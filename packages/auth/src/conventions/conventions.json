@@ -1,0 +1,193 @@
+{
+  "$comment": "SINGLE SOURCE for cross-app authentication conventions (ARCHITECTURE-auth.md §6). Read by packages/auth/src/conventions/index.ts (TypeScript) and by the mobile Gradle `generateAuthContract` task (Kotlin). Never copy these values by hand into another language.",
+  "version": 1,
+  "storageKey": "trips.auth.v1",
+  "refreshLeadMs": 60000,
+  "accessTokenTtlSeconds": 900,
+  "webSessionMaxSeconds": 43200,
+  "otpCodeLength": 6,
+  "otpMaxWrongAttempts": 5,
+  "statuses": ["loading", "authenticated", "anonymous", "sessionExpired"],
+  "surfaces": [
+    "traveler",
+    "business",
+    "admin",
+    "studio",
+    "crew",
+    "driver",
+    "photographer",
+    "moderator"
+  ],
+  "surfacePlatforms": {
+    "traveler": "web",
+    "business": "web",
+    "admin": "web",
+    "studio": "web",
+    "crew": "pwa",
+    "driver": "mobile",
+    "photographer": "mobile",
+    "moderator": "mobile"
+  },
+  "signInPaths": {
+    "traveler": "/sign-in",
+    "business": "/business/sign-in",
+    "admin": "/admin/sign-in",
+    "studio": "/sign-in",
+    "crew": "/crew/sign-in",
+    "driver": "/sign-in",
+    "photographer": "/sign-in",
+    "moderator": "/crew/sign-in"
+  },
+  "registrationCountries": [
+    { "code": "EG", "nameEn": "Egypt", "nameAr": "مصر", "enabled": true },
+    {
+      "code": "SA",
+      "nameEn": "Saudi Arabia",
+      "nameAr": "المملكة العربية السعودية",
+      "enabled": false
+    },
+    {
+      "code": "AE",
+      "nameEn": "United Arab Emirates",
+      "nameAr": "الإمارات العربية المتحدة",
+      "enabled": false
+    }
+  ],
+  "defaultRegistrationCountry": "EG",
+  "defaultCountryByLocale": { "ar": "EG", "en": "EG" },
+  "noRefreshProcedures": [
+    "auth/refreshSession",
+    "auth/signIn",
+    "auth/verifyOtp",
+    "auth/adminSignIn",
+    "auth/adminVerifyTotp",
+    "auth/staffSignIn",
+    "auth/staffVerifySecondFactor",
+    "auth/moderatorSignIn"
+  ],
+  "signInProcedures": [
+    "auth/signIn",
+    "auth/verifyOtp",
+    "auth/adminSignIn",
+    "auth/adminVerifyTotp",
+    "auth/staffSignIn",
+    "auth/staffVerifySecondFactor",
+    "auth/moderatorSignIn"
+  ],
+  "otpProcedures": ["auth/verifyOtp", "auth/resendOtp"],
+  "refreshableCodes": ["AUTH_TOKEN_EXPIRED", "AUTH_SESSION_EXPIRED", "UNAUTHORIZED"],
+  "maxSessionReason": "MAX_SESSION_DURATION_REACHED",
+  "fieldNames": [
+    "email",
+    "phone",
+    "password",
+    "fullName",
+    "country",
+    "code",
+    "identifier",
+    "staffCode",
+    "role",
+    "surface",
+    "tenantId"
+  ],
+  "fallbackErrorKey": "auth.error.unexpected",
+  "errorRows": [
+    {
+      "codes": ["AUTH_INVALID_CREDENTIALS"],
+      "key": "auth.error.invalidCredentials",
+      "recovery": "focusPassword",
+      "field": "password"
+    },
+    {
+      "codes": ["AUTH_ACCOUNT_LOCKED"],
+      "key": "auth.error.accountLocked",
+      "recovery": "countdown"
+    },
+    {
+      "codes": ["AUTH_OTP_INVALID"],
+      "key": "auth.error.otpInvalid",
+      "recovery": "clearCode"
+    },
+    {
+      "codes": ["AUTH_OTP_EXPIRED"],
+      "key": "auth.error.otpExpired",
+      "recovery": "enableResend"
+    },
+    {
+      "codes": ["AUTH_OTP_PAUSED"],
+      "key": "auth.error.otpPaused",
+      "recovery": "countdown"
+    },
+    {
+      "codes": ["AUTH_OTP_COOLDOWN"],
+      "key": "auth.error.otpCooldown",
+      "recovery": "enableResend"
+    },
+    {
+      "codes": ["AUTH_MFA_REQUIRED"],
+      "key": "auth.error.mfaRequired",
+      "recovery": "routeMfa"
+    },
+    {
+      "codes": ["AUTH_VERIFICATION_REQUIRED"],
+      "key": "auth.error.verificationRequired",
+      "recovery": "routeOtp"
+    },
+    {
+      "codes": ["AUTH_ACCOUNT_SUSPENDED"],
+      "key": "auth.error.suspended",
+      "recovery": "noRetry"
+    },
+    {
+      "codes": ["AUTH_DELETION_PENDING"],
+      "key": "auth.error.deletionPending",
+      "recovery": "stay"
+    },
+    {
+      "codes": ["AUTH_TOKEN_EXPIRED", "AUTH_SESSION_EXPIRED"],
+      "key": "auth.error.sessionExpired",
+      "recovery": "refresh"
+    },
+    {
+      "codes": ["VALIDATION_ERROR", "INVALID_INPUT"],
+      "key": "auth.error.validation",
+      "recovery": "focusField"
+    },
+    {
+      "codes": ["CONFLICT", "DUPLICATE_RESOURCE"],
+      "key": "auth.error.alreadyExists",
+      "recovery": "focusField"
+    },
+    {
+      "codes": [
+        "FORBIDDEN",
+        "ROLE_FORBIDDEN",
+        "PERMISSION_DENIED",
+        "ADMIN_SUBROLE_FORBIDDEN",
+        "MODERATOR_SCOPE_FORBIDDEN"
+      ],
+      "key": "auth.error.forbidden",
+      "recovery": "stay"
+    },
+    {
+      "codes": ["AUTH_WEB_ONLY_REGISTRATION"],
+      "key": "auth.error.webOnlyRegistration",
+      "recovery": "noRetry"
+    },
+    {
+      "codes": ["RATE_LIMITED"],
+      "key": "auth.error.rateLimited",
+      "recovery": "countdown"
+    },
+    {
+      "codes": ["NOT_FOUND", "RESOURCE_NOT_FOUND", "TENANT_NOT_FOUND"],
+      "key": "auth.error.notFound",
+      "recovery": "stay"
+    },
+    {
+      "codes": ["INTERNAL_ERROR", "SERVICE_UNAVAILABLE"],
+      "key": "auth.error.unavailable",
+      "recovery": "retry"
+    }
+  ]
+}

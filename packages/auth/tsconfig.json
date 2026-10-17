@@ -1,0 +1,7 @@
+{
+  "extends": "@trips-app/config/tsconfig.base.json",
+  "include": ["src/**/*.ts", "src/**/*.json", "test/**/*.ts"],
+  "compilerOptions": {
+    "noEmit": true
+  }
+}
