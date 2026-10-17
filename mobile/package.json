@@ -1,0 +1,8 @@
+{
+  "name": "@trips-app/mobile",
+  "private": true,
+  "scripts": {
+    "build": "./gradlew buildAllApps"
+  },
+  "packageManager": "yarn@1.22.22"
+}

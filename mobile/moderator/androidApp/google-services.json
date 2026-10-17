@@ -1,0 +1,105 @@
+{
+  "project_info": {
+    "project_number": "219706704727",
+    "project_id": "trips-enjoy-com",
+    "storage_bucket": "trips-enjoy-com.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:219706704727:android:270d093c32d6197fea3412",
+        "android_client_info": {
+          "package_name": "com.tripsenjoy.driver"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD1BpyA749ftmNXc1pM3ZtXdMysSCplNu4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:219706704727:android:d3f421f833333fccea3412",
+        "android_client_info": {
+          "package_name": "com.tripsenjoy.driver"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD1BpyA749ftmNXc1pM3ZtXdMysSCplNu4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:219706704727:android:951c376868cd6367ea3412",
+        "android_client_info": {
+          "package_name": "com.tripsenjoy.moderator"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD1BpyA749ftmNXc1pM3ZtXdMysSCplNu4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:219706704727:android:9e14131dcc1997ffea3412",
+        "android_client_info": {
+          "package_name": "com.tripsenjoy.photographer"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD1BpyA749ftmNXc1pM3ZtXdMysSCplNu4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:219706704727:android:6effffa29020cedcea3412",
+        "android_client_info": {
+          "package_name": "com.tripsenjoy.traveler"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD1BpyA749ftmNXc1pM3ZtXdMysSCplNu4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
