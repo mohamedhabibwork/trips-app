@@ -150,7 +150,7 @@ export function SignUpScreen({ returnTo }: { returnTo?: string }) {
         surface: "web",
       })) as unknown as VerifyResult;
 
-      if (result.session) {
+      if (result.session && !isSupplier) {
         signInWithSession(result.session);
         await navigate({ to: returnToSafe(returnTo, result.session.activeRole) });
         return;
@@ -162,7 +162,11 @@ export function SignUpScreen({ returnTo }: { returnTo?: string }) {
         return;
       }
 
-      // AC-1: a driver/photographer lands on the pending screen with no session stored.
+      if (result.session && isSupplier) {
+        signInWithSession(result.session);
+      }
+
+      // AC-1: a supplier lands on the pending/onboarding screen after verifying both channels.
       setStep({ kind: "pending", contact: email.trim() || phone.trim() });
     } catch (caught) {
       setError(toAuthErrorView(caught, { locale, procedure: "auth/verifyOtp" }));
@@ -207,7 +211,7 @@ export function SignUpScreen({ returnTo }: { returnTo?: string }) {
     // No dispatch left means every channel is verified; fall through to the form is wrong, so the
     // pending screen is rendered instead of mutating state during render.
     if (!dispatch) {
-      return <PendingApprovalScreen contact={email.trim() || phone.trim()} />;
+      return <PendingApprovalScreen contact={email.trim() || phone.trim()} role={role} />;
     }
     return (
       <OtpScreen
@@ -227,7 +231,7 @@ export function SignUpScreen({ returnTo }: { returnTo?: string }) {
   }
 
   if (step.kind === "pending") {
-    return <PendingApprovalScreen contact={step.contact} />;
+    return <PendingApprovalScreen contact={step.contact} role={role} />;
   }
 
   // M2: per-field issues render under their input; anything else goes to the banner.

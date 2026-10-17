@@ -21,7 +21,7 @@ export interface AdminDecisionFormProps {
   /** Effect summary shown inside the confirmation dialog. */
   dialogEffect?: ReactNode;
   cancel: { slug: AdminSlug; label: string };
-  onConfirm: () => void;
+  onConfirm: (reason: string) => void | Promise<void>;
 }
 
 /**
@@ -78,7 +78,7 @@ export function AdminDecisionForm({
         primaryLabel={confirmLabel}
         onPrimary={() => {
           setDialogOpen(false);
-          onConfirm();
+          void onConfirm(reason.trim());
         }}
         confirmDisabled={!canConfirm}
         secondaryLabel="Keep editing"

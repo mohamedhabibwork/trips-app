@@ -73,6 +73,9 @@ export function SignInScreen({ returnTo }: { returnTo?: string }) {
         await goHome(result.session);
         return;
       }
+      if (result.session) {
+        signInWithSession(result.session);
+      }
       setStep({ kind: "pending", contact: identifier.trim() });
     } catch (caught) {
       setError(toAuthErrorView(caught, { locale, procedure: PROCEDURE }));
@@ -94,6 +97,13 @@ export function SignInScreen({ returnTo }: { returnTo?: string }) {
 
       if (result.step === "authenticated" && result.session) {
         await goHome(result.session);
+        return;
+      }
+      if (result.step === "application_pending_approval") {
+        if (result.session) {
+          signInWithSession(result.session);
+        }
+        setStep({ kind: "pending", contact: identifier.trim() });
         return;
       }
       setError(

@@ -3,7 +3,7 @@
 // `toAuthErrorView`, so a regression here is visible on every auth screen at once — and it was the one
 // module in `apps/web/src/auth` with no test at all.
 import { describe, expect, test } from "bun:test";
-import { SessionExpiredError } from "@trips-app/auth";
+import { fieldMessageFor, SessionExpiredError } from "@trips-app/auth";
 
 import {
   authErrorViewFor,
@@ -270,5 +270,64 @@ describe("Unit: isSessionExpiredFailure (F3)", () => {
     expect(isSessionExpiredFailure({ status: 401, code: "FORBIDDEN" })).toBe(false);
     expect(isSessionExpiredFailure({ status: 403, code: "UNAUTHORIZED" })).toBe(false);
     expect(isSessionExpiredFailure({ status: 500, code: "INTERNAL_ERROR" })).toBe(false);
+  });
+});
+
+describe("Validation: oRPC issues become localized field copy", () => {
+  test("a zod length issue keeps its bound and renders in the caller's language", () => {
+    const error = orpcError({
+      code: "BAD_REQUEST",
+      status: 400,
+      data: {
+        success: false,
+        data: null,
+        error: { code: "BAD_REQUEST", status: 400, message: "Input validation failed." },
+        issues: [
+          {
+            code: "too_small",
+            origin: "string",
+            path: ["password"],
+            minimum: 12,
+            message: "String must contain at least 12 character(s)",
+          },
+        ],
+      },
+    });
+
+    const view = toAuthErrorView(error, { locale: "ar" });
+    const issue = view.fieldErrors![0]!;
+
+    expect(view.field).toBe("password");
+    expect(issue.key).toBe("validation.tooShort");
+    expect(issue.params.min).toBe(12);
+    expect(fieldMessageFor(issue, "ar")).toContain("12");
+    expect(fieldMessageFor(issue, "en")).toBe("Use at least 12 characters.");
+  });
+
+  test("a code field's regex failure becomes the digit-count message", () => {
+    const error = orpcError({
+      code: "BAD_REQUEST",
+      status: 400,
+      data: {
+        success: false,
+        data: null,
+        error: { code: "BAD_REQUEST", status: 400, message: "Input validation failed." },
+        issues: [
+          {
+            code: "invalid_format",
+            format: "regex",
+            path: ["code"],
+            pattern: /^\d{6}$/,
+            message: "Invalid string",
+          },
+        ],
+      },
+    });
+
+    const issue = toAuthErrorView(error, { locale: "en" }).fieldErrors![0]!;
+
+    expect(issue.key).toBe("validation.invalidCode");
+    expect(issue.params.length).toBe(6);
+    expect(fieldMessageFor(issue, "en")).toBe("Enter the 6-digit code.");
   });
 });
