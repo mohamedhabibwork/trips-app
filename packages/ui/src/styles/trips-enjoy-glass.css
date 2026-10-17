@@ -1,0 +1,98 @@
+/* Trips Enjoy Liquid Glass (web approximation). Controls float above content; never glass on glass. */
+
+.te-glass {
+  position: relative;
+  background-color: var(--te-glass-fill-regular);
+  background-image: linear-gradient(to bottom, var(--te-glass-sheen), transparent 60%);
+  -webkit-backdrop-filter: blur(var(--te-glass-blur-regular)) saturate(var(--te-glass-saturate));
+  backdrop-filter: blur(var(--te-glass-blur-regular)) saturate(var(--te-glass-saturate));
+  box-shadow:
+    var(--te-glass-shadow),
+    inset 0 0 0 1px var(--te-glass-stroke),
+    inset 0 1px 0 var(--te-glass-highlight);
+  color: var(--te-ink);
+}
+
+/* Single primary floating action: opaque primary with the glass edge and sheen */
+.te-glass--tint {
+  background-color: var(--te-glass-tint);
+  color: var(--te-on-primary);
+}
+
+.te-glass-surface {
+  padding: var(--te-space-4);
+  border-radius: var(--te-radius-lg);
+}
+
+.te-glass-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--te-space-2);
+  min-block-size: 56px;
+  min-inline-size: 56px;
+  padding-inline: var(--te-space-6);
+  border: 0;
+  border-radius: var(--te-radius-pill);
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.te-glass-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--te-space-3);
+  min-block-size: 56px;
+  margin: 0;
+  padding-block: var(--te-space-2);
+  padding-inline: var(--te-space-4);
+  border-radius: var(--te-radius-pill);
+}
+
+.te-glass-tabbar {
+  padding: var(--te-space-1);
+  border-radius: var(--te-radius-pill);
+}
+
+.te-glass-tabbar__list {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  gap: var(--te-space-1);
+}
+
+.te-glass-tabbar__item {
+  display: flex;
+  flex: 1 1 0;
+}
+
+.te-glass-tab {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--te-space-1);
+  min-block-size: 52px;
+  padding-block: var(--te-space-2);
+  padding-inline: var(--te-space-3);
+  border: 0;
+  border-radius: var(--te-radius-pill);
+  background: transparent;
+  color: var(--te-ink);
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+/* Active tab: selected pill on glass, icon and label in tab-active */
+.te-glass-tab[aria-current="page"] {
+  background: var(--te-glass-selection);
+  color: var(--te-tab-active);
+  font-weight: 600;
+}

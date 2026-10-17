@@ -1,0 +1,294 @@
+/* Trips Enjoy controls: destructive button, password toggle, textarea, bar chart, calendar, link, seat states. Tokens only; logical properties. */
+
+/* Destructive button: irreversible actions. Pair with a clear label, never colour alone. */
+.te-button--destructive {
+  background: var(--te-danger);
+  color: var(--te-on-danger);
+}
+
+.te-button--destructive:hover {
+  box-shadow: var(--te-card-shadow-hover);
+}
+
+/* Password toggle: the field and its show/hide button sit on one row */
+.te-input__control {
+  display: flex;
+  align-items: stretch;
+  gap: var(--te-space-2);
+}
+
+.te-input__control .te-input__field {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}
+
+.te-input__toggle {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  min-block-size: 44px;
+  padding-block: var(--te-space-3);
+  padding-inline: var(--te-space-3);
+  border: 1px solid var(--te-control-border);
+  border-radius: var(--te-radius-sm);
+  background: var(--te-surface-raised);
+  color: var(--te-ink);
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.te-input__toggle[aria-pressed="true"] {
+  background: var(--te-hairline);
+}
+
+.te-input__toggle:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Textarea */
+.te-textarea__field {
+  resize: vertical;
+}
+
+.te-textarea__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--te-space-2);
+}
+
+.te-textarea__meta .te-input__support {
+  flex: 1 1 auto;
+}
+
+.te-textarea__counter {
+  margin: 0;
+  margin-inline-start: auto;
+  color: var(--te-ink-muted);
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Bar chart */
+.te-bar-chart {
+  position: relative;
+  min-inline-size: 0;
+  margin: 0;
+}
+
+.te-bar-chart__caption {
+  margin-block-end: var(--te-space-3);
+  color: var(--te-ink);
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 600;
+}
+
+.te-bar-chart__plot {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--te-space-2);
+}
+
+.te-bar-chart__column {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--te-space-1);
+  min-inline-size: 0;
+}
+
+.te-bar-chart__value {
+  color: var(--te-ink);
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.te-bar-chart__track {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  inline-size: 100%;
+}
+
+.te-bar-chart__bar {
+  inline-size: 100%;
+  max-inline-size: 40px;
+  margin-inline: auto;
+  border-start-start-radius: var(--te-radius-sm);
+  border-start-end-radius: var(--te-radius-sm);
+  background: var(--te-primary);
+}
+
+.te-bar-chart__label {
+  max-inline-size: 100%;
+  color: var(--te-ink-muted);
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 500;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+/* Calendar */
+.te-calendar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--te-space-3);
+  min-inline-size: 0;
+}
+
+.te-calendar__label {
+  margin: 0;
+  color: var(--te-ink);
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 600;
+}
+
+.te-calendar__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--te-space-2);
+}
+
+.te-calendar__month {
+  margin: 0;
+  color: var(--te-ink);
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 600;
+}
+
+.te-calendar__nav {
+  min-inline-size: 44px;
+  padding-inline: 0;
+}
+
+.te-calendar__grid {
+  inline-size: 100%;
+  table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: 2px;
+}
+
+.te-calendar__weekday {
+  padding-block: var(--te-space-1);
+  color: var(--te-ink-muted);
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.te-calendar__cell {
+  padding: 0;
+  text-align: center;
+}
+
+.te-calendar__day {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 100%;
+  min-block-size: 44px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: var(--te-radius-sm);
+  background: transparent;
+  color: var(--te-ink);
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+}
+
+.te-calendar__day:hover {
+  background: var(--te-hairline);
+}
+
+.te-calendar__day:focus-visible {
+  outline: 2px solid var(--te-focus-ring);
+  outline-offset: 2px;
+}
+
+.te-calendar__day--today {
+  border-color: var(--te-control-border);
+}
+
+.te-calendar__day--selected,
+.te-calendar__day--selected:hover {
+  background: var(--te-primary);
+  color: var(--te-on-primary);
+  font-weight: 600;
+}
+
+.te-calendar__day--disabled,
+.te-calendar__day--disabled:hover {
+  background: transparent;
+  color: var(--te-ink-muted);
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Link */
+.te-link {
+  color: var(--te-primary-text);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.te-link:hover {
+  text-decoration-thickness: 2px;
+}
+
+.te-link:focus-visible {
+  outline: 2px solid var(--te-focus-ring);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Seat states added to the base map. Every state also has a word and an icon. */
+.te-seat-map__seat--held {
+  border-style: dashed;
+  background: var(--te-info-soft);
+  color: var(--te-ink);
+}
+
+.te-seat-map__seat--reserved {
+  background: var(--te-warning-soft);
+  color: var(--te-warning);
+}
+
+.te-seat-map__seat--checked-in {
+  background: var(--te-success-soft);
+  color: var(--te-success);
+}
+
+.te-seat-map__seat--checked-out {
+  background: var(--te-hairline);
+  color: var(--te-ink-muted);
+}
+
+.te-seat-map__seat--cancelled {
+  border-style: dashed;
+  background: transparent;
+  color: var(--te-ink-muted);
+  text-decoration: line-through;
+}

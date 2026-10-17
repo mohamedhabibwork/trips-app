@@ -1,0 +1,323 @@
+/* Trips Enjoy screen components: live map, parent, driver, photographer and admin cards. Tokens only; logical properties. */
+
+/* Live map: square box, SVG hidden from assistive tech, status text beside it */
+.te-live-map {
+  display: flex;
+  flex-direction: column;
+  gap: var(--te-space-3);
+  max-inline-size: 32rem;
+}
+
+.te-live-map__svg {
+  display: block;
+  inline-size: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: var(--te-radius-md);
+  background: var(--te-map-ground);
+}
+
+.te-live-map__road {
+  fill: none;
+  stroke: var(--te-map-road);
+  stroke-width: 6;
+  stroke-linecap: round;
+}
+
+.te-live-map__route {
+  fill: none;
+  stroke: var(--te-map-route);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.te-live-map__stop {
+  fill: var(--te-map-road);
+  stroke: var(--te-map-route);
+  stroke-width: 1.5;
+}
+
+.te-live-map__bus {
+  fill: var(--te-map-route);
+  stroke: var(--te-map-road);
+  stroke-width: 2;
+}
+
+.te-live-map__status {
+  margin: 0;
+  color: var(--te-ink);
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 600;
+}
+
+.te-live-map__stops {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--te-space-1) var(--te-space-3);
+  margin: 0;
+  padding: 0;
+  color: var(--te-ink-muted);
+  font-size: 13px;
+  line-height: 18px;
+  list-style: none;
+}
+
+/* Child card (parent app) */
+.te-child-card {
+  display: flex;
+  align-items: center;
+  gap: var(--te-space-3);
+  inline-size: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  padding: var(--te-space-4);
+  border: 0;
+  border-radius: var(--te-radius-md);
+  background: var(--te-surface-raised);
+  box-shadow: var(--te-card-shadow);
+  color: var(--te-ink);
+  text-align: start;
+}
+
+.te-child-card--interactive {
+  cursor: pointer;
+}
+
+.te-child-card--interactive:hover {
+  box-shadow: var(--te-card-shadow-hover);
+}
+
+.te-child-card__body {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--te-space-1);
+  min-inline-size: 0;
+}
+
+.te-child-card__name {
+  font-size: 18px;
+  line-height: 24px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.te-child-card__trip {
+  color: var(--te-ink-muted);
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 500;
+}
+
+/* Assignment card (driver app) */
+.te-assignment-card__title {
+  font-size: 20px;
+  line-height: 28px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.te-assignment-card__facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  gap: var(--te-space-3) var(--te-space-4);
+  margin: 0;
+}
+
+.te-assignment-card__fact {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-inline-size: 0;
+}
+
+.te-assignment-card__fact dt {
+  color: var(--te-ink-muted);
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 500;
+}
+
+.te-assignment-card__fact dd {
+  margin: 0;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+/* Checklist (driver app) */
+.te-checklist {
+  display: flex;
+  flex-direction: column;
+  gap: var(--te-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.te-checklist__item {
+  padding: var(--te-space-3) var(--te-space-4);
+  border-radius: var(--te-radius-sm);
+  background: var(--te-surface-raised);
+}
+
+.te-checklist__state {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--te-space-1);
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 600;
+}
+
+.te-checklist__state .te-icon {
+  inline-size: 16px;
+  block-size: 16px;
+}
+
+.te-checklist__state--checked {
+  color: var(--te-success);
+}
+
+.te-checklist__state--pending {
+  color: var(--te-warning);
+}
+
+.te-checklist__note {
+  margin-inline-start: var(--te-space-2);
+  color: var(--te-ink-muted);
+  font-size: 13px;
+  line-height: 18px;
+}
+
+/* Offer card (driver and photographer deals) */
+.te-offer-card__title {
+  font-size: 18px;
+  line-height: 24px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.te-offer-card__summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--te-space-2) var(--te-space-3);
+}
+
+.te-offer-card__expires {
+  margin: 0;
+  color: var(--te-ink-muted);
+  font-size: 13px;
+  line-height: 18px;
+}
+
+/* Photo grid (photographer and traveler albums) */
+.te-photo-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--te-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 48rem) {
+  .te-photo-grid--cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.te-photo-grid__button {
+  display: block;
+  inline-size: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--te-radius-sm);
+  background: var(--te-hairline);
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.te-photo-grid__image {
+  display: block;
+  inline-size: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+}
+
+/* Application card (admin review queue) */
+.te-application-card__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--te-space-2) var(--te-space-3);
+}
+
+.te-application-card__name {
+  font-size: 18px;
+  line-height: 24px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.te-application-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--te-space-2) var(--te-space-3);
+}
+
+.te-application-card__submitted {
+  color: var(--te-ink-muted);
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.te-application-card__documents {
+  display: flex;
+  flex-direction: column;
+  gap: var(--te-space-2);
+  margin: 0;
+  padding: var(--te-space-3) 0 0;
+  border-block-start: 1px solid var(--te-hairline);
+  list-style: none;
+}
+
+.te-application-card__document {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--te-space-2);
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.te-application-card__verified {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: var(--te-space-1);
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 600;
+}
+
+.te-application-card__verified .te-icon {
+  inline-size: 16px;
+  block-size: 16px;
+}
+
+.te-application-card__verified--yes {
+  color: var(--te-success);
+}
+
+.te-application-card__verified--no {
+  color: var(--te-danger);
+}

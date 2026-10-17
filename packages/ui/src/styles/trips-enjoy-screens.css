@@ -1,0 +1,265 @@
+/* Trips Enjoy screen components: forms and controls (switch, checkbox, select, search, OTP). Tokens only; logical properties. */
+
+@keyframes te-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Visually hidden, still read by screen readers */
+.te-visually-hidden {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+/* Switch */
+.te-switch {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--te-space-3);
+  inline-size: 100%;
+  min-block-size: 44px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--te-ink);
+  text-align: start;
+  cursor: pointer;
+}
+
+.te-switch:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.te-switch__label {
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 500;
+}
+
+.te-switch__end {
+  display: flex;
+  align-items: center;
+  gap: var(--te-space-2);
+  flex-shrink: 0;
+}
+
+.te-switch__state {
+  color: var(--te-ink-muted);
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.te-switch__track {
+  position: relative;
+  display: inline-block;
+  inline-size: 48px;
+  block-size: 28px;
+  border: 1px solid var(--te-control-border);
+  border-radius: var(--te-radius-pill);
+  background: var(--te-surface-raised);
+  transition: background-color 150ms ease;
+}
+
+.te-switch__thumb {
+  position: absolute;
+  inset-block-start: 3px;
+  inset-inline-start: 3px;
+  inline-size: 20px;
+  block-size: 20px;
+  border-radius: 50%;
+  background: var(--te-control-border);
+  transition: inset-inline-start 150ms ease;
+}
+
+.te-switch[aria-checked="true"] .te-switch__track {
+  border-color: var(--te-primary);
+  background: var(--te-primary);
+}
+
+.te-switch[aria-checked="true"] .te-switch__thumb {
+  inset-inline-start: calc(100% - 23px);
+  background: var(--te-on-primary);
+}
+
+/* Checkbox */
+.te-checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--te-space-3);
+}
+
+.te-checkbox__input {
+  flex-shrink: 0;
+  inline-size: 24px;
+  block-size: 24px;
+  margin-block-start: 2px;
+  accent-color: var(--te-ink);
+}
+
+.te-checkbox__text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--te-space-1);
+  min-inline-size: 0;
+}
+
+.te-checkbox__label {
+  color: var(--te-ink);
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.te-checkbox__description {
+  display: block;
+  color: var(--te-ink-muted);
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.te-checkbox--disabled .te-checkbox__label {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Select (shares the TeInput look) */
+.te-select__field {
+  cursor: pointer;
+}
+
+/* Search field */
+.te-search-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--te-space-2);
+}
+
+.te-search-field__label {
+  color: var(--te-ink);
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 600;
+}
+
+.te-search-field__control {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.te-search-field__icon {
+  position: absolute;
+  inset-inline-start: var(--te-space-3);
+  color: var(--te-ink-muted);
+  pointer-events: none;
+}
+
+.te-search-field__input {
+  inline-size: 100%;
+  min-block-size: 44px;
+  padding-block: var(--te-space-3);
+  padding-inline: calc(var(--te-space-3) + 24px + var(--te-space-2)) calc(var(--te-space-3) + 44px);
+  border: 1px solid var(--te-control-border);
+  border-radius: var(--te-radius-sm);
+  background: var(--te-surface-raised);
+  color: var(--te-ink);
+  text-align: start;
+}
+
+.te-search-field__input::placeholder {
+  color: var(--te-ink-muted);
+}
+
+.te-search-field__input::-webkit-search-cancel-button {
+  appearance: none;
+  display: none;
+}
+
+.te-search-field__clear {
+  position: absolute;
+  inset-inline-end: var(--te-space-1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 44px;
+  block-size: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--te-radius-pill);
+  background: transparent;
+  color: var(--te-ink);
+  cursor: pointer;
+}
+
+.te-search-field__clear:hover {
+  background: var(--te-hairline);
+}
+
+/* OTP input: cells always run left to right */
+.te-otp {
+  display: flex;
+  flex-direction: column;
+  gap: var(--te-space-2);
+}
+
+.te-otp__label {
+  margin: 0;
+  color: var(--te-ink);
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 600;
+}
+
+.te-otp__cells {
+  display: flex;
+  gap: var(--te-space-2);
+  direction: ltr;
+}
+
+.te-otp__cell {
+  inline-size: clamp(40px, 12vw, 52px);
+  block-size: 52px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--te-control-border);
+  border-radius: var(--te-radius-sm);
+  background: var(--te-surface-raised);
+  color: var(--te-ink);
+  font-size: 22px;
+  line-height: 28px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+.te-otp__cell[aria-invalid="true"] {
+  border-color: var(--te-danger);
+  box-shadow: inset 0 0 0 1px var(--te-danger);
+}
+
+.te-otp__error {
+  display: flex;
+  align-items: center;
+  gap: var(--te-space-1);
+  margin: 0;
+  color: var(--te-danger);
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 600;
+}
+
+.te-otp__error .te-icon {
+  inline-size: 16px;
+  block-size: 16px;
+}

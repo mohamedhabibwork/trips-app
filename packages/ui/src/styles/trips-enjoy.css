@@ -1,0 +1,369 @@
+/*
+ * Trips Enjoy design tokens and base styles.
+ * Source: Trips Enjoy tokens.json (light and dark values). Not imported by globals.css.
+ * Load with: import "@trips-app/ui/trips-enjoy.css";
+ */
+@import "./trips-enjoy-components.css";
+@import "./trips-enjoy-glass.css";
+@import "./trips-enjoy-feedback.css";
+@import "./trips-enjoy-screens.css";
+@import "./trips-enjoy-screens-navigation.css";
+@import "./trips-enjoy-screens-cards.css";
+@import "./trips-enjoy-screens-data.css";
+@import "./trips-enjoy-screens-roles.css";
+@import "./trips-enjoy-controls.css";
+
+/* Bundled fonts (subset: Latin, Latin-1, punctuation, currency, arrows, Arabic). Licences: assets/fonts/OFL-*.txt */
+@font-face {
+  font-family: "Outfit";
+  src: url("../assets/fonts/outfit_regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Outfit";
+  src: url("../assets/fonts/outfit_medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Outfit";
+  src: url("../assets/fonts/outfit_semibold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Outfit";
+  src: url("../assets/fonts/outfit_bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Cairo";
+  src: url("../assets/fonts/cairo_medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Cairo";
+  src: url("../assets/fonts/cairo_semibold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Cairo";
+  src: url("../assets/fonts/cairo_bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  color-scheme: light;
+
+  /* Brand (exact logo colours; UI uses the derived tokens below) */
+  --te-brand-navy: #262a67;
+  --te-brand-orange: #ff6527;
+  --te-brand-coral: #fb8030;
+  --te-brand-amber: #f89e23;
+  --te-brand-cream: #f6f3e4;
+  --te-white: #ffffff;
+
+  /* Surfaces, ink and lines */
+  --te-surface: #f6f3e4;
+  --te-surface-raised: #ffffff;
+  --te-surface-inverse: #262a67;
+  --te-ink: #262a67;
+  --te-ink-muted: #5b5f86;
+  --te-ink-inverse: #f6f3e4;
+  --te-hairline: #e3dfc9;
+
+  /* Actions, accents and focus */
+  --te-primary: #ff6c2e;
+  --te-on-primary: #262a67;
+  --te-primary-text: #c93a00;
+  --te-accent: #fb8030;
+  --te-highlight: #f89e23;
+  --te-focus-ring: #262a67;
+  --te-control-border: #7b7fa6;
+
+  /* Status (PROPOSED in the brand files; always pair with an icon and a word) */
+  --te-danger: #b42318;
+  --te-on-danger: #ffffff;
+  --te-danger-soft: #fde8e6;
+  --te-success: #1f7a4d;
+  --te-success-soft: #e3f3ea;
+  --te-warning: #8a4b00;
+  --te-warning-soft: #fff1d6;
+  --te-info-soft: #e6e8f5;
+
+  /* Live map */
+  --te-map-ground: #ecebd9;
+  --te-map-road: #ffffff;
+  --te-map-route: #262a67;
+
+  /* Liquid Glass */
+  --te-glass-fill-regular: rgba(255, 255, 255, 0.62);
+  --te-glass-fill-clear: rgba(255, 255, 255, 0.16);
+  --te-glass-dim: rgba(16, 18, 48, 0.35);
+  --te-glass-stroke: rgba(255, 255, 255, 0.7);
+  --te-glass-highlight: rgba(255, 255, 255, 0.95);
+  --te-glass-sheen: rgba(255, 255, 255, 0.45);
+  --te-glass-selection: rgba(38, 42, 103, 0.1);
+  --te-glass-tint: #ff6c2e;
+  --te-tab-active: #262a67;
+
+  /* Shadows */
+  --te-card-shadow: 0 1px 2px rgba(38, 42, 103, 0.06), 0 6px 20px rgba(38, 42, 103, 0.08);
+  --te-card-shadow-hover: 0 2px 4px rgba(38, 42, 103, 0.08), 0 12px 32px rgba(38, 42, 103, 0.14);
+  --te-glass-shadow: 0 8px 30px rgba(38, 42, 103, 0.16);
+
+  /* Blur */
+  --te-glass-blur-regular: 20px;
+  --te-glass-blur-clear: 10px;
+  --te-glass-saturate: 180%;
+
+  /* Radius */
+  --te-radius-sm: 8px;
+  --te-radius-md: 12px;
+  --te-radius-lg: 20px;
+  --te-radius-icon: 22%;
+  --te-radius-pill: 999px;
+
+  /* Spacing (4px scale) */
+  --te-space-1: 4px;
+  --te-space-2: 8px;
+  --te-space-3: 12px;
+  --te-space-4: 16px;
+  --te-space-6: 24px;
+  --te-space-8: 32px;
+  --te-space-12: 48px;
+
+  /* Type families */
+  --te-font-sans: Outfit, Nunito, system-ui, sans-serif;
+  --te-font-arabic: Cairo, "Readex Pro", Tahoma, sans-serif;
+}
+
+/* Dark values: explicit choice (data-theme="dark", or the .dark class the web app sets on <html>) */
+:root[data-theme="dark"],
+:root.dark {
+  color-scheme: dark;
+  --te-surface: #262a67;
+  --te-surface-raised: #31367a;
+  --te-surface-inverse: #f6f3e4;
+  --te-ink: #f6f3e4;
+  --te-ink-muted: #b8bad6;
+  --te-ink-inverse: #262a67;
+  --te-hairline: #454a8c;
+  --te-primary-text: #ff8655;
+  --te-focus-ring: #f89e23;
+  --te-control-border: #8e92c8;
+  --te-on-danger: #262a67;
+  --te-danger: #ff9b8f;
+  --te-danger-soft: #4a2340;
+  --te-success: #6fd6a0;
+  --te-success-soft: #1d3f45;
+  --te-warning: #ffc46b;
+  --te-warning-soft: #4a3a1c;
+  --te-info-soft: #3a3f85;
+  --te-map-ground: #2b3070;
+  --te-map-road: #3a3f85;
+  --te-map-route: #f6f3e4;
+  --te-glass-fill-regular: rgba(49, 54, 122, 0.75);
+  --te-glass-fill-clear: rgba(255, 255, 255, 0.1);
+  --te-glass-dim: rgba(0, 0, 0, 0.4);
+  --te-glass-stroke: rgba(255, 255, 255, 0.18);
+  --te-glass-highlight: rgba(255, 255, 255, 0.28);
+  --te-glass-sheen: rgba(255, 255, 255, 0.1);
+  --te-glass-selection: rgba(255, 255, 255, 0.14);
+  --te-tab-active: #f89e23;
+  --te-card-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 6px 20px rgba(0, 0, 0, 0.25);
+  --te-card-shadow-hover: 0 2px 4px rgba(0, 0, 0, 0.35), 0 12px 32px rgba(0, 0, 0, 0.35);
+  --te-glass-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+}
+
+/* Dark values: follow the OS setting unless the page forces light */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --te-surface: #262a67;
+    --te-surface-raised: #31367a;
+    --te-surface-inverse: #f6f3e4;
+    --te-ink: #f6f3e4;
+    --te-ink-muted: #b8bad6;
+    --te-ink-inverse: #262a67;
+    --te-hairline: #454a8c;
+    --te-primary-text: #ff8655;
+    --te-focus-ring: #f89e23;
+    --te-control-border: #8e92c8;
+    --te-on-danger: #262a67;
+    --te-danger: #ff9b8f;
+    --te-danger-soft: #4a2340;
+    --te-success: #6fd6a0;
+    --te-success-soft: #1d3f45;
+    --te-warning: #ffc46b;
+    --te-warning-soft: #4a3a1c;
+    --te-info-soft: #3a3f85;
+    --te-map-ground: #2b3070;
+    --te-map-road: #3a3f85;
+    --te-map-route: #f6f3e4;
+    --te-glass-fill-regular: rgba(49, 54, 122, 0.75);
+    --te-glass-fill-clear: rgba(255, 255, 255, 0.1);
+    --te-glass-dim: rgba(0, 0, 0, 0.4);
+    --te-glass-stroke: rgba(255, 255, 255, 0.18);
+    --te-glass-highlight: rgba(255, 255, 255, 0.28);
+    --te-glass-sheen: rgba(255, 255, 255, 0.1);
+    --te-glass-selection: rgba(255, 255, 255, 0.14);
+    --te-tab-active: #f89e23;
+    --te-card-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 6px 20px rgba(0, 0, 0, 0.25);
+    --te-card-shadow-hover: 0 2px 4px rgba(0, 0, 0, 0.35), 0 12px 32px rgba(0, 0, 0, 0.35);
+    --te-glass-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+  }
+}
+
+/* Base */
+body {
+  margin: 0;
+  background: var(--te-surface);
+  color: var(--te-ink);
+  font-family: var(--te-font-sans);
+}
+
+:lang(ar),
+:lang(ar) body {
+  font-family: var(--te-font-arabic);
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+/* Focus: 2px solid ring, 2px offset, on every interactive element */
+:where(
+  a,
+  button,
+  input,
+  select,
+  textarea,
+  summary,
+  [tabindex],
+  [role="button"],
+  [role="tab"]
+):focus-visible {
+  outline: 2px solid var(--te-focus-ring);
+  outline-offset: 2px;
+}
+
+/* Type scale (English uses sans; Arabic classes set the Cairo family) */
+.te-display {
+  font-size: 56px;
+  line-height: 60px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.te-h1 {
+  font-size: 40px;
+  line-height: 48px;
+  font-weight: 700;
+}
+
+.te-h2 {
+  font-size: 28px;
+  line-height: 36px;
+  font-weight: 600;
+}
+
+.te-h3 {
+  font-size: 20px;
+  line-height: 28px;
+  font-weight: 600;
+}
+
+.te-body {
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+}
+
+.te-body-medium {
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 500;
+}
+
+.te-label {
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 600;
+}
+
+.te-caption {
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 500;
+}
+
+.te-ar-display {
+  font-family: var(--te-font-arabic);
+  font-size: 48px;
+  line-height: 68px;
+  font-weight: 700;
+}
+
+.te-ar-h1 {
+  font-family: var(--te-font-arabic);
+  font-size: 32px;
+  line-height: 48px;
+  font-weight: 700;
+}
+
+.te-ar-h2 {
+  font-family: var(--te-font-arabic);
+  font-size: 24px;
+  line-height: 36px;
+  font-weight: 600;
+}
+
+.te-ar-body {
+  font-family: var(--te-font-arabic);
+  font-size: 16px;
+  line-height: 28px;
+  font-weight: 500;
+}
+
+.te-ar-caption {
+  font-family: var(--te-font-arabic);
+  font-size: 13px;
+  line-height: 20px;
+  font-weight: 500;
+}
+
+/* Reduced transparency: glass falls back to an opaque surface */
+@media (prefers-reduced-transparency: reduce) {
+  .te-glass {
+    background-color: var(--te-surface-raised);
+    background-image: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  .te-glass--tint {
+    background-color: var(--te-glass-tint);
+  }
+}

@@ -1,0 +1,352 @@
+/* Trips Enjoy screen components: navigation, dialog, feedback, page header, plan gate. Tokens only; logical properties. */
+
+/* Tabs */
+.te-tabs {
+  display: flex;
+  gap: var(--te-space-2);
+  overflow-x: auto;
+  border-block-end: 1px solid var(--te-hairline);
+  scrollbar-width: none;
+}
+
+.te-tabs__tab {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--te-space-2);
+  min-block-size: 44px;
+  margin-block-end: -1px;
+  padding-inline: var(--te-space-3);
+  border: 0;
+  border-block-end: 2px solid transparent;
+  background: transparent;
+  color: var(--te-ink-muted);
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.te-tabs__tab[aria-selected="true"] {
+  border-block-end-color: var(--te-tab-active);
+  color: var(--te-ink);
+}
+
+.te-tabs__count {
+  min-inline-size: 22px;
+  padding-inline: var(--te-space-1);
+  border-radius: var(--te-radius-pill);
+  background: var(--te-hairline);
+  color: var(--te-ink);
+  font-size: 12px;
+  line-height: 20px;
+  text-align: center;
+}
+
+/* Pagination */
+.te-pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--te-space-3);
+}
+
+.te-pagination__status {
+  color: var(--te-ink);
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 600;
+}
+
+.te-pagination .te-button {
+  min-inline-size: 44px;
+  padding-inline: var(--te-space-3);
+}
+
+/* Stepper */
+.te-stepper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--te-space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.te-stepper__step {
+  display: flex;
+  align-items: center;
+  gap: var(--te-space-3);
+}
+
+.te-stepper__marker {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  inline-size: 32px;
+  block-size: 32px;
+  border: 2px solid var(--te-control-border);
+  border-radius: 50%;
+  background: var(--te-surface-raised);
+  color: var(--te-ink-muted);
+}
+
+.te-stepper__marker .te-icon {
+  inline-size: 16px;
+  block-size: 16px;
+}
+
+.te-stepper__step--done .te-stepper__marker {
+  border-color: var(--te-success);
+  background: var(--te-success-soft);
+  color: var(--te-success);
+}
+
+.te-stepper__step--current .te-stepper__marker {
+  border-color: var(--te-accent);
+  background: var(--te-accent);
+  color: var(--te-brand-navy);
+}
+
+.te-stepper__text {
+  display: flex;
+  flex-direction: column;
+}
+
+.te-stepper__label {
+  color: var(--te-ink);
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 600;
+}
+
+.te-stepper__step--upcoming .te-stepper__label {
+  color: var(--te-ink-muted);
+  font-weight: 500;
+}
+
+.te-stepper__state {
+  color: var(--te-ink-muted);
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 500;
+}
+
+@media (min-width: 48rem) {
+  .te-stepper {
+    flex-direction: row;
+  }
+
+  .te-stepper__step {
+    flex: 1 1 0;
+  }
+}
+
+/* Dialog. Do not set display here: the UA hides a closed dialog. */
+.te-dialog {
+  inline-size: min(32rem, 100vw - 2 * var(--te-space-4));
+  max-inline-size: calc(100vw - 2 * var(--te-space-4));
+  margin: auto;
+  padding: var(--te-space-6);
+  border: 0;
+  border-radius: var(--te-radius-lg);
+  background: var(--te-surface-raised);
+  color: var(--te-ink);
+  box-shadow: var(--te-glass-shadow);
+}
+
+.te-dialog::backdrop {
+  background: var(--te-glass-dim);
+}
+
+.te-dialog__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--te-space-3);
+}
+
+.te-dialog__title {
+  margin: 0;
+  font-size: 20px;
+  line-height: 28px;
+  font-weight: 600;
+}
+
+.te-dialog__description {
+  margin: 0;
+  color: var(--te-ink-muted);
+}
+
+.te-dialog__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--te-space-3);
+  margin-block-start: var(--te-space-6);
+}
+
+.te-dialog--danger .te-dialog__primary {
+  background: var(--te-danger);
+  color: var(--te-on-danger);
+}
+
+/* Offline banner (warning strip, like RetryBanner) */
+.te-offline-banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--te-space-3);
+  padding-block: var(--te-space-3);
+  padding-inline: var(--te-space-4);
+  border-radius: var(--te-radius-sm);
+  background: var(--te-warning-soft);
+  color: var(--te-warning);
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+}
+
+.te-offline-banner__message {
+  flex: 1 1 auto;
+  margin: 0;
+}
+
+/* Maintenance notice */
+.te-maintenance {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--te-space-4);
+  padding-block: var(--te-space-12);
+  padding-inline: var(--te-space-4);
+  color: var(--te-ink);
+  text-align: center;
+}
+
+.te-maintenance__icon {
+  inline-size: 40px;
+  block-size: 40px;
+}
+
+.te-maintenance__title {
+  margin: 0;
+  font-size: 28px;
+  line-height: 36px;
+  font-weight: 700;
+}
+
+.te-maintenance__description {
+  max-inline-size: 48ch;
+  margin: 0;
+  color: var(--te-ink-muted);
+}
+
+.te-maintenance__return {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--te-space-1);
+  margin: 0;
+  font-weight: 600;
+}
+
+/* Page header */
+.te-page-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--te-space-2);
+  padding-block-end: var(--te-space-4);
+}
+
+.te-page-header__crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--te-space-1);
+  margin: 0;
+  padding: 0;
+  color: var(--te-ink-muted);
+  font-size: 13px;
+  line-height: 18px;
+  list-style: none;
+}
+
+.te-page-header__crumb {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--te-space-1);
+}
+
+.te-page-header__separator {
+  inline-size: 16px;
+  block-size: 16px;
+}
+
+.te-page-header__crumb [aria-current="page"] {
+  color: var(--te-ink);
+  font-weight: 600;
+}
+
+.te-page-header__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--te-space-4);
+}
+
+.te-page-header__text {
+  display: flex;
+  flex: 1 1 16rem;
+  flex-direction: column;
+  gap: var(--te-space-2);
+  min-inline-size: 0;
+}
+
+.te-page-header__title {
+  margin: 0;
+  color: var(--te-ink);
+  font-size: 28px;
+  line-height: 36px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.te-page-header__description {
+  margin: 0;
+  color: var(--te-ink-muted);
+}
+
+.te-page-header__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--te-space-2);
+}
+
+@media (min-width: 48rem) {
+  .te-page-header__title {
+    font-size: 40px;
+    line-height: 48px;
+  }
+}
+
+/* Plan gate */
+.te-plan-gate {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--te-space-3);
+  padding: var(--te-space-4);
+  border: 1px dashed var(--te-control-border);
+  border-radius: var(--te-radius-md);
+  background: var(--te-surface-raised);
+  color: var(--te-ink);
+}
+
+.te-plan-gate__text {
+  margin: 0;
+  font-size: 16px;
+  line-height: 24px;
+}

@@ -5,9 +5,11 @@
   "type": "module",
   "exports": {
     "./globals.css": "./src/styles/globals.css",
+    "./trips-enjoy.css": "./src/styles/trips-enjoy.css",
     "./lib/*": "./src/lib/*.ts",
     "./components/*": "./src/components/*.tsx",
     "./hooks/*": "./src/hooks/*.ts",
+    "./types": "./src/types/index.ts",
     "./postcss.config": "./postcss.config.mjs"
   },
   "scripts": {

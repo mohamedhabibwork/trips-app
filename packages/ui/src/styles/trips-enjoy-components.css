@@ -1,0 +1,326 @@
+/* Trips Enjoy components. Every value comes from a --te-* token. Logical properties only (RTL-safe). */
+
+/* Icon: 24px, 2px rounded stroke, currentColor */
+.te-icon {
+  display: inline-block;
+  flex-shrink: 0;
+  inline-size: 24px;
+  block-size: 24px;
+  vertical-align: middle;
+}
+
+/* Directional icons mirror in RTL. Set flipInRtl on TeIcon to opt in. */
+[dir="rtl"] .te-icon--flip-rtl {
+  transform: scaleX(-1);
+}
+
+/* Button */
+.te-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--te-space-2);
+  min-block-size: 44px;
+  padding-block: var(--te-space-3);
+  padding-inline: var(--te-space-6);
+  border: 1px solid transparent;
+  border-radius: var(--te-radius-md);
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  transition:
+    background-color 150ms ease,
+    box-shadow 150ms ease;
+}
+
+.te-button--lg {
+  min-block-size: 56px;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.te-button--primary {
+  background: var(--te-primary);
+  color: var(--te-on-primary);
+}
+
+.te-button--primary:hover {
+  box-shadow: var(--te-card-shadow-hover);
+}
+
+.te-button--secondary {
+  background: var(--te-surface-raised);
+  border-color: var(--te-control-border);
+  color: var(--te-ink);
+}
+
+.te-button--secondary:hover {
+  background: var(--te-hairline);
+}
+
+.te-button--ghost {
+  background: transparent;
+  color: var(--te-ink);
+}
+
+.te-button--ghost:hover {
+  background: var(--te-hairline);
+}
+
+.te-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Chip */
+.te-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--te-space-1);
+  min-block-size: 36px;
+  padding-block: var(--te-space-2);
+  padding-inline: var(--te-space-3);
+  border: 1px solid var(--te-control-border);
+  border-radius: var(--te-radius-sm);
+  background: var(--te-surface-raised);
+  color: var(--te-ink);
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.te-chip .te-icon {
+  inline-size: 16px;
+  block-size: 16px;
+}
+
+.te-chip[aria-pressed="true"] {
+  border-color: var(--te-accent);
+  background: var(--te-accent);
+  color: var(--te-brand-navy);
+}
+
+/* Input */
+.te-input {
+  display: flex;
+  flex-direction: column;
+  gap: var(--te-space-2);
+}
+
+.te-input__label {
+  color: var(--te-ink);
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 600;
+}
+
+.te-input__field {
+  inline-size: 100%;
+  min-block-size: 44px;
+  padding-block: var(--te-space-3);
+  padding-inline: var(--te-space-3);
+  border: 1px solid var(--te-control-border);
+  border-radius: var(--te-radius-sm);
+  background: var(--te-surface-raised);
+  color: var(--te-ink);
+  text-align: start;
+}
+
+.te-input__field::placeholder {
+  color: var(--te-ink-muted);
+}
+
+.te-input__field[aria-invalid="true"] {
+  border-color: var(--te-danger);
+  box-shadow: inset 0 0 0 1px var(--te-danger);
+}
+
+.te-input__support {
+  margin: 0;
+  color: var(--te-ink-muted);
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 500;
+}
+
+.te-input__error {
+  display: flex;
+  align-items: center;
+  gap: var(--te-space-1);
+  margin: 0;
+  color: var(--te-danger);
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 600;
+}
+
+.te-input__error .te-icon {
+  inline-size: 16px;
+  block-size: 16px;
+}
+
+/* Trip card */
+.te-trip-card {
+  display: flex;
+  flex-direction: column;
+  inline-size: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: var(--te-radius-md);
+  background: var(--te-surface-raised);
+  box-shadow: var(--te-card-shadow);
+  color: var(--te-ink);
+  text-align: start;
+}
+
+.te-trip-card--interactive {
+  cursor: pointer;
+  transition: box-shadow 150ms ease;
+}
+
+.te-trip-card--interactive:hover {
+  box-shadow: var(--te-card-shadow-hover);
+}
+
+.te-trip-card__image {
+  display: block;
+  inline-size: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+.te-trip-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--te-space-2);
+  padding: var(--te-space-4);
+}
+
+@media (min-width: 48rem) {
+  .te-trip-card__body {
+    padding: var(--te-space-6);
+  }
+}
+
+.te-trip-card__title {
+  margin: 0;
+}
+
+.te-trip-card__meta {
+  color: var(--te-ink-muted);
+}
+
+/* Badge (also used by RoleBadge and TrackingStatus) */
+.te-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--te-space-1);
+  padding-block: var(--te-space-1);
+  padding-inline: var(--te-space-2);
+  border-radius: var(--te-radius-pill);
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.te-badge .te-icon {
+  inline-size: 16px;
+  block-size: 16px;
+}
+
+.te-badge--neutral {
+  background: var(--te-hairline);
+  color: var(--te-ink);
+}
+
+.te-badge--accent {
+  background: var(--te-accent);
+  color: var(--te-brand-navy);
+}
+
+.te-badge--highlight {
+  background: var(--te-highlight);
+  color: var(--te-brand-navy);
+}
+
+.te-badge--success {
+  background: var(--te-success-soft);
+  color: var(--te-success);
+}
+
+.te-badge--warning {
+  background: var(--te-warning-soft);
+  color: var(--te-warning);
+}
+
+.te-badge--danger {
+  background: var(--te-danger-soft);
+  color: var(--te-danger);
+}
+
+.te-badge--info {
+  background: var(--te-info-soft);
+  color: var(--te-ink);
+}
+
+.te-tracking-status {
+  font-weight: 600;
+}
+
+/* Inline alert */
+.te-inline-alert {
+  --te-alert-fg: var(--te-ink);
+  display: flex;
+  align-items: flex-start;
+  gap: var(--te-space-3);
+  padding: var(--te-space-4);
+  border-radius: var(--te-radius-md);
+  background: var(--te-info-soft);
+  color: var(--te-ink);
+}
+
+.te-inline-alert--error {
+  --te-alert-fg: var(--te-danger);
+  background: var(--te-danger-soft);
+}
+
+.te-inline-alert--warning {
+  --te-alert-fg: var(--te-warning);
+  background: var(--te-warning-soft);
+}
+
+.te-inline-alert--success {
+  --te-alert-fg: var(--te-success);
+  background: var(--te-success-soft);
+}
+
+.te-inline-alert__icon {
+  color: var(--te-alert-fg);
+}
+
+.te-inline-alert__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--te-space-1);
+  min-inline-size: 0;
+}
+
+.te-inline-alert__title {
+  margin: 0;
+  color: var(--te-alert-fg);
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 600;
+}
+
+.te-inline-alert__body {
+  color: var(--te-ink);
+  font-size: 14px;
+  line-height: 20px;
+}

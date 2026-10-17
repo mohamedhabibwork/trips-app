@@ -1,0 +1,146 @@
+/* Trips Enjoy feedback components: toast, retry banner, error and empty states. Logical properties only. */
+
+/* Toast (presentational; bottom-end solid card) */
+.te-toast {
+  position: fixed;
+  inset-block-end: var(--te-space-6);
+  inset-inline-end: var(--te-space-6);
+  z-index: 50;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--te-space-3);
+  max-inline-size: min(420px, calc(100vw - 2 * var(--te-space-4)));
+  padding: var(--te-space-4);
+  border-radius: var(--te-radius-md);
+  background: var(--te-surface-inverse);
+  box-shadow: var(--te-card-shadow-hover);
+  color: var(--te-ink-inverse);
+}
+
+.te-toast__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--te-space-1);
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}
+
+.te-toast__title {
+  margin: 0;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 600;
+}
+
+.te-toast__message {
+  margin: 0;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.te-toast__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: 32px;
+  min-inline-size: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--te-radius-pill);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.te-toast__close-icon {
+  inline-size: 20px;
+  block-size: 20px;
+}
+
+/* Retry banner (warning strip) */
+.te-retry-banner {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--te-space-3);
+  padding-block: var(--te-space-3);
+  padding-inline: var(--te-space-4);
+  border-radius: var(--te-radius-sm);
+  background: var(--te-warning-soft);
+  color: var(--te-warning);
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+}
+
+.te-retry-banner__message {
+  flex: 1 1 auto;
+  margin: 0;
+}
+
+/* Error state */
+.te-error-state,
+.te-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--te-space-4);
+  padding-block: var(--te-space-8);
+  padding-inline: var(--te-space-4);
+  text-align: center;
+  color: var(--te-ink);
+}
+
+.te-error-state__icon {
+  inline-size: 40px;
+  block-size: 40px;
+  color: var(--te-danger);
+}
+
+.te-error-state__title,
+.te-error-state__description,
+.te-empty-state__title,
+.te-empty-state__description {
+  margin: 0;
+}
+
+.te-error-state__description,
+.te-empty-state__description {
+  max-inline-size: 48ch;
+  color: var(--te-ink-muted);
+}
+
+.te-error-state__reference {
+  margin: 0;
+  color: var(--te-ink-muted);
+}
+
+.te-error-state__actions,
+.te-empty-state__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--te-space-3);
+}
+
+/* Empty state: nothing here yet, not an error */
+.te-empty-state {
+  padding-block: var(--te-space-12);
+  border: 1px dashed var(--te-hairline);
+  border-radius: var(--te-radius-md);
+}
+
+/* Mobile: stacked, full-width buttons */
+.te-error-state--mobile {
+  align-items: stretch;
+  text-align: center;
+}
+
+.te-error-state--mobile .te-error-state__actions {
+  flex-direction: column;
+  inline-size: 100%;
+}
+
+.te-error-state--mobile .te-button {
+  inline-size: 100%;
+}

@@ -1,0 +1,319 @@
+/* Trips Enjoy screen components: KPI, card, avatar, file upload, money. Tokens only; logical properties. */
+
+/* KPI tile */
+.te-kpi-tile {
+  gap: var(--te-space-2);
+}
+
+.te-kpi-tile__label,
+.te-kpi-tile__hint {
+  margin: 0;
+  color: var(--te-ink-muted);
+}
+
+.te-kpi-tile__value {
+  margin: 0;
+  color: var(--te-ink);
+  font-size: 28px;
+  line-height: 36px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.te-kpi-tile__delta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--te-space-1);
+  margin: 0;
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 600;
+}
+
+.te-kpi-tile__delta .te-icon {
+  inline-size: 16px;
+  block-size: 16px;
+}
+
+.te-kpi-tile__delta--up {
+  color: var(--te-success);
+}
+
+.te-kpi-tile__delta--up .te-icon {
+  transform: rotate(-90deg);
+}
+
+.te-kpi-tile__delta--down {
+  color: var(--te-danger);
+}
+
+.te-kpi-tile__delta--down .te-icon {
+  transform: rotate(90deg);
+}
+
+.te-kpi-tile__delta--flat {
+  color: var(--te-ink-muted);
+}
+
+/* Card: raised surface, card shadow */
+.te-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--te-space-3);
+  inline-size: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  padding: var(--te-space-4);
+  border: 0;
+  border-radius: var(--te-radius-md);
+  background: var(--te-surface-raised);
+  box-shadow: var(--te-card-shadow);
+  color: var(--te-ink);
+  text-align: start;
+}
+
+.te-card--pad-6 {
+  padding: var(--te-space-6);
+}
+
+.te-card :where(h1, h2, h3, p) {
+  margin: 0;
+}
+
+.te-card__header,
+.te-card__body,
+.te-card__footer {
+  min-inline-size: 0;
+}
+
+.te-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--te-space-2);
+}
+
+.te-card__footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--te-space-2);
+}
+
+/* Avatar */
+.te-avatar {
+  --te-avatar-size: 40px;
+  --te-avatar-font: 15px;
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--te-avatar-size);
+  block-size: var(--te-avatar-size);
+  overflow: hidden;
+  border-radius: 50%;
+  background: var(--te-info-soft);
+  color: var(--te-ink);
+  font-size: var(--te-avatar-font);
+  font-weight: 600;
+}
+
+.te-avatar--sm {
+  --te-avatar-size: 32px;
+  --te-avatar-font: 13px;
+}
+
+.te-avatar--md {
+  --te-avatar-size: 40px;
+  --te-avatar-font: 15px;
+}
+
+.te-avatar--lg {
+  --te-avatar-size: 56px;
+  --te-avatar-font: 20px;
+}
+
+.te-avatar__image {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+.te-avatar__initials {
+  line-height: 1;
+}
+
+.te-avatar > .te-icon {
+  inline-size: 55%;
+  block-size: 55%;
+}
+
+/* File upload */
+.te-file-upload {
+  display: flex;
+  flex-direction: column;
+  gap: var(--te-space-3);
+}
+
+.te-file-upload__area {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--te-space-2);
+  min-block-size: 120px;
+  padding: var(--te-space-6) var(--te-space-4);
+  border: 1px dashed var(--te-control-border);
+  border-radius: var(--te-radius-md);
+  background: var(--te-surface);
+  color: var(--te-ink);
+  text-align: center;
+  cursor: pointer;
+}
+
+.te-file-upload__area:focus-within {
+  outline: 2px solid var(--te-focus-ring);
+  outline-offset: 2px;
+}
+
+.te-file-upload__label {
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 600;
+}
+
+.te-file-upload__browse {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 44px;
+  padding-inline: var(--te-space-4);
+  border: 1px solid var(--te-control-border);
+  border-radius: var(--te-radius-md);
+  background: var(--te-surface-raised);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.te-file-upload__input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.te-file-upload__hint {
+  margin: 0;
+  color: var(--te-ink-muted);
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.te-file-upload__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--te-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.te-file-upload__item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--te-space-2) var(--te-space-3);
+  padding: var(--te-space-3);
+  border-radius: var(--te-radius-sm);
+  background: var(--te-surface-raised);
+}
+
+.te-file-upload__name {
+  flex: 1 1 8rem;
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+  font-weight: 500;
+}
+
+.te-file-upload__status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--te-space-1);
+  color: var(--te-ink-muted);
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 600;
+}
+
+.te-file-upload__status .te-icon {
+  inline-size: 16px;
+  block-size: 16px;
+}
+
+.te-file-upload__item--done .te-file-upload__status {
+  color: var(--te-success);
+}
+
+.te-file-upload__item--failed .te-file-upload__status {
+  color: var(--te-danger);
+}
+
+.te-file-upload__item--uploading .te-file-upload__status .te-icon {
+  animation: te-spin 1s linear infinite;
+}
+
+.te-file-upload__remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 44px;
+  block-size: 44px;
+  margin-inline-start: auto;
+  padding: 0;
+  border: 0;
+  border-radius: var(--te-radius-pill);
+  background: transparent;
+  color: var(--te-ink);
+  cursor: pointer;
+}
+
+.te-file-upload__message {
+  flex-basis: 100%;
+  margin: 0;
+  color: var(--te-ink-muted);
+  font-size: 13px;
+  line-height: 18px;
+}
+
+/* Money */
+.te-money {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--te-space-1) var(--te-space-2);
+  color: var(--te-ink);
+}
+
+.te-money__label {
+  color: var(--te-ink-muted);
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 500;
+}
+
+.te-money__value {
+  font-size: 18px;
+  line-height: 24px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .te-file-upload__item--uploading .te-file-upload__status .te-icon {
+    animation: none;
+  }
+
+  .te-switch__track,
+  .te-switch__thumb {
+    transition: none;
+  }
+}
