@@ -77,8 +77,10 @@
     "vite": "npm:@voidzero-dev/vite-plus-core@1.1.0"
   },
   "lint-staged": {
+    "*.{js,jsx,mjs,cjs,ts,tsx,mts,cts}": [
+      "oxlint"
+    ],
     "*": [
-      "oxlint",
       "oxfmt --write"
     ]
   },
