@@ -1,18 +1,16 @@
-import type { QueryClient } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { HeadContent, Outlet, Scripts, createRootRouteWithContext } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { Toaster } from "@trips-app/ui/components/sonner";
 
-import type { orpc } from "@/utils/orpc";
+import { AuthProvider } from "@/auth/auth-context";
+import { SessionExpiredDialog } from "@/auth/components/session-expired-dialog";
+import type { RouterAppContext } from "@/types";
 
 import Header from "../components/header";
-
 import appCss from "../index.css?url";
-export interface RouterAppContext {
-  orpc: typeof orpc;
-  queryClient: QueryClient;
-}
+
+export type { RouterAppContext } from "@/types";
 
 export const Route = createRootRouteWithContext<RouterAppContext>()({
   head: () => ({
@@ -25,10 +23,15 @@ export const Route = createRootRouteWithContext<RouterAppContext>()({
         content: "width=device-width, initial-scale=1",
       },
       {
-        title: "My App",
+        title: "Trips Enjoy",
       },
     ],
     links: [
+      {
+        rel: "icon",
+        type: "image/svg+xml",
+        href: "/favicon.svg",
+      },
       {
         rel: "stylesheet",
         href: appCss,
@@ -46,10 +49,18 @@ function RootDocument() {
         <HeadContent />
       </head>
       <body>
-        <div className="grid h-svh grid-rows-[auto_1fr]">
-          <Header />
-          <Outlet />
-        </div>
+        {/*
+          The provider owns the session state for the whole document: the header reads it, the
+          guards read the same controller through the router context, and the expired notice is
+          rendered above the active route so drafts stay mounted (E2).
+        */}
+        <AuthProvider>
+          <div className="grid h-svh grid-rows-[auto_1fr]">
+            <Header />
+            <Outlet />
+          </div>
+          <SessionExpiredDialog />
+        </AuthProvider>
         <Toaster richColors />
         <TanStackRouterDevtools position="bottom-left" />
         <ReactQueryDevtools position="bottom" buttonPosition="bottom-right" />
