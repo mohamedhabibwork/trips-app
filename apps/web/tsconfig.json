@@ -1,6 +1,10 @@
 {
-  "references": [{ "path": "../../packages/api" }],
+  "references": [{ "path": "../../packages/rpc" }],
   "include": ["**/*.ts", "**/*.tsx"],
+  // Tests are type-checked by ./tsconfig.test.json: they need Bun's globals, and those must never
+  // leak into the app program (this code ships to Workers/SSR, where `Buffer`, `process`, … do not
+  // exist). ARCHITECTURE-auth.md §7.2 / T02.
+  "exclude": ["**/*.test.ts", "**/*.test.tsx"],
   "compilerOptions": {
     "target": "ES2022",
     "jsx": "react-jsx",
@@ -12,6 +16,8 @@
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "noEmit": true,
+    /* @trips-app/auth reads its conventions from ./conventions.json */
+    "resolveJsonModule": true,
 
     /* Linting */
     "skipLibCheck": true,

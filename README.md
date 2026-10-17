@@ -90,21 +90,19 @@ Run standalone Node/Bun tools that use Varlock from the owning app directory so 
 
 ### Alchemy
 
-- Target: web on Cloudflare + Axiom observability
+- Target: web on Cloudflare
 - Configure provider accounts: `cd packages/infra && bunx alchemy profile edit`
 - Dev: bun run dev
 - Deploy: bun run deploy
 - Destroy: bun run destroy
 
-`alchemy profile edit` stores the selected Axiom, Cloudflare, Neon, PlanetScale, and/or Prisma provider profiles under `~/.alchemy`; no provider-specific setup command is required by this scaffold.
+`alchemy profile edit` stores the selected Cloudflare, Neon, PlanetScale, and/or Prisma provider profiles under `~/.alchemy`; no provider-specific setup command is required by this scaffold.
 
 Deploys are staged and default to a personal `dev_<username>` stage. For production, run the deploy with an explicit stage from `packages/infra`:
 
 ```bash
 cd packages/infra && bunx alchemy deploy --stage production
 ```
-
-Alchemy creates a stage-specific Axiom dataset and a least-privilege ingest token. `dev` injects the credentials into the observed apps without writing the token to an env file.
 
 ## Git Hooks and Formatting
 

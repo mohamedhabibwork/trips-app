@@ -1,0 +1,12 @@
+{
+  // Type-checks the auth test files, which run under Bun and may use Bun/Node globals.
+  // The app program (./tsconfig.json) deliberately excludes them so no Bun global can reach
+  // Workers/SSR code. Gate: `bunx tsc --noEmit -p apps/web && bunx tsc --noEmit -p apps/web/tsconfig.test.json`.
+  "extends": "./tsconfig.json",
+  "include": ["src/**/*.test.ts", "src/**/*.test.tsx"],
+  "exclude": [],
+  "compilerOptions": {
+    "types": ["vite/client", "bun"],
+    "noEmit": true
+  }
+}

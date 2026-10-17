@@ -56,3 +56,6 @@ coverage
 .cache
 tmp
 temp
+
+# Firebase service account keys (admin credentials, never commit)
+*-firebase-adminsdk-*.json

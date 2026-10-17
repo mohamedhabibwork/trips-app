@@ -12,12 +12,12 @@ The schema is currently empty (`export {};`), so the first migration will be the
 
 ## Commands (run from repo root)
 
-| Goal | Command |
-|---|---|
-| Generate SQL from schema changes | `bun run db:generate` |
-| Apply pending migrations | `bun run db:migrate` |
-| Browse the database | `bun run db:studio` |
-| Push schema without a migration file (dev only) | `bun run db:push` |
+| Goal                                            | Command               |
+| ----------------------------------------------- | --------------------- |
+| Generate SQL from schema changes                | `bun run db:generate` |
+| Apply pending migrations                        | `bun run db:migrate`  |
+| Browse the database                             | `bun run db:studio`   |
+| Push schema without a migration file (dev only) | `bun run db:push`     |
 
 ## Steps
 

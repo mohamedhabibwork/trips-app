@@ -730,12 +730,12 @@ export async function deleteUser(userId: string) {
 ```typescript
 "use server";
 
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { verifySession } from "@/lib/auth";
 
 const updateProfileSchema = z.object({
-  userId: z.string().uuid(),
+  userId: z.uuid(),
   name: z.string().min(1).max(100),
   email: z.string().email(),
 });

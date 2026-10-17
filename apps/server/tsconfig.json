@@ -1,6 +1,6 @@
 {
   "extends": "@trips-app/config/tsconfig.base.json",
-  "references": [{ "path": "../../packages/api" }],
+  "references": [{ "path": "../../packages/rpc" }],
   "compilerOptions": {
     "noEmit": true,
     "paths": {
