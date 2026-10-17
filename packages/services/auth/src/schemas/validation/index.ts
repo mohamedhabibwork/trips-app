@@ -79,6 +79,7 @@ export const signInSchema = z.object({
       "org_driver",
       "platform_photographer",
       "org_photographer",
+      "organization_owner",
     ])
     .optional(),
   surface: z.enum(CLIENT_SURFACES).default("web"),

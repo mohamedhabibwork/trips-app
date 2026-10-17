@@ -613,7 +613,13 @@ export function createAuthService(db: ServiceDatabase) {
       };
 
       const roles = await repo.listRolesForAccount(account.id);
-      const primaryRole = roles[0]?.role ?? "traveler";
+      const supplierRoleRow = roles.find(
+        (r) =>
+          r.role === "organization_owner" ||
+          r.role === "platform_driver" ||
+          r.role === "platform_photographer",
+      );
+      const primaryRole = supplierRoleRow?.role ?? roles[0]?.role ?? "traveler";
       const allRequiredChannelsVerified = hasRequiredVerifiedChannels(
         primaryRole,
         nextAccountState,
@@ -850,11 +856,22 @@ export function createAuthService(db: ServiceDatabase) {
       }
 
       if (selectedRoleRow.status === "pending_approval") {
+        const session = await createSessionAndTokens({
+          accountId: account.id,
+          activeRole: selectedRoleRow.role,
+          adminSubRole: selectedRoleRow.adminSubRole,
+          activeTenantId: selectedRoleRow.tenantId,
+          planTier: selectedRoleRow.planTier,
+          surface: input.surface,
+          meta,
+          authSettings: settings,
+        });
         return {
           step: "application_pending_approval" as const,
           accountId: account.id,
           role: selectedRoleRow.role,
           status: selectedRoleRow.status,
+          session,
         };
       }
 

@@ -1,5 +1,5 @@
 // Data access through @trips-app/db. Every tenant-owned query filters by tenant (DAT-01).
-import { type Database, eq, schema } from "@trips-app/db";
+import { count, type Database, eq, schema } from "@trips-app/db";
 
 import type { SystemSettingsData, UserRole } from "../model";
 
@@ -52,14 +52,24 @@ export function createAdminRepository(db: Database) {
       return row!;
     },
 
+    // Counts in the database. Loading whole rows would pull credential columns into memory for no reason.
     async countAccountsAndOrganizations() {
-      const allAccounts = await db.select().from(accounts);
-      const allOrgs = await db.select().from(organizations);
+      const countOf = async (query: Promise<{ value: number }[]>) => {
+        const [row] = await query;
+        return row?.value ?? 0;
+      };
       return {
-        totalAccounts: allAccounts.length,
-        activeAccounts: allAccounts.filter((a) => a.status === "active").length,
-        totalOrganizations: allOrgs.length,
-        activeOrganizations: allOrgs.filter((o) => o.status === "active").length,
+        totalAccounts: await countOf(db.select({ value: count() }).from(accounts)),
+        activeAccounts: await countOf(
+          db.select({ value: count() }).from(accounts).where(eq(accounts.status, "active")),
+        ),
+        totalOrganizations: await countOf(db.select({ value: count() }).from(organizations)),
+        activeOrganizations: await countOf(
+          db
+            .select({ value: count() })
+            .from(organizations)
+            .where(eq(organizations.status, "active")),
+        ),
       };
     },
 

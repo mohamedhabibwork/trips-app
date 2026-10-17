@@ -1,20 +1,26 @@
-// Arabic and English strings and direction helpers (UI-01, UI-02).
-// Auth copy lives in ./auth (single source: ./auth/messages.json).
-import type { Direction, Locale } from "./types";
-
+// Arabic and English strings, current-locale resolution and direction helpers (UI-01, UI-02).
+// Auth copy lives in ./auth, one table per locale: ./auth/en.ts (base) and ./auth/ar.ts.
 export type { Direction, Locale } from "./types";
+export type { AuthMessageKey, AuthMessages } from "./auth/index";
 export {
   AUTH_MESSAGE_KEYS,
   AUTH_MESSAGES,
   DEFAULT_AUTH_LOCALE,
   authMessageKeys,
   hasAuthMessage,
+  hasTranslation,
   interpolate,
   t,
 } from "./auth/index";
-
-export const SUPPORTED_LOCALES = ["ar", "en"] as const satisfies readonly Locale[];
-
-export function directionOf(locale: Locale): Direction {
-  return locale === "ar" ? "rtl" : "ltr";
-}
+export {
+  DEFAULT_LOCALE,
+  LOCALE_STORAGE_KEY,
+  SUPPORTED_LOCALES,
+  directionOf,
+  getLocale,
+  isLocale,
+  normalizeLocale,
+  resetLocale,
+  setLocale,
+  subscribeLocale,
+} from "./locale";

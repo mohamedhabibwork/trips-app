@@ -43,7 +43,7 @@ export const AUTH_ERROR_VIEWS: Readonly<Record<string, AuthErrorView>> = {
 
 /**
  * Every message key this module can emit. The drift test asserts this set equals the `auth.*` +
- * `field.*` key set of `packages/i18n/src/auth/messages.json` in both locales, so adding a row on one
+ * `field.*` key set of `packages/i18n/src/auth/en.ts` in both locales, so adding a row on one
  * side alone fails CI (ARCHITECTURE §6 rule 2).
  */
 export const AUTH_ERROR_MESSAGE_KEYS: readonly string[] = buildMessageKeys();

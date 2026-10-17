@@ -4,7 +4,13 @@
 // component the same snapshot, and the router guard reads the same object without hooks.
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "@tanstack/react-router";
-import { DEFAULT_AUTH_LOCALE, directionOf, t as translate } from "@trips-app/i18n";
+import {
+  DEFAULT_AUTH_LOCALE,
+  directionOf,
+  getLocale as getCurrentLocale,
+  setLocale as rememberLocale,
+  t as translate,
+} from "@trips-app/i18n";
 import type {
   AuthActor,
   AuthLocale,
@@ -50,7 +56,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const controller = authController;
   const router = useRouter();
   const queryClient = useQueryClient();
-  const [locale, setLocale] = useState<AuthLocale>(DEFAULT_AUTH_LOCALE);
+  const [locale, setLocaleState] = useState<AuthLocale>(DEFAULT_AUTH_LOCALE);
+
+  // Adopt the visitor's remembered language after mount, so the first client render still equals the
+  // server render (the same reason `restore()` runs in an effect).
+  useEffect(() => {
+    const current = getCurrentLocale();
+    setLocaleState((previous) => (current === previous ? previous : current));
+  }, []);
+
+  /** Switches the language: remembered for the next visit, mirrored onto `<html lang dir>`. */
+  const setLocale = useCallback((next: AuthLocale) => {
+    rememberLocale(next);
+    setLocaleState(next);
+  }, []);
 
   const snapshot: SessionSnapshot = useSyncExternalStore(
     controller.subscribe,
@@ -97,7 +116,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       signOut,
       signInWithSession,
     }),
-    [snapshot, controller, locale, signOut, signInWithSession],
+    [snapshot, controller, locale, setLocale, signOut, signInWithSession],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

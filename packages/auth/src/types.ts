@@ -98,7 +98,7 @@ export interface AuthErrorFieldView {
 
 /**
  * The only shape a screen renders. `key` is always an i18n key from
- * `packages/i18n/src/auth/messages.json` — never a server string and never a stack trace (G4).
+ * `packages/i18n/src/auth/en.ts` — never a server string and never a stack trace (G4).
  *
  * `fieldErrors` is additive to the design's interface: it carries every field-level issue so a form
  * can render one message per input (AC-7) while `field` still points at the first offender.
