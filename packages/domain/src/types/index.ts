@@ -387,6 +387,7 @@ export interface DriverApplicationSubmission {
   insurancePolicyNumber?: string | null;
   insuranceExpiry?: Date | null;
   labTestConsentSigned: boolean;
+  backgroundCheckConsentSigned?: boolean;
   labResultSubmittedAt: Date;
   documentTypes: readonly string[];
 }

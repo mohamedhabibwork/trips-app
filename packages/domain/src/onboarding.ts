@@ -69,6 +69,23 @@ export function addWorkingDays(start: Date, workingDays: number): Date {
 }
 
 /**
+ * Counts full or elapsed business working days between two dates (skipping Friday & Saturday).
+ */
+export function countWorkingDaysBetween(start: Date, end: Date): number {
+  if (end.getTime() <= start.getTime()) return 0;
+  const cursor = new Date(start.getTime());
+  let count = 0;
+  while (cursor.getTime() < end.getTime()) {
+    cursor.setUTCDate(cursor.getUTCDate() + 1);
+    const dayOfWeek = cursor.getUTCDay();
+    if (dayOfWeek !== 5 && dayOfWeek !== 6 && cursor.getTime() <= end.getTime()) {
+      count += 1;
+    }
+  }
+  return count;
+}
+
+/**
  * Validates Organization Application fields per D-72, D-73, D-74, D-75, D-76, D-68.
  */
 export function validateOrganizationApplication(
@@ -142,6 +159,13 @@ export function validateDriverApplication(
     });
   }
 
+  if (input.backgroundCheckConsentSigned === false) {
+    errors.push({
+      field: "backgroundCheckConsentSigned",
+      message: "Signed background check consent is required (T-ONB-11).",
+    });
+  }
+
   if (input.licenseExpiry.getTime() <= now.getTime()) {
     errors.push({
       field: "licenseExpiry",
@@ -158,7 +182,7 @@ export function validateDriverApplication(
     });
   }
 
-  // Own vehicle is optional (D-79), but if provided, insurance must be valid >= 6 months (FR-ONB-07)
+  // Own vehicle is optional (D-79), but if provided, insurance must be valid >= 3 months (FR-ONB-07)
   if (input.hasOwnVehicle) {
     if (!input.vehiclePlateNumber?.trim()) {
       errors.push({
@@ -172,13 +196,13 @@ export function validateDriverApplication(
         message: "Vehicle insurance expiry date is required when registering an owned vehicle.",
       });
     } else {
-      const sixMonthsAhead = new Date(now.getTime());
-      sixMonthsAhead.setUTCMonth(sixMonthsAhead.getUTCMonth() + 6);
-      if (input.insuranceExpiry.getTime() < sixMonthsAhead.getTime()) {
+      const threeMonthsAhead = new Date(now.getTime());
+      threeMonthsAhead.setUTCMonth(threeMonthsAhead.getUTCMonth() + 3);
+      if (input.insuranceExpiry.getTime() < threeMonthsAhead.getTime()) {
         errors.push({
           field: "insuranceExpiry",
           message:
-            "Vehicle insurance must be valid for at least 6 months from submission (FR-ONB-07).",
+            "Vehicle insurance must be valid for at least 3 months from submission (FR-ONB-07).",
         });
       }
     }

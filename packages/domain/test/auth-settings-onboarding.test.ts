@@ -251,7 +251,7 @@ describe("@trips-app/domain — Roles, Permissions, Plans & Settings", () => {
       }).valid,
     ).toBe(true);
 
-    // Driver with own vehicle requires insurance valid >= 6 months (FR-ONB-07)
+    // Driver with own vehicle requires insurance valid >= 3 months (FR-ONB-07)
     expect(
       validateDriverApplication(
         {
@@ -263,7 +263,7 @@ describe("@trips-app/domain — Roles, Permissions, Plans & Settings", () => {
           serviceAreas: ["Cairo"],
           hasOwnVehicle: true,
           vehiclePlateNumber: "ABC-123",
-          insuranceExpiry: new Date("2026-12-01T00:00:00Z"), // < 6 months
+          insuranceExpiry: new Date("2026-12-01T00:00:00Z"), // < 3 months
           labTestConsentSigned: true,
           labResultSubmittedAt: new Date("2026-10-10T00:00:00Z"),
           documentTypes: ["license"],
@@ -271,6 +271,27 @@ describe("@trips-app/domain — Roles, Permissions, Plans & Settings", () => {
         now,
       ).valid,
     ).toBe(false);
+
+    expect(
+      validateDriverApplication(
+        {
+          nationalId: "28501010101234",
+          licenseNumber: "LIC-1",
+          licenseCategory: "First Degree",
+          licenseExpiry: new Date("2028-01-01T00:00:00Z"),
+          yearsOfExperience: 5,
+          serviceAreas: ["Cairo"],
+          hasOwnVehicle: true,
+          vehiclePlateNumber: "ABC-123",
+          insuranceExpiry: new Date("2027-02-01T00:00:00Z"), // >= 3 months
+          labTestConsentSigned: true,
+          backgroundCheckConsentSigned: true,
+          labResultSubmittedAt: new Date("2026-10-10T00:00:00Z"),
+          documentTypes: ["license"],
+        },
+        now,
+      ).valid,
+    ).toBe(true);
 
     // Organization opting into child safety requires safetyLeadName & safetyHotlinePhone (D-68)
     expect(
