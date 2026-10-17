@@ -1,0 +1,22 @@
+{
+  "name": "@trips-app/service-plans",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "check-types": "tsc -b"
+  },
+  "dependencies": {
+    "@orpc/server": "catalog:",
+    "@trips-app/db": "workspace:*",
+    "@trips-app/domain": "workspace:*",
+    "@trips-app/rpc": "workspace:*",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@trips-app/config": "workspace:*",
+    "typescript": "catalog:"
+  }
+}
