@@ -50,18 +50,31 @@ export function authMessageKeys(locale: Locale = DEFAULT_AUTH_LOCALE): readonly 
  *
  * Pass `locale` explicitly when the caller already knows it (a server response, a React context
  * that renders one locale); omit it to follow the current locale.
+ *
+ * ```ts
+ * t("auth.signIn.title");                    // current locale
+ * t("auth.signIn.title", "en");              // explicit locale
+ * t("auth.error.accountLocked", { seconds: 30 });       // params only
+ * t("auth.error.accountLocked", "ar", { seconds: 30 }); // locale and params
+ * ```
  */
+export function t(key: string, params?: Record<string, string | number>): string;
+export function t(key: string, locale: Locale, params?: Record<string, string | number>): string;
 export function t(
   key: string,
-  locale: Locale = getLocale(),
+  localeOrParams?: Locale | Record<string, string | number>,
   params?: Record<string, string | number>,
 ): string {
   if (typeof key !== "string" || key.length === 0) return "";
 
+  const locale = typeof localeOrParams === "string" ? localeOrParams : getLocale();
+  const values =
+    typeof localeOrParams === "object" && localeOrParams !== null ? localeOrParams : params;
+
   const template = CATALOG[locale]?.[key as AuthMessageKey];
   if (typeof template !== "string" || template.length === 0) return key;
 
-  return params ? interpolate(template, params) : template;
+  return values ? interpolate(template, values) : template;
 }
 
 /** Replaces `{name}` with `params.name`; unknown placeholders are left untouched. */

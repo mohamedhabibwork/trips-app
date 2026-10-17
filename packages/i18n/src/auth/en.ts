@@ -172,6 +172,24 @@ export const en = {
   "auth.forbidden.backHome": "Go to the home page",
   "auth.loading.session": "Restoring your session…",
   "auth.signOut.done": "You are signed out.",
+
+  // Validation — the reason a single input was rejected, keyed by constraint, not by sentence.
+  // Duplicates reuse auth.error.alreadyExists rather than adding a second wording for one rule.
+  "validation.invalidChoice": "Choose one of the available options.",
+  "validation.invalidCode": "Enter the {length}-digit code.",
+  "validation.invalidEmail": "Enter a valid email address.",
+  "validation.invalidFormat": "Check the format of this field.",
+  "validation.invalidPhone": "Enter a valid phone number.",
+  "validation.invalidType": "Check this field.",
+  "validation.numberTooLarge": "Enter {max} or less.",
+  "validation.numberTooSmall": "Enter {min} or more.",
+  "validation.outOfRange": "Enter a value between {min} and {max}.",
+  "validation.passwordBreached":
+    "This password has appeared in a data breach. Choose a different one.",
+  "validation.required": "This field is required.",
+  "validation.tooLong": "Use {max} characters or fewer.",
+  "validation.tooShort": "Use at least {min} characters.",
+  "validation.unknown": "Check this field.",
 } as const;
 
 /** Every auth message key, derived from the English table. */

@@ -10,7 +10,8 @@ import { getLocale, setLocale, t, directionOf } from "@trips-app/i18n";
 
 t("auth.signIn.title"); // the current locale — Arabic unless the visitor chose otherwise
 t("auth.signIn.title", "en"); // an explicit locale, for server responses and context values
-t("auth.error.accountLocked", "ar", { seconds: 30 }); // `{seconds}` is interpolated
+t("auth.error.accountLocked", { seconds: 30 }); // `{seconds}` is interpolated
+t("auth.error.accountLocked", "ar", { seconds: 30 }); // locale and params
 
 getLocale(); // "ar" | "en": choice in this tab → remembered choice → <html lang> → browser → "ar"
 setLocale("en"); // remembers the choice and mirrors it onto <html lang dir>
@@ -24,6 +25,12 @@ Both apps list it as `"@trips-app/i18n": "workspace:*"`.
   string fails the build (T-FND-19).
 - `t()` falls back to the key itself — never to English, never to an empty string — so an
   untranslated or unknown key is obvious in the UI, in review and in tests.
+- `validation.*` holds the copy for a rejected input, keyed by constraint rather than by sentence:
+  `validation.tooShort` (`{min}`), `validation.invalidEmail`, `validation.invalidCode` (`{length}`),
+  and so on. The server sends a code plus its parameters; `@trips-app/auth` picks the key.
+- `bun run --cwd packages/i18n emit:mobile` regenerates `src/auth/messages.json` and the Kotlin
+  `AuthStrings.kt` from these tables, so the mobile contract cannot drift. The TypeScript files stay
+  the source of truth; both artifacts are generated.
 - Helpers for direction (`rtl` and `ltr`), which apps use to mirror layouts (UI-02).
 - Error messages come from here, keyed by stable error category, so the same category shows in the
   caller's language (IF-08).

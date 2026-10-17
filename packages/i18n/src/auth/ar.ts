@@ -168,4 +168,21 @@ export const ar: AuthMessages = {
   "auth.forbidden.backHome": "الذهاب إلى الصفحة الرئيسية",
   "auth.loading.session": "جارٍ استعادة جلستك…",
   "auth.signOut.done": "تم تسجيل خروجك.",
+
+  // Validation — the reason a single input was rejected, keyed by constraint, not by sentence.
+  // Duplicates reuse auth.error.alreadyExists rather than adding a second wording for one rule.
+  "validation.invalidChoice": "اختر أحد الخيارات المتاحة.",
+  "validation.invalidCode": "أدخل رمزًا من {length} أرقام.",
+  "validation.invalidEmail": "أدخل بريدًا إلكترونيًا صالحًا.",
+  "validation.invalidFormat": "تحقّق من صيغة هذا الحقل.",
+  "validation.invalidPhone": "أدخل رقم هاتف صالحًا.",
+  "validation.invalidType": "تحقّق من هذا الحقل.",
+  "validation.numberTooLarge": "أدخل {max} أو أقل.",
+  "validation.numberTooSmall": "أدخل {min} أو أكثر.",
+  "validation.outOfRange": "أدخل قيمة بين {min} و{max}.",
+  "validation.passwordBreached": "ظهرت كلمة المرور هذه في تسريب بيانات. اختر كلمة مرور أخرى.",
+  "validation.required": "هذا الحقل مطلوب.",
+  "validation.tooLong": "استخدم {max} حرفًا أو أقل.",
+  "validation.tooShort": "استخدم {min} حرفًا على الأقل.",
+  "validation.unknown": "تحقّق من هذا الحقل.",
 };
