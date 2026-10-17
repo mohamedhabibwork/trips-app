@@ -6,7 +6,17 @@ import type {
   UserRole,
 } from "@trips-app/domain";
 
+import type { accounts, lookups, lookupTypes } from "../schema";
+
 import type { createDb } from "../index";
+
+// Row and insert types inferred from the tables, so they cannot drift from the schema.
+export type AccountRow = typeof accounts.$inferSelect;
+export type AccountInsert = typeof accounts.$inferInsert;
+export type LookupTypeRow = typeof lookupTypes.$inferSelect;
+export type LookupTypeInsert = typeof lookupTypes.$inferInsert;
+export type LookupRow = typeof lookups.$inferSelect;
+export type LookupInsert = typeof lookups.$inferInsert;
 
 export type {
   LookupItemDto,
@@ -19,6 +29,8 @@ export type { CoercedEnvSchema, EnvSchemaAsStrings, PublicCoercedEnvSchema } fro
 
 export type DatabaseConfig = {
   DATABASE_URL: string;
+  /** Prints SQL text (never parameters) for each query. Off unless set. */
+  logQueries?: boolean;
 };
 
 export type Database = ReturnType<typeof createDb>;

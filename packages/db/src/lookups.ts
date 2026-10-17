@@ -7,7 +7,6 @@ import {
   getStaticLookupsByTypeCode,
   getStaticLookupTypeByCode,
   type LookupItemDto,
-  type LookupLocalizedText,
   type LookupTypeDto,
   type LookupTypeWithItemsDto,
   normalizeLookupCode,
@@ -16,7 +15,7 @@ import {
 import { and, asc, eq, inArray } from "drizzle-orm";
 
 import { lookups, lookupTypes } from "./schema";
-import type { Database } from "./types";
+import type { Database, LookupInsert, LookupTypeInsert } from "./types";
 
 export type {
   LookupItemDto,
@@ -55,28 +54,22 @@ export interface GetLookupByCodeParams {
   fallbackToStatic?: boolean;
 }
 
-export interface UpsertLookupTypeInput {
-  code: string;
-  value: string;
-  name: LookupLocalizedText;
-  description?: LookupLocalizedText | null;
+// Column fields come from the insert types, so they stay in step with the tables.
+export interface UpsertLookupTypeInput extends Pick<
+  LookupTypeInsert,
+  "code" | "value" | "name" | "description" | "sortBy" | "isPublic" | "isSystem"
+> {
   parentCode?: string | null;
-  sortBy?: number;
-  isPublic?: boolean;
-  isSystem?: boolean;
   actorAccountId?: string | null;
 }
 
-export interface UpsertLookupInput {
+export interface UpsertLookupInput extends Pick<
+  LookupInsert,
+  "code" | "value" | "name" | "description" | "sortBy" | "isPublic"
+> {
   typeCode: string;
-  code: string;
-  value: string;
-  name: LookupLocalizedText;
-  description?: LookupLocalizedText | null;
   parentLookupCode?: string | null;
   parentTypeCode?: string | null;
-  sortBy?: number;
-  isPublic?: boolean;
   actorAccountId?: string | null;
 }
 

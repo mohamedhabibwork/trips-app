@@ -91,7 +91,11 @@ export const consentRecords = pgTable(
       .notNull(),
     consentType: text("consent_type")
       .$type<
-        "driver_lab_test" | "child_tracking_guardian" | "terms_of_service" | "privacy_policy"
+        | "driver_lab_test"
+        | "driver_background_check"
+        | "child_tracking_guardian"
+        | "terms_of_service"
+        | "privacy_policy"
       >()
       .notNull(),
     documentVersion: text("document_version").default("1.0").notNull(),
