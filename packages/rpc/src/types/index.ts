@@ -1,4 +1,13 @@
 // Shared TypeScript interfaces and types for @trips-app/rpc.
+import type { Cache, CacheConfig, CacheManager } from "@mohamedhabibwork/cachekit";
+import type { Logger } from "@mohamedhabibwork/loggerkit";
+import type { BuiltInNotificationConfig, NotificationManager } from "@mohamedhabibwork/notifykit";
+import type {
+  BuiltInQueueConfig,
+  createQueueManager,
+  QueueProvider,
+} from "@mohamedhabibwork/queuekit";
+import type { Storage, StorageConfig, StorageManager } from "@mohamedhabibwork/storagekit";
 import type { Database } from "@trips-app/db";
 import type {
   AdminSubRole,
@@ -23,6 +32,30 @@ import type {
   UserRole,
 } from "@trips-app/domain";
 
+export type QueueManager<
+  TProviders extends Record<string, BuiltInQueueConfig> = Record<string, BuiltInQueueConfig>,
+> = ReturnType<typeof createQueueManager<TProviders>>;
+
+export type AppCacheConfigMap = {
+  readonly default: CacheConfig;
+  readonly catalog: CacheConfig;
+  readonly sessions: CacheConfig;
+  readonly idempotency: CacheConfig;
+  readonly seatHolds: CacheConfig;
+};
+
+export type AppQueueConfigMap = {
+  readonly jobs: BuiltInQueueConfig;
+  readonly events: BuiltInQueueConfig;
+  readonly notifications: BuiltInQueueConfig;
+};
+
+export type AppStorageConfigMap = {
+  readonly uploads: StorageConfig;
+  readonly documents: StorageConfig;
+  readonly temp: StorageConfig;
+};
+
 export type {
   AdminSubRole,
   ApiErrorFieldDetail,
@@ -32,15 +65,26 @@ export type {
   ApiResponse,
   ApiResponseMeta,
   ApiSuccessResponse,
+  BuiltInNotificationConfig,
+  BuiltInQueueConfig,
+  Cache,
+  CacheConfig,
+  CacheManager,
   CreateErrorResponseInput,
   CreateSuccessResponseOptions,
   ErrorCategory,
   ErrorHttpStatus,
+  Logger,
+  NotificationManager,
   OrgPermissionArea,
   OrgPermissionMatrix,
+  QueueProvider,
   ServiceErrorOptions,
   SharedErrorCode,
   SharedErrorDefinition,
+  Storage,
+  StorageConfig,
+  StorageManager,
   SupportedLocale,
   UserRole,
 };
@@ -57,9 +101,20 @@ export interface AuthActor {
   moderatorTripId?: string | null;
 }
 
-// Procedure context shared by every router. Routes read db and auth from here and pass them to services.
+// Procedure context shared by every router. Routes read db, auth, and kits from here and pass them to services.
 export type Context = {
   db: Database;
+  logger?: Logger;
+  cache?: Cache;
+  caches?: CacheManager<AppCacheConfigMap>;
+  queue?: QueueProvider;
+  queues?: QueueManager<AppQueueConfigMap>;
+  storage?: Storage;
+  disks?: StorageManager<AppStorageConfigMap>;
+  notifications?: NotificationManager<
+    Record<string, BuiltInNotificationConfig>,
+    string | undefined
+  >;
   requestId?: string;
   locale?: SupportedLocale;
   ipAddress?: string;
