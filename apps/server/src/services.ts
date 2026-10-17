@@ -1,5 +1,5 @@
-import { createDb } from "@trips-app/db";
+import { createDb, type Database } from "@trips-app/db";
 
 import { ENV } from "./env.server";
 
-export const db = createDb(ENV);
+export const db: Database = createDb(ENV);

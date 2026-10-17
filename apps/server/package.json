@@ -3,14 +3,16 @@
   "type": "module",
   "main": "src/index.ts",
   "scripts": {
-    "build": "tsc -b ../../packages/api && tsdown",
-    "check-types": "tsc -b ../../packages/api && tsc --noEmit",
+    "build": "tsc -b ../../packages/rpc && tsdown",
+    "dev": "bun run --hot src/index.ts",
+    "check-types": "tsc -b ../../packages/rpc && tsc --noEmit",
     "compile": "bun build --compile --no-compile-autoload-dotenv --minify --sourcemap --bytecode ./src/index.ts --outfile server",
     "start": "bun run dist/index.mjs",
     "dev:bare": "bun run --hot src/index.ts",
     "env:generate": "varlock codegen"
   },
   "dependencies": {
+    "@elysia/openapi": "^1.4.16",
     "@elysiajs/cors": "^1.4.2",
     "@orpc/openapi": "catalog:",
     "@orpc/server": "catalog:",
@@ -18,6 +20,9 @@
     "@sinclair/typebox": "^0.34.52",
     "@trips-app/api": "workspace:*",
     "@trips-app/db": "workspace:*",
+    "@trips-app/domain": "workspace:*",
+    "@trips-app/i18n": "workspace:*",
+    "@trips-app/rpc": "workspace:*",
     "elysia": "^1.4.30",
     "evlog": "catalog:",
     "varlock": "catalog:",
