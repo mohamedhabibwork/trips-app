@@ -74,7 +74,15 @@ export function Landing() {
   return (
     <div className="mx-auto flex w-full max-w-5xl flex-col gap-10 px-4 py-6">
       <header className="flex flex-wrap items-center justify-between gap-4">
-        <span className="te-h3">Trips Enjoy</span>
+        <a href="/" aria-label="Trips Enjoy home" className="inline-flex">
+          <img
+            src="/brand/trips-enjoy-horizontal-fullcolor.svg"
+            alt="Trips Enjoy"
+            width={962}
+            height={289}
+            className="h-10 w-auto"
+          />
+        </a>
         <div className="flex flex-wrap items-center gap-4">
           <PublicNav current="landing" />
           <LanguageSelect />
