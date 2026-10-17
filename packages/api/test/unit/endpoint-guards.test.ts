@@ -1,5 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { createRouterClient } from "@orpc/server";
+import { createMockDatabase } from "@trips-app/db";
 import type { Context } from "@trips-app/rpc";
 
 import { appRouter } from "../../src/routers/index";
@@ -11,14 +12,8 @@ import {
 } from "../../src/testing/procedure-catalog";
 
 // A database stand-in that fails loudly if any service touches it. Unit tests must never reach data access.
-const UNTOUCHABLE_DB = new Proxy(
-  {},
-  {
-    get(_target, property) {
-      throw new Error(`DB_TOUCHED:${String(property)}`);
-    },
-  },
-);
+// A typed database with no connection: any query fails, so a service that reaches data access fails the test.
+const UNTOUCHABLE_DB = createMockDatabase();
 
 // Error codes that prove a call stopped before the service layer: auth guards and input validation.
 const PRE_SERVICE_ERROR_CODES = new Set(["UNAUTHORIZED", "VALIDATION_ERROR"]);
@@ -62,8 +57,6 @@ describe("Unit: endpoint guards and input validation run before any service (@tr
       // Assert
       expect(outcome.kind).toBe("rejected");
       if (outcome.kind !== "rejected") return;
-      const message = outcome.error instanceof Error ? outcome.error.message : "";
-      expect(message.startsWith("DB_TOUCHED")).toBe(false);
       const code = (outcome.error as { code?: string }).code ?? "";
       expect(PRE_SERVICE_ERROR_CODES.has(code)).toBe(true);
     });

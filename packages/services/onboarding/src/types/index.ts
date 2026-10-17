@@ -6,9 +6,12 @@ import type {
   decideAppealSchema,
   getApplicationDetailSchema,
   getApplicationStatusSchema,
+  listOrganizationSuppliersSchema,
   listReviewQueueSchema,
   onboardOrganizationSupplierSchema,
+  openApplicationDocumentSchema,
   rejectApplicationSchema,
+  removeOrganizationSupplierSchema,
   requestApplicationChangesSchema,
   requestChangesExtensionSchema,
   resubmitApplicationSchema,
@@ -16,6 +19,7 @@ import type {
   submitDriverApplicationSchema,
   submitOrganizationApplicationSchema,
   submitPhotographerApplicationSchema,
+  verifyApplicationDocumentSchema,
 } from "../schemas/validation";
 
 export type {
@@ -43,8 +47,12 @@ export type RequestChangesExtensionInput = z.infer<typeof requestChangesExtensio
 export type ResubmitApplicationInput = z.infer<typeof resubmitApplicationSchema>;
 export type SubmitAppealInput = z.infer<typeof submitAppealSchema>;
 export type OnboardOrganizationSupplierInput = z.infer<typeof onboardOrganizationSupplierSchema>;
+export type ListOrganizationSuppliersInput = z.infer<typeof listOrganizationSuppliersSchema>;
+export type RemoveOrganizationSupplierInput = z.infer<typeof removeOrganizationSupplierSchema>;
 export type ListReviewQueueInput = z.infer<typeof listReviewQueueSchema>;
 export type GetApplicationDetailInput = z.infer<typeof getApplicationDetailSchema>;
+export type VerifyApplicationDocumentInput = z.infer<typeof verifyApplicationDocumentSchema>;
+export type OpenApplicationDocumentInput = z.infer<typeof openApplicationDocumentSchema>;
 export type ApproveApplicationInput = z.infer<typeof approveApplicationSchema>;
 export type RequestApplicationChangesInput = z.infer<typeof requestApplicationChangesSchema>;
 export type RejectApplicationInput = z.infer<typeof rejectApplicationSchema>;

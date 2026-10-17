@@ -1,34 +1,57 @@
 // Zod schemas that validate input at the boundary.
+import { createInsertSchema, createUpdateSchema, schema } from "@trips-app/db/zod";
 import { z } from "zod/v4";
 
 import { APPLICATION_STATES, SUPPLIER_APPLICATION_TYPES } from "../../model";
 
-export const documentUploadInputSchema = z.object({
-  documentType: z.string().min(2).max(80),
-  storageKey: z.string().min(3).max(255),
-  mimeType: z.enum(["application/pdf", "image/jpeg", "image/png", "image/webp"]),
-  fileSizeBytes: z
-    .number()
-    .int()
-    .min(1)
-    .max(15 * 1024 * 1024),
-  expiresAt: z.string().datetime().optional(),
+const SUPPORTED_MIME_TYPES = ["application/pdf", "image/jpeg", "image/png", "image/webp"] as const;
+
+export const documentUploadInputSchema = createInsertSchema(schema.applicationDocuments, {
+  documentType: (col) => col.min(2).max(80),
+  storageKey: (col) => col.min(3).max(255),
+  mimeType: () => z.enum(SUPPORTED_MIME_TYPES),
+  fileSizeBytes: (col) =>
+    col
+      .int()
+      .min(1)
+      .max(15 * 1024 * 1024),
+})
+  .pick({
+    documentType: true,
+    storageKey: true,
+    mimeType: true,
+    fileSizeBytes: true,
+  })
+  .extend({
+    expiresAt: z.string().datetime().optional(),
+  });
+
+const organizationBaseInsertSchema = createInsertSchema(schema.organizations, {
+  legalEntityName: (col) => col.min(2).max(160),
+  displayNameEn: (col) => col.min(2).max(120),
+  displayNameAr: (col) => col.min(2).max(120),
+  countryCode: () => z.enum(["EG", "SA", "AE"]),
+  headquartersAddress: (col) => col.min(5).max(300),
+  signatoryFullName: (col) => col.min(2).max(120),
+  signatoryRoleTitle: (col) => col.min(2).max(80),
+  payoutMethod: () => z.enum(["bank_transfer", "mobile_wallet"]),
+}).pick({
+  legalEntityName: true,
+  displayNameEn: true,
+  displayNameAr: true,
+  countryCode: true,
+  headquartersAddress: true,
+  signatoryFullName: true,
+  signatoryRoleTitle: true,
+  payoutMethod: true,
 });
 
-export const submitOrganizationApplicationSchema = z.object({
-  legalEntityName: z.string().min(2).max(160),
-  displayNameEn: z.string().min(2).max(120),
-  displayNameAr: z.string().min(2).max(120),
+export const submitOrganizationApplicationSchema = organizationBaseInsertSchema.extend({
   commercialRegNumber: z.string().min(2).max(80),
   taxNumber: z.string().min(2).max(80),
   tourismLicenseNumber: z.string().min(2).max(80),
   tourismLicenseExpiry: z.string().datetime(),
-  countryCode: z.enum(["EG", "SA", "AE"]).default("EG"),
-  headquartersAddress: z.string().min(5).max(300),
-  signatoryFullName: z.string().min(2).max(120),
   signatoryNationalId: z.string().min(6).max(30),
-  signatoryRoleTitle: z.string().min(2).max(80),
-  payoutMethod: z.enum(["bank_transfer", "mobile_wallet"]).default("bank_transfer"),
   payoutIbanOrWallet: z.string().min(6).max(64),
   billingContactName: z.string().min(2).max(120),
   billingContactEmail: z.string().email(),
@@ -42,42 +65,68 @@ export const submitOrganizationApplicationSchema = z.object({
   documents: z.array(documentUploadInputSchema).min(1),
 });
 
-export const submitDriverApplicationSchema = z.object({
+const driverProfileBaseInsertSchema = createInsertSchema(schema.driverProfiles, {
+  licenseCategory: (col) => col.min(2).max(60),
+  yearsOfExperience: (col) => col.int().min(1).max(60),
+  serviceAreas: () => z.array(z.string().min(2)).min(1),
+  vehicleYear: (col) => col.int().min(2000).max(2035),
+  vehicleSeatCapacity: (col) => col.int().min(1).max(80),
+}).pick({
+  licenseCategory: true,
+  yearsOfExperience: true,
+  serviceAreas: true,
+  hasOwnVehicle: true,
+  vehicleMakeModel: true,
+  vehicleYear: true,
+  vehiclePlateNumber: true,
+  vehicleSeatCapacity: true,
+  insurancePolicyNumber: true,
+});
+
+export const submitDriverApplicationSchema = driverProfileBaseInsertSchema.extend({
   nationalId: z.string().min(6).max(30),
   licenseNumber: z.string().min(3).max(40),
-  licenseCategory: z.string().min(2).max(60),
   licenseExpiry: z.string().datetime(),
   yearsOfExperience: z.number().int().min(1).max(60),
   serviceAreas: z.array(z.string().min(2)).min(1),
-  hasOwnVehicle: z.boolean().default(false),
-  vehicleMakeModel: z.string().optional().nullable(),
-  vehicleYear: z.number().int().min(2000).max(2035).optional().nullable(),
-  vehiclePlateNumber: z.string().optional().nullable(),
-  vehicleSeatCapacity: z.number().int().min(1).max(80).optional().nullable(),
-  insurancePolicyNumber: z.string().optional().nullable(),
   insuranceExpiry: z.string().datetime().optional().nullable(),
   labTestConsentSigned: z.boolean(),
+  backgroundCheckConsentSigned: z.boolean().default(true),
   labResultSubmittedAt: z.string().datetime(),
   documents: z.array(documentUploadInputSchema).min(1),
 });
 
-export const submitPhotographerApplicationSchema = z.object({
+const sampleAlbumItemSchema = z.object({
+  title: z.string().min(2).max(120),
+  photoCount: z.number().int().min(1),
+});
+
+const photographerProfileBaseInsertSchema = createInsertSchema(schema.photographerProfiles, {
+  yearsOfExperience: (col) => col.int().min(0).max(60),
+  cameraBodies: () => z.array(z.string().min(2)).min(1),
+  lenses: () => z.array(z.string().min(2)),
+  serviceRegions: () => z.array(z.string().min(2)).min(1),
+  specialties: () => z.array(z.string().min(2)).min(1),
+  portfolioPhotoCount: (col) => col.int().min(1).max(200),
+  sampleAlbums: () => z.array(sampleAlbumItemSchema),
+}).pick({
+  yearsOfExperience: true,
+  cameraBodies: true,
+  lenses: true,
+  hasDroneLicense: true,
+  serviceRegions: true,
+  specialties: true,
+  portfolioPhotoCount: true,
+  sampleAlbums: true,
+});
+
+export const submitPhotographerApplicationSchema = photographerProfileBaseInsertSchema.extend({
   nationalId: z.string().min(6).max(30),
   yearsOfExperience: z.number().int().min(0).max(60),
   cameraBodies: z.array(z.string().min(2)).min(1),
-  lenses: z.array(z.string().min(2)).default([]),
-  hasDroneLicense: z.boolean().default(false),
   serviceRegions: z.array(z.string().min(2)).min(1),
   specialties: z.array(z.string().min(2)).min(1),
   portfolioPhotoCount: z.number().int().min(1).max(200),
-  sampleAlbums: z
-    .array(
-      z.object({
-        title: z.string().min(2).max(120),
-        photoCount: z.number().int().min(1),
-      }),
-    )
-    .default([]),
   documents: z.array(documentUploadInputSchema).min(1),
 });
 
@@ -121,11 +170,24 @@ export const onboardOrganizationSupplierSchema = z.object({
   portfolioPhotoCount: z.number().int().optional(),
 });
 
+export const listOrganizationSuppliersSchema = z
+  .object({
+    supplierRole: z.enum(["org_driver", "org_photographer"]).optional(),
+  })
+  .optional();
+
+export const removeOrganizationSupplierSchema = z.object({
+  supplierAccountId: z.string().uuid(),
+  supplierRole: z.enum(["org_driver", "org_photographer"]).optional(),
+  reason: z.string().min(3).max(500).optional(),
+});
+
 export const listReviewQueueSchema = z
   .object({
     state: z.enum(APPLICATION_STATES).optional(),
     applicationType: z.enum(SUPPLIER_APPLICATION_TYPES).optional(),
     overdueOnly: z.boolean().optional(),
+    duplicateHoldOnly: z.boolean().optional(),
   })
   .optional();
 
@@ -133,11 +195,38 @@ export const getApplicationDetailSchema = z.object({
   applicationId: z.string().uuid(),
 });
 
-export const approveApplicationSchema = z.object({
+export const verifyApplicationDocumentSchema = createUpdateSchema(schema.applicationDocuments, {
+  verifiedStatus: () => z.enum(["verified", "rejected"]),
+  rejectionNote: (col) => col.max(500),
+})
+  .pick({
+    verifiedStatus: true,
+    rejectionNote: true,
+  })
+  .extend({
+    applicationId: z.string().uuid(),
+    documentId: z.string().uuid(),
+    verifiedStatus: z.enum(["verified", "rejected"]),
+  });
+
+export const openApplicationDocumentSchema = z.object({
   applicationId: z.string().uuid(),
-  decisionReasonCode: z.string().min(2).max(80).default("verified_complete"),
-  decisionNotes: z.string().max(1000).optional(),
+  documentId: z.string().uuid(),
+  reason: z.string().max(300).optional(),
 });
+
+export const approveApplicationSchema = createUpdateSchema(schema.applications, {
+  decisionReasonCode: (col) => col.min(2).max(80),
+  decisionNotes: (col) => col.max(1000),
+})
+  .pick({
+    decisionNotes: true,
+  })
+  .extend({
+    applicationId: z.string().uuid(),
+    decisionReasonCode: z.string().min(2).max(80).default("verified_complete"),
+    decisionNotes: z.string().max(1000).optional(),
+  });
 
 export const requestApplicationChangesSchema = z.object({
   applicationId: z.string().uuid(),

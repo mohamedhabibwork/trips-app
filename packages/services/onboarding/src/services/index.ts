@@ -5,8 +5,10 @@ import { OnboardingServiceError } from "../errors";
 import {
   addWorkingDays,
   type AdminSubRole,
+  type ApplicationState,
   canTransitionApplicationState,
   computeBlindIndex,
+  countWorkingDaysBetween,
   createDefaultOrganizationSettings,
   encryptField,
   hashPassword,
@@ -27,9 +29,12 @@ import type {
   DecideAppealInput,
   GetApplicationDetailInput,
   GetApplicationStatusInput,
+  ListOrganizationSuppliersInput,
   ListReviewQueueInput,
   OnboardOrganizationSupplierInput,
+  OpenApplicationDocumentInput,
   RejectApplicationInput,
+  RemoveOrganizationSupplierInput,
   RequestApplicationChangesInput,
   RequestChangesExtensionInput,
   ResubmitApplicationInput,
@@ -37,6 +42,7 @@ import type {
   SubmitDriverApplicationInput,
   SubmitOrganizationApplicationInput,
   SubmitPhotographerApplicationInput,
+  VerifyApplicationDocumentInput,
 } from "../schemas/dtos";
 import type { OnboardingRequestMeta } from "../types";
 
@@ -69,6 +75,43 @@ export function createOnboardingService(db: ServiceDatabase) {
     }
   }
 
+  async function dispatchApplicantStatusNotification(params: {
+    actorAccountId: string;
+    actorRole: UserRole | "system";
+    applicantAccountId: string;
+    applicationId: string;
+    applicationType: SupplierApplicationType;
+    nextState: ApplicationState;
+    template:
+      | "application_submitted"
+      | "application_approved"
+      | "application_changes_requested"
+      | "application_rejected"
+      | "application_appealed"
+      | "application_closed";
+    reasonCode?: string | null;
+    notes?: string | null;
+    meta?: OnboardingRequestMeta;
+  }) {
+    await repo.writeAuditLog({
+      actorAccountId: params.actorAccountId,
+      actorRole: params.actorRole,
+      action: "onboarding.notification.dispatched",
+      targetEntityType: "account",
+      targetEntityId: params.applicantAccountId,
+      reason: params.notes ?? params.reasonCode ?? null,
+      afterState: {
+        applicationId: params.applicationId,
+        applicationType: params.applicationType,
+        state: params.nextState,
+        template: params.template,
+        channels: ["email", "sms", "in_app"],
+      },
+      ipAddress: params.meta?.ipAddress,
+      requestId: params.meta?.requestId,
+    });
+  }
+
   return {
     // 1. Supplier Submissions (WF-APP-01..03)
     async submitOrganizationApplication(
@@ -96,12 +139,26 @@ export function createOnboardingService(db: ServiceDatabase) {
         );
       }
 
+      // T-ONB-14: Detect duplicate commercial registration or tax number and flag for admin hold (never auto-reject).
+      const duplicateMatches = await repo.findDuplicateOrganizations({
+        commercialRegNumber: input.commercialRegNumber,
+        taxNumber: input.taxNumber,
+        excludeApplicantAccountId: actor.accountId,
+      });
+      const duplicateHold = duplicateMatches.length > 0;
+
       const slaDueAt = addWorkingDays(now, 2); // FR-ONB-03: 2 working days SLA
+      const appPayload: Record<string, unknown> = {
+        ...(input as unknown as Record<string, unknown>),
+        duplicateHold,
+        duplicateMatches,
+      };
+
       const app = await repo.createApplication({
         applicantAccountId: actor.accountId,
         applicationType: "organization",
         state: "Pending Review",
-        payload: input as unknown as Record<string, unknown>,
+        payload: appPayload,
         slaDueAt,
       });
 
@@ -123,9 +180,39 @@ export function createOnboardingService(db: ServiceDatabase) {
           applicationType: "organization",
           state: app.state,
           slaDueAt: slaDueAt.toISOString(),
+          duplicateHold,
         },
         ipAddress: meta?.ipAddress,
         requestId: meta?.requestId,
+      });
+
+      if (duplicateHold) {
+        await repo.writeAuditLog({
+          actorAccountId: actor.accountId,
+          actorRole: "system",
+          action: "onboarding.application.duplicate_hold_flagged",
+          targetEntityType: "application",
+          targetEntityId: app.id,
+          reason:
+            "Commercial registration or tax number matches an existing organization or active application (T-ONB-14).",
+          afterState: {
+            duplicateHold: true,
+            duplicateMatches,
+          },
+          ipAddress: meta?.ipAddress,
+          requestId: meta?.requestId,
+        });
+      }
+
+      await dispatchApplicantStatusNotification({
+        actorAccountId: actor.accountId,
+        actorRole: "system",
+        applicantAccountId: actor.accountId,
+        applicationId: app.id,
+        applicationType: "organization",
+        nextState: app.state,
+        template: "application_submitted",
+        meta,
       });
 
       return app;
@@ -165,6 +252,16 @@ export function createOnboardingService(db: ServiceDatabase) {
         userAgent: meta?.userAgent,
       });
 
+      // T-ONB-11: Record signed background check consent alongside lab test consent
+      if (input.backgroundCheckConsentSigned !== false) {
+        await repo.createConsentRecord({
+          accountId: actor.accountId,
+          consentType: "driver_background_check",
+          ipAddress: meta?.ipAddress,
+          userAgent: meta?.userAgent,
+        });
+      }
+
       const slaDueAt = addWorkingDays(now, 2);
       const app = await repo.createApplication({
         applicantAccountId: actor.accountId,
@@ -182,13 +279,39 @@ export function createOnboardingService(db: ServiceDatabase) {
         status: "pending_approval",
       });
 
+      await repo.writeAuditLog({
+        actorAccountId: actor.accountId,
+        actorRole: "platform_driver",
+        action: "onboarding.application.submitted",
+        targetEntityType: "application",
+        targetEntityId: app.id,
+        afterState: {
+          applicationType: "platform_driver",
+          state: app.state,
+          slaDueAt: slaDueAt.toISOString(),
+        },
+        ipAddress: meta?.ipAddress,
+        requestId: meta?.requestId,
+      });
+
+      await dispatchApplicantStatusNotification({
+        actorAccountId: actor.accountId,
+        actorRole: "system",
+        applicantAccountId: actor.accountId,
+        applicationId: app.id,
+        applicationType: "platform_driver",
+        nextState: app.state,
+        template: "application_submitted",
+        meta,
+      });
+
       return app;
     },
 
     async submitPhotographerApplication(
       actor: { accountId: string },
       input: SubmitPhotographerApplicationInput,
-      _meta?: OnboardingRequestMeta,
+      meta?: OnboardingRequestMeta,
     ) {
       const now = new Date();
       await assertNotBlockedByRecentRejection(actor.accountId, "platform_photographer", now);
@@ -223,6 +346,32 @@ export function createOnboardingService(db: ServiceDatabase) {
         status: "pending_approval",
       });
 
+      await repo.writeAuditLog({
+        actorAccountId: actor.accountId,
+        actorRole: "platform_photographer",
+        action: "onboarding.application.submitted",
+        targetEntityType: "application",
+        targetEntityId: app.id,
+        afterState: {
+          applicationType: "platform_photographer",
+          state: app.state,
+          slaDueAt: slaDueAt.toISOString(),
+        },
+        ipAddress: meta?.ipAddress,
+        requestId: meta?.requestId,
+      });
+
+      await dispatchApplicantStatusNotification({
+        actorAccountId: actor.accountId,
+        actorRole: "system",
+        applicantAccountId: actor.accountId,
+        applicationId: app.id,
+        applicationType: "platform_photographer",
+        nextState: app.state,
+        template: "application_submitted",
+        meta,
+      });
+
       return app;
     },
 
@@ -236,16 +385,26 @@ export function createOnboardingService(db: ServiceDatabase) {
         throw new OnboardingServiceError("NOT_FOUND", "Application not found.");
       }
 
+      const now = new Date();
       const documents = await repo.listDocumentsForApplication(app.id);
       return {
         application: app,
         documents,
+        workingDaysWaiting: countWorkingDaysBetween(app.createdAt, now),
+        isSlaOverdue: app.state === "Pending Review" && app.slaDueAt.getTime() < now.getTime(),
+        reapplyBlocked: isRejectedApplicantBlocked({
+          state: app.state,
+          rejectedAt: app.rejectedAt,
+          reapplyBlockedUntil: app.reapplyBlockedUntil,
+          now,
+        }),
       };
     },
 
     async requestChangesExtension(
       actor: { accountId: string },
       input: RequestChangesExtensionInput,
+      meta?: OnboardingRequestMeta,
     ) {
       const app = await repo.findApplicationById(input.applicationId);
       if (!app || app.applicantAccountId !== actor.accountId) {
@@ -271,10 +430,27 @@ export function createOnboardingService(db: ServiceDatabase) {
         changesExtensionUsed: true,
       });
 
+      await repo.writeAuditLog({
+        actorAccountId: actor.accountId,
+        actorRole: "traveler",
+        action: "onboarding.application.extension_requested",
+        targetEntityType: "application",
+        targetEntityId: app.id,
+        reason: input.reason ?? "One-time +7 day extension requested",
+        beforeState: { changesDueAt: app.changesDueAt?.toISOString() ?? null },
+        afterState: { changesDueAt: extendedDue.toISOString(), changesExtensionUsed: true },
+        ipAddress: meta?.ipAddress,
+        requestId: meta?.requestId,
+      });
+
       return updated!;
     },
 
-    async resubmitApplication(actor: { accountId: string }, input: ResubmitApplicationInput) {
+    async resubmitApplication(
+      actor: { accountId: string },
+      input: ResubmitApplicationInput,
+      meta?: OnboardingRequestMeta,
+    ) {
       const app = await repo.findApplicationById(input.applicationId);
       if (!app || app.applicantAccountId !== actor.accountId) {
         throw new OnboardingServiceError("NOT_FOUND", "Application not found.");
@@ -309,10 +485,26 @@ export function createOnboardingService(db: ServiceDatabase) {
         })),
       });
 
+      await repo.writeAuditLog({
+        actorAccountId: actor.accountId,
+        actorRole: "traveler",
+        action: "onboarding.application.resubmitted",
+        targetEntityType: "application",
+        targetEntityId: app.id,
+        beforeState: { state: app.state },
+        afterState: { state: "Pending Review" },
+        ipAddress: meta?.ipAddress,
+        requestId: meta?.requestId,
+      });
+
       return updated!;
     },
 
-    async submitAppeal(actor: { accountId: string }, input: SubmitAppealInput) {
+    async submitAppeal(
+      actor: { accountId: string },
+      input: SubmitAppealInput,
+      meta?: OnboardingRequestMeta,
+    ) {
       const app = await repo.findApplicationById(input.applicationId);
       if (!app || app.applicantAccountId !== actor.accountId) {
         throw new OnboardingServiceError("NOT_FOUND", "Application not found.");
@@ -328,17 +520,43 @@ export function createOnboardingService(db: ServiceDatabase) {
         await repo.insertApplicationDocuments(app.id, input.documents);
       }
 
+      const now = new Date();
       const updated = await repo.updateApplication(app.id, {
         state: "Appealed",
         appealStatement: input.appealStatement,
-        appealedAt: new Date(),
-        slaDueAt: addWorkingDays(new Date(), 2),
+        appealedAt: now,
+        slaDueAt: addWorkingDays(now, 2),
+      });
+
+      await repo.writeAuditLog({
+        actorAccountId: actor.accountId,
+        actorRole: "traveler",
+        action: "onboarding.application.appealed",
+        targetEntityType: "application",
+        targetEntityId: app.id,
+        reason: input.appealStatement,
+        beforeState: { state: app.state },
+        afterState: { state: "Appealed", appealedAt: now.toISOString() },
+        ipAddress: meta?.ipAddress,
+        requestId: meta?.requestId,
+      });
+
+      await dispatchApplicantStatusNotification({
+        actorAccountId: actor.accountId,
+        actorRole: "system",
+        applicantAccountId: actor.accountId,
+        applicationId: app.id,
+        applicationType: app.applicationType,
+        nextState: "Appealed",
+        template: "application_appealed",
+        notes: input.appealStatement,
+        meta,
       });
 
       return updated!;
     },
 
-    // 3. Organization-Owned Supplier Onboarding (FR-ONB-09..10, D-82, D-94 — No Admin Queue)
+    // 3. Organization-Owned Supplier Onboarding (FR-ONB-09..10, D-82, D-94, SCR-ORG-20 — No Admin Queue)
     async onboardOrganizationSupplier(
       actor: {
         accountId: string;
@@ -461,20 +679,111 @@ export function createOnboardingService(db: ServiceDatabase) {
       };
     },
 
-    // 4. Admin Review Queue & Decisions (WF-APP-04..06, SCR-ADM-02..03)
+    async listOrganizationSuppliers(
+      actor: {
+        accountId: string;
+        activeRole: UserRole;
+        activeTenantId?: string | null;
+      },
+      input?: ListOrganizationSuppliersInput,
+    ) {
+      if (!actor.activeTenantId) {
+        throw new OnboardingServiceError("NOT_FOUND", "Organization context not found.");
+      }
+
+      const suppliers = await repo.listOrganizationSuppliers(
+        actor.activeTenantId,
+        input?.supplierRole,
+      );
+
+      return {
+        tenantId: actor.activeTenantId,
+        suppliers,
+      };
+    },
+
+    async removeOrganizationSupplier(
+      actor: {
+        accountId: string;
+        activeRole: UserRole;
+        activeTenantId?: string | null;
+      },
+      input: RemoveOrganizationSupplierInput,
+      meta?: OnboardingRequestMeta,
+    ) {
+      if (!actor.activeTenantId) {
+        throw new OnboardingServiceError("NOT_FOUND", "Organization context not found.");
+      }
+
+      const removed = await repo.removeOrganizationSupplier({
+        tenantId: actor.activeTenantId,
+        supplierAccountId: input.supplierAccountId,
+        supplierRole: input.supplierRole,
+      });
+
+      if (!removed) {
+        throw new OnboardingServiceError(
+          "NOT_FOUND",
+          "Organization supplier not found in this organization.",
+        );
+      }
+
+      await repo.writeAuditLog({
+        actorAccountId: actor.accountId,
+        actorRole: actor.activeRole,
+        tenantId: actor.activeTenantId,
+        action: "organization.supplier.removed",
+        targetEntityType: "account",
+        targetEntityId: input.supplierAccountId,
+        reason: input.reason ?? "Removed from organization supplier roster",
+        afterState: {
+          removedRoles: removed.removedRoles,
+          owningTenantId: actor.activeTenantId,
+        },
+        ipAddress: meta?.ipAddress,
+        requestId: meta?.requestId,
+      });
+
+      return {
+        removed: true,
+        supplierAccountId: input.supplierAccountId,
+        removedRoles: removed.removedRoles,
+      };
+    },
+
+    // 4. Admin Review Queue, Document Verification/Access & Decisions (WF-APP-04..06, SCR-ADM-02..03)
     async listReviewQueue(input?: ListReviewQueueInput) {
       const now = new Date();
       const items = await repo.listApplications({
         state: input?.state,
         applicationType: input?.applicationType,
         overdueOnly: input?.overdueOnly,
+        duplicateHoldOnly: input?.duplicateHoldOnly,
         now,
       });
 
-      return items.map((app) => ({
-        ...app,
-        isSlaOverdue: app.state === "Pending Review" && app.slaDueAt.getTime() < now.getTime(),
-      }));
+      const accountIds = [...new Set(items.map((a) => a.applicantAccountId))];
+      const accounts = await repo.listAccountsByIds(accountIds);
+      const accountMap = new Map(accounts.map((a) => [a.id, a]));
+
+      return items.map((app) => {
+        const applicant = accountMap.get(app.applicantAccountId);
+        const payloadObj = (app.payload ?? {}) as Record<string, unknown>;
+        return {
+          ...app,
+          isSlaOverdue: app.state === "Pending Review" && app.slaDueAt.getTime() < now.getTime(),
+          workingDaysWaiting: countWorkingDaysBetween(app.createdAt, now),
+          duplicateHold: Boolean(payloadObj.duplicateHold),
+          applicant: applicant
+            ? {
+                id: applicant.id,
+                fullName: applicant.fullName,
+                email: applicant.emailNormalized,
+                phone: applicant.phoneE164,
+              }
+            : null,
+        };
+      });
     },
 
     async getApplicationDetail(input: GetApplicationDetailInput) {
@@ -482,8 +791,11 @@ export function createOnboardingService(db: ServiceDatabase) {
       if (!app) {
         throw new OnboardingServiceError("NOT_FOUND", "Application not found.");
       }
+      const now = new Date();
       const applicant = await repo.findAccountById(app.applicantAccountId);
       const documents = await repo.listDocumentsForApplication(app.id);
+      const consents = await repo.listConsentsForAccount(app.applicantAccountId);
+      const payloadObj = (app.payload ?? {}) as Record<string, unknown>;
 
       return {
         application: app,
@@ -497,6 +809,101 @@ export function createOnboardingService(db: ServiceDatabase) {
             }
           : null,
         documents,
+        consents,
+        workingDaysWaiting: countWorkingDaysBetween(app.createdAt, now),
+        isSlaOverdue: app.state === "Pending Review" && app.slaDueAt.getTime() < now.getTime(),
+        duplicateHold: Boolean(payloadObj.duplicateHold),
+      };
+    },
+
+    async verifyApplicationDocument(
+      actor: { accountId: string; activeRole: UserRole; adminSubRole?: AdminSubRole | null },
+      input: VerifyApplicationDocumentInput,
+      meta?: OnboardingRequestMeta,
+    ) {
+      const app = await repo.findApplicationById(input.applicationId);
+      if (!app) {
+        throw new OnboardingServiceError("NOT_FOUND", "Application not found.");
+      }
+
+      const doc = await repo.findDocumentById(input.documentId);
+      if (!doc || doc.applicationId !== app.id) {
+        throw new OnboardingServiceError("NOT_FOUND", "Application document not found.");
+      }
+
+      const updated = await repo.updateApplicationDocument(doc.id, {
+        verifiedStatus: input.verifiedStatus,
+        rejectionNote: input.verifiedStatus === "rejected" ? (input.rejectionNote ?? null) : null,
+      });
+
+      await repo.writeAuditLog({
+        actorAccountId: actor.accountId,
+        actorRole: actor.activeRole,
+        action: "onboarding.document.verified",
+        targetEntityType: "application_document",
+        targetEntityId: doc.id,
+        reason: input.rejectionNote ?? null,
+        beforeState: { verifiedStatus: doc.verifiedStatus },
+        afterState: {
+          applicationId: app.id,
+          verifiedStatus: input.verifiedStatus,
+          rejectionNote: input.rejectionNote ?? null,
+        },
+        ipAddress: meta?.ipAddress,
+        requestId: meta?.requestId,
+      });
+
+      return updated!;
+    },
+
+    async openApplicationDocument(
+      actor: { accountId: string; activeRole: UserRole; adminSubRole?: AdminSubRole | null },
+      input: OpenApplicationDocumentInput,
+      meta?: OnboardingRequestMeta,
+    ) {
+      const app = await repo.findApplicationById(input.applicationId);
+      if (!app) {
+        throw new OnboardingServiceError("NOT_FOUND", "Application not found.");
+      }
+
+      const isOwner = app.applicantAccountId === actor.accountId;
+      const isAuthorizedAdmin =
+        actor.activeRole === "admin" &&
+        (actor.adminSubRole === "super_admin" || actor.adminSubRole === "operations");
+
+      if (!isOwner && !isAuthorizedAdmin) {
+        throw new OnboardingServiceError(
+          "FORBIDDEN",
+          "Only the applicant or an authorized operations/super admin may access application identity documents (T-ONB-10).",
+        );
+      }
+
+      const doc = await repo.findDocumentById(input.documentId);
+      if (!doc || doc.applicationId !== app.id) {
+        throw new OnboardingServiceError("NOT_FOUND", "Application document not found.");
+      }
+
+      // T-ONB-10: Every identity document view is logged to audit_logs
+      await repo.writeAuditLog({
+        actorAccountId: actor.accountId,
+        actorRole: actor.activeRole,
+        action: "onboarding.document.accessed",
+        targetEntityType: "application_document",
+        targetEntityId: doc.id,
+        reason: input.reason ?? "Application document inspection",
+        afterState: {
+          applicationId: app.id,
+          documentType: doc.documentType,
+          storageKey: doc.storageKey,
+        },
+        ipAddress: meta?.ipAddress,
+        requestId: meta?.requestId,
+      });
+
+      return {
+        document: doc,
+        signedAccessUrl: `/storage/documents/${encodeURIComponent(doc.storageKey)}?applicationId=${app.id}&documentId=${doc.id}`,
+        expiresInSeconds: 300,
       };
     },
 
@@ -668,6 +1075,19 @@ export function createOnboardingService(db: ServiceDatabase) {
         requestId: meta?.requestId,
       });
 
+      await dispatchApplicantStatusNotification({
+        actorAccountId: actor.accountId,
+        actorRole: "admin",
+        applicantAccountId: app.applicantAccountId,
+        applicationId: app.id,
+        applicationType: app.applicationType,
+        nextState: "Approved",
+        template: "application_approved",
+        reasonCode: input.decisionReasonCode,
+        notes: input.decisionNotes ?? null,
+        meta,
+      });
+
       return updated!;
     },
 
@@ -717,6 +1137,19 @@ export function createOnboardingService(db: ServiceDatabase) {
         requestId: meta?.requestId,
       });
 
+      await dispatchApplicantStatusNotification({
+        actorAccountId: actor.accountId,
+        actorRole: "admin",
+        applicantAccountId: app.applicantAccountId,
+        applicationId: app.id,
+        applicationType: app.applicationType,
+        nextState: "Changes Requested",
+        template: "application_changes_requested",
+        reasonCode: input.decisionReasonCode,
+        notes: input.decisionNotes,
+        meta,
+      });
+
       return updated!;
     },
 
@@ -764,6 +1197,19 @@ export function createOnboardingService(db: ServiceDatabase) {
         },
         ipAddress: meta?.ipAddress,
         requestId: meta?.requestId,
+      });
+
+      await dispatchApplicantStatusNotification({
+        actorAccountId: actor.accountId,
+        actorRole: "admin",
+        applicantAccountId: app.applicantAccountId,
+        applicationId: app.id,
+        applicationType: app.applicationType,
+        nextState: "Rejected",
+        template: "application_rejected",
+        reasonCode: input.decisionReasonCode,
+        notes: input.decisionNotes,
+        meta,
       });
 
       return updated!;
@@ -820,6 +1266,19 @@ export function createOnboardingService(db: ServiceDatabase) {
         requestId: meta?.requestId,
       });
 
+      await dispatchApplicantStatusNotification({
+        actorAccountId: actor.accountId,
+        actorRole: "admin",
+        applicantAccountId: app.applicantAccountId,
+        applicationId: app.id,
+        applicationType: app.applicationType,
+        nextState: "Closed",
+        template: "application_closed",
+        reasonCode: input.decisionReasonCode,
+        notes: input.decisionNotes,
+        meta,
+      });
+
       return updated!;
     },
 
@@ -830,6 +1289,17 @@ export function createOnboardingService(db: ServiceDatabase) {
           state: "Closed",
           decisionReasonCode: "changes_window_expired",
           decisionNotes: "Application closed automatically after 14-day changes window expired.",
+        });
+        await dispatchApplicantStatusNotification({
+          actorAccountId: app.applicantAccountId,
+          actorRole: "system",
+          applicantAccountId: app.applicantAccountId,
+          applicationId: app.id,
+          applicationType: app.applicationType,
+          nextState: "Closed",
+          template: "application_closed",
+          reasonCode: "changes_window_expired",
+          notes: "Application closed automatically after 14-day changes window expired.",
         });
       }
       return {

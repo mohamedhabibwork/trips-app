@@ -5,9 +5,12 @@ import {
   decideAppealSchema,
   getApplicationDetailSchema,
   getApplicationStatusSchema,
+  listOrganizationSuppliersSchema,
   listReviewQueueSchema,
   onboardOrganizationSupplierSchema,
+  openApplicationDocumentSchema,
   rejectApplicationSchema,
+  removeOrganizationSupplierSchema,
   requestApplicationChangesSchema,
   requestChangesExtensionSchema,
   resubmitApplicationSchema,
@@ -15,6 +18,7 @@ import {
   submitDriverApplicationSchema,
   submitOrganizationApplicationSchema,
   submitPhotographerApplicationSchema,
+  verifyApplicationDocumentSchema,
 } from "../schemas/validation";
 import { createOnboardingService } from "../services";
 import {
@@ -107,7 +111,7 @@ export const routes = {
     })
     .input(requestChangesExtensionSchema)
     .handler(({ context, input }) =>
-      createOnboardingService(context.db).requestChangesExtension(context.auth, input),
+      createOnboardingService(context.db).requestChangesExtension(context.auth, input, context),
     ),
 
   resubmitApplication: authedProcedure
@@ -120,7 +124,7 @@ export const routes = {
     })
     .input(resubmitApplicationSchema)
     .handler(({ context, input }) =>
-      createOnboardingService(context.db).resubmitApplication(context.auth, input),
+      createOnboardingService(context.db).resubmitApplication(context.auth, input, context),
     ),
 
   submitAppeal: authedProcedure
@@ -133,10 +137,10 @@ export const routes = {
     })
     .input(submitAppealSchema)
     .handler(({ context, input }) =>
-      createOnboardingService(context.db).submitAppeal(context.auth, input),
+      createOnboardingService(context.db).submitAppeal(context.auth, input, context),
     ),
 
-  // Organization-Owned Supplier Onboarding (FR-ONB-09..10)
+  // Organization-Owned Supplier Onboarding & Roster (FR-ONB-09..10, SCR-ORG-20)
   onboardOrganizationSupplier: orgFleetManageProcedure
     .route({
       method: "POST",
@@ -150,7 +154,35 @@ export const routes = {
       createOnboardingService(context.db).onboardOrganizationSupplier(context.auth, input, context),
     ),
 
-  // Admin Review Queue & Decisions (WF-APP-04..06, SCR-ADM-02..03)
+  listOrganizationSuppliers: orgFleetManageProcedure
+    .route({
+      method: "POST",
+      path: "/onboarding/listOrganizationSuppliers",
+      operationId: "onboardingListOrganizationSuppliers",
+      summary:
+        "List organization-owned drivers and photographers for the active tenant (SCR-ORG-20)",
+      tags: ["onboarding"],
+    })
+    .input(listOrganizationSuppliersSchema)
+    .handler(({ context, input }) =>
+      createOnboardingService(context.db).listOrganizationSuppliers(context.auth, input),
+    ),
+
+  removeOrganizationSupplier: orgFleetManageProcedure
+    .route({
+      method: "POST",
+      path: "/onboarding/removeOrganizationSupplier",
+      operationId: "onboardingRemoveOrganizationSupplier",
+      summary:
+        "Remove an organization-owned driver or photographer from the active tenant (SCR-ORG-20)",
+      tags: ["onboarding"],
+    })
+    .input(removeOrganizationSupplierSchema)
+    .handler(({ context, input }) =>
+      createOnboardingService(context.db).removeOrganizationSupplier(context.auth, input, context),
+    ),
+
+  // Admin Review Queue, Document Verification/Access & Decisions (WF-APP-04..06, SCR-ADM-02..03)
   listReviewQueue: opsOrSuperAdminProcedure
     .route({
       method: "POST",
@@ -173,6 +205,32 @@ export const routes = {
     .input(getApplicationDetailSchema)
     .handler(({ context, input }) =>
       createOnboardingService(context.db).getApplicationDetail(input),
+    ),
+
+  verifyApplicationDocument: opsOrSuperAdminProcedure
+    .route({
+      method: "POST",
+      path: "/onboarding/verifyApplicationDocument",
+      operationId: "onboardingVerifyApplicationDocument",
+      summary: "Verify or reject an uploaded application document (SCR-ADM-03, T-ONB-12)",
+      tags: ["onboarding"],
+    })
+    .input(verifyApplicationDocumentSchema)
+    .handler(({ context, input }) =>
+      createOnboardingService(context.db).verifyApplicationDocument(context.auth, input, context),
+    ),
+
+  openApplicationDocument: authedProcedure
+    .route({
+      method: "POST",
+      path: "/onboarding/openApplicationDocument",
+      operationId: "onboardingOpenApplicationDocument",
+      summary: "Open an application identity document with audit logging (T-ONB-10)",
+      tags: ["onboarding"],
+    })
+    .input(openApplicationDocumentSchema)
+    .handler(({ context, input }) =>
+      createOnboardingService(context.db).openApplicationDocument(context.auth, input, context),
     ),
 
   approveApplication: opsOrSuperAdminProcedure
