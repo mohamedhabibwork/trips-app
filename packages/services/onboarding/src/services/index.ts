@@ -1052,9 +1052,12 @@ export function createOnboardingService(db: ServiceDatabase) {
         });
       }
 
+      const reviewer = await repo.findAccountById(actor.accountId);
+      const reviewerAccountId = reviewer ? actor.accountId : null;
+
       const updated = await repo.updateApplication(app.id, {
         state: "Approved",
-        reviewedByAdminAccountId: actor.accountId,
+        reviewedByAdminAccountId: reviewerAccountId,
         reviewedAt: now,
         decisionReasonCode: input.decisionReasonCode,
         decisionNotes: input.decisionNotes ?? null,
@@ -1062,7 +1065,7 @@ export function createOnboardingService(db: ServiceDatabase) {
       });
 
       await repo.writeAuditLog({
-        actorAccountId: actor.accountId,
+        actorAccountId: reviewerAccountId,
         actorRole: "admin",
         tenantId: provisionedOrganizationId,
         action: "onboarding.application.approved",
@@ -1108,11 +1111,14 @@ export function createOnboardingService(db: ServiceDatabase) {
         );
       }
 
+      const reviewer = await repo.findAccountById(actor.accountId);
+      const reviewerAccountId = reviewer ? actor.accountId : null;
+
       const now = new Date();
       const changesDueAt = new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000); // FR-ONB-04: 14 days
       const updated = await repo.updateApplication(app.id, {
         state: "Changes Requested",
-        reviewedByAdminAccountId: actor.accountId,
+        reviewedByAdminAccountId: reviewerAccountId,
         reviewedAt: now,
         decisionReasonCode: input.decisionReasonCode,
         decisionNotes: input.decisionNotes,
@@ -1125,7 +1131,7 @@ export function createOnboardingService(db: ServiceDatabase) {
       });
 
       await repo.writeAuditLog({
-        actorAccountId: actor.accountId,
+        actorAccountId: reviewerAccountId,
         actorRole: "admin",
         action: "onboarding.application.changes_requested",
         targetEntityType: "application",
@@ -1170,12 +1176,15 @@ export function createOnboardingService(db: ServiceDatabase) {
         );
       }
 
+      const reviewer = await repo.findAccountById(actor.accountId);
+      const reviewerAccountId = reviewer ? actor.accountId : null;
+
       const now = new Date();
       const reapplyBlockedUntil = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000); // FR-ONB-05: 30-day block
 
       const updated = await repo.updateApplication(app.id, {
         state: "Rejected",
-        reviewedByAdminAccountId: actor.accountId,
+        reviewedByAdminAccountId: reviewerAccountId,
         reviewedAt: now,
         decisionReasonCode: input.decisionReasonCode,
         decisionNotes: input.decisionNotes,
@@ -1184,7 +1193,7 @@ export function createOnboardingService(db: ServiceDatabase) {
       });
 
       await repo.writeAuditLog({
-        actorAccountId: actor.accountId,
+        actorAccountId: reviewerAccountId,
         actorRole: "admin",
         action: "onboarding.application.rejected",
         targetEntityType: "application",
@@ -1244,17 +1253,20 @@ export function createOnboardingService(db: ServiceDatabase) {
         );
       }
 
+      const reviewer = await repo.findAccountById(actor.accountId);
+      const reviewerAccountId = reviewer ? actor.accountId : null;
+
       const now = new Date();
       const updated = await repo.updateApplication(app.id, {
         state: "Closed",
-        appealDecidedByAdminAccountId: actor.accountId,
+        appealDecidedByAdminAccountId: reviewerAccountId,
         appealDecidedAt: now,
         decisionReasonCode: input.decisionReasonCode,
         decisionNotes: input.decisionNotes,
       });
 
       await repo.writeAuditLog({
-        actorAccountId: actor.accountId,
+        actorAccountId: reviewerAccountId,
         actorRole: "admin",
         action: "onboarding.appeal.rejected_closed",
         targetEntityType: "application",

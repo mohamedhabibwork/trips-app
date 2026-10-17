@@ -47,6 +47,8 @@ const organizationBaseInsertSchema = createInsertSchema(schema.organizations, {
 });
 
 export const submitOrganizationApplicationSchema = organizationBaseInsertSchema.extend({
+  countryCode: z.enum(["EG", "SA", "AE"]).default("EG"),
+  payoutMethod: z.enum(["bank_transfer", "mobile_wallet"]).default("bank_transfer"),
   commercialRegNumber: z.string().min(2).max(80),
   taxNumber: z.string().min(2).max(80),
   tourismLicenseNumber: z.string().min(2).max(80),
@@ -89,6 +91,7 @@ export const submitDriverApplicationSchema = driverProfileBaseInsertSchema.exten
   licenseExpiry: z.string().datetime(),
   yearsOfExperience: z.number().int().min(1).max(60),
   serviceAreas: z.array(z.string().min(2)).min(1),
+  hasOwnVehicle: z.boolean().default(false),
   insuranceExpiry: z.string().datetime().optional().nullable(),
   labTestConsentSigned: z.boolean(),
   backgroundCheckConsentSigned: z.boolean().default(true),
@@ -124,9 +127,12 @@ export const submitPhotographerApplicationSchema = photographerProfileBaseInsert
   nationalId: z.string().min(6).max(30),
   yearsOfExperience: z.number().int().min(0).max(60),
   cameraBodies: z.array(z.string().min(2)).min(1),
+  lenses: z.array(z.string().min(2)).default([]),
+  hasDroneLicense: z.boolean().default(false),
   serviceRegions: z.array(z.string().min(2)).min(1),
   specialties: z.array(z.string().min(2)).min(1),
   portfolioPhotoCount: z.number().int().min(1).max(200),
+  sampleAlbums: z.array(sampleAlbumItemSchema).default([]),
   documents: z.array(documentUploadInputSchema).min(1),
 });
 

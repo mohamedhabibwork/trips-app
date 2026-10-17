@@ -669,7 +669,7 @@ export function createOnboardingRepository(db: Database) {
     },
 
     async writeAuditLog(entry: {
-      actorAccountId: string;
+      actorAccountId?: string | null;
       actorRole: UserRole | "system";
       tenantId?: string | null;
       action: string;
@@ -681,10 +681,13 @@ export function createOnboardingRepository(db: Database) {
       ipAddress?: string | null;
       requestId?: string | null;
     }) {
+      const actorRow = entry.actorAccountId
+        ? await this.findAccountById(entry.actorAccountId)
+        : null;
       const [created] = await db
         .insert(auditLogs)
         .values({
-          actorAccountId: entry.actorAccountId,
+          actorAccountId: actorRow ? entry.actorAccountId! : null,
           actorRole: entry.actorRole,
           tenantId: entry.tenantId ?? null,
           action: entry.action,
