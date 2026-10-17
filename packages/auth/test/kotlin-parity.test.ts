@@ -256,7 +256,7 @@ describe("Parity: the registration country contract (PRD §7.10 G1, G2, G6)", ()
   });
 });
 
-describe("Parity: messages.json ⇄ generated AuthStrings.kt (§6)", () => {
+describe("Parity: the auth catalog ⇄ generated AuthStrings.kt (§6)", () => {
   test("Kotlin ships exactly the key set the TypeScript catalog holds", () => {
     const source = generatedSource(STRINGS_KT);
     const generated = [...source.matchAll(/^\s{8}"([^"]+)",$/gm)].map((entry) => entry[1]!);

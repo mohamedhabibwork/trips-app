@@ -83,6 +83,16 @@ describe("Copy lookup: t() (I1)", () => {
     expect(/[\u0600-\u06FF]/.test(ar)).toBe(true);
   });
 
+  test("params can be passed without naming a locale", () => {
+    setLocale("ar");
+    const ar = t("auth.error.accountLocked", { seconds: 45 });
+    expect(ar).toContain("45");
+    expect(/[\u0600-\u06FF]/.test(ar)).toBe(true);
+
+    setLocale("en");
+    expect(t("auth.error.accountLocked", { seconds: 45 })).toContain("45");
+  });
+
   test("an unknown placeholder is left untouched", () => {
     expect(t("auth.error.unexpected", "en", {})).toContain("{requestId}");
   });

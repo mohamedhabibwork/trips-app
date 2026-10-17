@@ -26,6 +26,22 @@ import type {
 
 type Params = Record<string, string | number>;
 
+/**
+ * Codes that mean "the input was rejected". `BAD_REQUEST` and the 422 aliases are what oRPC reports
+ * for a zod failure; the other two are the service's own validation codes.
+ */
+const VALIDATION_CODES: ReadonlySet<string> = new Set([
+  "VALIDATION_ERROR",
+  "INVALID_INPUT",
+  "BAD_REQUEST",
+  "UNPROCESSABLE_CONTENT",
+  "UNPROCESSABLE_ENTITY",
+]);
+
+function isValidationCode(code: string): boolean {
+  return VALIDATION_CODES.has(code);
+}
+
 /** Views that are not server errors: a `step` the P0 UI has no screen for, and a pending application. */
 export const AUTH_ERROR_VIEWS: Readonly<Record<string, AuthErrorView>> = {
   /** Correction 7: `staff_2fa_setup_required` has no P0 screen. */
@@ -39,6 +55,48 @@ export const AUTH_ERROR_VIEWS: Readonly<Record<string, AuthErrorView>> = {
     params: {},
     recovery: "stay",
   },
+};
+
+/**
+ * Canonical validation codes → catalog keys.
+ *
+ * The server, the web app and the Kotlin app agree on these codes, so a rejected input is
+ * localized at render time instead of shipping English prose across the wire. A code that is not
+ * in this table falls back to the server sentence, then to `auth.error.validation`.
+ */
+const VALIDATION_KEYS: Readonly<Record<string, string>> = {
+  REQUIRED: "validation.required",
+  TOO_SHORT: "validation.tooShort",
+  TOO_LONG: "validation.tooLong",
+  NUMBER_TOO_SMALL: "validation.numberTooSmall",
+  NUMBER_TOO_LARGE: "validation.numberTooLarge",
+  OUT_OF_RANGE: "validation.outOfRange",
+  INVALID_EMAIL: "validation.invalidEmail",
+  INVALID_PHONE: "validation.invalidPhone",
+  INVALID_CODE: "validation.invalidCode",
+  INVALID_FORMAT: "validation.invalidFormat",
+  INVALID_CHOICE: "validation.invalidChoice",
+  INVALID_TYPE: "validation.invalidType",
+  PASSWORD_BREACHED: "validation.passwordBreached",
+  UNKNOWN_VALIDATION: "validation.unknown",
+};
+
+/** Every validation key the mapper can emit, for the drift test. */
+export const VALIDATION_MESSAGE_KEYS: readonly string[] = [
+  ...new Set(Object.values(VALIDATION_KEYS)),
+];
+
+/**
+ * Parameters a code cannot render without. A code that arrives without them falls back to the
+ * server's sentence instead of showing a raw `{min}` to the user.
+ */
+const REQUIRED_VALIDATION_PARAMS: Readonly<Record<string, readonly string[]>> = {
+  TOO_SHORT: ["min"],
+  TOO_LONG: ["max"],
+  NUMBER_TOO_SMALL: ["min"],
+  NUMBER_TOO_LARGE: ["max"],
+  OUT_OF_RANGE: ["min", "max"],
+  INVALID_CODE: ["length"],
 };
 
 /**
@@ -127,8 +185,10 @@ export function mapAuthError(input: AuthErrorInput): AuthErrorView {
   }
 
   // 6. Field-level issues: `fieldErrors[]` from the envelope, or the single `details.field` the
-  //    auth service throws for password-policy and duplicate-contact failures.
-  if (code === "VALIDATION_ERROR" || code === "INVALID_INPUT") {
+  //    auth service throws for password-policy and duplicate-contact failures. `BAD_REQUEST` and
+  //    the 422 aliases are included because that is what oRPC reports when a zod schema rejects the
+  //    input — without them a rejected form would fall through to the generic error.
+  if (isValidationCode(code)) {
     const issues = collectFieldIssues(input, details);
     if (issues.length > 0) {
       const views = issues.map((issue) => toFieldView(issue));
@@ -222,6 +282,7 @@ function collectFieldIssues(
           field: issue.field,
           code: typeof issue.code === "string" ? issue.code : "VALIDATION_ERROR",
           message: typeof issue.message === "string" ? issue.message : "",
+          ...(issue.params ? { params: { ...issue.params } } : {}),
         });
       }
     }
@@ -236,12 +297,36 @@ function collectFieldIssues(
   return issues;
 }
 
+/** The key and params for a coded validation issue, or `null` when the code is unknown. */
+function validationViewFor(issue: AuthErrorFieldIssue): { key: string; params: Params } | null {
+  const code = issue.code.toUpperCase();
+  const key = VALIDATION_KEYS[code];
+  if (key === undefined) return null;
+
+  const params: Params = { ...issue.params };
+  for (const name of REQUIRED_VALIDATION_PARAMS[code] ?? []) {
+    if (params[name] === undefined) return null;
+  }
+  return { key, params };
+}
+
 /**
- * A field issue always maps to an existing key: `field.<name>` for known fields, otherwise the
- * generic validation key. The server's localized sentence travels in `params.message`, so the input
- * shows the real reason without any copy being hardcoded in a component (AC-7, I1).
+ * A field issue always maps to an existing key: a `validation.*` key when the server sent a known
+ * code, `field.<name>` when it only sent a sentence, otherwise the generic validation key. The
+ * server's sentence travels in `params.message`, so the input shows the real reason even when the
+ * code is new to this build (AC-7, I1).
  */
 function toFieldView(issue: AuthErrorFieldIssue): AuthErrorFieldView {
+  const validation = validationViewFor(issue);
+  if (validation) {
+    return {
+      field: issue.field,
+      key: validation.key,
+      params: validation.params,
+      message: issue.message,
+    };
+  }
+
   const known = AUTH_FIELD_NAMES.includes(issue.field);
   const hasMessage = issue.message.trim().length > 0;
   if (known && hasMessage) {
@@ -288,6 +373,7 @@ function buildMessageKeys(): readonly string[] {
   keys.add("auth.error.webOnlyRegistration");
   keys.add("auth.error.validation");
   for (const field of AUTH_FIELD_NAMES) keys.add(`field.${field}`);
+  for (const key of VALIDATION_MESSAGE_KEYS) keys.add(key);
   return [...keys].sort();
 }
 

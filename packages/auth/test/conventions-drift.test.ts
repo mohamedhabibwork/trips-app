@@ -76,7 +76,7 @@ describe("Drift: conventions.json ↔ the code that consumes it (§6 rule 2)", (
   });
 });
 
-describe("Drift: error keys ↔ messages.json (§6 rule 2)", () => {
+describe("Drift: error keys ↔ the auth catalog (§6 rule 2)", () => {
   test("every key the mapper can emit exists in both locales", () => {
     for (const key of AUTH_ERROR_MESSAGE_KEYS) {
       expect(hasAuthMessage(key)).toBe(true);

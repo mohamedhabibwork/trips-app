@@ -208,7 +208,8 @@ describe("Unit: field-level errors (AC-7, M2)", () => {
 
     expect(view.recovery).toBe("focusField");
     expect(view.field).toBe("email");
-    expect(view.key).toBe("field.email");
+    // A coded issue renders from the catalog; the sentence is only the fallback.
+    expect(view.key).toBe("validation.invalidEmail");
     expect(view.fieldErrors?.length).toBe(2);
     expect(fieldMessageFor(view.fieldErrors![1]!, "en")).toBe("Use at least 12 characters.");
   });

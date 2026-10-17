@@ -115,8 +115,11 @@ export interface AuthErrorView {
 /** A single server-side field error as it arrives in the `ApiErrorResponse` envelope. */
 export interface AuthErrorFieldIssue {
   field: string;
+  /** A stable validation code (`REQUIRED`, `TOO_SHORT`, …); see `VALIDATION_KEYS` in errors.ts. */
   code: string;
   message: string;
+  /** Constraint values the code needs, for example `{ min: 12 }`. */
+  params?: Record<string, string | number>;
 }
 
 /** Everything `mapAuthError` needs; built by each platform's transport layer. */

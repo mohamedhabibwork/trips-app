@@ -137,10 +137,9 @@ const ROWS: readonly Row[] = [
       code: "VALIDATION_ERROR",
       fieldErrors: [{ field: "email", code: "INVALID_EMAIL", message: "Enter a valid email." }],
     },
-    key: "field.email",
+    key: "validation.invalidEmail",
     recovery: "focusField",
     field: "email",
-    sentenceFromServer: "Enter a valid email.",
   },
   {
     condition: "VALIDATION_ERROR with details.field and a message",
@@ -333,7 +332,7 @@ describe("Unit: field errors take priority", () => {
     });
 
     expect(view1.field).toBe("email");
-    expect(view1.key).toBe("field.email");
+    expect(view1.key).toBe("validation.invalidEmail");
     expect(view1.fieldErrors?.length).toBe(1);
   });
 
@@ -354,8 +353,8 @@ describe("Unit: field errors take priority", () => {
       "phone",
     ]);
     expect(view1.fieldErrors?.map((issue) => issue.key)).toEqual([
-      "field.fullName",
-      "field.country",
+      "validation.required",
+      "validation.required",
       "field.phone",
     ]);
   });
