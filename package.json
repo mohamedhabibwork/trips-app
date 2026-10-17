@@ -4,7 +4,10 @@
   "workspaces": {
     "packages": [
       "apps/*",
-      "packages/*"
+      "mobile/*",
+      "mobile",
+      "packages/*",
+      "packages/services/*"
     ],
     "catalog": {
       "zod": "^4.5.4",
@@ -19,7 +22,13 @@
       "next-themes": "^0.4.6",
       "sonner": "^2.0.8",
       "tailwindcss": "^4.3.3",
-      "@orpc/client": "^1.15.6"
+      "@orpc/client": "^1.15.6",
+      "@mohamedhabibwork/storagekit": "^0.6.1",
+      "@mohamedhabibwork/cachekit": "^0.2.1",
+      "@mohamedhabibwork/queuekit": "^0.4.1",
+      "@mohamedhabibwork/loggerkit": "^0.2.2",
+      "@mohamedhabibwork/notifykit": "^0.4.1",
+      "firebase-admin": "^13.7.0"
     }
   },
   "type": "module",
@@ -27,6 +36,8 @@
     "dev": "vp run -r dev",
     "build": "vp run -r build",
     "check-types": "vp run -r check-types",
+    "test": "bun test packages/auth && bun test apps/web/src/auth && bun test packages/api packages/domain && cd apps/server && bun test test",
+    "services:check": "bun scripts/services.ts check",
     "check": "oxlint && oxfmt --write",
     "lint": "vp lint",
     "format": "vp fmt",
@@ -35,6 +46,9 @@
     "db:studio": "vp run --filter @trips-app/db db:studio",
     "db:generate": "vp run --filter @trips-app/db db:generate",
     "db:migrate": "vp run --filter @trips-app/db db:migrate",
+    "db:seed": "bun --cwd packages/db src/seed/cli.ts default",
+    "db:seed:default": "bun --cwd packages/db src/seed/cli.ts default",
+    "db:seed:demo": "bun --cwd packages/db src/seed/cli.ts demo",
     "deploy": "vp run --filter @trips-app/infra deploy",
     "destroy": "vp run --filter @trips-app/infra destroy",
     "env:generate": "varlock codegen --path ./apps/web/ && varlock codegen --path ./apps/server/ && varlock codegen --path ./packages/db/",

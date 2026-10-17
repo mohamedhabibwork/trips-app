@@ -14,6 +14,11 @@
   "dependencies": {
     "@elysia/openapi": "^1.4.16",
     "@elysiajs/cors": "^1.4.2",
+    "@mohamedhabibwork/cachekit": "catalog:",
+    "@mohamedhabibwork/loggerkit": "catalog:",
+    "@mohamedhabibwork/notifykit": "catalog:",
+    "@mohamedhabibwork/queuekit": "catalog:",
+    "@mohamedhabibwork/storagekit": "catalog:",
     "@orpc/openapi": "catalog:",
     "@orpc/server": "catalog:",
     "@orpc/zod": "catalog:",
@@ -25,6 +30,7 @@
     "@trips-app/rpc": "workspace:*",
     "elysia": "^1.4.30",
     "evlog": "catalog:",
+    "firebase-admin": "catalog:",
     "varlock": "catalog:",
     "zod": "catalog:"
   },

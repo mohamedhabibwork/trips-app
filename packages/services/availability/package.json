@@ -9,6 +9,11 @@
     "check-types": "tsc -b"
   },
   "dependencies": {
+    "@mohamedhabibwork/cachekit": "catalog:",
+    "@mohamedhabibwork/loggerkit": "catalog:",
+    "@mohamedhabibwork/notifykit": "catalog:",
+    "@mohamedhabibwork/queuekit": "catalog:",
+    "@mohamedhabibwork/storagekit": "catalog:",
     "@orpc/server": "catalog:",
     "@trips-app/db": "workspace:*",
     "@trips-app/domain": "workspace:*",

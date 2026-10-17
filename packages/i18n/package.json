@@ -7,7 +7,8 @@
   },
   "scripts": {
     "build": "tsc -b",
-    "check-types": "tsc -b"
+    "check-types": "tsc -b",
+    "emit:mobile": "bun scripts/emit-mobile-contract.ts"
   },
   "devDependencies": {
     "@trips-app/config": "workspace:*",
