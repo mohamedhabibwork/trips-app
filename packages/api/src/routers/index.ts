@@ -1,11 +1,23 @@
-import type { RouterClient } from "@orpc/server";
-
 import { publicProcedure } from "../index";
+import type { AppRouter, AppRouterClient } from "../types";
+import { lookupsRouter } from "./lookups";
+import { serviceRouters } from "./services";
+
+export type { AppRouter, AppRouterClient };
 
 export const appRouter = {
-  healthCheck: publicProcedure.handler(() => {
-    return "OK";
-  }),
+  healthCheck: publicProcedure
+    .route({
+      method: "GET",
+      path: "/healthCheck",
+      operationId: "healthCheck",
+      summary: "Platform API health check",
+      description: "Returns OK when the Trips Enjoy backend API is healthy.",
+      tags: ["system"],
+    })
+    .handler(() => {
+      return "OK";
+    }),
+  lookups: lookupsRouter,
+  ...serviceRouters,
 };
-export type AppRouter = typeof appRouter;
-export type AppRouterClient = RouterClient<typeof appRouter>;
