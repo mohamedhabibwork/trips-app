@@ -2,7 +2,17 @@ import { randomUUID } from "node:crypto";
 
 import { verifyAccessToken } from "@trips-app/domain";
 
-import { db } from "./services";
+import {
+  cache,
+  caches,
+  db,
+  disks,
+  logger,
+  notifications,
+  queue,
+  queues,
+  storage,
+} from "./services";
 import type { AuthActor, CreateContextOptions, RpcContext } from "./types";
 
 export type { Context, CreateContextOptions } from "./types";
@@ -41,8 +51,28 @@ export async function createContext(options: CreateContextOptions): Promise<RpcC
   const userAgent = headers.get("user-agent") ?? "unknown";
   const deviceFingerprint = headers.get("x-device-fingerprint") ?? "default-device";
 
+  const requestLogger = logger.child("request", {
+    requestId,
+    locale,
+    ...(auth
+      ? {
+          accountId: auth.accountId,
+          activeRole: auth.activeRole,
+          activeTenantId: auth.activeTenantId,
+        }
+      : {}),
+  });
+
   return {
     db,
+    logger: requestLogger,
+    cache,
+    caches,
+    queue,
+    queues,
+    storage,
+    disks,
+    notifications,
     requestId,
     locale,
     ipAddress,

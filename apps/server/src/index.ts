@@ -23,6 +23,7 @@ import { evlog } from "evlog/elysia";
 
 import { createContext } from "./context";
 import { ENV } from "./env.server";
+import { getKitsHealth, logContext, logger, shutdownKits } from "./services";
 import type { OpenAPIDocumentation } from "./types";
 
 export type * from "./types";
@@ -30,7 +31,7 @@ export type * from "./types";
 const rpcHandler = new RPCHandler(appRouter, {
   interceptors: [
     onError((error) => {
-      console.error(error);
+      logger.error("RPC handler error", error instanceof Error ? error : { cause: String(error) });
     }),
   ],
 });
@@ -45,7 +46,10 @@ const apiHandler = new OpenAPIHandler(appRouter, {
   ],
   interceptors: [
     onError((error) => {
-      console.error(error);
+      logger.error(
+        "OpenAPI handler error",
+        error instanceof Error ? error : { cause: String(error) },
+      );
     }),
   ],
 });
@@ -125,34 +129,45 @@ export const app = new Elysia()
     "/rpc*",
     async (context) => {
       const rpcContext = await createContext({ context });
-      const { response } = await rpcHandler.handle(context.request, {
-        prefix: "/rpc",
-        context: rpcContext,
-      });
-      if (!response) {
-        const notFound = createErrorResponse({
-          code: "RESOURCE_NOT_FOUND",
-          locale: rpcContext.locale ?? "ar",
-          requestId: rpcContext.requestId ?? randomUUID(),
-          service: "rpc",
-        });
-        return new Response(JSON.stringify(notFound), {
-          status: 404,
-          headers: {
-            "content-type": "application/json; charset=utf-8",
-            "x-request-id": notFound.requestId,
-          },
-        });
-      }
-      const headers = new Headers(response.headers);
-      if (rpcContext.requestId) {
-        headers.set("x-request-id", rpcContext.requestId);
-      }
-      return new Response(response.body, {
-        status: response.status,
-        statusText: response.statusText,
-        headers,
-      });
+      return logContext.run(
+        {
+          requestId: rpcContext.requestId,
+          locale: rpcContext.locale,
+          accountId: rpcContext.auth?.accountId,
+          tenantId: rpcContext.auth?.activeTenantId ?? null,
+          role: rpcContext.auth?.activeRole,
+        },
+        async () => {
+          const { response } = await rpcHandler.handle(context.request, {
+            prefix: "/rpc",
+            context: rpcContext,
+          });
+          if (!response) {
+            const notFound = createErrorResponse({
+              code: "RESOURCE_NOT_FOUND",
+              locale: rpcContext.locale ?? "ar",
+              requestId: rpcContext.requestId ?? randomUUID(),
+              service: "rpc",
+            });
+            return new Response(JSON.stringify(notFound), {
+              status: 404,
+              headers: {
+                "content-type": "application/json; charset=utf-8",
+                "x-request-id": notFound.requestId,
+              },
+            });
+          }
+          const headers = new Headers(response.headers);
+          if (rpcContext.requestId) {
+            headers.set("x-request-id", rpcContext.requestId);
+          }
+          return new Response(response.body, {
+            status: response.status,
+            statusText: response.statusText,
+            headers,
+          });
+        },
+      );
     },
     {
       parse: "none",
@@ -162,14 +177,25 @@ export const app = new Elysia()
     "/api-reference*",
     async (context) => {
       const rpcContext = await createContext({ context });
-      const { response } = await apiHandler.handle(context.request, {
-        prefix: "/api-reference",
-        context: rpcContext,
-      });
-      return wrapOpenAPIHttpResponse(response, {
-        requestId: rpcContext.requestId ?? randomUUID(),
-        locale: rpcContext.locale ?? "ar",
-      });
+      return logContext.run(
+        {
+          requestId: rpcContext.requestId,
+          locale: rpcContext.locale,
+          accountId: rpcContext.auth?.accountId,
+          tenantId: rpcContext.auth?.activeTenantId ?? null,
+          role: rpcContext.auth?.activeRole,
+        },
+        async () => {
+          const { response } = await apiHandler.handle(context.request, {
+            prefix: "/api-reference",
+            context: rpcContext,
+          });
+          return wrapOpenAPIHttpResponse(response, {
+            requestId: rpcContext.requestId ?? randomUUID(),
+            locale: rpcContext.locale ?? "ar",
+          });
+        },
+      );
     },
     {
       parse: "none",
@@ -179,14 +205,25 @@ export const app = new Elysia()
     "/api*",
     async (context) => {
       const rpcContext = await createContext({ context });
-      const { response } = await apiHandler.handle(context.request, {
-        prefix: "/api",
-        context: rpcContext,
-      });
-      return wrapOpenAPIHttpResponse(response, {
-        requestId: rpcContext.requestId ?? randomUUID(),
-        locale: rpcContext.locale ?? "ar",
-      });
+      return logContext.run(
+        {
+          requestId: rpcContext.requestId,
+          locale: rpcContext.locale,
+          accountId: rpcContext.auth?.accountId,
+          tenantId: rpcContext.auth?.activeTenantId ?? null,
+          role: rpcContext.auth?.activeRole,
+        },
+        async () => {
+          const { response } = await apiHandler.handle(context.request, {
+            prefix: "/api",
+            context: rpcContext,
+          });
+          return wrapOpenAPIHttpResponse(response, {
+            requestId: rpcContext.requestId ?? randomUUID(),
+            locale: rpcContext.locale ?? "ar",
+          });
+        },
+      );
     },
     {
       parse: "none",
@@ -214,6 +251,7 @@ export const app = new Elysia()
       {
         status: "OK",
         service: "trips-app-server",
+        kits: getKitsHealth(),
       },
       {
         requestId,
@@ -225,6 +263,17 @@ export const app = new Elysia()
 
 if (import.meta.main) {
   app.listen(3000, () => {
-    console.log("Server is running on http://localhost:3000");
+    logger.info("Server is running on http://localhost:3000", {
+      kits: getKitsHealth(),
+    });
   });
+
+  const handleShutdown = async (signal: string) => {
+    logger.info(`Received ${signal}, shutting down kits...`);
+    await shutdownKits();
+    process.exit(0);
+  };
+
+  process.once("SIGINT", () => void handleShutdown("SIGINT"));
+  process.once("SIGTERM", () => void handleShutdown("SIGTERM"));
 }

@@ -7,3 +7,5 @@ export const db: Database = createDb({
   DATABASE_URL: ENV.DATABASE_URL,
   logQueries: ENV.NODE_ENV === "development",
 });
+
+export * from "./kits";
