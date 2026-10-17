@@ -1,3 +1,1 @@
-export type DatabaseConfig = {
-  DATABASE_URL: string;
-};
+export type { DatabaseConfig } from "./types";
