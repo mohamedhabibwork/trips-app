@@ -1,203 +1,259 @@
-import { useMemo, useState } from "react";
-
+// SCR-ORG-40 Live operations: the running trip's vehicles on the map, their occupancy and incidents.
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { TeDataTable, type TeDataTableColumn } from "@trips-app/ui/components/te-data-table";
-import { TeKpiTile } from "@trips-app/ui/components/te-kpi-tile";
-import { TeLiveMap } from "@trips-app/ui/components/te-live-map";
-import { TePageHeader } from "@trips-app/ui/components/te-page-header";
-import { TeSearchField } from "@trips-app/ui/components/te-search-field";
-import { TeTimeline, type TeTimelineItem } from "@trips-app/ui/components/te-timeline";
-import { TeTrackingStatus } from "@trips-app/ui/components/te-tracking-status";
+
 import { t } from "@trips-app/i18n";
+import { TeLiveMap } from "@trips-app/ui/components/te-live-map";
 
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
 
-import { OrgButtonLink, WorkspaceBackLink } from "../common/org-link";
-import { OrgSection, getSelectedTripId } from "../common/org-shared";
-import { StatePreview } from "../common/organization-state-preview";
+import { OrgInput } from "../common/org-form";
+import { getSelectedTripId, toTripState, tripStateLabel, tripTitle } from "../common/org-shared";
+import {
+  NO_VALUE,
+  OrgBadge,
+  OrgCard,
+  OrgEmpty,
+  OrgError,
+  OrgLoading,
+  OrgPage,
+  OrgPageHeader,
+  OrgRow,
+} from "../common/org-ui";
+import { formatTime, rowsOf, type CheckInView } from "../accounting/finance-format";
+import {
+  eventMessage,
+  eventsOf,
+  eventsOfType,
+  plateOf,
+  projectRoute,
+  vehicleMotion,
+  type FleetVehicleView,
+  type TripVehicleView,
+  type VehicleMotion,
+} from "./operations-parts";
 
-interface OccupancyRow {
-  id: string;
-  vehicle: string;
-  checkedIn: string;
-  seats: string;
-  occupancy: string;
+const ITEM_CLASS =
+  "flex items-center justify-between gap-3 border-b border-[var(--te-hairline)] py-3 text-sm leading-5 last:border-b-0";
+
+function MotionBadge({ motion }: { motion: VehicleMotion }) {
+  if (motion === "moving")
+    return (
+      <OrgBadge tone="ok" icon="bus">
+        {t("screen.organization.operations.liveOperations.moving")}
+      </OrgBadge>
+    );
+  if (motion === "stopped")
+    return (
+      <OrgBadge tone="warn">{t("screen.organization.operations.liveOperations.stopped")}</OrgBadge>
+    );
+  return (
+    <OrgBadge tone="neu" icon="offline">
+      {t("screen.organization.operations.liveOperations.noSignal")}
+    </OrgBadge>
+  );
 }
 
-const OCCUPANCY_COLUMNS = (): readonly TeDataTableColumn<OccupancyRow>[] => [
-  { key: "vehicle", header: t("screen.organization.operations.liveOperations.vehicle") },
-  {
-    key: "checkedIn",
-    header: t("screen.organization.operations.liveOperations.checkedIn"),
-    align: "end",
-  },
-  { key: "seats", header: t("screen.organization.operations.liveOperations.seats"), align: "end" },
-  {
-    key: "occupancy",
-    header: t("screen.organization.operations.liveOperations.occupancy"),
-    align: "end",
-  },
-];
-
 export function LiveOperations() {
-  const { status: authStatus } = useAuth();
+  const { status: authStatus, locale } = useAuth();
+  const enabled = authStatus === "authenticated";
   const [travelerQuery, setTravelerQuery] = useState("");
 
   const tripsQuery = useQuery(
-    orpc.trips.listOrganizationTrips.queryOptions({
-      input: {},
-      enabled: authStatus === "authenticated",
-    }),
+    orpc.trips.listOrganizationTrips.queryOptions({ input: {}, enabled }),
   );
+  const fleetQuery = useQuery(orpc.fleet.listVehicles.queryOptions({ input: {}, enabled }));
 
-  const fleetQuery = useQuery(
-    orpc.fleet.listVehicles.queryOptions({
-      input: {},
-      enabled: authStatus === "authenticated",
-    }),
-  );
-
+  const trips = tripsQuery.data?.items ?? [];
   const selectedId = getSelectedTripId();
-  const trip = useMemo(() => {
-    return (
-      tripsQuery.data?.items.find((item) => item.id === selectedId) ?? tripsQuery.data?.items[0]
-    );
-  }, [tripsQuery.data?.items, selectedId]);
-
-  const tripTitle = trip ? trip.titleEn || trip.titleAr : "";
-  const tripStatus = trip?.state ?? "In Progress";
+  const trip =
+    trips.find((item) => item.id === selectedId) ??
+    trips.find((item) => toTripState(item.state) === "In Progress") ??
+    trips[0];
+  const tripId = trip?.id ?? "";
 
   const manifestQuery = useQuery(
     orpc.checkIn.listTripManifest.queryOptions({
-      input: { tripId: trip?.id ?? "" },
-      enabled: authStatus === "authenticated" && Boolean(trip?.id),
+      input: { tripId },
+      enabled: enabled && Boolean(tripId),
     }),
   );
-
   const trackingQuery = useQuery(
     orpc.tracking.getTripLiveTracking.queryOptions({
-      input: { tripId: trip?.id ?? "" },
-      enabled: authStatus === "authenticated" && Boolean(trip?.id),
+      input: { tripId },
+      enabled: enabled && Boolean(tripId),
     }),
   );
 
-  const checkedInTotal = useMemo(() => {
-    if (!manifestQuery.data) return 0;
-    return manifestQuery.data.filter((m) => m.status === "checked_in").length;
-  }, [manifestQuery.data]);
+  const tripVehicles = (trip?.vehicles ?? []) as readonly TripVehicleView[];
+  const fleet = (fleetQuery.data?.items ?? []) as readonly FleetVehicleView[];
+  const manifest = rowsOf<CheckInView>(manifestQuery.data);
+  const events = eventsOf(trackingQuery.data);
+  const pings = eventsOfType(events, "gps_ping");
+  const incidents = eventsOfType(events, "safety_alert");
+  const route = projectRoute(pings);
+  const busPosition = route.at(-1);
+  const newestTime = Math.max(0, ...events.map((event) => new Date(event.occurredAt).getTime()));
+  const lastUpdate = newestTime > 0 ? formatTime(new Date(newestTime), locale) : NO_VALUE;
+  const plate = (vehicleId: string | null) => plateOf(vehicleId, tripVehicles, fleet);
 
-  const occupancyRows = useMemo<readonly OccupancyRow[]>(() => {
-    if (!fleetQuery.data?.items) return [];
-    return fleetQuery.data.items.map((v) => {
-      const pct =
-        v.seatCount > 0 ? Math.min(100, Math.round((checkedInTotal / v.seatCount) * 100)) : 0;
-      return {
-        id: v.id,
-        vehicle: v.plateNumber,
-        checkedIn: String(checkedInTotal),
-        seats: String(v.seatCount),
-        occupancy: `${pct}%`,
-      };
-    });
-  }, [fleetQuery.data?.items, checkedInTotal]);
+  const needle = travelerQuery.trim().toLowerCase();
+  const travelerMatches = needle
+    ? manifest.filter((record) => record.passengerName.toLowerCase().includes(needle))
+    : [];
 
-  const incidentItems = useMemo<readonly TeTimelineItem[]>(() => {
-    if (!trackingQuery.data?.events) return [];
-    return trackingQuery.data.events.map((ev) => ({
-      id: ev.id,
-      time: new Date(ev.occurredAt).toISOString().slice(11, 16),
-      label: ev.messageEn || ev.messageAr || ev.eventType,
-      state: "done" as const,
-    }));
-  }, [trackingQuery.data?.events]);
+  const name = trip ? tripTitle(trip, locale) || NO_VALUE : NO_VALUE;
+  const childTracking = trip?.childTrackingEnabled ?? false;
 
   return (
-    <StatePreview>
-      <div className="flex flex-col gap-8">
-        <WorkspaceBackLink
-          parent={{
-            slug: "trip-command-view",
-            label: t("screen.organization.operations.liveOperations.backToTrip"),
+    <OrgPage className="min-h-0">
+      <OrgPageHeader
+        title={t("screen.organization.operations.liveOperations.title")}
+        caption={
+          <span className="flex flex-wrap items-center gap-3">
+            {trip ? (
+              <OrgBadge tone="info" icon="live">
+                {t("screen.organization.operations.liveOperations.tripInState", {
+                  trip: name,
+                  state: tripStateLabel(toTripState(trip.state)),
+                })}
+              </OrgBadge>
+            ) : null}
+            {t("screen.organization.operations.liveOperations.lastUpdate", { time: lastUpdate })}
+          </span>
+        }
+        actions={
+          trip ? (
+            childTracking ? (
+              <OrgBadge tone="ok">
+                {t("screen.organization.operations.liveOperations.childTrackingOn")}
+              </OrgBadge>
+            ) : (
+              <OrgBadge tone="neu">
+                {t("screen.organization.operations.liveOperations.childTrackingOff")}
+              </OrgBadge>
+            )
+          ) : null
+        }
+      />
+      {tripsQuery.isError || trackingQuery.isError ? (
+        <OrgError
+          onRetry={() => {
+            void tripsQuery.refetch();
+            void trackingQuery.refetch();
           }}
         />
-        <TePageHeader
-          title={t("screen.organization.operations.liveOperations.liveOperations")}
-          description={tripTitle || t("screen.organization.operations.liveOperations.tripName")}
-        />
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <TeKpiTile
-            label={t("screen.organization.operations.liveOperations.tripStatus")}
-            value={tripStatus}
-          />
-          <TeKpiTile
-            label={t("screen.organization.operations.liveOperations.travelersCheckedIn")}
-            value={String(checkedInTotal)}
-          />
-          <TeKpiTile
-            label={t("screen.organization.operations.liveOperations.vehiclesOnTheRoad")}
-            value={String(occupancyRows.length)}
-          />
+      ) : null}
+      {tripsQuery.isSuccess && !trip ? (
+        <OrgEmpty title={t("screen.organization.operations.liveOperations.noTripInProgress")}>
+          {t("screen.organization.operations.liveOperations.occupancyAppearsWhenATrip")}
+        </OrgEmpty>
+      ) : null}
+      <OrgRow>
+        <OrgCard className="p-4 lg:flex-[2]">
+          <div className="relative flex flex-1 flex-col items-center justify-center overflow-hidden rounded-xl bg-[var(--te-map-ground)] px-4 pt-14 pb-4 lg:min-h-[520px]">
+            <TeLiveMap
+              className="w-full"
+              route={route}
+              busPosition={busPosition}
+              ariaLabel={t("screen.organization.operations.liveOperations.liveMap")}
+              statusText={
+                busPosition
+                  ? t("screen.organization.operations.liveOperations.vehiclePositionUpdated", {
+                      time: lastUpdate,
+                    })
+                  : t("screen.organization.operations.liveOperations.noPositionYet")
+              }
+            />
+            <OrgBadge tone="info" className="absolute start-4 top-4">
+              {t("screen.organization.operations.liveOperations.liveVehiclePositions")}
+            </OrgBadge>
+          </div>
+        </OrgCard>
+        <div className="flex min-w-0 flex-1 flex-col gap-6">
+          <OrgCard title={t("screen.organization.operations.liveOperations.vehiclesInProgress")}>
+            {tripsQuery.isLoading ? (
+              <OrgLoading rows={2} />
+            ) : tripVehicles.length === 0 ? (
+              <OrgEmpty
+                title={t("screen.organization.operations.liveOperations.noVehiclesInProgress")}
+              />
+            ) : (
+              <div>
+                {tripVehicles.map((vehicle) => {
+                  const checkedIn = manifest.filter(
+                    (record) =>
+                      record.vehicleId === vehicle.vehicleId && record.status === "checked_in",
+                  ).length;
+                  return (
+                    <div key={vehicle.vehicleId} className={ITEM_CLASS}>
+                      <span>
+                        <b className="font-semibold">{plate(vehicle.vehicleId)}</b>
+                        <br />
+                        <span className="te-caption text-[var(--te-ink-muted)]">
+                          {t("screen.organization.operations.liveOperations.occupancyNOfSeats", {
+                            n: manifestQuery.isSuccess ? checkedIn : NO_VALUE,
+                            seats: vehicle.seatCountSnapshot,
+                          })}
+                        </span>
+                      </span>
+                      <MotionBadge motion={vehicleMotion(vehicle.vehicleId, pings)} />
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </OrgCard>
+          <OrgCard title={t("screen.organization.operations.liveOperations.incidentFeed")}>
+            {incidents.length === 0 ? (
+              <p className="te-caption m-0 text-[var(--te-ink-muted)]">
+                {t("screen.organization.operations.liveOperations.noIncidents")}
+              </p>
+            ) : (
+              <ul className="m-0 list-none p-0">
+                {incidents.map((incident) => (
+                  <li key={incident.id} className={ITEM_CLASS}>
+                    <span>
+                      {t("screen.organization.operations.liveOperations.incidentLine", {
+                        time: formatTime(incident.occurredAt, locale),
+                        plate: plate(incident.vehicleId),
+                        description: eventMessage(incident, locale),
+                      })}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </OrgCard>
+          <div className="flex flex-col gap-2">
+            <OrgInput
+              label={t("screen.organization.operations.liveOperations.travelerLookup")}
+              hint={t("screen.organization.operations.liveOperations.showsTheVehicleOnly")}
+              type="search"
+              dir="auto"
+              value={travelerQuery}
+              onChange={(event) => setTravelerQuery(event.target.value)}
+            />
+            {needle ? (
+              <ul aria-live="polite" className="m-0 list-none p-0">
+                {travelerMatches.length === 0 ? (
+                  <li className="te-caption text-[var(--te-ink-muted)]">
+                    {t("screen.organization.operations.liveOperations.noTravelerFound")}
+                  </li>
+                ) : (
+                  travelerMatches.map((record) => (
+                    <li key={record.id} className={ITEM_CLASS}>
+                      <span>{record.passengerName}</span>
+                      <b className="font-semibold">{plate(record.vehicleId)}</b>
+                    </li>
+                  ))
+                )}
+              </ul>
+            ) : null}
+          </div>
         </div>
-        <OrgSection title={t("screen.organization.operations.liveOperations.liveMap")}>
-          <TeLiveMap
-            route={[]}
-            ariaLabel={t("screen.organization.operations.liveOperations.liveVehiclePositions")}
-            statusText={t(
-              "screen.organization.operations.liveOperations.vehiclePositionAndArrivalTime",
-            )}
-          />
-          <TeTrackingStatus status="on-time" />
-        </OrgSection>
-        <OrgSection title={t("screen.organization.operations.liveOperations.occupancyPerVehicle")}>
-          <TeDataTable
-            columns={OCCUPANCY_COLUMNS()}
-            rows={occupancyRows}
-            getRowKey={(row) => row.id}
-            caption={t("screen.organization.operations.liveOperations.occupancyPerVehicleCaption")}
-            emptyTitle={t("screen.organization.operations.liveOperations.noVehiclesInProgress")}
-            emptyDescription={t(
-              "screen.organization.operations.liveOperations.occupancyAppearsWhenATrip",
-            )}
-          />
-        </OrgSection>
-        <OrgSection title={t("screen.organization.operations.liveOperations.travelerLookup")}>
-          <TeSearchField
-            label={t("screen.organization.operations.liveOperations.findATraveler")}
-            value={travelerQuery}
-            onValueChange={setTravelerQuery}
-            clearLabel={t("screen.organization.operations.liveOperations.clearSearch")}
-          />
-          <p className="te-caption">
-            {t("screen.organization.operations.liveOperations.theLookupShowsTheTraveler")}
-          </p>
-        </OrgSection>
-        <OrgSection title={t("screen.organization.operations.liveOperations.incidentFeed")}>
-          <TeTimeline
-            items={incidentItems}
-            ariaLabel={t("screen.organization.operations.liveOperations.incidentFeedAriaLabel")}
-          />
-        </OrgSection>
-        <OrgSection title={t("screen.organization.operations.liveOperations.related")}>
-          <ul className="flex flex-wrap gap-2">
-            <li>
-              <OrgButtonLink slug="trip-report-review" variant="secondary">
-                {t("screen.organization.operations.liveOperations.tripReportReview")}
-              </OrgButtonLink>
-            </li>
-            <li>
-              <OrgButtonLink slug="bookings-and-travelers" variant="secondary">
-                {t("screen.organization.operations.liveOperations.bookingsAndTravelers")}
-              </OrgButtonLink>
-            </li>
-            <li>
-              <OrgButtonLink slug="child-safety-reports" variant="secondary">
-                {t("screen.organization.operations.liveOperations.childSafetyReports")}
-              </OrgButtonLink>
-            </li>
-          </ul>
-        </OrgSection>
-      </div>
-    </StatePreview>
+      </OrgRow>
+    </OrgPage>
   );
 }

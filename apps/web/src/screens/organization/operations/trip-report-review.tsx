@@ -1,181 +1,245 @@
-import { useMemo, useState } from "react";
-
+// SCR-ORG-41 Trip report review: each moderator's end-of-trip report, per vehicle.
+import { useId, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { TeButton } from "@trips-app/ui/components/te-button";
-import { TeCard } from "@trips-app/ui/components/te-card";
-import { TeDataTable, type TeDataTableColumn } from "@trips-app/ui/components/te-data-table";
-import { TeInput } from "@trips-app/ui/components/te-input";
-import { TePageHeader } from "@trips-app/ui/components/te-page-header";
+
 import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
 
-import { WorkspaceBackLink } from "../common/org-link";
-import { OrgSection, StateBadge, getSelectedTripId } from "../common/org-shared";
-import { StatePreview } from "../common/organization-state-preview";
+import { OrgTextarea } from "../common/org-form";
+import { useOrgParams } from "../common/org-link";
+import { getSelectedTripId, tripTitle } from "../common/org-shared";
+import { OrgTable, type OrgColumn } from "../common/org-table";
+import {
+  NO_VALUE,
+  OrgAlert,
+  OrgBadge,
+  OrgButton,
+  OrgCard,
+  OrgEmpty,
+  OrgError,
+  OrgPage,
+  OrgPageHeader,
+  OrgRow,
+} from "../common/org-ui";
+import { formatDateTime, rowsOf, type CheckInView } from "../accounting/finance-format";
+import {
+  eventsOf,
+  eventsOfType,
+  plateOf,
+  type FleetVehicleView,
+  type TripVehicleView,
+} from "./operations-parts";
 
-interface ModeratorReportRow {
-  id: string;
-  vehicle: string;
-  headcount: string;
-  checkedIn: string;
-  incidents: string;
-  submittedAt: string;
+type ReportStatus = "submitted" | "differs" | "pending";
+
+interface ReportRow {
+  vehicleId: string;
+  plate: string;
+  counted: number | null;
+  checkedIn: number;
+  submittedAt: string | Date | null;
+  reason: string | null;
+  incidents: number;
+  status: ReportStatus;
 }
 
-const REPORT_COLUMNS = (): readonly TeDataTableColumn<ModeratorReportRow>[] => [
-  { key: "vehicle", header: t("screen.organization.operations.tripReportReview.vehicle") },
-  {
-    key: "headcount",
-    header: t("screen.organization.operations.tripReportReview.finalHeadcount"),
-    align: "end",
-  },
-  {
-    key: "checkedIn",
-    header: t("screen.organization.operations.tripReportReview.checkedIn"),
-    align: "end",
-  },
-  {
-    key: "match",
-    header: t("screen.organization.operations.tripReportReview.headcount"),
-    render: (row) =>
-      row.headcount === row.checkedIn ? (
-        <StateBadge
-          tone="success"
-          icon="check"
-          label={t("screen.organization.operations.tripReportReview.matchesCheckIn")}
-        />
-      ) : (
-        <StateBadge
-          tone="warning"
-          icon="alert"
-          label={t("screen.organization.operations.tripReportReview.mismatch")}
-        />
-      ),
-  },
-  {
-    key: "incidents",
-    header: t("screen.organization.operations.tripReportReview.incidents"),
-    align: "end",
-  },
-  { key: "submittedAt", header: t("screen.organization.operations.tripReportReview.submitted") },
-];
+function counted(metadata: Record<string, unknown> | null | undefined): number | null {
+  const value = metadata?.countedPassengers;
+  return typeof value === "number" ? value : null;
+}
+
+function StatusBadge({ status }: { status: ReportStatus }) {
+  if (status === "submitted")
+    return (
+      <OrgBadge tone="ok">
+        {t("screen.organization.operations.tripReportReview.submitted")}
+      </OrgBadge>
+    );
+  if (status === "differs")
+    return (
+      <OrgBadge tone="warn">
+        {t("screen.organization.operations.tripReportReview.headcountDiffers")}
+      </OrgBadge>
+    );
+  return (
+    <OrgBadge tone="neu" icon="clock">
+      {t("screen.organization.operations.tripReportReview.reportPending")}
+    </OrgBadge>
+  );
+}
 
 export function TripReportReview() {
-  const { status: authStatus } = useAuth();
+  const { status: authStatus, locale } = useAuth();
+  const enabled = authStatus === "authenticated";
+  const noteHintId = useId();
   const [note, setNote] = useState("");
+  const { tripId: routeTripId } = useOrgParams();
 
   const tripsQuery = useQuery(
-    orpc.trips.listOrganizationTrips.queryOptions({
-      input: {},
-      enabled: authStatus === "authenticated",
-    }),
+    orpc.trips.listOrganizationTrips.queryOptions({ input: {}, enabled }),
   );
+  const fleetQuery = useQuery(orpc.fleet.listVehicles.queryOptions({ input: {}, enabled }));
 
-  const fleetQuery = useQuery(
-    orpc.fleet.listVehicles.queryOptions({
-      input: {},
-      enabled: authStatus === "authenticated",
-    }),
-  );
-
-  const selectedId = getSelectedTripId();
-  const trip = useMemo(() => {
-    return (
-      tripsQuery.data?.items.find((item) => item.id === selectedId) ?? tripsQuery.data?.items[0]
-    );
-  }, [tripsQuery.data?.items, selectedId]);
-
-  const tripTitle = trip ? trip.titleEn || trip.titleAr : "";
+  const trips = tripsQuery.data?.items ?? [];
+  const wantedId = routeTripId ?? getSelectedTripId();
+  const trip = trips.find((item) => item.id === wantedId) ?? trips[0];
+  const tripId = trip?.id ?? "";
 
   const manifestQuery = useQuery(
     orpc.checkIn.listTripManifest.queryOptions({
-      input: { tripId: trip?.id ?? "" },
-      enabled: authStatus === "authenticated" && Boolean(trip?.id),
+      input: { tripId },
+      enabled: enabled && Boolean(tripId),
     }),
   );
-
   const trackingQuery = useQuery(
     orpc.tracking.getTripLiveTracking.queryOptions({
-      input: { tripId: trip?.id ?? "" },
-      enabled: authStatus === "authenticated" && Boolean(trip?.id),
+      input: { tripId },
+      enabled: enabled && Boolean(tripId),
     }),
   );
 
-  const rows = useMemo<readonly ModeratorReportRow[]>(() => {
-    if (!fleetQuery.data?.items || !trip) return [];
-    const checkedInCount = manifestQuery.data
-      ? manifestQuery.data.filter((m) => m.status === "checked_in").length
-      : 0;
-    const incidentCount = trackingQuery.data?.events
-      ? trackingQuery.data.events.filter(
-          (ev) => ev.eventType === "safety_alert" || ev.eventType === "emergency_sos",
-        ).length
-      : 0;
-    const lastSubmitted = trackingQuery.data?.events[0]?.occurredAt
-      ? new Date(trackingQuery.data.events[0].occurredAt)
-          .toISOString()
-          .slice(0, 16)
-          .replace("T", " ")
-      : new Date(trip.updatedAt).toISOString().slice(0, 16).replace("T", " ");
-    return fleetQuery.data.items.map((v) => ({
-      id: v.id,
-      vehicle: v.plateNumber,
-      headcount: String(checkedInCount),
-      checkedIn: String(checkedInCount),
-      incidents: String(incidentCount),
-      submittedAt: lastSubmitted,
-    }));
-  }, [fleetQuery.data?.items, trip, manifestQuery.data, trackingQuery.data?.events]);
+  const tripVehicles = (trip?.vehicles ?? []) as readonly TripVehicleView[];
+  const fleet = (fleetQuery.data?.items ?? []) as readonly FleetVehicleView[];
+  const manifest = rowsOf<CheckInView>(manifestQuery.data);
+  const events = eventsOf(trackingQuery.data);
+  const headcounts = eventsOfType(events, "headcount_verified");
+  const alerts = eventsOfType(events, "safety_alert");
+
+  const rows: readonly ReportRow[] = tripVehicles.map((vehicle) => {
+    const report = headcounts.find((event) => event.vehicleId === vehicle.vehicleId);
+    const checkedIn = manifest.filter(
+      (record) => record.vehicleId === vehicle.vehicleId && record.status === "checked_in",
+    ).length;
+    const finalCount = report ? counted(report.metadata) : null;
+    const notes = report?.metadata?.notes;
+    return {
+      vehicleId: vehicle.vehicleId,
+      plate: plateOf(vehicle.vehicleId, tripVehicles, fleet),
+      counted: finalCount,
+      checkedIn,
+      submittedAt: report?.occurredAt ?? null,
+      reason: typeof notes === "string" && notes ? notes : null,
+      incidents: alerts.filter((event) => event.vehicleId === vehicle.vehicleId).length,
+      status: !report ? "pending" : finalCount !== checkedIn ? "differs" : "submitted",
+    };
+  });
+  const mismatch = rows.find((row) => row.status === "differs");
+  const notYet = t("screen.organization.operations.tripReportReview.notYet");
+
+  const columns: readonly OrgColumn<ReportRow>[] = [
+    {
+      key: "plate",
+      header: t("screen.organization.operations.tripReportReview.vehicle"),
+      render: (row) => <b className="font-semibold">{row.plate}</b>,
+    },
+    {
+      key: "counted",
+      header: t("screen.organization.operations.tripReportReview.finalHeadcount"),
+      render: (row) => (row.status === "pending" ? notYet : String(row.counted ?? NO_VALUE)),
+    },
+    { key: "checkedIn", header: t("screen.organization.operations.tripReportReview.checkedIn") },
+    {
+      key: "submittedAt",
+      header: t("screen.organization.operations.tripReportReview.submittedAt"),
+      className: "whitespace-nowrap",
+      render: (row) => (row.submittedAt ? formatDateTime(row.submittedAt, locale) : notYet),
+    },
+    {
+      key: "status",
+      header: t("screen.organization.operations.tripReportReview.status"),
+      render: (row) => <StatusBadge status={row.status} />,
+    },
+    { key: "incidents", header: t("screen.organization.operations.tripReportReview.incidents") },
+  ];
+
+  const failed = tripsQuery.isError || manifestQuery.isError || trackingQuery.isError;
+  const name = trip ? tripTitle(trip, locale) || NO_VALUE : NO_VALUE;
 
   return (
-    <StatePreview>
-      <div className="flex flex-col gap-8">
-        <WorkspaceBackLink
-          parent={{
-            slug: "trip-command-view",
-            label: t("screen.organization.operations.tripReportReview.backToTrip"),
+    <OrgPage>
+      <OrgPageHeader
+        title={t("screen.organization.operations.tripReportReview.title")}
+        caption={t("screen.organization.operations.tripReportReview.caption", { trip: name })}
+      />
+      {failed ? (
+        <OrgError
+          onRetry={() => {
+            void tripsQuery.refetch();
+            void manifestQuery.refetch();
+            void trackingQuery.refetch();
           }}
         />
-        <TePageHeader
-          title={t("screen.organization.operations.tripReportReview.tripReportReview")}
-          description={tripTitle || t("screen.organization.operations.tripReportReview.tripName")}
+      ) : (
+        <OrgTable
+          columns={columns}
+          rows={rows}
+          rowKey={(row) => row.vehicleId}
+          caption={t("screen.organization.operations.tripReportReview.moderatorReportsPerVehicle")}
+          loading={tripsQuery.isLoading || trackingQuery.isLoading}
+          rowClassName={(row) =>
+            row.status === "differs" ? "bg-[var(--te-warning-soft)]" : undefined
+          }
+          empty={
+            <OrgEmpty title={t("screen.organization.operations.tripReportReview.noReportsYet")}>
+              {t("screen.organization.operations.tripReportReview.reportsAppearHereAfterEach")}
+            </OrgEmpty>
+          }
         />
-        <OrgSection title={t("screen.organization.operations.tripReportReview.moderatorReports")}>
-          <TeDataTable
-            columns={REPORT_COLUMNS()}
-            rows={rows}
-            getRowKey={(row) => row.id}
-            caption={t(
-              "screen.organization.operations.tripReportReview.moderatorReportsPerVehicle",
-            )}
-            emptyTitle={t("screen.organization.operations.tripReportReview.noReportsYet")}
-            emptyDescription={t(
-              "screen.organization.operations.tripReportReview.reportsAppearHereAfterEach",
-            )}
+      )}
+      <OrgRow align="start">
+        <OrgCard
+          className="flex-1"
+          title={t("screen.organization.operations.tripReportReview.headcountMismatch")}
+        >
+          {mismatch ? (
+            <>
+              <OrgAlert
+                tone="warn"
+                title={t("screen.organization.operations.tripReportReview.nCountedNCheckedIn", {
+                  counted: mismatch.counted ?? NO_VALUE,
+                  checkedIn: mismatch.checkedIn,
+                })}
+              >
+                {t("screen.organization.operations.tripReportReview.moderatorsReason", {
+                  reason: mismatch.reason ?? NO_VALUE,
+                })}
+              </OrgAlert>
+              <p className="te-caption m-0 text-[var(--te-ink-muted)]">
+                {t("screen.organization.operations.tripReportReview.submittedAtReadOnly", {
+                  time: formatDateTime(mismatch.submittedAt, locale),
+                  plate: mismatch.plate,
+                })}
+              </p>
+            </>
+          ) : (
+            <p className="te-caption m-0 text-[var(--te-ink-muted)]">
+              {t("screen.organization.operations.tripReportReview.noMismatch")}
+            </p>
+          )}
+        </OrgCard>
+        <OrgCard
+          className="flex-1"
+          title={t("screen.organization.operations.tripReportReview.organizationNote")}
+        >
+          <OrgTextarea
+            label={t("screen.organization.operations.tripReportReview.addANote")}
+            rows={3}
+            dir="auto"
+            value={note}
+            onChange={(event) => setNote(event.target.value)}
           />
-        </OrgSection>
-        <OrgSection title={t("screen.organization.operations.tripReportReview.organizationNote")}>
-          <TeCard>
-            <div className="flex flex-col gap-4">
-              <TeInput
-                label={t("screen.organization.operations.tripReportReview.note")}
-                placeholder={t("screen.organization.operations.tripReportReview.notePlaceholder")}
-                value={note}
-                onChange={(event) => setNote(event.target.value)}
-                supportingText={t("screen.organization.operations.tripReportReview.youCanAddANote")}
-                dir="auto"
-              />
-              <div className="flex justify-end">
-                <TeButton disabled={note.trim().length === 0} onClick={() => setNote("")}>
-                  {t("screen.organization.operations.tripReportReview.addNote")}
-                </TeButton>
-              </div>
-            </div>
-          </TeCard>
-        </OrgSection>
-      </div>
-    </StatePreview>
+          <p id={noteHintId} className="te-caption m-0 text-[var(--te-ink-muted)]">
+            {t("screen.organization.operations.tripReportReview.savingNotesIsNotAvailable")}
+          </p>
+          <div className="flex justify-end">
+            <OrgButton aria-disabled="true" aria-describedby={noteHintId}>
+              {t("screen.organization.operations.tripReportReview.addNote")}
+            </OrgButton>
+          </div>
+        </OrgCard>
+      </OrgRow>
+    </OrgPage>
   );
 }

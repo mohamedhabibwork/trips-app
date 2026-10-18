@@ -1,213 +1,304 @@
-import { useState } from "react";
-
+// SCR-ORG-33 Subscription and billing: the plan, usage against its limits, and billing.
+import { useId, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { TeBadge } from "@trips-app/ui/components/te-badge";
-import { TeButton } from "@trips-app/ui/components/te-button";
-import { TeCard } from "@trips-app/ui/components/te-card";
-import { TeInlineAlert } from "@trips-app/ui/components/te-inline-alert";
-import { TeKpiTile } from "@trips-app/ui/components/te-kpi-tile";
-import { TePageHeader } from "@trips-app/ui/components/te-page-header";
-import { TeSwitch } from "@trips-app/ui/components/te-switch";
+
 import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
 
-import { WorkspaceBackLink } from "../common/org-link";
-import { OrgSection } from "../common/org-shared";
-import { StatePreview } from "../common/organization-state-preview";
+import { OrgChips, OrgChoice } from "../common/org-form";
+import { toTripState, type TripState } from "../common/org-shared";
+import {
+  NO_VALUE,
+  OrgAlert,
+  OrgBadge,
+  OrgButton,
+  OrgCard,
+  OrgError,
+  OrgPage,
+  OrgPageHeader,
+  OrgRow,
+  type OrgTone,
+} from "../common/org-ui";
+import { formatDate, formatMinor, intlLocale } from "../accounting/finance-format";
+import { UsageRow } from "./billing-parts";
 
-type PlanAction = "Upgrade" | "Downgrade" | null;
+const INACTIVE_STATES: readonly TripState[] = ["Draft", "Cancelled", "Archived", "Completed"];
+/** Basis points in a whole (1500 bps = 15%). */
+const BPS_PER_WHOLE = 10_000;
 
-interface PlanOption {
-  id: string;
-  name: string;
-  current: boolean;
-  action: PlanAction;
+type BillingCycle = "monthly" | "annual";
+
+/** Plan limits a page shows; null means unlimited. */
+interface PlanLimits {
+  activeTripsPerMonth: number | null;
+  vehiclesPerTrip: number | null;
+  programsPerTrip: number | null;
+  employeesMax: number | null;
+  activeCouponsMax: number | null;
 }
 
-const PLAN_OPTIONS: readonly PlanOption[] = [
-  { id: "starter", name: "Starter", current: false, action: "Downgrade" },
-  { id: "growth", name: "Growth", current: true, action: null },
-  { id: "enterprise", name: "Enterprise", current: false, action: "Upgrade" },
-];
+interface CatalogPlan {
+  id: string;
+  nameEn: string;
+  nameAr: string;
+  monthlyPriceMinor: number;
+  annualPriceMinor: number;
+  currencyCode: string;
+  annualDiscountBps: number;
+  limits: PlanLimits;
+}
+
+function statusBadge(status: string | undefined) {
+  const tones: Record<string, { tone: OrgTone; label: string }> = {
+    active: { tone: "ok", label: t("screen.organization.billing.subscriptionAndBilling.active") },
+    trialing: {
+      tone: "info",
+      label: t("screen.organization.billing.subscriptionAndBilling.trial"),
+    },
+    past_due: {
+      tone: "warn",
+      label: t("screen.organization.billing.subscriptionAndBilling.pastDue"),
+    },
+    cancelled: {
+      tone: "err",
+      label: t("screen.organization.billing.subscriptionAndBilling.cancelled"),
+    },
+  };
+  const entry = status ? tones[status] : undefined;
+  return entry ? <OrgBadge tone={entry.tone}>{entry.label}</OrgBadge> : null;
+}
 
 export function SubscriptionAndBilling() {
   const queryClient = useQueryClient();
-  const { status: authStatus } = useAuth();
-  const [annualBilling, setAnnualBilling] = useState(false);
+  const { status: authStatus, locale } = useAuth();
+  const enabled = authStatus === "authenticated";
+  const panelId = useId();
+  const paymentNoteId = useId();
+  const [cycle, setCycle] = useState<BillingCycle | null>(null);
+  const [changeOpen, setChangeOpen] = useState(false);
+  const [chosenPlanId, setChosenPlanId] = useState<string | null>(null);
 
   const subscriptionQuery = useQuery(
-    orpc.plans.getOrganizationSubscription.queryOptions({
-      input: undefined,
-      enabled: authStatus === "authenticated",
-    }),
+    orpc.plans.getOrganizationSubscription.queryOptions({ input: undefined, enabled }),
   );
-
+  const catalogQuery = useQuery(
+    orpc.plans.getCatalog.queryOptions({ input: { role: "organization" }, enabled }),
+  );
   const tripsQuery = useQuery(
-    orpc.trips.listOrganizationTrips.queryOptions({
-      input: {},
-      enabled: authStatus === "authenticated",
-    }),
+    orpc.trips.listOrganizationTrips.queryOptions({ input: {}, enabled }),
   );
-
-  const employeesQuery = useQuery(
-    orpc.employees.list.queryOptions({
-      input: {},
-      enabled: authStatus === "authenticated",
-    }),
-  );
-
+  const employeesQuery = useQuery(orpc.employees.list.queryOptions({ input: {}, enabled }));
   const couponsQuery = useQuery(
-    orpc.coupons.listOrganizationCoupons.queryOptions({
-      input: {},
-      enabled: authStatus === "authenticated",
-    }),
+    orpc.coupons.listOrganizationCoupons.queryOptions({ input: {}, enabled }),
   );
 
   const changePlanMutation = useMutation(
     orpc.plans.changeOrganizationPlan.mutationOptions({
       onSuccess: () => {
         void queryClient.invalidateQueries({ queryKey: orpc.plans.key() });
+        setChangeOpen(false);
       },
     }),
   );
 
   const sub = subscriptionQuery.data;
-  const currentTier = sub ? (sub.planId.split(":")[1] ?? "growth") : "growth";
-  const renewalDate = sub?.currentPeriodEnd
-    ? new Date(sub.currentPeriodEnd).toISOString().slice(0, 10)
-    : "";
+  const plans = (catalogQuery.data ?? []) as readonly CatalogPlan[];
+  const currentPlan = plans.find((plan) => plan.id === sub?.planId);
+  const activeCycle: BillingCycle =
+    cycle ?? (sub?.billingCycle === "annual" ? "annual" : "monthly");
+  const planName = (plan: CatalogPlan) =>
+    locale === "ar" ? plan.nameAr || plan.nameEn : plan.nameEn || plan.nameAr;
+  const periodEnd = sub ? formatDate(sub.currentPeriodEnd, locale) : NO_VALUE;
+  const discountBps = currentPlan?.annualDiscountBps ?? plans[0]?.annualDiscountBps;
+  const discount =
+    discountBps === undefined
+      ? NO_VALUE
+      : new Intl.NumberFormat(intlLocale(locale), { style: "percent" }).format(
+          discountBps / BPS_PER_WHOLE,
+        );
 
-  const activeTripsCount = tripsQuery.data?.items.length ?? 0;
-  const employeesCount = employeesQuery.data?.employees.length ?? 0;
-  const couponsCount = couponsQuery.data?.items.length ?? 0;
+  const trips = tripsQuery.data?.items ?? [];
+  const limits = currentPlan?.limits;
+  const activeTrips = tripsQuery.isSuccess
+    ? trips.filter((trip) => !INACTIVE_STATES.includes(toTripState(trip.state))).length
+    : null;
+  const vehiclesPerTrip = tripsQuery.isSuccess
+    ? trips.reduce((max, trip) => Math.max(max, trip.vehicles.length), 0)
+    : null;
+  const employees = employeesQuery.data?.employees.length ?? null;
+  const activeCoupons = couponsQuery.isSuccess
+    ? (couponsQuery.data?.items ?? []).filter((coupon) => coupon.status === "active").length
+    : null;
 
-  const handlePlanChange = (tierId: string) => {
-    if (authStatus !== "authenticated") return;
-    changePlanMutation.mutate({
-      planId: `organization:${tierId}`,
-      billingCycle: annualBilling ? "annual" : "monthly",
-    });
-  };
+  const selectedPlanId = chosenPlanId ?? sub?.planId ?? "";
+  const canConfirm =
+    enabled &&
+    Boolean(selectedPlanId) &&
+    !changePlanMutation.isPending &&
+    (selectedPlanId !== sub?.planId || activeCycle !== sub?.billingCycle);
 
-  const tripLimit =
-    currentTier === "enterprise" ? "Unlimited" : currentTier === "starter" ? "5" : "25";
-  const couponLimit =
-    currentTier === "enterprise" ? "Unlimited" : currentTier === "starter" ? "5" : "25";
+  const planPrice = (plan: CatalogPlan) =>
+    formatMinor(
+      activeCycle === "annual" ? plan.annualPriceMinor : plan.monthlyPriceMinor,
+      plan.currencyCode,
+      locale,
+    );
 
   return (
-    <StatePreview>
-      <div className="flex flex-col gap-8">
-        <WorkspaceBackLink />
-        <TePageHeader
-          title={t("screen.organization.billing.subscriptionAndBilling.subscriptionAndBilling")}
+    <OrgPage>
+      <OrgPageHeader
+        title={t("screen.organization.billing.subscriptionAndBilling.title")}
+        caption={t("screen.organization.billing.subscriptionAndBilling.caption")}
+        actions={
+          <OrgButton
+            aria-expanded={changeOpen}
+            aria-controls={panelId}
+            disabled={!enabled}
+            onClick={() => setChangeOpen((open) => !open)}
+          >
+            {t("screen.organization.billing.subscriptionAndBilling.changePlan")}
+          </OrgButton>
+        }
+      />
+      {subscriptionQuery.isError || catalogQuery.isError ? (
+        <OrgError
+          onRetry={() => {
+            void subscriptionQuery.refetch();
+            void catalogQuery.refetch();
+          }}
         />
-        <OrgSection title={t("screen.organization.billing.subscriptionAndBilling.currentPlan")}>
-          <TeCard>
-            <div className="flex flex-col gap-4">
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <h3 className="te-h3">
-                  {PLAN_OPTIONS.find((p) => p.id === currentTier)?.name ??
-                    t("screen.organization.billing.subscriptionAndBilling.growth")}
-                </h3>
-                <TeBadge tone="highlight">
-                  {t("screen.organization.billing.subscriptionAndBilling.currentPlan2")}
-                </TeBadge>
-              </div>
-              <p className="te-body">
-                {renewalDate
-                  ? `${t("screen.organization.billing.subscriptionAndBilling.renewsOnRenewalDate")} (${renewalDate})`
-                  : t("screen.organization.billing.subscriptionAndBilling.renewsOnRenewalDate")}
-              </p>
-              <TeSwitch
-                checked={annualBilling}
-                onCheckedChange={setAnnualBilling}
-                label={t("screen.organization.billing.subscriptionAndBilling.annualBilling")}
-                onLabel={t("screen.organization.billing.subscriptionAndBilling.annual")}
-                offLabel={t("screen.organization.billing.subscriptionAndBilling.monthly")}
-              />
-              {annualBilling ? (
-                <TeInlineAlert tone="info">
-                  {t(
-                    "screen.organization.billing.subscriptionAndBilling.annualBillingAppliesTheAnnual",
-                  )}
-                </TeInlineAlert>
-              ) : null}
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <p className="te-body">
-                  {t(
-                    "screen.organization.billing.subscriptionAndBilling.paymentMethodPaymentMethod",
-                  )}
-                </p>
-                <TeButton variant="secondary">
-                  {t("screen.organization.billing.subscriptionAndBilling.updatePaymentMethod")}
-                </TeButton>
-              </div>
-            </div>
-          </TeCard>
-        </OrgSection>
-        <OrgSection title={t("screen.organization.billing.subscriptionAndBilling.usage")}>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            <TeKpiTile
-              label={t("screen.organization.billing.subscriptionAndBilling.activeTripsThisMonth")}
-              value={`${activeTripsCount} of ${tripLimit}`}
-            />
-            <TeKpiTile
-              label={t("screen.organization.billing.subscriptionAndBilling.employees")}
-              value={`${employeesCount} of 20`}
-            />
-            <TeKpiTile
-              label={t("screen.organization.billing.subscriptionAndBilling.vehiclesPerTrip")}
-              value="Up to 10"
-            />
-            <TeKpiTile
-              label={t("screen.organization.billing.subscriptionAndBilling.programsPerTrip")}
-              value="Up to 15"
-            />
-            <TeKpiTile
-              label={t("screen.organization.billing.subscriptionAndBilling.coupons")}
-              value={`${couponsCount} of ${couponLimit}`}
-            />
-          </div>
-        </OrgSection>
-        <OrgSection title={t("screen.organization.billing.subscriptionAndBilling.changePlan")}>
-          <div className="grid gap-4 sm:grid-cols-3">
-            {PLAN_OPTIONS.map((plan) => {
-              const isCurrent = plan.id === currentTier;
-              return (
-                <TeCard
+      ) : null}
+      {changeOpen ? (
+        <OrgCard title={t("screen.organization.billing.subscriptionAndBilling.choosePlan")}>
+          <div id={panelId} className="flex flex-col gap-2">
+            <fieldset className="m-0 flex flex-col border-0 p-0">
+              <legend className="sr-only">
+                {t("screen.organization.billing.subscriptionAndBilling.choosePlan")}
+              </legend>
+              {plans.map((plan) => (
+                <OrgChoice
                   key={plan.id}
-                  header={
-                    <div className="flex flex-wrap items-center justify-between gap-2">
-                      <h3 className="te-h3">{plan.name}</h3>
-                      {isCurrent ? (
-                        <TeBadge tone="highlight">
-                          {t("screen.organization.billing.subscriptionAndBilling.currentPlan3")}
-                        </TeBadge>
-                      ) : null}
-                    </div>
-                  }
+                  type="radio"
+                  name="organization-plan"
+                  checked={plan.id === selectedPlanId}
+                  onChange={() => setChosenPlanId(plan.id)}
                 >
-                  <div className="flex flex-col gap-4">
-                    <p className="te-body">
-                      {t("screen.organization.billing.subscriptionAndBilling.price")}
-                    </p>
-                    {!isCurrent && plan.action ? (
-                      <TeButton variant="secondary" onClick={() => handlePlanChange(plan.id)}>
-                        {plan.action}
-                      </TeButton>
-                    ) : null}
-                  </div>
-                </TeCard>
-              );
-            })}
+                  {t("screen.organization.billing.subscriptionAndBilling.planWithPrice", {
+                    plan: planName(plan),
+                    price: planPrice(plan),
+                  })}
+                </OrgChoice>
+              ))}
+            </fieldset>
+            {changePlanMutation.isError ? (
+              <OrgAlert
+                tone="err"
+                title={t("screen.organization.billing.subscriptionAndBilling.changeFailed")}
+              />
+            ) : null}
+            <div className="flex flex-wrap justify-end gap-3">
+              <OrgButton variant="text" onClick={() => setChangeOpen(false)}>
+                {t("screen.organization.billing.subscriptionAndBilling.cancel")}
+              </OrgButton>
+              <OrgButton
+                disabled={!canConfirm}
+                onClick={() =>
+                  changePlanMutation.mutate({ planId: selectedPlanId, billingCycle: activeCycle })
+                }
+              >
+                {t("screen.organization.billing.subscriptionAndBilling.confirmPlanChange")}
+              </OrgButton>
+            </div>
           </div>
-          <TeInlineAlert tone="info">
-            {t("screen.organization.billing.subscriptionAndBilling.upgradesTakeEffectNowAnd")}
-          </TeInlineAlert>
-        </OrgSection>
-      </div>
-    </StatePreview>
+        </OrgCard>
+      ) : null}
+      <OrgRow align="start">
+        <OrgCard
+          className="flex-1"
+          title={t("screen.organization.billing.subscriptionAndBilling.currentPlan")}
+          actions={statusBadge(sub?.status)}
+        >
+          <div className="text-[28px] leading-9 font-semibold">
+            {currentPlan ? planName(currentPlan) : (sub?.tier ?? NO_VALUE)}
+          </div>
+          <p className="te-caption m-0 text-[var(--te-ink-muted)]">
+            {t("screen.organization.billing.subscriptionAndBilling.renewsOn", { date: periodEnd })}
+          </p>
+          <OrgChips
+            label={t("screen.organization.billing.subscriptionAndBilling.billingCycle")}
+            options={[
+              {
+                value: "monthly",
+                label: t("screen.organization.billing.subscriptionAndBilling.monthly"),
+              },
+              {
+                value: "annual",
+                label: t("screen.organization.billing.subscriptionAndBilling.annual"),
+              },
+            ]}
+            value={activeCycle}
+            onValueChange={(value) => setCycle(value === "annual" ? "annual" : "monthly")}
+          />
+          <p className="te-caption m-0 text-[var(--te-ink-muted)]">
+            {t("screen.organization.billing.subscriptionAndBilling.annualBillingSaves", {
+              discount,
+            })}
+          </p>
+          <div className="flex items-center justify-between gap-3 border-t border-[var(--te-hairline)] pt-4">
+            <div className="flex flex-col">
+              <span className="text-sm leading-5 font-semibold">
+                {t("screen.organization.billing.subscriptionAndBilling.paymentMethod")}
+              </span>
+              <span id={paymentNoteId} className="te-caption text-[var(--te-ink-muted)]">
+                {t("screen.organization.billing.subscriptionAndBilling.noPaymentMethodOnFile")}
+              </span>
+            </div>
+            <OrgButton variant="text" aria-disabled="true" aria-describedby={paymentNoteId}>
+              {t("screen.organization.billing.subscriptionAndBilling.update")}
+            </OrgButton>
+          </div>
+        </OrgCard>
+        <OrgCard
+          className="flex-1"
+          title={t("screen.organization.billing.subscriptionAndBilling.usageAgainstLimits")}
+        >
+          <UsageRow
+            label={t("screen.organization.billing.subscriptionAndBilling.activeTripsThisMonth")}
+            used={activeTrips}
+            limit={limits?.activeTripsPerMonth}
+          />
+          <UsageRow
+            label={t("screen.organization.billing.subscriptionAndBilling.employees")}
+            used={employees}
+            limit={limits?.employeesMax}
+          />
+          <UsageRow
+            label={t("screen.organization.billing.subscriptionAndBilling.vehiclesPerTrip")}
+            used={vehiclesPerTrip}
+            limit={limits?.vehiclesPerTrip}
+          />
+          <UsageRow
+            label={t("screen.organization.billing.subscriptionAndBilling.programsPerTrip")}
+            used={null}
+            limit={limits?.programsPerTrip}
+          />
+          <UsageRow
+            label={t("screen.organization.billing.subscriptionAndBilling.coupons")}
+            used={activeCoupons}
+            limit={limits?.activeCouponsMax}
+          />
+        </OrgCard>
+      </OrgRow>
+      <OrgAlert
+        tone="info"
+        title={t("screen.organization.billing.subscriptionAndBilling.upgradesApplyAtOnce")}
+      >
+        {t("screen.organization.billing.subscriptionAndBilling.downgradesTakeEffect", {
+          date: periodEnd,
+        })}
+      </OrgAlert>
+    </OrgPage>
   );
 }
