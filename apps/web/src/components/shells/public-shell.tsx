@@ -6,6 +6,7 @@ import type { ReactNode } from "react";
 import { useAuth } from "@/auth/auth-context";
 import { AccountMenu } from "@/auth/components/account-menu";
 import { pathFor } from "@/navigation/web-routes";
+import { OfflineBanner } from "@/screens/shared/offline-banner";
 
 import { BrandLink, LanguageSwitch, MAIN_CONTENT_ID, SkipLink } from "./shell-parts";
 
@@ -72,6 +73,7 @@ export function PublicShell({ children, tone = "default" }: PublicShellProps) {
         </div>
       </header>
       <main id={MAIN_CONTENT_ID} className="flex flex-1 flex-col">
+        <OfflineBanner />
         {children}
       </main>
     </div>

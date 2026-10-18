@@ -1,20 +1,31 @@
-import { Link } from "@tanstack/react-router";
-import { TeInlineAlert } from "@trips-app/ui/components/te-inline-alert";
-import { TeKpiTile } from "@trips-app/ui/components/te-kpi-tile";
-import { t } from "@trips-app/i18n";
+// SCR-PUB-16 Deletion grace period (`/account/deletion`): the account is scheduled for deletion and
+// signing in restores it. The end date comes from `?graceEndsAt=`, else from the grace length.
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { orpc } from "@/utils/orpc";
-import { buttonLinkClass } from "../../shared/button-link";
-import { AuthFrame } from "../common/auth-frame";
+import { useNavigate, useRouterState } from "@tanstack/react-router";
 
-/** Account in the 30-day deletion grace period. Signing in restores the account. */
+import { useAuth } from "@/auth/auth-context";
+import { Button, Notice, StatusPill, TextButton } from "@/components/kit/controls";
+import { formatDate } from "@/components/kit/format";
+import { ActionRow, CenteredPanel, FactBox, Lead, PanelHeading } from "@/components/kit/layout";
+import { orpc } from "@/utils/orpc";
+
+const DEFAULT_GRACE_DAYS = 30;
+const DAY_MS = 24 * 60 * 60 * 1000;
+const LAST_TARGET_KEY = "te:lastOtpTarget";
+
 export function DeletionGracePeriod() {
+  const { t, locale, status, signOut } = useAuth();
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const settingsQuery = useQuery(orpc.auth.getAuthSettings.queryOptions({ input: undefined }));
-  const days = settingsQuery.data?.deletionGraceDays ?? 30;
-  const graceEndLabel = new Date(Date.now() + days * 24 * 60 * 60 * 1000)
-    .toISOString()
-    .slice(0, 10);
+  const days = settingsQuery.data?.deletionGraceDays ?? DEFAULT_GRACE_DAYS;
+  const graceEndsAt = useRouterState({
+    select: (state) => {
+      const value = (state.location.search as Record<string, unknown>).graceEndsAt;
+      return typeof value === "string" ? value : null;
+    },
+  });
+  const graceEnd = formatDate(graceEndsAt ?? new Date(Date.now() + days * DAY_MS), locale);
 
   const restoreMutation = useMutation(
     orpc.auth.restoreAccountFromDeletion.mutationOptions({
@@ -24,37 +35,42 @@ export function DeletionGracePeriod() {
     }),
   );
 
-  const handleRestore = () => {
+  async function handleContinue() {
     const target =
-      typeof sessionStorage !== "undefined" ? sessionStorage.getItem("te:lastOtpTarget") : null;
-    if (!target) return;
-    void restoreMutation.mutateAsync({ identifier: target }).catch(() => {});
-  };
+      typeof sessionStorage !== "undefined" ? sessionStorage.getItem(LAST_TARGET_KEY) : null;
+    if (target) {
+      try {
+        await restoreMutation.mutateAsync({ identifier: target });
+      } catch {
+        return;
+      }
+    }
+    await navigate({ to: "/" });
+  }
 
   return (
-    <AuthFrame
-      title={t("screen.public.accountRecovery.deletionGracePeriod.deletionGracePeriod")}
-      description={t("screen.public.accountRecovery.deletionGracePeriod.yourAccountIsInThe")}
-    >
-      <TeKpiTile
-        label={t("screen.public.accountRecovery.deletionGracePeriod.gracePeriodEnds")}
-        value={graceEndLabel}
-        hint={t("screen.public.accountRecovery.deletionGracePeriod.30DaysAfterTheDeletion")}
-      />
-      <TeInlineAlert
-        tone="info"
-        title={t("screen.public.accountRecovery.deletionGracePeriod.signInToRestore")}
-      >
-        {t("screen.public.accountRecovery.deletionGracePeriod.signingInRestoresYourAccount")}
-      </TeInlineAlert>
-      <p className="te-body">
-        {t("screen.public.accountRecovery.deletionGracePeriod.ifTheDeletionBecomesPermanent")}
-      </p>
-      <div>
-        <Link to="/" className={buttonLinkClass("primary", "lg")} onClick={handleRestore}>
-          {t("screen.public.accountRecovery.deletionGracePeriod.continueToAppHome")}
-        </Link>
-      </div>
-    </AuthFrame>
+    <CenteredPanel width={600}>
+      <StatusPill tone="warning" icon="clock">
+        {t("screen.public.deletionGrace.badge")}
+      </StatusPill>
+      <PanelHeading>{t("screen.public.deletionGrace.title")}</PanelHeading>
+      <FactBox label={t("screen.public.deletionGrace.endsLabel")}>
+        {t("screen.public.deletionGrace.endsValue", { date: graceEnd, days })}
+      </FactBox>
+      <Lead>{t("screen.public.deletionGrace.body")}</Lead>
+      {restoreMutation.isError ? (
+        <Notice tone="danger">{t("screen.public.deletionGrace.restoreFailed")}</Notice>
+      ) : null}
+      <ActionRow>
+        <Button onClick={() => void handleContinue()} disabled={restoreMutation.isPending}>
+          {t("screen.public.deletionGrace.continue")}
+        </Button>
+        {status === "authenticated" ? (
+          <TextButton onClick={() => void signOut().then(() => navigate({ to: "/" }))}>
+            {t("screen.public.accountSuspended.signOut")}
+          </TextButton>
+        ) : null}
+      </ActionRow>
+    </CenteredPanel>
   );
 }

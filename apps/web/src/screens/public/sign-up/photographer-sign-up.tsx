@@ -1,35 +1,69 @@
-import { useNavigate } from "@tanstack/react-router";
-import { useState, type FormEvent } from "react";
-import { TeFileUpload, type TeFileUploadItem } from "@trips-app/ui/components/te-file-upload";
-import { TeInlineAlert } from "@trips-app/ui/components/te-inline-alert";
-import { TeInput } from "@trips-app/ui/components/te-input";
-import { TeSelect } from "@trips-app/ui/components/te-select";
-import { t } from "@trips-app/i18n";
+// SCR-PUB-05 Photographer sign-up: details on the left, the portfolio grid on the right. At least
+// eight photos are required before the application can be submitted.
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "@tanstack/react-router";
+import type { TeFileUploadItem } from "@trips-app/ui/components/te-file-upload";
+import { useEffect, useRef, useState, type FormEvent } from "react";
+
 import { useAuth } from "@/auth/auth-context";
+import { Button, Notice, TextField } from "@/components/kit/controls";
+import { PageIntro, PageMain, Panel, PanelTitle, TwoColumns } from "@/components/kit/layout";
+import { pathFor } from "@/navigation/web-routes";
 import { orpc } from "@/utils/orpc";
+
 import {
   ensureSupplierSession,
   setApplicantApplicationId,
   setApplicantRole,
   uploadItemsToDocuments,
 } from "../../onboarding-state";
-import { StateLoading, StatePreview } from "../../shared/state-preview";
-import { toPendingItems, withoutItem } from "../../shared/upload-items";
-import { AuthFrame } from "../common/auth-frame";
-import { AUTH_ROUTES } from "../common/auth-routes";
-import { COUNTRY_OPTIONS } from "../common/country-options";
-import { SignUpFooter } from "../common/sign-up-footer";
-import { useFormReady } from "../common/use-form-ready";
+import { CountrySelect } from "../common/country-select";
 
 const MIN_PORTFOLIO_PHOTOS = 8;
 
-function PhotographerSignUpForm({
+interface PortfolioPhoto {
+  item: TeFileUploadItem;
+  previewUrl: string;
+}
+
+/** Picked photos with local previews; the preview URLs are released when the page closes. */
+function usePortfolio() {
+  const [photos, setPhotos] = useState<readonly PortfolioPhoto[]>([]);
+  const urls = useRef<string[]>([]);
+
+  useEffect(
+    () => () => {
+      for (const url of urls.current) URL.revokeObjectURL(url);
+    },
+    [],
+  );
+
+  function add(files: readonly File[]) {
+    const known = new Set(photos.map((photo) => photo.item.name));
+    const added = files
+      .filter((file) => !known.has(file.name))
+      .map((file): PortfolioPhoto => {
+        const previewUrl = URL.createObjectURL(file);
+        urls.current = [...urls.current, previewUrl];
+        return { item: { name: file.name, status: "pending" }, previewUrl };
+      });
+    setPhotos((current) => [...current, ...added]);
+  }
+
+  function remove(name: string) {
+    setPhotos((current) => current.filter((photo) => photo.item.name !== name));
+  }
+
+  return { photos, add, remove };
+}
+
+/** Photographer application. Access starts after approval; the status page follows submission. */
+export function PhotographerSignUp({
   onSubmitted,
 }: {
   onSubmitted?: (applicationId: string) => void;
-}) {
-  const { status, locale, signInWithSession } = useAuth();
+} = {}) {
+  const { t, status, locale, signInWithSession } = useAuth();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const submitMutation = useMutation(
@@ -40,51 +74,42 @@ function PhotographerSignUpForm({
     }),
   );
   const [country, setCountry] = useState("");
-  const [portfolio, setPortfolio] = useState<readonly TeFileUploadItem[]>([]);
+  const { photos, add, remove } = usePortfolio();
   const [submitting, setSubmitting] = useState(false);
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const { submitDisabled, formProps } = useFormReady();
-  const portfolioReady = portfolio.length >= MIN_PORTFOLIO_PHOTOS;
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const portfolioReady = photos.length >= MIN_PORTFOLIO_PHOTOS;
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (submitting || !portfolioReady) return;
+    if (submitting || !portfolioReady || country.length === 0) return;
     const formData = new FormData(event.currentTarget);
     const displayName = String(formData.get("displayName") ?? "").trim();
-    const email = String(formData.get("email") ?? "").trim();
-    const phone = String(formData.get("phone") ?? "").trim();
 
     setSubmitting(true);
-    setErrorMsg(null);
+    setErrorMessage(null);
     try {
       await ensureSupplierSession({
         isAuthenticated: status === "authenticated",
         signInWithSession,
         role: "platform_photographer",
         fullName: displayName,
-        email,
-        phone,
+        email: String(formData.get("email") ?? "").trim(),
+        phone: String(formData.get("phone") ?? "").trim(),
         preferredLanguage: locale,
       });
 
-      const portfolioDocuments = uploadItemsToDocuments(
-        portfolio,
-        "portfolio_sample",
-        "image/jpeg",
-      );
+      const items = photos.map((photo) => photo.item);
       const result = await submitMutation.mutateAsync({
         nationalId: "29201011234567",
         yearsOfExperience: 4,
         cameraBodies: [`${displayName || "Pro"} Camera Kit`],
         lenses: ["24-70mm f/2.8", "70-200mm f/2.8"],
         hasDroneLicense: false,
-        serviceRegions: [country || "Cairo"],
+        serviceRegions: [country],
         specialties: ["Adventure", "Group Trips"],
-        portfolioPhotoCount: portfolio.length,
-        sampleAlbums: [
-          { title: `${displayName || "Studio"} Portfolio`, photoCount: portfolio.length },
-        ],
-        documents: portfolioDocuments,
+        portfolioPhotoCount: items.length,
+        sampleAlbums: [{ title: `${displayName || "Studio"} Portfolio`, photoCount: items.length }],
+        documents: uploadItemsToDocuments(items, "portfolio_sample", "image/jpeg"),
       });
 
       setApplicantApplicationId(result.id);
@@ -92,14 +117,13 @@ function PhotographerSignUpForm({
       if (onSubmitted) {
         onSubmitted(result.id);
       } else {
-        await navigate({
-          to: "/screens/$surface/$slug",
-          params: { surface: "public", slug: "application-status-and-changes-response" },
-        });
+        await navigate({ to: pathFor("SCR-PUB-17") });
       }
     } catch (caught) {
-      setErrorMsg(
-        caught instanceof Error ? caught.message : "Could not submit photographer application.",
+      setErrorMessage(
+        caught instanceof Error
+          ? caught.message
+          : t("screen.public.signUp.photographer.submitFailed"),
       );
     } finally {
       setSubmitting(false);
@@ -107,108 +131,110 @@ function PhotographerSignUpForm({
   }
 
   return (
-    <form
-      action={AUTH_ROUTES.signUp}
-      method="post"
-      className="flex flex-col gap-4"
-      {...formProps}
-      onSubmit={(e) => void handleSubmit(e)}
-    >
-      <input type="hidden" name="role" value="photographer" />
-      <TeInput
-        label={t("screen.public.signUp.photographerSignUp.nameOrStudioName")}
-        name="displayName"
-        autoComplete="organization"
-        required
+    <PageMain>
+      <PageIntro
+        title={t("screen.public.signUp.photographer.title")}
+        description={t("screen.public.signUp.photographer.lead")}
       />
-      <TeInput
-        label={t("screen.public.signUp.photographerSignUp.email")}
-        name="email"
-        type="email"
-        autoComplete="email"
-        required
-      />
-      <TeInput
-        label={t("screen.public.signUp.photographerSignUp.phone")}
-        name="phone"
-        type="tel"
-        autoComplete="tel"
-        required
-      />
-      <TeSelect
-        label={t("screen.public.signUp.photographerSignUp.country")}
-        name="country"
-        options={COUNTRY_OPTIONS}
-        value={country}
-        onValueChange={setCountry}
-        supportingText={t("screen.public.signUp.photographerSignUp.required")}
-        required
-      />
-      <TeInlineAlert
-        tone="info"
-        title={t("screen.public.signUp.photographerSignUp.portfolioPhotosNeeded")}
-      >
-        {t("screen.public.signUp.photographerSignUp.uploadProgress", {
-          min: MIN_PORTFOLIO_PHOTOS,
-          uploaded: portfolio.length,
-        })}
-      </TeInlineAlert>
-      <TeFileUpload
-        label={t("screen.public.signUp.photographerSignUp.portfolioPhotos")}
-        accept="image/*"
-        multiple
-        files={portfolio}
-        onFilesSelected={(files) => setPortfolio([...portfolio, ...toPendingItems(files)])}
-        onRemove={(name) => setPortfolio(withoutItem(portfolio, name))}
-        hint={t("screen.public.signUp.photographerSignUp.minimumPhotosSubmitStaysBlocked", {
-          min: MIN_PORTFOLIO_PHOTOS,
-        })}
-      />
-      {errorMsg ? (
-        <TeInlineAlert
-          tone="error"
-          title={t("screen.public.signUp.photographerSignUp.submissionFailed")}
-        >
-          {errorMsg}
-        </TeInlineAlert>
-      ) : null}
-      <SignUpFooter
-        submitLabel={
-          submitting
-            ? t("screen.public.signUp.photographerSignUp.submitting")
-            : t("screen.public.signUp.photographerSignUp.submitApplication")
-        }
-        disabled={submitDisabled || !portfolioReady || submitting}
-      />
-    </form>
-  );
-}
+      <form onSubmit={(event) => void handleSubmit(event)}>
+        <TwoColumns ratio="wideEnd">
+          <Panel>
+            <PanelTitle>{t("screen.public.signUp.photographer.yourDetails")}</PanelTitle>
+            <TextField
+              name="displayName"
+              label={t("screen.public.signUp.photographer.name")}
+              autoComplete="name"
+              required
+              disabled={submitting}
+            />
+            <TextField
+              name="email"
+              type="email"
+              dir="ltr"
+              label={t("screen.public.signUp.photographer.email")}
+              placeholder={t("screen.auth.signUp.emailPlaceholder")}
+              autoComplete="email"
+              required
+              disabled={submitting}
+            />
+            <TextField
+              name="phone"
+              type="tel"
+              dir="ltr"
+              label={t("screen.public.signUp.photographer.phone")}
+              placeholder={t("screen.auth.signUp.phonePlaceholder")}
+              autoComplete="tel"
+              required
+              disabled={submitting}
+            />
+            <CountrySelect value={country} onChange={setCountry} disabled={submitting} />
+          </Panel>
 
-/** Photographer application with a portfolio of at least 8 photos. Access starts after approval. */
-export function PhotographerSignUp({
-  onSubmitted,
-}: {
-  onSubmitted?: (applicationId: string) => void;
-} = {}) {
-  return (
-    <AuthFrame
-      title={t("screen.public.signUp.photographerSignUp.photographerSignUp")}
-      description={t("screen.public.signUp.photographerSignUp.applyToJoinThePlatform")}
-    >
-      <StatePreview
-        main={<PhotographerSignUpForm onSubmitted={onSubmitted} />}
-        loading={<StateLoading />}
-        error={
-          <TeInlineAlert
-            tone="warning"
-            title={t("screen.public.signUp.photographerSignUp.addMorePhotos")}
-          >
-            {t("screen.public.signUp.photographerSignUp.yourPortfolioHasFewerThan")}{" "}
-            {MIN_PORTFOLIO_PHOTOS}{" "}
-            {t("screen.public.signUp.photographerSignUp.photosAddMoreToSubmit")}
-          </TeInlineAlert>
-        }
-      />
-    </AuthFrame>
+          <Panel>
+            <div className="flex items-center justify-between gap-4">
+              <PanelTitle>{t("screen.public.signUp.photographer.portfolio")}</PanelTitle>
+              <span className="text-sm font-semibold">
+                {t("screen.public.signUp.photographer.count", {
+                  count: photos.length,
+                  required: MIN_PORTFOLIO_PHOTOS,
+                })}
+              </span>
+            </div>
+            <ul className="m-0 grid list-none grid-cols-3 gap-3 p-0 sm:grid-cols-4">
+              {photos.map((photo) => (
+                <li key={photo.item.name} className="relative aspect-square">
+                  <img
+                    src={photo.previewUrl}
+                    alt={photo.item.name}
+                    className="size-full rounded-[var(--te-radius-sm)] object-cover"
+                  />
+                  <button
+                    type="button"
+                    disabled={submitting}
+                    onClick={() => remove(photo.item.name)}
+                    aria-label={t("screen.public.common.documentDrop.removeFile", {
+                      name: photo.item.name,
+                    })}
+                    className="absolute end-1 bottom-1 min-h-8 cursor-pointer rounded-[var(--te-radius-sm)] border-0 bg-[var(--te-surface-raised)] px-2 text-xs font-semibold text-[var(--te-ink)] shadow-[var(--te-card-shadow)]"
+                  >
+                    {t("screen.public.common.documentDrop.remove")}
+                  </button>
+                </li>
+              ))}
+              <li className="aspect-square">
+                <label className="flex size-full cursor-pointer items-center justify-center rounded-[var(--te-radius-sm)] border-2 border-dashed border-[var(--te-control-border)] p-2 text-center text-[13px] font-semibold focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-[var(--te-focus-ring)]">
+                  {t("screen.public.signUp.photographer.addPhotos")}
+                  <input
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp"
+                    multiple
+                    disabled={submitting}
+                    className="sr-only"
+                    onChange={(event) => {
+                      add(Array.from(event.target.files ?? []));
+                      event.target.value = "";
+                    }}
+                  />
+                </label>
+              </li>
+            </ul>
+            {portfolioReady ? null : (
+              <Notice tone="warning">
+                {t("screen.public.signUp.photographer.needMore", {
+                  count: photos.length,
+                  required: MIN_PORTFOLIO_PHOTOS,
+                })}
+              </Notice>
+            )}
+            {errorMessage ? <Notice tone="danger">{errorMessage}</Notice> : null}
+            <Button type="submit" disabled={!portfolioReady || country.length === 0 || submitting}>
+              {submitting
+                ? t("screen.public.signUp.photographer.submitting")
+                : t("screen.public.signUp.photographer.submit")}
+            </Button>
+          </Panel>
+        </TwoColumns>
+      </form>
+    </PageMain>
   );
 }

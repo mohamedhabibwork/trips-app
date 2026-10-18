@@ -1,26 +1,26 @@
-import { useNavigate } from "@tanstack/react-router";
-import { useState, type FormEvent } from "react";
-import { TeFileUpload, type TeFileUploadItem } from "@trips-app/ui/components/te-file-upload";
-import { TeInlineAlert } from "@trips-app/ui/components/te-inline-alert";
-import { TeInput } from "@trips-app/ui/components/te-input";
-import { TeSelect } from "@trips-app/ui/components/te-select";
-import { t } from "@trips-app/i18n";
+// SCR-PUB-06 Organization sign-up: the organization on the left, owner and billing on the right.
+// No plan choice: the Starter plan is assigned when the registration is approved.
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "@tanstack/react-router";
+import type { TeFileUploadItem } from "@trips-app/ui/components/te-file-upload";
+import { useState, type FormEvent } from "react";
+
 import { useAuth } from "@/auth/auth-context";
+import { Button, Notice, TextField } from "@/components/kit/controls";
+import { PageIntro, PageMain, Panel, PanelTitle, TwoColumns } from "@/components/kit/layout";
+import { pathFor } from "@/navigation/web-routes";
 import { orpc } from "@/utils/orpc";
+
 import {
   ensureSupplierSession,
   setApplicantApplicationId,
   setApplicantRole,
   uploadItemsToDocuments,
 } from "../../onboarding-state";
-import { StateLoading, StatePreview } from "../../shared/state-preview";
-import { toPendingItems, withoutItem } from "../../shared/upload-items";
-import { AuthFrame } from "../common/auth-frame";
-import { AUTH_ROUTES } from "../common/auth-routes";
-import { COUNTRY_OPTIONS } from "../common/country-options";
-import { SignUpFooter } from "../common/sign-up-footer";
-import { useFormReady } from "../common/use-form-ready";
+import { CountrySelect } from "../common/country-select";
+import { DocumentDrop } from "../common/document-drop";
+
+const LICENSE_VALID_MS = 365 * 24 * 60 * 60 * 1000;
 
 function normalizeOrgCountry(raw: string): "EG" | "SA" | "AE" {
   const upper = raw.toUpperCase();
@@ -28,12 +28,13 @@ function normalizeOrgCountry(raw: string): "EG" | "SA" | "AE" {
   return "EG";
 }
 
-function OrganizationSignUpForm({
+/** Organization registration, reviewed by admin. Staff access opens after approval. */
+export function OrganizationSignUp({
   onSubmitted,
 }: {
   onSubmitted?: (applicationId: string) => void;
-}) {
-  const { status, locale, signInWithSession } = useAuth();
+} = {}) {
+  const { t, status, locale, signInWithSession } = useAuth();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const submitMutation = useMutation(
@@ -46,33 +47,28 @@ function OrganizationSignUpForm({
   const [country, setCountry] = useState("");
   const [registration, setRegistration] = useState<readonly TeFileUploadItem[]>([]);
   const [submitting, setSubmitting] = useState(false);
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const { submitDisabled, formProps } = useFormReady();
-  const registrationReady = registration.length > 0;
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const ready = registration.length > 0 && country.length > 0;
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (submitting || !registrationReady) return;
+    if (submitting || !ready) return;
     const formData = new FormData(event.currentTarget);
-    const ownerName = String(formData.get("ownerName") ?? "").trim();
-    const ownerEmail = String(formData.get("ownerEmail") ?? "").trim();
-    const ownerPhone = String(formData.get("ownerPhone") ?? "").trim();
-    const legalName = String(formData.get("legalName") ?? "").trim();
-    const commercialRegNumber = String(formData.get("commercialRegistration") ?? "").trim();
-    const taxNumber = String(formData.get("taxNumber") ?? "").trim();
-    const billingContactName = String(formData.get("billingName") ?? "").trim();
-    const billingContactEmail = String(formData.get("billingEmail") ?? "").trim();
-    const countryCode = normalizeOrgCountry(country || String(formData.get("country") ?? "EG"));
+    const read = (name: string) => String(formData.get(name) ?? "").trim();
+    const ownerName = read("ownerName");
+    const ownerPhone = read("ownerPhone");
+    const legalName = read("legalName");
+    const commercialRegNumber = read("commercialRegistration");
 
     setSubmitting(true);
-    setErrorMsg(null);
+    setErrorMessage(null);
     try {
       await ensureSupplierSession({
         isAuthenticated: status === "authenticated",
         signInWithSession,
         role: "organization_owner",
         fullName: ownerName,
-        email: ownerEmail,
+        email: read("ownerEmail"),
         phone: ownerPhone,
         preferredLanguage: locale,
       });
@@ -82,18 +78,18 @@ function OrganizationSignUpForm({
         displayNameAr: legalName,
         displayNameEn: legalName,
         commercialRegNumber,
-        taxNumber,
+        taxNumber: read("taxNumber"),
         tourismLicenseNumber: `TL-${commercialRegNumber}`,
-        tourismLicenseExpiry: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
-        countryCode,
+        tourismLicenseExpiry: new Date(Date.now() + LICENSE_VALID_MS).toISOString(),
+        countryCode: normalizeOrgCountry(country),
         headquartersAddress: `${legalName} Headquarters`,
         signatoryFullName: ownerName,
         signatoryNationalId: "29001011234567",
         signatoryRoleTitle: "Managing Director",
         payoutMethod: "bank_transfer",
         payoutIbanOrWallet: "EG380019000500000000263180002",
-        billingContactName,
-        billingContactEmail,
+        billingContactName: ownerName,
+        billingContactEmail: read("billingEmail"),
         billingContactPhone: ownerPhone,
         billingAddress: `${legalName} Billing Office`,
         invoiceLanguage: locale === "ar" ? "ar" : "en",
@@ -106,14 +102,13 @@ function OrganizationSignUpForm({
       if (onSubmitted) {
         onSubmitted(result.id);
       } else {
-        await navigate({
-          to: "/screens/$surface/$slug",
-          params: { surface: "public", slug: "application-status-and-changes-response" },
-        });
+        await navigate({ to: pathFor("SCR-PUB-17") });
       }
     } catch (caught) {
-      setErrorMsg(
-        caught instanceof Error ? caught.message : "Could not submit organization application.",
+      setErrorMessage(
+        caught instanceof Error
+          ? caught.message
+          : t("screen.public.signUp.organization.submitFailed"),
       );
     } finally {
       setSubmitting(false);
@@ -121,147 +116,96 @@ function OrganizationSignUpForm({
   }
 
   return (
-    <form
-      action={AUTH_ROUTES.signUp}
-      method="post"
-      className="flex flex-col gap-6"
-      {...formProps}
-      onSubmit={(e) => void handleSubmit(e)}
-    >
-      <input type="hidden" name="role" value="organization" />
-
-      <section className="flex flex-col gap-4" aria-labelledby="org-owner-heading">
-        <h2 id="org-owner-heading" className="te-h3">
-          {t("screen.public.signUp.organizationSignUp.owner")}
-        </h2>
-        <TeInput
-          label={t("screen.public.signUp.organizationSignUp.ownerName")}
-          name="ownerName"
-          autoComplete="name"
-          required
-        />
-        <TeInput
-          label={t("screen.public.signUp.organizationSignUp.ownerEmail")}
-          name="ownerEmail"
-          type="email"
-          autoComplete="email"
-          required
-        />
-        <TeInput
-          label={t("screen.public.signUp.organizationSignUp.ownerPhone")}
-          name="ownerPhone"
-          type="tel"
-          autoComplete="tel"
-          required
-        />
-      </section>
-
-      <section className="flex flex-col gap-4" aria-labelledby="org-company-heading">
-        <h2 id="org-company-heading" className="te-h3">
-          {t("screen.public.signUp.organizationSignUp.organization")}
-        </h2>
-        <TeInput
-          label={t("screen.public.signUp.organizationSignUp.legalName")}
-          name="legalName"
-          autoComplete="organization"
-          required
-        />
-        <TeSelect
-          label={t("screen.public.signUp.organizationSignUp.country")}
-          name="country"
-          options={COUNTRY_OPTIONS}
-          value={country}
-          onValueChange={setCountry}
-          supportingText={t("screen.public.signUp.organizationSignUp.required")}
-          required
-        />
-        <TeInput
-          label={t("screen.public.signUp.organizationSignUp.commercialRegistrationNumber")}
-          name="commercialRegistration"
-          required
-        />
-        <TeInput
-          label={t("screen.public.signUp.organizationSignUp.taxNumber")}
-          name="taxNumber"
-          required
-        />
-        <TeFileUpload
-          label={t("screen.public.signUp.organizationSignUp.commercialRegistrationDocument")}
-          accept="image/*,application/pdf"
-          multiple
-          files={registration}
-          onFilesSelected={(files) => setRegistration([...registration, ...toPendingItems(files)])}
-          onRemove={(name) => setRegistration(withoutItem(registration, name))}
-          hint={t("screen.public.signUp.organizationSignUp.aClearPhotoOrScan")}
-        />
-      </section>
-
-      <section className="flex flex-col gap-4" aria-labelledby="org-billing-heading">
-        <h2 id="org-billing-heading" className="te-h3">
-          {t("screen.public.signUp.organizationSignUp.billingContact")}
-        </h2>
-        <TeInput
-          label={t("screen.public.signUp.organizationSignUp.billingContactName")}
-          name="billingName"
-          autoComplete="name"
-          required
-        />
-        <TeInput
-          label={t("screen.public.signUp.organizationSignUp.billingContactEmail")}
-          name="billingEmail"
-          type="email"
-          required
-        />
-      </section>
-
-      {errorMsg ? (
-        <TeInlineAlert
-          tone="error"
-          title={t("screen.public.signUp.organizationSignUp.submissionFailed")}
-        >
-          {errorMsg}
-        </TeInlineAlert>
-      ) : null}
-
-      <TeInlineAlert tone="info" title={t("screen.public.signUp.organizationSignUp.planAndReview")}>
-        {t("screen.public.signUp.organizationSignUp.theStarterPlanIsAssigned")}
-      </TeInlineAlert>
-
-      <SignUpFooter
-        submitLabel={
-          submitting
-            ? t("screen.public.signUp.organizationSignUp.submitting")
-            : t("screen.public.signUp.organizationSignUp.submitForReview")
-        }
-        disabled={submitDisabled || !registrationReady || submitting}
+    <PageMain>
+      <PageIntro
+        title={t("screen.public.signUp.organization.title")}
+        description={t("screen.public.signUp.organization.lead")}
       />
-    </form>
-  );
-}
+      <form onSubmit={(event) => void handleSubmit(event)}>
+        <TwoColumns>
+          <Panel>
+            <PanelTitle>{t("screen.public.signUp.organization.organization")}</PanelTitle>
+            <TextField
+              name="legalName"
+              label={t("screen.public.signUp.organization.legalName")}
+              autoComplete="organization"
+              required
+              disabled={submitting}
+            />
+            <CountrySelect value={country} onChange={setCountry} disabled={submitting} />
+            <TextField
+              name="commercialRegistration"
+              dir="ltr"
+              label={t("screen.public.signUp.organization.registrationNumber")}
+              required
+              minLength={2}
+              disabled={submitting}
+            />
+            <TextField
+              name="taxNumber"
+              dir="ltr"
+              label={t("screen.public.signUp.organization.taxNumber")}
+              required
+              minLength={2}
+              disabled={submitting}
+            />
+            <DocumentDrop
+              title={t("screen.public.signUp.organization.certificate")}
+              hint={t("screen.public.signUp.organization.certificateHint")}
+              items={registration}
+              onChange={setRegistration}
+              disabled={submitting}
+            />
+          </Panel>
 
-/** Organization registration, web only. Staff access waits for admin approval. */
-export function OrganizationSignUp({
-  onSubmitted,
-}: {
-  onSubmitted?: (applicationId: string) => void;
-} = {}) {
-  return (
-    <AuthFrame
-      title={t("screen.public.signUp.organizationSignUp.organizationSignUpWebOnly")}
-      description={t("screen.public.signUp.organizationSignUp.registerYourOrganizationForAdmin")}
-    >
-      <StatePreview
-        main={<OrganizationSignUpForm onSubmitted={onSubmitted} />}
-        loading={<StateLoading />}
-        error={
-          <TeInlineAlert
-            tone="error"
-            title={t("screen.public.signUp.organizationSignUp.countryIsMissing")}
-          >
-            {t("screen.public.signUp.organizationSignUp.selectACountrySubmitIs")}
-          </TeInlineAlert>
-        }
-      />
-    </AuthFrame>
+          <Panel>
+            <PanelTitle>{t("screen.public.signUp.organization.ownerAndBilling")}</PanelTitle>
+            <TextField
+              name="ownerName"
+              label={t("screen.public.signUp.organization.ownerName")}
+              autoComplete="name"
+              required
+              disabled={submitting}
+            />
+            <TextField
+              name="ownerEmail"
+              type="email"
+              dir="ltr"
+              label={t("screen.public.signUp.organization.ownerEmail")}
+              placeholder={t("screen.auth.signUp.emailPlaceholder")}
+              autoComplete="email"
+              required
+              disabled={submitting}
+            />
+            <TextField
+              name="ownerPhone"
+              type="tel"
+              dir="ltr"
+              label={t("screen.public.signUp.organization.ownerPhone")}
+              placeholder={t("screen.auth.signUp.phonePlaceholder")}
+              autoComplete="tel"
+              required
+              disabled={submitting}
+            />
+            <TextField
+              name="billingEmail"
+              type="email"
+              dir="ltr"
+              label={t("screen.public.signUp.organization.billingEmail")}
+              placeholder={t("screen.public.signUp.organization.billingEmailPlaceholder")}
+              required
+              disabled={submitting}
+            />
+            <Notice tone="info">{t("screen.public.signUp.organization.planNote")}</Notice>
+            {errorMessage ? <Notice tone="danger">{errorMessage}</Notice> : null}
+            <Button type="submit" disabled={!ready || submitting}>
+              {submitting
+                ? t("screen.public.signUp.organization.submitting")
+                : t("screen.public.signUp.organization.submit")}
+            </Button>
+          </Panel>
+        </TwoColumns>
+      </form>
+    </PageMain>
   );
 }

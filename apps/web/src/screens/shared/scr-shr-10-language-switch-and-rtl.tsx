@@ -1,65 +1,38 @@
-import { useState } from "react";
-import { TeButton } from "@trips-app/ui/components/te-button";
-import { TeCard } from "@trips-app/ui/components/te-card";
-import { TeIcon } from "@trips-app/ui/components/te-icon";
-import { TeInput } from "@trips-app/ui/components/te-input";
-import { TePageHeader } from "@trips-app/ui/components/te-page-header";
-import { TeSelect } from "@trips-app/ui/components/te-select";
-import { t } from "@trips-app/i18n";
-import { COUNTRY_OPTIONS } from "../public/common/country-options";
-import { LanguageSelect } from "../public/common/language-select";
-import { goBack, preventSubmit } from "./screen-actions";
+// SCR-SHR-10 Language switch and RTL: the switch, a field that keeps its value across the switch,
+// and a date that follows the selected language's format.
+import { Link } from "@tanstack/react-router";
 
-/** Language and layout direction. Switching keeps the form data and the current step. */
+import { useAuth } from "@/auth/auth-context";
+import { TextField, buttonClass } from "@/components/kit/controls";
+import { formatDate } from "@/components/kit/format";
+import { PhoneColumn } from "@/components/kit/layout";
+
+import { LanguageSwitchPanel } from "./language-switch";
+
 export function ScrShr10LanguageSwitchAndRtl() {
-  const [language, setLanguage] = useState("en");
-  const [country, setCountry] = useState("");
-  const isArabic = language === "ar";
-
+  const { t, locale } = useAuth();
   return (
-    <div
-      lang={isArabic ? "ar" : "en"}
-      dir={isArabic ? "rtl" : "ltr"}
-      className="mx-auto flex w-full max-w-2xl flex-col gap-6 px-4 py-6"
-    >
-      <TePageHeader
-        title={t("screen.shared.scrShr10LanguageSwitchAndRtl.languageSwitchAndRtl")}
-        description={
-          isArabic
-            ? t("screen.shared.scrShr10LanguageSwitchAndRtl.layoutRightToLeft")
-            : t("screen.shared.scrShr10LanguageSwitchAndRtl.layoutLeftToRight")
-        }
-        actions={
-          <div className="flex flex-wrap items-center gap-2">
-            <LanguageSelect defaultValue={language} onValueChange={setLanguage} />
-            <TeButton variant="ghost" onClick={goBack}>
-              {t("screen.shared.scrShr10LanguageSwitchAndRtl.back")}
-            </TeButton>
-          </div>
-        }
+    <PhoneColumn>
+      <h1 className="m-0 text-2xl leading-9 font-bold">
+        {t("screen.shared.languageSwitch.title")}
+      </h1>
+      <LanguageSwitchPanel />
+      <TextField
+        name="fullName"
+        label={t("screen.shared.languageSwitch.fullName")}
+        autoComplete="name"
+        className="font-medium"
       />
-      <TeCard>
-        <form className="flex flex-col gap-4" onSubmit={preventSubmit}>
-          <TeInput
-            label={t("screen.shared.scrShr10LanguageSwitchAndRtl.fullName")}
-            name="fullName"
-            autoComplete="name"
-          />
-          <TeSelect
-            label={t("screen.shared.scrShr10LanguageSwitchAndRtl.country")}
-            name="country"
-            options={COUNTRY_OPTIONS}
-            value={country}
-            onValueChange={setCountry}
-          />
-          <div>
-            <TeButton type="submit" variant="primary">
-              {t("screen.shared.scrShr10LanguageSwitchAndRtl.continue")}{" "}
-              <TeIcon name="arrow" flipInRtl />
-            </TeButton>
-          </div>
-        </form>
-      </TeCard>
-    </div>
+      <div className="flex items-center justify-between rounded-[var(--te-radius-md)] bg-[var(--te-surface-raised)] px-4 py-3.5 shadow-[var(--te-card-shadow)]">
+        <span className="text-[15px] font-medium">{t("screen.shared.languageSwitch.today")}</span>
+        <span className="text-base font-bold">{formatDate(new Date(), locale)}</span>
+      </div>
+      <p className="m-0 text-[13px] leading-5 text-[var(--te-ink-muted)]">
+        {t("screen.shared.languageSwitch.formats")}
+      </p>
+      <Link to="/" className={`${buttonClass("primary")} mt-auto`}>
+        {t("screen.shared.languageSwitch.continue")}
+      </Link>
+    </PhoneColumn>
   );
 }

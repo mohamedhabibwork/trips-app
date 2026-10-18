@@ -75,6 +75,14 @@ export const ar: AppMessages = {
   "screen.auth.crew.noCode": "لا يمكنك الدخول بدون رمز الموظف. اطلب المساعدة من منظم الرحلة.",
   // apps/web/src/components/shells/public-shell.tsx
   "component.shell.admin.signInLabel": "الإدارة",
+  // apps/web/src/auth/components/session-expired-dialog.tsx
+  "screen.auth.sessionExpired.badge": "انتهت الجلسة",
+  "screen.auth.sessionExpired.title": "سجّل الدخول مرة أخرى للمتابعة",
+  "screen.auth.sessionExpired.bodyMax":
+    "حفاظًا على أمانك، انتهت جلستك بعد 12 ساعة. ستعود إلى الصفحة نفسها بعد تسجيل الدخول.",
+  "screen.auth.sessionExpired.body":
+    "حفاظًا على أمانك، انتهت جلستك. ستعود إلى الصفحة نفسها بعد تسجيل الدخول.",
+  "screen.auth.sessionExpired.drafts": "مسوداتك غير المحفوظة باقية.",
   // apps/web/src/components/api-status.tsx
   "component.apiStatus.apiStatus": "حالة الواجهة البرمجية",
   "component.apiStatus.connected": "متصل",
@@ -2633,145 +2641,95 @@ export const ar: AppMessages = {
   "screen.organization.workspace.workspaceHome.setupChecklist": "قائمة الإعداد",
   "screen.organization.workspace.workspaceHome.setupChecklistAriaLabel": "قائمة الإعداد",
   // apps/web/src/screens/public/account-recovery/account-suspended.tsx
-  "screen.public.accountRecovery.accountSuspended.accountSuspended": "الحساب موقوف",
-  "screen.public.accountRecovery.accountSuspended.accessToThisAccountIs":
-    "الوصول إلى هذا الحساب متوقف. لم تُحذف أي بيانات.",
-  "screen.public.accountRecovery.accountSuspended.reason": "السبب",
-  "screen.public.accountRecovery.accountSuspended.theReasonFromTheSuspension":
-    "يُعرض هنا السبب من إشعار الإيقاف.",
-  "screen.public.accountRecovery.accountSuspended.toAskForAReview":
-    "لطلب مراجعة، تواصل مع الدعم. يبقى تسجيل الدخول مرفوضًا ما دام الإيقاف قائمًا.",
+  "screen.public.accountSuspended.badge": "الحساب موقوف",
+  "screen.public.accountSuspended.title": "تم إيقاف وصولك",
+  "screen.public.accountSuspended.reason": "السبب: {reason}",
+  "screen.public.accountSuspended.body":
+    "لم تُحذف أي بيانات. تواصل مع الدعم للاستفسار عن هذا القرار.",
+  "screen.public.accountSuspended.signOut": "تسجيل الخروج",
   // apps/web/src/screens/public/account-recovery/appeal-a-rejection.tsx
-  "screen.public.accountRecovery.appealARejection.appealStatement": "بيان الاعتراض",
-  "screen.public.accountRecovery.appealARejection.explainWhyTheDecisionShould":
-    "اشرح سبب وجوب مراجعة القرار (10 أحرف على الأقل).",
-  "screen.public.accountRecovery.appealARejection.supportingFiles": "المستندات الداعمة",
-  "screen.public.accountRecovery.appealARejection.addAnyDocumentThatSupports":
-    "أضف أي مستند يدعم اعتراضك.",
-  "screen.public.accountRecovery.appealARejection.appealSubmitted": "تم إرسال الاعتراض",
-  "screen.public.accountRecovery.appealARejection.yourAppealHasBeenSent":
-    "أُرسل اعتراضك إلى فريق المراجعة.",
-  "screen.public.accountRecovery.appealARejection.appealCouldNotBeSubmitted": "تعذّر إرسال الاعتراض",
-  "screen.public.accountRecovery.appealARejection.submitting": "جارٍ الإرسال...",
-  "screen.public.accountRecovery.appealARejection.submitAppeal": "إرسال الاعتراض",
-  "screen.public.accountRecovery.appealARejection.backToStatus": "العودة إلى الحالة",
-  "screen.public.accountRecovery.appealARejection.appealARejection": "الاعتراض على رفض",
-  "screen.public.accountRecovery.appealARejection.askForAReviewOf":
-    "اطلب مراجعة القرار ما دامت نافذة الاعتراض مفتوحة.",
-  "screen.public.accountRecovery.appealARejection.rejected": "مرفوض",
-  "screen.public.accountRecovery.appealARejection.reasonOnRecord": "السبب المسجَّل:",
-  "screen.public.accountRecovery.appealARejection.theReasonFromTheReview":
-    "يُعرض هنا السبب من فريق المراجعة.",
+  "screen.public.appeal.title": "الاعتراض على الرفض",
+  "screen.public.appeal.lead": "أخبرنا لماذا يجب مراجعة القرار.",
+  "screen.public.appeal.rejected": "مرفوض",
+  "screen.public.appeal.reason": "السبب المسجّل: {reason}",
+  "screen.public.appeal.reasonMissing": "غير متاح",
+  "screen.public.appeal.statement": "بيان الاعتراض",
+  "screen.public.appeal.statementPlaceholder": "اشرح لماذا يجب مراجعة القرار",
+  "screen.public.appeal.files": "ملفات داعمة (اختياري)",
+  "screen.public.appeal.filesHint": "ملف PDF أو صورة، حتى 15 ميغابايت لكل ملف",
+  "screen.public.appeal.submit": "إرسال الاعتراض",
+  "screen.public.appeal.submitting": "جارٍ الإرسال…",
+  "screen.public.appeal.cancel": "إلغاء",
+  "screen.public.appeal.submitted": "أُرسل اعتراضك. نراجعه خلال يومي عمل.",
+  "screen.public.appeal.noApplication": "لم يُعثر على طلب مرفوض لهذا الحساب.",
+  "screen.public.appeal.submitFailed": "تعذّر إرسال الاعتراض. حاول مرة أخرى.",
   // apps/web/src/screens/public/account-recovery/application-status-and-changes-response.tsx
-  "screen.public.accountRecovery.applicationStatusAndChangesResponse.submitted": "تاريخ التقديم",
-  "screen.public.accountRecovery.applicationStatusAndChangesResponse.pendingReview": "قيد المراجعة",
-  "screen.public.accountRecovery.applicationStatusAndChangesResponse.decision": "القرار",
-  "screen.public.accountRecovery.applicationStatusAndChangesResponse.uploadAClearerInsuranceDocument":
-    "ارفع مستند تأمين أوضح",
-  "screen.public.accountRecovery.applicationStatusAndChangesResponse.confirmTheVehicleSeatCount":
-    "أكّد عدد مقاعد المركبة",
-  "screen.public.accountRecovery.applicationStatusAndChangesResponse.approved": "معتمد",
-  "screen.public.accountRecovery.applicationStatusAndChangesResponse.changesRequested":
-    "طُلبت تغييرات",
-  "screen.public.accountRecovery.applicationStatusAndChangesResponse.appealed": "تم الاعتراض",
-  "screen.public.accountRecovery.applicationStatusAndChangesResponse.pendingReviewLabel":
-    "قيد المراجعة",
-  "screen.public.accountRecovery.applicationStatusAndChangesResponse.targetReviewWithin2Working":
-    "الهدف: المراجعة خلال يومَي عمل.",
-  "screen.public.accountRecovery.applicationStatusAndChangesResponse.applicationProgress":
-    "تقدّم الطلب",
-  "screen.public.accountRecovery.applicationStatusAndChangesResponse.respondWithin14Days":
-    "الرد خلال 14 يومًا",
-  "screen.public.accountRecovery.applicationStatusAndChangesResponse.requestedChangesMustBeAnswered":
-    "يجب الرد على التغييرات المطلوبة قبل الموعد النهائي",
-  "screen.public.accountRecovery.applicationStatusAndChangesResponse.orTheApplicationCloses":
-    "، وإلا يُغلق الطلب.",
-  "screen.public.accountRecovery.applicationStatusAndChangesResponse.reviewerNotes":
-    "ملاحظات المراجع",
-  "screen.public.accountRecovery.applicationStatusAndChangesResponse.updateSaved": "تم حفظ التحديث",
-  "screen.public.accountRecovery.applicationStatusAndChangesResponse.actionFailed": "فشل الإجراء",
-  "screen.public.accountRecovery.applicationStatusAndChangesResponse.requestedChanges":
-    "التغييرات المطلوبة",
-  "screen.public.accountRecovery.applicationStatusAndChangesResponse.requestedChangesAriaLabel":
-    "التغييرات المطلوبة",
-  "screen.public.accountRecovery.applicationStatusAndChangesResponse.updatedDocumentsOptional":
-    "مستندات محدَّثة (اختياري)",
-  "screen.public.accountRecovery.applicationStatusAndChangesResponse.attachReplacementOrSupportingDocuments":
-    "أرفق مستندات بديلة أو داعمة قبل إعادة الإرسال.",
-  "screen.public.accountRecovery.applicationStatusAndChangesResponse.submitting": "جارٍ الإرسال...",
-  "screen.public.accountRecovery.applicationStatusAndChangesResponse.resubmit": "إعادة الإرسال",
-  "screen.public.accountRecovery.applicationStatusAndChangesResponse.request7DayExtension":
-    "طلب تمديد 7 أيام",
-  "screen.public.accountRecovery.applicationStatusAndChangesResponse.appealARejection":
-    "الاعتراض على رفض",
-  "screen.public.accountRecovery.applicationStatusAndChangesResponse.applicationStatusAndChangesResponse":
-    "حالة الطلب والرد على التغييرات",
-  "screen.public.accountRecovery.applicationStatusAndChangesResponse.trackYourApplicationAndRespond":
-    "تتبّع طلبك وردّ على أي تغييرات مطلوبة.",
-  "screen.public.accountRecovery.applicationStatusAndChangesResponse.statusCouldNotLoad":
-    "تعذّر تحميل الحالة",
-  "screen.public.accountRecovery.applicationStatusAndChangesResponse.tryAgainInAFew":
-    "أعد المحاولة بعد بضع دقائق.",
+  "screen.public.applicationStatus.title": "طلبك",
+  "screen.public.applicationStatus.summary": "طلب {type}. أُرسل في {date}.",
+  "screen.public.applicationStatus.type.platform_driver": "سائق",
+  "screen.public.applicationStatus.type.platform_photographer": "مصوّر",
+  "screen.public.applicationStatus.type.organization": "مؤسسة",
+  "screen.public.applicationStatus.signInFirst": "سجّل الدخول لعرض طلبك.",
+  "screen.public.applicationStatus.loading": "جارٍ تحميل طلبك",
+  "screen.public.applicationStatus.notFound": "لم يُعثر على طلب لهذا الحساب.",
+  "screen.public.applicationStatus.status": "الحالة",
+  "screen.public.applicationStatus.submitted": "تم الإرسال",
+  "screen.public.applicationStatus.pendingReview": "قيد المراجعة (يوما عمل)",
+  "screen.public.applicationStatus.outcome.changes": "مطلوب تعديلات",
+  "screen.public.applicationStatus.outcome.approved": "تمت الموافقة",
+  "screen.public.applicationStatus.outcome.rejected": "مرفوض",
+  "screen.public.applicationStatus.outcome.closed": "مغلق",
+  "screen.public.applicationStatus.outcome.appealed": "الاعتراض قيد المراجعة",
+  "screen.public.applicationStatus.respondBy":
+    "ردّ قبل {date} (14 يومًا من الطلب). بعد ذلك يُغلق الطلب.",
+  "screen.public.applicationStatus.notes": "ملاحظات المراجع: {notes}",
+  "screen.public.applicationStatus.requestedChanges": "التعديلات المطلوبة",
+  "screen.public.applicationStatus.noChanges": "لا توجد تعديلات مطلوبة.",
+  "screen.public.applicationStatus.updatedDocuments": "مستندات محدّثة (اختياري)",
+  "screen.public.applicationStatus.updatedDocumentsHint":
+    "ملف PDF أو صورة، حتى 15 ميغابايت لكل ملف",
+  "screen.public.applicationStatus.resubmit": "إعادة إرسال الطلب",
+  "screen.public.applicationStatus.submitting": "جارٍ الإرسال…",
+  "screen.public.applicationStatus.extend": "طلب 7 أيام إضافية",
+  "screen.public.applicationStatus.appeal": "الاعتراض على الرفض",
+  "screen.public.applicationStatus.resubmitted": "أُرسل طلبك المحدّث للمراجعة.",
+  "screen.public.applicationStatus.resubmitFailed": "تعذّرت إعادة إرسال الطلب. حاول مرة أخرى.",
+  "screen.public.applicationStatus.extended": "مُدّدت المهلة 7 أيام.",
+  "screen.public.applicationStatus.extendFailed": "تعذّر طلب التمديد. حاول مرة أخرى.",
   // apps/web/src/screens/public/account-recovery/deletion-grace-period.tsx
-  "screen.public.accountRecovery.deletionGracePeriod.deletionGracePeriod": "فترة السماح للحذف",
-  "screen.public.accountRecovery.deletionGracePeriod.yourAccountIsInThe":
-    "حسابك في فترة السماح البالغة 30 يومًا بعد طلب الحذف.",
-  "screen.public.accountRecovery.deletionGracePeriod.gracePeriodEnds": "تنتهي فترة السماح",
-  "screen.public.accountRecovery.deletionGracePeriod.30DaysAfterTheDeletion":
-    "30 يومًا بعد طلب الحذف",
-  "screen.public.accountRecovery.deletionGracePeriod.signInToRestore": "سجّل الدخول للاستعادة",
-  "screen.public.accountRecovery.deletionGracePeriod.signingInRestoresYourAccount":
-    "يؤدي تسجيل الدخول إلى استعادة حسابك وإلغاء طلب الحذف.",
-  "screen.public.accountRecovery.deletionGracePeriod.ifTheDeletionBecomesPermanent":
-    "إذا أصبح الحذف نهائيًا، تُلغى الحجوزات المستقبلية وتُسترد مبالغها.",
-  "screen.public.accountRecovery.deletionGracePeriod.continueToAppHome":
-    "المتابعة إلى رئيسية التطبيق",
+  "screen.public.deletionGrace.badge": "طُلب الحذف",
+  "screen.public.deletionGrace.title": "حسابك مجدول للحذف",
+  "screen.public.deletionGrace.endsLabel": "تنتهي مهلة الاسترداد",
+  "screen.public.deletionGrace.endsValue": "{date}، بعد {days} يومًا من طلبك",
+  "screen.public.deletionGrace.body":
+    "يؤدي تسجيل الدخول إلى استعادة حسابك وإلغاء طلب الحذف. لا تُلغى الحجوزات القادمة ولا تُسترد إلا عندما يصبح الحذف نهائيًا.",
+  "screen.public.deletionGrace.continue": "المتابعة إلى الصفحة الرئيسية",
+  "screen.public.deletionGrace.restoreFailed": "تعذّرت استعادة حسابك. سجّل الدخول لاستعادته.",
   // apps/web/src/screens/public/account-recovery/password-reset.tsx
-  "screen.public.accountRecovery.passwordReset.emailOrPhone": "البريد الإلكتروني أو الهاتف",
-  "screen.public.accountRecovery.passwordReset.newPassword": "كلمة المرور الجديدة",
-  "screen.public.accountRecovery.passwordReset.atLeastCharactersPasswordsFound":
-    "{min} أحرف على الأقل. تُرفض كلمات المرور الواردة في قوائم مسرّبة.",
-  "screen.public.accountRecovery.passwordReset.setPassword": "تعيين كلمة المرور",
-  "screen.public.accountRecovery.passwordReset.rememberedIt": "تذكرتها؟",
-  "screen.public.accountRecovery.passwordReset.backToSignIn": "العودة إلى تسجيل الدخول",
-  "screen.public.accountRecovery.passwordReset.passwordReset": "إعادة تعيين كلمة المرور",
-  "screen.public.accountRecovery.passwordReset.weSendACodeTo":
-    "نرسل رمزًا إلى بريدك أو هاتفك الموثّق. ثم عيّن كلمة مرور جديدة.",
-  "screen.public.accountRecovery.passwordReset.passwordRefused": "تم رفض كلمة المرور",
-  "screen.public.accountRecovery.passwordReset.theNewPasswordIsShorter":
-    "كلمة المرور الجديدة أقصر من",
-  "screen.public.accountRecovery.passwordReset.charactersOrWasFoundIn":
-    "حرفًا أو وردت في قائمة مسرّبة.",
-  // apps/web/src/screens/public/account-recovery/session-expired.tsx
-  "screen.public.accountRecovery.sessionExpired.sessionExpired": "انتهت الجلسة",
-  "screen.public.accountRecovery.sessionExpired.forYourSecurityYouWere":
-    "لأمانك تم تسجيل خروجك. مسوداتك غير المحفوظة محفوظة.",
-  "screen.public.accountRecovery.sessionExpired.draftsKept": "المسودات محفوظة",
-  "screen.public.accountRecovery.sessionExpired.signInToContinueWhere":
-    "سجّل الدخول لمتابعة ما كنت تفعله، في التطبيق نفسه.",
-  "screen.public.accountRecovery.sessionExpired.signIn": "تسجيل الدخول",
-  // apps/web/src/screens/public/common/auth-frame.tsx
-  "screen.public.common.authFrame.backToTheStart": "العودة إلى البداية",
-  // apps/web/src/screens/public/common/country-options.ts
-  "screen.public.common.countryOptions.selectACountry": "اختر دولة",
-  "screen.public.common.countryOptions.saudiArabia": "المملكة العربية السعودية",
-  // apps/web/src/screens/public/common/language-select.tsx
-  "screen.public.common.languageSelect.language": "اللغة",
-  // apps/web/src/screens/public/common/public-nav.tsx
-  "screen.public.common.publicNav.start": "ابدأ",
-  "screen.public.common.publicNav.signUp": "إنشاء حساب",
-  "screen.public.common.publicNav.signIn": "تسجيل الدخول",
-  "screen.public.common.publicNav.applicationStatus": "حالة الطلب",
-  "screen.public.common.publicNav.public": "عام",
-  // apps/web/src/screens/public/common/sign-up-footer.tsx
-  "screen.public.common.signUpFooter.nextConfirmYourDetailsWith": "بعد ذلك، أكّد بياناتك برمز:",
-  "screen.public.common.signUpFooter.verificationByCode": "التحقق بالرمز",
-  "screen.public.common.signUpFooter.alreadyHaveAnAccount": "لديك حساب بالفعل؟",
-  "screen.public.common.signUpFooter.signIn": "تسجيل الدخول",
-  // apps/web/src/screens/public/common/staff-code-panel.tsx
-  "screen.public.common.staffCodePanel.authenticatorApp": "تطبيق المصادقة",
-  "screen.public.common.staffCodePanel.secondFactorMethod": "طريقة العامل الثاني",
-  "screen.public.common.staffCodePanel.staffCode": "رمز الموظف",
+  "screen.public.passwordReset.step1": "الخطوة 1 من 2: الرمز",
+  "screen.public.passwordReset.step2": "الخطوة 2 من 2: كلمة المرور الجديدة",
+  "screen.public.passwordReset.title": "إعادة تعيين كلمة المرور",
+  "screen.public.passwordReset.lead": "نرسل رمزًا إلى البريد الإلكتروني أو الهاتف المسجل في حسابك.",
+  "screen.public.passwordReset.sendCode": "إرسال الرمز",
+  "screen.public.passwordReset.remembered": "تذكرتها؟",
+  "screen.public.passwordReset.backToSignIn": "العودة لتسجيل الدخول",
+  "screen.public.passwordReset.passwordTitle": "عيّن كلمة مرور جديدة",
+  "screen.public.passwordReset.passwordLead": "رمزك جاهز. اختر كلمة مرور جديدة لحسابك.",
+  "screen.public.passwordReset.newPassword": "كلمة المرور الجديدة",
+  "screen.public.passwordReset.confirmPassword": "تأكيد كلمة المرور الجديدة",
+  "screen.public.passwordReset.ruleLength": "{min} حرفًا على الأقل",
+  "screen.public.passwordReset.ruleBreached": "غير موجودة في قوائم كلمات المرور المسرّبة",
+  "screen.public.passwordReset.mismatch": "كلمتا المرور غير متطابقتين.",
+  "screen.public.passwordReset.setPassword": "تعيين كلمة المرور",
+  "screen.public.passwordReset.doneTitle": "تم تحديث كلمة المرور",
+  "screen.public.passwordReset.doneLead": "سجّل الدخول بكلمة المرور الجديدة.",
+  // apps/web/src/screens/public/common/country-select.tsx
+  "screen.public.common.countrySelect.country": "الدولة",
+  "screen.public.common.countrySelect.selectCountry": "اختر الدولة",
+  // apps/web/src/screens/public/common/document-drop.tsx
+  "screen.public.common.documentDrop.added": "تمت إضافة ملفات: {count}",
+  "screen.public.common.documentDrop.remove": "إزالة",
+  "screen.public.common.documentDrop.removeFile": "إزالة {name}",
   // apps/web/src/screens/public/index.ts
   "screen.registry.public.landing.title": "الصفحة الرئيسية",
   "screen.registry.public.signUpChooser.title": "اختيار نوع التسجيل (/register)",
@@ -2794,271 +2752,138 @@ export const ar: AppMessages = {
   "screen.registry.public.appealARejection.title": "الاعتراض على رفض",
   "screen.registry.public.moderatorSignInWithStaffCode.title": "تسجيل دخول المشرف برمز الموظف",
   // apps/web/src/screens/public/landing/landing.tsx
-  "screen.public.landing.landing.traveler": "المسافر",
-  "screen.public.landing.landing.createATravelerAccountAnd": "أنشئ حساب مسافر واحجز الرحلات.",
-  "screen.public.landing.landing.platformDriver": "سائق المنصة",
-  "screen.public.landing.landing.applyToJoinThePlatform": "تقدّم للانضمام إلى مجموعة سائقي المنصة.",
-  "screen.public.landing.landing.photographer": "مصوّر",
-  "screen.public.landing.landing.applyToJoinThePlatformDescription":
-    "تقدّم للانضمام إلى مجموعة مصوّري المنصة.",
-  "screen.public.landing.landing.organization": "المؤسسة",
-  "screen.public.landing.landing.registerYourOrganizationWebOnly": "سجّل مؤسستك. عبر الويب فقط.",
-  "screen.public.landing.landing.permissionDenied": "تم رفض الإذن",
-  "screen.public.landing.landing.notFound": "غير موجود",
-  "screen.public.landing.landing.unauthorized": "غير مصرّح",
-  "screen.public.landing.landing.serverError": "خطأ في الخادم",
-  "screen.public.landing.landing.serviceUnavailable": "الخدمة غير متاحة",
-  "screen.public.landing.landing.maintenancePage": "صفحة الصيانة",
-  "screen.public.landing.landing.sharedStates": "الحالات المشتركة",
-  "screen.public.landing.landing.tripsEnjoyHome": "رئيسية Trips Enjoy",
-  "screen.public.landing.landing.tripsEnjoy": "Trips Enjoy",
-  "screen.public.landing.landing.publicTrips": "الرحلات العامة",
-  "screen.public.landing.landing.browseTheTripsThatAre": "تصفّح الرحلات المنشورة للعامة.",
-  "screen.public.landing.landing.browseTrips": "تصفّح الرحلات",
-  "screen.public.landing.landing.noPublicTripsRightNow": "لا توجد رحلات عامة الآن",
-  "screen.public.landing.landing.tripsAppearHereOnceThey":
-    "تظهر الرحلات هنا بعد نشرها. يمكنك التسجيل في دور أدناه.",
-  "screen.public.landing.landing.tripsCouldNotLoad": "تعذّر تحميل الرحلات",
-  "screen.public.landing.landing.tryAgainInAFew": "أعد المحاولة بعد بضع دقائق.",
-  "screen.public.landing.landing.signUpAs": "سجّل بصفة",
-  "screen.public.landing.landing.signUpAs2": "سجّل بصفة",
+  "screen.public.landing.title": "رحلتك الجماعية القادمة",
+  "screen.public.landing.lead": "تصفّح الرحلات العامة، أو سجّل حسب دورك.",
+  "screen.public.landing.browseTrips": "تصفّح الرحلات",
+  "screen.public.landing.publicTrips": "الرحلات العامة",
+  "screen.public.landing.loading": "جارٍ تحميل الرحلات",
+  "screen.public.landing.tripsFailed": "تعذّر تحميل الرحلات. حاول مرة أخرى بعد دقائق.",
+  "screen.public.landing.noTrips": "لا توجد رحلات عامة حاليًا",
+  "screen.public.landing.noTripsBody": "تظهر الرحلات هنا بعد أن ينشرها المنظمون.",
+  "screen.public.landing.groupPhoto": "صورة المجموعة",
+  "screen.public.landing.fromPrice": "ابتداءً من {price}",
+  "screen.public.landing.seatsLeft": "المقاعد المتبقية: {count}",
+  "screen.public.landing.signUpForRole": "سجّل حسب دورك",
+  "screen.public.landing.signUp": "سجّل الآن",
+  "screen.public.landing.role.traveler": "مسافر",
+  "screen.public.landing.role.travelerBody": "احجز المقاعد والأنشطة لمجموعتك.",
+  "screen.public.landing.role.driver": "سائق المنصة",
+  "screen.public.landing.role.driverBody": "قدّم طلبًا للانضمام إلى السائقين.",
+  "screen.public.landing.role.photographer": "مصوّر",
+  "screen.public.landing.role.photographerBody": "قدّم طلبًا للانضمام إلى المصورين.",
+  "screen.public.landing.role.organization": "مؤسسة",
+  "screen.public.landing.role.organizationBody": "نظّم رحلات جماعية لشركتك. على الويب فقط.",
+  "screen.public.landing.fullyBooked": "اكتمل الحجز",
   // apps/web/src/screens/public/sign-in/admin-authenticator-set-up-and-code.tsx
-  "screen.public.signIn.adminAuthenticatorSetUpAndCode.setUpAuthenticator": "إعداد المصادقة",
-  "screen.public.signIn.adminAuthenticatorSetUpAndCode.enterCode": "أدخل الرمز",
-  "screen.public.signIn.adminAuthenticatorSetUpAndCode.setUpSteps": "خطوات الإعداد",
-  "screen.public.signIn.adminAuthenticatorSetUpAndCode.setUpRequired": "الإعداد مطلوب",
-  "screen.public.signIn.adminAuthenticatorSetUpAndCode.theAdminConsoleDoesNot":
-    "لا تُفتح لوحة الإدارة حتى يتم إعداد المصادقة.",
-  "screen.public.signIn.adminAuthenticatorSetUpAndCode.scanTheQrCodeShown":
-    "امسح رمز QR الظاهر على الشاشة بتطبيق المصادقة، ثم أدخل الرمز المكوّن من ستة أرقام.",
-  "screen.public.signIn.adminAuthenticatorSetUpAndCode.authenticatorCode": "رمز المصادقة",
-  "screen.public.signIn.adminAuthenticatorSetUpAndCode.verify": "توثيق",
-  "screen.public.signIn.adminAuthenticatorSetUpAndCode.afterVerificationTheAdminConsole":
-    "بعد التحقق، تُفتح لوحة الإدارة.",
-  "screen.public.signIn.adminAuthenticatorSetUpAndCode.adminHome": "الرئيسية الإدارية",
-  "screen.public.signIn.adminAuthenticatorSetUpAndCode.adminAuthenticatorSetUpAnd":
-    "إعداد مصادقة المسؤول والرمز",
-  "screen.public.signIn.adminAuthenticatorSetUpAndCode.adminSignInNeedsAn":
-    "يحتاج تسجيل دخول المسؤول إلى رمز مصادقة. تُفتح لوحة الإدارة بعد هذه الخطوة.",
-  "screen.public.signIn.adminAuthenticatorSetUpAndCode.wrongCode": "رمز خاطئ",
-  "screen.public.signIn.adminAuthenticatorSetUpAndCode.tryAgainFiveFailuresLock":
-    "أعد المحاولة. خمس محاولات فاشلة تقفل تسجيل دخول المسؤول لمدة 15 دقيقة.",
-  // apps/web/src/screens/public/sign-in/admin-sign-in.tsx
-  "screen.public.signIn.adminSignIn.email": "البريد الإلكتروني",
-  "screen.public.signIn.adminSignIn.password": "كلمة المرور",
-  "screen.public.signIn.adminSignIn.atLeast12CharactersPasswords":
-    "12 حرفًا على الأقل. تُرفض كلمات المرور الواردة في قوائم مسرّبة.",
-  "screen.public.signIn.adminSignIn.continue": "متابعة",
-  "screen.public.signIn.adminSignIn.authenticatorNotSetUpYet": "لم تُعدّ المصادقة بعد؟",
-  "screen.public.signIn.adminSignIn.setItUp": "أعدّها",
-  "screen.public.signIn.adminSignIn.adminSignIn": "تسجيل دخول المسؤول",
-  "screen.public.signIn.adminSignIn.staffOnlyThereIsNo":
-    "للموظفين فقط. لا يوجد تسجيل عام للمسؤولين.",
-  "screen.public.signIn.adminSignIn.signInRefused": "تم رفض تسجيل الدخول",
-  "screen.public.signIn.adminSignIn.theEmailOrPasswordIs":
-    "البريد الإلكتروني أو كلمة المرور غير صحيحة. خمس محاولات فاشلة تقفل تسجيل الدخول لمدة 15 دقيقة.",
-  // apps/web/src/screens/public/sign-in/moderator-sign-in-with-staff-code.tsx
-  "screen.public.signIn.moderatorSignInWithStaffCode.emailOrPhone": "البريد الإلكتروني أو الهاتف",
-  "screen.public.signIn.moderatorSignInWithStaffCode.signIn": "تسجيل الدخول",
-  "screen.public.signIn.moderatorSignInWithStaffCode.moderatorSignInWithStaff":
-    "تسجيل دخول المشرف برمز الموظف",
-  "screen.public.signIn.moderatorSignInWithStaffCode.afterSignInYouSee":
-    "بعد تسجيل الدخول ترى مركبتك المعيَّنة فقط.",
-  // apps/web/src/screens/public/sign-in/organization-staff-sign-in-with-code.tsx
-  "screen.public.signIn.organizationStaffSignInWithCode.email": "البريد الإلكتروني",
-  "screen.public.signIn.organizationStaffSignInWithCode.password": "كلمة المرور",
-  "screen.public.signIn.organizationStaffSignInWithCode.secondFactor": "العامل الثاني",
-  "screen.public.signIn.organizationStaffSignInWithCode.signIn": "تسجيل الدخول",
-  "screen.public.signIn.organizationStaffSignInWithCode.firstSignIn": "أول تسجيل دخول؟",
-  "screen.public.signIn.organizationStaffSignInWithCode.setUpYourStaffCode": "أعدّ رمز الموظف",
-  "screen.public.signIn.organizationStaffSignInWithCode.organizationStaffSignInWith":
-    "تسجيل دخول موظف المؤسسة بالرمز",
-  "screen.public.signIn.organizationStaffSignInWithCode.enterYourEmailYourPassword":
-    "أدخل بريدك الإلكتروني وكلمة المرور والرمز من عاملك الثاني. إذا كان بريدك مرتبطًا بعدة مؤسسات، تختار واحدة بعد الرمز.",
-  "screen.public.signIn.organizationStaffSignInWithCode.signInRefused": "تم رفض تسجيل الدخول",
-  "screen.public.signIn.organizationStaffSignInWithCode.theCodeIsWrongOr":
-    "الرمز خاطئ، أو هذا البريد غير مرتبط بأي مؤسسة.",
-  // apps/web/src/screens/public/sign-in/sign-in.tsx
-  "screen.public.signIn.signIn.oneTimeCode": "رمز لمرة واحدة",
-  "screen.public.signIn.signIn.password": "كلمة المرور",
-  "screen.public.signIn.signIn.sessionExpired": "انتهت الجلسة",
-  "screen.public.signIn.signIn.accountSuspended": "الحساب موقوف",
-  "screen.public.signIn.signIn.deletionRequested": "حذف مطلوب",
-  "screen.public.signIn.signIn.applicationPending": "الطلب قيد الانتظار",
-  "screen.public.signIn.signIn.emailOrPhone": "البريد الإلكتروني أو الهاتف",
-  "screen.public.signIn.signIn.signInMethod": "طريقة تسجيل الدخول",
-  "screen.public.signIn.signIn.passwordLabel": "كلمة المرور",
-  "screen.public.signIn.signIn.weSendAOneTime":
-    "نرسل رمزًا لمرة واحدة إلى البريد أو الهاتف الذي تدخله.",
-  "screen.public.signIn.signIn.signIn": "تسجيل الدخول",
-  "screen.public.signIn.signIn.createAnAccount": "إنشاء حساب",
-  "screen.public.signIn.signIn.forgotPassword": "هل نسيت كلمة المرور؟",
-  "screen.public.signIn.signIn.otherSignInOutcomes": "نتائج تسجيل دخول أخرى",
-  "screen.public.signIn.signIn.otherOutcomes": "نتائج أخرى",
-  "screen.public.signIn.signIn.signInTravelerAndSupplier": "تسجيل الدخول (المسافر والمورّد)",
-  "screen.public.signIn.signIn.travelersAndApprovedSuppliersSign":
-    "يسجّل المسافرون والمورّدون المعتمدون الدخول هنا.",
-  "screen.public.signIn.signIn.detailsDoNotMatch": "البيانات غير مطابقة",
-  "screen.public.signIn.signIn.checkYourDetailsAndTry":
-    "تحقق من بياناتك وأعد المحاولة. الإخفاقات المتكررة توقف تسجيل الدخول مؤقتًا.",
+  "screen.public.signIn.adminAuthenticator.setUpRequired": "الإعداد مطلوب",
+  "screen.public.signIn.adminAuthenticator.title": "إعداد تطبيق المصادقة",
+  "screen.public.signIn.adminAuthenticator.lead":
+    "امسح الرمز في تطبيق المصادقة، ثم أدخل الرمز المكوّن من 6 أرقام الذي يظهر. تُفتح لوحة الإدارة بعد هذه الخطوة.",
+  "screen.public.signIn.adminAuthenticator.qrLabel": "رمز QR للإعداد",
+  "screen.public.signIn.adminAuthenticator.qrCode": "رمز QR",
+  "screen.public.signIn.adminAuthenticator.cannotScan": "لا يمكنك المسح؟",
+  "screen.public.signIn.adminAuthenticator.enterKey": "أدخل هذا المفتاح في تطبيقك:",
+  "screen.public.signIn.adminAuthenticator.keyMissing": "اطلب مفتاح الإعداد من مسؤول المنصة.",
+  "screen.public.signIn.adminAuthenticator.codeLabel": "رمز المصادقة",
   // apps/web/src/screens/public/sign-in/staff-code-set-up.tsx
+  "screen.public.signIn.staffCodeSetUp.required": "مطلوب قبل فتح مساحة العمل",
+  "screen.public.signIn.staffCodeSetUp.title": "اضبط رمز الدخول",
+  "screen.public.signIn.staffCodeSetUp.lead":
+    "يحتاج كل دخول للموظفين إلى رمز ثانٍ. اختر طريقة استلامه.",
+  "screen.public.signIn.staffCodeSetUp.method": "طريقة الرمز",
+  "screen.public.signIn.staffCodeSetUp.app": "تطبيق المصادقة",
+  "screen.public.signIn.staffCodeSetUp.sms": "رسالة نصية (SMS)",
+  "screen.public.signIn.staffCodeSetUp.codeFromApp": "الرمز من تطبيقك",
+  "screen.public.signIn.staffCodeSetUp.codeFromSms": "الرمز من الرسالة النصية",
   "screen.public.signIn.staffCodeSetUp.confirm": "تأكيد",
-  "screen.public.signIn.staffCodeSetUp.afterConfirmationTheWorkspaceOpens":
-    "بعد التأكيد، تُفتح مساحة العمل.",
-  "screen.public.signIn.staffCodeSetUp.openTheWorkspace": "فتح مساحة العمل",
-  "screen.public.signIn.staffCodeSetUp.staffCodeSetUpFirst": "إعداد رمز الموظف (أول تسجيل دخول)",
-  "screen.public.signIn.staffCodeSetUp.chooseSmsOrAnAuthenticator":
-    "اختر SMS أو تطبيق مصادقة، ثم أكّد رمزًا. تُفتح مساحة العمل بعد هذه الخطوة.",
-  "screen.public.signIn.staffCodeSetUp.codeExpired": "انتهت صلاحية الرمز",
-  "screen.public.signIn.staffCodeSetUp.theCodeIsWrongOr":
-    "الرمز خاطئ أو منتهي الصلاحية. اطلب رمزًا جديدًا وأعد المحاولة.",
   // apps/web/src/screens/public/sign-up/organization-sign-up.tsx
-  "screen.public.signUp.organizationSignUp.owner": "المالك",
-  "screen.public.signUp.organizationSignUp.ownerName": "اسم المالك",
-  "screen.public.signUp.organizationSignUp.ownerEmail": "بريد المالك",
-  "screen.public.signUp.organizationSignUp.ownerPhone": "هاتف المالك",
-  "screen.public.signUp.organizationSignUp.organization": "المؤسسة",
-  "screen.public.signUp.organizationSignUp.legalName": "الاسم القانوني",
-  "screen.public.signUp.organizationSignUp.country": "الدولة",
-  "screen.public.signUp.organizationSignUp.required": "مطلوب.",
-  "screen.public.signUp.organizationSignUp.commercialRegistrationNumber": "رقم السجل التجاري",
-  "screen.public.signUp.organizationSignUp.taxNumber": "الرقم الضريبي",
-  "screen.public.signUp.organizationSignUp.commercialRegistrationDocument": "مستند السجل التجاري",
-  "screen.public.signUp.organizationSignUp.aClearPhotoOrScan": "صورة أو نسخة ممسوحة واضحة.",
-  "screen.public.signUp.organizationSignUp.billingContact": "جهة اتصال الفوترة",
-  "screen.public.signUp.organizationSignUp.billingContactName": "اسم جهة اتصال الفوترة",
-  "screen.public.signUp.organizationSignUp.billingContactEmail": "بريد جهة اتصال الفوترة",
-  "screen.public.signUp.organizationSignUp.submissionFailed": "فشل الإرسال",
-  "screen.public.signUp.organizationSignUp.planAndReview": "الخطة والمراجعة",
-  "screen.public.signUp.organizationSignUp.theStarterPlanIsAssigned":
-    "تُمنح خطة Starter عند اعتماد مؤسستك. التحقق من السجل يدوي. لا يُمنح وصول الموظفين قبل الاعتماد.",
-  "screen.public.signUp.organizationSignUp.submitting": "جارٍ الإرسال...",
-  "screen.public.signUp.organizationSignUp.submitForReview": "الإرسال للمراجعة",
-  "screen.public.signUp.organizationSignUp.organizationSignUpWebOnly":
-    "تسجيل المؤسسة (عبر الويب فقط)",
-  "screen.public.signUp.organizationSignUp.registerYourOrganizationForAdmin":
-    "سجّل مؤسستك لمراجعة الإدارة. يتحقق المالك من البريد والهاتف معًا.",
-  "screen.public.signUp.organizationSignUp.countryIsMissing": "الدولة مفقودة",
-  "screen.public.signUp.organizationSignUp.selectACountrySubmitIs":
-    "اختر دولة. يُرفض الإرسال حتى تُحدَّد.",
+  "screen.public.signUp.organization.title": "سجّل مؤسستك",
+  "screen.public.signUp.organization.lead":
+    "تراجع الإدارة التسجيل. يُفتح دخول الموظفين بعد الموافقة.",
+  "screen.public.signUp.organization.organization": "المؤسسة",
+  "screen.public.signUp.organization.legalName": "الاسم القانوني",
+  "screen.public.signUp.organization.registrationNumber": "رقم السجل التجاري",
+  "screen.public.signUp.organization.taxNumber": "الرقم الضريبي",
+  "screen.public.signUp.organization.certificate": "شهادة السجل التجاري",
+  "screen.public.signUp.organization.certificateHint": "ملف PDF أو صورة، حتى 15 ميغابايت",
+  "screen.public.signUp.organization.ownerAndBilling": "المالك والفوترة",
+  "screen.public.signUp.organization.ownerName": "اسم المالك",
+  "screen.public.signUp.organization.ownerEmail": "بريد المالك الإلكتروني",
+  "screen.public.signUp.organization.ownerPhone": "هاتف المالك",
+  "screen.public.signUp.organization.billingEmail": "بريد جهة الفوترة",
+  "screen.public.signUp.organization.billingEmailPlaceholder": "billing@example.com",
+  "screen.public.signUp.organization.planNote":
+    "لا يوجد اختيار للخطة هنا. تُمنح الخطة المبدئية عند الموافقة على تسجيلك.",
+  "screen.public.signUp.organization.submit": "إرسال التسجيل",
+  "screen.public.signUp.organization.submitting": "جارٍ الإرسال…",
+  "screen.public.signUp.organization.submitFailed": "تعذّر إرسال التسجيل. حاول مرة أخرى.",
   // apps/web/src/screens/public/sign-up/photographer-sign-up.tsx
-  "screen.public.signUp.photographerSignUp.uploadProgress":
-    "ارفع {min} صور على الأقل. المرفوع: {uploaded} من {min}.",
-  "screen.public.signUp.photographerSignUp.nameOrStudioName": "الاسم أو اسم الاستوديو",
-  "screen.public.signUp.photographerSignUp.email": "البريد الإلكتروني",
-  "screen.public.signUp.photographerSignUp.phone": "الهاتف",
-  "screen.public.signUp.photographerSignUp.country": "الدولة",
-  "screen.public.signUp.photographerSignUp.required": "مطلوب.",
-  "screen.public.signUp.photographerSignUp.portfolioPhotosNeeded": "صور الأعمال المطلوبة",
-  "screen.public.signUp.photographerSignUp.portfolioPhotos": "صور الأعمال",
-  "screen.public.signUp.photographerSignUp.minimumPhotosSubmitStaysBlocked":
-    "بحد أدنى {min} صور. يبقى الإرسال متوقفًا حتى بلوغ الحد.",
-  "screen.public.signUp.photographerSignUp.submissionFailed": "فشل الإرسال",
-  "screen.public.signUp.photographerSignUp.submitting": "جارٍ الإرسال...",
-  "screen.public.signUp.photographerSignUp.submitApplication": "إرسال الطلب",
-  "screen.public.signUp.photographerSignUp.photographerSignUp": "تسجيل المصوّر",
-  "screen.public.signUp.photographerSignUp.applyToJoinThePlatform":
-    "تقدّم للانضمام إلى مجموعة مصوّري المنصة. يتحقق المصوّرون من البريد والهاتف معًا.",
-  "screen.public.signUp.photographerSignUp.addMorePhotos": "إضافة صور أخرى",
-  "screen.public.signUp.photographerSignUp.yourPortfolioHasFewerThan": "أعمالك أقل من",
-  "screen.public.signUp.photographerSignUp.photosAddMoreToSubmit": "صور. أضف المزيد للإرسال.",
+  "screen.public.signUp.photographer.title": "قدّم طلبًا كمصوّر",
+  "screen.public.signUp.photographer.lead":
+    "اعرض أعمالك بملف من 8 صور على الأقل. يبدأ الدخول بعد الموافقة.",
+  "screen.public.signUp.photographer.yourDetails": "بياناتك",
+  "screen.public.signUp.photographer.name": "الاسم أو اسم الاستوديو",
+  "screen.public.signUp.photographer.email": "البريد الإلكتروني",
+  "screen.public.signUp.photographer.phone": "الهاتف",
+  "screen.public.signUp.photographer.portfolio": "معرض الأعمال",
+  "screen.public.signUp.photographer.count": "{count} من {required} صور",
+  "screen.public.signUp.photographer.addPhotos": "إضافة صور",
+  "screen.public.signUp.photographer.needMore":
+    "أضف {required} صور على الأقل للإرسال. لديك {count} من {required}.",
+  "screen.public.signUp.photographer.submit": "إرسال الطلب",
+  "screen.public.signUp.photographer.submitting": "جارٍ الإرسال…",
+  "screen.public.signUp.photographer.submitFailed": "تعذّر إرسال الطلب. حاول مرة أخرى.",
   // apps/web/src/screens/public/sign-up/platform-driver-sign-up.tsx
-  "screen.public.signUp.platformDriverSignUp.registrationDocument": "مستند التسجيل",
-  "screen.public.signUp.platformDriverSignUp.insuranceDocument": "مستند التأمين",
-  "screen.public.signUp.platformDriverSignUp.labResult": "نتيجة التحليل",
-  "screen.public.signUp.platformDriverSignUp.aClearPhotoOrScan": "صورة أو نسخة ممسوحة واضحة.",
-  "screen.public.signUp.platformDriverSignUp.identity": "الهوية",
-  "screen.public.signUp.platformDriverSignUp.fullName": "الاسم الكامل",
-  "screen.public.signUp.platformDriverSignUp.email": "البريد الإلكتروني",
-  "screen.public.signUp.platformDriverSignUp.phone": "الهاتف",
-  "screen.public.signUp.platformDriverSignUp.country": "الدولة",
-  "screen.public.signUp.platformDriverSignUp.required": "مطلوب.",
-  "screen.public.signUp.platformDriverSignUp.vehicle": "المركبة",
-  "screen.public.signUp.platformDriverSignUp.iDriveMyOwnVehicle": "أقود مركبتي الخاصة",
-  "screen.public.signUp.platformDriverSignUp.plateNumber": "رقم اللوحة",
-  "screen.public.signUp.platformDriverSignUp.model": "الطراز",
-  "screen.public.signUp.platformDriverSignUp.year": "السنة",
-  "screen.public.signUp.platformDriverSignUp.seats": "المقاعد",
-  "screen.public.signUp.platformDriverSignUp.documents": "المستندات",
-  "screen.public.signUp.platformDriverSignUp.insuranceValidUntil": "التأمين ساري حتى",
-  "screen.public.signUp.platformDriverSignUp.yyyyMmDd": "YYYY-MM-DD",
-  "screen.public.signUp.platformDriverSignUp.insuranceMustBeValidFor":
-    "يجب أن يكون التأمين ساريًا لثلاثة أشهر على الأقل.",
-  "screen.public.signUp.platformDriverSignUp.labTestDate": "تاريخ التحليل المخبري",
-  "screen.public.signUp.platformDriverSignUp.yyyyMmDdPlaceholder": "YYYY-MM-DD",
-  "screen.public.signUp.platformDriverSignUp.theLabResultMustBe":
-    "يجب ألا تتجاوز نتيجة التحليل 30 يومًا.",
-  "screen.public.signUp.platformDriverSignUp.consent": "الموافقة",
-  "screen.public.signUp.platformDriverSignUp.iConsentToABackground": "أوافق على التحقق من الخلفية",
-  "screen.public.signUp.platformDriverSignUp.requiredToJoinTheDriver":
-    "مطلوب للانضمام إلى مجموعة السائقين.",
-  "screen.public.signUp.platformDriverSignUp.iConsentToALab": "أوافق على التحليل المخبري",
-  "screen.public.signUp.platformDriverSignUp.requiredToJoinTheDriverDescription":
-    "مطلوب للانضمام إلى مجموعة السائقين.",
-  "screen.public.signUp.platformDriverSignUp.applicationBlocked": "الطلب محظور",
-  "screen.public.signUp.platformDriverSignUp.submitting": "جارٍ الإرسال...",
-  "screen.public.signUp.platformDriverSignUp.submitApplication": "إرسال الطلب",
-  "screen.public.signUp.platformDriverSignUp.platformDriverSignUp": "تسجيل سائق المنصة",
-  "screen.public.signUp.platformDriverSignUp.applyToJoinThePlatform":
-    "تقدّم للانضمام إلى مجموعة سائقي المنصة. يتحقق السائقون من البريد والهاتف معًا.",
-  "screen.public.signUp.platformDriverSignUp.applicationBlockedTitle": "الطلب محظور",
-  "screen.public.signUp.platformDriverSignUp.insuranceMustBeValidFor2":
-    "يجب أن يكون التأمين ساريًا لثلاثة أشهر أخرى على الأقل، وألا تتجاوز نتيجة التحليل 30 يومًا.",
-  // apps/web/src/screens/public/sign-up/sign-up-chooser.tsx
-  "screen.public.signUp.signUpChooser.traveler": "المسافر",
-  "screen.public.signUp.signUpChooser.createATravelerAccountOn":
-    "أنشئ حساب مسافر على الخطة المجانية.",
-  "screen.public.signUp.signUpChooser.platformDriver": "سائق المنصة",
-  "screen.public.signUp.signUpChooser.applyToJoinThePlatform":
-    "تقدّم للانضمام إلى مجموعة سائقي المنصة.",
-  "screen.public.signUp.signUpChooser.photographer": "مصوّر",
-  "screen.public.signUp.signUpChooser.applyToJoinThePlatformDescription":
-    "تقدّم للانضمام إلى مجموعة مصوّري المنصة.",
-  "screen.public.signUp.signUpChooser.organization": "المؤسسة",
-  "screen.public.signUp.signUpChooser.registerAnOrganizationForAdmin": "سجّل مؤسسة لمراجعة الإدارة.",
-  "screen.public.signUp.signUpChooser.webOnly": "عبر الويب فقط",
-  "screen.public.signUp.signUpChooser.continueAs": "المتابعة بصفة",
-  "screen.public.signUp.signUpChooser.signUpChooserRegister": "اختيار نوع التسجيل (/register)",
-  "screen.public.signUp.signUpChooser.pickTheRoleThatFits": "اختر الدور الذي يناسبك.",
-  "screen.public.signUp.signUpChooser.rolesCouldNotLoad": "تعذّر تحميل الأدوار",
-  "screen.public.signUp.signUpChooser.refreshThePageToTry": "حدّث الصفحة لإعادة المحاولة.",
-  "screen.public.signUp.signUpChooser.alreadyHaveAnAccount": "لديك حساب بالفعل؟",
-  "screen.public.signUp.signUpChooser.signIn": "تسجيل الدخول",
-  // apps/web/src/screens/public/sign-up/traveler-sign-up.tsx
-  "screen.public.signUp.travelerSignUp.fullName": "الاسم الكامل",
-  "screen.public.signUp.travelerSignUp.email": "البريد الإلكتروني",
-  "screen.public.signUp.travelerSignUp.enterAnEmailAPhone":
-    "أدخل بريدًا إلكترونيًا أو رقم هاتف أو كليهما. مطلوب واحد على الأقل.",
-  "screen.public.signUp.travelerSignUp.phone": "الهاتف",
-  "screen.public.signUp.travelerSignUp.country": "الدولة",
-  "screen.public.signUp.travelerSignUp.required": "مطلوب.",
-  "screen.public.signUp.travelerSignUp.language": "اللغة",
-  "screen.public.signUp.travelerSignUp.passwordOptional": "كلمة المرور (اختياري)",
-  "screen.public.signUp.travelerSignUp.leaveEmptyToSignIn":
-    "اتركه فارغًا لتسجيل الدخول برمز لمرة واحدة.",
-  "screen.public.signUp.travelerSignUp.createAccount": "إنشاء الحساب",
-  "screen.public.signUp.travelerSignUp.travelerSignUp": "تسجيل المسافر",
-  "screen.public.signUp.travelerSignUp.createATravelerAccountOn":
-    "أنشئ حساب مسافر على الخطة المجانية.",
-  "screen.public.signUp.travelerSignUp.accountAlreadyExists": "الحساب موجود بالفعل",
-  "screen.public.signUp.travelerSignUp.anAccountAlreadyUsesThis":
-    "يستخدم حساب بالفعل هذا البريد أو الهاتف. سجّل الدخول بدلًا من ذلك.",
+  "screen.public.signUp.driver.title": "قدّم طلبًا للقيادة",
+  "screen.public.signUp.driver.lead": "طلب سائق المنصة. يمكنك تسجيل الدخول بعد المراجعة.",
+  "screen.public.signUp.driver.yourDetails": "بياناتك",
+  "screen.public.signUp.driver.fullName": "الاسم الكامل",
+  "screen.public.signUp.driver.fullNamePlaceholder": "كما في بطاقة هويتك",
+  "screen.public.signUp.driver.email": "البريد الإلكتروني",
+  "screen.public.signUp.driver.phone": "الهاتف",
+  "screen.public.signUp.driver.yourVehicle": "مركبتك",
+  "screen.public.signUp.driver.plate": "رقم اللوحة",
+  "screen.public.signUp.driver.model": "الطراز",
+  "screen.public.signUp.driver.documentsAndConsent": "المستندات والموافقة",
+  "screen.public.signUp.driver.registrationDocument": "رخصة المركبة",
+  "screen.public.signUp.driver.registrationHint": "ملف PDF أو صورة، حتى 15 ميغابايت",
+  "screen.public.signUp.driver.insuranceDocument": "وثيقة التأمين",
+  "screen.public.signUp.driver.insuranceHint": "يجب أن تكون سارية لمدة 3 أشهر على الأقل",
+  "screen.public.signUp.driver.backgroundConsent": "أوافق على التحقق من السجل.",
+  "screen.public.signUp.driver.labConsent":
+    "أوافق على إجراء تحليل مخبري وعلى حفظ سجل هذه الموافقة.",
+  "screen.public.signUp.driver.labDate": "تاريخ نتيجة التحليل الأولى",
+  "screen.public.signUp.driver.labDateHint": "يجب أن تكون نتيجة التحليل خلال آخر 30 يومًا.",
+  "screen.public.signUp.driver.labDateTooOld": "اختر تاريخًا خلال آخر 30 يومًا.",
+  "screen.public.signUp.driver.submit": "إرسال الطلب",
+  "screen.public.signUp.driver.submitting": "جارٍ الإرسال…",
+  "screen.public.signUp.driver.submitFailed": "تعذّر إرسال الطلب. حاول مرة أخرى.",
   // apps/web/src/screens/public/sign-up/verification-by-code.tsx
-  "screen.public.signUp.verificationByCode.verify": "توثيق",
-  "screen.public.signUp.verificationByCode.afterVerification": "بعد التحقق",
-  "screen.public.signUp.verificationByCode.signIn": "تسجيل الدخول",
-  "screen.public.signUp.verificationByCode.applicationStatus": "حالة الطلب",
-  "screen.public.signUp.verificationByCode.verificationByCode": "التحقق بالرمز",
-  "screen.public.signUp.verificationByCode.confirmYourEmailOrPhone":
-    "أكّد بريدك أو هاتفك قبل أن يتمكن حسابك من العمل.",
-  "screen.public.signUp.verificationByCode.wrongCode": "رمز خاطئ",
-  "screen.public.signUp.verificationByCode.thatCodeDoesNotMatch":
-    "هذا الرمز غير مطابق. خمسة رموز خاطئة توقف التحقق لمدة 15 دقيقة.",
+  "screen.public.signUp.verification.stepEmail": "الخطوة 1 من 2: البريد الإلكتروني",
+  "screen.public.signUp.verification.stepPhone": "الخطوة 1 من 2: الهاتف",
+  "screen.public.signUp.verification.changeNumber": "تغيير الرقم",
+  "screen.public.signUp.verification.verified": "تم التحقق. يمكنك تسجيل الدخول الآن.",
   // apps/web/src/screens/registry.ts
   "screen.registry.surface.publicAndSignIn": "العام وتسجيل الدخول",
   "screen.registry.surface.sharedStates": "الحالات المشتركة",
   "screen.registry.surface.organizationDashboard": "لوحة المؤسسة",
   "screen.registry.surface.adminConsole": "لوحة الإدارة",
+  // apps/web/src/screens/shared/confirmation-dialog.tsx
+  "screen.shared.confirmation.reason": "السبب (مطلوب)",
+  "screen.shared.confirmation.reasonPlaceholder": "اكتب السبب",
+  "screen.shared.confirmation.cancel": "إلغاء",
+  // apps/web/src/screens/shared/error-page.tsx
+  "screen.shared.errorPage.status": "خطأ {status}",
+  "screen.shared.errorPage.backHome": "العودة إلى الرئيسية",
+  "screen.shared.errorPage.goHome": "الذهاب إلى الرئيسية",
+  "screen.shared.errorPage.tryAgain": "حاول مرة أخرى",
+  // apps/web/src/screens/shared/language-switch.tsx
+  "screen.shared.languageSwitch.label": "اللغة",
+  "screen.shared.languageSwitch.keepsData": "تبقى بياناتك المكتوبة وخطوتك الحالية عند تبديل اللغة.",
+  // apps/web/src/screens/shared/offline-banner.tsx
+  "screen.shared.offline.title": "لا يوجد اتصال",
+  "screen.shared.offline.body":
+    "يمكنك متابعة عرض ما على الشاشة. تنتظر الإجراءات التي تحتاج إلى اتصال حتى تعود متصلًا.",
   // apps/web/src/screens/shared/index.ts
   "screen.registry.shared.planLimitUpgradePrompt.title": "تنبيه تجاوز حد الخطة",
   "screen.registry.shared.permissionDenied.title": "تم رفض الإذن (403)",
@@ -3077,202 +2902,162 @@ export const ar: AppMessages = {
   "screen.registry.shared.seatMap.title": "خريطة المقاعد",
   "screen.registry.shared.documentAndPhotoUpload.title": "رفع المستندات والصور",
   // apps/web/src/screens/shared/otp-entry-panel.tsx
-  "screen.shared.otpEntryPanel.enterDigitCode": "أدخل الرمز المكوّن من {length} أرقام المرسل إلى",
-  "screen.shared.otpEntryPanel.codeExpiry": ". تنتهي صلاحية الرمز خلال {minutes} دقائق.",
-  "screen.shared.otpEntryPanel.resendIn": "إعادة إرسال الرمز خلال {seconds} ثانية",
-  "screen.shared.otpEntryPanel.verificationCode": "رمز التحقق",
-  "screen.shared.otpEntryPanel.digitOf": "الرقم {position} من {length}",
-  "screen.shared.otpEntryPanel.changeEmailOrPhone": "تغيير البريد أو الهاتف",
+  "screen.shared.otpEntry.expires": ". تنتهي صلاحيته خلال 5 دقائق.",
+  "screen.shared.otpEntry.waiting": "بانتظار الرمز. يمكنك إعادة الإرسال بعد {seconds} ثانية.",
+  // apps/web/src/screens/shared/plan-limit-prompt.tsx
+  "screen.shared.planLimit.badge": "تم بلوغ الحد",
+  "screen.shared.planLimit.title": "رقِّ خطتك لإضافة المزيد",
+  "screen.shared.planLimit.usage": "{limit}: استُخدم {current} من {allowance} في خطتك الحالية.",
+  "screen.shared.planLimit.limit.activeTripsPerMonth": "الرحلات النشطة هذا الشهر",
+  "screen.shared.planLimit.limit.vehiclesPerTrip": "المركبات لكل رحلة",
+  "screen.shared.planLimit.limit.programsPerTrip": "البرامج لكل رحلة",
+  "screen.shared.planLimit.limit.employeesMax": "الموظفون",
+  "screen.shared.planLimit.limit.activeCouponsMax": "القسائم النشطة",
+  "screen.shared.planLimit.limit.portfolioPhotosMax": "صور معرض الأعمال",
+  "screen.shared.planLimit.limit.webhookEndpointsMax": "نقاط Webhook",
+  "screen.shared.planLimit.tierLifts": "خطة {tier} ترفع هذا الحد",
+  "screen.shared.planLimit.perMonth": "{price} شهريًا",
+  "screen.shared.planLimit.prorated": "تبدأ الترقية فورًا وتُحتسب بالتناسب.",
+  "screen.shared.planLimit.upgrade": "الترقية إلى {tier}",
+  "screen.shared.planLimit.cancel": "إلغاء",
+  // apps/web/src/screens/shared/role-switcher.tsx
+  "screen.shared.roleSwitcher.title": "تبديل الدور أو المؤسسة",
+  "screen.shared.roleSwitcher.loading": "جارٍ تحميل أدوارك",
+  "screen.shared.roleSwitcher.roles": "أدوارك",
+  "screen.shared.roleSwitcher.organizations": "المؤسسات المرتبطة بهذا البريد",
+  "screen.shared.roleSwitcher.note": "لكل دور ومؤسسة بياناته الخاصة. لا يُنشئ التبديل حسابًا ثانيًا.",
+  "screen.shared.roleSwitcher.failed": "لم يتم التبديل. حاول مرة أخرى.",
+  "screen.shared.roleSwitcher.switch": "تبديل",
+  "screen.shared.roleSwitcher.role.traveler": "مسافر",
+  "screen.shared.roleSwitcher.role.parent": "ولي أمر",
+  "screen.shared.roleSwitcher.role.platformDriver": "سائق المنصة",
+  "screen.shared.roleSwitcher.role.orgDriver": "سائق المؤسسة",
+  "screen.shared.roleSwitcher.role.platformPhotographer": "مصوّر المنصة",
+  "screen.shared.roleSwitcher.role.orgPhotographer": "مصوّر المؤسسة",
+  "screen.shared.roleSwitcher.role.organizationOwner": "مالك المؤسسة",
+  "screen.shared.roleSwitcher.role.organizationEmployee": "موظف المؤسسة",
+  "screen.shared.roleSwitcher.role.moderator": "مشرف",
+  "screen.shared.roleSwitcher.role.admin": "مسؤول",
+  "screen.shared.roleSwitcher.signIn": "سجّل الدخول لتبديل الأدوار.",
+  // apps/web/src/screens/shared/seat-map.tsx
+  "screen.shared.seatMap.legend": "حالات المقاعد",
+  "screen.shared.seatMap.state.available": "متاح",
+  "screen.shared.seatMap.state.selected": "محدد",
+  "screen.shared.seatMap.state.held": "محجوز مؤقتًا",
+  "screen.shared.seatMap.state.taken": "مشغول",
+  "screen.shared.seatMap.front": "الأمام",
+  "screen.shared.seatMap.seat.available": "المقعد {seat}، متاح",
+  "screen.shared.seatMap.seat.selected": "المقعد {seat}، محدد",
+  "screen.shared.seatMap.seat.taken": "المقعد {seat}، مشغول",
+  "screen.shared.seatMap.seatHeld": "المقعد {seat}، محجوز لمدة {minutes} دقيقة",
   // apps/web/src/screens/shared/scr-shr-01-plan-limit-upgrade-prompt.tsx
-  "screen.shared.scrShr01PlanLimitUpgradePrompt.planLimitUpgradePrompt": "تنبيه تجاوز حد الخطة",
-  "screen.shared.scrShr01PlanLimitUpgradePrompt.aPlanLimitBlocksThis":
-    "حد الخطة يمنع هذا الإجراء. الترقية ترفع الحد.",
-  "screen.shared.scrShr01PlanLimitUpgradePrompt.thisActionIsLockedOn":
-    "هذا الإجراء مقفل في خطتك الحالية.",
-  "screen.shared.scrShr01PlanLimitUpgradePrompt.paymentFailed": "فشل الدفع",
-  "screen.shared.scrShr01PlanLimitUpgradePrompt.theUpgradeDidNotGo":
-    "لم تكتمل الترقية، لذا يبقى الإجراء مقفلًا. جرّب طريقة دفع أخرى.",
-  "screen.shared.scrShr01PlanLimitUpgradePrompt.planLimitReached": "تم بلوغ حد الخطة",
-  "screen.shared.scrShr01PlanLimitUpgradePrompt.yourCurrentPlanDoesNot":
-    "خطتك الحالية لا تسمح بهذا الإجراء. الترقية تُطبَّق فورًا وتُحتسب بالتناسب.",
-  "screen.shared.scrShr01PlanLimitUpgradePrompt.upgradeTo": "الترقية إلى {plan}",
-  "screen.shared.scrShr01PlanLimitUpgradePrompt.cancel": "إلغاء",
-  "screen.shared.scrShr01PlanLimitUpgradePrompt.limit": "الحد",
-  "screen.shared.scrShr01PlanLimitUpgradePrompt.limitNameFromTheBlocked":
-    "اسم الحد من الإجراء المحظور",
-  "screen.shared.scrShr01PlanLimitUpgradePrompt.liftedBy": "يُرفع بواسطة",
+  "screen.shared.planLimit.loading": "جارٍ تحميل الخطط",
+  "screen.shared.planLimit.noTier": "لا توجد خطة أعلى متاحة.",
+  "screen.shared.planLimit.failed": "لم تتم الترقية. خطتك كما هي.",
+  "screen.shared.planLimit.signIn": "سجّل الدخول إلى مؤسستك لعرض الخطط.",
   // apps/web/src/screens/shared/scr-shr-02-permission-denied.tsx
-  "screen.shared.scrShr02PermissionDenied.youDonTHavePermission": "لا تملك إذنًا لهذا",
-  "screen.shared.scrShr02PermissionDenied.yourRoleDoesNotInclude":
-    "دورك لا يشمل هذا الإجراء. عُد إلى الشاشة التي أتيت منها.",
-  "screen.shared.scrShr02PermissionDenied.goBack": "رجوع",
+  "screen.shared.permissionDenied.title": "ليس لديك صلاحية الوصول إلى هذه الصفحة",
+  "screen.shared.permissionDenied.body":
+    "لا يشمل دورك هذا القسم. اطلب الصلاحية من مالك مؤسستك إن احتجت إليها.",
   // apps/web/src/screens/shared/scr-shr-03-not-found.tsx
-  "screen.shared.scrShr03NotFound.theLinkMayBeOut":
-    "قد يكون الرابط قديمًا أو أُزيل العنصر. تحقق من العنوان، أو انتقل إلى الرئيسية.",
-  "screen.shared.scrShr03NotFound.goToHome": "الانتقال إلى الرئيسية",
+  "screen.shared.notFound.title": "لم نتمكن من العثور على ذلك",
+  "screen.shared.notFound.body": "ربما أُزيل العنصر، أو لم يعد الرابط متاحًا للمشاركة.",
   // apps/web/src/screens/shared/scr-shr-04-unauthorized.tsx
-  "screen.shared.scrShr04Unauthorized.signInToContinue": "سجّل الدخول للمتابعة",
-  "screen.shared.scrShr04Unauthorized.yourSessionIsNoLonger":
-    "جلستك لم تعد صالحة. سجّل الدخول مجددًا وستعود إلى هذه الصفحة.",
-  "screen.shared.scrShr04Unauthorized.signIn": "تسجيل الدخول",
+  "screen.shared.unauthorized.title": "سجّل الدخول للمتابعة",
+  "screen.shared.unauthorized.body":
+    "انتهت جلستك. ستعود إلى هذه الصفحة بعد تسجيل الدخول. مسوداتك محفوظة.",
   // apps/web/src/screens/shared/scr-shr-05-server-error.tsx
-  "screen.shared.scrShr05ServerError.requestId": "معرّف الطلب",
-  "screen.shared.scrShr05ServerError.tryAgain": "إعادة المحاولة",
-  "screen.shared.scrShr05ServerError.goToHome": "الانتقال إلى الرئيسية",
+  "screen.shared.serverError.title": "حدث خطأ من جهتنا",
+  "screen.shared.serverError.body": "مسوداتك محفوظة. حاول مرة أخرى بعد لحظات.",
+  "screen.shared.serverError.reference": "المرجع للدعم:",
   // apps/web/src/screens/shared/scr-shr-06-service-unavailable.tsx
-  "screen.shared.scrShr06ServiceUnavailable.serviceIsTemporarilyUnavailable":
-    "الخدمة غير متاحة مؤقتًا",
-  "screen.shared.scrShr06ServiceUnavailable.weAreRestoringTheService":
-    "نعمل على استعادة الخدمة. مدفوعات الحجز ليست مفقودة: تُرتَّب الاستدعاءات وتُعالَج عند عودة الخدمة.",
-  "screen.shared.scrShr06ServiceUnavailable.retry": "إعادة المحاولة",
-  "screen.shared.scrShr06ServiceUnavailable.updatesArePostedOnThe":
-    "تُنشر التحديثات على صفحة الحالة.",
+  "screen.shared.serviceUnavailable.title": "الخدمة غير متاحة مؤقتًا",
+  "screen.shared.serviceUnavailable.body":
+    "نعمل على حل المشكلة. مدفوعات حجوزاتك لم تضع: إنها في قائمة الانتظار وتُعالج عند عودة الخدمة.",
   // apps/web/src/screens/shared/scr-shr-07-maintenance-page.tsx
-  "screen.shared.scrShr07MaintenancePage.plannedMaintenance": "صيانة مخطط لها",
-  "screen.shared.scrShr07MaintenancePage.tripsEnjoyIsUnavailableDuring":
-    "Trips Enjoy غير متاح خلال نافذة صيانة مخطط لها. تستمر استدعاءات الدفع في الترتيب وتُعالَج بعد النافذة.",
-  "screen.shared.scrShr07MaintenancePage.startAndEndTimesIn":
-    "أوقات البدء والانتهاء، بمنطقتك الزمنية",
-  "screen.shared.scrShr07MaintenancePage.plannedWindow": "النافذة المخططة",
-  "screen.shared.scrShr07MaintenancePage.tryAgainAfterTheWindow": "أعد المحاولة بعد انتهاء النافذة",
+  "screen.shared.maintenance.badge": "صيانة مجدولة",
+  "screen.shared.maintenance.title": "نحدّث Trips Enjoy",
+  "screen.shared.maintenance.window": "فترة الصيانة",
+  "screen.shared.maintenance.windowValue": "من {from} إلى {until} ({zone})",
+  "screen.shared.maintenance.otherLanguage": "الموقع في صيانة مجدولة خلال الفترة المحددة أعلاه.",
+  "screen.shared.maintenance.payments":
+    "مدفوعات الحجز لم تضع. تأكيدات الدفع في قائمة الانتظار وتُعالج عند عودة الخدمة.",
+  "screen.shared.maintenance.retryAfter": "حاول مرة أخرى بعد {time}",
   // apps/web/src/screens/shared/scr-shr-08-offline-banner.tsx
-  "screen.shared.scrShr08OfflineBanner.youAreOfflineViewingSaved":
-    "أنت غير متصل. عرض الرحلات المحفوظة لا يزال يعمل. إجراءات الحجز والدفع متوقفة حتى تعود الاتصال.",
-  "screen.shared.scrShr08OfflineBanner.retry": "إعادة المحاولة",
-  "screen.shared.scrShr08OfflineBanner.offlineBanner": "شريط عدم الاتصال",
-  "screen.shared.scrShr08OfflineBanner.theBannerSitsAboveThe":
-    "يظهر الشريط أعلى الشاشة الحالية ويختفي عند عودة الاتصال.",
-  "screen.shared.scrShr08OfflineBanner.contentAlreadyOnScreenStays":
-    "يبقى المحتوى الظاهر على الشاشة مرئيًا. الإجراءات التي تحتاج إلى اتصال معطّلة حتى يعود التطبيق متصلًا.",
+  "screen.shared.offline.example": "رحلاتك",
+  "screen.shared.offline.exampleBody":
+    "تبقى الرحلات المحفوظة على هذا الجهاز متاحة أثناء انقطاع الاتصال.",
   // apps/web/src/screens/shared/scr-shr-09-confirmation-dialog.tsx
-  "screen.shared.scrShr09ConfirmationDialog.confirmationDialog": "مربع حوار التأكيد",
-  "screen.shared.scrShr09ConfirmationDialog.aDecisionScreenAsksFor":
-    "تطلب شاشة القرار تأكيدًا قبل حفظ التغيير.",
-  "screen.shared.scrShr09ConfirmationDialog.reviewChange": "مراجعة التغيير",
-  "screen.shared.scrShr09ConfirmationDialog.back": "رجوع",
-  "screen.shared.scrShr09ConfirmationDialog.confirmThisChange": "تأكيد هذا التغيير",
-  "screen.shared.scrShr09ConfirmationDialog.theChangeTakesEffectWhen":
-    "يُطبَّق التغيير عند التأكيد. يُبلَّغ المسافرون المتأثرون قبل تطبيقه. يُسجَّل هذا الإجراء.",
-  "screen.shared.scrShr09ConfirmationDialog.confirmChange": "تأكيد التغيير",
-  "screen.shared.scrShr09ConfirmationDialog.cancel": "إلغاء",
-  "screen.shared.scrShr09ConfirmationDialog.reason": "السبب",
-  "screen.shared.scrShr09ConfirmationDialog.requiredForThisChangeConfirm":
-    "مطلوب لهذا التغيير. يبقى التأكيد معطّلًا حتى تعبئته.",
+  "screen.shared.confirmation.exampleTitle": "إزالة هذا المسافر من الرحلة؟",
+  "screen.shared.confirmation.exampleBody": "سيُبلَّغ قبل أن يسري ذلك. يُحرَّر المقعد ويُسجَّل هذا الإجراء.",
+  "screen.shared.confirmation.exampleConfirm": "إزالة المسافر",
   // apps/web/src/screens/shared/scr-shr-10-language-switch-and-rtl.tsx
-  "screen.shared.scrShr10LanguageSwitchAndRtl.languageSwitchAndRtl":
-    "تبديل اللغة والاتجاه من اليمين إلى اليسار",
-  "screen.shared.scrShr10LanguageSwitchAndRtl.layoutRightToLeft": "التخطيط: من اليمين إلى اليسار",
-  "screen.shared.scrShr10LanguageSwitchAndRtl.layoutLeftToRight": "التخطيط: من اليسار إلى اليمين",
-  "screen.shared.scrShr10LanguageSwitchAndRtl.back": "رجوع",
-  "screen.shared.scrShr10LanguageSwitchAndRtl.fullName": "الاسم الكامل",
-  "screen.shared.scrShr10LanguageSwitchAndRtl.country": "الدولة",
-  "screen.shared.scrShr10LanguageSwitchAndRtl.continue": "متابعة",
+  "screen.shared.languageSwitch.title": "اللغة والاتجاه",
+  "screen.shared.languageSwitch.fullName": "الاسم الكامل",
+  "screen.shared.languageSwitch.today": "اليوم",
+  "screen.shared.languageSwitch.formats": "التواريخ والأرقام تتبع تنسيق اللغة المختارة.",
+  "screen.shared.languageSwitch.continue": "متابعة",
   // apps/web/src/screens/shared/scr-shr-11-notification-centre.tsx
-  "screen.shared.scrShr11NotificationCentre.applicationStatusChanged": "تغيّرت حالة الطلب",
-  "screen.shared.scrShr11NotificationCentre.yourApplicationIsNowPending": "طلبك الآن قيد المراجعة.",
-  "screen.shared.scrShr11NotificationCentre.verificationCodeSent": "أُرسل رمز التحقق",
-  "screen.shared.scrShr11NotificationCentre.checkYourEmailForThe":
-    "تحقق من بريدك للحصول على الرمز. تنتهي صلاحية الرموز بعد 5 دقائق.",
-  "screen.shared.scrShr11NotificationCentre.tripTimeChanged": "تغيّر وقت الرحلة",
-  "screen.shared.scrShr11NotificationCentre.emailDeliveryFailedDeliveryStatus":
-    "فشل تسليم البريد. حالة التسليم: إعادة المحاولة مجدولة.",
-  "screen.shared.scrShr11NotificationCentre.all": "الكل",
-  "screen.shared.scrShr11NotificationCentre.unread": "غير المقروء",
-  "screen.shared.scrShr11NotificationCentre.filterNotifications": "تصفية الإشعارات",
-  "screen.shared.scrShr11NotificationCentre.markAllAsRead": "تعليم الكل كمقروء",
-  "screen.shared.scrShr11NotificationCentre.noUnreadNotifications": "لا إشعارات غير مقروءة",
-  "screen.shared.scrShr11NotificationCentre.youAreAllCaughtUp": "لا شيء جديد لديك.",
-  "screen.shared.scrShr11NotificationCentre.notificationCentre": "مركز الإشعارات",
-  "screen.shared.scrShr11NotificationCentre.yourNotificationsWithDeliveryStatus":
-    "إشعاراتك، مع حالة التسليم لكل منها.",
-  "screen.shared.scrShr11NotificationCentre.back": "رجوع",
-  "screen.shared.scrShr11NotificationCentre.noNotificationsYet": "لا إشعارات بعد",
-  "screen.shared.scrShr11NotificationCentre.notificationsAboutYourBookingsAnd":
-    "تظهر هنا الإشعارات المتعلقة بحجوزاتك وطلباتك.",
-  "screen.shared.scrShr11NotificationCentre.notificationsCouldNotLoad": "تعذّر تحميل الإشعارات",
-  "screen.shared.scrShr11NotificationCentre.tryAgainInAFew": "أعد المحاولة بعد بضع دقائق.",
+  "screen.shared.notifications.title": "الإشعارات",
+  "screen.shared.notifications.loading": "جارٍ تحميل الإشعارات",
+  "screen.shared.notifications.failed": "تعذّر تحميل الإشعارات. حاول مرة أخرى بعد دقائق.",
+  "screen.shared.notifications.empty": "لا توجد إشعارات بعد",
+  "screen.shared.notifications.emptyBody": "تظهر هنا تحديثات رحلاتك وحجوزاتك وحسابك.",
+  "screen.shared.notifications.category.bookings": "حجز",
+  "screen.shared.notifications.category.trip_updates": "تحديث رحلة",
+  "screen.shared.notifications.category.promotions": "عرض",
+  "screen.shared.notifications.category.security": "الحساب",
+  "screen.shared.notifications.category.safety": "السلامة",
+  "screen.shared.notifications.category.operations": "العمليات",
+  "screen.shared.notifications.channel.in_app": "أُرسل عبر التطبيق",
+  "screen.shared.notifications.channel.email": "أُرسل عبر البريد الإلكتروني",
+  "screen.shared.notifications.channel.sms": "أُرسل برسالة نصية",
+  "screen.shared.notifications.channel.push": "أُرسل كإشعار فوري",
+  "screen.shared.notifications.open": "فتح",
+  "screen.shared.notifications.markRead": "تعليم كمقروء",
+  "screen.shared.notifications.markAll": "تعليم الكل كمقروء",
+  "screen.shared.notifications.signIn": "سجّل الدخول لعرض إشعاراتك.",
   // apps/web/src/screens/shared/scr-shr-12-receipt-and-invoice-view.tsx
-  "screen.shared.scrShr12ReceiptAndInvoiceView.lineDescription": "وصف البند",
-  "screen.shared.scrShr12ReceiptAndInvoiceView.description": "الوصف",
-  "screen.shared.scrShr12ReceiptAndInvoiceView.amount": "المبلغ",
-  "screen.shared.scrShr12ReceiptAndInvoiceView.issued": "تاريخ الإصدار",
-  "screen.shared.scrShr12ReceiptAndInvoiceView.receiptNumberIssueDateAnd":
-    "يظهر هنا رقم الإيصال وتاريخ الإصدار وبيانات المشتري.",
-  "screen.shared.scrShr12ReceiptAndInvoiceView.receiptLines": "بنود الإيصال",
-  "screen.shared.scrShr12ReceiptAndInvoiceView.noLines": "لا بنود",
-  "screen.shared.scrShr12ReceiptAndInvoiceView.tax": "الضريبة",
-  "screen.shared.scrShr12ReceiptAndInvoiceView.total": "الإجمالي",
-  "screen.shared.scrShr12ReceiptAndInvoiceView.exportIsLockedOnThe":
-    "التصدير مقفل في الخطة المجانية.",
-  "screen.shared.scrShr12ReceiptAndInvoiceView.upgradeToExport": "الترقية للتصدير",
-  "screen.shared.scrShr12ReceiptAndInvoiceView.receiptAndInvoiceView": "عرض الإيصال والفاتورة",
-  "screen.shared.scrShr12ReceiptAndInvoiceView.numberDateBuyerLinesTax":
-    "الرقم والتاريخ والمشتري والبنود والضريبة والإجماليات.",
-  "screen.shared.scrShr12ReceiptAndInvoiceView.back": "رجوع",
-  "screen.shared.scrShr12ReceiptAndInvoiceView.receiptCouldNotLoad": "تعذّر تحميل الإيصال",
-  "screen.shared.scrShr12ReceiptAndInvoiceView.tryAgainLaterTheReceipt":
-    "أعد المحاولة لاحقًا. يبقى الإيصال متاحًا من حجوزاتك.",
-  // apps/web/src/screens/shared/scr-shr-13-role-and-organization-switcher.tsx
-  "screen.shared.scrShr13RoleAndOrganizationSwitcher.showingRole":
-    "المعروض: {role}. لا تُعرض بيانات الأدوار الأخرى.",
-  "screen.shared.scrShr13RoleAndOrganizationSwitcher.traveler": "المسافر",
-  "screen.shared.scrShr13RoleAndOrganizationSwitcher.driver": "السائق",
-  "screen.shared.scrShr13RoleAndOrganizationSwitcher.organization1": "المؤسسة 1",
-  "screen.shared.scrShr13RoleAndOrganizationSwitcher.organization2": "المؤسسة 2",
-  "screen.shared.scrShr13RoleAndOrganizationSwitcher.roleAndOrganizationSwitcher":
-    "مبدّل الدور والمؤسسة",
-  "screen.shared.scrShr13RoleAndOrganizationSwitcher.onlyRolesYouHoldAnd":
-    "تُعرض فقط الأدوار التي تشغلها والمؤسسات المرتبطة ببريدك. لا يُظهر التبديل بيانات دور آخر.",
-  "screen.shared.scrShr13RoleAndOrganizationSwitcher.back": "رجوع",
-  "screen.shared.scrShr13RoleAndOrganizationSwitcher.roles": "الأدوار",
-  "screen.shared.scrShr13RoleAndOrganizationSwitcher.organizations": "المؤسسات",
-  // apps/web/src/screens/shared/scr-shr-14-otp-entry.tsx
-  "screen.shared.scrShr14OtpEntry.verify": "توثيق",
-  "screen.shared.scrShr14OtpEntry.otpEntry": "إدخال الرمز",
-  "screen.shared.scrShr14OtpEntry.enterTheOneTimeCode":
-    "أدخل الرمز لمرة واحدة. لا تُعرض الرموز ولا تُسجَّل.",
-  "screen.shared.scrShr14OtpEntry.back": "رجوع",
-  "screen.shared.scrShr14OtpEntry.wrongCode": "رمز خاطئ",
-  "screen.shared.scrShr14OtpEntry.thatCodeDoesNotMatch":
-    "هذا الرمز غير مطابق. بعد خمسة رموز خاطئة، يتوقف التحقق لمدة 15 دقيقة.",
+  "screen.shared.receipt.title": "الإيصال",
+  "screen.shared.receipt.loading": "جارٍ تحميل الإيصال",
+  "screen.shared.receipt.failed": "تعذّر تحميل الإيصال. حاول لاحقًا.",
+  "screen.shared.receipt.notFound": "لم يُعثر على هذا الإيصال.",
+  "screen.shared.receipt.issued": "صادر",
+  "screen.shared.receipt.date": "التاريخ",
+  "screen.shared.receipt.item": "البند",
+  "screen.shared.receipt.amount": "المبلغ",
+  "screen.shared.receipt.subtotal": "المجموع الفرعي",
+  "screen.shared.receipt.commission": "عمولة المنصة",
+  "screen.shared.receipt.total": "الإجمالي",
+  "screen.shared.receipt.download": "طباعة أو حفظ كملف PDF",
+  "screen.shared.receipt.signIn": "سجّل الدخول لعرض هذا الإيصال.",
   // apps/web/src/screens/shared/scr-shr-15-seat-map.tsx
-  "screen.shared.scrShr15SeatMap.vehicleSeatMap": "خريطة مقاعد المركبة",
-  "screen.shared.scrShr15SeatMap.seatsAsAList": "المقاعد كقائمة",
-  "screen.shared.scrShr15SeatMap.seat": "المقعد",
-  "screen.shared.scrShr15SeatMap.selectedSeat": "المقعد المحدد:",
-  "screen.shared.scrShr15SeatMap.confirmSeat": "تأكيد المقعد",
-  "screen.shared.scrShr15SeatMap.seatMap": "خريطة المقاعد",
-  "screen.shared.scrShr15SeatMap.selectAnAvailableSeatSeat":
-    "اختر مقعدًا متاحًا. تُعرض حالات المقاعد ككلمات وأيقونات.",
-  "screen.shared.scrShr15SeatMap.back": "رجوع",
-  "screen.shared.scrShr15SeatMap.seatTaken": "المقعد محجوز",
-  "screen.shared.scrShr15SeatMap.thisSeatWasTakenWhile":
-    "حُجز هذا المقعد أثناء اختيارك. اختر مقعدًا آخر.",
+  "screen.shared.seatMap.title": "خريطة المقاعد",
+  "screen.shared.seatMap.loading": "جارٍ تحميل المقاعد",
+  "screen.shared.seatMap.noSeats": "لا تتوفر خريطة مقاعد لرحلة عامة حاليًا.",
+  "screen.shared.seatMap.lead": "{trip}. اختر مقعدًا ثم أكّد لحجزه مؤقتًا.",
+  "screen.shared.seatMap.heldNote":
+    "المقعد {seat} محجوز حتى {time}. اختر مقعدًا آخر إذا انتهى الحجز.",
+  "screen.shared.seatMap.holdFailed": "تعذّر حجز هذا المقعد. اختر مقعدًا آخر.",
+  "screen.shared.seatMap.confirm": "تأكيد المقعد {seat}",
+  "screen.shared.seatMap.choose": "اختر مقعدًا",
+  "screen.shared.seatMap.signIn": "سجّل الدخول لاختيار مقعد.",
   // apps/web/src/screens/shared/scr-shr-16-document-and-photo-upload.tsx
-  "screen.shared.scrShr16DocumentAndPhotoUpload.uploadProgress":
-    "ارفع {min} صور على الأقل. المرفوع: {uploaded} من {min}.",
-  "screen.shared.scrShr16DocumentAndPhotoUpload.fileTypeNotAllowed": "نوع الملف غير مسموح",
-  "screen.shared.scrShr16DocumentAndPhotoUpload.documents": "المستندات",
-  "screen.shared.scrShr16DocumentAndPhotoUpload.chooseAFileOrTake": "اختر ملفًا أو التقط صورة.",
-  "screen.shared.scrShr16DocumentAndPhotoUpload.portfolioPhotos": "صور الأعمال",
-  "screen.shared.scrShr16DocumentAndPhotoUpload.minimumCount": "الحد الأدنى للعدد",
-  "screen.shared.scrShr16DocumentAndPhotoUpload.portfolioPhotosLabel": "صور الأعمال",
-  "screen.shared.scrShr16DocumentAndPhotoUpload.photosAreStrippedOfLocation":
-    "تُزال بيانات الموقع من الصور قبل تخزينها.",
-  "screen.shared.scrShr16DocumentAndPhotoUpload.documentAndPhotoUpload": "رفع المستندات والصور",
-  "screen.shared.scrShr16DocumentAndPhotoUpload.filesAreCheckedForType":
-    "تُفحص الملفات من حيث النوع والحجم والعدد. يُستأنف الرفع المتقطع دون البدء من جديد.",
-  "screen.shared.scrShr16DocumentAndPhotoUpload.back": "رجوع",
-  "screen.shared.scrShr16DocumentAndPhotoUpload.fileRefused": "تم رفض الملف",
-  "screen.shared.scrShr16DocumentAndPhotoUpload.thisFileTypeIsNot":
-    "نوع الملف هذا غير مسموح. اختر PDF أو صورة.",
-  // apps/web/src/screens/shared/state-preview.tsx
-  "screen.shared.statePreview.labels.main": "الرئيسية",
-  "screen.shared.statePreview.labels.loading": "التحميل",
-  "screen.shared.statePreview.labels.empty": "الفراغ",
-  "screen.shared.statePreview.labels.error": "الخطأ",
-  "screen.shared.statePreview.previewState": "معاينة الحالة",
-  "screen.shared.statePreview.loading": "التحميل",
+  "screen.shared.upload.title": "أضف صورك",
+  "screen.shared.upload.count": "{count} من {required} مطلوبة",
+  "screen.shared.upload.choose": "اختر ملفات أو التقط صورة",
+  "screen.shared.upload.hint": "JPG أو PNG، حتى 15 ميغابايت لكل صورة",
+  "screen.shared.upload.privacy": "تُراجع الصور قبل مشاركتها. تُزال بيانات الموقع من كل صورة.",
+  "screen.shared.upload.continue": "متابعة",
+  "screen.shared.upload.waiting": "تابع بعد انتهاء الرفع",
+  "screen.shared.upload.uploading": "جارٍ الرفع…",
+  "screen.shared.upload.uploadingFile": "جارٍ رفع {name}",
+  "screen.shared.upload.cancel": "إلغاء",
+  "screen.shared.upload.status.done": "اكتمل",
+  "screen.shared.upload.status.tooLarge": "غير مقبول: الملف كبير جدًا",
+  "screen.shared.upload.status.wrongType": "غير مقبول: استخدم JPG أو PNG",
+  "screen.shared.upload.status.failed": "فشل الرفع. أزله وحاول مرة أخرى.",
+  "screen.shared.upload.signIn": "سجّل الدخول لرفع صورك.",
   // packages/ui/src/components/message-scroller.tsx
   "ui.messageScroller.scrollToEnd": "التمرير إلى النهاية",
   "ui.messageScroller.scrollToStart": "التمرير إلى البداية",

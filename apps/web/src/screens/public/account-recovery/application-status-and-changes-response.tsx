@@ -1,64 +1,37 @@
-import { useEffect, useState } from "react";
-import { TeBadge } from "@trips-app/ui/components/te-badge";
-import { TeButton } from "@trips-app/ui/components/te-button";
-import { TeChecklist, type TeChecklistItem } from "@trips-app/ui/components/te-checklist";
-import { TeFileUpload, type TeFileUploadItem } from "@trips-app/ui/components/te-file-upload";
-import { TeIcon } from "@trips-app/ui/components/te-icon";
-import { TeInlineAlert } from "@trips-app/ui/components/te-inline-alert";
-import { TeStepper } from "@trips-app/ui/components/te-stepper";
-import { t } from "@trips-app/i18n";
+// SCR-PUB-17 Application status (`/application-status`): where a supplier application stands, the
+// requested changes with their deadline, resubmission, and the way to appeal.
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import type { TeFileUploadItem } from "@trips-app/ui/components/te-file-upload";
+import { TeIcon, type TeIconName } from "@trips-app/ui/components/te-icon";
+import { cn } from "@trips-app/ui/lib/utils";
+import { useEffect, useState } from "react";
+
 import { useAuth } from "@/auth/auth-context";
+import { Button, Notice, TextLink } from "@/components/kit/controls";
+import { formatDate } from "@/components/kit/format";
+import {
+  ActionRow,
+  PageIntro,
+  PageMain,
+  Panel,
+  PanelTitle,
+  TwoColumns,
+} from "@/components/kit/layout";
+import { pathFor } from "@/navigation/web-routes";
 import { orpc } from "@/utils/orpc";
+
 import {
   getApplicantApplicationId,
   setApplicantApplicationId,
   uploadItemsToDocuments,
 } from "../../onboarding-state";
-import { buttonLinkClass } from "../../shared/button-link";
-import { ScreenLink } from "../../shared/screen-link";
-import { StateLoading, StatePreview } from "../../shared/state-preview";
-import { toPendingItems, withoutItem } from "../../shared/upload-items";
-import { AuthFrame } from "../common/auth-frame";
-
-const APPLICATION_STEPS = () =>
-  [
-    {
-      id: "submitted",
-      label: t("screen.public.accountRecovery.applicationStatusAndChangesResponse.submitted"),
-    },
-    {
-      id: "review",
-      label: t("screen.public.accountRecovery.applicationStatusAndChangesResponse.pendingReview"),
-    },
-    {
-      id: "decision",
-      label: t("screen.public.accountRecovery.applicationStatusAndChangesResponse.decision"),
-    },
-  ] as const;
-
-const DEFAULT_REQUESTED_CHANGES = (): readonly TeChecklistItem[] => [
-  {
-    id: "change-1",
-    label: t(
-      "screen.public.accountRecovery.applicationStatusAndChangesResponse.uploadAClearerInsuranceDocument",
-    ),
-    checked: false,
-    note: "Respond within 14 days.",
-  },
-  {
-    id: "change-2",
-    label: t(
-      "screen.public.accountRecovery.applicationStatusAndChangesResponse.confirmTheVehicleSeatCount",
-    ),
-    checked: false,
-  },
-];
+import { DocumentDrop } from "../common/document-drop";
 
 interface LiveApplication {
   id: string;
   applicationType: string;
   state: string;
+  createdAt?: string | Date | null;
   changesDueAt?: string | Date | null;
   changesExtensionUsed?: boolean;
   decisionNotes?: string | null;
@@ -69,57 +42,45 @@ interface LiveApplication {
   }> | null;
 }
 
-function statusBadgeTone(state: string): {
-  tone: "warning" | "success" | "danger" | "info";
-  icon: "alert" | "check" | "clock";
-  label: string;
-} {
-  switch (state) {
-    case "Approved":
-    case "approved":
-      return {
-        tone: "success",
-        icon: "check",
-        label: t("screen.public.accountRecovery.applicationStatusAndChangesResponse.approved"),
-      };
-    case "Rejected":
-    case "rejected":
-    case "Closed":
-    case "closed":
-      return {
-        tone: "danger",
-        icon: "alert",
-        label: state === "Closed" || state === "closed" ? "Closed" : "Rejected",
-      };
-    case "Changes Requested":
-    case "changes_requested":
-      return {
-        tone: "warning",
-        icon: "alert",
-        label: t(
-          "screen.public.accountRecovery.applicationStatusAndChangesResponse.changesRequested",
-        ),
-      };
-    case "Appealed":
-    case "appeal_pending":
-      return {
-        tone: "info",
-        icon: "clock",
-        label: t("screen.public.accountRecovery.applicationStatusAndChangesResponse.appealed"),
-      };
-    default:
-      return {
-        tone: "info",
-        icon: "clock",
-        label: t(
-          "screen.public.accountRecovery.applicationStatusAndChangesResponse.pendingReviewLabel",
-        ),
-      };
-  }
+type Outcome = "changes" | "approved" | "rejected" | "closed" | "appealed" | "pending";
+
+function outcomeOf(state: string): Outcome {
+  const normalized = state.toLowerCase().replace(/\s+/g, "_");
+  if (normalized === "changes_requested") return "changes";
+  if (normalized === "approved") return "approved";
+  if (normalized === "rejected") return "rejected";
+  if (normalized === "closed") return "closed";
+  if (normalized === "appealed" || normalized === "appeal_pending") return "appealed";
+  return "pending";
+}
+
+const OUTCOME_STYLE: Record<Exclude<Outcome, "pending">, { icon: TeIconName; color: string }> = {
+  changes: { icon: "alert", color: "text-[var(--te-warning)]" },
+  approved: { icon: "check", color: "text-[var(--te-success)]" },
+  rejected: { icon: "alert", color: "text-[var(--te-danger)]" },
+  closed: { icon: "alert", color: "text-[var(--te-danger)]" },
+  appealed: { icon: "clock", color: "text-[var(--te-ink)]" },
+};
+
+function StatusLine({
+  icon,
+  className,
+  children,
+}: {
+  icon: TeIconName;
+  className?: string;
+  children: string;
+}) {
+  return (
+    <li className={cn("flex items-center gap-2.5", className)}>
+      <TeIcon name={icon} className="size-5 shrink-0" />
+      {children}
+    </li>
+  );
 }
 
 export function ApplicationStatusView({ applicationIdProp }: { applicationIdProp?: string } = {}) {
-  const { status: authStatus } = useAuth();
+  const { t, locale, status: authStatus } = useAuth();
   const queryClient = useQueryClient();
   const storedId = applicationIdProp ?? getApplicantApplicationId() ?? undefined;
   const statusQuery = useQuery({
@@ -128,258 +89,198 @@ export function ApplicationStatusView({ applicationIdProp }: { applicationIdProp
     }),
     enabled: authStatus === "authenticated",
   });
-
+  const invalidate = () => queryClient.invalidateQueries({ queryKey: orpc.onboarding.key() });
   const resubmitMutation = useMutation(
-    orpc.onboarding.resubmitApplication.mutationOptions({
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: orpc.onboarding.key() });
-      },
-    }),
+    orpc.onboarding.resubmitApplication.mutationOptions({ onSuccess: invalidate }),
   );
-
   const extensionMutation = useMutation(
-    orpc.onboarding.requestChangesExtension.mutationOptions({
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: orpc.onboarding.key() });
-      },
-    }),
+    orpc.onboarding.requestChangesExtension.mutationOptions({ onSuccess: invalidate }),
   );
-
-  const app = (statusQuery.data?.application as unknown as LiveApplication) ?? null;
-  const [checks, setChecks] = useState<readonly TeChecklistItem[]>(DEFAULT_REQUESTED_CHANGES());
-  const [additionalFiles, setAdditionalFiles] = useState<readonly TeFileUploadItem[]>([]);
-  const [busy, setBusy] = useState(false);
+  const [files, setFiles] = useState<readonly TeFileUploadItem[]>([]);
   const [feedback, setFeedback] = useState<string | null>(null);
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const busy = resubmitMutation.isPending || extensionMutation.isPending;
+
+  const app = (statusQuery.data?.application as unknown as LiveApplication | undefined) ?? null;
 
   useEffect(() => {
-    if (!app) return;
-    setApplicantApplicationId(app.id);
-    const items = app.changesRequestedChecklist;
-    if (items && items.length > 0) {
-      setChecks(
-        items.map((item, index) => ({
-          id: `change-${index}`,
-          label: `${item.field}: ${item.instruction}`,
-          checked: Boolean(item.resolved),
-        })),
-      );
-    }
+    if (app) setApplicantApplicationId(app.id);
   }, [app]);
 
-  function toggleCheck(id: string) {
-    setChecks((current) =>
-      current.map((item) => (item.id === id ? { ...item, checked: !item.checked } : item)),
+  const title = t("screen.public.applicationStatus.title");
+
+  if (authStatus !== "authenticated") {
+    return (
+      <>
+        <PageIntro title={title} />
+        <Notice tone="info">
+          {t("screen.public.applicationStatus.signInFirst")}{" "}
+          <TextLink to={pathFor("SCR-PUB-08")}>{t("screen.auth.signIn.submit")}</TextLink>
+        </Notice>
+      </>
+    );
+  }
+  if (statusQuery.isPending) {
+    return (
+      <>
+        <PageIntro title={title} />
+        <div
+          role="status"
+          aria-label={t("screen.public.applicationStatus.loading")}
+          className="h-64 animate-pulse rounded-[var(--te-radius-lg)] bg-[var(--te-hairline)]"
+        />
+      </>
+    );
+  }
+  if (!app) {
+    return (
+      <>
+        <PageIntro title={title} />
+        <Notice tone="danger">{t("screen.public.applicationStatus.notFound")}</Notice>
+      </>
     );
   }
 
-  async function handleResubmit() {
-    if (!app) return;
-    setBusy(true);
-    setErrorMsg(null);
+  const outcome = outcomeOf(app.state);
+  const changes = app.changesRequestedChecklist ?? [];
+  const canExtend = outcome === "changes" && !app.changesExtensionUsed;
+
+  async function run(action: () => Promise<unknown>, successKey: string, failKey: string) {
     setFeedback(null);
+    setErrorMessage(null);
     try {
-      await resubmitMutation.mutateAsync({
-        applicationId: app.id,
-        updatedPayload: { resubmittedFromWeb: true },
-        documents: uploadItemsToDocuments(additionalFiles, "other"),
-      });
-      setAdditionalFiles([]);
-      setFeedback("Your updated application has been resubmitted for review.");
+      await action();
+      setFeedback(t(successKey));
     } catch (caught) {
-      setErrorMsg(caught instanceof Error ? caught.message : "Could not resubmit application.");
-    } finally {
-      setBusy(false);
+      setErrorMessage(caught instanceof Error ? caught.message : t(failKey));
     }
   }
 
-  async function handleRequestExtension() {
-    if (!app) return;
-    setBusy(true);
-    setErrorMsg(null);
-    setFeedback(null);
-    try {
-      await extensionMutation.mutateAsync({
-        applicationId: app.id,
-        reason: "Need additional time to obtain updated official documents.",
-      });
-      setFeedback("Your 7-day deadline extension has been granted.");
-    } catch (caught) {
-      setErrorMsg(caught instanceof Error ? caught.message : "Could not request extension.");
-    } finally {
-      setBusy(false);
-    }
-  }
+  const resubmit = () =>
+    run(
+      async () => {
+        await resubmitMutation.mutateAsync({
+          applicationId: app.id,
+          updatedPayload: { resubmittedFromWeb: true },
+          documents: uploadItemsToDocuments(files, "other"),
+        });
+        setFiles([]);
+      },
+      "screen.public.applicationStatus.resubmitted",
+      "screen.public.applicationStatus.resubmitFailed",
+    );
 
-  const currentState = app?.state ?? "Changes Requested";
-  const isChangesRequested =
-    currentState === "Changes Requested" || currentState === "changes_requested";
-  const isDecided =
-    currentState === "Approved" ||
-    currentState === "Rejected" ||
-    currentState === "Closed" ||
-    currentState === "approved" ||
-    currentState === "rejected" ||
-    currentState === "closed";
-  const badge = statusBadgeTone(currentState);
-  const canResubmit =
-    Boolean(app) &&
-    isChangesRequested &&
-    !busy &&
-    (checks.some((item) => item.checked) || additionalFiles.length > 0);
-
-  const deadlineText = app?.changesDueAt ? new Date(app.changesDueAt).toLocaleDateString() : null;
+  const extend = () =>
+    run(
+      () =>
+        extensionMutation.mutateAsync({
+          applicationId: app.id,
+          reason: "Need additional time to obtain updated official documents.",
+        }),
+      "screen.public.applicationStatus.extended",
+      "screen.public.applicationStatus.extendFailed",
+    );
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex flex-wrap items-center gap-3">
-        <TeBadge tone={badge.tone}>
-          <TeIcon name={badge.icon} />
-          {badge.label}
-        </TeBadge>
-        <p className="te-body">
-          {t(
-            "screen.public.accountRecovery.applicationStatusAndChangesResponse.targetReviewWithin2Working",
-          )}
-        </p>
-      </div>
-      <TeStepper
-        steps={APPLICATION_STEPS()}
-        currentId={isDecided ? "decision" : "review"}
-        completedIds={isDecided ? ["submitted", "review"] : ["submitted"]}
-        ariaLabel={t(
-          "screen.public.accountRecovery.applicationStatusAndChangesResponse.applicationProgress",
-        )}
+    <>
+      <PageIntro
+        title={title}
+        description={t("screen.public.applicationStatus.summary", {
+          type: t(`screen.public.applicationStatus.type.${app.applicationType}`),
+          date: formatDate(app.createdAt, locale),
+        })}
       />
-      <TeInlineAlert
-        tone="warning"
-        title={t(
-          "screen.public.accountRecovery.applicationStatusAndChangesResponse.respondWithin14Days",
-        )}
-      >
-        {t(
-          "screen.public.accountRecovery.applicationStatusAndChangesResponse.requestedChangesMustBeAnswered",
-        )}{" "}
-        {deadlineText ? ` (${deadlineText})` : ""}
-        {t(
-          "screen.public.accountRecovery.applicationStatusAndChangesResponse.orTheApplicationCloses",
-        )}
-      </TeInlineAlert>
-      {app?.decisionNotes ? (
-        <TeInlineAlert
-          tone={currentState === "Rejected" ? "error" : "info"}
-          title={t(
-            "screen.public.accountRecovery.applicationStatusAndChangesResponse.reviewerNotes",
-          )}
-        >
-          {app.decisionNotes}
-        </TeInlineAlert>
-      ) : null}
-      {feedback ? (
-        <TeInlineAlert
-          tone="info"
-          title={t("screen.public.accountRecovery.applicationStatusAndChangesResponse.updateSaved")}
-        >
-          {feedback}
-        </TeInlineAlert>
-      ) : null}
-      {errorMsg ? (
-        <TeInlineAlert
-          tone="error"
-          title={t(
-            "screen.public.accountRecovery.applicationStatusAndChangesResponse.actionFailed",
-          )}
-        >
-          {errorMsg}
-        </TeInlineAlert>
-      ) : null}
-      <section className="flex flex-col gap-4" aria-labelledby="requested-changes-heading">
-        <h2 id="requested-changes-heading" className="te-h3">
-          {t("screen.public.accountRecovery.applicationStatusAndChangesResponse.requestedChanges")}
-        </h2>
-        <TeChecklist
-          items={checks}
-          onToggle={toggleCheck}
-          ariaLabel={t(
-            "screen.public.accountRecovery.applicationStatusAndChangesResponse.requestedChangesAriaLabel",
-          )}
-        />
-        <TeFileUpload
-          label={t(
-            "screen.public.accountRecovery.applicationStatusAndChangesResponse.updatedDocumentsOptional",
-          )}
-          accept="image/*,application/pdf"
-          multiple
-          files={additionalFiles}
-          onFilesSelected={(selected) =>
-            setAdditionalFiles([...additionalFiles, ...toPendingItems(selected)])
-          }
-          onRemove={(name) => setAdditionalFiles(withoutItem(additionalFiles, name))}
-          hint={t(
-            "screen.public.accountRecovery.applicationStatusAndChangesResponse.attachReplacementOrSupportingDocuments",
-          )}
-        />
-      </section>
-      <div className="flex flex-wrap gap-3">
-        <TeButton
-          variant="primary"
-          size="lg"
-          disabled={!canResubmit}
-          onClick={() => void handleResubmit()}
-        >
-          {busy
-            ? t("screen.public.accountRecovery.applicationStatusAndChangesResponse.submitting")
-            : t("screen.public.accountRecovery.applicationStatusAndChangesResponse.resubmit")}
-        </TeButton>
-        {app && isChangesRequested && !app.changesExtensionUsed ? (
-          <TeButton
-            variant="secondary"
-            size="lg"
-            disabled={busy}
-            onClick={() => void handleRequestExtension()}
-          >
-            {t(
-              "screen.public.accountRecovery.applicationStatusAndChangesResponse.request7DayExtension",
+      <TwoColumns>
+        <Panel className="gap-3.5">
+          <PanelTitle>{t("screen.public.applicationStatus.status")}</PanelTitle>
+          <ul className="m-0 flex list-none flex-col gap-3 p-0 text-base">
+            <StatusLine icon="check" className="font-semibold text-[var(--te-success)]">
+              {t("screen.public.applicationStatus.submitted")}
+            </StatusLine>
+            <StatusLine
+              icon="clock"
+              className={outcome === "pending" ? "font-semibold" : "text-[var(--te-ink-muted)]"}
+            >
+              {t("screen.public.applicationStatus.pendingReview")}
+            </StatusLine>
+            {outcome === "pending" ? null : (
+              <StatusLine
+                icon={OUTCOME_STYLE[outcome].icon}
+                className={cn("font-semibold", OUTCOME_STYLE[outcome].color)}
+              >
+                {t(`screen.public.applicationStatus.outcome.${outcome}`)}
+              </StatusLine>
             )}
-          </TeButton>
-        ) : null}
-        <ScreenLink
-          surface="public"
-          slug="appeal-a-rejection"
-          className={buttonLinkClass("secondary")}
-        >
-          {t("screen.public.accountRecovery.applicationStatusAndChangesResponse.appealARejection")}
-        </ScreenLink>
-      </div>
-    </div>
+          </ul>
+          {outcome === "changes" && app.changesDueAt ? (
+            <Notice tone="warning" strong>
+              {t("screen.public.applicationStatus.respondBy", {
+                date: formatDate(app.changesDueAt, locale),
+              })}
+            </Notice>
+          ) : null}
+          {app.decisionNotes ? (
+            <Notice tone={outcome === "rejected" ? "danger" : "info"}>
+              {t("screen.public.applicationStatus.notes", { notes: app.decisionNotes })}
+            </Notice>
+          ) : null}
+        </Panel>
+
+        <Panel className="gap-3.5">
+          <PanelTitle>{t("screen.public.applicationStatus.requestedChanges")}</PanelTitle>
+          {changes.length > 0 ? (
+            <ol className="m-0 flex flex-col gap-2.5 ps-5 text-base leading-6">
+              {changes.map((item) => (
+                <li key={`${item.field}-${item.instruction}`}>{item.instruction}</li>
+              ))}
+            </ol>
+          ) : (
+            <p className="m-0 text-sm text-[var(--te-ink-muted)]">
+              {t("screen.public.applicationStatus.noChanges")}
+            </p>
+          )}
+          {outcome === "changes" ? (
+            <DocumentDrop
+              title={t("screen.public.applicationStatus.updatedDocuments")}
+              hint={t("screen.public.applicationStatus.updatedDocumentsHint")}
+              items={files}
+              onChange={setFiles}
+              multiple
+              disabled={busy}
+            />
+          ) : null}
+          {feedback ? <Notice tone="success">{feedback}</Notice> : null}
+          {errorMessage ? <Notice tone="danger">{errorMessage}</Notice> : null}
+          <ActionRow className="mt-1.5">
+            {outcome === "changes" ? (
+              <Button onClick={() => void resubmit()} disabled={busy}>
+                {resubmitMutation.isPending
+                  ? t("screen.public.applicationStatus.submitting")
+                  : t("screen.public.applicationStatus.resubmit")}
+              </Button>
+            ) : null}
+            {canExtend ? (
+              <Button tone="outline" onClick={() => void extend()} disabled={busy}>
+                {t("screen.public.applicationStatus.extend")}
+              </Button>
+            ) : null}
+            {outcome === "rejected" ? (
+              <TextLink to={pathFor("SCR-PUB-18")}>
+                {t("screen.public.applicationStatus.appeal")}
+              </TextLink>
+            ) : null}
+          </ActionRow>
+        </Panel>
+      </TwoColumns>
+    </>
   );
 }
 
 /** Where an application stands. Shows requested changes, the deadline, and the appeal route. */
 export function ApplicationStatusAndChangesResponse() {
   return (
-    <AuthFrame
-      title={t(
-        "screen.public.accountRecovery.applicationStatusAndChangesResponse.applicationStatusAndChangesResponse",
-      )}
-      description={t(
-        "screen.public.accountRecovery.applicationStatusAndChangesResponse.trackYourApplicationAndRespond",
-      )}
-    >
-      <StatePreview
-        main={<ApplicationStatusView />}
-        loading={<StateLoading />}
-        error={
-          <TeInlineAlert
-            tone="error"
-            title={t(
-              "screen.public.accountRecovery.applicationStatusAndChangesResponse.statusCouldNotLoad",
-            )}
-          >
-            {t("screen.public.accountRecovery.applicationStatusAndChangesResponse.tryAgainInAFew")}
-          </TeInlineAlert>
-        }
-      />
-    </AuthFrame>
+    <PageMain>
+      <ApplicationStatusView />
+    </PageMain>
   );
 }

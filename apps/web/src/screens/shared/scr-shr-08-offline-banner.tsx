@@ -1,24 +1,20 @@
-import { TeOfflineBanner } from "@trips-app/ui/components/te-offline-banner";
-import { TePageHeader } from "@trips-app/ui/components/te-page-header";
-import { t } from "@trips-app/i18n";
-import { retryPage } from "./screen-actions";
+// SCR-SHR-08 Offline banner on its catalog page. The public shell mounts `OfflineBanner`, which
+// shows itself only while the browser is offline.
+import { useAuth } from "@/auth/auth-context";
 
-/** Connection lost. The banner stays above the current screen until the connection returns. */
+import { OfflineBanner } from "./offline-banner";
+
 export function ScrShr08OfflineBanner() {
+  const { t } = useAuth();
   return (
-    <div className="mx-auto flex w-full max-w-3xl flex-col gap-6 px-4 py-6">
-      <TeOfflineBanner
-        message={t("screen.shared.scrShr08OfflineBanner.youAreOfflineViewingSaved")}
-        onRetry={retryPage}
-        retryLabel={t("screen.shared.scrShr08OfflineBanner.retry")}
-      />
-      <TePageHeader
-        title={t("screen.shared.scrShr08OfflineBanner.offlineBanner")}
-        description={t("screen.shared.scrShr08OfflineBanner.theBannerSitsAboveThe")}
-      />
-      <p className="te-body">
-        {t("screen.shared.scrShr08OfflineBanner.contentAlreadyOnScreenStays")}
-      </p>
+    <div className="flex flex-col">
+      <OfflineBanner forceVisible />
+      <div className="mx-auto flex w-full max-w-[440px] flex-col gap-3 px-4 py-4">
+        <h1 className="m-0 text-2xl leading-8 font-bold">{t("screen.shared.offline.example")}</h1>
+        <p className="m-0 text-sm text-[var(--te-ink-muted)]">
+          {t("screen.shared.offline.exampleBody")}
+        </p>
+      </div>
     </div>
   );
 }
