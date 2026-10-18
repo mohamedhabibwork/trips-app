@@ -331,35 +331,6 @@ export const en = {
   "screen.admin.applications.requestChangesDecision.noApplication": "No application selected",
   "screen.admin.applications.requestChangesDecision.noApplicationBody":
     "Open an application from the queue first.",
-  // apps/web/src/screens/admin/common/admin-decision-form.tsx
-  "screen.admin.common.adminDecisionForm.keepEditing": "Keep editing",
-  // apps/web/src/screens/admin/common/admin-nav.tsx
-  "screen.admin.nav.adminHome": "Home",
-  "screen.admin.nav.applicationQueue": "Applications",
-  "screen.admin.nav.usersAndEntitiesDirectory": "Users",
-  "screen.admin.nav.labTestsQueue": "Lab tests",
-  "screen.admin.nav.plansCatalog": "Plans",
-  "screen.admin.nav.platformCoupons": "Coupons",
-  "screen.admin.nav.dealAuditList": "Deals",
-  "screen.admin.nav.disputesQueue": "Disputes",
-  "screen.admin.nav.platformFinancialView": "Finance",
-  "screen.admin.nav.tripOversight": "Trips",
-  "screen.admin.nav.auditLog": "Audit",
-  "screen.admin.nav.featureFlagsAndPlatformConfiguration": "Configuration",
-  "screen.admin.nav.operationsHealthDashboard": "Operations",
-  "screen.admin.common.adminNav.adminAreas": "Admin areas",
-  // apps/web/src/screens/admin/common/admin-shared.tsx
-  "screen.admin.common.adminShared.backToAdminHome": "Back to admin home",
-  "screen.admin.common.adminShared.chartDataPending": "{label}. Chart data pending.",
-  "screen.admin.common.adminShared.chartDataPending2": ". Chart data pending.",
-  // apps/web/src/screens/admin/common/admin-state-preview.tsx
-  "screen.admin.common.adminStatePreview.main": "Main",
-  "screen.admin.common.adminStatePreview.loading": "Loading",
-  "screen.admin.common.adminStatePreview.empty": "Empty",
-  "screen.admin.common.adminStatePreview.error": "Error",
-  "screen.admin.common.adminStatePreview.screenStates": "Screen states",
-  "screen.admin.common.adminStatePreview.chooseAScreenStateTo": "Choose a screen state to preview",
-  "screen.admin.common.adminStatePreview.loading2": "Loading",
   // apps/web/src/screens/admin/common/admin-states.tsx
   "screen.admin.common.adminStates.loading": "Loading. This can take a few seconds.",
   "screen.admin.common.adminStates.didNotLoad": "This section did not load",

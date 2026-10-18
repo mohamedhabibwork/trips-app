@@ -323,35 +323,6 @@ export const ar: AppMessages = {
   "screen.admin.applications.requestChangesDecision.noApplication": "لم يتم اختيار طلب",
   "screen.admin.applications.requestChangesDecision.noApplicationBody":
     "افتح طلبًا من قائمة الانتظار أولًا.",
-  // apps/web/src/screens/admin/common/admin-decision-form.tsx
-  "screen.admin.common.adminDecisionForm.keepEditing": "متابعة التحرير",
-  // apps/web/src/screens/admin/common/admin-nav.tsx
-  "screen.admin.nav.adminHome": "الرئيسية",
-  "screen.admin.nav.applicationQueue": "الطلبات",
-  "screen.admin.nav.usersAndEntitiesDirectory": "المستخدمون",
-  "screen.admin.nav.labTestsQueue": "التحاليل المخبرية",
-  "screen.admin.nav.plansCatalog": "الخطط",
-  "screen.admin.nav.platformCoupons": "الكوبونات",
-  "screen.admin.nav.dealAuditList": "الاتفاقيات",
-  "screen.admin.nav.disputesQueue": "النزاعات",
-  "screen.admin.nav.platformFinancialView": "المالية",
-  "screen.admin.nav.tripOversight": "الرحلات",
-  "screen.admin.nav.auditLog": "التدقيق",
-  "screen.admin.nav.featureFlagsAndPlatformConfiguration": "الإعدادات",
-  "screen.admin.nav.operationsHealthDashboard": "العمليات",
-  "screen.admin.common.adminNav.adminAreas": "أقسام الإدارة",
-  // apps/web/src/screens/admin/common/admin-shared.tsx
-  "screen.admin.common.adminShared.backToAdminHome": "العودة إلى الرئيسية الإدارية",
-  "screen.admin.common.adminShared.chartDataPending": "{label}. بيانات الرسم البياني قيد الانتظار.",
-  "screen.admin.common.adminShared.chartDataPending2": ". بيانات الرسم البياني قيد الانتظار.",
-  // apps/web/src/screens/admin/common/admin-state-preview.tsx
-  "screen.admin.common.adminStatePreview.main": "الرئيسية",
-  "screen.admin.common.adminStatePreview.loading": "التحميل",
-  "screen.admin.common.adminStatePreview.empty": "الفراغ",
-  "screen.admin.common.adminStatePreview.error": "الخطأ",
-  "screen.admin.common.adminStatePreview.screenStates": "حالات الشاشة",
-  "screen.admin.common.adminStatePreview.chooseAScreenStateTo": "اختر حالة شاشة لمعاينتها",
-  "screen.admin.common.adminStatePreview.loading2": "التحميل",
   // apps/web/src/screens/admin/common/admin-states.tsx
   "screen.admin.common.adminStates.loading": "جارٍ التحميل. قد يستغرق ذلك بضع ثوانٍ.",
   "screen.admin.common.adminStates.didNotLoad": "تعذّر تحميل هذا القسم",
