@@ -1,184 +1,234 @@
+// SCR-ADM-28 Settlements tracker (docs/design/web/admin/SCR-ADM-28.dc.html): amounts owed between
+// organizations, suppliers and the platform until settled, with the "Mark settled" panel beside
+// the table. Settling records a payout settlement for the selected amount with its payment
+// reference.
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { TeButton } from "@trips-app/ui/components/te-button";
-import { TeDataTable, type TeDataTableColumn } from "@trips-app/ui/components/te-data-table";
-import { TeInput } from "@trips-app/ui/components/te-input";
-import { TePageHeader } from "@trips-app/ui/components/te-page-header";
-import type { TeSelectOption } from "@trips-app/ui/components/te-select";
 import { t } from "@trips-app/i18n";
+
+import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
-import { StatePreview } from "../common/admin-state-preview";
-import { AdminScreenLink } from "../common/admin-links";
+
+import { AdminButton } from "../common/admin-actions";
+import { AdminInput } from "../common/admin-form";
+import { AdminEmpty, AdminQueryState } from "../common/admin-states";
 import {
-  AdminActions,
-  AdminFilterSelect,
-  AdminFilters,
+  AdminAlert,
+  AdminBadge,
+  AdminCard,
   AdminPage,
-  AdminPagination,
-  AdminPanel,
-  AdminStatus,
-  type AdminStatusPresentation,
-} from "../common/admin-shared";
+  AdminSplit,
+  AdminTable,
+  type AdminColumn,
+} from "../common/admin-ui";
+import { formatDate, formatMinor, isPayoutCurrency } from "./finance-format";
+
+type Party = "platform" | "organization" | "supplier";
 
 interface SettlementRow {
   id: string;
-  from: string;
-  to: string;
+  from: Party;
+  to: Party;
+  amountMinor: number;
+  currency: string;
   amount: string;
   date: string;
-  state: "open" | "settled";
+  settled: boolean;
 }
 
-const DEFAULT_SETTLEMENT_ROWS: readonly SettlementRow[] = [];
+const MIN_REFERENCE_LENGTH = 3;
 
-const STATE_PRESENTATION = (): Record<SettlementRow["state"], AdminStatusPresentation> => ({
-  open: {
-    tone: "warning",
-    icon: "clock",
-    label: t("screen.admin.finance.settlementsTracker.open"),
-  },
-  settled: {
-    tone: "success",
-    icon: "check",
-    label: t("screen.admin.finance.settlementsTracker.settled"),
-  },
-});
+function partyLabel(party: Party): string {
+  if (party === "platform") return t("screen.admin.finance.settlementsTracker.platform");
+  if (party === "organization") return t("screen.admin.finance.settlementsTracker.organization");
+  return t("screen.admin.finance.settlementsTracker.supplier");
+}
 
-const STATE_OPTIONS = (): readonly TeSelectOption[] => [
-  { value: "all", label: t("screen.admin.finance.settlementsTracker.anyState") },
-  { value: "open", label: t("screen.admin.finance.settlementsTracker.openLabel") },
-  { value: "settled", label: t("screen.admin.finance.settlementsTracker.settledLabel") },
-];
+function StateBadge({ settled }: { settled: boolean }) {
+  return settled ? (
+    <AdminBadge tone="ok" icon={false}>
+      {t("screen.admin.finance.settlementsTracker.settled")}
+    </AdminBadge>
+  ) : (
+    <AdminBadge tone="warn" icon={false}>
+      {t("screen.admin.finance.settlementsTracker.open")}
+    </AdminBadge>
+  );
+}
 
 export function SettlementsTracker() {
+  const { status: authStatus, locale } = useAuth();
   const queryClient = useQueryClient();
+  const [selectedId, setSelectedId] = useState<string | null>(null);
   const [reference, setReference] = useState("");
-  const canMark = reference.trim() !== "";
 
-  const ledgerQuery = useQuery(orpc.accounting.listLedgerEntries.queryOptions({ input: {} }));
-
+  const ledgerQuery = useQuery({
+    ...orpc.accounting.listLedgerEntries.queryOptions({ input: {} }),
+    enabled: authStatus === "authenticated",
+  });
   const settlementMutation = useMutation(
     orpc.accounting.createPayoutSettlement.mutationOptions({
       onSuccess: () => {
+        setReference("");
+        setSelectedId(null);
         void queryClient.invalidateQueries({ queryKey: orpc.accounting.key() });
       },
     }),
   );
 
-  const rows: readonly SettlementRow[] =
-    ledgerQuery.data && ledgerQuery.data.length > 0
-      ? ledgerQuery.data.map((entry) => ({
-          id: entry.id,
-          from: entry.direction === "credit" ? "Platform Escrow" : "Organization",
-          to: entry.direction === "credit" ? "Organization" : "Supplier",
-          amount: `${(Math.abs(entry.netAmountMinor) / 100).toFixed(2)} ${entry.currencyCode}`,
-          date: new Date(entry.createdAt).toISOString().slice(0, 10),
-          state: (entry.entryType === "payout_settlement"
-            ? "settled"
-            : "open") as SettlementRow["state"],
-        }))
-      : DEFAULT_SETTLEMENT_ROWS;
+  const rows: readonly SettlementRow[] = (ledgerQuery.data ?? []).map((entry) => {
+    const amountMinor = Math.abs(entry.netAmountMinor);
+    const isCredit = entry.direction === "credit";
+    return {
+      id: entry.id,
+      from: isCredit ? "platform" : "organization",
+      to: isCredit ? "organization" : "supplier",
+      amountMinor,
+      currency: entry.currencyCode,
+      amount: formatMinor(amountMinor, entry.currencyCode, locale),
+      date: formatDate(entry.occurredAt, locale),
+      settled: entry.status === "settled",
+    };
+  });
+  const selected = rows.find((row) => row.id === selectedId) ?? rows.find((row) => !row.settled);
+  const trimmedReference = reference.trim();
+  const canSettle =
+    selected !== undefined &&
+    !selected.settled &&
+    isPayoutCurrency(selected.currency) &&
+    trimmedReference.length >= MIN_REFERENCE_LENGTH &&
+    !settlementMutation.isPending;
 
-  const handleMarkSettled = async (rowId?: string) => {
-    const targetId = rowId ?? rows.find((r) => r.state === "open")?.id ?? rows[0]?.id;
-    try {
-      await settlementMutation.mutateAsync({
-        amountMinor: 850000,
-        currencyCode: "EGP",
-        description: reference.trim() || `Settlement ${targetId ?? "manual"}`,
-      });
-    } catch {
-      // Optimistic fallback kept
-    }
-    setReference("");
+  const handleMarkSettled = () => {
+    if (!selected || !canSettle || !isPayoutCurrency(selected.currency)) return;
+    settlementMutation.mutate({
+      amountMinor: selected.amountMinor,
+      currencyCode: selected.currency,
+      invoiceNumber: trimmedReference,
+      description: trimmedReference,
+    });
   };
 
-  const columns: readonly TeDataTableColumn<SettlementRow>[] = [
-    { key: "from", header: t("screen.admin.finance.settlementsTracker.from") },
-    { key: "to", header: t("screen.admin.finance.settlementsTracker.to") },
-    { key: "amount", header: t("screen.admin.finance.settlementsTracker.amount") },
-    { key: "date", header: t("screen.admin.finance.settlementsTracker.date") },
+  const columns: readonly AdminColumn<SettlementRow>[] = [
+    {
+      key: "from",
+      header: t("screen.admin.finance.settlementsTracker.from"),
+      render: (row) => partyLabel(row.from),
+    },
+    {
+      key: "to",
+      header: t("screen.admin.finance.settlementsTracker.to"),
+      render: (row) => partyLabel(row.to),
+    },
+    {
+      key: "amount",
+      header: t("screen.admin.finance.settlementsTracker.amount"),
+      render: (row) => row.amount,
+    },
     {
       key: "state",
       header: t("screen.admin.finance.settlementsTracker.state"),
-      render: (row) => <AdminStatus status={STATE_PRESENTATION()[row.state]} />,
+      render: (row) => <StateBadge settled={row.settled} />,
+    },
+    {
+      key: "date",
+      header: t("screen.admin.finance.settlementsTracker.date"),
+      render: (row) => row.date,
     },
     {
       key: "action",
-      header: t("screen.admin.finance.settlementsTracker.action"),
+      header: (
+        <span className="te-caption">{t("screen.admin.finance.settlementsTracker.action")}</span>
+      ),
       render: (row) => (
-        <TeButton
-          variant="secondary"
-          aria-label={t("screen.admin.finance.settlementsTracker.markSettlementFromToAs", {
-            from: row.from,
-            to: row.to,
+        <AdminButton
+          variant="link"
+          aria-pressed={row.id === selected?.id}
+          aria-label={t("screen.admin.finance.settlementsTracker.selectSettlement", {
+            from: partyLabel(row.from),
+            to: partyLabel(row.to),
+            amount: row.amount,
           })}
-          onClick={() => void handleMarkSettled(row.id)}
+          onClick={() => setSelectedId(row.id)}
         >
-          {t("screen.admin.finance.settlementsTracker.markSettled")}
-        </TeButton>
+          {row.settled
+            ? t("screen.admin.finance.settlementsTracker.viewRecord")
+            : t("screen.admin.finance.settlementsTracker.select")}
+        </AdminButton>
       ),
     },
   ];
 
+  const summary = selected
+    ? t("screen.admin.finance.settlementsTracker.summary", {
+        from: partyLabel(selected.from),
+        to: partyLabel(selected.to),
+        amount: selected.amount,
+      })
+    : t("screen.admin.finance.settlementsTracker.nothingSelected");
+
   return (
-    <AdminPage>
-      <TePageHeader
-        title={t("screen.admin.finance.settlementsTracker.settlementsTracker")}
-        description={t(
-          "screen.admin.finance.settlementsTracker.amountsOwedBetweenOrganizationsSuppliers",
-        )}
-        actions={
-          <AdminScreenLink slug="platform-financial-view" variant="ghost">
-            {t("screen.admin.finance.settlementsTracker.backToFinancialView")}
-          </AdminScreenLink>
-        }
-      />
-      <StatePreview
-        emptyTitle={t("screen.admin.finance.settlementsTracker.noSettlements")}
-        emptyDescription={t("screen.admin.finance.settlementsTracker.noAmountsAreOwedRight")}
-        loadingLabel={t("screen.admin.finance.settlementsTracker.loadingTheSettlements")}
+    <AdminPage
+      title={t("screen.admin.finance.settlementsTracker.title")}
+      description={t("screen.admin.finance.settlementsTracker.description")}
+    >
+      <AdminQueryState
+        query={ledgerQuery}
+        loadingLabel={t("screen.admin.finance.settlementsTracker.loading")}
       >
-        <AdminFilters>
-          <AdminFilterSelect
-            label={t("screen.admin.finance.settlementsTracker.stateLabel")}
-            options={STATE_OPTIONS()}
-          />
-        </AdminFilters>
-        <AdminPanel title={t("screen.admin.finance.settlementsTracker.settlements")}>
-          <TeDataTable
-            columns={columns}
-            rows={rows}
-            getRowKey={(row) => row.id}
-            caption={t("screen.admin.finance.settlementsTracker.settlementsCaption")}
-            emptyTitle={t("screen.admin.finance.settlementsTracker.noSettlementsEmptyTitle")}
-            emptyDescription={t(
-              "screen.admin.finance.settlementsTracker.noAmountsAreOwedRightEmptyDescription",
-            )}
-          />
-          <AdminPagination pageCount={1} />
-        </AdminPanel>
-        <AdminPanel title={t("screen.admin.finance.settlementsTracker.markSettledTitle")}>
-          <TeInput
-            label={t("screen.admin.finance.settlementsTracker.recordedPaymentReferenceRequired")}
-            value={reference}
-            onChange={(event) => setReference(event.target.value)}
-            placeholder={t("screen.admin.finance.settlementsTracker.paymentReference")}
-          />
-          <TeInput
-            label={t("screen.admin.finance.settlementsTracker.paymentDate")}
-            placeholder={t("screen.admin.finance.settlementsTracker.yyyyMmDd")}
-          />
-          <AdminActions>
-            <AdminScreenLink slug="platform-financial-view" variant="secondary">
-              {t("screen.admin.finance.settlementsTracker.cancel")}
-            </AdminScreenLink>
-            <TeButton disabled={!canMark} onClick={() => void handleMarkSettled()}>
-              {t("screen.admin.finance.settlementsTracker.markAsSettled")}
-            </TeButton>
-          </AdminActions>
-        </AdminPanel>
-      </StatePreview>
+        <AdminSplit
+          main={
+            <AdminTable
+              caption={t("screen.admin.finance.settlementsTracker.tableCaption")}
+              columns={columns}
+              rows={rows}
+              getRowKey={(row) => row.id}
+              empty={
+                <AdminEmpty
+                  title={t("screen.admin.finance.settlementsTracker.emptyTitle")}
+                  description={t("screen.admin.finance.settlementsTracker.emptyBody")}
+                />
+              }
+            />
+          }
+          side={
+            <AdminCard title={t("screen.admin.finance.settlementsTracker.markSettled")}>
+              <p className="te-body text-[var(--te-ink-muted)]">{summary}</p>
+              {selected?.settled ? (
+                <StateBadge settled />
+              ) : (
+                <>
+                  <AdminInput
+                    label={t("screen.admin.finance.settlementsTracker.paymentReference")}
+                    placeholder={t(
+                      "screen.admin.finance.settlementsTracker.paymentReferencePlaceholder",
+                    )}
+                    value={reference}
+                    disabled={!selected}
+                    onChange={(event) => setReference(event.target.value)}
+                  />
+                  {settlementMutation.isError ? (
+                    <AdminAlert
+                      tone="danger"
+                      title={t("screen.admin.finance.settlementsTracker.errorTitle")}
+                    >
+                      {t("screen.admin.finance.settlementsTracker.errorBody")}
+                    </AdminAlert>
+                  ) : null}
+                  <AdminButton
+                    variant="primary"
+                    className="self-start"
+                    disabled={!canSettle}
+                    onClick={handleMarkSettled}
+                  >
+                    {t("screen.admin.finance.settlementsTracker.markSettled")}
+                  </AdminButton>
+                </>
+              )}
+            </AdminCard>
+          }
+        />
+      </AdminQueryState>
     </AdminPage>
   );
 }

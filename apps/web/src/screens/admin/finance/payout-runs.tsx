@@ -1,177 +1,225 @@
+// SCR-ADM-26 Payout runs (docs/design/web/admin/SCR-ADM-26.dc.html): the weekly runs that pay
+// suppliers, one row per week, and the per-supplier amounts of the selected run. Runs are built
+// from the payout settlement entries of the ledger, grouped by the week they occurred in.
+import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { TeButton } from "@trips-app/ui/components/te-button";
-import { TeDataTable, type TeDataTableColumn } from "@trips-app/ui/components/te-data-table";
-import { TeInlineAlert } from "@trips-app/ui/components/te-inline-alert";
-import { TePageHeader } from "@trips-app/ui/components/te-page-header";
 import { t } from "@trips-app/i18n";
+
+import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
-import { StatePreview } from "../common/admin-state-preview";
-import { AdminScreenLink } from "../common/admin-links";
+
+import { AdminButton } from "../common/admin-actions";
+import { AdminEmpty, AdminQueryState } from "../common/admin-states";
 import {
-  AdminActions,
+  AdminAlert,
+  AdminBadge,
   AdminPage,
-  AdminPanel,
-  AdminStatus,
-  type AdminStatusPresentation,
-} from "../common/admin-shared";
+  AdminTable,
+  type AdminColumn,
+} from "../common/admin-ui";
+import { CreatePayoutRunForm, type NewPayoutRun } from "./payout-run-form";
+import {
+  formatDate,
+  formatMinor,
+  formatTotals,
+  totalsByCurrency,
+  weekStart,
+} from "./finance-format";
 
-interface RunRow {
-  id: string;
-  week: string;
-  suppliers: string;
-  total: string;
-  state: "completed" | "failed";
-}
-
-interface SupplierRow {
+interface PayoutEntry {
   id: string;
   supplier: string;
-  amount: string;
-  state: "completed" | "failed";
+  amountMinor: number;
+  currency: string;
+  failed: boolean;
 }
 
-const DEFAULT_RUN_ROWS: readonly RunRow[] = [];
+interface RunRow {
+  week: string;
+  weekLabel: string;
+  entries: readonly PayoutEntry[];
+  total: string;
+  failed: boolean;
+}
 
-const DEFAULT_SUPPLIER_ROWS: readonly SupplierRow[] = [];
-
-const STATE_PRESENTATION = (): Record<RunRow["state"], AdminStatusPresentation> => ({
-  completed: {
-    tone: "success",
-    icon: "check",
-    label: t("screen.admin.finance.payoutRuns.completed"),
-  },
-  failed: { tone: "danger", icon: "alert", label: t("screen.admin.finance.payoutRuns.failed") },
-});
-
-const RUN_COLUMNS = (): readonly TeDataTableColumn<RunRow>[] => [
-  { key: "week", header: t("screen.admin.finance.payoutRuns.week") },
-  { key: "suppliers", header: t("screen.admin.finance.payoutRuns.suppliers"), align: "end" },
-  { key: "total", header: t("screen.admin.finance.payoutRuns.total") },
-  {
-    key: "state",
-    header: t("screen.admin.finance.payoutRuns.state"),
-    render: (row) => <AdminStatus status={STATE_PRESENTATION()[row.state]} />,
-  },
-  {
-    key: "open",
-    header: t("screen.admin.finance.payoutRuns.action"),
-    render: (row) => (
-      <TeButton
-        variant="secondary"
-        aria-label={t("screen.admin.finance.payoutRuns.openPayoutRunFor", { week: row.week })}
-      >
-        {t("screen.admin.finance.payoutRuns.openRun")}
-      </TeButton>
-    ),
-  },
-];
-
-const SUPPLIER_COLUMNS = (): readonly TeDataTableColumn<SupplierRow>[] => [
-  { key: "supplier", header: t("screen.admin.finance.payoutRuns.supplier") },
-  { key: "amount", header: t("screen.admin.finance.payoutRuns.amount") },
-  {
-    key: "state",
-    header: t("screen.admin.finance.payoutRuns.stateHeader"),
-    render: (row) => <AdminStatus status={STATE_PRESENTATION()[row.state]} />,
-  },
-];
+function RunStateBadge({ failed }: { failed: boolean }) {
+  return failed ? (
+    <AdminBadge tone="bad" icon="alert">
+      {t("screen.admin.finance.payoutRuns.failed")}
+    </AdminBadge>
+  ) : (
+    <AdminBadge tone="ok" icon={false}>
+      {t("screen.admin.finance.payoutRuns.completed")}
+    </AdminBadge>
+  );
+}
 
 export function PayoutRuns() {
+  const { status: authStatus, locale } = useAuth();
   const queryClient = useQueryClient();
-  const ledgerQuery = useQuery(orpc.accounting.listLedgerEntries.queryOptions({ input: {} }));
+  const [selectedWeek, setSelectedWeek] = useState<string | null>(null);
+  const [isCreating, setIsCreating] = useState(false);
 
+  const ledgerQuery = useQuery({
+    ...orpc.accounting.listLedgerEntries.queryOptions({ input: {} }),
+    enabled: authStatus === "authenticated",
+  });
   const createPayoutMutation = useMutation(
     orpc.accounting.createPayoutSettlement.mutationOptions({
       onSuccess: () => {
+        setIsCreating(false);
         void queryClient.invalidateQueries({ queryKey: orpc.accounting.key() });
       },
     }),
   );
 
-  const payouts =
-    ledgerQuery.data?.filter((entry) => entry.entryType === "payout_settlement") ?? [];
+  const payouts = (ledgerQuery.data ?? []).filter(
+    (entry) => entry.entryType === "payout_settlement",
+  );
+  const byWeek = payouts.reduce<ReadonlyMap<string, readonly PayoutEntry[]>>((acc, entry) => {
+    const week = weekStart(entry.occurredAt);
+    const item: PayoutEntry = {
+      id: entry.id,
+      supplier: entry.description,
+      amountMinor: Math.abs(entry.netAmountMinor),
+      currency: entry.currencyCode,
+      failed: entry.status === "reconciliation_exception",
+    };
+    return new Map(acc).set(week, [...(acc.get(week) ?? []), item]);
+  }, new Map());
+  const runs: readonly RunRow[] = [...byWeek.entries()]
+    .sort(([a], [b]) => b.localeCompare(a))
+    .map(([week, entries]) => ({
+      week,
+      weekLabel: t("screen.admin.finance.payoutRuns.weekOf", { date: formatDate(week, locale) }),
+      entries,
+      total: formatTotals(
+        totalsByCurrency(
+          entries.map((e) => ({ amountMinor: e.amountMinor, currency: e.currency })),
+        ),
+        locale,
+      ),
+      failed: entries.some((e) => e.failed),
+    }));
+  const selectedRun = runs.find((run) => run.week === selectedWeek) ?? runs[0];
 
-  const runs: readonly RunRow[] =
-    payouts.length > 0
-      ? payouts.map((p) => ({
-          id: p.id,
-          week: new Date(p.createdAt).toISOString().slice(0, 10),
-          suppliers: "1",
-          total: `${(Math.abs(p.netAmountMinor) / 100).toFixed(2)} ${p.currencyCode}`,
-          state: "completed",
-        }))
-      : DEFAULT_RUN_ROWS;
-
-  const suppliers: readonly SupplierRow[] =
-    payouts.length > 0
-      ? payouts.map((p) => ({
-          id: `sup-${p.id}`,
-          supplier: p.description || `Settlement ${p.id.slice(0, 8)}`,
-          amount: `${(Math.abs(p.netAmountMinor) / 100).toFixed(2)} ${p.currencyCode}`,
-          state: "completed",
-        }))
-      : DEFAULT_SUPPLIER_ROWS;
-
-  const handleCreateRun = async () => {
-    const today = new Date().toISOString().slice(0, 10);
-    try {
-      await createPayoutMutation.mutateAsync({
-        amountMinor: 1250000,
-        currencyCode: "EGP",
-        description: `Weekly payout run ${today}`,
-      });
-    } catch {
-      // Optimistic fallback kept
-    }
+  const handleCreate = (run: NewPayoutRun) => {
+    createPayoutMutation.mutate({
+      amountMinor: run.amountMinor,
+      currencyCode: run.currency,
+      description: t("screen.admin.finance.payoutRuns.runDescription", {
+        date: new Date().toISOString().slice(0, 10),
+      }),
+    });
   };
 
+  const runColumns: readonly AdminColumn<RunRow>[] = [
+    {
+      key: "week",
+      header: t("screen.admin.finance.payoutRuns.week"),
+      render: (row) => row.weekLabel,
+    },
+    {
+      key: "suppliers",
+      header: t("screen.admin.finance.payoutRuns.suppliers"),
+      render: (row) => row.entries.length.toLocaleString(locale),
+      align: "end",
+    },
+    {
+      key: "total",
+      header: t("screen.admin.finance.payoutRuns.total"),
+      render: (row) => row.total,
+    },
+    {
+      key: "state",
+      header: t("screen.admin.finance.payoutRuns.state"),
+      render: (row) => <RunStateBadge failed={row.failed} />,
+    },
+    {
+      key: "action",
+      header: <span className="te-caption">{t("screen.admin.finance.payoutRuns.action")}</span>,
+      render: (row) => (
+        <AdminButton
+          variant="link"
+          aria-label={t("screen.admin.finance.payoutRuns.viewRunFor", { week: row.weekLabel })}
+          aria-pressed={row.week === selectedRun?.week}
+          onClick={() => setSelectedWeek(row.week)}
+        >
+          {t("screen.admin.finance.payoutRuns.viewRun")}
+        </AdminButton>
+      ),
+    },
+  ];
+
+  const supplierColumns: readonly AdminColumn<PayoutEntry>[] = [
+    {
+      key: "supplier",
+      header: t("screen.admin.finance.payoutRuns.supplier"),
+      render: (row) => row.supplier,
+      wrap: true,
+    },
+    {
+      key: "amount",
+      header: t("screen.admin.finance.payoutRuns.amount"),
+      render: (row) => formatMinor(row.amountMinor, row.currency, locale),
+    },
+    {
+      key: "listed",
+      header: t("screen.admin.finance.payoutRuns.listedForSupplier"),
+      render: () => (
+        <span className="te-caption">{t("screen.admin.finance.payoutRuns.visibleToSupplier")}</span>
+      ),
+    },
+  ];
+
   return (
-    <AdminPage>
-      <TePageHeader
-        title={t("screen.admin.finance.payoutRuns.payoutRuns")}
-        description={t("screen.admin.finance.payoutRuns.createAndTrackWeeklyPayout")}
-        actions={
-          <TeButton onClick={() => void handleCreateRun()}>
-            {t("screen.admin.finance.payoutRuns.createPayoutRun")}
-          </TeButton>
-        }
-      />
-      <StatePreview
-        emptyTitle={t("screen.admin.finance.payoutRuns.noPayoutRuns")}
-        emptyDescription={t("screen.admin.finance.payoutRuns.createTheFirstPayoutRun")}
-        loadingLabel={t("screen.admin.finance.payoutRuns.loadingThePayoutRuns")}
+    <AdminPage
+      title={t("screen.admin.finance.payoutRuns.title")}
+      description={t("screen.admin.finance.payoutRuns.description")}
+      actions={
+        <AdminButton variant="primary" onClick={() => setIsCreating(true)}>
+          {t("screen.admin.finance.payoutRuns.createRun")}
+        </AdminButton>
+      }
+    >
+      {isCreating ? (
+        <CreatePayoutRunForm
+          isPending={createPayoutMutation.isPending}
+          hasError={createPayoutMutation.isError}
+          onSubmit={handleCreate}
+          onCancel={() => setIsCreating(false)}
+        />
+      ) : null}
+      <AdminQueryState
+        query={ledgerQuery}
+        loadingLabel={t("screen.admin.finance.payoutRuns.loading")}
       >
-        <TeInlineAlert tone="info" title={t("screen.admin.finance.payoutRuns.schedule")}>
-          {t("screen.admin.finance.payoutRuns.payoutRunsAreCreatedWeekly")}
-        </TeInlineAlert>
-        <AdminPanel title={t("screen.admin.finance.payoutRuns.runs")}>
-          <TeDataTable
-            columns={RUN_COLUMNS()}
-            rows={runs}
+        <AdminTable
+          caption={t("screen.admin.finance.payoutRuns.runsCaption")}
+          columns={runColumns}
+          rows={runs}
+          getRowKey={(row) => row.week}
+          empty={
+            <AdminEmpty
+              title={t("screen.admin.finance.payoutRuns.emptyTitle")}
+              description={t("screen.admin.finance.payoutRuns.emptyBody")}
+            />
+          }
+        />
+        {selectedRun ? (
+          <AdminTable
+            caption={t("screen.admin.finance.payoutRuns.detailCaption")}
+            title={t("screen.admin.finance.payoutRuns.runDetail", {
+              date: formatDate(selectedRun.week, locale),
+            })}
+            toolbar={<RunStateBadge failed={selectedRun.failed} />}
+            columns={supplierColumns}
+            rows={selectedRun.entries}
             getRowKey={(row) => row.id}
-            caption={t("screen.admin.finance.payoutRuns.payoutRunsCaption")}
-            emptyTitle={t("screen.admin.finance.payoutRuns.noPayoutRunsEmptyTitle")}
-            emptyDescription={t(
-              "screen.admin.finance.payoutRuns.createTheFirstPayoutRunEmptyDescription",
-            )}
           />
-        </AdminPanel>
-        <AdminPanel title={t("screen.admin.finance.payoutRuns.runDetailWeekOfDate")}>
-          <TeDataTable
-            columns={SUPPLIER_COLUMNS()}
-            rows={suppliers}
-            getRowKey={(row) => row.id}
-            caption={t("screen.admin.finance.payoutRuns.amountPerSupplierInThis")}
-            emptyTitle={t("screen.admin.finance.payoutRuns.noSuppliersInThisRun")}
-            emptyDescription={t("screen.admin.finance.payoutRuns.thisRunHasNoSupplier")}
-          />
-        </AdminPanel>
-        <AdminActions>
-          <AdminScreenLink slug="platform-financial-view" variant="ghost">
-            {t("screen.admin.finance.payoutRuns.backToFinancialView")}
-          </AdminScreenLink>
-        </AdminActions>
-      </StatePreview>
+        ) : null}
+      </AdminQueryState>
+      <AdminAlert tone="info">{t("screen.admin.finance.payoutRuns.visibilityNote")}</AdminAlert>
     </AdminPage>
   );
 }
