@@ -1,203 +1,187 @@
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { TeButton } from "@trips-app/ui/components/te-button";
-import { TeCard } from "@trips-app/ui/components/te-card";
-import { TeDataTable, type TeDataTableColumn } from "@trips-app/ui/components/te-data-table";
-import { TeInput } from "@trips-app/ui/components/te-input";
-import { TePageHeader } from "@trips-app/ui/components/te-page-header";
-import { TeSelect, type TeSelectOption } from "@trips-app/ui/components/te-select";
+// SCR-ADM-31 Notification templates (docs/design/web/admin/SCR-ADM-31.dc.html): notification
+// text by category and language, an editor with English and Arabic tabs, the variables the text
+// uses, and a preview. Each save creates a new version. No procedure lists or saves templates yet,
+// so the list shows its empty state and saving stays disabled.
+import { useState, type ReactNode } from "react";
 import { t } from "@trips-app/i18n";
-import { orpc } from "@/utils/orpc";
-import { StatePreview } from "../common/admin-state-preview";
+
+import { AdminButton } from "../common/admin-actions";
+import { AdminTabs, AdminTextarea, type AdminTab } from "../common/admin-form";
+import { AdminEmpty } from "../common/admin-states";
 import {
-  AdminActions,
-  AdminFilterSelect,
-  AdminFilters,
+  AdminAlert,
+  AdminBadge,
+  AdminCard,
   AdminPage,
-  AdminPagination,
-  AdminPanel,
-  AdminSearch,
-  AdminStatus,
-  type AdminStatusPresentation,
-} from "../common/admin-shared";
+  AdminTable,
+  type AdminColumn,
+} from "../common/admin-ui";
+
+type TemplateLanguage = "en" | "ar";
 
 interface TemplateRow {
   id: string;
   category: string;
   language: string;
   version: string;
-  state: "published" | "missing-translation";
 }
 
-const DEFAULT_TEMPLATE_ROWS: readonly TemplateRow[] = [];
+const TEMPLATE_ROWS: readonly TemplateRow[] = [];
+const VARIABLE_PATTERN = /\[([a-z][a-z0-9_]*)\]/g;
+const EMPTY_DRAFTS: Readonly<Record<TemplateLanguage, string>> = { en: "", ar: "" };
 
-const STATE_PRESENTATION = (): Record<TemplateRow["state"], AdminStatusPresentation> => ({
-  published: {
-    tone: "success",
-    icon: "check",
-    label: t("screen.admin.platform.notificationTemplates.published"),
-  },
-  "missing-translation": {
-    tone: "danger",
-    icon: "alert",
-    label: t("screen.admin.platform.notificationTemplates.translationMissing"),
-  },
-});
+const languageTabs = (): readonly AdminTab[] => [
+  { id: "en", label: t("screen.admin.platform.notificationTemplates.english") },
+  { id: "ar", label: t("screen.admin.platform.notificationTemplates.arabic") },
+];
 
-const LANGUAGE_OPTIONS = (): readonly TeSelectOption[] => [
-  { value: "all", label: t("screen.admin.platform.notificationTemplates.allLanguages") },
-  { value: "en", label: t("screen.admin.platform.notificationTemplates.english") },
-  { value: "ar", label: t("screen.admin.platform.notificationTemplates.arabic") },
+const columns = (): readonly AdminColumn<TemplateRow>[] => [
+  {
+    key: "category",
+    header: t("screen.admin.platform.notificationTemplates.category"),
+    render: (row) => row.category,
+    wrap: true,
+  },
+  {
+    key: "language",
+    header: t("screen.admin.platform.notificationTemplates.language"),
+    render: (row) => row.language,
+  },
+  {
+    key: "version",
+    header: t("screen.admin.platform.notificationTemplates.version"),
+    render: (row) => row.version,
+  },
 ];
-const EDIT_LANGUAGE_OPTIONS = (): readonly TeSelectOption[] => [
-  { value: "en", label: t("screen.admin.platform.notificationTemplates.englishLabel") },
-  { value: "ar", label: t("screen.admin.platform.notificationTemplates.arabicLabel") },
-];
+
+/** The distinct `[variable]` names in a message, in the order they first appear. */
+function variablesIn(text: string): readonly string[] {
+  return [...new Set([...text.matchAll(VARIABLE_PATTERN)].map((match) => match[1] ?? ""))].filter(
+    Boolean,
+  );
+}
+
+/** `[trip_name]` reads as `[Trip name]` in the preview. */
+function previewText(text: string): string {
+  return text.replace(VARIABLE_PATTERN, (_match, name: string) => {
+    const words = name.replace(/_/g, " ");
+    return `[${words.charAt(0).toUpperCase()}${words.slice(1)}]`;
+  });
+}
+
+function isLanguage(value: string): value is TemplateLanguage {
+  return value === "en" || value === "ar";
+}
+
+/** List and editor side by side, one to two. Stacks below `lg`. */
+function TemplateLayout({ list, editor }: { list: ReactNode; editor: ReactNode }) {
+  return (
+    <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
+      <div className="flex min-w-0 flex-col gap-6">{list}</div>
+      <div className="flex min-w-0 flex-col gap-6">{editor}</div>
+    </div>
+  );
+}
 
 export function NotificationTemplates() {
-  const inboxQuery = useQuery(orpc.notifications.listInbox.queryOptions({ input: {} }));
-  const [publishedIds, setPublishedIds] = useState<ReadonlySet<string>>(new Set());
-  const [selectedId, setSelectedId] = useState<string>("tpl-1");
-  const [language, setLanguage] = useState("en");
-  const [text, setText] = useState("Your booking {{bookingRef}} for {{tripName}} is confirmed.");
+  const [language, setLanguage] = useState<TemplateLanguage>("en");
+  const [drafts, setDrafts] = useState(EMPTY_DRAFTS);
 
-  const rows: readonly TemplateRow[] =
-    inboxQuery.data && inboxQuery.data.length > 0
-      ? inboxQuery.data.slice(0, 10).map((n, index) => {
-          const isPublished = publishedIds.has(n.id) || !!n.bodyAr;
-          return {
-            id: n.id,
-            category: n.category,
-            language: n.bodyAr ? "English / Arabic" : "English",
-            version: publishedIds.has(n.id) ? "v2.0" : `v1.${index + 1}`,
-            state: (isPublished ? "published" : "missing-translation") as TemplateRow["state"],
-          };
-        })
-      : DEFAULT_TEMPLATE_ROWS;
+  const text = drafts[language];
+  const variables = variablesIn(text);
+  const unavailable = t("screen.admin.platform.notificationTemplates.savingUnavailable");
 
-  const handlePublish = () => {
-    setPublishedIds((prev) => new Set([...prev, selectedId]));
-  };
+  const editorCard = (
+    <AdminCard label={t("screen.admin.platform.notificationTemplates.editorLabel")}>
+      <AdminTabs
+        label={t("screen.admin.platform.notificationTemplates.language")}
+        tabs={languageTabs()}
+        activeId={language}
+        onSelect={(id) => isLanguage(id) && setLanguage(id)}
+      />
+      <AdminTextarea
+        label={t("screen.admin.platform.notificationTemplates.messageText")}
+        placeholder={t("screen.admin.platform.notificationTemplates.messagePlaceholder")}
+        rows={4}
+        lang={language}
+        dir={language === "ar" ? "rtl" : "ltr"}
+        value={text}
+        onChange={(event) =>
+          setDrafts((current) => ({ ...current, [language]: event.target.value }))
+        }
+      />
+      <div className="flex flex-wrap items-center gap-2 border-b border-[var(--te-hairline)] py-2.5">
+        <span className="te-caption">
+          {t("screen.admin.platform.notificationTemplates.variables")}
+        </span>
+        {variables.length === 0 ? (
+          <span className="te-caption">—</span>
+        ) : (
+          variables.map((name) => (
+            <AdminBadge key={name} icon={false}>
+              {`[${name}]`}
+            </AdminBadge>
+          ))
+        )}
+      </div>
+    </AdminCard>
+  );
 
-  const columns: readonly TeDataTableColumn<TemplateRow>[] = [
-    { key: "category", header: t("screen.admin.platform.notificationTemplates.category") },
-    { key: "language", header: t("screen.admin.platform.notificationTemplates.language") },
-    { key: "version", header: t("screen.admin.platform.notificationTemplates.version") },
-    {
-      key: "state",
-      header: t("screen.admin.platform.notificationTemplates.status"),
-      render: (row) => <AdminStatus status={STATE_PRESENTATION()[row.state]} />,
-    },
-    {
-      key: "edit",
-      header: t("screen.admin.platform.notificationTemplates.action"),
-      render: (row) => (
-        <TeButton
-          variant="secondary"
-          aria-label={t("screen.admin.platform.notificationTemplates.editIn", {
-            category: row.category,
-            language: row.language,
-          })}
-          onClick={() => {
-            setSelectedId(row.id);
-            setText(`Notification template for ${row.category}`);
-          }}
-        >
-          {t("screen.admin.platform.notificationTemplates.edit")}
-        </TeButton>
-      ),
-    },
-  ];
+  const previewCard = (
+    <AdminCard title={t("screen.admin.platform.notificationTemplates.preview")}>
+      <p
+        lang={language}
+        dir={language === "ar" ? "rtl" : "ltr"}
+        className="te-body rounded-[var(--te-radius-md)] bg-[var(--te-surface)] p-4"
+      >
+        {text ? previewText(text) : t("screen.admin.platform.notificationTemplates.previewEmpty")}
+      </p>
+      <p className="te-caption">
+        {t("screen.admin.platform.notificationTemplates.publishedVersion", { version: "—" })}
+      </p>
+    </AdminCard>
+  );
 
   return (
-    <AdminPage>
-      <TePageHeader
-        title={t("screen.admin.platform.notificationTemplates.notificationTemplates")}
-        description={t(
-          "screen.admin.platform.notificationTemplates.editNotificationTextByCategory",
-        )}
-      />
-      <StatePreview
-        emptyTitle={t("screen.admin.platform.notificationTemplates.noTemplates")}
-        emptyDescription={t(
-          "screen.admin.platform.notificationTemplates.noTemplatesMatchTheseFilters",
-        )}
-        loadingLabel={t("screen.admin.platform.notificationTemplates.loadingTheTemplates")}
-      >
-        <AdminFilters>
-          <AdminSearch
-            label={t("screen.admin.platform.notificationTemplates.categoryLabel")}
-            placeholder={t("screen.admin.platform.notificationTemplates.categoryName")}
-            clearLabel={t("screen.admin.platform.notificationTemplates.clearCategory")}
-          />
-          <AdminFilterSelect
-            label={t("screen.admin.platform.notificationTemplates.languageLabel")}
-            options={LANGUAGE_OPTIONS()}
-          />
-        </AdminFilters>
-        <AdminPanel title={t("screen.admin.platform.notificationTemplates.templates")}>
-          <TeDataTable
-            columns={columns}
-            rows={rows}
-            getRowKey={(row) => row.id}
-            caption={t("screen.admin.platform.notificationTemplates.notificationTemplatesCaption")}
-            emptyTitle={t("screen.admin.platform.notificationTemplates.noTemplatesEmptyTitle")}
-            emptyDescription={t(
-              "screen.admin.platform.notificationTemplates.noTemplatesMatchTheseFiltersEmptyDescription",
-            )}
-          />
-          <AdminPagination pageCount={1} />
-        </AdminPanel>
-        <AdminPanel title={t("screen.admin.platform.notificationTemplates.editTemplate")}>
-          <TeSelect
-            label={t("screen.admin.platform.notificationTemplates.language2")}
-            options={EDIT_LANGUAGE_OPTIONS()}
-            value={language}
-            onValueChange={setLanguage}
-          />
-          <TeInput
-            label={t("screen.admin.platform.notificationTemplates.messageText")}
-            value={text}
-            onChange={(event) => setText(event.target.value)}
-            placeholder={t("screen.admin.platform.notificationTemplates.messageTextPlaceholder")}
-            supportingText={t(
-              "screen.admin.platform.notificationTemplates.useThePlaceholdersFromThe",
-            )}
-          />
-        </AdminPanel>
-        <AdminPanel title={t("screen.admin.platform.notificationTemplates.preview")}>
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            <TeCard>
-              <p className="te-caption">
-                {t("screen.admin.platform.notificationTemplates.englishPreview")}
-              </p>
-              <p lang="en" dir="ltr">
-                {text ||
-                  t("screen.admin.platform.notificationTemplates.englishPreviewOfTheMessage")}
-              </p>
-            </TeCard>
-            <TeCard>
-              <p className="te-caption">
-                {t("screen.admin.platform.notificationTemplates.arabicPreview")}
-              </p>
-              <p lang="ar" dir="rtl">
-                {t("screen.admin.platform.notificationTemplates.arabicPreviewOfTheMessage")}
-              </p>
-            </TeCard>
-          </div>
-        </AdminPanel>
-        <AdminActions>
-          <TeButton variant="secondary" onClick={handlePublish}>
+    <AdminPage
+      title={t("screen.admin.platform.notificationTemplates.title")}
+      description={t("screen.admin.platform.notificationTemplates.description")}
+      actions={
+        <>
+          <AdminButton disabled title={unavailable}>
             {t("screen.admin.platform.notificationTemplates.saveAsNewVersion")}
-          </TeButton>
-          <TeButton onClick={handlePublish}>
-            {t("screen.admin.platform.notificationTemplates.publish")}
-          </TeButton>
-        </AdminActions>
-        <p className="te-caption">
-          {t("screen.admin.platform.notificationTemplates.earlierMessagesKeepTheVersion")}
-        </p>
-      </StatePreview>
+          </AdminButton>
+          <AdminButton variant="primary" disabled title={unavailable}>
+            {t("screen.admin.platform.notificationTemplates.publishVersion")}
+          </AdminButton>
+        </>
+      }
+    >
+      <TemplateLayout
+        list={
+          <AdminTable
+            caption={t("screen.admin.platform.notificationTemplates.tableCaption")}
+            columns={columns()}
+            rows={TEMPLATE_ROWS}
+            getRowKey={(row) => row.id}
+            empty={
+              <AdminEmpty
+                title={t("screen.admin.platform.notificationTemplates.emptyTitle")}
+                description={t("screen.admin.platform.notificationTemplates.emptyBody")}
+              />
+            }
+          />
+        }
+        editor={
+          <>
+            {editorCard}
+            {previewCard}
+            <AdminAlert tone="warning">
+              {t("screen.admin.platform.notificationTemplates.translationRule")}
+            </AdminAlert>
+          </>
+        }
+      />
     </AdminPage>
   );
 }

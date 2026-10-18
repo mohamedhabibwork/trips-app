@@ -1101,43 +1101,47 @@ export const en = {
   "screen.admin.labTests.requestLabTestDecision.auditNote":
     "This request is recorded in the audit log. Test rules follow each market's legal review.",
   // apps/web/src/screens/admin/operations/operations-health-dashboard.tsx
+  "screen.admin.operations.operationsHealthDashboard.title": "Operations health",
+  "screen.admin.operations.operationsHealthDashboard.description":
+    "Trip operations, payment success and failure, and notification delivery by channel.",
+  "screen.admin.operations.operationsHealthDashboard.timeRange": "Time range",
   "screen.admin.operations.operationsHealthDashboard.lastHour": "Last hour",
   "screen.admin.operations.operationsHealthDashboard.last24Hours": "Last 24 hours",
   "screen.admin.operations.operationsHealthDashboard.last7Days": "Last 7 days",
-  "screen.admin.operations.operationsHealthDashboard.channel": "Channel",
-  "screen.admin.operations.operationsHealthDashboard.delivered": "Delivered",
-  "screen.admin.operations.operationsHealthDashboard.failed": "Failed",
-  "screen.admin.operations.operationsHealthDashboard.deliveryRate": "Delivery rate",
-  "screen.admin.operations.operationsHealthDashboard.operationsHealthDashboard":
-    "Operations health dashboard",
-  "screen.admin.operations.operationsHealthDashboard.tripOperationsPaymentSuccessAnd":
-    "Trip operations, payment success and failure rates, and notification delivery by channel.",
-  "screen.admin.operations.operationsHealthDashboard.noData": "No data",
-  "screen.admin.operations.operationsHealthDashboard.noOperationsDataIsAvailable":
-    "No operations data is available for the selected range.",
-  "screen.admin.operations.operationsHealthDashboard.loadingTheOperationsData":
-    "Loading the operations data.",
-  "screen.admin.operations.operationsHealthDashboard.timeRange": "Time range",
-  "screen.admin.operations.operationsHealthDashboard.paymentSuccessRate": "Payment success rate",
-  "screen.admin.operations.operationsHealthDashboard.paymentFailureRate": "Payment failure rate",
-  "screen.admin.operations.operationsHealthDashboard.liveTrips": "Live trips",
-  "screen.admin.operations.operationsHealthDashboard.checkInEvents": "Check-in events",
-  "screen.admin.operations.operationsHealthDashboard.notificationsDelivered":
-    "Notifications delivered",
-  "screen.admin.operations.operationsHealthDashboard.allChannels": "All channels",
-  "screen.admin.operations.operationsHealthDashboard.paymentSuccessAndFailure":
-    "Payment success and failure",
-  "screen.admin.operations.operationsHealthDashboard.paymentSuccessAndFailureOver":
-    "Payment success and failure over the selected range",
-  "screen.admin.operations.operationsHealthDashboard.notificationDeliveryByChannel":
-    "Notification delivery by channel",
-  "screen.admin.operations.operationsHealthDashboard.notificationDeliveryByChannelCaption":
-    "Notification delivery by channel",
-  "screen.admin.operations.operationsHealthDashboard.noDeliveryData": "No delivery data",
-  "screen.admin.operations.operationsHealthDashboard.noNotificationsWereSentIn":
-    "No notifications were sent in the selected range.",
-  "screen.admin.operations.operationsHealthDashboard.criticalAlertsGoToOn":
-    "Critical alerts go to on-call (NFR-OBS-04). This dashboard does not replace alerting.",
+  "screen.admin.operations.operationsHealthDashboard.staleTitle": "Stale data",
+  "screen.admin.operations.operationsHealthDashboard.staleBody":
+    "Last updated {minutes} minutes ago. Figures may lag behind live activity.",
+  "screen.admin.operations.operationsHealthDashboard.paymentsTitle": "Payment success and failure",
+  "screen.admin.operations.operationsHealthDashboard.paymentsEmptyTitle": "No payment data",
+  "screen.admin.operations.operationsHealthDashboard.paymentsEmptyBody":
+    "Payment success and failure rates are not available on this screen yet.",
+  "screen.admin.operations.operationsHealthDashboard.deliveryTitle": "Delivery by channel",
+  "screen.admin.operations.operationsHealthDashboard.channelInApp": "In-app",
+  "screen.admin.operations.operationsHealthDashboard.channelPush": "Push",
+  "screen.admin.operations.operationsHealthDashboard.channelEmail": "Email",
+  "screen.admin.operations.operationsHealthDashboard.channelSms": "SMS",
+  "screen.admin.operations.operationsHealthDashboard.deliveryCaption":
+    "Messages delivered to your admin inbox in the selected range, by channel: {summary}.",
+  "screen.admin.operations.operationsHealthDashboard.deliveryChartLabel":
+    "Bar chart of notification delivery by channel: {summary}",
+  "screen.admin.operations.operationsHealthDashboard.deliveryEmptyTitle": "No deliveries",
+  "screen.admin.operations.operationsHealthDashboard.deliveryEmptyBody":
+    "No notifications were delivered in the selected range.",
+  "screen.admin.operations.operationsHealthDashboard.liveTripsTitle": "Live trips",
+  "screen.admin.operations.operationsHealthDashboard.liveTripsCaption":
+    "Trips whose schedule covers each point in the range. Peak: {peak}.",
+  "screen.admin.operations.operationsHealthDashboard.liveTripsChartLabel":
+    "Line chart of live trips over the selected range, peak {peak}",
+  "screen.admin.operations.operationsHealthDashboard.liveTripsEmptyTitle": "No live trips",
+  "screen.admin.operations.operationsHealthDashboard.liveTripsEmptyBody":
+    "No trip was scheduled to run in the selected range.",
+  "screen.admin.operations.operationsHealthDashboard.checkInsTitle": "Check-in events",
+  "screen.admin.operations.operationsHealthDashboard.checkInsEmptyTitle": "No check-in data",
+  "screen.admin.operations.operationsHealthDashboard.checkInsEmptyBody":
+    "Check-in events are not available on this screen yet.",
+  "screen.admin.operations.operationsHealthDashboard.pagingLabel": "Alerting",
+  "screen.admin.operations.operationsHealthDashboard.pagingNote":
+    "Critical alerts go to the on-call team. The dashboard is for review, not for paging.",
   // apps/web/src/screens/admin/plans/override-plan-card.tsx
   "screen.admin.plans.overridePlanCard.title": "Override plan",
   "screen.admin.plans.overridePlanCard.account": "Account",
@@ -1245,192 +1249,175 @@ export const en = {
   "screen.admin.plans.subscriptionsAndOverrides.emptyTitle": "No subscriptions",
   "screen.admin.plans.subscriptionsAndOverrides.emptyBody": "No subscriptions match these filters.",
   // apps/web/src/screens/admin/platform/audit-log.tsx
+  "screen.admin.platform.auditLog.title": "Audit log",
+  "screen.admin.platform.auditLog.description":
+    "Every admin action and permission change, with before and after values.",
+  "screen.admin.platform.auditLog.readOnly": "Read only",
+  "screen.admin.platform.auditLog.filters": "Filters",
+  "screen.admin.platform.auditLog.actor": "Actor",
+  "screen.admin.platform.auditLog.actorPlaceholder": "Admin name",
+  "screen.admin.platform.auditLog.action": "Action",
+  "screen.admin.platform.auditLog.allActions": "All actions",
+  "screen.admin.platform.auditLog.actionSuspendAccount": "Suspend account",
+  "screen.admin.platform.auditLog.actionPlanOverride": "Plan override",
+  "screen.admin.platform.auditLog.actionFeatureFlagChanged": "Feature flag changed",
+  "screen.admin.platform.auditLog.actionRoleAssigned": "Role assigned",
+  "screen.admin.platform.auditLog.target": "Target",
+  "screen.admin.platform.auditLog.targetPlaceholder": "Account or item",
+  "screen.admin.platform.auditLog.timeRange": "Time range",
   "screen.admin.platform.auditLog.last24Hours": "Last 24 hours",
   "screen.admin.platform.auditLog.last7Days": "Last 7 days",
   "screen.admin.platform.auditLog.last30Days": "Last 30 days",
-  "screen.admin.platform.auditLog.customRange": "Custom range",
-  "screen.admin.platform.auditLog.anyAction": "Any action",
   "screen.admin.platform.auditLog.time": "Time",
-  "screen.admin.platform.auditLog.actor": "Actor",
-  "screen.admin.platform.auditLog.action": "Action",
-  "screen.admin.platform.auditLog.target": "Target",
   "screen.admin.platform.auditLog.before": "Before",
   "screen.admin.platform.auditLog.after": "After",
   "screen.admin.platform.auditLog.requestId": "Request ID",
-  "screen.admin.platform.auditLog.auditLog": "Audit log",
-  "screen.admin.platform.auditLog.everyAdminActionAndPermission":
-    "Every admin action and permission change. Read only.",
-  "screen.admin.platform.auditLog.noEntries": "No entries",
-  "screen.admin.platform.auditLog.noAuditEntriesMatchThese":
-    "No audit entries match these filters.",
-  "screen.admin.platform.auditLog.loadingTheAuditEntries": "Loading the audit entries.",
-  "screen.admin.platform.auditLog.readOnly": "Read only",
-  "screen.admin.platform.auditLog.entriesCannotBeEditedOr":
-    "Entries cannot be edited or deleted. The log is kept for 7 years (D-04).",
-  "screen.admin.platform.auditLog.actorLabel": "Actor",
-  "screen.admin.platform.auditLog.nameOrEmail": "Name or email",
-  "screen.admin.platform.auditLog.clearActor": "Clear actor",
-  "screen.admin.platform.auditLog.actionLabel": "Action",
-  "screen.admin.platform.auditLog.targetLabel": "Target",
-  "screen.admin.platform.auditLog.nameOrReference": "Name or reference",
-  "screen.admin.platform.auditLog.clearTarget": "Clear target",
-  "screen.admin.platform.auditLog.timeRange": "Time range",
-  "screen.admin.platform.auditLog.entries": "Entries",
-  "screen.admin.platform.auditLog.auditLogEntries": "Audit log entries",
-  "screen.admin.platform.auditLog.noEntriesEmptyTitle": "No entries",
-  "screen.admin.platform.auditLog.noAuditEntriesMatchTheseEmptyDescription":
-    "No audit entries match these filters.",
+  "screen.admin.platform.auditLog.tableCaption": "Audit log entries",
+  "screen.admin.platform.auditLog.emptyTitle": "No entries",
+  "screen.admin.platform.auditLog.emptyBody": "Audit entries cannot be listed on this screen yet.",
+  "screen.admin.platform.auditLog.retentionNote":
+    "Entries cannot be edited or deleted. Audit log retention is 7 years.",
+  // apps/web/src/screens/admin/platform/feature-flag-table.tsx
+  "screen.admin.platform.featureFlagTable.title": "Feature flags",
+  "screen.admin.platform.featureFlagTable.caption": "Feature flags by phase",
+  "screen.admin.platform.featureFlagTable.flag": "Flag",
+  "screen.admin.platform.featureFlagTable.phase": "Phase",
+  "screen.admin.platform.featureFlagTable.phaseN": "Phase {phase}",
+  "screen.admin.platform.featureFlagTable.state": "State",
+  "screen.admin.platform.featureFlagTable.on": "On",
+  "screen.admin.platform.featureFlagTable.off": "Off",
+  "screen.admin.platform.featureFlagTable.turnOn": "Turn on",
+  "screen.admin.platform.featureFlagTable.turnOff": "Turn off",
+  "screen.admin.platform.featureFlagTable.turnOnFor": "Turn on {flag}",
+  "screen.admin.platform.featureFlagTable.turnOffFor": "Turn off {flag}",
+  "screen.admin.platform.featureFlagTable.empty": "No feature flags",
+  "screen.admin.platform.featureFlagTable.flagFoundation": "Foundation",
+  "screen.admin.platform.featureFlagTable.flagSingleVehicle": "Single-vehicle MVP",
+  "screen.admin.platform.featureFlagTable.flagMultiVehicle": "Multi-vehicle check-in",
+  "screen.admin.platform.featureFlagTable.flagMarketplace": "Marketplace supply",
+  "screen.admin.platform.featureFlagTable.flagSubscriptions": "Subscriptions and coupons",
+  "screen.admin.platform.featureFlagTable.flagLiveTracking": "Live tracking and public API",
   // apps/web/src/screens/admin/platform/feature-flags-and-platform-configuration.tsx
-  "screen.admin.platform.featureFlagsAndPlatformConfiguration.stripeInternational":
-    "Stripe (international)",
-  "screen.admin.platform.featureFlagsAndPlatformConfiguration.paymobLocalMena":
-    "Paymob (local MENA)",
-  "screen.admin.platform.featureFlagsAndPlatformConfiguration.tapLocalMena": "Tap (local MENA)",
-  "screen.admin.platform.featureFlagsAndPlatformConfiguration.fawryCashInEgypt":
-    "Fawry (cash in Egypt)",
-  "screen.admin.platform.featureFlagsAndPlatformConfiguration.featureFlagsAndPlatformConfiguration":
-    "Feature flags and platform configuration",
-  "screen.admin.platform.featureFlagsAndPlatformConfiguration.turnFeaturesOnOrOff":
-    "Turn features on or off by phase, and set platform configuration.",
+  "screen.admin.platform.featureFlagsAndPlatformConfiguration.title":
+    "Feature flags and configuration",
+  "screen.admin.platform.featureFlagsAndPlatformConfiguration.description":
+    "Turn features on or off by phase. Each change is audited.",
   "screen.admin.platform.featureFlagsAndPlatformConfiguration.saveConfiguration":
     "Save configuration",
-  "screen.admin.platform.featureFlagsAndPlatformConfiguration.noFeatureFlags": "No feature flags",
-  "screen.admin.platform.featureFlagsAndPlatformConfiguration.noFeatureFlagsAreDefined":
-    "No feature flags are defined for this phase.",
-  "screen.admin.platform.featureFlagsAndPlatformConfiguration.loadingTheConfiguration":
-    "Loading the configuration.",
-  "screen.admin.platform.featureFlagsAndPlatformConfiguration.featureFlags": "Feature flags",
-  "screen.admin.platform.featureFlagsAndPlatformConfiguration.aFlagChangeAppliesTo":
-    "A flag change applies to all users at once and is audited.",
-  "screen.admin.platform.featureFlagsAndPlatformConfiguration.featureFlagName":
-    "[Feature flag name]",
-  "screen.admin.platform.featureFlagsAndPlatformConfiguration.phasePhase": "Phase: [Phase]",
-  "screen.admin.platform.featureFlagsAndPlatformConfiguration.featureFlagNameLabel":
-    "[Feature flag name]",
-  "screen.admin.platform.featureFlagsAndPlatformConfiguration.phasePhase2": "Phase: [Phase]",
-  "screen.admin.platform.featureFlagsAndPlatformConfiguration.paymentGatewayByMarket":
-    "Payment gateway by market",
-  "screen.admin.platform.featureFlagsAndPlatformConfiguration.market": "Market",
-  "screen.admin.platform.featureFlagsAndPlatformConfiguration.marketCode": "[Market code]",
-  "screen.admin.platform.featureFlagsAndPlatformConfiguration.gateway": "Gateway",
-  "screen.admin.platform.featureFlagsAndPlatformConfiguration.stripeForInternationalPaymentsPaymob":
-    "Stripe for international payments. Paymob or Tap for local MENA. Fawry for cash in Egypt. The choice for each market is confirmed at launch (D-12).",
-  "screen.admin.platform.featureFlagsAndPlatformConfiguration.otpAndSessionPolicy":
-    "OTP and session policy",
+  "screen.admin.platform.featureFlagsAndPlatformConfiguration.loading": "Loading the configuration",
+  "screen.admin.platform.featureFlagsAndPlatformConfiguration.unsavedChanges":
+    "You have unsaved changes.",
+  "screen.admin.platform.featureFlagsAndPlatformConfiguration.approvalTitle": "Approve the change",
+  "screen.admin.platform.featureFlagsAndPlatformConfiguration.approvalCaption":
+    "A flag change needs a reason and a second admin's approval before it is saved.",
+  "screen.admin.platform.featureFlagsAndPlatformConfiguration.reason": "Reason (required)",
+  "screen.admin.platform.featureFlagsAndPlatformConfiguration.approver":
+    "Second approver account ID (required)",
+  "screen.admin.platform.featureFlagsAndPlatformConfiguration.approverHelp":
+    "Another platform admin's account ID. You cannot approve your own change.",
+  "screen.admin.platform.featureFlagsAndPlatformConfiguration.saveFailedTitle":
+    "The configuration was not saved",
+  "screen.admin.platform.featureFlagsAndPlatformConfiguration.saveFailedBody":
+    "Check the reason and the second approver, then try again. Nothing was changed.",
+  "screen.admin.platform.featureFlagsAndPlatformConfiguration.saved":
+    "The configuration was saved and recorded in the audit log.",
+  "screen.admin.platform.featureFlagsAndPlatformConfiguration.otpTitle": "OTP and session policy",
   "screen.admin.platform.featureFlagsAndPlatformConfiguration.otpPolicy": "OTP policy",
-  "screen.admin.platform.featureFlagsAndPlatformConfiguration.editabilityIsUnderReviewD":
-    "Editability is under review (D-288).",
   "screen.admin.platform.featureFlagsAndPlatformConfiguration.sessionPolicy": "Session policy",
-  "screen.admin.platform.featureFlagsAndPlatformConfiguration.editabilityIsUnderReviewDSupportingText":
-    "Editability is under review (D-288).",
-  "screen.admin.platform.featureFlagsAndPlatformConfiguration.quietHours": "Quiet hours",
+  "screen.admin.platform.featureFlagsAndPlatformConfiguration.fixedByBrl20": "Fixed by BRL-20",
+  "screen.admin.platform.featureFlagsAndPlatformConfiguration.fixedByBrl22": "Fixed by BRL-22",
+  "screen.admin.platform.featureFlagsAndPlatformConfiguration.policyNotDecided":
+    "Editing these values is not decided yet.",
+  "screen.admin.platform.featureFlagsAndPlatformConfiguration.quietHoursTitle":
+    "Quiet-hours urgent categories",
   "screen.admin.platform.featureFlagsAndPlatformConfiguration.urgentCategories":
-    "Urgent categories",
-  "screen.admin.platform.featureFlagsAndPlatformConfiguration.urgentNotificationCategories":
-    "[Urgent notification categories]",
-  "screen.admin.platform.featureFlagsAndPlatformConfiguration.setByD288": "Set by D-288.",
-  "screen.admin.platform.featureFlagsAndPlatformConfiguration.audit": "Audit",
-  "screen.admin.platform.featureFlagsAndPlatformConfiguration.everyChangeOnThisPage":
-    "Every change on this page is written to the audit log.",
-  "screen.admin.platform.featureFlagsAndPlatformConfiguration.cancel": "Cancel",
+    "Categories that can break quiet hours",
+  "screen.admin.platform.featureFlagsAndPlatformConfiguration.quietHoursNote":
+    "Changes apply to new notifications only.",
+  // apps/web/src/screens/admin/platform/gateway-routing-card.tsx
+  "screen.admin.platform.gatewayRoutingCard.title": "Gateway routing by market",
+  "screen.admin.platform.gatewayRoutingCard.international": "International",
+  "screen.admin.platform.gatewayRoutingCard.localMena": "Local MENA market",
+  "screen.admin.platform.gatewayRoutingCard.cashEgypt": "Cash payments in Egypt",
+  "screen.admin.platform.gatewayRoutingCard.note": "Choice per market is confirmed at launch.",
+  "screen.admin.platform.gatewayRoutingCard.notConfigured": "Not configured",
+  "screen.admin.platform.gatewayRoutingCard.or": " or ",
+  "screen.admin.platform.gatewayRoutingCard.stripe": "Stripe",
+  "screen.admin.platform.gatewayRoutingCard.paymob": "Paymob",
+  "screen.admin.platform.gatewayRoutingCard.tap": "Tap",
+  "screen.admin.platform.gatewayRoutingCard.fawry": "Fawry",
   // apps/web/src/screens/admin/platform/notification-templates.tsx
-  "screen.admin.platform.notificationTemplates.published": "Published",
-  "screen.admin.platform.notificationTemplates.translationMissing": "Translation missing",
-  "screen.admin.platform.notificationTemplates.allLanguages": "All languages",
-  "screen.admin.platform.notificationTemplates.english": "English",
-  "screen.admin.platform.notificationTemplates.arabic": "Arabic",
-  "screen.admin.platform.notificationTemplates.englishLabel": "English",
-  "screen.admin.platform.notificationTemplates.arabicLabel": "Arabic",
+  "screen.admin.platform.notificationTemplates.title": "Notification templates",
+  "screen.admin.platform.notificationTemplates.description":
+    "Edit notification text by category and language. Each save creates a new version.",
+  "screen.admin.platform.notificationTemplates.saveAsNewVersion": "Save as new version",
+  "screen.admin.platform.notificationTemplates.publishVersion": "Publish version",
+  "screen.admin.platform.notificationTemplates.savingUnavailable":
+    "Saving templates is not available yet.",
   "screen.admin.platform.notificationTemplates.category": "Category",
   "screen.admin.platform.notificationTemplates.language": "Language",
   "screen.admin.platform.notificationTemplates.version": "Version",
-  "screen.admin.platform.notificationTemplates.status": "Status",
-  "screen.admin.platform.notificationTemplates.action": "Action",
-  "screen.admin.platform.notificationTemplates.editIn": "Edit {category} in {language}",
-  "screen.admin.platform.notificationTemplates.edit": "Edit",
-  "screen.admin.platform.notificationTemplates.notificationTemplates": "Notification templates",
-  "screen.admin.platform.notificationTemplates.editNotificationTextByCategory":
-    "Edit notification text by category and language. Each save makes a new version.",
-  "screen.admin.platform.notificationTemplates.noTemplates": "No templates",
-  "screen.admin.platform.notificationTemplates.noTemplatesMatchTheseFilters":
-    "No templates match these filters.",
-  "screen.admin.platform.notificationTemplates.loadingTheTemplates": "Loading the templates.",
-  "screen.admin.platform.notificationTemplates.categoryLabel": "Category",
-  "screen.admin.platform.notificationTemplates.categoryName": "Category name",
-  "screen.admin.platform.notificationTemplates.clearCategory": "Clear category",
-  "screen.admin.platform.notificationTemplates.languageLabel": "Language",
-  "screen.admin.platform.notificationTemplates.templates": "Templates",
-  "screen.admin.platform.notificationTemplates.notificationTemplatesCaption":
-    "Notification templates",
-  "screen.admin.platform.notificationTemplates.noTemplatesEmptyTitle": "No templates",
-  "screen.admin.platform.notificationTemplates.noTemplatesMatchTheseFiltersEmptyDescription":
-    "No templates match these filters.",
-  "screen.admin.platform.notificationTemplates.editTemplate": "Edit template",
-  "screen.admin.platform.notificationTemplates.language2": "Language",
+  "screen.admin.platform.notificationTemplates.english": "English",
+  "screen.admin.platform.notificationTemplates.arabic": "Arabic",
+  "screen.admin.platform.notificationTemplates.editorLabel": "Template editor",
   "screen.admin.platform.notificationTemplates.messageText": "Message text",
-  "screen.admin.platform.notificationTemplates.messageTextPlaceholder": "[Message text]",
-  "screen.admin.platform.notificationTemplates.useThePlaceholdersFromThe":
-    "Use the {variable} placeholders from the template catalogue.",
+  "screen.admin.platform.notificationTemplates.messagePlaceholder":
+    "Your trip [trip_name] departs at [departure_time] from [pickup_point].",
+  "screen.admin.platform.notificationTemplates.variables": "Variables:",
   "screen.admin.platform.notificationTemplates.preview": "Preview",
-  "screen.admin.platform.notificationTemplates.englishPreview": "English preview",
-  "screen.admin.platform.notificationTemplates.englishPreviewOfTheMessage":
-    "[English preview of the message]",
-  "screen.admin.platform.notificationTemplates.arabicPreview": "Arabic preview",
-  "screen.admin.platform.notificationTemplates.arabicPreviewOfTheMessage":
-    "[Arabic preview of the message]",
-  "screen.admin.platform.notificationTemplates.saveAsNewVersion": "Save as new version",
-  "screen.admin.platform.notificationTemplates.publish": "Publish",
-  "screen.admin.platform.notificationTemplates.earlierMessagesKeepTheVersion":
-    "Earlier messages keep the version they were sent with.",
+  "screen.admin.platform.notificationTemplates.previewEmpty":
+    "Write the message text to see a preview.",
+  "screen.admin.platform.notificationTemplates.publishedVersion":
+    "Current published version: {version}. Earlier messages keep their original version.",
+  "screen.admin.platform.notificationTemplates.tableCaption":
+    "Notification templates by category and language",
+  "screen.admin.platform.notificationTemplates.emptyTitle": "No templates",
+  "screen.admin.platform.notificationTemplates.emptyBody":
+    "Templates cannot be listed on this screen yet.",
+  "screen.admin.platform.notificationTemplates.translationRule":
+    "Publishing needs a translation in every language. A missing translation blocks publish.",
   // apps/web/src/screens/admin/trips/trip-oversight.tsx
-  "screen.admin.trips.tripOversight.planned": "Planned",
-  "screen.admin.trips.tripOversight.inProgress": "In progress",
-  "screen.admin.trips.tripOversight.allStates": "All states",
-  "screen.admin.trips.tripOversight.plannedLabel": "Planned",
-  "screen.admin.trips.tripOversight.inProgressLabel": "In progress",
-  "screen.admin.trips.tripOversight.completed": "Completed",
-  "screen.admin.trips.tripOversight.cancelled": "Cancelled",
-  "screen.admin.trips.tripOversight.organization": "Organization",
-  "screen.admin.trips.tripOversight.trip": "Trip",
-  "screen.admin.trips.tripOversight.state": "State",
-  "screen.admin.trips.tripOversight.dates": "Dates",
-  "screen.admin.trips.tripOversight.staffingGaps": "Staffing gaps",
-  "screen.admin.trips.tripOversight.actions": "Actions",
-  "screen.admin.trips.tripOversight.openTrip": "Open trip {trip}",
-  "screen.admin.trips.tripOversight.openTrip2": "Open trip",
-  "screen.admin.trips.tripOversight.cancelTrip": "Cancel trip {trip}",
-  "screen.admin.trips.tripOversight.cancelTrip2": "Cancel trip",
-  "screen.admin.trips.tripOversight.tripOversight": "Trip oversight",
-  "screen.admin.trips.tripOversight.seeAnyTripAcrossOrganizations":
+  "screen.admin.trips.tripOversight.title": "Trip oversight",
+  "screen.admin.trips.tripOversight.description":
     "See any trip across organizations and act on it when needed.",
-  "screen.admin.trips.tripOversight.noTrips": "No trips",
-  "screen.admin.trips.tripOversight.noTripsMatchTheseFilters": "No trips match these filters.",
-  "screen.admin.trips.tripOversight.loadingTheTrips": "Loading the trips.",
-  "screen.admin.trips.tripOversight.tripsInProgress": "Trips in progress",
-  "screen.admin.trips.tripOversight.aTripInProgressCannot":
-    "A trip in progress cannot be cancelled here. Use incident handling only (D-25).",
-  "screen.admin.trips.tripOversight.tripOrOrganization": "Trip or organization",
-  "screen.admin.trips.tripOversight.tripOrOrganizationPlaceholder": "Trip or organization",
-  "screen.admin.trips.tripOversight.clearSearch": "Clear search",
-  "screen.admin.trips.tripOversight.stateLabel": "State",
-  "screen.admin.trips.tripOversight.trips": "Trips",
-  "screen.admin.trips.tripOversight.tripOversightCaption": "Trip oversight",
-  "screen.admin.trips.tripOversight.noTripsEmptyTitle": "No trips",
-  "screen.admin.trips.tripOversight.noTripsMatchTheseFiltersEmptyDescription":
-    "No trips match these filters.",
-  "screen.admin.trips.tripOversight.cancelTripDecision": "Cancel trip (decision)",
-  "screen.admin.trips.tripOversight.tripReferenceRequired": "Trip reference (required)",
-  "screen.admin.trips.tripOversight.tripReference": "[Trip reference]",
-  "screen.admin.trips.tripOversight.reasonForCancellingRequired":
-    "Reason for cancelling (required)",
-  "screen.admin.trips.tripOversight.recordedInTheAuditLog":
-    "Recorded in the audit log. Refunds for paid bookings follow the cancellation.",
-  "screen.admin.trips.tripOversight.cancelTripSubmitLabel": "Cancel trip",
-  "screen.admin.trips.tripOversight.cancelThisTrip": "Cancel this trip?",
-  "screen.admin.trips.tripOversight.refundsForPaidBookingsAre":
-    "Refunds for paid bookings are queued. The cancellation is audited.",
-  "screen.admin.trips.tripOversight.cancelTripConfirmLabel": "Cancel trip",
-  "screen.admin.trips.tripOversight.keepTrip": "Keep trip",
+  "screen.admin.trips.tripOversight.filters": "Filters",
+  "screen.admin.trips.tripOversight.organization": "Organization",
+  "screen.admin.trips.tripOversight.searchPlaceholder": "Search by organization or trip",
+  "screen.admin.trips.tripOversight.state": "State",
+  "screen.admin.trips.tripOversight.allStates": "All states",
+  "screen.admin.trips.tripOversight.dates": "Dates",
+  "screen.admin.trips.tripOversight.trip": "Trip",
+  "screen.admin.trips.tripOversight.staffingGaps": "Staffing gaps",
+  "screen.admin.trips.tripOversight.action": "Action",
+  "screen.admin.trips.tripOversight.openTrip": "Open trip",
+  "screen.admin.trips.tripOversight.openTripFor": "Open trip {trip}",
+  "screen.admin.trips.tripOversight.cancel": "Cancel",
+  "screen.admin.trips.tripOversight.cancelFor": "Cancel trip {trip}",
+  "screen.admin.trips.tripOversight.stateDraft": "Draft",
+  "screen.admin.trips.tripOversight.statePublished": "Published",
+  "screen.admin.trips.tripOversight.stateScheduled": "Scheduled",
+  "screen.admin.trips.tripOversight.stateSelection": "Selection",
+  "screen.admin.trips.tripOversight.stateInProgress": "In Progress",
+  "screen.admin.trips.tripOversight.stateCompleted": "Completed",
+  "screen.admin.trips.tripOversight.stateCancelled": "Cancelled",
+  "screen.admin.trips.tripOversight.cancelTrip": "Cancel trip",
+  "screen.admin.trips.tripOversight.selectedTrip": "{organization}: {trip}",
+  "screen.admin.trips.tripOversight.noTripSelected": "Choose a trip from the list to cancel it.",
+  "screen.admin.trips.tripOversight.inProgressBlocked":
+    "This trip is In Progress and cannot be cancelled from this screen.",
+  "screen.admin.trips.tripOversight.reasonRequired": "Reason (required)",
+  "screen.admin.trips.tripOversight.reasonPlaceholder": "Why this trip is being cancelled",
+  "screen.admin.trips.tripOversight.cancelFailedTitle": "The trip was not cancelled",
+  "screen.admin.trips.tripOversight.cancelFailedBody":
+    "Check the reason and try again. Nothing was changed.",
+  "screen.admin.trips.tripOversight.cancelDone":
+    "The trip was cancelled. The reason is recorded in the audit log.",
+  "screen.admin.trips.tripOversight.loading": "Loading the trips",
+  "screen.admin.trips.tripOversight.tableCaption": "Trips across organizations",
+  "screen.admin.trips.tripOversight.emptyTitle": "No trips",
+  "screen.admin.trips.tripOversight.emptyBody": "No trips match these filters.",
+  "screen.admin.trips.tripOversight.inProgressNote":
+    "In Progress trips cannot be cancelled from this screen. Only incident handling can act on them.",
   // apps/web/src/screens/organization/accounting/ledger-and-exports.tsx
   "screen.organization.accounting.ledgerAndExports.event": "Event",
   "screen.organization.accounting.ledgerAndExports.amount": "Amount",

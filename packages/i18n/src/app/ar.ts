@@ -1075,41 +1075,48 @@ export const ar: AppMessages = {
   "screen.admin.labTests.requestLabTestDecision.auditNote":
     "يُسجَّل هذا الطلب في سجل التدقيق. وتتبع قواعد الفحص المراجعة القانونية لكل سوق.",
   // apps/web/src/screens/admin/operations/operations-health-dashboard.tsx
+  "screen.admin.operations.operationsHealthDashboard.title": "صحة العمليات",
+  "screen.admin.operations.operationsHealthDashboard.description":
+    "عمليات الرحلات، ونجاح المدفوعات وإخفاقها، وتسليم الإشعارات حسب القناة.",
+  "screen.admin.operations.operationsHealthDashboard.timeRange": "النطاق الزمني",
   "screen.admin.operations.operationsHealthDashboard.lastHour": "آخر ساعة",
   "screen.admin.operations.operationsHealthDashboard.last24Hours": "آخر 24 ساعة",
   "screen.admin.operations.operationsHealthDashboard.last7Days": "آخر 7 أيام",
-  "screen.admin.operations.operationsHealthDashboard.channel": "القناة",
-  "screen.admin.operations.operationsHealthDashboard.delivered": "تم التسليم",
-  "screen.admin.operations.operationsHealthDashboard.failed": "فاشلة",
-  "screen.admin.operations.operationsHealthDashboard.deliveryRate": "معدل التسليم",
-  "screen.admin.operations.operationsHealthDashboard.operationsHealthDashboard":
-    "لوحة صحة العمليات",
-  "screen.admin.operations.operationsHealthDashboard.tripOperationsPaymentSuccessAnd":
-    "عمليات الرحلات ومعدلات نجاح وفشل الدفع وتسليم الإشعارات حسب القناة.",
-  "screen.admin.operations.operationsHealthDashboard.noData": "لا بيانات",
-  "screen.admin.operations.operationsHealthDashboard.noOperationsDataIsAvailable":
-    "لا تتوفر بيانات عمليات للنطاق المحدد.",
-  "screen.admin.operations.operationsHealthDashboard.loadingTheOperationsData":
-    "جارٍ تحميل بيانات العمليات.",
-  "screen.admin.operations.operationsHealthDashboard.timeRange": "النطاق الزمني",
-  "screen.admin.operations.operationsHealthDashboard.paymentSuccessRate": "معدل نجاح الدفع",
-  "screen.admin.operations.operationsHealthDashboard.paymentFailureRate": "معدل فشل الدفع",
-  "screen.admin.operations.operationsHealthDashboard.liveTrips": "الرحلات الجارية",
-  "screen.admin.operations.operationsHealthDashboard.checkInEvents": "أحداث تسجيل الحضور",
-  "screen.admin.operations.operationsHealthDashboard.notificationsDelivered": "الإشعارات المسلَّمة",
-  "screen.admin.operations.operationsHealthDashboard.allChannels": "كل القنوات",
-  "screen.admin.operations.operationsHealthDashboard.paymentSuccessAndFailure": "نجاح الدفع وفشله",
-  "screen.admin.operations.operationsHealthDashboard.paymentSuccessAndFailureOver":
-    "نجاح الدفع وفشله خلال النطاق المحدد",
-  "screen.admin.operations.operationsHealthDashboard.notificationDeliveryByChannel":
-    "تسليم الإشعارات حسب القناة",
-  "screen.admin.operations.operationsHealthDashboard.notificationDeliveryByChannelCaption":
-    "تسليم الإشعارات حسب القناة",
-  "screen.admin.operations.operationsHealthDashboard.noDeliveryData": "لا بيانات تسليم",
-  "screen.admin.operations.operationsHealthDashboard.noNotificationsWereSentIn":
-    "لم تُرسل أي إشعارات في النطاق المحدد.",
-  "screen.admin.operations.operationsHealthDashboard.criticalAlertsGoToOn":
-    "تذهب التنبيهات الحرجة إلى فريق المناوبة (NFR-OBS-04). هذه اللوحة لا تُغني عن التنبيهات.",
+  "screen.admin.operations.operationsHealthDashboard.staleTitle": "بيانات قديمة",
+  "screen.admin.operations.operationsHealthDashboard.staleBody":
+    "آخر تحديث قبل {minutes} دقيقة. قد تتأخر الأرقام عن النشاط الفعلي.",
+  "screen.admin.operations.operationsHealthDashboard.paymentsTitle": "نجاح المدفوعات وإخفاقها",
+  "screen.admin.operations.operationsHealthDashboard.paymentsEmptyTitle": "لا توجد بيانات مدفوعات",
+  "screen.admin.operations.operationsHealthDashboard.paymentsEmptyBody":
+    "معدلات نجاح المدفوعات وإخفاقها غير متاحة على هذه الشاشة بعد.",
+  "screen.admin.operations.operationsHealthDashboard.deliveryTitle": "التسليم حسب القناة",
+  "screen.admin.operations.operationsHealthDashboard.channelInApp": "داخل التطبيق",
+  "screen.admin.operations.operationsHealthDashboard.channelPush": "الإشعارات الفورية",
+  "screen.admin.operations.operationsHealthDashboard.channelEmail": "البريد الإلكتروني",
+  "screen.admin.operations.operationsHealthDashboard.channelSms": "الرسائل النصية",
+  "screen.admin.operations.operationsHealthDashboard.deliveryCaption":
+    "الرسائل التي وصلت إلى صندوق وارد حسابك الإداري في النطاق المحدد، حسب القناة: {summary}.",
+  "screen.admin.operations.operationsHealthDashboard.deliveryChartLabel":
+    "مخطط أعمدة لتسليم الإشعارات حسب القناة: {summary}",
+  "screen.admin.operations.operationsHealthDashboard.deliveryEmptyTitle": "لا توجد عمليات تسليم",
+  "screen.admin.operations.operationsHealthDashboard.deliveryEmptyBody":
+    "لم يُسلَّم أي إشعار في النطاق المحدد.",
+  "screen.admin.operations.operationsHealthDashboard.liveTripsTitle": "الرحلات الجارية",
+  "screen.admin.operations.operationsHealthDashboard.liveTripsCaption":
+    "الرحلات التي يغطي جدولها كل نقطة في النطاق. الذروة: {peak}.",
+  "screen.admin.operations.operationsHealthDashboard.liveTripsChartLabel":
+    "مخطط خطي للرحلات الجارية خلال النطاق المحدد، الذروة {peak}",
+  "screen.admin.operations.operationsHealthDashboard.liveTripsEmptyTitle": "لا توجد رحلات جارية",
+  "screen.admin.operations.operationsHealthDashboard.liveTripsEmptyBody":
+    "لم تكن أي رحلة مجدولة للتشغيل في النطاق المحدد.",
+  "screen.admin.operations.operationsHealthDashboard.checkInsTitle": "أحداث تسجيل الصعود",
+  "screen.admin.operations.operationsHealthDashboard.checkInsEmptyTitle":
+    "لا توجد بيانات تسجيل صعود",
+  "screen.admin.operations.operationsHealthDashboard.checkInsEmptyBody":
+    "أحداث تسجيل الصعود غير متاحة على هذه الشاشة بعد.",
+  "screen.admin.operations.operationsHealthDashboard.pagingLabel": "التنبيهات",
+  "screen.admin.operations.operationsHealthDashboard.pagingNote":
+    "تُرسل التنبيهات الحرجة إلى فريق المناوبة. هذه اللوحة للمراجعة وليست للاستدعاء.",
   // apps/web/src/screens/admin/plans/override-plan-card.tsx
   "screen.admin.plans.overridePlanCard.title": "استثناء الخطة",
   "screen.admin.plans.overridePlanCard.account": "الحساب",
@@ -1215,186 +1222,169 @@ export const ar: AppMessages = {
   "screen.admin.plans.subscriptionsAndOverrides.emptyBody":
     "لا توجد اشتراكات تطابق عوامل التصفية هذه.",
   // apps/web/src/screens/admin/platform/audit-log.tsx
+  "screen.admin.platform.auditLog.title": "سجل التدقيق",
+  "screen.admin.platform.auditLog.description":
+    "كل إجراء إداري وكل تغيير في الصلاحيات، مع القيم قبل التغيير وبعده.",
+  "screen.admin.platform.auditLog.readOnly": "للقراءة فقط",
+  "screen.admin.platform.auditLog.filters": "عوامل التصفية",
+  "screen.admin.platform.auditLog.actor": "المنفّذ",
+  "screen.admin.platform.auditLog.actorPlaceholder": "اسم المسؤول",
+  "screen.admin.platform.auditLog.action": "الإجراء",
+  "screen.admin.platform.auditLog.allActions": "جميع الإجراءات",
+  "screen.admin.platform.auditLog.actionSuspendAccount": "تعليق حساب",
+  "screen.admin.platform.auditLog.actionPlanOverride": "تجاوز الخطة",
+  "screen.admin.platform.auditLog.actionFeatureFlagChanged": "تغيير علامة ميزة",
+  "screen.admin.platform.auditLog.actionRoleAssigned": "إسناد دور",
+  "screen.admin.platform.auditLog.target": "الهدف",
+  "screen.admin.platform.auditLog.targetPlaceholder": "حساب أو عنصر",
+  "screen.admin.platform.auditLog.timeRange": "النطاق الزمني",
   "screen.admin.platform.auditLog.last24Hours": "آخر 24 ساعة",
   "screen.admin.platform.auditLog.last7Days": "آخر 7 أيام",
   "screen.admin.platform.auditLog.last30Days": "آخر 30 يومًا",
-  "screen.admin.platform.auditLog.customRange": "نطاق مخصص",
-  "screen.admin.platform.auditLog.anyAction": "أي إجراء",
   "screen.admin.platform.auditLog.time": "الوقت",
-  "screen.admin.platform.auditLog.actor": "المنفّذ",
-  "screen.admin.platform.auditLog.action": "الإجراء",
-  "screen.admin.platform.auditLog.target": "الهدف",
   "screen.admin.platform.auditLog.before": "قبل",
   "screen.admin.platform.auditLog.after": "بعد",
   "screen.admin.platform.auditLog.requestId": "معرّف الطلب",
-  "screen.admin.platform.auditLog.auditLog": "سجل التدقيق",
-  "screen.admin.platform.auditLog.everyAdminActionAndPermission":
-    "كل إجراء إداري وتغيير صلاحيات. للقراءة فقط.",
-  "screen.admin.platform.auditLog.noEntries": "لا توجد قيود",
-  "screen.admin.platform.auditLog.noAuditEntriesMatchThese": "لا توجد قيود تدقيق تطابق هذه التصفية.",
-  "screen.admin.platform.auditLog.loadingTheAuditEntries": "جارٍ تحميل قيود التدقيق.",
-  "screen.admin.platform.auditLog.readOnly": "للقراءة فقط",
-  "screen.admin.platform.auditLog.entriesCannotBeEditedOr":
-    "لا يمكن تعديل القيود أو حذفها. يُحفظ السجل لمدة 7 سنوات (D-04).",
-  "screen.admin.platform.auditLog.actorLabel": "المنفّذ",
-  "screen.admin.platform.auditLog.nameOrEmail": "الاسم أو البريد الإلكتروني",
-  "screen.admin.platform.auditLog.clearActor": "مسح المنفّذ",
-  "screen.admin.platform.auditLog.actionLabel": "الإجراء",
-  "screen.admin.platform.auditLog.targetLabel": "الهدف",
-  "screen.admin.platform.auditLog.nameOrReference": "الاسم أو المرجع",
-  "screen.admin.platform.auditLog.clearTarget": "مسح الهدف",
-  "screen.admin.platform.auditLog.timeRange": "النطاق الزمني",
-  "screen.admin.platform.auditLog.entries": "القيود",
-  "screen.admin.platform.auditLog.auditLogEntries": "قيود سجل التدقيق",
-  "screen.admin.platform.auditLog.noEntriesEmptyTitle": "لا توجد قيود",
-  "screen.admin.platform.auditLog.noAuditEntriesMatchTheseEmptyDescription":
-    "لا توجد قيود تدقيق تطابق هذه التصفية.",
+  "screen.admin.platform.auditLog.tableCaption": "إدخالات سجل التدقيق",
+  "screen.admin.platform.auditLog.emptyTitle": "لا توجد إدخالات",
+  "screen.admin.platform.auditLog.emptyBody": "لا يمكن عرض إدخالات التدقيق على هذه الشاشة بعد.",
+  "screen.admin.platform.auditLog.retentionNote":
+    "لا يمكن تعديل الإدخالات أو حذفها. تُحفظ سجلات التدقيق لمدة 7 سنوات.",
+  // apps/web/src/screens/admin/platform/feature-flag-table.tsx
+  "screen.admin.platform.featureFlagTable.title": "علامات الميزات",
+  "screen.admin.platform.featureFlagTable.caption": "علامات الميزات حسب المرحلة",
+  "screen.admin.platform.featureFlagTable.flag": "العلامة",
+  "screen.admin.platform.featureFlagTable.phase": "المرحلة",
+  "screen.admin.platform.featureFlagTable.phaseN": "المرحلة {phase}",
+  "screen.admin.platform.featureFlagTable.state": "الحالة",
+  "screen.admin.platform.featureFlagTable.on": "مفعّلة",
+  "screen.admin.platform.featureFlagTable.off": "متوقفة",
+  "screen.admin.platform.featureFlagTable.turnOn": "تفعيل",
+  "screen.admin.platform.featureFlagTable.turnOff": "إيقاف",
+  "screen.admin.platform.featureFlagTable.turnOnFor": "تفعيل {flag}",
+  "screen.admin.platform.featureFlagTable.turnOffFor": "إيقاف {flag}",
+  "screen.admin.platform.featureFlagTable.empty": "لا توجد علامات ميزات",
+  "screen.admin.platform.featureFlagTable.flagFoundation": "الأساس",
+  "screen.admin.platform.featureFlagTable.flagSingleVehicle": "النسخة الأولى بمركبة واحدة",
+  "screen.admin.platform.featureFlagTable.flagMultiVehicle": "تسجيل الصعود بعدة مركبات",
+  "screen.admin.platform.featureFlagTable.flagMarketplace": "سوق مزودي الخدمة",
+  "screen.admin.platform.featureFlagTable.flagSubscriptions": "الاشتراكات والقسائم",
+  "screen.admin.platform.featureFlagTable.flagLiveTracking":
+    "التتبع المباشر والواجهة البرمجية العامة",
   // apps/web/src/screens/admin/platform/feature-flags-and-platform-configuration.tsx
-  "screen.admin.platform.featureFlagsAndPlatformConfiguration.stripeInternational":
-    "Stripe (الدولي)",
-  "screen.admin.platform.featureFlagsAndPlatformConfiguration.paymobLocalMena":
-    "Paymob (الشرق الأوسط المحلي)",
-  "screen.admin.platform.featureFlagsAndPlatformConfiguration.tapLocalMena":
-    "Tap (الشرق الأوسط المحلي)",
-  "screen.admin.platform.featureFlagsAndPlatformConfiguration.fawryCashInEgypt":
-    "Fawry (الدفع النقدي في مصر)",
-  "screen.admin.platform.featureFlagsAndPlatformConfiguration.featureFlagsAndPlatformConfiguration":
-    "أعلام الميزات وإعدادات المنصة",
-  "screen.admin.platform.featureFlagsAndPlatformConfiguration.turnFeaturesOnOrOff":
-    "شغّل الميزات أو أوقفها حسب المرحلة، واضبط إعدادات المنصة.",
+  "screen.admin.platform.featureFlagsAndPlatformConfiguration.title": "علامات الميزات والإعدادات",
+  "screen.admin.platform.featureFlagsAndPlatformConfiguration.description":
+    "شغّل الميزات أو أوقفها حسب المرحلة. يخضع كل تغيير للتدقيق.",
   "screen.admin.platform.featureFlagsAndPlatformConfiguration.saveConfiguration": "حفظ الإعدادات",
-  "screen.admin.platform.featureFlagsAndPlatformConfiguration.noFeatureFlags": "لا توجد أعلام ميزات",
-  "screen.admin.platform.featureFlagsAndPlatformConfiguration.noFeatureFlagsAreDefined":
-    "لا توجد أعلام ميزات محددة لهذه المرحلة.",
-  "screen.admin.platform.featureFlagsAndPlatformConfiguration.loadingTheConfiguration":
-    "جارٍ تحميل الإعدادات.",
-  "screen.admin.platform.featureFlagsAndPlatformConfiguration.featureFlags": "أعلام الميزات",
-  "screen.admin.platform.featureFlagsAndPlatformConfiguration.aFlagChangeAppliesTo":
-    "يُطبَّق تغيير العلم على كل المستخدمين فورًا ويُدقَّق.",
-  "screen.admin.platform.featureFlagsAndPlatformConfiguration.featureFlagName": "[اسم علم الميزة]",
-  "screen.admin.platform.featureFlagsAndPlatformConfiguration.phasePhase": "المرحلة: [المرحلة]",
-  "screen.admin.platform.featureFlagsAndPlatformConfiguration.featureFlagNameLabel":
-    "[اسم علم الميزة]",
-  "screen.admin.platform.featureFlagsAndPlatformConfiguration.phasePhase2": "المرحلة: [المرحلة]",
-  "screen.admin.platform.featureFlagsAndPlatformConfiguration.paymentGatewayByMarket":
-    "بوابة الدفع حسب السوق",
-  "screen.admin.platform.featureFlagsAndPlatformConfiguration.market": "السوق",
-  "screen.admin.platform.featureFlagsAndPlatformConfiguration.marketCode": "[رمز السوق]",
-  "screen.admin.platform.featureFlagsAndPlatformConfiguration.gateway": "البوابة",
-  "screen.admin.platform.featureFlagsAndPlatformConfiguration.stripeForInternationalPaymentsPaymob":
-    "Stripe للمدفوعات الدولية. Paymob أو Tap للشرق الأوسط المحلي. Fawry للدفع النقدي في مصر. يُؤكَّد اختيار كل سوق عند الإطلاق (D-12).",
-  "screen.admin.platform.featureFlagsAndPlatformConfiguration.otpAndSessionPolicy":
-    "سياسة الرموز والجلسات",
-  "screen.admin.platform.featureFlagsAndPlatformConfiguration.otpPolicy": "سياسة الرموز",
-  "screen.admin.platform.featureFlagsAndPlatformConfiguration.editabilityIsUnderReviewD":
-    "قابلية التعديل قيد المراجعة (D-288).",
-  "screen.admin.platform.featureFlagsAndPlatformConfiguration.sessionPolicy": "سياسة الجلسات",
-  "screen.admin.platform.featureFlagsAndPlatformConfiguration.editabilityIsUnderReviewDSupportingText":
-    "قابلية التعديل قيد المراجعة (D-288).",
-  "screen.admin.platform.featureFlagsAndPlatformConfiguration.quietHours": "ساعات الهدوء",
-  "screen.admin.platform.featureFlagsAndPlatformConfiguration.urgentCategories": "الفئات العاجلة",
-  "screen.admin.platform.featureFlagsAndPlatformConfiguration.urgentNotificationCategories":
-    "[فئات الإشعارات العاجلة]",
-  "screen.admin.platform.featureFlagsAndPlatformConfiguration.setByD288": "محددة بـ D-288.",
-  "screen.admin.platform.featureFlagsAndPlatformConfiguration.audit": "التدقيق",
-  "screen.admin.platform.featureFlagsAndPlatformConfiguration.everyChangeOnThisPage":
-    "كل تغيير في هذه الصفحة يُسجَّل في سجل التدقيق.",
-  "screen.admin.platform.featureFlagsAndPlatformConfiguration.cancel": "إلغاء",
+  "screen.admin.platform.featureFlagsAndPlatformConfiguration.loading": "جارٍ تحميل الإعدادات",
+  "screen.admin.platform.featureFlagsAndPlatformConfiguration.unsavedChanges":
+    "لديك تغييرات غير محفوظة.",
+  "screen.admin.platform.featureFlagsAndPlatformConfiguration.approvalTitle": "اعتماد التغيير",
+  "screen.admin.platform.featureFlagsAndPlatformConfiguration.approvalCaption":
+    "يتطلب تغيير العلامة سببًا وموافقة مسؤول ثانٍ قبل حفظه.",
+  "screen.admin.platform.featureFlagsAndPlatformConfiguration.reason": "السبب (مطلوب)",
+  "screen.admin.platform.featureFlagsAndPlatformConfiguration.approver":
+    "معرّف حساب المعتمِد الثاني (مطلوب)",
+  "screen.admin.platform.featureFlagsAndPlatformConfiguration.approverHelp":
+    "معرّف حساب مسؤول منصة آخر. لا يمكنك اعتماد تغييرك بنفسك.",
+  "screen.admin.platform.featureFlagsAndPlatformConfiguration.saveFailedTitle":
+    "لم يتم حفظ الإعدادات",
+  "screen.admin.platform.featureFlagsAndPlatformConfiguration.saveFailedBody":
+    "تحقق من السبب ومن المعتمِد الثاني، ثم حاول مرة أخرى. لم يتغير شيء.",
+  "screen.admin.platform.featureFlagsAndPlatformConfiguration.saved":
+    "تم حفظ الإعدادات وتسجيلها في سجل التدقيق.",
+  "screen.admin.platform.featureFlagsAndPlatformConfiguration.otpTitle": "سياسة رمز التحقق والجلسة",
+  "screen.admin.platform.featureFlagsAndPlatformConfiguration.otpPolicy": "سياسة رمز التحقق",
+  "screen.admin.platform.featureFlagsAndPlatformConfiguration.sessionPolicy": "سياسة الجلسة",
+  "screen.admin.platform.featureFlagsAndPlatformConfiguration.fixedByBrl20": "ثابتة بموجب BRL-20",
+  "screen.admin.platform.featureFlagsAndPlatformConfiguration.fixedByBrl22": "ثابتة بموجب BRL-22",
+  "screen.admin.platform.featureFlagsAndPlatformConfiguration.policyNotDecided":
+    "لم يُحسم بعد ما إذا كانت هذه القيم قابلة للتعديل.",
+  "screen.admin.platform.featureFlagsAndPlatformConfiguration.quietHoursTitle":
+    "الفئات العاجلة في ساعات الهدوء",
+  "screen.admin.platform.featureFlagsAndPlatformConfiguration.urgentCategories":
+    "الفئات التي يمكنها تجاوز ساعات الهدوء",
+  "screen.admin.platform.featureFlagsAndPlatformConfiguration.quietHoursNote":
+    "تسري التغييرات على الإشعارات الجديدة فقط.",
+  // apps/web/src/screens/admin/platform/gateway-routing-card.tsx
+  "screen.admin.platform.gatewayRoutingCard.title": "توجيه بوابات الدفع حسب السوق",
+  "screen.admin.platform.gatewayRoutingCard.international": "دولي",
+  "screen.admin.platform.gatewayRoutingCard.localMena": "السوق المحلي في الشرق الأوسط وشمال أفريقيا",
+  "screen.admin.platform.gatewayRoutingCard.cashEgypt": "المدفوعات النقدية في مصر",
+  "screen.admin.platform.gatewayRoutingCard.note": "يُؤكَّد الاختيار لكل سوق عند الإطلاق.",
+  "screen.admin.platform.gatewayRoutingCard.notConfigured": "غير مُعدّ",
+  "screen.admin.platform.gatewayRoutingCard.or": " أو ",
+  "screen.admin.platform.gatewayRoutingCard.stripe": "Stripe",
+  "screen.admin.platform.gatewayRoutingCard.paymob": "Paymob",
+  "screen.admin.platform.gatewayRoutingCard.tap": "Tap",
+  "screen.admin.platform.gatewayRoutingCard.fawry": "فوري",
   // apps/web/src/screens/admin/platform/notification-templates.tsx
-  "screen.admin.platform.notificationTemplates.published": "منشور",
-  "screen.admin.platform.notificationTemplates.translationMissing": "الترجمة مفقودة",
-  "screen.admin.platform.notificationTemplates.allLanguages": "كل اللغات",
-  "screen.admin.platform.notificationTemplates.english": "الإنجليزية",
-  "screen.admin.platform.notificationTemplates.arabic": "العربية",
-  "screen.admin.platform.notificationTemplates.englishLabel": "الإنجليزية",
-  "screen.admin.platform.notificationTemplates.arabicLabel": "العربية",
+  "screen.admin.platform.notificationTemplates.title": "قوالب الإشعارات",
+  "screen.admin.platform.notificationTemplates.description":
+    "عدّل نص الإشعارات حسب الفئة واللغة. ينشئ كل حفظ إصدارًا جديدًا.",
+  "screen.admin.platform.notificationTemplates.saveAsNewVersion": "حفظ كإصدار جديد",
+  "screen.admin.platform.notificationTemplates.publishVersion": "نشر الإصدار",
+  "screen.admin.platform.notificationTemplates.savingUnavailable": "حفظ القوالب غير متاح بعد.",
   "screen.admin.platform.notificationTemplates.category": "الفئة",
   "screen.admin.platform.notificationTemplates.language": "اللغة",
   "screen.admin.platform.notificationTemplates.version": "الإصدار",
-  "screen.admin.platform.notificationTemplates.status": "الحالة",
-  "screen.admin.platform.notificationTemplates.action": "الإجراء",
-  "screen.admin.platform.notificationTemplates.editIn": "تعديل {category} باللغة {language}",
-  "screen.admin.platform.notificationTemplates.edit": "تعديل",
-  "screen.admin.platform.notificationTemplates.notificationTemplates": "قوالب الإشعارات",
-  "screen.admin.platform.notificationTemplates.editNotificationTextByCategory":
-    "حرّر نص الإشعار حسب الفئة واللغة. كل حفظ ينشئ إصدارًا جديدًا.",
-  "screen.admin.platform.notificationTemplates.noTemplates": "لا توجد قوالب",
-  "screen.admin.platform.notificationTemplates.noTemplatesMatchTheseFilters":
-    "لا توجد قوالب تطابق هذه التصفية.",
-  "screen.admin.platform.notificationTemplates.loadingTheTemplates": "جارٍ تحميل القوالب.",
-  "screen.admin.platform.notificationTemplates.categoryLabel": "الفئة",
-  "screen.admin.platform.notificationTemplates.categoryName": "اسم الفئة",
-  "screen.admin.platform.notificationTemplates.clearCategory": "مسح الفئة",
-  "screen.admin.platform.notificationTemplates.languageLabel": "اللغة",
-  "screen.admin.platform.notificationTemplates.templates": "القوالب",
-  "screen.admin.platform.notificationTemplates.notificationTemplatesCaption": "قوالب الإشعارات",
-  "screen.admin.platform.notificationTemplates.noTemplatesEmptyTitle": "لا توجد قوالب",
-  "screen.admin.platform.notificationTemplates.noTemplatesMatchTheseFiltersEmptyDescription":
-    "لا توجد قوالب تطابق هذه التصفية.",
-  "screen.admin.platform.notificationTemplates.editTemplate": "تعديل القالب",
-  "screen.admin.platform.notificationTemplates.language2": "اللغة",
+  "screen.admin.platform.notificationTemplates.english": "الإنجليزية",
+  "screen.admin.platform.notificationTemplates.arabic": "العربية",
+  "screen.admin.platform.notificationTemplates.editorLabel": "محرر القالب",
   "screen.admin.platform.notificationTemplates.messageText": "نص الرسالة",
-  "screen.admin.platform.notificationTemplates.messageTextPlaceholder": "[نص الرسالة]",
-  "screen.admin.platform.notificationTemplates.useThePlaceholdersFromThe":
-    "استخدم عناصر {variable} من دليل القوالب.",
+  "screen.admin.platform.notificationTemplates.messagePlaceholder":
+    "تنطلق رحلتك [trip_name] في [departure_time] من [pickup_point].",
+  "screen.admin.platform.notificationTemplates.variables": "المتغيرات:",
   "screen.admin.platform.notificationTemplates.preview": "معاينة",
-  "screen.admin.platform.notificationTemplates.englishPreview": "معاينة إنجليزية",
-  "screen.admin.platform.notificationTemplates.englishPreviewOfTheMessage":
-    "[معاينة إنجليزية للرسالة]",
-  "screen.admin.platform.notificationTemplates.arabicPreview": "معاينة عربية",
-  "screen.admin.platform.notificationTemplates.arabicPreviewOfTheMessage": "[معاينة عربية للرسالة]",
-  "screen.admin.platform.notificationTemplates.saveAsNewVersion": "حفظ كإصدار جديد",
-  "screen.admin.platform.notificationTemplates.publish": "نشر",
-  "screen.admin.platform.notificationTemplates.earlierMessagesKeepTheVersion":
-    "تحتفظ الرسائل السابقة بالإصدار الذي أُرسلت به.",
+  "screen.admin.platform.notificationTemplates.previewEmpty": "اكتب نص الرسالة لعرض المعاينة.",
+  "screen.admin.platform.notificationTemplates.publishedVersion":
+    "الإصدار المنشور حاليًا: {version}. تحتفظ الرسائل السابقة بإصدارها الأصلي.",
+  "screen.admin.platform.notificationTemplates.tableCaption": "قوالب الإشعارات حسب الفئة واللغة",
+  "screen.admin.platform.notificationTemplates.emptyTitle": "لا توجد قوالب",
+  "screen.admin.platform.notificationTemplates.emptyBody": "لا يمكن عرض القوالب على هذه الشاشة بعد.",
+  "screen.admin.platform.notificationTemplates.translationRule":
+    "يتطلب النشر وجود ترجمة بكل لغة. تمنع الترجمة الناقصة النشر.",
   // apps/web/src/screens/admin/trips/trip-oversight.tsx
-  "screen.admin.trips.tripOversight.planned": "مخطط لها",
-  "screen.admin.trips.tripOversight.inProgress": "قيد التنفيذ",
-  "screen.admin.trips.tripOversight.allStates": "كل الحالات",
-  "screen.admin.trips.tripOversight.plannedLabel": "مخطط لها",
-  "screen.admin.trips.tripOversight.inProgressLabel": "قيد التنفيذ",
-  "screen.admin.trips.tripOversight.completed": "مكتملة",
-  "screen.admin.trips.tripOversight.cancelled": "ملغى",
+  "screen.admin.trips.tripOversight.title": "الإشراف على الرحلات",
+  "screen.admin.trips.tripOversight.description":
+    "اطّلع على أي رحلة في جميع المؤسسات واتخذ إجراءً عليها عند الحاجة.",
+  "screen.admin.trips.tripOversight.filters": "عوامل التصفية",
   "screen.admin.trips.tripOversight.organization": "المؤسسة",
-  "screen.admin.trips.tripOversight.trip": "الرحلة",
+  "screen.admin.trips.tripOversight.searchPlaceholder": "ابحث باسم المؤسسة أو الرحلة",
   "screen.admin.trips.tripOversight.state": "الحالة",
+  "screen.admin.trips.tripOversight.allStates": "جميع الحالات",
   "screen.admin.trips.tripOversight.dates": "التواريخ",
-  "screen.admin.trips.tripOversight.staffingGaps": "نواقص الطواقم",
-  "screen.admin.trips.tripOversight.actions": "الإجراءات",
-  "screen.admin.trips.tripOversight.openTrip": "فتح الرحلة {trip}",
-  "screen.admin.trips.tripOversight.openTrip2": "فتح الرحلة",
-  "screen.admin.trips.tripOversight.cancelTrip": "إلغاء الرحلة {trip}",
-  "screen.admin.trips.tripOversight.cancelTrip2": "إلغاء الرحلة",
-  "screen.admin.trips.tripOversight.tripOversight": "الإشراف على الرحلات",
-  "screen.admin.trips.tripOversight.seeAnyTripAcrossOrganizations":
-    "اطّلع على أي رحلة عبر المؤسسات وتصرّف عند الحاجة.",
-  "screen.admin.trips.tripOversight.noTrips": "لا توجد رحلات",
-  "screen.admin.trips.tripOversight.noTripsMatchTheseFilters": "لا توجد رحلات تطابق هذه التصفية.",
-  "screen.admin.trips.tripOversight.loadingTheTrips": "جارٍ تحميل الرحلات.",
-  "screen.admin.trips.tripOversight.tripsInProgress": "رحلات قيد التنفيذ",
-  "screen.admin.trips.tripOversight.aTripInProgressCannot":
-    "لا يمكن إلغاء رحلة قيد التنفيذ هنا. استخدم معالجة الحوادث فقط (D-25).",
-  "screen.admin.trips.tripOversight.tripOrOrganization": "الرحلة أو المؤسسة",
-  "screen.admin.trips.tripOversight.tripOrOrganizationPlaceholder": "الرحلة أو المؤسسة",
-  "screen.admin.trips.tripOversight.clearSearch": "مسح البحث",
-  "screen.admin.trips.tripOversight.stateLabel": "الحالة",
-  "screen.admin.trips.tripOversight.trips": "الرحلات",
-  "screen.admin.trips.tripOversight.tripOversightCaption": "الإشراف على الرحلات",
-  "screen.admin.trips.tripOversight.noTripsEmptyTitle": "لا توجد رحلات",
-  "screen.admin.trips.tripOversight.noTripsMatchTheseFiltersEmptyDescription":
-    "لا توجد رحلات تطابق هذه التصفية.",
-  "screen.admin.trips.tripOversight.cancelTripDecision": "إلغاء الرحلة (قرار)",
-  "screen.admin.trips.tripOversight.tripReferenceRequired": "مرجع الرحلة (مطلوب)",
-  "screen.admin.trips.tripOversight.tripReference": "[مرجع الرحلة]",
-  "screen.admin.trips.tripOversight.reasonForCancellingRequired": "سبب الإلغاء (مطلوب)",
-  "screen.admin.trips.tripOversight.recordedInTheAuditLog":
-    "يُسجَّل في سجل التدقيق. تتبع استردادات الحجوزات المدفوعة عملية الإلغاء.",
-  "screen.admin.trips.tripOversight.cancelTripSubmitLabel": "إلغاء الرحلة",
-  "screen.admin.trips.tripOversight.cancelThisTrip": "إلغاء هذه الرحلة؟",
-  "screen.admin.trips.tripOversight.refundsForPaidBookingsAre":
-    "تُدرَج استردادات الحجوزات المدفوعة. يُدقَّق الإلغاء.",
-  "screen.admin.trips.tripOversight.cancelTripConfirmLabel": "إلغاء الرحلة",
-  "screen.admin.trips.tripOversight.keepTrip": "الإبقاء على الرحلة",
+  "screen.admin.trips.tripOversight.trip": "الرحلة",
+  "screen.admin.trips.tripOversight.staffingGaps": "نقص الطاقم",
+  "screen.admin.trips.tripOversight.action": "الإجراء",
+  "screen.admin.trips.tripOversight.openTrip": "فتح الرحلة",
+  "screen.admin.trips.tripOversight.openTripFor": "فتح الرحلة {trip}",
+  "screen.admin.trips.tripOversight.cancel": "إلغاء",
+  "screen.admin.trips.tripOversight.cancelFor": "إلغاء الرحلة {trip}",
+  "screen.admin.trips.tripOversight.stateDraft": "مسودة",
+  "screen.admin.trips.tripOversight.statePublished": "منشورة",
+  "screen.admin.trips.tripOversight.stateScheduled": "مجدولة",
+  "screen.admin.trips.tripOversight.stateSelection": "قيد الاختيار",
+  "screen.admin.trips.tripOversight.stateInProgress": "جارية",
+  "screen.admin.trips.tripOversight.stateCompleted": "مكتملة",
+  "screen.admin.trips.tripOversight.stateCancelled": "ملغاة",
+  "screen.admin.trips.tripOversight.cancelTrip": "إلغاء الرحلة",
+  "screen.admin.trips.tripOversight.selectedTrip": "{organization}: {trip}",
+  "screen.admin.trips.tripOversight.noTripSelected": "اختر رحلة من القائمة لإلغائها.",
+  "screen.admin.trips.tripOversight.inProgressBlocked":
+    "هذه الرحلة جارية ولا يمكن إلغاؤها من هذه الشاشة.",
+  "screen.admin.trips.tripOversight.reasonRequired": "السبب (مطلوب)",
+  "screen.admin.trips.tripOversight.reasonPlaceholder": "سبب إلغاء هذه الرحلة",
+  "screen.admin.trips.tripOversight.cancelFailedTitle": "لم يتم إلغاء الرحلة",
+  "screen.admin.trips.tripOversight.cancelFailedBody":
+    "تحقق من السبب وحاول مرة أخرى. لم يتغير شيء.",
+  "screen.admin.trips.tripOversight.cancelDone": "تم إلغاء الرحلة، وسُجّل السبب في سجل التدقيق.",
+  "screen.admin.trips.tripOversight.loading": "جارٍ تحميل الرحلات",
+  "screen.admin.trips.tripOversight.tableCaption": "الرحلات في جميع المؤسسات",
+  "screen.admin.trips.tripOversight.emptyTitle": "لا توجد رحلات",
+  "screen.admin.trips.tripOversight.emptyBody": "لا توجد رحلات تطابق عوامل التصفية هذه.",
+  "screen.admin.trips.tripOversight.inProgressNote":
+    "لا يمكن إلغاء الرحلات الجارية من هذه الشاشة. وحده التعامل مع الحوادث يمكنه اتخاذ إجراء عليها.",
   // apps/web/src/screens/organization/accounting/ledger-and-exports.tsx
   "screen.organization.accounting.ledgerAndExports.event": "الحدث",
   "screen.organization.accounting.ledgerAndExports.amount": "المبلغ",
