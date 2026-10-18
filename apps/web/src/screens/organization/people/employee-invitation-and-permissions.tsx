@@ -1,22 +1,40 @@
-import { useEffect, useMemo, useState } from "react";
-
+// SCR-ORG-35 Invite employee: the invitation, its permission areas and their change history.
+// Opened from an employee's name in the list, the same page edits that employee's areas.
+import { useState, type FormEvent } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { TeButton } from "@trips-app/ui/components/te-button";
-import { TeCard } from "@trips-app/ui/components/te-card";
-import { TeCheckbox } from "@trips-app/ui/components/te-checkbox";
-import { TeDataTable, type TeDataTableColumn } from "@trips-app/ui/components/te-data-table";
-import { TeInlineAlert } from "@trips-app/ui/components/te-inline-alert";
-import { TeInput } from "@trips-app/ui/components/te-input";
-import { TePageHeader } from "@trips-app/ui/components/te-page-header";
+
 import { t } from "@trips-app/i18n";
+
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
 
-import { WorkspaceBackLink, useOrgNavigate } from "../common/org-link";
-import { getSelectedEmployeeId, OrgSection } from "../common/org-shared";
-import { StatePreview } from "../common/organization-state-preview";
+import { OrgChoice, OrgInput } from "../common/org-form";
+import { useOrgNavigate } from "../common/org-link";
+import { getSelectedEmployeeId } from "../common/org-shared";
+import {
+  OrgAlert,
+  OrgButton,
+  OrgCard,
+  OrgError,
+  OrgLoading,
+  OrgPage,
+  OrgPageHeader,
+  OrgRow,
+} from "../common/org-ui";
 
-const AREA_IDS = [
+import {
+  permissionAreaLabel,
+  type PermissionArea,
+  type PermissionLevel,
+  type PermissionMatrix,
+} from "./people-parts";
+import { PermissionHistory } from "./permission-history";
+
+const FORM_ID = "employee-invitation-form";
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+/** The areas the artboard offers; live tracking follows trips and settings stay owner-only. */
+const EDITABLE_AREAS = [
   "trips",
   "bookings",
   "accounting",
@@ -24,293 +42,224 @@ const AREA_IDS = [
   "employees",
   "fleet",
   "subscription",
-] as const;
+] as const satisfies readonly PermissionArea[];
 
-type AreaId = (typeof AREA_IDS)[number];
+type EditableArea = (typeof EDITABLE_AREAS)[number];
 
-const AREA_LABELS: Record<AreaId, string> = {
-  get trips() {
-    return t("screen.organization.people.employeeInvitationAndPermissions.labels.trips");
-  },
-  get bookings() {
-    return t("screen.organization.people.employeeInvitationAndPermissions.labels.bookings");
-  },
-  get accounting() {
-    return t("screen.organization.people.employeeInvitationAndPermissions.labels.accounting");
-  },
-  get coupons() {
-    return t("screen.organization.people.employeeInvitationAndPermissions.labels.coupons");
-  },
-  get employees() {
-    return t("screen.organization.people.employeeInvitationAndPermissions.labels.employees");
-  },
-  get fleet() {
-    return t("screen.organization.people.employeeInvitationAndPermissions.labels.fleet");
-  },
-  get subscription() {
-    return t("screen.organization.people.employeeInvitationAndPermissions.labels.subscription");
-  },
-};
-
-const INITIAL_AREAS: Record<AreaId, boolean> = {
-  trips: false,
-  bookings: false,
-  accounting: false,
-  coupons: false,
-  employees: false,
-  fleet: false,
-  subscription: false,
-};
-
-interface ChangeRow {
+interface Employee {
   id: string;
-  actor: string;
-  time: string;
-  before: string;
-  after: string;
+  invitedEmail: string;
+  roleTitle: string;
+  permissions: PermissionMatrix;
 }
 
-const CHANGE_COLUMNS = (): readonly TeDataTableColumn<ChangeRow>[] => [
-  {
-    key: "actor",
-    header: t("screen.organization.people.employeeInvitationAndPermissions.changedBy"),
-  },
-  { key: "time", header: t("screen.organization.people.employeeInvitationAndPermissions.when") },
-  {
-    key: "before",
-    header: t("screen.organization.people.employeeInvitationAndPermissions.before"),
-  },
-  { key: "after", header: t("screen.organization.people.employeeInvitationAndPermissions.after") },
-];
-
-type PermissionLevel = "none" | "view" | "manage";
-
-function toMatrix(areas: Record<AreaId, boolean>): {
-  trips: PermissionLevel;
-  bookings: PermissionLevel;
-  accounting: PermissionLevel;
-  coupons: PermissionLevel;
-  employees: PermissionLevel;
-  fleet: PermissionLevel;
-  subscription: PermissionLevel;
-  tracking: PermissionLevel;
-  settings: PermissionLevel;
-} {
+function toMatrix(areas: ReadonlySet<EditableArea>, base?: PermissionMatrix): PermissionMatrix {
+  const level = (area: EditableArea): PermissionLevel =>
+    areas.has(area) ? (base && base[area] !== "none" ? base[area] : "manage") : "none";
   return {
-    trips: areas.trips ? "manage" : "none",
-    bookings: areas.bookings ? "manage" : "none",
-    accounting: areas.accounting ? "manage" : "none",
-    coupons: areas.coupons ? "manage" : "none",
-    employees: areas.employees ? "manage" : "none",
-    fleet: areas.fleet ? "manage" : "none",
-    subscription: areas.subscription ? "manage" : "none",
-    tracking: areas.trips ? "manage" : "none",
-    settings: "none",
+    trips: level("trips"),
+    bookings: level("bookings"),
+    accounting: level("accounting"),
+    coupons: level("coupons"),
+    employees: level("employees"),
+    fleet: level("fleet"),
+    subscription: level("subscription"),
+    tracking: base?.tracking ?? (areas.has("trips") ? "manage" : "none"),
+    settings: base?.settings ?? "none",
   };
+}
+
+interface InvitationFormProps {
+  employee: Employee | null;
+  onSubmit: (values: { email: string; roleTitle: string; permissions: PermissionMatrix }) => void;
+}
+
+function InvitationForm({ employee, onSubmit }: InvitationFormProps) {
+  const [email, setEmail] = useState(employee?.invitedEmail ?? "");
+  const [roleTitle, setRoleTitle] = useState(employee?.roleTitle ?? "");
+  const [areas, setAreas] = useState<ReadonlySet<EditableArea>>(
+    () =>
+      new Set(
+        employee ? EDITABLE_AREAS.filter((area) => employee.permissions[area] !== "none") : [],
+      ),
+  );
+  const [submitted, setSubmitted] = useState(false);
+
+  const emailError =
+    submitted && !EMAIL_PATTERN.test(email.trim())
+      ? t("screen.organization.people.employeeInvitationAndPermissions.emailInvalid")
+      : undefined;
+  const roleError =
+    submitted && roleTitle.trim().length < 2
+      ? t("screen.organization.people.employeeInvitationAndPermissions.roleTitleTooShort")
+      : undefined;
+
+  function toggle(area: EditableArea, checked: boolean) {
+    setAreas((current) => {
+      const next = new Set(current);
+      if (checked) next.add(area);
+      else next.delete(area);
+      return next;
+    });
+  }
+
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setSubmitted(true);
+    if (!EMAIL_PATTERN.test(email.trim()) || roleTitle.trim().length < 2) return;
+    onSubmit({
+      email: email.trim(),
+      roleTitle: roleTitle.trim(),
+      permissions: toMatrix(areas, employee?.permissions),
+    });
+  }
+
+  return (
+    <form id={FORM_ID} noValidate onSubmit={handleSubmit} className="flex flex-col gap-4">
+      <OrgInput
+        label={t("screen.organization.people.employeeInvitationAndPermissions.employeeEmail")}
+        type="email"
+        autoComplete="off"
+        value={email}
+        onChange={(event) => setEmail(event.target.value)}
+        readOnly={Boolean(employee)}
+        error={emailError}
+      />
+      <OrgInput
+        label={t("screen.organization.people.employeeInvitationAndPermissions.roleTitle")}
+        value={roleTitle}
+        onChange={(event) => setRoleTitle(event.target.value)}
+        maxLength={120}
+        dir="auto"
+        error={roleError}
+      />
+      <fieldset className="m-0 flex flex-col gap-1 border-0 p-0">
+        <legend className="mb-2 p-0 text-sm leading-5 font-semibold">
+          {t("screen.organization.people.employeeInvitationAndPermissions.permissionAreas")}
+        </legend>
+        {EDITABLE_AREAS.map((area) => (
+          <OrgChoice
+            key={area}
+            type="checkbox"
+            checked={areas.has(area)}
+            onChange={(event) => toggle(area, event.target.checked)}
+          >
+            {permissionAreaLabel(area)}
+          </OrgChoice>
+        ))}
+      </fieldset>
+    </form>
+  );
 }
 
 export function EmployeeInvitationAndPermissions() {
   const goTo = useOrgNavigate();
   const queryClient = useQueryClient();
-  const { status: authStatus, actor } = useAuth();
-  const [email, setEmail] = useState("");
-  const [roleTitle, setRoleTitle] = useState("Operations Coordinator");
-  const [areas, setAreas] = useState(INITIAL_AREAS);
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
-
+  const { status: authStatus, actor, locale } = useAuth();
+  const enabled = authStatus === "authenticated" && Boolean(actor?.activeTenantId);
   const preferredId = getSelectedEmployeeId();
-  const employeesListQuery = useQuery(
-    orpc.employees.list.queryOptions({
-      input: {},
-      enabled: authStatus === "authenticated" && Boolean(actor?.activeTenantId),
-    }),
-  );
 
-  const target = useMemo(() => {
-    const list = employeesListQuery.data?.employees ?? [];
-    return (preferredId ? list.find((emp) => emp.id === preferredId) : undefined) ?? list[0];
-  }, [employeesListQuery.data?.employees, preferredId]);
+  const employeesQuery = useQuery(orpc.employees.list.queryOptions({ input: {}, enabled }));
+  const target =
+    (preferredId
+      ? employeesQuery.data?.employees.find((employee) => employee.id === preferredId)
+      : undefined) ?? null;
 
-  const targetMembershipId = target?.id ?? null;
-
-  const employeeDetailQuery = useQuery(
+  const detailQuery = useQuery(
     orpc.employees.getById.queryOptions({
-      input: { membershipId: targetMembershipId ?? "" },
-      enabled:
-        authStatus === "authenticated" &&
-        Boolean(actor?.activeTenantId) &&
-        Boolean(targetMembershipId),
+      input: { membershipId: target?.id ?? "" },
+      enabled: enabled && Boolean(target),
     }),
   );
 
-  useEffect(() => {
-    if (target) {
-      setEmail(target.invitedEmail);
-      setRoleTitle(target.roleTitle);
-      setAreas({
-        trips: target.permissions.trips !== "none",
-        bookings: target.permissions.bookings !== "none",
-        accounting: target.permissions.accounting !== "none",
-        coupons: target.permissions.coupons !== "none",
-        employees: target.permissions.employees !== "none",
-        fleet: target.permissions.fleet !== "none",
-        subscription: target.permissions.subscription !== "none",
-      });
-    }
-  }, [target]);
-
-  const changeRows = useMemo<readonly ChangeRow[]>(() => {
-    if (!employeeDetailQuery.data?.recentAuditLogs) return [];
-    return employeeDetailQuery.data.recentAuditLogs.map((log) => ({
-      id: log.id,
-      actor: log.actorRole,
-      time: new Date(log.createdAt).toLocaleString(),
-      before: JSON.stringify(log.beforeState ?? {}),
-      after: JSON.stringify(log.afterState ?? {}),
-    }));
-  }, [employeeDetailQuery.data?.recentAuditLogs]);
-
-  const updatePermissionsMutation = useMutation(
-    orpc.employees.updatePermissions.mutationOptions({
-      onSuccess: () => {
-        void queryClient.invalidateQueries({ queryKey: orpc.employees.key() });
-      },
-    }),
-  );
-
-  const inviteMutation = useMutation(
-    orpc.employees.invite.mutationOptions({
-      onSuccess: () => {
-        void queryClient.invalidateQueries({ queryKey: orpc.employees.key() });
-      },
-    }),
-  );
-
-  const setArea = (area: AreaId, checked: boolean) => {
-    setAreas((current) => ({ ...current, [area]: checked }));
+  const onSuccess = () => {
+    void queryClient.invalidateQueries({ queryKey: orpc.employees.key() });
+    void goTo("employees-list");
   };
+  const inviteMutation = useMutation(orpc.employees.invite.mutationOptions({ onSuccess }));
+  const updatePermissionsMutation = useMutation(
+    orpc.employees.updatePermissions.mutationOptions({ onSuccess }),
+  );
 
-  async function handleSavePermissions() {
-    if (authStatus === "authenticated" && targetMembershipId) {
-      setErrorMsg(null);
-      try {
-        await updatePermissionsMutation.mutateAsync({
-          membershipId: targetMembershipId,
-          roleTitle: roleTitle.trim() || "Employee",
-          permissions: toMatrix(areas),
-        });
-      } catch (caught) {
-        setErrorMsg(caught instanceof Error ? caught.message : "Could not update permissions.");
-        return;
-      }
+  const busy = inviteMutation.isPending || updatePermissionsMutation.isPending;
+  const failed = inviteMutation.isError || updatePermissionsMutation.isError;
+  const resolving = Boolean(preferredId) && employeesQuery.isLoading;
+
+  function handleSubmit(values: {
+    email: string;
+    roleTitle: string;
+    permissions: PermissionMatrix;
+  }) {
+    if (!enabled) return;
+    if (target) {
+      updatePermissionsMutation.mutate({
+        membershipId: target.id,
+        roleTitle: values.roleTitle,
+        permissions: values.permissions,
+      });
+      return;
     }
-    void goTo("employees-list");
+    inviteMutation.mutate({
+      invitedEmail: values.email,
+      roleTitle: values.roleTitle,
+      permissions: values.permissions,
+    });
   }
-
-  async function handleSendInvitation() {
-    if (authStatus === "authenticated" && email.trim()) {
-      setErrorMsg(null);
-      try {
-        await inviteMutation.mutateAsync({
-          invitedEmail: email.trim(),
-          roleTitle: roleTitle.trim() || "Employee",
-          permissions: toMatrix(areas),
-        });
-      } catch (caught) {
-        setErrorMsg(caught instanceof Error ? caught.message : "Could not send invitation.");
-        return;
-      }
-    }
-    void goTo("employees-list");
-  }
-
-  const busy = updatePermissionsMutation.isPending || inviteMutation.isPending;
 
   return (
-    <StatePreview>
-      <div className="flex flex-col gap-8">
-        <WorkspaceBackLink
-          parent={{
-            slug: "employees-list",
-            label: t("screen.organization.people.employeeInvitationAndPermissions.backToEmployees"),
-          }}
-        />
-        <TePageHeader
-          title={t(
-            "screen.organization.people.employeeInvitationAndPermissions.employeeInvitationAndPermissions",
+    <OrgPage className="gap-5">
+      <OrgPageHeader
+        title={
+          target
+            ? t("screen.organization.people.employeeInvitationAndPermissions.editTitle")
+            : t("screen.organization.people.employeeInvitationAndPermissions.title")
+        }
+        caption={t("screen.organization.people.employeeInvitationAndPermissions.caption")}
+        actions={
+          <OrgButton type="submit" form={FORM_ID} disabled={!enabled || busy || resolving}>
+            {target
+              ? t("screen.organization.people.employeeInvitationAndPermissions.savePermissions")
+              : t("screen.organization.people.employeeInvitationAndPermissions.sendInvitation")}
+          </OrgButton>
+        }
+      />
+      {failed ? (
+        <OrgAlert
+          tone="err"
+          title={t("screen.organization.people.employeeInvitationAndPermissions.notSavedTitle")}
+        >
+          {t("screen.organization.people.employeeInvitationAndPermissions.notSavedBody")}
+        </OrgAlert>
+      ) : null}
+      <OrgRow align="start">
+        <OrgCard
+          title={t("screen.organization.people.employeeInvitationAndPermissions.invitation")}
+          className="flex-1"
+        >
+          {resolving ? (
+            <OrgLoading rows={4} />
+          ) : (
+            <InvitationForm key={target?.id ?? "new"} employee={target} onSubmit={handleSubmit} />
           )}
-        />
-        {errorMsg ? <TeInlineAlert tone="error">{errorMsg}</TeInlineAlert> : null}
-        <OrgSection title={t("screen.organization.people.employeeInvitationAndPermissions.invite")}>
-          <TeCard>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <TeInput
-                label={t("screen.organization.people.employeeInvitationAndPermissions.email")}
-                type="email"
-                placeholder={t(
-                  "screen.organization.people.employeeInvitationAndPermissions.emailPlaceholder",
-                )}
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
-              />
-              <TeInput
-                label={t("screen.organization.people.employeeInvitationAndPermissions.roleTitle")}
-                placeholder={t(
-                  "screen.organization.people.employeeInvitationAndPermissions.operationsCoordinator",
-                )}
-                value={roleTitle}
-                onChange={(event) => setRoleTitle(event.target.value)}
-              />
-            </div>
-          </TeCard>
-        </OrgSection>
-        <OrgSection
-          title={t("screen.organization.people.employeeInvitationAndPermissions.permissionAreas")}
-        >
-          <TeCard>
-            <div className="grid gap-4 sm:grid-cols-2">
-              {AREA_IDS.map((area) => (
-                <TeCheckbox
-                  key={area}
-                  label={AREA_LABELS[area]}
-                  checked={areas[area]}
-                  onCheckedChange={(checked) => setArea(area, checked)}
-                />
-              ))}
-            </div>
-          </TeCard>
-        </OrgSection>
-        <OrgSection
+        </OrgCard>
+        <OrgCard
           title={t("screen.organization.people.employeeInvitationAndPermissions.changeHistory")}
+          className="lg:flex-[1.4]"
         >
-          <TeDataTable
-            columns={CHANGE_COLUMNS()}
-            rows={changeRows}
-            getRowKey={(row) => row.id}
-            caption={t(
-              "screen.organization.people.employeeInvitationAndPermissions.permissionChangeHistory",
-            )}
-            emptyTitle={t(
-              "screen.organization.people.employeeInvitationAndPermissions.noChangesYet",
-            )}
-            emptyDescription={t(
-              "screen.organization.people.employeeInvitationAndPermissions.changesToPermissionAreasAre",
-            )}
-          />
-        </OrgSection>
-        <div className="flex flex-wrap justify-end gap-3">
-          <TeButton
-            variant="secondary"
-            disabled={busy}
-            onClick={() => void handleSavePermissions()}
-          >
-            {t("screen.organization.people.employeeInvitationAndPermissions.savePermissions")}
-          </TeButton>
-          <TeButton disabled={busy} onClick={() => void handleSendInvitation()}>
-            {t("screen.organization.people.employeeInvitationAndPermissions.sendInvitation")}
-          </TeButton>
-        </div>
-      </div>
-    </StatePreview>
+          <p className="te-caption m-0 text-[var(--te-ink-muted)]">
+            {t("screen.organization.people.employeeInvitationAndPermissions.historyCaption")}
+          </p>
+          {detailQuery.isError ? (
+            <OrgError onRetry={() => void detailQuery.refetch()} />
+          ) : (
+            <PermissionHistory
+              entries={detailQuery.data?.recentAuditLogs ?? []}
+              locale={locale}
+              loading={Boolean(target) && detailQuery.isLoading}
+            />
+          )}
+        </OrgCard>
+      </OrgRow>
+    </OrgPage>
   );
 }
