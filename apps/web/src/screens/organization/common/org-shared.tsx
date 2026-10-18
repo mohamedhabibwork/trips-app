@@ -1,30 +1,15 @@
+// Shared organization vocabulary: status badges, trip states, the trip wizard frame and the ids a
+// page remembers between steps (the wizard URLs carry no trip id, so the draft id lives here).
+import { Link } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 
-import { TeBadge, type TeBadgeTone } from "@trips-app/ui/components/te-badge";
-import { TeButton } from "@trips-app/ui/components/te-button";
-import { TeIcon, type TeIconName } from "@trips-app/ui/components/te-icon";
-import { TePageHeader } from "@trips-app/ui/components/te-page-header";
-import { TeStepper, type TeStep } from "@trips-app/ui/components/te-stepper";
+import { TeIcon } from "@trips-app/ui/components/te-icon";
+import { cn } from "@trips-app/ui/lib/utils";
 import { t } from "@trips-app/i18n";
 
-import { OrgButtonLink, WorkspaceBackLink, useOrgNavigate } from "./org-link";
-import type { OrgSlug } from "./org-routes";
-
-export interface StatePresentation {
-  tone: TeBadgeTone;
-  icon: TeIconName;
-  label: string;
-}
-
-/** A status is always a word and an icon. Tone is a second cue, never the only one. */
-export function StateBadge({ tone, icon, label }: StatePresentation) {
-  return (
-    <TeBadge tone={tone}>
-      <TeIcon name={icon} />
-      <span>{label}</span>
-    </TeBadge>
-  );
-}
+import { useOrgNavigate } from "./org-link";
+import { orgHref, type OrgSlug } from "./org-routes";
+import { OrgBadge, OrgButton, OrgPage, OrgPageHeader, type OrgTone } from "./org-ui";
 
 export const TRIP_STATES = [
   "Draft",
@@ -44,20 +29,20 @@ export const TRIP_STATES = [
 
 export type TripState = (typeof TRIP_STATES)[number];
 
-const TRIP_STATE_STYLE: Record<TripState, Omit<StatePresentation, "label">> = {
-  Draft: { tone: "neutral", icon: "file" },
-  Published: { tone: "info", icon: "ticket" },
-  Negotiating: { tone: "warning", icon: "refresh" },
-  Ready: { tone: "success", icon: "check" },
-  "Filling Up": { tone: "accent", icon: "users" },
-  "Sold Out": { tone: "highlight", icon: "seat" },
-  "In Progress": { tone: "info", icon: "live" },
-  "Partially Completed": { tone: "warning", icon: "clock" },
-  Completed: { tone: "success", icon: "check" },
-  "Post-Processing": { tone: "neutral", icon: "refresh" },
-  Archived: { tone: "neutral", icon: "file" },
-  Cancelled: { tone: "danger", icon: "close" },
-  "Refunds Issued": { tone: "danger", icon: "close" },
+const TRIP_STATE_STYLE: Record<TripState, { tone: OrgTone; key: string }> = {
+  Draft: { tone: "neu", key: "draft" },
+  Published: { tone: "info", key: "published" },
+  Negotiating: { tone: "info", key: "negotiating" },
+  Ready: { tone: "ok", key: "ready" },
+  "Filling Up": { tone: "info", key: "fillingUp" },
+  "Sold Out": { tone: "acc", key: "soldOut" },
+  "In Progress": { tone: "info", key: "inProgress" },
+  "Partially Completed": { tone: "warn", key: "partiallyCompleted" },
+  Completed: { tone: "ok", key: "completed" },
+  "Post-Processing": { tone: "neu", key: "postProcessing" },
+  Archived: { tone: "neu", key: "archived" },
+  Cancelled: { tone: "err", key: "cancelled" },
+  "Refunds Issued": { tone: "err", key: "refundsIssued" },
 };
 
 const BACKEND_TRIP_STATE_MAP: Record<string, TripState> = {
@@ -82,77 +67,120 @@ export function toTripState(state: string): TripState {
   return BACKEND_TRIP_STATE_MAP[state] ?? "Draft";
 }
 
-/** Trip state names as written in SRS 7.1. */
-export function TripStateBadge({ state }: { state: TripState }) {
-  return <StateBadge {...TRIP_STATE_STYLE[state]} label={state} />;
+/** Trip state name (SRS 7.1) in the current language. */
+export function tripStateLabel(state: TripState): string {
+  return t(`screen.organization.common.orgShared.tripState.${TRIP_STATE_STYLE[state].key}`);
 }
 
-export const TRIP_WIZARD_STEPS: readonly TeStep[] = [
-  {
-    id: "basics",
-    get label() {
-      return t("screen.organization.common.orgShared.step.basics");
-    },
-  },
-  {
-    id: "schedule",
-    get label() {
-      return t("screen.organization.common.orgShared.step.schedule");
-    },
-  },
-  {
-    id: "vehicles",
-    get label() {
-      return t("screen.organization.common.orgShared.step.vehicles");
-    },
-  },
-  {
-    id: "staffing",
-    get label() {
-      return t("screen.organization.common.orgShared.step.staffing");
-    },
-  },
-  {
-    id: "programs",
-    get label() {
-      return t("screen.organization.common.orgShared.step.programs");
-    },
-  },
-  {
-    id: "seating",
-    get label() {
-      return t("screen.organization.common.orgShared.step.seating");
-    },
-  },
-  {
-    id: "pricing",
-    get label() {
-      return t("screen.organization.common.orgShared.step.pricing");
-    },
-  },
-  {
-    id: "publish",
-    get label() {
-      return t("screen.organization.common.orgShared.step.publish");
-    },
-  },
-];
-
-interface OrgSectionProps {
-  title: string;
-  actions?: ReactNode;
-  children: ReactNode;
+export function tripStateTone(state: TripState): OrgTone {
+  return TRIP_STATE_STYLE[state].tone;
 }
 
-export function OrgSection({ title, actions, children }: OrgSectionProps) {
+export function TripStateBadge({ state, tone }: { state: TripState; tone?: OrgTone }) {
+  return <OrgBadge tone={tone ?? tripStateTone(state)}>{tripStateLabel(state)}</OrgBadge>;
+}
+
+/** A trip's display name: the title in the reader's language, else the other one. */
+export function tripTitle(
+  trip: { titleEn?: string | null; titleAr?: string | null },
+  locale: string,
+): string {
+  const en = trip.titleEn ?? "";
+  const ar = trip.titleAr ?? "";
+  return (locale === "ar" ? ar || en : en || ar) || "";
+}
+
+/** `YYYY-MM-DD` of an ISO date or Date, or null. */
+export function isoDay(value: string | Date | null | undefined): string | null {
+  if (!value) return null;
+  const date = value instanceof Date ? value : new Date(value);
+  return Number.isNaN(date.getTime()) ? null : date.toISOString().slice(0, 10);
+}
+
+export const TRIP_WIZARD_STEP_IDS = [
+  "basics",
+  "schedule",
+  "vehicles",
+  "staffing",
+  "programs",
+  "seating",
+  "pricing",
+  "publish",
+] as const;
+
+export type TripWizardStepId = (typeof TRIP_WIZARD_STEP_IDS)[number];
+
+const STEP_SLUG: Record<TripWizardStepId, OrgSlug> = {
+  basics: "trip-wizard-step-1-basics",
+  schedule: "trip-wizard-step-2-schedule-and-route",
+  vehicles: "trip-wizard-step-3-vehicles",
+  staffing: "trip-wizard-step-4-staffing",
+  programs: "trip-wizard-step-5-programs",
+  seating: "trip-wizard-step-6-seating",
+  pricing: "trip-wizard-step-7-pricing-and-capacity",
+  publish: "trip-wizard-step-8-publish",
+};
+
+export function wizardStepSlug(step: TripWizardStepId): OrgSlug {
+  return STEP_SLUG[step];
+}
+
+export function wizardStepLabel(step: TripWizardStepId): string {
+  return t(`screen.organization.common.orgShared.step.${step}`);
+}
+
+/** The eight wizard steps as numbered dots; done steps show a check and link back. */
+export function TripWizardSteps({ current }: { current: TripWizardStepId }) {
+  const currentIndex = TRIP_WIZARD_STEP_IDS.indexOf(current);
   return (
-    <section className="flex flex-col gap-4">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 className="te-h2">{title}</h2>
-        {actions}
-      </div>
-      {children}
-    </section>
+    <ol
+      aria-label={t("screen.organization.common.orgShared.tripWizardProgress")}
+      className="m-0 flex list-none flex-wrap items-center gap-x-4 gap-y-3 p-0"
+    >
+      {TRIP_WIZARD_STEP_IDS.map((step, index) => {
+        const state = index < currentIndex ? "done" : index === currentIndex ? "now" : "next";
+        const content = (
+          <>
+            <span
+              aria-hidden="true"
+              className={cn(
+                "inline-flex size-7 shrink-0 items-center justify-center rounded-full border text-[13px] leading-[18px] font-semibold",
+                state === "done" &&
+                  "border-[var(--te-success)] bg-[var(--te-success-soft)] text-[var(--te-success)]",
+                state === "now" &&
+                  "border-[var(--te-accent)] bg-[var(--te-accent)] text-[var(--te-brand-navy)]",
+                state === "next" &&
+                  "border-[var(--te-control-border)] bg-[var(--te-surface-raised)]",
+              )}
+            >
+              {state === "done" ? <TeIcon name="check" className="size-4" /> : index + 1}
+            </span>
+            <span>{wizardStepLabel(step)}</span>
+            {state === "done" ? (
+              <span className="sr-only">{t("screen.organization.common.orgShared.stepDone")}</span>
+            ) : null}
+          </>
+        );
+        const itemClass = cn(
+          "flex items-center gap-2 text-sm leading-5 font-semibold",
+          state === "now" ? "text-[var(--te-ink)]" : "text-[var(--te-ink-muted)]",
+        );
+        return (
+          <li key={step} aria-current={state === "now" ? "step" : undefined}>
+            {state === "done" ? (
+              <Link
+                to={orgHref(STEP_SLUG[step])}
+                className={cn(itemClass, "no-underline hover:text-[var(--te-ink)]")}
+              >
+                {content}
+              </Link>
+            ) : (
+              <span className={itemClass}>{content}</span>
+            )}
+          </li>
+        );
+      })}
+    </ol>
   );
 }
 
@@ -251,78 +279,115 @@ export function setSelectedProgramId(id: string | null): void {
 }
 
 interface TripWizardFrameProps {
-  title: string;
-  stepId: string;
-  previousSlug: OrgSlug;
-  nextSlug: OrgSlug;
+  stepId: TripWizardStepId;
+  /** h1; "Create trip" unless the step names its own action (step 8: "Publish trip"). */
+  title?: string;
+  /** Trip name added to the caption once the draft has one. */
+  tripName?: string;
   primaryLabel?: string;
   secondaryLabel?: string;
+  /** Disables the primary action, e.g. Publish while a required step is incomplete. */
+  primaryDisabled?: boolean;
+  /** Id of the note that explains a disabled primary action. */
+  primaryDescribedBy?: string;
   /** Return false to keep the user on this step, for example when a required field is empty. */
   beforeNext?: () => boolean | Promise<boolean>;
+  /** Runs instead of opening the next step (step 8 publishes). */
+  onPrimary?: () => void | Promise<void>;
   onSaveDraft?: () => void | Promise<void>;
+  busy?: boolean;
+  /** Shown under the actions. */
+  footerNote?: ReactNode;
   children: ReactNode;
 }
 
-/** Shared frame for trip wizard steps 1 to 8: header, eight-step stepper and step actions. */
+/** Frame of trip wizard steps 1 to 8: title, step caption, the eight dots, content and actions. */
 export function TripWizardFrame({
-  title,
   stepId,
-  previousSlug,
-  nextSlug,
-  primaryLabel = "Next",
-  secondaryLabel = "Save as draft",
+  title,
+  tripName,
+  primaryLabel,
+  secondaryLabel,
+  primaryDisabled = false,
+  primaryDescribedBy,
   beforeNext,
+  onPrimary,
   onSaveDraft,
+  busy = false,
+  footerNote,
   children,
 }: TripWizardFrameProps) {
   const goTo = useOrgNavigate();
-  const stepIndex = Math.max(
-    TRIP_WIZARD_STEPS.findIndex((step) => step.id === stepId),
-    0,
-  );
-  const completedIds = TRIP_WIZARD_STEPS.slice(0, stepIndex).map((step) => step.id);
+  const index = TRIP_WIZARD_STEP_IDS.indexOf(stepId);
+  const previous = TRIP_WIZARD_STEP_IDS[index - 1];
+  const next = TRIP_WIZARD_STEP_IDS[index + 1];
+  const caption = [
+    t("screen.organization.common.orgShared.stepCaption", {
+      n: index + 1,
+      step: t(`screen.organization.common.orgShared.stepCaption.${stepId}`),
+    }),
+    tripName,
+  ]
+    .filter(Boolean)
+    .join(" · ");
 
-  const handleNext = () => {
-    if (beforeNext) {
-      const result = beforeNext();
-      if (result instanceof Promise) {
-        void result.then((ok) => {
-          if (ok) void goTo(nextSlug);
-        });
-        return;
-      }
-      if (!result) {
-        return;
-      }
+  const handlePrimary = async () => {
+    if (beforeNext && !(await beforeNext())) return;
+    if (onPrimary) {
+      await onPrimary();
+      return;
     }
-    void goTo(nextSlug);
+    if (next) void goTo(STEP_SLUG[next]);
   };
 
+  const draftButton = (
+    <OrgButton
+      variant="secondary"
+      disabled={busy}
+      onClick={() => {
+        if (onSaveDraft) void onSaveDraft();
+      }}
+    >
+      {secondaryLabel ?? t("screen.organization.common.orgShared.saveAsDraft")}
+    </OrgButton>
+  );
+  const primaryButton = (
+    <OrgButton
+      disabled={primaryDisabled || busy}
+      aria-describedby={primaryDescribedBy}
+      onClick={() => void handlePrimary()}
+    >
+      {primaryLabel ?? t("screen.organization.common.orgShared.next")}
+    </OrgButton>
+  );
+
   return (
-    <div className="flex flex-col gap-6">
-      <WorkspaceBackLink />
-      <TePageHeader title={title} />
-      <TeStepper
-        steps={TRIP_WIZARD_STEPS}
-        currentId={stepId}
-        completedIds={completedIds}
-        ariaLabel={t("screen.organization.common.orgShared.tripWizardProgress")}
+    <OrgPage>
+      <OrgPageHeader
+        title={title ?? t("screen.organization.common.orgShared.createTrip")}
+        caption={caption}
       />
-      <div className="flex flex-col gap-4">{children}</div>
-      <div className="flex flex-wrap justify-end gap-3">
-        <OrgButtonLink slug={previousSlug} variant="ghost">
-          {t("screen.organization.common.orgShared.back")}
-        </OrgButtonLink>
-        <TeButton
-          variant="secondary"
-          onClick={() => {
-            if (onSaveDraft) void onSaveDraft();
-          }}
+      <TripWizardSteps current={stepId} />
+      {children}
+      <div className="flex flex-col gap-2">
+        <div
+          className={cn(
+            "flex flex-wrap gap-3",
+            previous && next ? "justify-between" : "justify-end",
+          )}
         >
-          {secondaryLabel}
-        </TeButton>
-        <TeButton onClick={handleNext}>{primaryLabel}</TeButton>
+          {previous && next ? (
+            <OrgButton variant="secondary" onClick={() => void goTo(STEP_SLUG[previous])}>
+              {t("screen.organization.common.orgShared.back")}
+            </OrgButton>
+          ) : null}
+          <div className="flex flex-wrap gap-3">
+            {draftButton}
+            {primaryButton}
+          </div>
+        </div>
+        {footerNote}
       </div>
-    </div>
+    </OrgPage>
   );
 }
