@@ -600,196 +600,183 @@ export const en = {
   "screen.admin.dealsAndDisputes.disputesQueue.noDisputesMatchTheseFiltersEmptyDescription":
     "No disputes match these filters.",
   // apps/web/src/screens/admin/directory/admin-staff-accounts.tsx
-  "screen.admin.directory.adminStaffAccounts.active": "Active",
-  "screen.admin.directory.adminStaffAccounts.setUpRequired": "Set-up required",
-  "screen.admin.directory.adminStaffAccounts.name": "Name",
+  "screen.admin.directory.adminStaffAccounts.title": "Admin staff accounts",
+  "screen.admin.directory.adminStaffAccounts.description":
+    "Create admin accounts and see their set-up state.",
+  "screen.admin.directory.adminStaffAccounts.createAdmin": "Create admin",
+  "screen.admin.directory.adminStaffAccounts.setupNotice":
+    "New admins set up their authenticator at first sign-in. Only an existing admin can create an account.",
+  "screen.admin.directory.adminStaffAccounts.invitationSent": "Invitation sent to {email}.",
+  "screen.admin.directory.adminStaffAccounts.notSaved": "The change was not saved",
+  "screen.admin.directory.adminStaffAccounts.notSavedBody": "Check the details and try again.",
+  "screen.admin.directory.adminStaffAccounts.resetDone":
+    "The authenticator was reset. The admin sets it up again at next sign-in.",
+  "screen.admin.directory.adminStaffAccounts.fullName": "Full name",
   "screen.admin.directory.adminStaffAccounts.email": "Email",
-  "screen.admin.directory.adminStaffAccounts.status": "Status",
+  "screen.admin.directory.adminStaffAccounts.subRole": "Sub-role",
+  "screen.admin.directory.adminStaffAccounts.operations": "Operations",
+  "screen.admin.directory.adminStaffAccounts.finance": "Finance",
+  "screen.admin.directory.adminStaffAccounts.superAdmin": "Super admin",
+  "screen.admin.directory.adminStaffAccounts.cancel": "Cancel",
+  "screen.admin.directory.adminStaffAccounts.sendInvitation": "Send invitation",
+  "screen.admin.directory.adminStaffAccounts.name": "Name",
+  "screen.admin.directory.adminStaffAccounts.country": "Country",
   "screen.admin.directory.adminStaffAccounts.authenticator": "Authenticator",
+  "screen.admin.directory.adminStaffAccounts.notSetUp": "Not set up",
+  "screen.admin.directory.adminStaffAccounts.status": "Status",
+  "screen.admin.directory.adminStaffAccounts.setUpRequired": "Set-up required",
   "screen.admin.directory.adminStaffAccounts.action": "Action",
+  "screen.admin.directory.adminStaffAccounts.resetAuthenticator": "Reset authenticator",
   "screen.admin.directory.adminStaffAccounts.resetAuthenticatorFor":
     "Reset authenticator for {name}",
-  "screen.admin.directory.adminStaffAccounts.resetAuthenticator": "Reset authenticator",
-  "screen.admin.directory.adminStaffAccounts.adminStaffAccounts": "Admin staff accounts",
-  "screen.admin.directory.adminStaffAccounts.createAdminAccountsAndSee":
-    "Create admin accounts and see their set-up state.",
-  "screen.admin.directory.adminStaffAccounts.noAdminAccounts": "No admin accounts",
-  "screen.admin.directory.adminStaffAccounts.createTheFirstAdminAccount":
-    "Create the first admin account above.",
-  "screen.admin.directory.adminStaffAccounts.loadingTheAdminAccounts":
-    "Loading the admin accounts.",
-  "screen.admin.directory.adminStaffAccounts.createAdminAccount": "Create admin account",
-  "screen.admin.directory.adminStaffAccounts.fullName": "Full name",
-  "screen.admin.directory.adminStaffAccounts.fullNamePlaceholder": "[Full name]",
-  "screen.admin.directory.adminStaffAccounts.emailLabel": "Email",
-  "screen.admin.directory.adminStaffAccounts.emailPlaceholder": "[Email]",
-  "screen.admin.directory.adminStaffAccounts.country": "Country",
-  "screen.admin.directory.adminStaffAccounts.countryPlaceholder": "[Country]",
-  "screen.admin.directory.adminStaffAccounts.countryIsProposedInD": "Country is proposed in D-49.",
-  "screen.admin.directory.adminStaffAccounts.createAdminAccount2": "Create admin account",
-  "screen.admin.directory.adminStaffAccounts.howAdminAccountsStart": "How admin accounts start",
-  "screen.admin.directory.adminStaffAccounts.aNewAdminMustSet":
-    "A new admin must set up an authenticator at first sign-in. Only an existing admin can create an admin account. There is no self-registration.",
-  "screen.admin.directory.adminStaffAccounts.adminAccounts": "Admin accounts",
-  "screen.admin.directory.adminStaffAccounts.adminStaffAccountsCaption": "Admin staff accounts",
-  "screen.admin.directory.adminStaffAccounts.noAdminAccountsEmptyTitle": "No admin accounts",
-  "screen.admin.directory.adminStaffAccounts.createTheFirstAdminAccountEmptyDescription":
-    "Create the first admin account above.",
+  "screen.admin.directory.adminStaffAccounts.tableCaption": "Admin staff accounts",
+  "screen.admin.directory.adminStaffAccounts.emptyTitle": "No admin accounts to show",
+  "screen.admin.directory.adminStaffAccounts.emptyBody":
+    "Invitations you send from this page appear here.",
   // apps/web/src/screens/admin/directory/deletion-and-data-requests.tsx
-  "screen.admin.directory.deletionAndDataRequests.gracePeriod": "Grace period",
-  "screen.admin.directory.deletionAndDataRequests.overdue": "Overdue",
-  "screen.admin.directory.deletionAndDataRequests.allTypes": "All types",
+  "screen.admin.directory.deletionAndDataRequests.title": "Deletion and data requests",
+  "screen.admin.directory.deletionAndDataRequests.description":
+    "Work account deletion and data copy requests.",
+  "screen.admin.directory.deletionAndDataRequests.requestTypes": "Request types",
+  "screen.admin.directory.deletionAndDataRequests.all": "All",
   "screen.admin.directory.deletionAndDataRequests.accountDeletion": "Account deletion",
   "screen.admin.directory.deletionAndDataRequests.dataCopy": "Data copy",
-  "screen.admin.directory.deletionAndDataRequests.anyStatus": "Any status",
-  "screen.admin.directory.deletionAndDataRequests.gracePeriodLabel": "Grace period",
-  "screen.admin.directory.deletionAndDataRequests.overdueLabel": "Overdue",
+  "screen.admin.directory.deletionAndDataRequests.overdueTitle":
+    "{count} data copy requests are overdue",
+  "screen.admin.directory.deletionAndDataRequests.overdueBody":
+    "Respond to these first. Each row shows its due date.",
   "screen.admin.directory.deletionAndDataRequests.requestType": "Request type",
   "screen.admin.directory.deletionAndDataRequests.account": "Account",
   "screen.admin.directory.deletionAndDataRequests.requested": "Requested",
   "screen.admin.directory.deletionAndDataRequests.graceEndOrDueDate": "Grace end or due date",
+  "screen.admin.directory.deletionAndDataRequests.graceEnds": "Grace ends {date}",
+  "screen.admin.directory.deletionAndDataRequests.due": "Due {date}",
   "screen.admin.directory.deletionAndDataRequests.status": "Status",
+  "screen.admin.directory.deletionAndDataRequests.gracePeriod": "Grace period",
+  "screen.admin.directory.deletionAndDataRequests.overdue": "Overdue",
+  "screen.admin.directory.deletionAndDataRequests.inProgress": "In progress",
   "screen.admin.directory.deletionAndDataRequests.action": "Action",
-  "screen.admin.directory.deletionAndDataRequests.openAccountFor": "Open account for {account}",
   "screen.admin.directory.deletionAndDataRequests.openAccount": "Open account",
-  "screen.admin.directory.deletionAndDataRequests.deletionAndDataRequests":
-    "Deletion and data requests",
-  "screen.admin.directory.deletionAndDataRequests.workAccountDeletionAndData":
-    "Work account deletion and data copy requests.",
-  "screen.admin.directory.deletionAndDataRequests.noRequests": "No requests",
-  "screen.admin.directory.deletionAndDataRequests.noDeletionOrDataCopy":
-    "No deletion or data copy requests are open.",
-  "screen.admin.directory.deletionAndDataRequests.loadingTheRequests": "Loading the requests.",
-  "screen.admin.directory.deletionAndDataRequests.retentionRules": "Retention rules",
-  "screen.admin.directory.deletionAndDataRequests.accountsArePurgedOnDay":
-    "Accounts are purged on day 31 after the deletion request (D-38). A data copy past its due date is flagged overdue (D-162).",
-  "screen.admin.directory.deletionAndDataRequests.requestTypeLabel": "Request type",
-  "screen.admin.directory.deletionAndDataRequests.statusLabel": "Status",
-  "screen.admin.directory.deletionAndDataRequests.requests": "Requests",
-  "screen.admin.directory.deletionAndDataRequests.deletionAndDataRequestsCaption":
-    "Deletion and data requests",
-  "screen.admin.directory.deletionAndDataRequests.noRequestsEmptyTitle": "No requests",
-  "screen.admin.directory.deletionAndDataRequests.noDeletionOrDataCopyEmptyDescription":
-    "No deletion or data copy requests are open.",
+  "screen.admin.directory.deletionAndDataRequests.openAccountFor": "Open account for {account}",
+  "screen.admin.directory.deletionAndDataRequests.tableCaption": "Deletion and data requests",
+  "screen.admin.directory.deletionAndDataRequests.emptyTitle": "No requests",
+  "screen.admin.directory.deletionAndDataRequests.emptyBody":
+    "No account deletion or data copy requests to show.",
+  // apps/web/src/screens/admin/directory/directory-shared.tsx
+  "screen.admin.directory.directoryShared.active": "Active",
+  "screen.admin.directory.directoryShared.deleted": "Deleted",
+  "screen.admin.directory.directoryShared.driver": "Driver",
+  "screen.admin.directory.directoryShared.moderator": "Moderator",
+  "screen.admin.directory.directoryShared.noAccountSelected": "No account selected",
+  "screen.admin.directory.directoryShared.openAnAccountFromTheDirectory":
+    "Open an account from the users and entities directory.",
+  "screen.admin.directory.directoryShared.openTheDirectory": "Open the directory",
+  "screen.admin.directory.directoryShared.organization": "Organization",
+  "screen.admin.directory.directoryShared.pendingApproval": "Pending approval",
+  "screen.admin.directory.directoryShared.photographer": "Photographer",
+  "screen.admin.directory.directoryShared.platformDriver": "Platform driver",
+  "screen.admin.directory.directoryShared.platformPhotographer": "Platform photographer",
+  "screen.admin.directory.directoryShared.suspended": "Suspended",
+  "screen.admin.directory.directoryShared.traveler": "Traveler",
   // apps/web/src/screens/admin/directory/entity-detail.tsx
-  "screen.admin.directory.entityDetail.adminActionFromTheAudit":
-    "[Admin action from the audit log]",
-  "screen.admin.directory.entityDetail.adminActionFromTheAuditLabel":
-    "[Admin action from the audit log]",
-  "screen.admin.directory.entityDetail.active": "Active",
-  "screen.admin.directory.entityDetail.trip": "Trip",
-  "screen.admin.directory.entityDetail.state": "State",
-  "screen.admin.directory.entityDetail.dates": "Dates",
-  "screen.admin.directory.entityDetail.entityDetail": "Entity detail",
-  "screen.admin.directory.entityDetail.entityNameProfilePlanTrips":
-    "[Entity name]. Profile, plan, trips, bookings and history.",
-  "screen.admin.directory.entityDetail.handleDeletion": "Handle deletion",
+  "screen.admin.directory.entityDetail.title": "Account",
+  "screen.admin.directory.entityDetail.suspend": "Suspend",
+  "screen.admin.directory.entityDetail.reinstate": "Reinstate",
+  "screen.admin.directory.entityDetail.resetCredentials": "Reset credentials",
+  "screen.admin.directory.entityDetail.resetCredentialsUnavailable":
+    "Credential reset for accounts is not available yet.",
   "screen.admin.directory.entityDetail.grantOrOverridePlan": "Grant or override plan",
-  "screen.admin.directory.entityDetail.requestLabTest": "Request lab test",
-  "screen.admin.directory.entityDetail.suspendOrReinstate": "Suspend or reinstate",
-  "screen.admin.directory.entityDetail.noTripsOrBookings": "No trips or bookings",
-  "screen.admin.directory.entityDetail.thisAccountHasNoTrips":
-    "This account has no trips or bookings yet.",
-  "screen.admin.directory.entityDetail.loadingTheAccount": "Loading the account.",
-  "screen.admin.directory.entityDetail.suspended": "Suspended",
-  "screen.admin.directory.entityDetail.signInIsRefusedWhile":
-    "Sign-in is refused while the account is suspended. Data is kept.",
+  "screen.admin.directory.entityDetail.sections": "Account sections",
   "screen.admin.directory.entityDetail.profile": "Profile",
+  "screen.admin.directory.entityDetail.plan": "Plan",
+  "screen.admin.directory.entityDetail.tripsAndBookings": "Trips and bookings",
+  "screen.admin.directory.entityDetail.history": "History",
+  "screen.admin.directory.entityDetail.loading": "Loading the account.",
   "screen.admin.directory.entityDetail.name": "Name",
   "screen.admin.directory.entityDetail.email": "Email",
   "screen.admin.directory.entityDetail.phone": "Phone",
   "screen.admin.directory.entityDetail.country": "Country",
-  "screen.admin.directory.entityDetail.entityType": "Entity type",
-  "screen.admin.directory.entityDetail.deletionRequest": "Deletion request",
-  "screen.admin.directory.entityDetail.backToDirectory": "Back to directory",
   "screen.admin.directory.entityDetail.roleAssignments": "Role assignments",
-  "screen.admin.directory.entityDetail.roleAssignments2": "[Role assignments]",
   "screen.admin.directory.entityDetail.planAndSubscription": "Plan and subscription",
-  "screen.admin.directory.entityDetail.plan": "Plan",
   "screen.admin.directory.entityDetail.billingStatus": "Billing status",
   "screen.admin.directory.entityDetail.renewalDate": "Renewal date",
-  "screen.admin.directory.entityDetail.tripsAndBookings": "Trips and bookings",
-  "screen.admin.directory.entityDetail.tripsAndBookingsCaption": "Trips and bookings",
-  "screen.admin.directory.entityDetail.noTripsOrBookingsEmptyTitle": "No trips or bookings",
-  "screen.admin.directory.entityDetail.thisAccountHasNoTripsEmptyDescription":
-    "This account has no trips or bookings yet.",
+  "screen.admin.directory.entityDetail.deletionRequest": "Deletion request",
+  "screen.admin.directory.entityDetail.requested": "Requested",
+  "screen.admin.directory.entityDetail.graceEnd": "Grace end",
+  "screen.admin.directory.entityDetail.openDeletionQueue":
+    "Open the deletion queue to handle this request.",
+  "screen.admin.directory.entityDetail.deletionQueue": "Deletion queue",
   "screen.admin.directory.entityDetail.auditHistory": "Audit history",
-  "screen.admin.directory.entityDetail.auditHistoryForThisAccount":
-    "Audit history for this account",
+  "screen.admin.directory.entityDetail.noAuditEntries": "No audit entries to show",
+  "screen.admin.directory.entityDetail.noAuditEntriesBody":
+    "Actions on this account are recorded in the audit log.",
+  "screen.admin.directory.entityDetail.openAuditLog": "Open the audit log",
+  "screen.admin.directory.entityDetail.noTrips": "No trips or bookings to show",
+  "screen.admin.directory.entityDetail.noTripsBody":
+    "Trips and bookings of this account are not listed here yet.",
   // apps/web/src/screens/admin/directory/suspend-or-reinstate-decision.tsx
-  "screen.admin.directory.suspendOrReinstateDecision.suspendAccount": "Suspend account",
-  "screen.admin.directory.suspendOrReinstateDecision.reinstateAccount": "Reinstate account",
-  "screen.admin.directory.suspendOrReinstateDecision.active": "Active",
-  "screen.admin.directory.suspendOrReinstateDecision.suspendOrReinstateDecision":
-    "Suspend or reinstate (decision)",
-  "screen.admin.directory.suspendOrReinstateDecision.stopOrRestoreAccessWithout":
-    "Stop or restore access without deleting data.",
-  "screen.admin.directory.suspendOrReinstateDecision.noAccountSelected": "No account selected",
-  "screen.admin.directory.suspendOrReinstateDecision.openAnAccountFromThe":
-    "Open an account from the directory before you suspend or reinstate it.",
-  "screen.admin.directory.suspendOrReinstateDecision.loadingTheAccount": "Loading the account.",
-  "screen.admin.directory.suspendOrReinstateDecision.account": "Account",
-  "screen.admin.directory.suspendOrReinstateDecision.accountName": "Account name",
-  "screen.admin.directory.suspendOrReinstateDecision.entityType": "Entity type",
-  "screen.admin.directory.suspendOrReinstateDecision.decision": "Decision",
-  "screen.admin.directory.suspendOrReinstateDecision.action": "Action",
-  "screen.admin.directory.suspendOrReinstateDecision.reasonRequired": "Reason (required)",
-  "screen.admin.directory.suspendOrReinstateDecision.reasonRulesAreNotYet":
-    "Reason rules are not yet defined (D-234).",
-  "screen.admin.directory.suspendOrReinstateDecision.suspendAccount2": "Suspend account",
-  "screen.admin.directory.suspendOrReinstateDecision.reinstateAccount2": "Reinstate account",
-  "screen.admin.directory.suspendOrReinstateDecision.suspendThisAccount": "Suspend this account?",
-  "screen.admin.directory.suspendOrReinstateDecision.reinstateThisAccount":
-    "Reinstate this account?",
-  "screen.admin.directory.suspendOrReinstateDecision.accessStopsAtOnceData":
-    "Access stops at once. Data is kept. The action is written to the audit log.",
-  "screen.admin.directory.suspendOrReinstateDecision.accessIsRestoredAtOnce":
-    "Access is restored at once. Data is unchanged. The action is written to the audit log.",
-  "screen.admin.directory.suspendOrReinstateDecision.suspendAccount3": "Suspend account",
-  "screen.admin.directory.suspendOrReinstateDecision.reinstateAccount3": "Reinstate account",
+  "screen.admin.directory.suspendOrReinstateDecision.suspendTitle": "Suspend account",
+  "screen.admin.directory.suspendOrReinstateDecision.suspendDescription":
+    "Stop access without deleting data. {name}.",
+  "screen.admin.directory.suspendOrReinstateDecision.suspendAccess": "Suspend access",
+  "screen.admin.directory.suspendOrReinstateDecision.suspendAcknowledge":
+    "I understand that access stops at once and the data is kept.",
+  "screen.admin.directory.suspendOrReinstateDecision.suspendEffectAccess": "Access stops at once.",
+  "screen.admin.directory.suspendOrReinstateDecision.suspendEffectData":
+    "Data is kept, not deleted.",
+  "screen.admin.directory.suspendOrReinstateDecision.suspendNotice":
+    "Sign-in is refused and the account sees the suspended message.",
+  "screen.admin.directory.suspendOrReinstateDecision.suspendPlaceholder":
+    "Describe why access is being stopped",
+  "screen.admin.directory.suspendOrReinstateDecision.reinstateTitle": "Reinstate account",
+  "screen.admin.directory.suspendOrReinstateDecision.reinstateDescription":
+    "Restore access to a suspended account. {name}.",
+  "screen.admin.directory.suspendOrReinstateDecision.reinstateAccess": "Reinstate access",
+  "screen.admin.directory.suspendOrReinstateDecision.reinstateAcknowledge":
+    "I understand that access is restored at once.",
+  "screen.admin.directory.suspendOrReinstateDecision.reinstateEffectAccess":
+    "Access is restored at once.",
+  "screen.admin.directory.suspendOrReinstateDecision.reinstateEffectData": "Data stays as it was.",
+  "screen.admin.directory.suspendOrReinstateDecision.reinstateNotice":
+    "The account can sign in again as soon as you confirm.",
+  "screen.admin.directory.suspendOrReinstateDecision.reinstatePlaceholder":
+    "Describe why access is being restored",
+  "screen.admin.directory.suspendOrReinstateDecision.effectAudit":
+    "The action is written to the audit log.",
   "screen.admin.directory.suspendOrReinstateDecision.cancel": "Cancel",
-  "screen.admin.directory.suspendOrReinstateDecision.effectOfSuspending": "Effect of suspending",
-  "screen.admin.directory.suspendOrReinstateDecision.effectOfReinstating": "Effect of reinstating",
-  "screen.admin.directory.suspendOrReinstateDecision.accessStopsAtOnceData2":
-    "Access stops at once. Data is kept.",
-  "screen.admin.directory.suspendOrReinstateDecision.accessIsRestoredAtOnce2":
-    "Access is restored at once. Data is unchanged.",
+  "screen.admin.directory.suspendOrReinstateDecision.reason": "Reason",
+  "screen.admin.directory.suspendOrReinstateDecision.reasonRequired": "Reason (required)",
+  "screen.admin.directory.suspendOrReinstateDecision.reasonHelp": "At least {min} characters.",
+  "screen.admin.directory.suspendOrReinstateDecision.effect": "Effect",
+  "screen.admin.directory.suspendOrReinstateDecision.loading": "Loading the account.",
+  "screen.admin.directory.suspendOrReinstateDecision.notSaved": "The decision was not saved",
+  "screen.admin.directory.suspendOrReinstateDecision.notSavedBody":
+    "Nothing changed on the account. Try again.",
   // apps/web/src/screens/admin/directory/users-and-entities-directory.tsx
+  "screen.admin.directory.usersAndEntitiesDirectory.title": "Users and entities",
+  "screen.admin.directory.usersAndEntitiesDirectory.description":
+    "Find any user, organization, driver, photographer or moderator.",
+  "screen.admin.directory.usersAndEntitiesDirectory.filters": "Directory filters",
+  "screen.admin.directory.usersAndEntitiesDirectory.search": "Search",
+  "screen.admin.directory.usersAndEntitiesDirectory.searchPlaceholder":
+    "Name, email, phone, organization or reference",
+  "screen.admin.directory.usersAndEntitiesDirectory.role": "Role",
+  "screen.admin.directory.usersAndEntitiesDirectory.allRoles": "All roles",
+  "screen.admin.directory.usersAndEntitiesDirectory.status": "Status",
+  "screen.admin.directory.usersAndEntitiesDirectory.allStatuses": "All statuses",
   "screen.admin.directory.usersAndEntitiesDirectory.active": "Active",
   "screen.admin.directory.usersAndEntitiesDirectory.suspended": "Suspended",
-  "screen.admin.directory.usersAndEntitiesDirectory.allRoles": "All roles",
-  "screen.admin.directory.usersAndEntitiesDirectory.allStatuses": "All statuses",
-  "screen.admin.directory.usersAndEntitiesDirectory.activeLabel": "Active",
-  "screen.admin.directory.usersAndEntitiesDirectory.suspendedLabel": "Suspended",
-  "screen.admin.directory.usersAndEntitiesDirectory.deletionRequested": "Deletion requested",
+  "screen.admin.directory.usersAndEntitiesDirectory.statusFilterUnavailable":
+    "Account status is shown on each account page.",
   "screen.admin.directory.usersAndEntitiesDirectory.name": "Name",
-  "screen.admin.directory.usersAndEntitiesDirectory.role": "Role",
-  "screen.admin.directory.usersAndEntitiesDirectory.organization": "Organization",
-  "screen.admin.directory.usersAndEntitiesDirectory.status": "Status",
+  "screen.admin.directory.usersAndEntitiesDirectory.email": "Email",
   "screen.admin.directory.usersAndEntitiesDirectory.action": "Action",
-  "screen.admin.directory.usersAndEntitiesDirectory.open": "Open {name}",
-  "screen.admin.directory.usersAndEntitiesDirectory.open2": "Open",
-  "screen.admin.directory.usersAndEntitiesDirectory.usersAndEntitiesDirectory":
-    "Users and entities directory",
-  "screen.admin.directory.usersAndEntitiesDirectory.findAnyUserOrganizationDriver":
-    "Find any user, organization, driver, photographer or moderator.",
-  "screen.admin.directory.usersAndEntitiesDirectory.deletionRequests": "Deletion requests",
-  "screen.admin.directory.usersAndEntitiesDirectory.adminStaffAccounts": "Admin staff accounts",
-  "screen.admin.directory.usersAndEntitiesDirectory.noResults": "No results",
-  "screen.admin.directory.usersAndEntitiesDirectory.changeTheSearchOrThe":
-    "Change the search or the filters.",
-  "screen.admin.directory.usersAndEntitiesDirectory.loadingTheDirectory": "Loading the directory.",
-  "screen.admin.directory.usersAndEntitiesDirectory.search": "Search",
-  "screen.admin.directory.usersAndEntitiesDirectory.nameEmailPhoneOrganizationOr":
-    "Name, email, phone, organization or reference",
-  "screen.admin.directory.usersAndEntitiesDirectory.clearSearch": "Clear search",
-  "screen.admin.directory.usersAndEntitiesDirectory.roleLabel": "Role",
-  "screen.admin.directory.usersAndEntitiesDirectory.statusLabel": "Status",
-  "screen.admin.directory.usersAndEntitiesDirectory.results": "Results",
-  "screen.admin.directory.usersAndEntitiesDirectory.usersAndEntities": "Users and entities",
-  "screen.admin.directory.usersAndEntitiesDirectory.noResultsEmptyTitle": "No results",
-  "screen.admin.directory.usersAndEntitiesDirectory.changeTheSearchOrTheEmptyDescription":
-    "Change the search or the filters.",
+  "screen.admin.directory.usersAndEntitiesDirectory.openAccount": "Open account",
+  "screen.admin.directory.usersAndEntitiesDirectory.openAccountFor": "Open account for {name}",
+  "screen.admin.directory.usersAndEntitiesDirectory.loading": "Loading the directory.",
+  "screen.admin.directory.usersAndEntitiesDirectory.tableCaption": "Users and entities",
+  "screen.admin.directory.usersAndEntitiesDirectory.emptyTitle": "No results",
+  "screen.admin.directory.usersAndEntitiesDirectory.emptyBody": "Change the search or the filters.",
   // apps/web/src/screens/admin/entries-part-1.ts
   "screen.registry.admin.adminHome.title": "Admin home",
   "screen.registry.admin.applicationQueue.title": "Application queue",

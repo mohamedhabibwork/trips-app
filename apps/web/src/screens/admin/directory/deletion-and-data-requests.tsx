@@ -1,165 +1,167 @@
+// SCR-ADM-10 Deletion and data requests (docs/design/web/admin/SCR-ADM-10.dc.html): account
+// deletion and data copy requests in one table, tabbed by type, with overdue data copies flagged
+// first. No API procedure lists these requests yet, so the table shows its empty state until one
+// exists; the page never shows invented rows.
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { TeDataTable, type TeDataTableColumn } from "@trips-app/ui/components/te-data-table";
-import { TeInlineAlert } from "@trips-app/ui/components/te-inline-alert";
-import { TePageHeader } from "@trips-app/ui/components/te-page-header";
-import { TeSelect, type TeSelectOption } from "@trips-app/ui/components/te-select";
 import { t } from "@trips-app/i18n";
-import { useAuth } from "@/auth/auth-context";
-import { orpc } from "@/utils/orpc";
-import { StatePreview } from "../common/admin-state-preview";
-import { AdminScreenLink } from "../common/admin-links";
+
+import { AdminLink } from "../common/admin-actions";
+import { AdminTabs, type AdminTab } from "../common/admin-form";
+import { setSelectedAdminEntityId } from "../common/admin-selection";
+import { AdminEmpty } from "../common/admin-states";
 import {
-  AdminFilters,
+  AdminAlert,
+  AdminBadge,
   AdminPage,
-  AdminPagination,
-  AdminPanel,
-  AdminStatus,
-  type AdminStatusPresentation,
-} from "../common/admin-shared";
+  AdminTable,
+  type AdminColumn,
+} from "../common/admin-ui";
+
+type RequestType = "deletion" | "dataCopy";
+type RequestState = "grace" | "overdue" | "inProgress";
 
 interface RequestRow {
   id: string;
-  type: "Account deletion" | "Data copy";
+  entityId: string;
+  type: RequestType;
   account: string;
   requested: string;
-  dueOrGrace: string;
-  state: "grace" | "overdue";
+  dueDate: string;
+  state: RequestState;
 }
 
-const STATE_PRESENTATION = (): Record<RequestRow["state"], AdminStatusPresentation> => ({
-  grace: {
-    tone: "info",
-    icon: "clock",
-    label: t("screen.admin.directory.deletionAndDataRequests.gracePeriod"),
-  },
-  overdue: {
-    tone: "danger",
-    icon: "alert",
-    label: t("screen.admin.directory.deletionAndDataRequests.overdue"),
-  },
-});
+/** Rows come from a request list procedure once the API serves one. */
+const REQUESTS: readonly RequestRow[] = [];
 
-const TYPE_OPTIONS = (): readonly TeSelectOption[] => [
-  { value: "all", label: t("screen.admin.directory.deletionAndDataRequests.allTypes") },
-  { value: "deletion", label: t("screen.admin.directory.deletionAndDataRequests.accountDeletion") },
-  { value: "data-copy", label: t("screen.admin.directory.deletionAndDataRequests.dataCopy") },
-];
-const STATE_OPTIONS = (): readonly TeSelectOption[] => [
-  { value: "all", label: t("screen.admin.directory.deletionAndDataRequests.anyStatus") },
-  { value: "grace", label: t("screen.admin.directory.deletionAndDataRequests.gracePeriodLabel") },
-  { value: "overdue", label: t("screen.admin.directory.deletionAndDataRequests.overdueLabel") },
+const requestTabs = (): readonly AdminTab[] => [
+  { id: "all", label: t("screen.admin.directory.deletionAndDataRequests.all") },
+  { id: "deletion", label: t("screen.admin.directory.deletionAndDataRequests.accountDeletion") },
+  { id: "dataCopy", label: t("screen.admin.directory.deletionAndDataRequests.dataCopy") },
 ];
 
-const COLUMNS = (): readonly TeDataTableColumn<RequestRow>[] => [
-  { key: "type", header: t("screen.admin.directory.deletionAndDataRequests.requestType") },
-  { key: "account", header: t("screen.admin.directory.deletionAndDataRequests.account") },
-  { key: "requested", header: t("screen.admin.directory.deletionAndDataRequests.requested") },
+function typeLabel(type: RequestType): string {
+  return type === "deletion"
+    ? t("screen.admin.directory.deletionAndDataRequests.accountDeletion")
+    : t("screen.admin.directory.deletionAndDataRequests.dataCopy");
+}
+
+function dueLabel(row: RequestRow): string {
+  return row.type === "deletion"
+    ? t("screen.admin.directory.deletionAndDataRequests.graceEnds", { date: row.dueDate })
+    : t("screen.admin.directory.deletionAndDataRequests.due", { date: row.dueDate });
+}
+
+function StateBadge({ state }: { state: RequestState }) {
+  if (state === "overdue") {
+    return (
+      <AdminBadge tone="bad">
+        {t("screen.admin.directory.deletionAndDataRequests.overdue")}
+      </AdminBadge>
+    );
+  }
+  if (state === "grace") {
+    return (
+      <AdminBadge tone="warn">
+        {t("screen.admin.directory.deletionAndDataRequests.gracePeriod")}
+      </AdminBadge>
+    );
+  }
+  return (
+    <AdminBadge icon={false}>
+      {t("screen.admin.directory.deletionAndDataRequests.inProgress")}
+    </AdminBadge>
+  );
+}
+
+const columns = (): readonly AdminColumn<RequestRow>[] => [
   {
-    key: "dueOrGrace",
+    key: "type",
+    header: t("screen.admin.directory.deletionAndDataRequests.requestType"),
+    render: (row) => typeLabel(row.type),
+  },
+  {
+    key: "account",
+    header: t("screen.admin.directory.deletionAndDataRequests.account"),
+    render: (row) => row.account,
+    wrap: true,
+  },
+  {
+    key: "requested",
+    header: t("screen.admin.directory.deletionAndDataRequests.requested"),
+    render: (row) => row.requested,
+  },
+  {
+    key: "due",
     header: t("screen.admin.directory.deletionAndDataRequests.graceEndOrDueDate"),
+    render: dueLabel,
   },
   {
     key: "state",
     header: t("screen.admin.directory.deletionAndDataRequests.status"),
-    render: (row) => <AdminStatus status={STATE_PRESENTATION()[row.state]} />,
+    render: (row) => <StateBadge state={row.state} />,
   },
   {
-    key: "open",
-    header: t("screen.admin.directory.deletionAndDataRequests.action"),
+    key: "action",
+    header: (
+      <span className="te-caption">
+        {t("screen.admin.directory.deletionAndDataRequests.action")}
+      </span>
+    ),
     render: (row) => (
-      <AdminScreenLink
-        slug="entity-detail"
-        variant="secondary"
+      <AdminLink
+        screen="SCR-ADM-08"
+        params={{ entityId: row.entityId }}
         ariaLabel={t("screen.admin.directory.deletionAndDataRequests.openAccountFor", {
           account: row.account,
         })}
+        onClick={() => setSelectedAdminEntityId(row.entityId)}
       >
         {t("screen.admin.directory.deletionAndDataRequests.openAccount")}
-      </AdminScreenLink>
+      </AdminLink>
     ),
   },
 ];
 
 export function DeletionAndDataRequests() {
-  const { status: authStatus } = useAuth();
-  const [typeFilter, setTypeFilter] = useState("all");
-  const [stateFilter, setStateFilter] = useState("all");
-
-  const queueQuery = useQuery({
-    ...orpc.onboarding.listReviewQueue.queryOptions({
-      input: { state: "Closed" },
-    }),
-    enabled: authStatus === "authenticated",
-  });
-
-  const rows: readonly RequestRow[] = (queueQuery.data ?? []).map((app) => {
-    const createdMs = new Date(app.updatedAt).getTime();
-    const graceEnd = new Date(createdMs + 30 * 86400000).toISOString().slice(0, 10);
-    return {
-      id: app.id,
-      type: "Account deletion",
-      account: app.applicant?.fullName ?? app.applicant?.email ?? app.applicantAccountId,
-      requested: new Date(app.updatedAt).toISOString().slice(0, 10),
-      dueOrGrace: graceEnd,
-      state: app.isSlaOverdue ? "overdue" : "grace",
-    };
-  });
-
-  const visibleRows = rows.filter((row) => {
-    if (typeFilter === "deletion" && row.type !== "Account deletion") return false;
-    if (typeFilter === "data-copy" && row.type !== "Data copy") return false;
-    if (stateFilter !== "all" && row.state !== stateFilter) return false;
-    return true;
-  });
+  const [tab, setTab] = useState("all");
+  const rows = tab === "all" ? REQUESTS : REQUESTS.filter((row) => row.type === tab);
+  const overdueCount = REQUESTS.filter(
+    (row) => row.type === "dataCopy" && row.state === "overdue",
+  ).length;
 
   return (
-    <AdminPage>
-      <TePageHeader
-        title={t("screen.admin.directory.deletionAndDataRequests.deletionAndDataRequests")}
-        description={t("screen.admin.directory.deletionAndDataRequests.workAccountDeletionAndData")}
+    <AdminPage
+      title={t("screen.admin.directory.deletionAndDataRequests.title")}
+      description={t("screen.admin.directory.deletionAndDataRequests.description")}
+    >
+      <AdminTabs
+        tabs={requestTabs()}
+        activeId={tab}
+        onSelect={setTab}
+        label={t("screen.admin.directory.deletionAndDataRequests.requestTypes")}
       />
-      <StatePreview
-        emptyTitle={t("screen.admin.directory.deletionAndDataRequests.noRequests")}
-        emptyDescription={t("screen.admin.directory.deletionAndDataRequests.noDeletionOrDataCopy")}
-        loadingLabel={t("screen.admin.directory.deletionAndDataRequests.loadingTheRequests")}
-      >
-        <TeInlineAlert
-          tone="info"
-          title={t("screen.admin.directory.deletionAndDataRequests.retentionRules")}
+      {overdueCount > 0 ? (
+        <AdminAlert
+          tone="danger"
+          title={t("screen.admin.directory.deletionAndDataRequests.overdueTitle", {
+            count: String(overdueCount),
+          })}
         >
-          {t("screen.admin.directory.deletionAndDataRequests.accountsArePurgedOnDay")}
-        </TeInlineAlert>
-        <AdminFilters>
-          <TeSelect
-            label={t("screen.admin.directory.deletionAndDataRequests.requestTypeLabel")}
-            options={TYPE_OPTIONS()}
-            value={typeFilter}
-            onValueChange={setTypeFilter}
+          {t("screen.admin.directory.deletionAndDataRequests.overdueBody")}
+        </AdminAlert>
+      ) : null}
+      <AdminTable
+        caption={t("screen.admin.directory.deletionAndDataRequests.tableCaption")}
+        columns={columns()}
+        rows={rows}
+        getRowKey={(row) => row.id}
+        empty={
+          <AdminEmpty
+            title={t("screen.admin.directory.deletionAndDataRequests.emptyTitle")}
+            description={t("screen.admin.directory.deletionAndDataRequests.emptyBody")}
           />
-          <TeSelect
-            label={t("screen.admin.directory.deletionAndDataRequests.statusLabel")}
-            options={STATE_OPTIONS()}
-            value={stateFilter}
-            onValueChange={setStateFilter}
-          />
-        </AdminFilters>
-        <AdminPanel title={t("screen.admin.directory.deletionAndDataRequests.requests")}>
-          <TeDataTable
-            columns={COLUMNS()}
-            rows={visibleRows}
-            getRowKey={(row) => row.id}
-            caption={t(
-              "screen.admin.directory.deletionAndDataRequests.deletionAndDataRequestsCaption",
-            )}
-            emptyTitle={t("screen.admin.directory.deletionAndDataRequests.noRequestsEmptyTitle")}
-            emptyDescription={t(
-              "screen.admin.directory.deletionAndDataRequests.noDeletionOrDataCopyEmptyDescription",
-            )}
-          />
-          <AdminPagination pageCount={1} />
-        </AdminPanel>
-      </StatePreview>
+        }
+      />
     </AdminPage>
   );
 }

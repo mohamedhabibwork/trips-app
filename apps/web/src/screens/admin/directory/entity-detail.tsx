@@ -1,188 +1,226 @@
+// SCR-ADM-08 Entity detail (docs/design/web/admin/SCR-ADM-08.dc.html): one account with its role
+// and status, profile, role assignments, plan, deletion request and audit history, plus the
+// suspend and plan-override actions. The entity is the onboarding application in the URL.
+import { useState, type ReactNode } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { TeDataTable, type TeDataTableColumn } from "@trips-app/ui/components/te-data-table";
-import { TeInlineAlert } from "@trips-app/ui/components/te-inline-alert";
-import { TePageHeader } from "@trips-app/ui/components/te-page-header";
-import { TeTimeline, type TeTimelineItem } from "@trips-app/ui/components/te-timeline";
 import { t } from "@trips-app/i18n";
+
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
-import { StatePreview } from "../common/admin-state-preview";
-import { AdminScreenLink } from "../common/admin-links";
-import {
-  AdminActions,
-  AdminFacts,
-  AdminPage,
-  AdminPanel,
-  AdminStatus,
-  getSelectedAdminEntityId,
-  type AdminStatusPresentation,
-} from "../common/admin-shared";
 
-interface TripRow {
-  id: string;
-  trip: string;
-  state: string;
-  dates: string;
+import { AdminButton, AdminLink, useAdminParam } from "../common/admin-actions";
+import { AdminTabs, type AdminTab } from "../common/admin-form";
+import { getSelectedAdminEntityId } from "../common/admin-selection";
+import { AdminEmpty, AdminQueryState } from "../common/admin-states";
+import { AdminBadge, AdminCard, AdminGrid, AdminPage, AdminRow } from "../common/admin-ui";
+import {
+  AccountStatusBadge,
+  NoEntitySelected,
+  entityName,
+  entityRole,
+  readCountry,
+  readPayload,
+  roleAssignmentLabel,
+  roleLabel,
+} from "./directory-shared";
+
+type DetailTab = "profile" | "plan" | "trips" | "history";
+
+const detailTabs = (): readonly AdminTab[] => [
+  { id: "profile", label: t("screen.admin.directory.entityDetail.profile") },
+  { id: "plan", label: t("screen.admin.directory.entityDetail.plan") },
+  { id: "trips", label: t("screen.admin.directory.entityDetail.tripsAndBookings") },
+  { id: "history", label: t("screen.admin.directory.entityDetail.history") },
+];
+
+const NO_VALUE = "—";
+
+function PlanCard() {
+  return (
+    <AdminCard title={t("screen.admin.directory.entityDetail.planAndSubscription")}>
+      <div>
+        <AdminRow label={t("screen.admin.directory.entityDetail.plan")}>{NO_VALUE}</AdminRow>
+        <AdminRow label={t("screen.admin.directory.entityDetail.billingStatus")}>
+          {NO_VALUE}
+        </AdminRow>
+        <AdminRow label={t("screen.admin.directory.entityDetail.renewalDate")} last>
+          {NO_VALUE}
+        </AdminRow>
+      </div>
+    </AdminCard>
+  );
 }
 
-const ACTIVE = (): AdminStatusPresentation => ({
-  tone: "success",
-  icon: "check",
-  label: t("screen.admin.directory.entityDetail.active"),
-});
+function AuditHistoryCard() {
+  return (
+    <AdminCard title={t("screen.admin.directory.entityDetail.auditHistory")} className="py-4">
+      <AdminEmpty
+        title={t("screen.admin.directory.entityDetail.noAuditEntries")}
+        description={t("screen.admin.directory.entityDetail.noAuditEntriesBody")}
+      />
+      <AdminLink screen="SCR-ADM-30">
+        {t("screen.admin.directory.entityDetail.openAuditLog")}
+      </AdminLink>
+    </AdminCard>
+  );
+}
 
-const TRIP_COLUMNS = (): readonly TeDataTableColumn<TripRow>[] => [
-  { key: "trip", header: t("screen.admin.directory.entityDetail.trip") },
-  { key: "state", header: t("screen.admin.directory.entityDetail.state") },
-  { key: "dates", header: t("screen.admin.directory.entityDetail.dates") },
-];
+function TripsCard() {
+  return (
+    <AdminCard title={t("screen.admin.directory.entityDetail.tripsAndBookings")}>
+      <AdminEmpty
+        title={t("screen.admin.directory.entityDetail.noTrips")}
+        description={t("screen.admin.directory.entityDetail.noTripsBody")}
+      />
+    </AdminCard>
+  );
+}
+
+function DeletionRequestCard() {
+  return (
+    <AdminCard title={t("screen.admin.directory.entityDetail.deletionRequest")}>
+      <div>
+        <AdminRow label={t("screen.admin.directory.entityDetail.requested")}>{NO_VALUE}</AdminRow>
+        <AdminRow label={t("screen.admin.directory.entityDetail.graceEnd")} last>
+          {NO_VALUE}
+        </AdminRow>
+      </div>
+      <p className="te-caption">{t("screen.admin.directory.entityDetail.openDeletionQueue")}</p>
+      <AdminLink screen="SCR-ADM-10">
+        {t("screen.admin.directory.entityDetail.deletionQueue")}
+      </AdminLink>
+    </AdminCard>
+  );
+}
+
+interface EntityView {
+  name: string;
+  email: string | null;
+  phone: string | null;
+  country: string | null;
+  roleLabel: string;
+  assignmentLabel: string;
+  status: string | null;
+}
+
+function ProfileTab({ entity }: { entity: EntityView }) {
+  return (
+    <>
+      <AdminGrid columns={2}>
+        <AdminCard title={t("screen.admin.directory.entityDetail.profile")}>
+          <div>
+            <AdminRow label={t("screen.admin.directory.entityDetail.name")}>{entity.name}</AdminRow>
+            <AdminRow label={t("screen.admin.directory.entityDetail.email")}>
+              {entity.email ?? NO_VALUE}
+            </AdminRow>
+            <AdminRow label={t("screen.admin.directory.entityDetail.phone")}>
+              {entity.phone ?? NO_VALUE}
+            </AdminRow>
+            <AdminRow label={t("screen.admin.directory.entityDetail.country")} last>
+              {entity.country ?? NO_VALUE}
+            </AdminRow>
+          </div>
+        </AdminCard>
+        <AdminCard title={t("screen.admin.directory.entityDetail.roleAssignments")}>
+          <AdminRow label={entity.assignmentLabel} strong last>
+            <AccountStatusBadge status={entity.status} />
+          </AdminRow>
+        </AdminCard>
+        <PlanCard />
+        <DeletionRequestCard />
+      </AdminGrid>
+      <AuditHistoryCard />
+    </>
+  );
+}
+
+const TAB_CONTENT: Record<Exclude<DetailTab, "profile">, () => ReactNode> = {
+  plan: () => <PlanCard />,
+  trips: () => <TripsCard />,
+  history: () => <AuditHistoryCard />,
+};
 
 export function EntityDetail() {
   const { status: authStatus } = useAuth();
+  const entityId = useAdminParam("entityId", getSelectedAdminEntityId);
+  const [tab, setTab] = useState<DetailTab>("profile");
 
-  const queueQuery = useQuery({
-    ...orpc.onboarding.listReviewQueue.queryOptions({ input: {} }),
-    enabled: authStatus === "authenticated",
-  });
-  const tripsQuery = useQuery({
-    ...orpc.trips.browsePublicTrips.queryOptions({ input: {} }),
-  });
-  const catalogQuery = useQuery({
-    ...orpc.plans.getCatalog.queryOptions({ input: {} }),
+  const detailQuery = useQuery({
+    ...orpc.onboarding.getApplicationDetail.queryOptions({
+      input: { applicationId: entityId ?? "" },
+    }),
+    enabled: authStatus === "authenticated" && Boolean(entityId),
   });
 
-  const apps = queueQuery.data ?? [];
-  const publicTrips = tripsQuery.data ?? { items: [] };
-  const catalog = catalogQuery.data ?? [];
+  if (!entityId) {
+    return (
+      <AdminPage title={t("screen.admin.directory.entityDetail.title")}>
+        <NoEntitySelected />
+      </AdminPage>
+    );
+  }
 
-  const selectedId = getSelectedAdminEntityId();
-  const found = apps.find((a) => a.id === selectedId) ?? apps[0];
-  const payload = (found?.payload ?? {}) as Record<string, unknown>;
-
-  const entityName =
-    found?.applicant?.fullName ??
-    (typeof payload.legalEntityName === "string"
-      ? payload.legalEntityName
-      : (found?.applicantAccountId ?? "-"));
-  const email =
-    found?.applicant?.email ??
-    (typeof payload.billingContactEmail === "string" ? payload.billingContactEmail : "-");
-  const phone =
-    found?.applicant?.phone ??
-    (typeof payload.billingContactPhone === "string" ? payload.billingContactPhone : "-");
-  const country = typeof payload.countryCode === "string" ? payload.countryCode : "EG";
-  const entityType = found?.applicationType ?? "-";
-  const isSuspended = found?.state === "Rejected" || found?.state === "Closed";
-
-  const firstPlan = catalog[0];
-  const planName = firstPlan ? firstPlan.nameEn : "Starter";
-  const billingStatus = firstPlan ? "Active" : "Active";
-  const renewalDate = firstPlan
-    ? new Date(Date.now() + 30 * 86400000).toISOString().slice(0, 10)
-    : "-";
-
-  const tripRows: readonly TripRow[] = publicTrips.items.map((trip) => ({
-    id: trip.id,
-    trip: trip.titleEn || trip.titleAr,
-    state: trip.state,
-    dates: trip.startsAt ? new Date(trip.startsAt).toISOString().slice(0, 10) : "-",
-  }));
-
-  const historyItems: readonly TeTimelineItem[] = apps.slice(0, 10).map((a) => ({
-    id: a.id,
-    time: new Date(a.updatedAt).toISOString().slice(0, 16).replace("T", " "),
-    label: `${a.state} (${a.applicationType})`,
-    state: "done" as const,
-  }));
+  const detail = detailQuery.data;
+  const application = detail?.application;
+  const payload = readPayload(application?.payload);
+  const role = entityRole(application?.applicationType ?? "");
+  const entity: EntityView = {
+    name: application
+      ? entityName({ ...application, applicant: detail?.applicant })
+      : t("screen.admin.directory.entityDetail.title"),
+    email: detail?.applicant?.email ?? null,
+    phone: detail?.applicant?.phone ?? null,
+    country: readCountry(payload),
+    roleLabel: roleLabel(role),
+    assignmentLabel: roleAssignmentLabel(role),
+    status: detail?.applicant?.status ?? null,
+  };
+  const isSuspended = entity.status === "suspended";
 
   return (
-    <AdminPage>
-      <TePageHeader
-        title={t("screen.admin.directory.entityDetail.entityDetail")}
-        description={t("screen.admin.directory.entityDetail.entityNameProfilePlanTrips")}
-        actions={
-          <AdminActions>
-            <AdminScreenLink slug="deletion-and-data-requests" variant="ghost">
-              {t("screen.admin.directory.entityDetail.handleDeletion")}
-            </AdminScreenLink>
-            <AdminScreenLink slug="subscriptions-and-overrides" variant="secondary">
-              {t("screen.admin.directory.entityDetail.grantOrOverridePlan")}
-            </AdminScreenLink>
-            <AdminScreenLink slug="request-lab-test-decision" variant="secondary">
-              {t("screen.admin.directory.entityDetail.requestLabTest")}
-            </AdminScreenLink>
-            <AdminScreenLink slug="suspend-or-reinstate-decision" variant="primary">
-              {t("screen.admin.directory.entityDetail.suspendOrReinstate")}
-            </AdminScreenLink>
-          </AdminActions>
-        }
+    <AdminPage
+      title={entity.name}
+      description={
+        application ? (
+          <span className="flex flex-wrap items-center gap-2">
+            <AdminBadge tone="info" icon={false}>
+              {entity.roleLabel}
+            </AdminBadge>
+            <AccountStatusBadge status={entity.status} />
+          </span>
+        ) : undefined
+      }
+      actions={
+        <>
+          <AdminLink screen="SCR-ADM-09" params={{ entityId }} variant="danger-outline">
+            {isSuspended
+              ? t("screen.admin.directory.entityDetail.reinstate")
+              : t("screen.admin.directory.entityDetail.suspend")}
+          </AdminLink>
+          <AdminButton
+            disabled
+            title={t("screen.admin.directory.entityDetail.resetCredentialsUnavailable")}
+          >
+            {t("screen.admin.directory.entityDetail.resetCredentials")}
+          </AdminButton>
+          <AdminLink screen="SCR-ADM-17" variant="primary">
+            {t("screen.admin.directory.entityDetail.grantOrOverridePlan")}
+          </AdminLink>
+        </>
+      }
+    >
+      <AdminTabs
+        tabs={detailTabs()}
+        activeId={tab}
+        onSelect={(id) => setTab(id as DetailTab)}
+        label={t("screen.admin.directory.entityDetail.sections")}
       />
-      <StatePreview
-        emptyTitle={t("screen.admin.directory.entityDetail.noTripsOrBookings")}
-        emptyDescription={t("screen.admin.directory.entityDetail.thisAccountHasNoTrips")}
-        loadingLabel={t("screen.admin.directory.entityDetail.loadingTheAccount")}
+      <AdminQueryState
+        query={detailQuery}
+        loadingLabel={t("screen.admin.directory.entityDetail.loading")}
       >
-        {isSuspended ? (
-          <TeInlineAlert tone="warning" title={t("screen.admin.directory.entityDetail.suspended")}>
-            {t("screen.admin.directory.entityDetail.signInIsRefusedWhile")}
-          </TeInlineAlert>
-        ) : null}
-        <AdminPanel title={t("screen.admin.directory.entityDetail.profile")}>
-          <AdminStatus status={ACTIVE()} />
-          <AdminFacts
-            items={[
-              { label: t("screen.admin.directory.entityDetail.name"), value: entityName },
-              { label: t("screen.admin.directory.entityDetail.email"), value: email },
-              { label: t("screen.admin.directory.entityDetail.phone"), value: phone },
-              { label: t("screen.admin.directory.entityDetail.country"), value: country },
-              {
-                label: t("screen.admin.directory.entityDetail.entityType"),
-                value: entityType,
-              },
-              {
-                label: t("screen.admin.directory.entityDetail.deletionRequest"),
-                value: "None",
-              },
-            ]}
-          />
-          <AdminScreenLink slug="users-and-entities-directory">
-            {t("screen.admin.directory.entityDetail.backToDirectory")}
-          </AdminScreenLink>
-        </AdminPanel>
-        <AdminPanel title={t("screen.admin.directory.entityDetail.roleAssignments")}>
-          <p>{t("screen.admin.directory.entityDetail.roleAssignments2")}</p>
-        </AdminPanel>
-        <AdminPanel title={t("screen.admin.directory.entityDetail.planAndSubscription")}>
-          <AdminFacts
-            items={[
-              { label: t("screen.admin.directory.entityDetail.plan"), value: planName },
-              {
-                label: t("screen.admin.directory.entityDetail.billingStatus"),
-                value: billingStatus,
-              },
-              { label: t("screen.admin.directory.entityDetail.renewalDate"), value: renewalDate },
-            ]}
-          />
-        </AdminPanel>
-        <AdminPanel title={t("screen.admin.directory.entityDetail.tripsAndBookings")}>
-          <TeDataTable
-            columns={TRIP_COLUMNS()}
-            rows={tripRows}
-            getRowKey={(row) => row.id}
-            caption={t("screen.admin.directory.entityDetail.tripsAndBookingsCaption")}
-            emptyTitle={t("screen.admin.directory.entityDetail.noTripsOrBookingsEmptyTitle")}
-            emptyDescription={t(
-              "screen.admin.directory.entityDetail.thisAccountHasNoTripsEmptyDescription",
-            )}
-          />
-        </AdminPanel>
-        <AdminPanel title={t("screen.admin.directory.entityDetail.auditHistory")}>
-          <TeTimeline
-            items={historyItems}
-            ariaLabel={t("screen.admin.directory.entityDetail.auditHistoryForThisAccount")}
-          />
-        </AdminPanel>
-      </StatePreview>
+        {tab === "profile" ? <ProfileTab entity={entity} /> : TAB_CONTENT[tab]()}
+      </AdminQueryState>
     </AdminPage>
   );
 }

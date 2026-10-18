@@ -1,184 +1,187 @@
+// SCR-ADM-09 Suspend or reinstate (docs/design/web/admin/SCR-ADM-09.dc.html): stop or restore an
+// account's access with a required reason and an acknowledgement. The page suspends an active
+// account and reinstates a suspended one; the side column states the effect.
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { TeInlineAlert } from "@trips-app/ui/components/te-inline-alert";
-import { TePageHeader } from "@trips-app/ui/components/te-page-header";
-import { TeSelect, type TeSelectOption } from "@trips-app/ui/components/te-select";
 import { t } from "@trips-app/i18n";
+
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
-import { AdminDecisionForm } from "../common/admin-decision-form";
-import { StatePreview } from "../common/admin-state-preview";
-import { useAdminNavigate } from "../common/admin-links";
-import {
-  AdminFacts,
-  AdminPage,
-  AdminPanel,
-  AdminStatus,
-  getSelectedAdminEntityId,
-} from "../common/admin-shared";
 
-const ACTION_OPTIONS = (): readonly TeSelectOption[] => [
-  {
-    value: "suspend",
-    label: t("screen.admin.directory.suspendOrReinstateDecision.suspendAccount"),
-  },
-  {
-    value: "reinstate",
-    label: t("screen.admin.directory.suspendOrReinstateDecision.reinstateAccount"),
-  },
-];
+import { AdminButton, AdminLink, useAdminNavigate, useAdminParam } from "../common/admin-actions";
+import { AdminCheckbox, AdminTextarea } from "../common/admin-form";
+import { getSelectedAdminEntityId } from "../common/admin-selection";
+import { AdminQueryState } from "../common/admin-states";
+import { AdminAlert, AdminCard, AdminLines, AdminPage, AdminSplit } from "../common/admin-ui";
+import { NoEntitySelected, entityName } from "./directory-shared";
 
-const ACTIVE = () =>
-  ({
-    tone: "success",
-    icon: "check",
-    label: t("screen.admin.directory.suspendOrReinstateDecision.active"),
-  }) as const;
+const REASON_MIN_LENGTH = 5;
+const REASON_MAX_LENGTH = 500;
+
+interface DecisionCopy {
+  title: string;
+  description: string;
+  submit: string;
+  acknowledge: string;
+  effects: readonly string[];
+  notice: string;
+}
+
+function suspendCopy(name: string): DecisionCopy {
+  return {
+    title: t("screen.admin.directory.suspendOrReinstateDecision.suspendTitle"),
+    description: t("screen.admin.directory.suspendOrReinstateDecision.suspendDescription", {
+      name,
+    }),
+    submit: t("screen.admin.directory.suspendOrReinstateDecision.suspendAccess"),
+    acknowledge: t("screen.admin.directory.suspendOrReinstateDecision.suspendAcknowledge"),
+    effects: [
+      t("screen.admin.directory.suspendOrReinstateDecision.suspendEffectAccess"),
+      t("screen.admin.directory.suspendOrReinstateDecision.suspendEffectData"),
+      t("screen.admin.directory.suspendOrReinstateDecision.effectAudit"),
+    ],
+    notice: t("screen.admin.directory.suspendOrReinstateDecision.suspendNotice"),
+  };
+}
+
+function reinstateCopy(name: string): DecisionCopy {
+  return {
+    title: t("screen.admin.directory.suspendOrReinstateDecision.reinstateTitle"),
+    description: t("screen.admin.directory.suspendOrReinstateDecision.reinstateDescription", {
+      name,
+    }),
+    submit: t("screen.admin.directory.suspendOrReinstateDecision.reinstateAccess"),
+    acknowledge: t("screen.admin.directory.suspendOrReinstateDecision.reinstateAcknowledge"),
+    effects: [
+      t("screen.admin.directory.suspendOrReinstateDecision.reinstateEffectAccess"),
+      t("screen.admin.directory.suspendOrReinstateDecision.reinstateEffectData"),
+      t("screen.admin.directory.suspendOrReinstateDecision.effectAudit"),
+    ],
+    notice: t("screen.admin.directory.suspendOrReinstateDecision.reinstateNotice"),
+  };
+}
 
 export function SuspendOrReinstateDecision() {
   const { status: authStatus } = useAuth();
   const queryClient = useQueryClient();
-  const [action, setAction] = useState("suspend");
   const goTo = useAdminNavigate();
-  const isSuspend = action === "suspend";
+  const entityId = useAdminParam("entityId", getSelectedAdminEntityId);
+  const [reason, setReason] = useState("");
+  const [acknowledged, setAcknowledged] = useState(false);
 
-  const queueQuery = useQuery({
-    ...orpc.onboarding.listReviewQueue.queryOptions({ input: {} }),
-    enabled: authStatus === "authenticated",
+  const detailQuery = useQuery({
+    ...orpc.onboarding.getApplicationDetail.queryOptions({
+      input: { applicationId: entityId ?? "" },
+    }),
+    enabled: authStatus === "authenticated" && Boolean(entityId),
   });
 
+  const onDecided = async () => {
+    await Promise.all([
+      queryClient.invalidateQueries({ queryKey: orpc.auth.key() }),
+      queryClient.invalidateQueries({ queryKey: orpc.onboarding.key() }),
+    ]);
+    if (entityId) await goTo("SCR-ADM-08", { entityId });
+  };
   const suspendMutation = useMutation(
-    orpc.auth.suspendAccount.mutationOptions({
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: orpc.auth.key() });
-      },
-    }),
+    orpc.auth.suspendAccount.mutationOptions({ onSuccess: onDecided }),
   );
   const reinstateMutation = useMutation(
-    orpc.auth.reinstateAccount.mutationOptions({
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: orpc.auth.key() });
-      },
-    }),
+    orpc.auth.reinstateAccount.mutationOptions({ onSuccess: onDecided }),
   );
 
-  const apps = queueQuery.data ?? [];
-  const selectedId = getSelectedAdminEntityId();
-  const found = apps.find((a) => a.id === selectedId) ?? apps[0];
-  const payload = (found?.payload ?? {}) as Record<string, unknown>;
-  const targetAccountId = found?.applicantAccountId ?? "";
-  const accountName =
-    found?.applicant?.fullName ??
-    (typeof payload.legalEntityName === "string"
-      ? payload.legalEntityName
-      : (found?.applicantAccountId ?? "-"));
-  const entityType = found?.applicationType ?? "-";
+  if (!entityId) {
+    return (
+      <AdminPage title={t("screen.admin.directory.suspendOrReinstateDecision.suspendTitle")}>
+        <NoEntitySelected />
+      </AdminPage>
+    );
+  }
 
-  const handleConfirm = async (reason: string) => {
-    const accountId = targetAccountId || getSelectedAdminEntityId();
-    const trimmedReason =
-      reason.trim().length >= 5 ? reason.trim() : "Admin decision from directory console";
-    if (accountId) {
-      try {
-        if (isSuspend) {
-          await suspendMutation.mutateAsync({
-            targetAccountId: accountId,
-            reason: trimmedReason,
-          });
-        } else {
-          await reinstateMutation.mutateAsync({
-            targetAccountId: accountId,
-            reason: trimmedReason,
-          });
-        }
-      } catch {
-        // Proceed to entity detail after attempting status change
-      }
-    }
-    goTo("entity-detail");
+  const detail = detailQuery.data;
+  const application = detail?.application;
+  const name = application ? entityName({ ...application, applicant: detail?.applicant }) : "—";
+  const isReinstate = detail?.applicant?.status === "suspended";
+  const copy = isReinstate ? reinstateCopy(name) : suspendCopy(name);
+  const mutation = isReinstate ? reinstateMutation : suspendMutation;
+  const trimmedReason = reason.trim();
+  const canSubmit =
+    Boolean(application) &&
+    trimmedReason.length >= REASON_MIN_LENGTH &&
+    acknowledged &&
+    !mutation.isPending;
+
+  const submit = () => {
+    if (!application || !canSubmit) return;
+    mutation.mutate({ targetAccountId: application.applicantAccountId, reason: trimmedReason });
   };
 
   return (
-    <AdminPage>
-      <TePageHeader
-        title={t("screen.admin.directory.suspendOrReinstateDecision.suspendOrReinstateDecision")}
-        description={t(
-          "screen.admin.directory.suspendOrReinstateDecision.stopOrRestoreAccessWithout",
-        )}
-      />
-      <StatePreview
-        emptyTitle={t("screen.admin.directory.suspendOrReinstateDecision.noAccountSelected")}
-        emptyDescription={t(
-          "screen.admin.directory.suspendOrReinstateDecision.openAnAccountFromThe",
-        )}
-        loadingLabel={t("screen.admin.directory.suspendOrReinstateDecision.loadingTheAccount")}
+    <AdminPage
+      title={copy.title}
+      description={copy.description}
+      actions={
+        <>
+          <AdminLink screen="SCR-ADM-08" params={{ entityId }} variant="secondary">
+            {t("screen.admin.directory.suspendOrReinstateDecision.cancel")}
+          </AdminLink>
+          <AdminButton
+            variant={isReinstate ? "primary" : "danger"}
+            disabled={!canSubmit}
+            onClick={submit}
+          >
+            {copy.submit}
+          </AdminButton>
+        </>
+      }
+    >
+      <AdminQueryState
+        query={detailQuery}
+        loadingLabel={t("screen.admin.directory.suspendOrReinstateDecision.loading")}
       >
-        <AdminPanel title={t("screen.admin.directory.suspendOrReinstateDecision.account")}>
-          <AdminStatus status={ACTIVE()} />
-          <AdminFacts
-            items={[
-              {
-                label: t("screen.admin.directory.suspendOrReinstateDecision.accountName"),
-                value: accountName,
-              },
-              {
-                label: t("screen.admin.directory.suspendOrReinstateDecision.entityType"),
-                value: entityType,
-              },
-            ]}
-          />
-        </AdminPanel>
-        <AdminPanel title={t("screen.admin.directory.suspendOrReinstateDecision.decision")}>
-          <TeSelect
-            label={t("screen.admin.directory.suspendOrReinstateDecision.action")}
-            options={ACTION_OPTIONS()}
-            value={action}
-            onValueChange={setAction}
-          />
-          <AdminDecisionForm
-            reasonLabel={t("screen.admin.directory.suspendOrReinstateDecision.reasonRequired")}
-            reasonHelp={t("screen.admin.directory.suspendOrReinstateDecision.reasonRulesAreNotYet")}
-            submitLabel={
-              isSuspend
-                ? t("screen.admin.directory.suspendOrReinstateDecision.suspendAccount2")
-                : t("screen.admin.directory.suspendOrReinstateDecision.reinstateAccount2")
-            }
-            dialogTitle={
-              isSuspend
-                ? t("screen.admin.directory.suspendOrReinstateDecision.suspendThisAccount")
-                : t("screen.admin.directory.suspendOrReinstateDecision.reinstateThisAccount")
-            }
-            dialogDescription={
-              isSuspend
-                ? t("screen.admin.directory.suspendOrReinstateDecision.accessStopsAtOnceData")
-                : t("screen.admin.directory.suspendOrReinstateDecision.accessIsRestoredAtOnce")
-            }
-            confirmLabel={
-              isSuspend
-                ? t("screen.admin.directory.suspendOrReinstateDecision.suspendAccount3")
-                : t("screen.admin.directory.suspendOrReinstateDecision.reinstateAccount3")
-            }
-            tone={isSuspend ? "danger" : "default"}
-            cancel={{
-              slug: "entity-detail",
-              label: t("screen.admin.directory.suspendOrReinstateDecision.cancel"),
-            }}
-            onConfirm={(reason) => void handleConfirm(reason)}
-          />
-        </AdminPanel>
-        <TeInlineAlert
-          tone={isSuspend ? "warning" : "info"}
-          title={
-            isSuspend
-              ? t("screen.admin.directory.suspendOrReinstateDecision.effectOfSuspending")
-              : t("screen.admin.directory.suspendOrReinstateDecision.effectOfReinstating")
+        {mutation.isError ? (
+          <AdminAlert
+            tone="danger"
+            title={t("screen.admin.directory.suspendOrReinstateDecision.notSaved")}
+          >
+            {t("screen.admin.directory.suspendOrReinstateDecision.notSavedBody")}
+          </AdminAlert>
+        ) : null}
+        <AdminSplit
+          main={
+            <AdminCard title={t("screen.admin.directory.suspendOrReinstateDecision.reason")}>
+              <AdminTextarea
+                label={t("screen.admin.directory.suspendOrReinstateDecision.reasonRequired")}
+                placeholder={
+                  isReinstate
+                    ? t("screen.admin.directory.suspendOrReinstateDecision.reinstatePlaceholder")
+                    : t("screen.admin.directory.suspendOrReinstateDecision.suspendPlaceholder")
+                }
+                help={t("screen.admin.directory.suspendOrReinstateDecision.reasonHelp", {
+                  min: String(REASON_MIN_LENGTH),
+                })}
+                value={reason}
+                maxLength={REASON_MAX_LENGTH}
+                required
+                onChange={(event) => setReason(event.target.value)}
+              />
+              <AdminCheckbox
+                label={copy.acknowledge}
+                checked={acknowledged}
+                onCheckedChange={setAcknowledged}
+              />
+            </AdminCard>
           }
-        >
-          {isSuspend
-            ? t("screen.admin.directory.suspendOrReinstateDecision.accessStopsAtOnceData2")
-            : t("screen.admin.directory.suspendOrReinstateDecision.accessIsRestoredAtOnce2")}
-        </TeInlineAlert>
-      </StatePreview>
+          side={
+            <>
+              <AdminCard title={t("screen.admin.directory.suspendOrReinstateDecision.effect")}>
+                <AdminLines lines={copy.effects} />
+              </AdminCard>
+              <AdminAlert tone={isReinstate ? "info" : "warning"}>{copy.notice}</AdminAlert>
+            </>
+          }
+        />
+      </AdminQueryState>
     </AdminPage>
   );
 }
