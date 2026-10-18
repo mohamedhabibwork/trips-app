@@ -1,97 +1,57 @@
-import { useCallback } from "react";
+// SCR-ADM-01 Admin home (docs/design/web/admin/SCR-ADM-01.dc.html): six KPI cards, one per queue
+// that needs action now, each with its count and a link to the queue. A queue whose source failed
+// to load shows "—" and a warning alert with Retry; the other queues keep their counts.
 import { useQuery } from "@tanstack/react-query";
-import { TeDataTable, type TeDataTableColumn } from "@trips-app/ui/components/te-data-table";
-import { TePageHeader } from "@trips-app/ui/components/te-page-header";
-import { TeRetryBanner } from "@trips-app/ui/components/te-retry-banner";
 import { t } from "@trips-app/i18n";
+
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
-import { AdminNav } from "../common/admin-nav";
-import { StatePreview } from "../common/admin-state-preview";
-import { AdminScreenLink, type AdminSlug } from "../common/admin-links";
-import { AdminPage, AdminPanel } from "../common/admin-shared";
 
-interface QueueRow {
+import { AdminButton, AdminLink, type AdminScreenId } from "../common/admin-actions";
+import { AdminAlert, AdminGrid, AdminKpi, AdminPage } from "../common/admin-ui";
+
+/** Applications an admin still has to act on. */
+const WAITING_STATES: ReadonlySet<string> = new Set(["Submitted", "Pending Review", "Appealed"]);
+/** Driver applications with no decision yet: their lab test is due or overdue. */
+const UNDECIDED_STATES: ReadonlySet<string> = new Set(["Submitted", "Pending Review"]);
+
+type QueueSource = "applications" | "exceptions" | "coupons";
+
+interface QueueCard {
   id: string;
-  queue: string;
-  count: string;
-  oldest: string;
-  target: AdminSlug;
+  label: string;
+  caption: string;
+  linkLabel: string;
+  screen: AdminScreenId;
+  /** The query the count comes from; `null` when no endpoint backs this queue yet. */
+  source: QueueSource | null;
+  count: number | null;
 }
 
-const INITIAL_QUEUE_ROWS: readonly QueueRow[] = [
-  {
-    id: "applications",
-    queue: "Applications to review",
-    count: "0",
-    oldest: "-",
-    target: "application-queue",
-  },
-  {
-    id: "lab-tests",
-    queue: "Lab tests due or overdue",
-    count: "0",
-    oldest: "-",
-    target: "lab-tests-queue",
-  },
-  {
-    id: "disputes",
-    queue: "Open disputes",
-    count: "0",
-    oldest: "-",
-    target: "disputes-queue",
-  },
-  {
-    id: "deletions",
-    queue: "Deletion requests",
-    count: "0",
-    oldest: "-",
-    target: "deletion-and-data-requests",
-  },
-  {
-    id: "coupon-flags",
-    queue: "Coupon abuse flags",
-    count: "0",
-    oldest: "-",
-    target: "platform-coupons",
-  },
-  {
-    id: "settlements",
-    queue: "Open settlements",
-    count: "0",
-    oldest: "-",
-    target: "settlements-tracker",
-  },
-];
+interface QueryLike {
+  isError: boolean;
+  isPending: boolean;
+  isFetching: boolean;
+  refetch: () => unknown;
+}
 
-const COLUMNS = (): readonly TeDataTableColumn<QueueRow>[] => [
-  { key: "queue", header: t("screen.admin.home.adminHome.queue") },
-  { key: "count", header: t("screen.admin.home.adminHome.items"), align: "end" },
-  { key: "oldest", header: t("screen.admin.home.adminHome.oldestItem") },
-  {
-    key: "open",
-    header: t("screen.admin.home.adminHome.action"),
-    render: (row) => (
-      <AdminScreenLink
-        slug={row.target}
-        variant="secondary"
-        ariaLabel={t("screen.admin.home.adminHome.open", { queue: row.queue })}
-      >
-        {t("screen.admin.home.adminHome.openQueue")}
-      </AdminScreenLink>
-    ),
-  },
-];
+function sourceLabel(source: QueueSource): string {
+  if (source === "applications") return t("screen.admin.home.adminHome.sourceApplications");
+  if (source === "exceptions") return t("screen.admin.home.adminHome.sourceDisputes");
+  return t("screen.admin.home.adminHome.sourceCoupons");
+}
 
-const MORE_AREAS = (): readonly { slug: AdminSlug; label: string }[] => [
-  { slug: "admin-staff-accounts", label: t("screen.admin.home.adminHome.adminStaffAccounts") },
-  {
-    slug: "subscriptions-and-overrides",
-    label: t("screen.admin.home.adminHome.subscriptionsAndOverrides"),
-  },
-  { slug: "revenue-dashboard", label: t("screen.admin.home.adminHome.revenueDashboard") },
-  { slug: "notification-templates", label: t("screen.admin.home.adminHome.notificationTemplates") },
-];
+function KpiValue({ card, query }: { card: QueueCard; query: QueryLike | null }) {
+  const unavailable = !query || query.isError || query.isPending || card.count === null;
+  if (unavailable) {
+    return (
+      <span aria-busy={query?.isPending ? "true" : undefined}>
+        {t("screen.admin.home.adminHome.noValue")}
+      </span>
+    );
+  }
+  return <>{card.count}</>;
+}
 
 export function AdminHome() {
   const { status: authStatus } = useAuth();
@@ -108,110 +68,134 @@ export function AdminHome() {
     enabled: authStatus === "authenticated",
   });
 
-  const loadFailed = queueQuery.isError || exceptionsQuery.isError || couponsQuery.isError;
+  const queries: Record<QueueSource, QueryLike> = {
+    applications: queueQuery,
+    exceptions: exceptionsQuery,
+    coupons: couponsQuery,
+  };
 
-  const handleRetry = useCallback(() => {
+  const applications = queueQuery.data ?? [];
+  const waiting = applications.filter((app) => WAITING_STATES.has(app.state));
+  const overdue = waiting.filter((app) => app.isSlaOverdue).length;
+  const labTestsDue = applications.filter(
+    (app) => app.applicationType === "platform_driver" && UNDECIDED_STATES.has(app.state),
+  ).length;
+  const deletionRequests = applications.filter((app) => app.state === "Closed").length;
+  // Same rule as the coupons screen: a coupon that hit its usage limit is flagged.
+  const couponFlags = (couponsQuery.data?.items ?? []).filter(
+    (coupon) => coupon.maxRedemptions !== null && coupon.redemptionsCount >= coupon.maxRedemptions,
+  ).length;
+
+  const cards: readonly QueueCard[] = [
+    {
+      id: "applications",
+      label: t("screen.admin.home.adminHome.applicationsWaiting"),
+      caption: t("screen.admin.home.adminHome.overdueAfterTwoDays", {
+        count: queueQuery.isSuccess ? String(overdue) : t("screen.admin.home.adminHome.noValue"),
+      }),
+      linkLabel: t("screen.admin.home.adminHome.openApplications"),
+      screen: "SCR-ADM-02",
+      source: "applications",
+      count: waiting.length,
+    },
+    {
+      id: "lab-tests",
+      label: t("screen.admin.home.adminHome.labTests"),
+      caption: t("screen.admin.home.adminHome.dueOrOverdue"),
+      linkLabel: t("screen.admin.home.adminHome.openLabTests"),
+      screen: "SCR-ADM-12",
+      source: "applications",
+      count: labTestsDue,
+    },
+    {
+      id: "disputes",
+      label: t("screen.admin.home.adminHome.openDisputes"),
+      caption: t("screen.admin.home.adminHome.awaitingAcknowledgement"),
+      linkLabel: t("screen.admin.home.adminHome.openDisputesLink"),
+      screen: "SCR-ADM-23",
+      source: "exceptions",
+      count: exceptionsQuery.data?.length ?? null,
+    },
+    {
+      id: "deletions",
+      label: t("screen.admin.home.adminHome.deletionRequests"),
+      caption: t("screen.admin.home.adminHome.withGraceEndDates"),
+      linkLabel: t("screen.admin.home.adminHome.openRequests"),
+      screen: "SCR-ADM-10",
+      source: "applications",
+      count: deletionRequests,
+    },
+    {
+      id: "coupon-flags",
+      label: t("screen.admin.home.adminHome.couponAbuseFlags"),
+      caption: t("screen.admin.home.adminHome.raisedByAbuseRules"),
+      linkLabel: t("screen.admin.home.adminHome.openCoupons"),
+      screen: "SCR-ADM-19",
+      source: "coupons",
+      count: couponFlags,
+    },
+    {
+      id: "settlements",
+      label: t("screen.admin.home.adminHome.openSettlements"),
+      caption: t("screen.admin.home.adminHome.owedBetweenParties"),
+      linkLabel: t("screen.admin.home.adminHome.openSettlementsLink"),
+      screen: "SCR-ADM-28",
+      // No settlements count is loaded on this page; the tracker owns that data.
+      source: null,
+      count: null,
+    },
+  ];
+
+  const failedSources = (Object.keys(queries) as QueueSource[]).filter(
+    (source) => queries[source].isError,
+  );
+  const isRefreshing = Object.values(queries).some((query) => query.isFetching);
+
+  function refreshQueues() {
     void queueQuery.refetch();
     void exceptionsQuery.refetch();
     void couponsQuery.refetch();
-  }, [queueQuery, exceptionsQuery, couponsQuery]);
-
-  const apps = queueQuery.data ?? [];
-  const exceptions = exceptionsQuery.data ?? [];
-  const coupons = couponsQuery.data ?? { items: [] };
-
-  const driverApps = apps.filter((a) => a.applicationType === "platform_driver");
-  const closedApps = apps.filter((a) => a.state === "Closed");
-  const formatDate = (d: Date | string | undefined) =>
-    d ? new Date(d).toISOString().slice(0, 10) : "-";
-
-  const queueRows: readonly QueueRow[] =
-    queueQuery.data || exceptionsQuery.data || couponsQuery.data
-      ? [
-          {
-            id: "applications",
-            queue: "Applications to review",
-            count: String(apps.length),
-            oldest: formatDate(apps[apps.length - 1]?.createdAt),
-            target: "application-queue",
-          },
-          {
-            id: "lab-tests",
-            queue: "Lab tests due or overdue",
-            count: String(driverApps.length),
-            oldest: formatDate(driverApps[driverApps.length - 1]?.createdAt),
-            target: "lab-tests-queue",
-          },
-          {
-            id: "disputes",
-            queue: "Open disputes",
-            count: String(exceptions.length),
-            oldest: formatDate(exceptions[exceptions.length - 1]?.createdAt),
-            target: "disputes-queue",
-          },
-          {
-            id: "deletions",
-            queue: "Deletion requests",
-            count: String(closedApps.length),
-            oldest: formatDate(closedApps[closedApps.length - 1]?.updatedAt),
-            target: "deletion-and-data-requests",
-          },
-          {
-            id: "coupon-flags",
-            queue: "Coupon abuse flags",
-            count: String(coupons.items.filter((c) => c.status === "paused").length),
-            oldest: formatDate(coupons.items[0]?.createdAt),
-            target: "platform-coupons",
-          },
-          {
-            id: "settlements",
-            queue: "Open settlements",
-            count: String(exceptions.length),
-            oldest: formatDate(exceptions[0]?.createdAt),
-            target: "settlements-tracker",
-          },
-        ]
-      : INITIAL_QUEUE_ROWS;
+  }
 
   return (
-    <AdminPage backHome={false}>
-      <AdminNav current="admin-home" />
-      <TePageHeader
-        title={t("screen.admin.home.adminHome.adminHome")}
-        description={t("screen.admin.home.adminHome.queuesThatNeedActionNow")}
-      />
-      <StatePreview
-        emptyTitle={t("screen.admin.home.adminHome.allClear")}
-        emptyDescription={t("screen.admin.home.adminHome.noQueueHasItemsThat")}
-        loadingLabel={t("screen.admin.home.adminHome.loadingTheQueues")}
-      >
-        {loadFailed ? (
-          <TeRetryBanner
-            message={t("screen.admin.home.adminHome.theLabTestsQueueCould")}
-            onRetry={handleRetry}
-            retryLabel={t("screen.admin.home.adminHome.retryLabTests")}
+    <AdminPage
+      title={t("screen.admin.home.adminHome.title")}
+      description={t("screen.admin.home.adminHome.description")}
+      actions={
+        <AdminButton onClick={refreshQueues} disabled={isRefreshing} aria-busy={isRefreshing}>
+          {t("screen.admin.home.adminHome.refreshQueues")}
+        </AdminButton>
+      }
+    >
+      <AdminGrid columns={3}>
+        {cards.map((card) => (
+          <AdminKpi
+            key={card.id}
+            label={card.label}
+            value={<KpiValue card={card} query={card.source ? queries[card.source] : null} />}
+            caption={card.caption}
+            action={
+              <AdminLink screen={card.screen} className="self-start">
+                {card.linkLabel}
+              </AdminLink>
+            }
           />
-        ) : null}
-        <AdminPanel title={t("screen.admin.home.adminHome.queues")}>
-          <TeDataTable
-            columns={COLUMNS()}
-            rows={queueRows}
-            getRowKey={(row) => row.id}
-            caption={t("screen.admin.home.adminHome.queuesThatNeedAction")}
-            emptyTitle={t("screen.admin.home.adminHome.allClearEmptyTitle")}
-            emptyDescription={t("screen.admin.home.adminHome.noQueueHasItemsThatEmptyDescription")}
-          />
-        </AdminPanel>
-        <AdminPanel title={t("screen.admin.home.adminHome.moreAreas")}>
-          <ul className="flex flex-col gap-2">
-            {MORE_AREAS().map((area) => (
-              <li key={area.slug}>
-                <AdminScreenLink slug={area.slug}>{area.label}</AdminScreenLink>
-              </li>
-            ))}
-          </ul>
-        </AdminPanel>
-      </StatePreview>
+        ))}
+      </AdminGrid>
+      {failedSources.map((source) => (
+        <AdminAlert
+          key={source}
+          tone="warning"
+          title={t("screen.admin.home.adminHome.queueFailed", { queue: sourceLabel(source) })}
+          action={
+            <AdminButton small onClick={() => void queries[source].refetch()}>
+              {t("screen.admin.home.adminHome.retry")}
+            </AdminButton>
+          }
+        >
+          {t("screen.admin.home.adminHome.queueFailedBody")}
+        </AdminAlert>
+      ))}
     </AdminPage>
   );
 }

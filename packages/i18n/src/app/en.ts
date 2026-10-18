@@ -101,41 +101,43 @@ export const en = {
   "route.screensIndex.screens": "Screens",
   "route.screensIndex.screensAcrossTheWebSurfaces": "screens across the web surfaces.",
   // apps/web/src/screens/admin/applications/appeal-review.tsx
-  "screen.admin.applications.appealReview.appealedPending": "Appealed (pending)",
-  "screen.admin.applications.appealReview.selectADecision": "Select a decision",
-  "screen.admin.applications.appealReview.upholdAppealApplicationBecomesApproved":
-    "Uphold appeal (application becomes Approved)",
-  "screen.admin.applications.appealReview.upholdRejectionApplicationStaysRejected":
-    "Uphold rejection (application stays Rejected)",
-  "screen.admin.applications.appealReview.appealReview": "Appeal review",
-  "screen.admin.applications.appealReview.decideAnAppealFromA":
+  "screen.admin.applications.appealReview.title": "Appeal review",
+  "screen.admin.applications.appealReview.description":
     "Decide an appeal from a rejected applicant.",
-  "screen.admin.applications.appealReview.noAppealStatement": "No appeal statement",
-  "screen.admin.applications.appealReview.theApplicantHasNotAdded":
-    "The applicant has not added a statement to this appeal.",
-  "screen.admin.applications.appealReview.loadingTheAppeal": "Loading the appeal.",
+  "screen.admin.applications.appealReview.appealedPending": "Appealed, decision pending",
+  "screen.admin.applications.appealReview.decidedApproved": "Appeal upheld, approved",
+  "screen.admin.applications.appealReview.decidedRejected": "Rejection upheld",
   "screen.admin.applications.appealReview.originalApplication": "Original application",
-  "screen.admin.applications.appealReview.applicantName": "Applicant name",
-  "screen.admin.applications.appealReview.applicationType": "Application type",
+  "screen.admin.applications.appealReview.applicant": "Applicant",
+  "screen.admin.applications.appealReview.type": "Type",
+  "screen.admin.applications.appealReview.driver": "Driver",
+  "screen.admin.applications.appealReview.organization": "Organization",
+  "screen.admin.applications.appealReview.photographer": "Photographer",
   "screen.admin.applications.appealReview.rejectedOn": "Rejected on",
-  "screen.admin.applications.appealReview.rejectionReason": "Rejection reason",
-  "screen.admin.applications.appealReview.openOriginalApplication": "Open original application",
+  "screen.admin.applications.appealReview.originalReason": "Original reason",
+  "screen.admin.applications.appealReview.noMessage": "No message was sent with the rejection.",
   "screen.admin.applications.appealReview.appealStatement": "Appeal statement",
-  "screen.admin.applications.appealReview.appealReceived": "Appeal received",
-  "screen.admin.applications.appealReview.appealWindowCloses": "Appeal window closes",
-  "screen.admin.applications.appealReview.couldNotSaveDecision": "Could not save decision",
+  "screen.admin.applications.appealReview.noStatement": "The applicant did not write a statement.",
+  "screen.admin.applications.appealReview.appealWindow": "Appeal window: {days} days remaining",
   "screen.admin.applications.appealReview.decision": "Decision",
-  "screen.admin.applications.appealReview.decisionRequired": "Decision (required)",
+  "screen.admin.applications.appealReview.upholdAppeal": "Uphold appeal",
+  "screen.admin.applications.appealReview.upholdAppealBody": "Set the application to Approved.",
+  "screen.admin.applications.appealReview.upholdRejection": "Uphold rejection",
+  "screen.admin.applications.appealReview.upholdRejectionBody": "Keep the application Rejected.",
   "screen.admin.applications.appealReview.reasonRequired": "Reason (required)",
-  "screen.admin.applications.appealReview.reasonForTheDecision": "[Reason for the decision]",
-  "screen.admin.applications.appealReview.recordedWithTheDecisionIn":
-    "Recorded with the decision in the audit log.",
-  "screen.admin.applications.appealReview.appealWindow": "Appeal window",
-  "screen.admin.applications.appealReview.aDecisionCanBeSaved":
-    "A decision can be saved only while the appeal window is open.",
+  "screen.admin.applications.appealReview.reasonPlaceholder":
+    "The appeal does not add the missing document.",
+  "screen.admin.applications.appealReview.reasonTooShort": "Write at least 5 characters.",
   "screen.admin.applications.appealReview.cancel": "Cancel",
-  "screen.admin.applications.appealReview.saving": "Saving...",
   "screen.admin.applications.appealReview.saveDecision": "Save decision",
+  "screen.admin.applications.appealReview.saving": "Saving…",
+  "screen.admin.applications.appealReview.saveFailed": "The decision was not saved",
+  "screen.admin.applications.appealReview.saveFailedBody":
+    "Try again. If it keeps failing, reload the page.",
+  "screen.admin.applications.appealReview.loading": "Loading the appeal…",
+  "screen.admin.applications.appealReview.emptyTitle": "No appeals to review",
+  "screen.admin.applications.appealReview.emptyBody":
+    "Appeals from rejected applicants appear here.",
   // apps/web/src/screens/admin/applications/application-queue.tsx
   "screen.admin.applications.applicationQueue.title": "Application queue",
   "screen.admin.applications.applicationQueue.description":
@@ -175,150 +177,160 @@ export const en = {
   "screen.admin.applications.applicationQueue.emptyBody":
     "Change the filters to see more applications.",
   // apps/web/src/screens/admin/applications/application-review-detail.tsx
-  "screen.admin.applications.applicationReviewDetail.identityDocument": "Identity document",
-  "screen.admin.applications.applicationReviewDetail.insuranceCertificate": "Insurance certificate",
-  "screen.admin.applications.applicationReviewDetail.initialLabResult": "Initial lab result",
-  "screen.admin.applications.applicationReviewDetail.verified": "Verified",
-  "screen.admin.applications.applicationReviewDetail.notVerified": "Not verified",
-  "screen.admin.applications.applicationReviewDetail.submitted": "Submitted",
-  "screen.admin.applications.applicationReviewDetail.documents": "Documents",
-  "screen.admin.applications.applicationReviewDetail.checks": "Checks",
-  "screen.admin.applications.applicationReviewDetail.decision": "Decision",
-  "screen.admin.applications.applicationReviewDetail.backgroundCheckConsentSigned":
-    "Background check consent signed",
-  "screen.admin.applications.applicationReviewDetail.labConsentSigned": "Lab consent signed",
-  "screen.admin.applications.applicationReviewDetail.initialLabResultDatedWithin":
-    "Initial lab result dated within 30 days",
-  "screen.admin.applications.applicationReviewDetail.insuranceValidFor3Months":
-    "Insurance valid for 3 months or more",
-  "screen.admin.applications.applicationReviewDetail.document": "Document",
-  "screen.admin.applications.applicationReviewDetail.status": "Status",
-  "screen.admin.applications.applicationReviewDetail.restrictedView": "Restricted view",
-  "screen.admin.applications.applicationReviewDetail.view": "View {label}",
-  "screen.admin.applications.applicationReviewDetail.view2": "View",
-  "screen.admin.applications.applicationReviewDetail.unverify": "Unverify",
-  "screen.admin.applications.applicationReviewDetail.verify": "Verify",
-  "screen.admin.applications.applicationReviewDetail.applicationReviewDetail":
-    "Application review detail",
-  "screen.admin.applications.applicationReviewDetail.checkTheSubmittedDataAnd":
+  "screen.admin.applications.applicationReviewDetail.title": "Application review",
+  "screen.admin.applications.applicationReviewDetail.description":
     "Check the submitted data and documents, then decide.",
-  "screen.admin.applications.applicationReviewDetail.noDocuments": "No documents",
-  "screen.admin.applications.applicationReviewDetail.theApplicantHasNotUploaded":
-    "The applicant has not uploaded documents.",
-  "screen.admin.applications.applicationReviewDetail.loadingTheApplication":
-    "Loading the application.",
-  "screen.admin.applications.applicationReviewDetail.reviewSteps": "Review steps",
-  "screen.admin.applications.applicationReviewDetail.duplicateRegistrationHold":
-    "Duplicate registration hold",
-  "screen.admin.applications.applicationReviewDetail.anotherOrganizationAlreadyUsesThis":
-    "Another organization already uses this commercial registration number or tax number. Approval is blocked while this duplicate hold is active.",
-  "screen.admin.applications.applicationReviewDetail.restrictedDocumentOpenedAuditLogged":
-    "Restricted document opened (audit logged)",
-  "screen.admin.applications.applicationReviewDetail.viewing": "Viewing:",
-  "screen.admin.applications.applicationReviewDetail.actionFailed": "Action failed",
-  "screen.admin.applications.applicationReviewDetail.applicantData": "Applicant data",
-  "screen.admin.applications.applicationReviewDetail.applicantName": "Applicant name",
-  "screen.admin.applications.applicationReviewDetail.email": "Email",
-  "screen.admin.applications.applicationReviewDetail.phone": "Phone",
-  "screen.admin.applications.applicationReviewDetail.country": "Country",
-  "screen.admin.applications.applicationReviewDetail.documentsTitle": "Documents",
-  "screen.admin.applications.applicationReviewDetail.submittedDocuments": "Submitted documents",
-  "screen.admin.applications.applicationReviewDetail.noDocumentsEmptyTitle": "No documents",
-  "screen.admin.applications.applicationReviewDetail.theApplicantHasNotUploadedEmptyDescription":
-    "The applicant has not uploaded documents.",
-  "screen.admin.applications.applicationReviewDetail.checksDriver": "Checks (driver)",
-  "screen.admin.applications.applicationReviewDetail.driverChecks": "Driver checks",
-  "screen.admin.applications.applicationReviewDetail.approveIsBlocked": "Approve is blocked",
-  "screen.admin.applications.applicationReviewDetail.approveStaysOffUntilEvery":
-    "Approve stays off until every check passes and every document is verified. Approval assigns the Starter plan (D-24).",
-  "screen.admin.applications.applicationReviewDetail.decisionTitle": "Decision",
-  "screen.admin.applications.applicationReviewDetail.backToQueue": "Back to queue",
   "screen.admin.applications.applicationReviewDetail.reject": "Reject",
   "screen.admin.applications.applicationReviewDetail.requestChanges": "Request changes",
-  "screen.admin.applications.applicationReviewDetail.approving": "Approving...",
-  "screen.admin.applications.applicationReviewDetail.approveApplication": "Approve application",
-  "screen.admin.applications.applicationReviewDetail.chooseOneDecisionEachDecision":
-    "Choose one decision. Each decision is written to the audit log.",
+  "screen.admin.applications.applicationReviewDetail.approve": "Approve",
+  "screen.admin.applications.applicationReviewDetail.approving": "Approving…",
+  "screen.admin.applications.applicationReviewDetail.applicantData": "Applicant data",
+  "screen.admin.applications.applicationReviewDetail.applicant": "Applicant",
+  "screen.admin.applications.applicationReviewDetail.type": "Type",
+  "screen.admin.applications.applicationReviewDetail.country": "Country",
+  "screen.admin.applications.applicationReviewDetail.submitted": "Submitted",
+  "screen.admin.applications.applicationReviewDetail.driver": "Driver",
+  "screen.admin.applications.applicationReviewDetail.organization": "Organization",
+  "screen.admin.applications.applicationReviewDetail.photographer": "Photographer",
+  "screen.admin.applications.applicationReviewDetail.driverChecks": "Driver checks",
+  "screen.admin.applications.applicationReviewDetail.noChecksForType":
+    "No automatic checks apply to this application type.",
+  "screen.admin.applications.applicationReviewDetail.backgroundConsent": "Background consent",
+  "screen.admin.applications.applicationReviewDetail.labConsent": "Lab consent",
+  "screen.admin.applications.applicationReviewDetail.initialLabResult":
+    "Initial lab result within 30 days",
+  "screen.admin.applications.applicationReviewDetail.insuranceValid":
+    "Insurance valid 3 months or more",
+  "screen.admin.applications.applicationReviewDetail.decision": "Decision",
+  "screen.admin.applications.applicationReviewDetail.readyToApprove":
+    "All checks passed and every document is on file. Approving assigns the Starter plan and sends the applicant a notice.",
+  "screen.admin.applications.applicationReviewDetail.approveBlocked":
+    "Approve stays off until every check passes and every document is verified.",
+  "screen.admin.applications.applicationReviewDetail.restrictedTitle":
+    "Identity documents are in a restricted view",
+  "screen.admin.applications.applicationReviewDetail.auditRecorded":
+    "Every view is recorded in the audit log.",
+  "screen.admin.applications.applicationReviewDetail.documentOpened":
+    "Opened {document} in the restricted view",
+  "screen.admin.applications.applicationReviewDetail.duplicateHold": "Duplicate registration hold",
+  "screen.admin.applications.applicationReviewDetail.duplicateHoldBody":
+    "Another organization already uses this registration. Resolve the duplicate before approving.",
+  "screen.admin.applications.applicationReviewDetail.actionFailed": "The action did not complete",
+  "screen.admin.applications.applicationReviewDetail.actionFailedBody":
+    "Try again. If it keeps failing, reload the page.",
+  "screen.admin.applications.applicationReviewDetail.unverifiedNote":
+    "Marked unverified during review",
+  "screen.admin.applications.applicationReviewDetail.loading": "Loading the application…",
+  "screen.admin.applications.applicationReviewDetail.emptyTitle": "No application to review",
+  "screen.admin.applications.applicationReviewDetail.emptyBody":
+    "Open an application from the queue to review it.",
+  // apps/web/src/screens/admin/applications/application-review-sections.tsx
+  "screen.admin.applications.applicationReviewSections.documents": "Documents",
+  "screen.admin.applications.applicationReviewSections.checks": "Checks",
+  "screen.admin.applications.applicationReviewSections.restrictedView": "Restricted view",
+  "screen.admin.applications.applicationReviewSections.openRestricted":
+    "Open {document} in the restricted view",
+  "screen.admin.applications.applicationReviewSections.received": "Received",
+  "screen.admin.applications.applicationReviewSections.verified": "Verified",
+  "screen.admin.applications.applicationReviewSections.rejected": "Rejected",
+  "screen.admin.applications.applicationReviewSections.verify": "Verify",
+  "screen.admin.applications.applicationReviewSections.unverify": "Unverify",
+  "screen.admin.applications.applicationReviewSections.verifyDocument": "Verify {document}",
+  "screen.admin.applications.applicationReviewSections.unverifyDocument": "Unverify {document}",
+  "screen.admin.applications.applicationReviewSections.noDocuments": "No documents",
+  "screen.admin.applications.applicationReviewSections.noDocumentsBody":
+    "The applicant has not uploaded any documents yet.",
+  "screen.admin.applications.applicationReviewSections.passed": "Passed",
+  "screen.admin.applications.applicationReviewSections.notConfirmed": "Not confirmed",
+  "screen.admin.applications.applicationReviewSections.missing": "Missing",
+  "screen.admin.applications.applicationReviewSections.markPassed": "Mark passed",
+  "screen.admin.applications.applicationReviewSections.undo": "Undo",
+  "screen.admin.applications.applicationReviewSections.toggleCheck": "Change the result of {check}",
   // apps/web/src/screens/admin/applications/reject-with-reason-decision.tsx
-  "screen.admin.applications.rejectWithReasonDecision.rejectWithReasonDecision":
-    "Reject with reason (decision)",
-  "screen.admin.applications.rejectWithReasonDecision.rejectThisApplicationTheApplicant":
-    "Reject this application. The applicant is told the reason.",
-  "screen.admin.applications.rejectWithReasonDecision.noReasonEntered": "No reason entered",
-  "screen.admin.applications.rejectWithReasonDecision.enterAReasonBeforeYou":
-    "Enter a reason before you reject the application.",
-  "screen.admin.applications.rejectWithReasonDecision.loadingTheApplication":
-    "Loading the application.",
-  "screen.admin.applications.rejectWithReasonDecision.applicant": "Applicant",
-  "screen.admin.applications.rejectWithReasonDecision.applicantName": "Applicant name",
-  "screen.admin.applications.rejectWithReasonDecision.applicationType": "Application type",
-  "screen.admin.applications.rejectWithReasonDecision.couldNotRejectApplication":
-    "Could not reject application",
-  "screen.admin.applications.rejectWithReasonDecision.reason": "Reason",
-  "screen.admin.applications.rejectWithReasonDecision.reasonForRejectionRequired":
-    "Reason for rejection (required)",
-  "screen.admin.applications.rejectWithReasonDecision.reasonCodesAreProposedD":
-    "Reason codes are proposed (D-234). This text is sent to the applicant.",
-  "screen.admin.applications.rejectWithReasonDecision.rejectApplication": "Reject application",
-  "screen.admin.applications.rejectWithReasonDecision.rejectThisApplication":
-    "Reject this application?",
-  "screen.admin.applications.rejectWithReasonDecision.theApplicantIsToldThe":
-    "The applicant is told the reason. They can re-apply after 30 days, or appeal.",
-  "screen.admin.applications.rejectWithReasonDecision.rejectApplicationConfirmLabel":
-    "Reject application",
+  "screen.admin.applications.rejectWithReasonDecision.title": "Reject application",
+  "screen.admin.applications.rejectWithReasonDecision.description":
+    "Give one reason. The applicant sees it.",
   "screen.admin.applications.rejectWithReasonDecision.cancel": "Cancel",
-  "screen.admin.applications.rejectWithReasonDecision.whatTheApplicantCanDo":
-    "What the applicant can do next",
-  "screen.admin.applications.rejectWithReasonDecision.theApplicantCanReApply":
-    "The applicant can re-apply after 30 days. The applicant can also appeal this decision.",
+  "screen.admin.applications.rejectWithReasonDecision.rejectApplication": "Reject application",
+  "screen.admin.applications.rejectWithReasonDecision.rejecting": "Rejecting…",
+  "screen.admin.applications.rejectWithReasonDecision.reason": "Reason",
+  "screen.admin.applications.rejectWithReasonDecision.reasonCode": "Reason code (required)",
+  "screen.admin.applications.rejectWithReasonDecision.chooseReason": "Choose a reason code",
+  "screen.admin.applications.rejectWithReasonDecision.reasonDocuments":
+    "Documents incomplete or unreadable",
+  "screen.admin.applications.rejectWithReasonDecision.reasonChecks": "Required checks not passed",
+  "screen.admin.applications.rejectWithReasonDecision.reasonEligibility":
+    "Does not meet the eligibility rules",
+  "screen.admin.applications.rejectWithReasonDecision.reasonDuplicate": "Duplicate registration",
+  "screen.admin.applications.rejectWithReasonDecision.message": "Message to applicant",
+  "screen.admin.applications.rejectWithReasonDecision.defaultMessage":
+    "Your application cannot be approved yet. The reason is shown above.",
+  "screen.admin.applications.rejectWithReasonDecision.messageTooShort":
+    "Write at least 5 characters.",
+  "screen.admin.applications.rejectWithReasonDecision.applicantIsTold": "The applicant is told",
+  "screen.admin.applications.rejectWithReasonDecision.reapplyAfter":
+    "They can re-apply after 30 days.",
+  "screen.admin.applications.rejectWithReasonDecision.canAppeal":
+    "They can also appeal this decision.",
+  "screen.admin.applications.rejectWithReasonDecision.currentState": "Current state",
+  "screen.admin.applications.rejectWithReasonDecision.savedAsRejected":
+    "Saved as Rejected once you confirm.",
+  "screen.admin.applications.rejectWithReasonDecision.submitted": "Submitted",
+  "screen.admin.applications.rejectWithReasonDecision.underReview": "Under review",
+  "screen.admin.applications.rejectWithReasonDecision.changesRequested": "Changes requested",
+  "screen.admin.applications.rejectWithReasonDecision.approved": "Approved",
+  "screen.admin.applications.rejectWithReasonDecision.rejected": "Rejected",
+  "screen.admin.applications.rejectWithReasonDecision.appealed": "Appealed",
+  "screen.admin.applications.rejectWithReasonDecision.closed": "Closed",
+  "screen.admin.applications.rejectWithReasonDecision.rejectFailed":
+    "The application was not rejected",
+  "screen.admin.applications.rejectWithReasonDecision.rejectFailedBody":
+    "Try again. If it keeps failing, reload the page.",
+  "screen.admin.applications.rejectWithReasonDecision.loading": "Loading the application…",
+  "screen.admin.applications.rejectWithReasonDecision.noApplication": "No application selected",
+  "screen.admin.applications.rejectWithReasonDecision.noApplicationBody":
+    "Open an application from the queue first.",
   // apps/web/src/screens/admin/applications/request-changes-decision.tsx
-  "screen.admin.applications.requestChangesDecision.deadlineNotice":
-    "The applicant has 14 days to respond. Deadline: {date}. If the deadline passes, the application closes.",
-  "screen.admin.applications.requestChangesDecision.readableIdentityDocument":
-    "Readable identity document",
-  "screen.admin.applications.requestChangesDecision.validInsuranceCertificate":
-    "Valid insurance certificate",
-  "screen.admin.applications.requestChangesDecision.signedLabConsent": "Signed lab consent",
-  "screen.admin.applications.requestChangesDecision.signedBackgroundCheckConsent":
-    "Signed background check consent",
-  "screen.admin.applications.requestChangesDecision.atLeast8PortfolioPhotos":
-    "At least 8 portfolio photos (photographers)",
+  "screen.admin.applications.requestChangesDecision.title": "Request changes",
+  "screen.admin.applications.requestChangesDecision.description":
+    "Ask the applicant for specific fixes within 14 days.",
+  "screen.admin.applications.requestChangesDecision.cancel": "Cancel",
+  "screen.admin.applications.requestChangesDecision.sendRequest": "Send request",
+  "screen.admin.applications.requestChangesDecision.sending": "Sending…",
+  "screen.admin.applications.requestChangesDecision.itemsToFix": "Items to fix",
+  "screen.admin.applications.requestChangesDecision.itemsToFixCaption":
+    "Select at least one item. The applicant sees each item as written.",
+  "screen.admin.applications.requestChangesDecision.fixIdentity":
+    "Identity document: send a clear, complete copy",
+  "screen.admin.applications.requestChangesDecision.fixInsurance":
+    "Insurance certificate: send a policy valid for 3 months or more",
+  "screen.admin.applications.requestChangesDecision.fixPortfolio":
+    "Portfolio: add at least 8 photos",
+  "screen.admin.applications.requestChangesDecision.messageTitle": "Message to applicant",
+  "screen.admin.applications.requestChangesDecision.language": "Language",
   "screen.admin.applications.requestChangesDecision.english": "English",
   "screen.admin.applications.requestChangesDecision.arabic": "Arabic",
-  "screen.admin.applications.requestChangesDecision.requestChangesDecision":
-    "Request changes (decision)",
-  "screen.admin.applications.requestChangesDecision.askTheApplicantForSpecific":
-    "Ask the applicant for specific fixes within 14 days.",
-  "screen.admin.applications.requestChangesDecision.noItemsToFix": "No items to fix",
-  "screen.admin.applications.requestChangesDecision.selectAtLeastOneItem":
-    "Select at least one item before you send the request.",
-  "screen.admin.applications.requestChangesDecision.loadingTheApplication":
-    "Loading the application.",
-  "screen.admin.applications.requestChangesDecision.applicant": "Applicant",
-  "screen.admin.applications.requestChangesDecision.applicantName": "Applicant name",
-  "screen.admin.applications.requestChangesDecision.applicationState": "Application state",
-  "screen.admin.applications.requestChangesDecision.itemsToFix": "Items to fix",
-  "screen.admin.applications.requestChangesDecision.selectAtLeastOneItem2":
-    "Select at least one item. Send stays off until then.",
-  "screen.admin.applications.requestChangesDecision.couldNotSendRequest": "Could not send request",
-  "screen.admin.applications.requestChangesDecision.messageToApplicant": "Message to applicant",
-  "screen.admin.applications.requestChangesDecision.messageLanguage": "Message language",
-  "screen.admin.applications.requestChangesDecision.useTheApplicantSLanguage":
-    "Use the applicant's language.",
-  "screen.admin.applications.requestChangesDecision.messageToApplicantRequired":
-    "Message to applicant (required)",
-  "screen.admin.applications.requestChangesDecision.sayExactlyWhatToFix":
-    "Say exactly what to fix. The 14-day deadline is added for you.",
-  "screen.admin.applications.requestChangesDecision.sendRequest": "Send request",
-  "screen.admin.applications.requestChangesDecision.sendThisRequestToThe":
-    "Send this request to the applicant?",
-  "screen.admin.applications.requestChangesDecision.theApplicantGets14Days":
-    "The applicant gets 14 days to fix the items. If they do not, the application closes.",
-  "screen.admin.applications.requestChangesDecision.sendRequestConfirmLabel": "Send request",
-  "screen.admin.applications.requestChangesDecision.applicationStateBecomesChangesRequested":
-    "Application state becomes Changes Requested.",
-  "screen.admin.applications.requestChangesDecision.cancel": "Cancel",
-  "screen.admin.applications.requestChangesDecision.responseDeadline": "Response deadline",
+  "screen.admin.applications.requestChangesDecision.message": "Message",
+  "screen.admin.applications.requestChangesDecision.defaultMessage":
+    "Please send the items listed above so we can finish reviewing your application.",
+  "screen.admin.applications.requestChangesDecision.messageTooShort":
+    "Write at least 5 characters.",
+  "screen.admin.applications.requestChangesDecision.deadline": "Deadline",
+  "screen.admin.applications.requestChangesDecision.deadlineDays": "14 days from sending",
+  "screen.admin.applications.requestChangesDecision.deadlineDate": "Deadline date: {date}",
+  "screen.admin.applications.requestChangesDecision.afterSending": "After sending",
+  "screen.admin.applications.requestChangesDecision.changesRequested": "Changes requested",
+  "screen.admin.applications.requestChangesDecision.staysOpen":
+    "The application stays open until the deadline.",
+  "screen.admin.applications.requestChangesDecision.closesAutomatically":
+    "If the deadline passes with no reply, the application closes automatically.",
+  "screen.admin.applications.requestChangesDecision.sendFailed": "The request was not sent",
+  "screen.admin.applications.requestChangesDecision.sendFailedBody":
+    "Try again. If it keeps failing, reload the page.",
+  "screen.admin.applications.requestChangesDecision.loading": "Loading the application…",
+  "screen.admin.applications.requestChangesDecision.noApplication": "No application selected",
+  "screen.admin.applications.requestChangesDecision.noApplicationBody":
+    "Open an application from the queue first.",
   // apps/web/src/screens/admin/common/admin-decision-form.tsx
   "screen.admin.common.adminDecisionForm.keepEditing": "Keep editing",
   // apps/web/src/screens/admin/common/admin-nav.tsx
@@ -992,31 +1004,35 @@ export const en = {
   "screen.admin.finance.settlementsTracker.cancel": "Cancel",
   "screen.admin.finance.settlementsTracker.markAsSettled": "Mark as settled",
   // apps/web/src/screens/admin/home/admin-home.tsx
-  "screen.admin.home.adminHome.queue": "Queue",
-  "screen.admin.home.adminHome.items": "Items",
-  "screen.admin.home.adminHome.oldestItem": "Oldest item",
-  "screen.admin.home.adminHome.action": "Action",
-  "screen.admin.home.adminHome.open": "Open {queue}",
-  "screen.admin.home.adminHome.openQueue": "Open queue",
-  "screen.admin.home.adminHome.adminStaffAccounts": "Admin staff accounts",
-  "screen.admin.home.adminHome.subscriptionsAndOverrides": "Subscriptions and overrides",
-  "screen.admin.home.adminHome.revenueDashboard": "Revenue dashboard",
-  "screen.admin.home.adminHome.notificationTemplates": "Notification templates",
-  "screen.admin.home.adminHome.adminHome": "Admin home",
-  "screen.admin.home.adminHome.queuesThatNeedActionNow":
-    "Queues that need action now. Applications are flagged overdue after 2 working days.",
-  "screen.admin.home.adminHome.allClear": "All clear",
-  "screen.admin.home.adminHome.noQueueHasItemsThat": "No queue has items that need action.",
-  "screen.admin.home.adminHome.loadingTheQueues": "Loading the queues.",
-  "screen.admin.home.adminHome.theLabTestsQueueCould":
-    "The lab tests queue could not load. The other queues are shown.",
-  "screen.admin.home.adminHome.retryLabTests": "Retry lab tests",
-  "screen.admin.home.adminHome.queues": "Queues",
-  "screen.admin.home.adminHome.queuesThatNeedAction": "Queues that need action",
-  "screen.admin.home.adminHome.allClearEmptyTitle": "All clear",
-  "screen.admin.home.adminHome.noQueueHasItemsThatEmptyDescription":
-    "No queue has items that need action.",
-  "screen.admin.home.adminHome.moreAreas": "More areas",
+  "screen.admin.home.adminHome.title": "Admin home",
+  "screen.admin.home.adminHome.description": "Queues that need action now.",
+  "screen.admin.home.adminHome.refreshQueues": "Refresh queues",
+  "screen.admin.home.adminHome.noValue": "—",
+  "screen.admin.home.adminHome.applicationsWaiting": "Applications waiting",
+  "screen.admin.home.adminHome.overdueAfterTwoDays": "{count} overdue after 2 working days",
+  "screen.admin.home.adminHome.openApplications": "Open applications",
+  "screen.admin.home.adminHome.labTests": "Lab tests",
+  "screen.admin.home.adminHome.dueOrOverdue": "Due or overdue",
+  "screen.admin.home.adminHome.openLabTests": "Open lab tests",
+  "screen.admin.home.adminHome.openDisputes": "Open disputes",
+  "screen.admin.home.adminHome.awaitingAcknowledgement": "Awaiting acknowledgement or resolution",
+  "screen.admin.home.adminHome.openDisputesLink": "Open disputes",
+  "screen.admin.home.adminHome.deletionRequests": "Deletion requests",
+  "screen.admin.home.adminHome.withGraceEndDates": "With grace end dates",
+  "screen.admin.home.adminHome.openRequests": "Open requests",
+  "screen.admin.home.adminHome.couponAbuseFlags": "Coupon abuse flags",
+  "screen.admin.home.adminHome.raisedByAbuseRules": "Raised by the abuse rules",
+  "screen.admin.home.adminHome.openCoupons": "Open coupons",
+  "screen.admin.home.adminHome.openSettlements": "Open settlements",
+  "screen.admin.home.adminHome.owedBetweenParties": "Owed between parties",
+  "screen.admin.home.adminHome.openSettlementsLink": "Open settlements",
+  "screen.admin.home.adminHome.queueFailed": "Queue failed: {queue}",
+  "screen.admin.home.adminHome.queueFailedBody":
+    "Other queues show their current counts. Retry this queue to load its count.",
+  "screen.admin.home.adminHome.retry": "Retry",
+  "screen.admin.home.adminHome.sourceApplications": "Applications, lab tests and deletion requests",
+  "screen.admin.home.adminHome.sourceDisputes": "Open disputes",
+  "screen.admin.home.adminHome.sourceCoupons": "Coupon abuse flags",
   // apps/web/src/screens/admin/lab-tests/lab-test-detail-and-decision.tsx
   "screen.admin.labTests.labTestDetailAndDecision.resultUploaded": "Result uploaded",
   "screen.admin.labTests.labTestDetailAndDecision.testRequested": "Test requested",

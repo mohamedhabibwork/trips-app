@@ -100,41 +100,41 @@ export const ar: AppMessages = {
   "route.screensIndex.screens": "الشاشات",
   "route.screensIndex.screensAcrossTheWebSurfaces": "شاشة عبر واجهات الويب.",
   // apps/web/src/screens/admin/applications/appeal-review.tsx
-  "screen.admin.applications.appealReview.appealedPending": "تم الاعتراض (قيد الانتظار)",
-  "screen.admin.applications.appealReview.selectADecision": "اختر قرارًا",
-  "screen.admin.applications.appealReview.upholdAppealApplicationBecomesApproved":
-    "تأييد الاعتراض (يصبح الطلب معتمدًا)",
-  "screen.admin.applications.appealReview.upholdRejectionApplicationStaysRejected":
-    "تأييد الرفض (يبقى الطلب مرفوضًا)",
-  "screen.admin.applications.appealReview.appealReview": "مراجعة الاعتراض",
-  "screen.admin.applications.appealReview.decideAnAppealFromA":
-    "اتخذ قرارًا بشأن اعتراض من متقدم مرفوض.",
-  "screen.admin.applications.appealReview.noAppealStatement": "لا يوجد بيان اعتراض",
-  "screen.admin.applications.appealReview.theApplicantHasNotAdded":
-    "لم يضف المتقدم بيانًا لهذا الاعتراض.",
-  "screen.admin.applications.appealReview.loadingTheAppeal": "جارٍ تحميل الاعتراض.",
+  "screen.admin.applications.appealReview.title": "مراجعة الطعن",
+  "screen.admin.applications.appealReview.description": "قرّر في طعن مقدَّم من متقدّم مرفوض.",
+  "screen.admin.applications.appealReview.appealedPending": "مطعون فيه، القرار معلّق",
+  "screen.admin.applications.appealReview.decidedApproved": "قُبل الطعن، تمت الموافقة",
+  "screen.admin.applications.appealReview.decidedRejected": "تم تأييد الرفض",
   "screen.admin.applications.appealReview.originalApplication": "الطلب الأصلي",
-  "screen.admin.applications.appealReview.applicantName": "اسم المتقدم",
-  "screen.admin.applications.appealReview.applicationType": "نوع الطلب",
+  "screen.admin.applications.appealReview.applicant": "مقدّم الطلب",
+  "screen.admin.applications.appealReview.type": "النوع",
+  "screen.admin.applications.appealReview.driver": "سائق",
+  "screen.admin.applications.appealReview.organization": "منظمة",
+  "screen.admin.applications.appealReview.photographer": "مصوّر",
   "screen.admin.applications.appealReview.rejectedOn": "تاريخ الرفض",
-  "screen.admin.applications.appealReview.rejectionReason": "سبب الرفض",
-  "screen.admin.applications.appealReview.openOriginalApplication": "فتح الطلب الأصلي",
-  "screen.admin.applications.appealReview.appealStatement": "بيان الاعتراض",
-  "screen.admin.applications.appealReview.appealReceived": "تم استلام الاعتراض",
-  "screen.admin.applications.appealReview.appealWindowCloses": "إغلاق نافذة الاعتراض",
-  "screen.admin.applications.appealReview.couldNotSaveDecision": "تعذّر حفظ القرار",
+  "screen.admin.applications.appealReview.originalReason": "السبب الأصلي",
+  "screen.admin.applications.appealReview.noMessage": "لم تُرسل رسالة مع الرفض.",
+  "screen.admin.applications.appealReview.appealStatement": "بيان الطعن",
+  "screen.admin.applications.appealReview.noStatement": "لم يكتب مقدّم الطلب بيانًا.",
+  "screen.admin.applications.appealReview.appealWindow": "مهلة الطعن: متبقٍ {days} يوم",
   "screen.admin.applications.appealReview.decision": "القرار",
-  "screen.admin.applications.appealReview.decisionRequired": "القرار (مطلوب)",
+  "screen.admin.applications.appealReview.upholdAppeal": "قبول الطعن",
+  "screen.admin.applications.appealReview.upholdAppealBody": "تعيين حالة الطلب إلى مقبول.",
+  "screen.admin.applications.appealReview.upholdRejection": "تأييد الرفض",
+  "screen.admin.applications.appealReview.upholdRejectionBody": "إبقاء الطلب مرفوضًا.",
   "screen.admin.applications.appealReview.reasonRequired": "السبب (مطلوب)",
-  "screen.admin.applications.appealReview.reasonForTheDecision": "[سبب القرار]",
-  "screen.admin.applications.appealReview.recordedWithTheDecisionIn":
-    "يُسجَّل مع القرار في سجل التدقيق.",
-  "screen.admin.applications.appealReview.appealWindow": "نافذة الاعتراض",
-  "screen.admin.applications.appealReview.aDecisionCanBeSaved":
-    "لا يمكن حفظ القرار إلا أثناء فتح نافذة الاعتراض.",
+  "screen.admin.applications.appealReview.reasonPlaceholder": "لا يضيف الطعن المستند الناقص.",
+  "screen.admin.applications.appealReview.reasonTooShort": "اكتب 5 أحرف على الأقل.",
   "screen.admin.applications.appealReview.cancel": "إلغاء",
-  "screen.admin.applications.appealReview.saving": "جارٍ الحفظ...",
   "screen.admin.applications.appealReview.saveDecision": "حفظ القرار",
+  "screen.admin.applications.appealReview.saving": "جارٍ الحفظ…",
+  "screen.admin.applications.appealReview.saveFailed": "لم يُحفظ القرار",
+  "screen.admin.applications.appealReview.saveFailedBody":
+    "حاول مرة أخرى. إذا استمر الخطأ، أعد تحميل الصفحة.",
+  "screen.admin.applications.appealReview.loading": "جارٍ تحميل الطعن…",
+  "screen.admin.applications.appealReview.emptyTitle": "لا توجد طعون للمراجعة",
+  "screen.admin.applications.appealReview.emptyBody":
+    "تظهر هنا الطعون المقدّمة من المتقدمين المرفوضين.",
   // apps/web/src/screens/admin/applications/application-queue.tsx
   "screen.admin.applications.applicationQueue.title": "قائمة الطلبات",
   "screen.admin.applications.applicationQueue.description":
@@ -173,141 +173,156 @@ export const ar: AppMessages = {
   "screen.admin.applications.applicationQueue.emptyBody":
     "غيّر عوامل التصفية لرؤية المزيد من الطلبات.",
   // apps/web/src/screens/admin/applications/application-review-detail.tsx
-  "screen.admin.applications.applicationReviewDetail.identityDocument": "وثيقة الهوية",
-  "screen.admin.applications.applicationReviewDetail.insuranceCertificate": "شهادة التأمين",
-  "screen.admin.applications.applicationReviewDetail.initialLabResult": "نتيجة التحليل الأولية",
-  "screen.admin.applications.applicationReviewDetail.verified": "موثّق",
-  "screen.admin.applications.applicationReviewDetail.notVerified": "غير موثّق",
-  "screen.admin.applications.applicationReviewDetail.submitted": "تاريخ التقديم",
-  "screen.admin.applications.applicationReviewDetail.documents": "المستندات",
-  "screen.admin.applications.applicationReviewDetail.checks": "الفحوص",
-  "screen.admin.applications.applicationReviewDetail.decision": "القرار",
-  "screen.admin.applications.applicationReviewDetail.backgroundCheckConsentSigned":
-    "تم توقيع موافقة التحقق من الخلفية",
-  "screen.admin.applications.applicationReviewDetail.labConsentSigned": "تم توقيع موافقة التحليل",
-  "screen.admin.applications.applicationReviewDetail.initialLabResultDatedWithin":
-    "نتيجة تحليل أولية بتاريخ لا يتجاوز 30 يومًا",
-  "screen.admin.applications.applicationReviewDetail.insuranceValidFor3Months":
-    "تأمين ساري لمدة 3 أشهر أو أكثر",
-  "screen.admin.applications.applicationReviewDetail.document": "المستند",
-  "screen.admin.applications.applicationReviewDetail.status": "الحالة",
-  "screen.admin.applications.applicationReviewDetail.restrictedView": "عرض مقيّد",
-  "screen.admin.applications.applicationReviewDetail.view": "عرض {label}",
-  "screen.admin.applications.applicationReviewDetail.view2": "عرض",
-  "screen.admin.applications.applicationReviewDetail.unverify": "إلغاء التوثيق",
-  "screen.admin.applications.applicationReviewDetail.verify": "توثيق",
-  "screen.admin.applications.applicationReviewDetail.applicationReviewDetail":
-    "تفاصيل مراجعة الطلب",
-  "screen.admin.applications.applicationReviewDetail.checkTheSubmittedDataAnd":
+  "screen.admin.applications.applicationReviewDetail.title": "مراجعة الطلب",
+  "screen.admin.applications.applicationReviewDetail.description":
     "راجع البيانات والمستندات المقدّمة، ثم اتخذ القرار.",
-  "screen.admin.applications.applicationReviewDetail.noDocuments": "لا توجد مستندات",
-  "screen.admin.applications.applicationReviewDetail.theApplicantHasNotUploaded":
-    "لم يرفع المتقدم أي مستندات.",
-  "screen.admin.applications.applicationReviewDetail.loadingTheApplication": "جارٍ تحميل الطلب.",
-  "screen.admin.applications.applicationReviewDetail.reviewSteps": "خطوات المراجعة",
-  "screen.admin.applications.applicationReviewDetail.duplicateRegistrationHold":
-    "إيقاف التسجيل المكرر",
-  "screen.admin.applications.applicationReviewDetail.anotherOrganizationAlreadyUsesThis":
-    "مؤسسة أخرى تستخدم رقم السجل التجاري أو الرقم الضريبي هذا بالفعل. الاعتماد موقوف ما دام هذا الإيقاف المكرر قائمًا.",
-  "screen.admin.applications.applicationReviewDetail.restrictedDocumentOpenedAuditLogged":
-    "تم فتح مستند مقيّد (مسجَّل في سجل التدقيق)",
-  "screen.admin.applications.applicationReviewDetail.viewing": "المعروض:",
-  "screen.admin.applications.applicationReviewDetail.actionFailed": "فشل الإجراء",
-  "screen.admin.applications.applicationReviewDetail.applicantData": "بيانات المتقدم",
-  "screen.admin.applications.applicationReviewDetail.applicantName": "اسم المتقدم",
-  "screen.admin.applications.applicationReviewDetail.email": "البريد الإلكتروني",
-  "screen.admin.applications.applicationReviewDetail.phone": "الهاتف",
-  "screen.admin.applications.applicationReviewDetail.country": "الدولة",
-  "screen.admin.applications.applicationReviewDetail.documentsTitle": "المستندات",
-  "screen.admin.applications.applicationReviewDetail.submittedDocuments": "المستندات المقدّمة",
-  "screen.admin.applications.applicationReviewDetail.noDocumentsEmptyTitle": "لا توجد مستندات",
-  "screen.admin.applications.applicationReviewDetail.theApplicantHasNotUploadedEmptyDescription":
-    "لم يرفع المتقدم أي مستندات.",
-  "screen.admin.applications.applicationReviewDetail.checksDriver": "الفحوص (السائق)",
-  "screen.admin.applications.applicationReviewDetail.driverChecks": "فحوص السائق",
-  "screen.admin.applications.applicationReviewDetail.approveIsBlocked": "الاعتماد موقوف",
-  "screen.admin.applications.applicationReviewDetail.approveStaysOffUntilEvery":
-    "يبقى الاعتماد متوقفًا حتى تنجح كل الفحوص ويُوثَّق كل مستند. يمنح الاعتماد خطة Starter (D-24).",
-  "screen.admin.applications.applicationReviewDetail.decisionTitle": "القرار",
-  "screen.admin.applications.applicationReviewDetail.backToQueue": "العودة إلى القائمة",
   "screen.admin.applications.applicationReviewDetail.reject": "رفض",
-  "screen.admin.applications.applicationReviewDetail.requestChanges": "طلب تغييرات",
-  "screen.admin.applications.applicationReviewDetail.approving": "جارٍ الاعتماد...",
-  "screen.admin.applications.applicationReviewDetail.approveApplication": "اعتماد الطلب",
-  "screen.admin.applications.applicationReviewDetail.chooseOneDecisionEachDecision":
-    "اختر قرارًا واحدًا. يُسجَّل كل قرار في سجل التدقيق.",
+  "screen.admin.applications.applicationReviewDetail.requestChanges": "طلب تعديلات",
+  "screen.admin.applications.applicationReviewDetail.approve": "موافقة",
+  "screen.admin.applications.applicationReviewDetail.approving": "جارٍ الاعتماد…",
+  "screen.admin.applications.applicationReviewDetail.applicantData": "بيانات مقدّم الطلب",
+  "screen.admin.applications.applicationReviewDetail.applicant": "مقدّم الطلب",
+  "screen.admin.applications.applicationReviewDetail.type": "النوع",
+  "screen.admin.applications.applicationReviewDetail.country": "الدولة",
+  "screen.admin.applications.applicationReviewDetail.submitted": "تاريخ التقديم",
+  "screen.admin.applications.applicationReviewDetail.driver": "سائق",
+  "screen.admin.applications.applicationReviewDetail.organization": "منظمة",
+  "screen.admin.applications.applicationReviewDetail.photographer": "مصوّر",
+  "screen.admin.applications.applicationReviewDetail.driverChecks": "فحوصات السائق",
+  "screen.admin.applications.applicationReviewDetail.noChecksForType":
+    "لا تنطبق فحوصات تلقائية على هذا النوع من الطلبات.",
+  "screen.admin.applications.applicationReviewDetail.backgroundConsent":
+    "الموافقة على التحقق من السجل",
+  "screen.admin.applications.applicationReviewDetail.labConsent": "الموافقة على التحليل المخبري",
+  "screen.admin.applications.applicationReviewDetail.initialLabResult":
+    "نتيجة التحليل الأولية خلال 30 يومًا",
+  "screen.admin.applications.applicationReviewDetail.insuranceValid":
+    "تأمين ساري لمدة 3 أشهر أو أكثر",
+  "screen.admin.applications.applicationReviewDetail.decision": "القرار",
+  "screen.admin.applications.applicationReviewDetail.readyToApprove":
+    "اجتازت جميع الفحوصات وكل المستندات متوفرة. تؤدي الموافقة إلى تعيين الخطة المبدئية وإرسال إشعار إلى مقدّم الطلب.",
+  "screen.admin.applications.applicationReviewDetail.approveBlocked":
+    "يبقى زر الموافقة معطّلًا حتى تجتاز جميع الفحوصات ويُتحقق من كل المستندات.",
+  "screen.admin.applications.applicationReviewDetail.restrictedTitle":
+    "مستندات الهوية معروضة في وضع مقيّد",
+  "screen.admin.applications.applicationReviewDetail.auditRecorded": "يُسجَّل كل عرض في سجل التدقيق.",
+  "screen.admin.applications.applicationReviewDetail.documentOpened":
+    "تم فتح {document} في العرض المقيّد",
+  "screen.admin.applications.applicationReviewDetail.duplicateHold": "تعليق بسبب تسجيل مكرر",
+  "screen.admin.applications.applicationReviewDetail.duplicateHoldBody":
+    "تستخدم منظمة أخرى هذا التسجيل بالفعل. عالج التكرار قبل الموافقة.",
+  "screen.admin.applications.applicationReviewDetail.actionFailed": "لم يكتمل الإجراء",
+  "screen.admin.applications.applicationReviewDetail.actionFailedBody":
+    "حاول مرة أخرى. إذا استمر الخطأ، أعد تحميل الصفحة.",
+  "screen.admin.applications.applicationReviewDetail.unverifiedNote":
+    "وُضعت عليه علامة غير مُتحقق منه أثناء المراجعة",
+  "screen.admin.applications.applicationReviewDetail.loading": "جارٍ تحميل الطلب…",
+  "screen.admin.applications.applicationReviewDetail.emptyTitle": "لا يوجد طلب للمراجعة",
+  "screen.admin.applications.applicationReviewDetail.emptyBody":
+    "افتح طلبًا من قائمة الانتظار لمراجعته.",
+  // apps/web/src/screens/admin/applications/application-review-sections.tsx
+  "screen.admin.applications.applicationReviewSections.documents": "المستندات",
+  "screen.admin.applications.applicationReviewSections.checks": "الفحوصات",
+  "screen.admin.applications.applicationReviewSections.restrictedView": "عرض مقيّد",
+  "screen.admin.applications.applicationReviewSections.openRestricted":
+    "فتح {document} في العرض المقيّد",
+  "screen.admin.applications.applicationReviewSections.received": "مستلم",
+  "screen.admin.applications.applicationReviewSections.verified": "تم التحقق",
+  "screen.admin.applications.applicationReviewSections.rejected": "مرفوض",
+  "screen.admin.applications.applicationReviewSections.verify": "تحقق",
+  "screen.admin.applications.applicationReviewSections.unverify": "إلغاء التحقق",
+  "screen.admin.applications.applicationReviewSections.verifyDocument": "التحقق من {document}",
+  "screen.admin.applications.applicationReviewSections.unverifyDocument":
+    "إلغاء التحقق من {document}",
+  "screen.admin.applications.applicationReviewSections.noDocuments": "لا توجد مستندات",
+  "screen.admin.applications.applicationReviewSections.noDocumentsBody":
+    "لم يرفع مقدّم الطلب أي مستندات بعد.",
+  "screen.admin.applications.applicationReviewSections.passed": "ناجح",
+  "screen.admin.applications.applicationReviewSections.notConfirmed": "غير مؤكد",
+  "screen.admin.applications.applicationReviewSections.missing": "غير متوفر",
+  "screen.admin.applications.applicationReviewSections.markPassed": "تحديد كناجح",
+  "screen.admin.applications.applicationReviewSections.undo": "تراجع",
+  "screen.admin.applications.applicationReviewSections.toggleCheck": "تغيير نتيجة {check}",
   // apps/web/src/screens/admin/applications/reject-with-reason-decision.tsx
-  "screen.admin.applications.rejectWithReasonDecision.rejectWithReasonDecision":
-    "الرفض مع ذكر السبب (قرار)",
-  "screen.admin.applications.rejectWithReasonDecision.rejectThisApplicationTheApplicant":
-    "ارفض هذا الطلب. يُبلَّغ المتقدم بالسبب.",
-  "screen.admin.applications.rejectWithReasonDecision.noReasonEntered": "لم يُدخل أي سبب",
-  "screen.admin.applications.rejectWithReasonDecision.enterAReasonBeforeYou":
-    "أدخل سببًا قبل رفض الطلب.",
-  "screen.admin.applications.rejectWithReasonDecision.loadingTheApplication": "جارٍ تحميل الطلب.",
-  "screen.admin.applications.rejectWithReasonDecision.applicant": "المتقدم",
-  "screen.admin.applications.rejectWithReasonDecision.applicantName": "اسم المتقدم",
-  "screen.admin.applications.rejectWithReasonDecision.applicationType": "نوع الطلب",
-  "screen.admin.applications.rejectWithReasonDecision.couldNotRejectApplication": "تعذّر رفض الطلب",
-  "screen.admin.applications.rejectWithReasonDecision.reason": "السبب",
-  "screen.admin.applications.rejectWithReasonDecision.reasonForRejectionRequired":
-    "سبب الرفض (مطلوب)",
-  "screen.admin.applications.rejectWithReasonDecision.reasonCodesAreProposedD":
-    "أسباب مقترحة (D-234). تُرسل هذه الرسالة إلى المتقدم.",
-  "screen.admin.applications.rejectWithReasonDecision.rejectApplication": "رفض الطلب",
-  "screen.admin.applications.rejectWithReasonDecision.rejectThisApplication": "رفض هذا الطلب؟",
-  "screen.admin.applications.rejectWithReasonDecision.theApplicantIsToldThe":
-    "يُبلَّغ المتقدم بالسبب. يمكنه التقديم مجددًا بعد 30 يومًا أو الاعتراض.",
-  "screen.admin.applications.rejectWithReasonDecision.rejectApplicationConfirmLabel": "رفض الطلب",
+  "screen.admin.applications.rejectWithReasonDecision.title": "رفض الطلب",
+  "screen.admin.applications.rejectWithReasonDecision.description":
+    "اذكر سببًا واحدًا. سيراه مقدّم الطلب.",
   "screen.admin.applications.rejectWithReasonDecision.cancel": "إلغاء",
-  "screen.admin.applications.rejectWithReasonDecision.whatTheApplicantCanDo":
-    "ما يمكن للمتقدم فعله بعد ذلك",
-  "screen.admin.applications.rejectWithReasonDecision.theApplicantCanReApply":
-    "يمكن للمتقدم التقديم مجددًا بعد 30 يومًا. ويمكنه أيضًا الاعتراض على هذا القرار.",
+  "screen.admin.applications.rejectWithReasonDecision.rejectApplication": "رفض الطلب",
+  "screen.admin.applications.rejectWithReasonDecision.rejecting": "جارٍ الرفض…",
+  "screen.admin.applications.rejectWithReasonDecision.reason": "السبب",
+  "screen.admin.applications.rejectWithReasonDecision.reasonCode": "رمز السبب (مطلوب)",
+  "screen.admin.applications.rejectWithReasonDecision.chooseReason": "اختر رمز السبب",
+  "screen.admin.applications.rejectWithReasonDecision.reasonDocuments":
+    "المستندات غير مكتملة أو غير مقروءة",
+  "screen.admin.applications.rejectWithReasonDecision.reasonChecks": "لم تُجتز الفحوصات المطلوبة",
+  "screen.admin.applications.rejectWithReasonDecision.reasonEligibility": "لا يستوفي شروط الأهلية",
+  "screen.admin.applications.rejectWithReasonDecision.reasonDuplicate": "تسجيل مكرر",
+  "screen.admin.applications.rejectWithReasonDecision.message": "رسالة إلى مقدّم الطلب",
+  "screen.admin.applications.rejectWithReasonDecision.defaultMessage":
+    "لا يمكن الموافقة على طلبك حاليًا. السبب موضّح أعلاه.",
+  "screen.admin.applications.rejectWithReasonDecision.messageTooShort": "اكتب 5 أحرف على الأقل.",
+  "screen.admin.applications.rejectWithReasonDecision.applicantIsTold": "يُبلَّغ مقدّم الطلب بما يلي",
+  "screen.admin.applications.rejectWithReasonDecision.reapplyAfter":
+    "يمكنه إعادة التقديم بعد 30 يومًا.",
+  "screen.admin.applications.rejectWithReasonDecision.canAppeal":
+    "ويمكنه أيضًا الطعن في هذا القرار.",
+  "screen.admin.applications.rejectWithReasonDecision.currentState": "الحالة الحالية",
+  "screen.admin.applications.rejectWithReasonDecision.savedAsRejected": "يُحفظ كمرفوض بمجرد تأكيدك.",
+  "screen.admin.applications.rejectWithReasonDecision.submitted": "مُقدَّم",
+  "screen.admin.applications.rejectWithReasonDecision.underReview": "قيد المراجعة",
+  "screen.admin.applications.rejectWithReasonDecision.changesRequested": "مطلوب تعديلات",
+  "screen.admin.applications.rejectWithReasonDecision.approved": "مقبول",
+  "screen.admin.applications.rejectWithReasonDecision.rejected": "مرفوض",
+  "screen.admin.applications.rejectWithReasonDecision.appealed": "مطعون فيه",
+  "screen.admin.applications.rejectWithReasonDecision.closed": "مغلق",
+  "screen.admin.applications.rejectWithReasonDecision.rejectFailed": "لم يُرفض الطلب",
+  "screen.admin.applications.rejectWithReasonDecision.rejectFailedBody":
+    "حاول مرة أخرى. إذا استمر الخطأ، أعد تحميل الصفحة.",
+  "screen.admin.applications.rejectWithReasonDecision.loading": "جارٍ تحميل الطلب…",
+  "screen.admin.applications.rejectWithReasonDecision.noApplication": "لم يتم اختيار طلب",
+  "screen.admin.applications.rejectWithReasonDecision.noApplicationBody":
+    "افتح طلبًا من قائمة الانتظار أولًا.",
   // apps/web/src/screens/admin/applications/request-changes-decision.tsx
-  "screen.admin.applications.requestChangesDecision.deadlineNotice":
-    "لدى المتقدم 14 يومًا للرد. الموعد النهائي: {date}. إذا انقضت المهلة، يُغلق الطلب.",
-  "screen.admin.applications.requestChangesDecision.readableIdentityDocument": "وثيقة هوية مقروءة",
-  "screen.admin.applications.requestChangesDecision.validInsuranceCertificate": "شهادة تأمين سارية",
-  "screen.admin.applications.requestChangesDecision.signedLabConsent": "موافقة تحليل موقّعة",
-  "screen.admin.applications.requestChangesDecision.signedBackgroundCheckConsent":
-    "موافقة موقّعة على التحقق من الخلفية",
-  "screen.admin.applications.requestChangesDecision.atLeast8PortfolioPhotos":
-    "8 صور من الأعمال على الأقل (للمصورين)",
+  "screen.admin.applications.requestChangesDecision.title": "طلب تعديلات",
+  "screen.admin.applications.requestChangesDecision.description":
+    "اطلب من مقدّم الطلب تصحيحات محددة خلال 14 يومًا.",
+  "screen.admin.applications.requestChangesDecision.cancel": "إلغاء",
+  "screen.admin.applications.requestChangesDecision.sendRequest": "إرسال الطلب",
+  "screen.admin.applications.requestChangesDecision.sending": "جارٍ الإرسال…",
+  "screen.admin.applications.requestChangesDecision.itemsToFix": "العناصر المطلوب تصحيحها",
+  "screen.admin.applications.requestChangesDecision.itemsToFixCaption":
+    "اختر عنصرًا واحدًا على الأقل. يرى مقدّم الطلب كل عنصر كما هو مكتوب.",
+  "screen.admin.applications.requestChangesDecision.fixIdentity":
+    "مستند الهوية: أرسل نسخة واضحة وكاملة",
+  "screen.admin.applications.requestChangesDecision.fixInsurance":
+    "شهادة التأمين: أرسل وثيقة سارية لمدة 3 أشهر أو أكثر",
+  "screen.admin.applications.requestChangesDecision.fixPortfolio":
+    "معرض الأعمال: أضف 8 صور على الأقل",
+  "screen.admin.applications.requestChangesDecision.messageTitle": "رسالة إلى مقدّم الطلب",
+  "screen.admin.applications.requestChangesDecision.language": "اللغة",
   "screen.admin.applications.requestChangesDecision.english": "الإنجليزية",
   "screen.admin.applications.requestChangesDecision.arabic": "العربية",
-  "screen.admin.applications.requestChangesDecision.requestChangesDecision": "طلب تغييرات (قرار)",
-  "screen.admin.applications.requestChangesDecision.askTheApplicantForSpecific":
-    "اطلب من المتقدم إصلاحات محددة خلال 14 يومًا.",
-  "screen.admin.applications.requestChangesDecision.noItemsToFix": "لا توجد عناصر للإصلاح",
-  "screen.admin.applications.requestChangesDecision.selectAtLeastOneItem":
-    "اختر عنصرًا واحدًا على الأقل قبل إرسال الطلب.",
-  "screen.admin.applications.requestChangesDecision.loadingTheApplication": "جارٍ تحميل الطلب.",
-  "screen.admin.applications.requestChangesDecision.applicant": "المتقدم",
-  "screen.admin.applications.requestChangesDecision.applicantName": "اسم المتقدم",
-  "screen.admin.applications.requestChangesDecision.applicationState": "حالة الطلب",
-  "screen.admin.applications.requestChangesDecision.itemsToFix": "العناصر المطلوب إصلاحها",
-  "screen.admin.applications.requestChangesDecision.selectAtLeastOneItem2":
-    "اختر عنصرًا واحدًا على الأقل. يبقى الإرسال متوقفًا حتى ذلك الحين.",
-  "screen.admin.applications.requestChangesDecision.couldNotSendRequest": "تعذّر إرسال الطلب",
-  "screen.admin.applications.requestChangesDecision.messageToApplicant": "رسالة إلى المتقدم",
-  "screen.admin.applications.requestChangesDecision.messageLanguage": "لغة الرسالة",
-  "screen.admin.applications.requestChangesDecision.useTheApplicantSLanguage":
-    "استخدم لغة المتقدم.",
-  "screen.admin.applications.requestChangesDecision.messageToApplicantRequired":
-    "رسالة إلى المتقدم (مطلوب)",
-  "screen.admin.applications.requestChangesDecision.sayExactlyWhatToFix":
-    "وضّح بالضبط ما يجب إصلاحه. تُضاف مهلة الـ 14 يومًا تلقائيًا.",
-  "screen.admin.applications.requestChangesDecision.sendRequest": "إرسال الطلب",
-  "screen.admin.applications.requestChangesDecision.sendThisRequestToThe":
-    "إرسال هذا الطلب إلى المتقدم؟",
-  "screen.admin.applications.requestChangesDecision.theApplicantGets14Days":
-    "يحصل المتقدم على 14 يومًا لإصلاح العناصر. وإلا يُغلق الطلب.",
-  "screen.admin.applications.requestChangesDecision.sendRequestConfirmLabel": "إرسال الطلب",
-  "screen.admin.applications.requestChangesDecision.applicationStateBecomesChangesRequested":
-    "تصبح حالة الطلب «طُلبت تغييرات».",
-  "screen.admin.applications.requestChangesDecision.cancel": "إلغاء",
-  "screen.admin.applications.requestChangesDecision.responseDeadline": "مهلة الرد",
+  "screen.admin.applications.requestChangesDecision.message": "الرسالة",
+  "screen.admin.applications.requestChangesDecision.defaultMessage":
+    "يُرجى إرسال العناصر المذكورة أعلاه حتى نتمكن من إكمال مراجعة طلبك.",
+  "screen.admin.applications.requestChangesDecision.messageTooShort": "اكتب 5 أحرف على الأقل.",
+  "screen.admin.applications.requestChangesDecision.deadline": "الموعد النهائي",
+  "screen.admin.applications.requestChangesDecision.deadlineDays": "14 يومًا من تاريخ الإرسال",
+  "screen.admin.applications.requestChangesDecision.deadlineDate": "تاريخ الموعد النهائي: {date}",
+  "screen.admin.applications.requestChangesDecision.afterSending": "بعد الإرسال",
+  "screen.admin.applications.requestChangesDecision.changesRequested": "مطلوب تعديلات",
+  "screen.admin.applications.requestChangesDecision.staysOpen":
+    "يبقى الطلب مفتوحًا حتى الموعد النهائي.",
+  "screen.admin.applications.requestChangesDecision.closesAutomatically":
+    "إذا انقضى الموعد النهائي دون رد، يُغلق الطلب تلقائيًا.",
+  "screen.admin.applications.requestChangesDecision.sendFailed": "لم يُرسل الطلب",
+  "screen.admin.applications.requestChangesDecision.sendFailedBody":
+    "حاول مرة أخرى. إذا استمر الخطأ، أعد تحميل الصفحة.",
+  "screen.admin.applications.requestChangesDecision.loading": "جارٍ تحميل الطلب…",
+  "screen.admin.applications.requestChangesDecision.noApplication": "لم يتم اختيار طلب",
+  "screen.admin.applications.requestChangesDecision.noApplicationBody":
+    "افتح طلبًا من قائمة الانتظار أولًا.",
   // apps/web/src/screens/admin/common/admin-decision-form.tsx
   "screen.admin.common.adminDecisionForm.keepEditing": "متابعة التحرير",
   // apps/web/src/screens/admin/common/admin-nav.tsx
@@ -968,31 +983,35 @@ export const ar: AppMessages = {
   "screen.admin.finance.settlementsTracker.cancel": "إلغاء",
   "screen.admin.finance.settlementsTracker.markAsSettled": "تعليم كمسوّاة",
   // apps/web/src/screens/admin/home/admin-home.tsx
-  "screen.admin.home.adminHome.queue": "القائمة",
-  "screen.admin.home.adminHome.items": "العناصر",
-  "screen.admin.home.adminHome.oldestItem": "أقدم عنصر",
-  "screen.admin.home.adminHome.action": "الإجراء",
-  "screen.admin.home.adminHome.open": "فتح {queue}",
-  "screen.admin.home.adminHome.openQueue": "فتح القائمة",
-  "screen.admin.home.adminHome.adminStaffAccounts": "حسابات موظفي الإدارة",
-  "screen.admin.home.adminHome.subscriptionsAndOverrides": "الاشتراكات والتجاوزات",
-  "screen.admin.home.adminHome.revenueDashboard": "لوحة الإيرادات",
-  "screen.admin.home.adminHome.notificationTemplates": "قوالب الإشعارات",
-  "screen.admin.home.adminHome.adminHome": "الرئيسية الإدارية",
-  "screen.admin.home.adminHome.queuesThatNeedActionNow":
-    "قوائم تحتاج إلى إجراء الآن. تُعلَّم الطلبات متأخرة بعد يومَي عمل.",
-  "screen.admin.home.adminHome.allClear": "لا شيء معلّق",
-  "screen.admin.home.adminHome.noQueueHasItemsThat": "لا توجد قائمة بها عناصر تحتاج إلى إجراء.",
-  "screen.admin.home.adminHome.loadingTheQueues": "جارٍ تحميل القوائم.",
-  "screen.admin.home.adminHome.theLabTestsQueueCould":
-    "تعذّر تحميل قائمة التحاليل المخبرية. تُعرض القوائم الأخرى.",
-  "screen.admin.home.adminHome.retryLabTests": "إعادة محاولة التحاليل المخبرية",
-  "screen.admin.home.adminHome.queues": "القوائم",
-  "screen.admin.home.adminHome.queuesThatNeedAction": "قوائم تحتاج إلى إجراء",
-  "screen.admin.home.adminHome.allClearEmptyTitle": "لا شيء معلّق",
-  "screen.admin.home.adminHome.noQueueHasItemsThatEmptyDescription":
-    "لا توجد قائمة بها عناصر تحتاج إلى إجراء.",
-  "screen.admin.home.adminHome.moreAreas": "أقسام أخرى",
+  "screen.admin.home.adminHome.title": "الرئيسية للإدارة",
+  "screen.admin.home.adminHome.description": "قوائم الانتظار التي تحتاج إلى إجراء الآن.",
+  "screen.admin.home.adminHome.refreshQueues": "تحديث قوائم الانتظار",
+  "screen.admin.home.adminHome.noValue": "—",
+  "screen.admin.home.adminHome.applicationsWaiting": "طلبات بانتظار المراجعة",
+  "screen.admin.home.adminHome.overdueAfterTwoDays": "{count} متأخرة بعد يومي عمل",
+  "screen.admin.home.adminHome.openApplications": "فتح الطلبات",
+  "screen.admin.home.adminHome.labTests": "التحاليل المخبرية",
+  "screen.admin.home.adminHome.dueOrOverdue": "مستحقة أو متأخرة",
+  "screen.admin.home.adminHome.openLabTests": "فتح التحاليل المخبرية",
+  "screen.admin.home.adminHome.openDisputes": "النزاعات المفتوحة",
+  "screen.admin.home.adminHome.awaitingAcknowledgement": "بانتظار الإقرار أو الحل",
+  "screen.admin.home.adminHome.openDisputesLink": "فتح النزاعات",
+  "screen.admin.home.adminHome.deletionRequests": "طلبات الحذف",
+  "screen.admin.home.adminHome.withGraceEndDates": "مع تواريخ انتهاء فترة السماح",
+  "screen.admin.home.adminHome.openRequests": "فتح الطلبات",
+  "screen.admin.home.adminHome.couponAbuseFlags": "تنبيهات إساءة استخدام القسائم",
+  "screen.admin.home.adminHome.raisedByAbuseRules": "أطلقتها قواعد منع الإساءة",
+  "screen.admin.home.adminHome.openCoupons": "فتح القسائم",
+  "screen.admin.home.adminHome.openSettlements": "التسويات المفتوحة",
+  "screen.admin.home.adminHome.owedBetweenParties": "مبالغ مستحقة بين الأطراف",
+  "screen.admin.home.adminHome.openSettlementsLink": "فتح التسويات",
+  "screen.admin.home.adminHome.queueFailed": "تعذّر تحميل قائمة الانتظار: {queue}",
+  "screen.admin.home.adminHome.queueFailedBody":
+    "تعرض قوائم الانتظار الأخرى أعدادها الحالية. أعد المحاولة لتحميل عدد هذه القائمة.",
+  "screen.admin.home.adminHome.retry": "إعادة المحاولة",
+  "screen.admin.home.adminHome.sourceApplications": "الطلبات والتحاليل المخبرية وطلبات الحذف",
+  "screen.admin.home.adminHome.sourceDisputes": "النزاعات المفتوحة",
+  "screen.admin.home.adminHome.sourceCoupons": "تنبيهات إساءة استخدام القسائم",
   // apps/web/src/screens/admin/lab-tests/lab-test-detail-and-decision.tsx
   "screen.admin.labTests.labTestDetailAndDecision.resultUploaded": "تم رفع النتيجة",
   "screen.admin.labTests.labTestDetailAndDecision.testRequested": "طُلب التحليل",
