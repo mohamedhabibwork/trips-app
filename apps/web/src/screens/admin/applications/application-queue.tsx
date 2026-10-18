@@ -1,285 +1,293 @@
+// SCR-ADM-02 Application queue (docs/design/web/admin/SCR-ADM-02.dc.html): one queue for
+// organizations, platform drivers and platform photographers, filtered by type, country, age and
+// state, with the overdue flag after 2 working days.
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import {
-  TeApplicationStatus,
-  TE_APPLICATION_STATUS_PRESENTATION,
-} from "@trips-app/ui/components/te-application-card";
-import { TeButton } from "@trips-app/ui/components/te-button";
-import { TeDataTable, type TeDataTableColumn } from "@trips-app/ui/components/te-data-table";
-import { TePageHeader } from "@trips-app/ui/components/te-page-header";
-import { TeRoleBadge, type TeRole } from "@trips-app/ui/components/te-role-badge";
-import { TeSelect, type TeSelectOption } from "@trips-app/ui/components/te-select";
 import { t } from "@trips-app/i18n";
+
 import { useAuth } from "@/auth/auth-context";
 import { setSelectedAdminApplicationId } from "@/screens/onboarding-state";
 import { orpc } from "@/utils/orpc";
-import { StatePreview } from "../common/admin-state-preview";
-import { AdminScreenLink, useAdminNavigate } from "../common/admin-links";
+
+import { AdminLink } from "../common/admin-actions";
+import { AdminSelect, type AdminOption } from "../common/admin-form";
+import { AdminEmpty, AdminQueryState } from "../common/admin-states";
 import {
-  AdminActions,
-  AdminFilters,
+  AdminBadge,
+  AdminFilterBar,
   AdminPage,
-  AdminPagination,
-  AdminPanel,
-  AdminStatus,
-  type AdminStatusPresentation,
-} from "../common/admin-shared";
+  AdminTable,
+  type AdminColumn,
+  type AdminTone,
+} from "../common/admin-ui";
+
+type ApplicationType = "organization" | "platform_driver" | "platform_photographer";
+type ApplicationState =
+  | "Submitted"
+  | "Pending Review"
+  | "Changes Requested"
+  | "Approved"
+  | "Rejected";
 
 interface ApplicationRow {
   id: string;
-  role: TeRole;
+  type: string;
   applicant: string;
   country: string;
   submitted: string;
-  waiting: string;
-  state: TeApplicationStatus;
+  waiting: number;
+  state: string;
   overdue: boolean;
 }
 
-const OVERDUE = (): AdminStatusPresentation => ({
-  tone: "danger",
-  icon: "alert",
-  label: t("screen.admin.applications.applicationQueue.overdue"),
-});
-const ON_TIME = (): AdminStatusPresentation => ({
-  tone: "info",
-  icon: "clock",
-  label: t("screen.admin.applications.applicationQueue.onTime"),
-});
+const TYPE_FILTER: Record<string, ApplicationType | undefined> = {
+  all: undefined,
+  organization: "organization",
+  driver: "platform_driver",
+  photographer: "platform_photographer",
+};
 
-const TYPE_OPTIONS = (): readonly TeSelectOption[] => [
+const STATE_FILTER: Record<string, ApplicationState | undefined> = {
+  all: undefined,
+  submitted: "Submitted",
+  underReview: "Pending Review",
+  changesRequested: "Changes Requested",
+  approved: "Approved",
+  rejected: "Rejected",
+};
+
+const typeOptions = (): readonly AdminOption[] => [
   { value: "all", label: t("screen.admin.applications.applicationQueue.allTypes") },
   { value: "organization", label: t("screen.admin.applications.applicationQueue.organization") },
-  { value: "driver", label: t("screen.admin.applications.applicationQueue.platformDriver") },
-  {
-    value: "photographer",
-    label: t("screen.admin.applications.applicationQueue.platformPhotographer"),
-  },
+  { value: "driver", label: t("screen.admin.applications.applicationQueue.driver") },
+  { value: "photographer", label: t("screen.admin.applications.applicationQueue.photographer") },
 ];
-const COUNTRY_OPTIONS = (): readonly TeSelectOption[] => [
-  { value: "all", label: t("screen.admin.applications.applicationQueue.allCountries") },
-  { value: "EG", label: t("screen.admin.applications.applicationQueue.egypt") },
-  { value: "JO", label: t("screen.admin.applications.applicationQueue.jordan") },
-];
-const AGE_OPTIONS = (): readonly TeSelectOption[] => [
+
+const ageOptions = (): readonly AdminOption[] => [
   { value: "any", label: t("screen.admin.applications.applicationQueue.anyAge") },
-  {
-    value: "overdue",
-    label: t("screen.admin.applications.applicationQueue.overdueOver2WorkingDays"),
-  },
+  { value: "overdue", label: t("screen.admin.applications.applicationQueue.overdueOnly") },
 ];
-const STATE_OPTIONS = (): readonly TeSelectOption[] => [
-  { value: "all", label: t("screen.admin.applications.applicationQueue.anyState") },
-  { value: "pending", label: t("screen.admin.applications.applicationQueue.pendingReview") },
+
+const stateOptions = (): readonly AdminOption[] => [
+  { value: "all", label: t("screen.admin.applications.applicationQueue.allStates") },
+  { value: "submitted", label: t("screen.admin.applications.applicationQueue.submittedState") },
+  { value: "underReview", label: t("screen.admin.applications.applicationQueue.underReview") },
   {
-    value: "changes-requested",
+    value: "changesRequested",
     label: t("screen.admin.applications.applicationQueue.changesRequested"),
   },
   { value: "approved", label: t("screen.admin.applications.applicationQueue.approved") },
   { value: "rejected", label: t("screen.admin.applications.applicationQueue.rejected") },
 ];
 
-function mapRole(applicationType: string): TeRole {
-  if (applicationType === "organization") return "organization";
-  if (applicationType === "platform_photographer") return "photographer";
-  return "driver";
+function typeLabel(applicationType: string): string {
+  if (applicationType === "organization")
+    return t("screen.admin.applications.applicationQueue.organization");
+  if (applicationType === "platform_photographer")
+    return t("screen.admin.applications.applicationQueue.photographer");
+  return t("screen.admin.applications.applicationQueue.driver");
 }
 
-function mapStatus(state: string): TeApplicationStatus {
-  if (state === "Changes Requested") return "changes-requested";
-  if (state === "Approved") return "approved";
-  if (state === "Rejected" || state === "Closed") return "rejected";
-  return "pending";
+const STATE_PRESENTATION: Record<string, { key: string; tone: AdminTone }> = {
+  Submitted: { key: "screen.admin.applications.applicationQueue.submittedState", tone: "info" },
+  "Pending Review": { key: "screen.admin.applications.applicationQueue.underReview", tone: "info" },
+  "Changes Requested": {
+    key: "screen.admin.applications.applicationQueue.changesRequested",
+    tone: "warn",
+  },
+  Approved: { key: "screen.admin.applications.applicationQueue.approved", tone: "ok" },
+  Rejected: { key: "screen.admin.applications.applicationQueue.rejected", tone: "bad" },
+  Appealed: { key: "screen.admin.applications.applicationQueue.appealed", tone: "info" },
+  Closed: { key: "screen.admin.applications.applicationQueue.closed", tone: "neutral" },
+};
+
+function StateBadge({ state }: { state: string }) {
+  const presentation = STATE_PRESENTATION[state];
+  if (!presentation) return <AdminBadge icon={false}>{state}</AdminBadge>;
+  return (
+    <AdminBadge tone={presentation.tone} icon={presentation.tone === "info" ? false : undefined}>
+      {t(presentation.key)}
+    </AdminBadge>
+  );
+}
+
+function readCountry(payload: Record<string, unknown>): string {
+  if (typeof payload.countryCode === "string") return payload.countryCode;
+  if (typeof payload.country === "string") return payload.country;
+  return "";
 }
 
 export function ApplicationQueue() {
-  const { status: authStatus } = useAuth();
-  const goTo = useAdminNavigate();
+  const { status: authStatus, locale } = useAuth();
   const [typeFilter, setTypeFilter] = useState("all");
   const [countryFilter, setCountryFilter] = useState("all");
   const [ageFilter, setAgeFilter] = useState("any");
   const [stateFilter, setStateFilter] = useState("all");
 
-  const applicationType =
-    typeFilter === "organization"
-      ? ("organization" as const)
-      : typeFilter === "driver"
-        ? ("platform_driver" as const)
-        : typeFilter === "photographer"
-          ? ("platform_photographer" as const)
-          : undefined;
-  const state =
-    stateFilter === "pending"
-      ? ("Pending Review" as const)
-      : stateFilter === "changes-requested"
-        ? ("Changes Requested" as const)
-        : stateFilter === "approved"
-          ? ("Approved" as const)
-          : stateFilter === "rejected"
-            ? ("Rejected" as const)
-            : undefined;
-  const overdueOnly = ageFilter === "overdue" ? true : undefined;
-
+  const applicationType = TYPE_FILTER[typeFilter];
+  const state = STATE_FILTER[stateFilter];
   const queueQuery = useQuery({
     ...orpc.onboarding.listReviewQueue.queryOptions({
       input: {
         ...(applicationType ? { applicationType } : {}),
         ...(state ? { state } : {}),
-        ...(overdueOnly ? { overdueOnly } : {}),
+        ...(ageFilter === "overdue" ? { overdueOnly: true } : {}),
       },
     }),
     enabled: authStatus === "authenticated",
   });
 
-  const rawRows: readonly ApplicationRow[] = (queueQuery.data ?? []).map((item): ApplicationRow => {
+  const allRows: readonly ApplicationRow[] = (queueQuery.data ?? []).map((item) => {
     const payload = (item.payload ?? {}) as Record<string, unknown>;
-    const country =
-      typeof payload.countryCode === "string"
-        ? payload.countryCode
-        : typeof payload.country === "string"
-          ? payload.country
-          : "EG";
-    const applicantName =
-      item.applicant?.fullName ??
-      (typeof payload.legalEntityName === "string" ? payload.legalEntityName : null) ??
-      item.applicantAccountId;
+    const legalName = typeof payload.legalEntityName === "string" ? payload.legalEntityName : null;
     return {
       id: item.id,
-      role: mapRole(item.applicationType),
-      applicant: applicantName,
-      country,
-      submitted: new Date(item.createdAt).toLocaleDateString(),
-      waiting: String(item.workingDaysWaiting ?? 0),
-      state: mapStatus(item.state),
+      type: typeLabel(item.applicationType),
+      applicant: item.applicant?.fullName ?? legalName ?? item.applicantAccountId,
+      country: readCountry(payload),
+      submitted: new Date(item.createdAt).toLocaleDateString(locale),
+      waiting: item.workingDaysWaiting ?? 0,
+      state: item.state,
       overdue: Boolean(item.isSlaOverdue),
     };
   });
 
+  // Countries come from the loaded applications, so the list only offers ones that exist.
+  const countries = [...new Set(allRows.map((row) => row.country).filter(Boolean))].sort();
+  const countryOptions: readonly AdminOption[] = [
+    { value: "all", label: t("screen.admin.applications.applicationQueue.allCountries") },
+    ...countries.map((country) => ({ value: country, label: country })),
+  ];
   const rows =
-    countryFilter === "all"
-      ? rawRows
-      : rawRows.filter((r) => r.country.toUpperCase() === countryFilter.toUpperCase());
+    countryFilter === "all" ? allRows : allRows.filter((row) => row.country === countryFilter);
+  const first = rows[0];
 
-  function openApplication(id: string) {
-    setSelectedAdminApplicationId(id);
-    void goTo("application-review-detail");
-  }
-
-  const columns: readonly TeDataTableColumn<ApplicationRow>[] = [
+  const columns: readonly AdminColumn<ApplicationRow>[] = [
     {
-      key: "role",
+      key: "type",
       header: t("screen.admin.applications.applicationQueue.type"),
-      render: (row) => <TeRoleBadge role={row.role} />,
+      render: (row) => row.type,
     },
-    { key: "applicant", header: t("screen.admin.applications.applicationQueue.applicant") },
-    { key: "country", header: t("screen.admin.applications.applicationQueue.country") },
-    { key: "submitted", header: t("screen.admin.applications.applicationQueue.submitted") },
+    {
+      key: "applicant",
+      header: t("screen.admin.applications.applicationQueue.applicant"),
+      render: (row) => row.applicant,
+      wrap: true,
+    },
+    {
+      key: "country",
+      header: t("screen.admin.applications.applicationQueue.country"),
+      render: (row) => row.country || "—",
+    },
+    {
+      key: "submitted",
+      header: t("screen.admin.applications.applicationQueue.submitted"),
+      render: (row) => row.submitted,
+    },
     {
       key: "waiting",
       header: t("screen.admin.applications.applicationQueue.workingDaysWaiting"),
+      render: (row) => row.waiting,
       align: "end",
+      headerWrap: true,
     },
     {
       key: "state",
       header: t("screen.admin.applications.applicationQueue.state"),
-      render: (row) => <AdminStatus status={TE_APPLICATION_STATUS_PRESENTATION[row.state]} />,
+      render: (row) => <StateBadge state={row.state} />,
     },
     {
       key: "overdue",
-      header: t("screen.admin.applications.applicationQueue.overdueHeader"),
-      render: (row) => <AdminStatus status={row.overdue ? OVERDUE() : ON_TIME()} />,
+      header: t("screen.admin.applications.applicationQueue.overdue"),
+      render: (row) =>
+        row.overdue ? (
+          <AdminBadge tone="warn">
+            {t("screen.admin.applications.applicationQueue.overdue")}
+          </AdminBadge>
+        ) : (
+          <span className="te-caption">
+            {t("screen.admin.applications.applicationQueue.notOverdue")}
+          </span>
+        ),
     },
     {
-      key: "open",
-      header: t("screen.admin.applications.applicationQueue.action"),
+      key: "action",
+      header: (
+        <span className="te-caption">{t("screen.admin.applications.applicationQueue.action")}</span>
+      ),
       render: (row) => (
-        <TeButton
-          variant="secondary"
-          aria-label={t("screen.admin.applications.applicationQueue.openApplicationFor", {
+        <AdminLink
+          screen="SCR-ADM-03"
+          params={{ applicationId: row.id }}
+          ariaLabel={t("screen.admin.applications.applicationQueue.openApplicationFor", {
             applicant: row.applicant,
           })}
-          onClick={() => openApplication(row.id)}
+          onClick={() => setSelectedAdminApplicationId(row.id)}
         >
           {t("screen.admin.applications.applicationQueue.openApplication")}
-        </TeButton>
+        </AdminLink>
       ),
     },
   ];
 
   return (
-    <AdminPage>
-      <TePageHeader
-        title={t("screen.admin.applications.applicationQueue.applicationQueue")}
-        description={t(
-          "screen.admin.applications.applicationQueue.organizationsPlatformDriversAndPlatform",
-        )}
-        actions={
-          <AdminActions>
-            <AdminScreenLink slug="appeal-review" variant="secondary">
-              {t("screen.admin.applications.applicationQueue.reviewAppeals")}
-            </AdminScreenLink>
-            <TeButton
-              variant="primary"
-              onClick={() => {
-                if (rows[0]) {
-                  openApplication(rows[0].id);
-                } else {
-                  void goTo("application-review-detail");
-                }
-              }}
-            >
-              {t("screen.admin.applications.applicationQueue.openNextApplication")}
-            </TeButton>
-          </AdminActions>
-        }
-      />
-      <StatePreview
-        emptyTitle={t("screen.admin.applications.applicationQueue.noApplicationsWaiting")}
-        emptyDescription={t("screen.admin.applications.applicationQueue.changeTheFiltersToSee")}
-        loadingLabel={t("screen.admin.applications.applicationQueue.loadingTheApplicationQueue")}
+    <AdminPage
+      title={t("screen.admin.applications.applicationQueue.title")}
+      description={t("screen.admin.applications.applicationQueue.description")}
+      actions={
+        <AdminLink
+          screen="SCR-ADM-03"
+          params={first ? { applicationId: first.id } : {}}
+          variant="primary"
+          onClick={() => first && setSelectedAdminApplicationId(first.id)}
+        >
+          {t("screen.admin.applications.applicationQueue.openApplication")}
+        </AdminLink>
+      }
+    >
+      <AdminFilterBar label={t("screen.admin.applications.applicationQueue.filters")}>
+        <AdminSelect
+          label={t("screen.admin.applications.applicationQueue.type")}
+          options={typeOptions()}
+          value={typeFilter}
+          onValueChange={setTypeFilter}
+        />
+        <AdminSelect
+          label={t("screen.admin.applications.applicationQueue.country")}
+          options={countryOptions}
+          value={countryFilter}
+          onValueChange={setCountryFilter}
+        />
+        <AdminSelect
+          label={t("screen.admin.applications.applicationQueue.ageWorkingDays")}
+          options={ageOptions()}
+          value={ageFilter}
+          onValueChange={setAgeFilter}
+        />
+        <AdminSelect
+          label={t("screen.admin.applications.applicationQueue.state")}
+          options={stateOptions()}
+          value={stateFilter}
+          onValueChange={setStateFilter}
+        />
+      </AdminFilterBar>
+      <AdminQueryState
+        query={queueQuery}
+        loadingLabel={t("screen.admin.applications.applicationQueue.loading")}
       >
-        <AdminFilters>
-          <TeSelect
-            label={t("screen.admin.applications.applicationQueue.typeLabel")}
-            options={TYPE_OPTIONS()}
-            value={typeFilter}
-            onValueChange={setTypeFilter}
-          />
-          <TeSelect
-            label={t("screen.admin.applications.applicationQueue.countryLabel")}
-            options={COUNTRY_OPTIONS()}
-            value={countryFilter}
-            onValueChange={setCountryFilter}
-          />
-          <TeSelect
-            label={t("screen.admin.applications.applicationQueue.age")}
-            options={AGE_OPTIONS()}
-            value={ageFilter}
-            onValueChange={setAgeFilter}
-          />
-          <TeSelect
-            label={t("screen.admin.applications.applicationQueue.stateLabel")}
-            options={STATE_OPTIONS()}
-            value={stateFilter}
-            onValueChange={setStateFilter}
-          />
-        </AdminFilters>
-        <AdminPanel title={t("screen.admin.applications.applicationQueue.applications")}>
-          <TeDataTable
-            columns={columns}
-            rows={rows}
-            getRowKey={(row) => row.id}
-            caption={t("screen.admin.applications.applicationQueue.applicationsWaitingForReview")}
-            emptyTitle={t(
-              "screen.admin.applications.applicationQueue.noApplicationsWaitingEmptyTitle",
-            )}
-            emptyDescription={t(
-              "screen.admin.applications.applicationQueue.changeTheFiltersToSeeEmptyDescription",
-            )}
-          />
-          <AdminPagination pageCount={1} />
-        </AdminPanel>
-      </StatePreview>
+        <AdminTable
+          caption={t("screen.admin.applications.applicationQueue.tableCaption")}
+          columns={columns}
+          rows={rows}
+          getRowKey={(row) => row.id}
+          empty={
+            <AdminEmpty
+              title={t("screen.admin.applications.applicationQueue.emptyTitle")}
+              description={t("screen.admin.applications.applicationQueue.emptyBody")}
+            />
+          }
+        />
+      </AdminQueryState>
     </AdminPage>
   );
 }
