@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SCR-SHR-13 Role and organization switcher</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Cairo:wght@500;600;700&display=swap" rel="stylesheet">
+<style>body{margin:0}a{color:var(--primary-text)}</style>
+</helmet>
+<div style="--surface:#f6f3e4;--surface-raised:#ffffff;--surface-inverse:#262a67;--ink:#262a67;--ink-muted:#5b5f86;--ink-inverse:#f6f3e4;--hairline:#e3dfc9;--primary:#ff6c2e;--on-primary:#262a67;--primary-text:#c93a00;--accent:#fb8030;--highlight:#f89e23;--focus-ring:#262a67;--control-border:#7b7fa6;--danger:#b42318;--danger-soft:#fde8e6;--success:#1f7a4d;--success-soft:#e3f3ea;--warning:#8a4b00;--warning-soft:#fff1d6;--info-soft:#e6e8f5;--glass-dim:rgba(16,18,48,.35);--card-shadow:0 1px 2px rgba(38,42,103,.06),0 6px 20px rgba(38,42,103,.08);--radius-sm:8px;--radius-md:12px;--radius-lg:20px;--radius-pill:999px;position:relative;width:390px;height:844px;box-sizing:border-box;overflow:hidden;background:var(--surface);color:var(--ink);font-family:Outfit,Nunito,system-ui,sans-serif">
+  <div style="padding:16px;background:var(--surface-raised);border-bottom:1px solid var(--hairline);font-size:20px;font-weight:700">Trips <span style="color:var(--primary-text)">Enjoy</span></div>
+  <div aria-hidden="true" style="position:absolute;inset:60px 0 0 0;background:var(--glass-dim)"></div>
+  <section role="dialog" aria-modal="true" aria-labelledby="r1" style="position:absolute;left:0;right:0;bottom:0;background:var(--surface-raised);border-radius:var(--radius-lg) var(--radius-lg) 0 0;box-shadow:var(--card-shadow);padding:20px 16px 24px;display:flex;flex-direction:column;gap:14px">
+    <h1 id="r1" style="margin:0;font-size:22px;line-height:30px;font-weight:700">Switch role or organization</h1>
+    <fieldset style="margin:0;padding:0;border:0;display:flex;flex-direction:column;gap:8px">
+      <legend style="font-size:13px;font-weight:600;color:var(--ink-muted);margin-bottom:6px">Your roles</legend>
+      <label style="display:flex;gap:12px;align-items:center;padding:12px 14px;border-radius:var(--radius-md);border:2px solid var(--ink);font-size:16px;font-weight:600"><input type="radio" name="role" checked style="width:20px;height:20px;margin:0">Traveler</label>
+      <label style="display:flex;gap:12px;align-items:center;padding:12px 14px;border-radius:var(--radius-md);border:1.5px solid var(--control-border);font-size:16px"><input type="radio" name="role" style="width:20px;height:20px;margin:0">Platform driver</label>
+    </fieldset>
+    <fieldset style="margin:0;padding:0;border:0;display:flex;flex-direction:column;gap:8px">
+      <legend style="font-size:13px;font-weight:600;color:var(--ink-muted);margin-bottom:6px">Organizations linked to this email</legend>
+      <label style="display:flex;gap:12px;align-items:center;padding:12px 14px;border-radius:var(--radius-md);border:1.5px solid var(--control-border);font-size:16px"><input type="radio" name="org" style="width:20px;height:20px;margin:0">[ORGANIZATION A]</label>
+      <label style="display:flex;gap:12px;align-items:center;padding:12px 14px;border-radius:var(--radius-md);border:1.5px solid var(--control-border);font-size:16px"><input type="radio" name="org" style="width:20px;height:20px;margin:0">[ORGANIZATION B]</label>
+    </fieldset>
+    <p style="margin:0;font-size:13px;line-height:18px;color:var(--ink-muted)">Each role and organization keeps its own data. Switching does not create a second account.</p>
+    <button type="button" style="min-height:48px;padding:12px 24px;border:0;border-radius:var(--radius-md);background:var(--primary);color:var(--on-primary);font:inherit;font-size:16px;font-weight:600;cursor:pointer">Switch</button>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

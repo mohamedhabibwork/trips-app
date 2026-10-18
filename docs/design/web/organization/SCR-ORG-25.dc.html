@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SCR-ORG-25 Seat map and seat assignment</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+.app{--te-brand-navy:#262a67;--te-brand-orange:#ff6527;--te-surface:#f6f3e4;--te-surface-raised:#ffffff;--te-surface-inverse:#262a67;--te-ink:#262a67;--te-ink-muted:#5b5f86;--te-ink-inverse:#f6f3e4;--te-hairline:#e3dfc9;--te-primary:#ff6c2e;--te-on-primary:#262a67;--te-primary-text:#c93a00;--te-accent:#fb8030;--te-control-border:#7b7fa6;--te-danger:#b42318;--te-danger-soft:#fde8e6;--te-success:#1f7a4d;--te-success-soft:#e3f3ea;--te-warning:#8a4b00;--te-warning-soft:#fff1d6;--te-info-soft:#e6e8f5;--te-card-shadow:0 1px 2px rgba(38,42,103,.06),0 6px 20px rgba(38,42,103,.08);font:16px/24px Outfit,Nunito,system-ui,sans-serif;color:var(--te-ink)}
+.app *{box-sizing:border-box}
+.app h1,.app h2,.app p{margin:0}
+.app h1{font-size:40px;line-height:48px;font-weight:700}
+.app h2{font-size:28px;line-height:36px;font-weight:600}
+.app .cap{font-size:13px;line-height:18px;font-weight:500;color:var(--te-ink-muted)}
+.app .lbl{font-size:14px;line-height:20px;font-weight:600}
+.app .btn{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:12px 24px;border:2px solid transparent;border-radius:12px;font:600 14px/20px Outfit,Nunito,system-ui,sans-serif;cursor:pointer;white-space:nowrap}
+.app .btn-p{background:var(--te-primary);color:var(--te-on-primary)}
+.app .btn-s{background:var(--te-surface-raised);color:var(--te-ink);border-color:var(--te-control-border)}
+.app .card{background:var(--te-surface-raised);border:1px solid var(--te-hairline);border-radius:12px;box-shadow:var(--te-card-shadow);padding:24px;display:flex;flex-direction:column;gap:16px;min-width:0}
+.app .badge{display:inline-flex;align-items:center;gap:4px;padding:4px 12px;border-radius:999px;font:500 13px/18px Outfit,Nunito,system-ui,sans-serif;white-space:nowrap}
+.app .ok{background:var(--te-success-soft);color:var(--te-success)}
+.app .warn{background:var(--te-warning-soft);color:var(--te-warning)}
+.app .info{background:var(--te-info-soft);color:var(--te-ink)}
+.app .neu{background:var(--te-surface-raised);color:var(--te-ink-muted);border:1px solid var(--te-control-border)}
+.app .alert{display:flex;gap:12px;align-items:flex-start;padding:16px 20px;border-radius:12px;font-size:14px;line-height:20px}
+.app .nv{display:flex;align-items:center;min-height:44px;padding:0 12px;border-radius:8px;color:var(--te-ink);text-decoration:none;font:600 14px/20px Outfit,Nunito,system-ui,sans-serif}
+.app .nv[aria-current="page"]{background:var(--te-accent);color:var(--te-brand-navy)}
+.app :focus-visible{outline:2px solid var(--te-ink);outline-offset:2px}
+.app .tabs{display:flex;gap:8px;border-bottom:1px solid var(--te-hairline)}
+.app .tab{padding:12px 16px;border-bottom:2px solid transparent;font:600 14px/20px Outfit,Nunito,system-ui,sans-serif;color:var(--te-ink-muted)}
+.app .tab[aria-selected="true"]{color:var(--te-ink);border-bottom-color:var(--te-ink)}
+.app .row{display:flex;gap:24px;align-items:stretch}
+.app .sb{width:88px;min-height:56px;border-radius:8px;border:1px solid var(--te-control-border);background:var(--te-surface-raised);display:flex;flex-direction:column;align-items:center;justify-content:center;font:600 14px/20px Outfit,Nunito,system-ui,sans-serif;color:var(--te-ink);padding:4px}
+.app .sb span{font:500 13px/18px Outfit,Nunito,system-ui,sans-serif}
+.app .sb.h{background:var(--te-warning-soft);color:var(--te-warning);border-color:var(--te-warning)}
+.app .sb.r{background:var(--te-info-soft)}
+.app .sb.c{background:var(--te-success-soft);color:var(--te-success);border-color:var(--te-success)}
+.app .sb.x{background:var(--te-surface);color:var(--te-ink-muted);border-style:dashed}
+.app .sb.o{background:var(--te-surface);color:var(--te-ink-muted)}
+.app .aisle{width:24px}
+.app .sw{display:inline-block;width:16px;height:16px;border-radius:4px;border:1px solid var(--te-control-border);vertical-align:middle;margin-inline-end:6px}
+.app .who{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 16px;border:1px solid var(--te-hairline);border-radius:12px;background:var(--te-surface-raised)}
+.app .who[aria-pressed="true"]{border:2px solid var(--te-ink)}
+</style>
+</helmet>
+<div class="app" style="width:1280px;height:900px;display:flex;flex-direction:column;overflow:hidden;background:var(--te-surface)">
+<header style="height:64px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:0 24px;background:var(--te-surface-inverse);color:var(--te-ink-inverse)">
+<div style="display:flex;align-items:center;gap:16px"><span style="font:700 20px/28px Outfit,Nunito,system-ui,sans-serif">Trips <span style="color:var(--te-brand-orange)">Enjoy</span></span><span class="cap" style="color:var(--te-ink-inverse)">[Organization name]</span></div>
+<div style="display:flex;align-items:center;gap:12px"><span class="badge info">Owner</span><span class="lbl" style="color:var(--te-ink-inverse)">[Your name]</span></div>
+</header>
+<div style="display:flex;flex:1;min-height:0">
+<nav aria-label="Organization" style="width:232px;flex-shrink:0;background:var(--te-surface-raised);border-right:1px solid var(--te-hairline);padding:24px 16px;display:flex;flex-direction:column;gap:4px">
+<a class="nv" href="#">Workspace home</a>
+<a class="nv" href="#">Trips</a>
+<a class="nv" href="#">Vehicles</a>
+<a class="nv" href="#">Staffing</a>
+<a class="nv" href="#" aria-current="page">Bookings</a>
+<a class="nv" href="#">Coupons</a>
+<a class="nv" href="#">Accounting</a>
+<a class="nv" href="#">Employees</a>
+<a class="nv" href="#">Invoices</a>
+<a class="nv" href="#">Reports</a>
+<a class="nv" href="#">Live operations</a>
+<a class="nv" href="#">Subscription</a>
+<a class="nv" href="#">Settings and CRM</a>
+</nav>
+<main style="flex:1;min-width:0;padding:32px 40px;display:flex;flex-direction:column;gap:20px;overflow:hidden">
+<div style="display:flex;justify-content:space-between;align-items:flex-end;gap:24px">
+<div style="display:flex;flex-direction:column;gap:4px"><h1>Seat map</h1><p class="cap">Bus 3 · Hurghada · Seat mode: organization-assigned · Updates live</p></div>
+</div>
+<div class="tabs" role="tablist" aria-label="Seat views">
+<span class="tab" role="tab" aria-selected="true">Map</span>
+<span class="tab" role="tab" aria-selected="false">List</span>
+</div>
+<div class="row" style="align-items:flex-start">
+<section class="card" style="flex:3" aria-labelledby="sm">
+<h2 id="sm" style="font-size:20px;line-height:28px">Vehicle [Plate number] · front of bus at top</h2>
+<div role="group" aria-label="Seat map" style="display:grid;grid-template-columns:repeat(2,88px) 24px repeat(2,88px);gap:8px;justify-content:center">
+<button class="sb c" type="button" aria-label="Seat 1A, checked in"><b>1A</b><span>Checked in</span></button><button class="sb c" type="button" aria-label="Seat 1B, checked in"><b>1B</b><span>Checked in</span></button><span class="aisle"></span><button class="sb r" type="button" aria-label="Seat 1C, reserved"><b>1C</b><span>Reserved</span></button><button class="sb r" type="button" aria-label="Seat 1D, reserved"><b>1D</b><span>Reserved</span></button>
+<button class="sb h" type="button" aria-label="Seat 2A, held"><b>2A</b><span>Held</span></button><button class="sb" type="button" aria-label="Seat 2B, available"><b>2B</b><span>Available</span></button><span class="aisle"></span><button class="sb" type="button" aria-label="Seat 2C, available"><b>2C</b><span>Available</span></button><button class="sb x" type="button" aria-label="Seat 2D, cancelled"><b>2D</b><span>Cancelled</span></button>
+<button class="sb" type="button" aria-label="Seat 3A, available"><b>3A</b><span>Available</span></button><button class="sb r" type="button" aria-label="Seat 3B, reserved"><b>3B</b><span>Reserved</span></button><span class="aisle"></span><button class="sb" type="button" aria-label="Seat 3C, available"><b>3C</b><span>Available</span></button><button class="sb" type="button" aria-label="Seat 3D, available"><b>3D</b><span>Available</span></button>
+<button class="sb o" type="button" aria-label="Seat 4A, checked out"><b>4A</b><span>Checked out</span></button><button class="sb" type="button" aria-label="Seat 4B, available"><b>4B</b><span>Available</span></button><span class="aisle"></span><button class="sb h" type="button" aria-label="Seat 4C, held"><b>4C</b><span>Held</span></button><button class="sb" type="button" aria-label="Seat 4D, available"><b>4D</b><span>Available</span></button>
+<button class="sb" type="button" aria-label="Seat 5A, available"><b>5A</b><span>Available</span></button><button class="sb" type="button" aria-label="Seat 5B, available"><b>5B</b><span>Available</span></button><span class="aisle"></span><button class="sb" type="button" aria-label="Seat 5C, available"><b>5C</b><span>Available</span></button><button class="sb" type="button" aria-label="Seat 5D, available"><b>5D</b><span>Available</span></button>
+</div>
+<p class="cap" aria-label="Legend"><span class="sw" style="background:var(--te-surface-raised)"></span>Available · <span class="sw" style="background:var(--te-warning-soft)"></span>Held · <span class="sw" style="background:var(--te-info-soft)"></span>Reserved · <span class="sw" style="background:var(--te-success-soft)"></span>Checked in · <span class="sw" style="background:var(--te-surface)"></span>Checked out · Cancelled (dashed)</p>
+</section>
+<section class="card" style="flex:2;min-width:0" aria-labelledby="un">
+<h2 id="un" style="font-size:20px;line-height:28px">Unassigned travelers</h2>
+<div class="who" aria-pressed="true"><span><b>[Traveler name]</b><br><span class="cap">Program [Program name]</span></span><span class="badge info">Selected</span></div>
+<div class="who" aria-pressed="false"><span><b>[Traveler name]</b><br><span class="cap">Program [Program name]</span></span><span class="badge neu">Waiting</span></div>
+<div class="who" aria-pressed="false"><span><b>[Traveler name]</b><br><span class="cap">Program [Program name]</span></span><span class="badge neu">Waiting</span></div>
+<div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:8px"><button class="btn btn-p" type="button">Assign to seat [label]</button><button class="btn btn-s" type="button">Move seat</button></div>
+<p class="cap">Checked-in seats are locked. A seat already reserved cannot be assigned.</p>
+</section>
+</div>
+</main>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

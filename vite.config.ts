@@ -46,6 +46,7 @@ export default defineConfig({
       ".agents/**",
       ".skills/**",
       "**/.wrangler/**",
+      "docs/design/**",
     ],
     singleQuote: false,
     semi: true,

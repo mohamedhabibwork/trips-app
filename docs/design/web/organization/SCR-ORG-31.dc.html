@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SCR-ORG-31 Ledger and exports</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+.app{--te-brand-navy:#262a67;--te-brand-orange:#ff6527;--te-surface:#f6f3e4;--te-surface-raised:#ffffff;--te-surface-inverse:#262a67;--te-ink:#262a67;--te-ink-muted:#5b5f86;--te-ink-inverse:#f6f3e4;--te-hairline:#e3dfc9;--te-primary:#ff6c2e;--te-on-primary:#262a67;--te-primary-text:#c93a00;--te-accent:#fb8030;--te-control-border:#7b7fa6;--te-danger:#b42318;--te-danger-soft:#fde8e6;--te-success:#1f7a4d;--te-success-soft:#e3f3ea;--te-warning:#8a4b00;--te-warning-soft:#fff1d6;--te-info-soft:#e6e8f5;--te-card-shadow:0 1px 2px rgba(38,42,103,.06),0 6px 20px rgba(38,42,103,.08);font:16px/24px Outfit,Nunito,system-ui,sans-serif;color:var(--te-ink)}
+.app *{box-sizing:border-box}
+.app h1,.app h2,.app p{margin:0}
+.app h1{font-size:40px;line-height:48px;font-weight:700}
+.app .cap{font-size:13px;line-height:18px;font-weight:500;color:var(--te-ink-muted)}
+.app .lbl{font-size:14px;line-height:20px;font-weight:600}
+.app .btn{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:12px 24px;border:2px solid transparent;border-radius:12px;font:600 14px/20px Outfit,Nunito,system-ui,sans-serif;cursor:pointer;white-space:nowrap}
+.app .btn-s{background:var(--te-surface-raised);color:var(--te-ink);border-color:var(--te-control-border)}
+.app .card{background:var(--te-surface-raised);border:1px solid var(--te-hairline);border-radius:12px;box-shadow:var(--te-card-shadow);padding:24px;display:flex;flex-direction:column;gap:16px;min-width:0}
+.app .badge{display:inline-flex;align-items:center;gap:4px;padding:4px 12px;border-radius:999px;font:500 13px/18px Outfit,Nunito,system-ui,sans-serif;white-space:nowrap}
+.app .neu{background:var(--te-surface-raised);color:var(--te-ink-muted);border:1px solid var(--te-control-border)}
+.app .info{background:var(--te-info-soft);color:var(--te-ink)}
+.app table{width:100%;border-collapse:separate;border-spacing:0;background:var(--te-surface-raised);border:1px solid var(--te-hairline);border-radius:12px;overflow:hidden}
+.app th{font:600 13px/18px Outfit,Nunito,system-ui,sans-serif;color:var(--te-ink-muted);text-align:start;padding:12px 16px;border-bottom:1px solid var(--te-hairline);background:var(--te-surface)}
+.app td{padding:12px 16px;border-bottom:1px solid var(--te-hairline);font-size:14px;line-height:20px;vertical-align:middle}
+.app tr:last-child td{border-bottom:0}
+.app .nv{display:flex;align-items:center;min-height:44px;padding:0 12px;border-radius:8px;color:var(--te-ink);text-decoration:none;font:600 14px/20px Outfit,Nunito,system-ui,sans-serif}
+.app .nv[aria-current="page"]{background:var(--te-accent);color:var(--te-brand-navy)}
+.app .fld{display:flex;flex-direction:column;gap:4px;font-size:14px;line-height:20px}
+.app .fld label{font-weight:600}
+.app input,.app select,.app textarea{min-height:44px;padding:8px 12px;border:1px solid var(--te-control-border);border-radius:8px;background:var(--te-surface-raised);color:var(--te-ink);font:16px/24px Outfit,Nunito,system-ui,sans-serif}
+.app :focus-visible{outline:2px solid var(--te-ink);outline-offset:2px}
+.app .row{display:flex;gap:24px;align-items:stretch}
+</style>
+</helmet>
+<div class="app" style="width:1280px;height:900px;display:flex;flex-direction:column;overflow:hidden;background:var(--te-surface)">
+<header style="height:64px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:0 24px;background:var(--te-surface-inverse);color:var(--te-ink-inverse)">
+<div style="display:flex;align-items:center;gap:16px"><span style="font:700 20px/28px Outfit,Nunito,system-ui,sans-serif">Trips <span style="color:var(--te-brand-orange)">Enjoy</span></span><span class="cap" style="color:var(--te-ink-inverse)">[Organization name]</span></div>
+<div style="display:flex;align-items:center;gap:12px"><span class="badge info">Owner</span><span class="lbl" style="color:var(--te-ink-inverse)">[Your name]</span></div>
+</header>
+<div style="display:flex;flex:1;min-height:0">
+<nav aria-label="Organization" style="width:232px;flex-shrink:0;background:var(--te-surface-raised);border-right:1px solid var(--te-hairline);padding:24px 16px;display:flex;flex-direction:column;gap:4px">
+<a class="nv" href="#">Workspace home</a>
+<a class="nv" href="#">Trips</a>
+<a class="nv" href="#">Vehicles</a>
+<a class="nv" href="#">Staffing</a>
+<a class="nv" href="#">Bookings</a>
+<a class="nv" href="#">Coupons</a>
+<a class="nv" href="#" aria-current="page">Accounting</a>
+<a class="nv" href="#">Employees</a>
+<a class="nv" href="#">Invoices</a>
+<a class="nv" href="#">Reports</a>
+<a class="nv" href="#">Live operations</a>
+<a class="nv" href="#">Subscription</a>
+<a class="nv" href="#">Settings and CRM</a>
+</nav>
+<main style="flex:1;min-width:0;padding:32px 40px;display:flex;flex-direction:column;gap:20px;overflow:hidden">
+<div style="display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap">
+<div style="display:flex;flex-direction:column;gap:4px"><h1>Ledger</h1><p class="cap">Every financial event, with its booking or deal and gateway reference</p></div>
+<div style="display:flex;gap:12px;flex-wrap:wrap">
+<button class="btn btn-s" type="button">Export CSV</button>
+<button class="btn btn-s" type="button" aria-describedby="pdfn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Export PDF</button>
+</div>
+</div>
+<p id="pdfn" class="cap">PDF export is on Enterprise. Your plan can export CSV.</p>
+<div class="row" style="align-items:flex-end;flex-wrap:wrap">
+<div class="fld" style="min-width:200px"><label for="per">Period</label><select id="per"><option>[Period]</option></select></div>
+<div class="fld" style="min-width:200px"><label for="evt">Event type</label><select id="evt"><option>All events</option></select></div>
+<div class="fld" style="flex:1;min-width:240px"><label for="rf">Booking or deal reference</label><input id="rf" value="[Reference]"></div>
+</div>
+<table>
+<thead><tr><th scope="col">Date</th><th scope="col">Event type</th><th scope="col">Amount</th><th scope="col">Currency</th><th scope="col">Linked booking or deal</th><th scope="col">Gateway reference</th></tr></thead>
+<tbody>
+<tr><td>[date]</td><td>Booking paid</td><td>[amount]</td><td>[currency]</td><td>[Booking reference]</td><td>[Gateway reference]</td></tr>
+<tr><td>[date]</td><td>Refund issued</td><td>[amount]</td><td>[currency]</td><td>[Booking reference]</td><td>[Gateway reference]</td></tr>
+<tr><td>[date]</td><td>Supplier cost</td><td>[amount]</td><td>[currency]</td><td>[Deal reference]</td><td>Not applicable</td></tr>
+<tr><td>[date]</td><td>Coupon applied</td><td>[amount]</td><td>[currency]</td><td>[Booking reference]</td><td>Not applicable</td></tr>
+</tbody>
+</table>
+<p class="cap">Each event's entries balance. An export for the same filters totals the same as this list.</p>
+</main>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

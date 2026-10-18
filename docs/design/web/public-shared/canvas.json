@@ -1,0 +1,72 @@
+{
+  "v": 3,
+  "createdOnFiles": {"v": 1, "at": "2026-10-17T09:00:00Z"},
+  "title": "Trips Enjoy: Public, auth and shared screens",
+  "launch": {"view": "canvas"},
+  "boards": {
+    "SCR-PUB-01.dc.html": {"x": 1100, "y": 0, "w": 1280, "h": 900, "title": "SCR-PUB-01 Landing"},
+    "SCR-PUB-02.dc.html": {"x": 2460, "y": 0, "w": 1280, "h": 900, "title": "SCR-PUB-02 Sign-up chooser"},
+    "SCR-SHR-07.dc.html": {"x": 3820, "y": 0, "w": 1280, "h": 900, "title": "SCR-SHR-07 Maintenance page"},
+    "SCR-PUB-04.dc.html": {"x": 1100, "y": 1020, "w": 1280, "h": 900, "title": "SCR-PUB-04 Platform driver sign-up"},
+    "SCR-PUB-05.dc.html": {"x": 2460, "y": 1020, "w": 1280, "h": 900, "title": "SCR-PUB-05 Photographer sign-up"},
+    "SCR-PUB-06.dc.html": {"x": 3820, "y": 1020, "w": 1280, "h": 900, "title": "SCR-PUB-06 Organization sign-up"},
+    "SCR-PUB-07.dc.html": {"x": 5180, "y": 1020, "w": 1280, "h": 900, "title": "SCR-PUB-07 Verification by code"},
+    "SCR-PUB-09.dc.html": {"x": 6540, "y": 1020, "w": 1280, "h": 900, "title": "SCR-PUB-09 Admin sign-in"},
+    "SCR-PUB-10.dc.html": {"x": 7900, "y": 1020, "w": 1280, "h": 900, "title": "SCR-PUB-10 Admin authenticator"},
+    "SCR-PUB-12.dc.html": {"x": 1100, "y": 2040, "w": 1280, "h": 900, "title": "SCR-PUB-12 Staff code set-up"},
+    "SCR-PUB-13.dc.html": {"x": 2460, "y": 2040, "w": 1280, "h": 900, "title": "SCR-PUB-13 Password reset"},
+    "SCR-PUB-03.dc.html": {"x": 1100, "y": 3060, "w": 390, "h": 844, "title": "SCR-PUB-03 Traveler sign-up"},
+    "SCR-PUB-08.dc.html": {"x": 1570, "y": 3060, "w": 390, "h": 844, "title": "SCR-PUB-08 Sign-in (traveler and supplier)"},
+    "SCR-PUB-11.dc.html": {"x": 2040, "y": 3060, "w": 390, "h": 844, "title": "SCR-PUB-11 Organization staff sign-in"},
+    "SCR-PUB-19.dc.html": {"x": 2510, "y": 3060, "w": 390, "h": 844, "title": "SCR-PUB-19 Moderator sign-in"},
+    "SCR-PUB-14.dc.html": {"x": 1100, "y": 4024, "w": 1280, "h": 900, "title": "SCR-PUB-14 Session expired"},
+    "SCR-PUB-15.dc.html": {"x": 2460, "y": 4024, "w": 1280, "h": 900, "title": "SCR-PUB-15 Account suspended"},
+    "SCR-PUB-16.dc.html": {"x": 3820, "y": 4024, "w": 1280, "h": 900, "title": "SCR-PUB-16 Deletion grace period"},
+    "SCR-PUB-17.dc.html": {"x": 5180, "y": 4024, "w": 1280, "h": 900, "title": "SCR-PUB-17 Application status"},
+    "SCR-PUB-18.dc.html": {"x": 6540, "y": 4024, "w": 1280, "h": 900, "title": "SCR-PUB-18 Appeal a rejection"},
+    "SCR-SHR-01.dc.html": {"x": 1100, "y": 5044, "w": 390, "h": 844, "title": "SCR-SHR-01 Plan-limit upgrade prompt"},
+    "SCR-SHR-02.dc.html": {"x": 1570, "y": 5044, "w": 390, "h": 844, "title": "SCR-SHR-02 Permission denied (403)"},
+    "SCR-SHR-03.dc.html": {"x": 2040, "y": 5044, "w": 390, "h": 844, "title": "SCR-SHR-03 Not found (404)"},
+    "SCR-SHR-04.dc.html": {"x": 2510, "y": 5044, "w": 390, "h": 844, "title": "SCR-SHR-04 Unauthorized (401)"},
+    "SCR-SHR-05.dc.html": {"x": 2980, "y": 5044, "w": 390, "h": 844, "title": "SCR-SHR-05 Server error (500)"},
+    "SCR-SHR-06.dc.html": {"x": 3450, "y": 5044, "w": 390, "h": 844, "title": "SCR-SHR-06 Service unavailable (503)"},
+    "SCR-SHR-08.dc.html": {"x": 1100, "y": 6008, "w": 390, "h": 844, "title": "SCR-SHR-08 Offline banner"},
+    "SCR-SHR-09.dc.html": {"x": 1570, "y": 6008, "w": 390, "h": 844, "title": "SCR-SHR-09 Confirmation dialog"},
+    "SCR-SHR-10.dc.html": {"x": 2040, "y": 6008, "w": 390, "h": 844, "title": "SCR-SHR-10 Language switch and RTL"},
+    "SCR-SHR-11.dc.html": {"x": 2510, "y": 6008, "w": 390, "h": 844, "title": "SCR-SHR-11 Notification centre"},
+    "SCR-SHR-12.dc.html": {"x": 2980, "y": 6008, "w": 390, "h": 844, "title": "SCR-SHR-12 Receipt and invoice view"},
+    "SCR-SHR-13.dc.html": {"x": 3450, "y": 6008, "w": 390, "h": 844, "title": "SCR-SHR-13 Role and organization switcher"},
+    "SCR-SHR-14.dc.html": {"x": 1100, "y": 6972, "w": 390, "h": 844, "title": "SCR-SHR-14 OTP entry"},
+    "SCR-SHR-15.dc.html": {"x": 1570, "y": 6972, "w": 390, "h": 844, "title": "SCR-SHR-15 Seat map"},
+    "SCR-SHR-16.dc.html": {"x": 2040, "y": 6972, "w": 390, "h": 844, "title": "SCR-SHR-16 Document and photo upload"}
+  },
+  "order": [
+    "SCR-PUB-01.dc.html", "SCR-PUB-02.dc.html", "SCR-SHR-07.dc.html",
+    "SCR-PUB-04.dc.html", "SCR-PUB-05.dc.html", "SCR-PUB-06.dc.html", "SCR-PUB-07.dc.html", "SCR-PUB-09.dc.html", "SCR-PUB-10.dc.html",
+    "SCR-PUB-12.dc.html", "SCR-PUB-13.dc.html",
+    "SCR-PUB-03.dc.html", "SCR-PUB-08.dc.html", "SCR-PUB-11.dc.html", "SCR-PUB-19.dc.html",
+    "SCR-PUB-14.dc.html", "SCR-PUB-15.dc.html", "SCR-PUB-16.dc.html", "SCR-PUB-17.dc.html", "SCR-PUB-18.dc.html",
+    "SCR-SHR-01.dc.html", "SCR-SHR-02.dc.html", "SCR-SHR-03.dc.html", "SCR-SHR-04.dc.html", "SCR-SHR-05.dc.html", "SCR-SHR-06.dc.html",
+    "SCR-SHR-08.dc.html", "SCR-SHR-09.dc.html", "SCR-SHR-10.dc.html", "SCR-SHR-11.dc.html", "SCR-SHR-12.dc.html", "SCR-SHR-13.dc.html",
+    "SCR-SHR-14.dc.html", "SCR-SHR-15.dc.html", "SCR-SHR-16.dc.html"
+  ],
+  "notes": {
+    "row1": {"x": 120, "y": 0, "text": "Public site", "kind": "title1", "maxW": 900},
+    "row2": {"x": 120, "y": 1020, "text": "Sign-up and sign-in", "kind": "title1", "maxW": 900},
+    "row3": {"x": 120, "y": 2040, "text": "Sign-up and sign-in (continued)", "kind": "title1", "maxW": 900},
+    "row4": {"x": 120, "y": 3060, "text": "Sign-up and sign-in (continued)", "kind": "title1", "maxW": 900},
+    "row5": {"x": 120, "y": 4024, "text": "Account states", "kind": "title1", "maxW": 900},
+    "row6": {"x": 120, "y": 5044, "text": "Shared states and components", "kind": "title1", "maxW": 900},
+    "row7": {"x": 120, "y": 6008, "text": "Shared states and components (continued)", "kind": "title1", "maxW": 900},
+    "row8": {"x": 120, "y": 6972, "text": "Shared states and components (continued)", "kind": "title1", "maxW": 900}
+  },
+  "designSystems": [
+    {
+      "title": "Trips Enjoy",
+      "namespace": "trips-enjoy",
+      "artifact": "https://claude.ai/code/artifact/0b7cf04c-b189-4940-93eb-ec9c29422a76",
+      "version": "1791099355-4d59",
+      "copiedAt": "2026-10-17T09:00:00Z"
+    }
+  ]
+}

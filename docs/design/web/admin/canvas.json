@@ -1,0 +1,60 @@
+{
+ "v": 3,
+ "createdOnFiles": {"v": 1, "at": "2026-10-17T09:00:00Z"},
+ "title": "Trips Enjoy: Admin console screens",
+ "launch": {"view": "canvas"},
+ "boards": {
+  "SCR-ADM-01.dc.html": {"x": 0, "y": 300, "w": 1280, "h": 900, "title": "SCR-ADM-01 Admin home"},
+  "SCR-ADM-02.dc.html": {"x": 1360, "y": 300, "w": 1280, "h": 900, "title": "SCR-ADM-02 Application queue"},
+  "SCR-ADM-03.dc.html": {"x": 2720, "y": 300, "w": 1280, "h": 900, "title": "SCR-ADM-03 Application review detail"},
+  "SCR-ADM-04.dc.html": {"x": 4080, "y": 300, "w": 1280, "h": 900, "title": "SCR-ADM-04 Request changes"},
+  "SCR-ADM-05.dc.html": {"x": 5440, "y": 300, "w": 1280, "h": 900, "title": "SCR-ADM-05 Reject with reason"},
+  "SCR-ADM-06.dc.html": {"x": 6800, "y": 300, "w": 1280, "h": 900, "title": "SCR-ADM-06 Appeal review"},
+  "SCR-ADM-07.dc.html": {"x": 0, "y": 1320, "w": 1280, "h": 900, "title": "SCR-ADM-07 Users and entities directory"},
+  "SCR-ADM-08.dc.html": {"x": 1360, "y": 1320, "w": 1280, "h": 900, "title": "SCR-ADM-08 Entity detail"},
+  "SCR-ADM-09.dc.html": {"x": 2720, "y": 1320, "w": 1280, "h": 900, "title": "SCR-ADM-09 Suspend or reinstate"},
+  "SCR-ADM-10.dc.html": {"x": 4080, "y": 1320, "w": 1280, "h": 900, "title": "SCR-ADM-10 Deletion and data requests"},
+  "SCR-ADM-11.dc.html": {"x": 5440, "y": 1320, "w": 1280, "h": 900, "title": "SCR-ADM-11 Admin staff accounts"},
+  "SCR-ADM-12.dc.html": {"x": 6800, "y": 1320, "w": 1280, "h": 900, "title": "SCR-ADM-12 Lab tests queue"},
+  "SCR-ADM-13.dc.html": {"x": 0, "y": 2340, "w": 1280, "h": 900, "title": "SCR-ADM-13 Lab test detail and decision"},
+  "SCR-ADM-14.dc.html": {"x": 1360, "y": 2340, "w": 1280, "h": 900, "title": "SCR-ADM-14 Request lab test"},
+  "SCR-ADM-15.dc.html": {"x": 2720, "y": 2340, "w": 1280, "h": 900, "title": "SCR-ADM-15 Plans catalog"},
+  "SCR-ADM-16.dc.html": {"x": 4080, "y": 2340, "w": 1280, "h": 900, "title": "SCR-ADM-16 Plan editor"},
+  "SCR-ADM-17.dc.html": {"x": 5440, "y": 2340, "w": 1280, "h": 900, "title": "SCR-ADM-17 Subscriptions and overrides"},
+  "SCR-ADM-18.dc.html": {"x": 6800, "y": 2340, "w": 1280, "h": 900, "title": "SCR-ADM-18 Revenue dashboard"},
+  "SCR-ADM-19.dc.html": {"x": 0, "y": 3360, "w": 1280, "h": 900, "title": "SCR-ADM-19 Platform coupons"},
+  "SCR-ADM-20.dc.html": {"x": 1360, "y": 3360, "w": 1280, "h": 900, "title": "SCR-ADM-20 Platform coupon editor"},
+  "SCR-ADM-21.dc.html": {"x": 2720, "y": 3360, "w": 1280, "h": 900, "title": "SCR-ADM-21 Deal audit list"},
+  "SCR-ADM-22.dc.html": {"x": 4080, "y": 3360, "w": 1280, "h": 900, "title": "SCR-ADM-22 Deal audit detail"},
+  "SCR-ADM-23.dc.html": {"x": 5440, "y": 3360, "w": 1280, "h": 900, "title": "SCR-ADM-23 Disputes queue"},
+  "SCR-ADM-24.dc.html": {"x": 6800, "y": 3360, "w": 1280, "h": 900, "title": "SCR-ADM-24 Dispute detail and refund decision"},
+  "SCR-ADM-25.dc.html": {"x": 0, "y": 4380, "w": 1280, "h": 900, "title": "SCR-ADM-25 Platform financial view"},
+  "SCR-ADM-26.dc.html": {"x": 1360, "y": 4380, "w": 1280, "h": 900, "title": "SCR-ADM-26 Payout runs"},
+  "SCR-ADM-27.dc.html": {"x": 2720, "y": 4380, "w": 1280, "h": 900, "title": "SCR-ADM-27 Reconciliation exceptions"},
+  "SCR-ADM-28.dc.html": {"x": 4080, "y": 4380, "w": 1280, "h": 900, "title": "SCR-ADM-28 Settlements tracker"},
+  "SCR-ADM-29.dc.html": {"x": 5440, "y": 4380, "w": 1280, "h": 900, "title": "SCR-ADM-29 Trip oversight"},
+  "SCR-ADM-30.dc.html": {"x": 6800, "y": 4380, "w": 1280, "h": 900, "title": "SCR-ADM-30 Audit log"},
+  "SCR-ADM-31.dc.html": {"x": 0, "y": 5400, "w": 1280, "h": 900, "title": "SCR-ADM-31 Notification templates"},
+  "SCR-ADM-32.dc.html": {"x": 1360, "y": 5400, "w": 1280, "h": 900, "title": "SCR-ADM-32 Feature flags and platform configuration"},
+  "SCR-ADM-33.dc.html": {"x": 2720, "y": 5400, "w": 1280, "h": 900, "title": "SCR-ADM-33 Operations health dashboard"}
+ },
+ "order": [
+  "SCR-ADM-01.dc.html", "SCR-ADM-02.dc.html", "SCR-ADM-03.dc.html", "SCR-ADM-04.dc.html", "SCR-ADM-05.dc.html", "SCR-ADM-06.dc.html",
+  "SCR-ADM-07.dc.html", "SCR-ADM-08.dc.html", "SCR-ADM-09.dc.html", "SCR-ADM-10.dc.html", "SCR-ADM-11.dc.html", "SCR-ADM-12.dc.html",
+  "SCR-ADM-13.dc.html", "SCR-ADM-14.dc.html", "SCR-ADM-15.dc.html", "SCR-ADM-16.dc.html", "SCR-ADM-17.dc.html", "SCR-ADM-18.dc.html",
+  "SCR-ADM-19.dc.html", "SCR-ADM-20.dc.html", "SCR-ADM-21.dc.html", "SCR-ADM-22.dc.html", "SCR-ADM-23.dc.html", "SCR-ADM-24.dc.html",
+  "SCR-ADM-25.dc.html", "SCR-ADM-26.dc.html", "SCR-ADM-27.dc.html", "SCR-ADM-28.dc.html", "SCR-ADM-29.dc.html", "SCR-ADM-30.dc.html",
+  "SCR-ADM-31.dc.html", "SCR-ADM-32.dc.html", "SCR-ADM-33.dc.html"
+ ],
+ "notes": {
+  "row1": {"x": 0, "y": 60, "text": "Applications and onboarding", "kind": "title1", "maxW": 8080},
+  "row2": {"x": 0, "y": 1080, "text": "Users, staff and lab tests", "kind": "title1", "maxW": 8080},
+  "row3": {"x": 0, "y": 2100, "text": "Lab tests, plans and revenue", "kind": "title1", "maxW": 8080},
+  "row4": {"x": 0, "y": 3120, "text": "Coupons, deals and disputes", "kind": "title1", "maxW": 8080},
+  "row5": {"x": 0, "y": 4140, "text": "Money, trips and audit", "kind": "title1", "maxW": 8080},
+  "row6": {"x": 0, "y": 5160, "text": "Platform and operations", "kind": "title1", "maxW": 8080}
+ },
+ "designSystems": [
+  {"title": "Trips Enjoy", "namespace": "trips-enjoy", "artifact": "https://claude.ai/code/artifact/0b7cf04c-b189-4940-93eb-ec9c29422a76", "version": "1791099355-4d59", "copiedAt": "2026-10-17T09:00:00Z"}
+ ]
+}

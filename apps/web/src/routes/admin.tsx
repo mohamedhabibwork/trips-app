@@ -1,9 +1,8 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { Outlet, createFileRoute } from "@tanstack/react-router";
 
 import { requireSurface } from "@/auth/guard";
-import { GuardedSurface } from "@/components/guarded-surface";
+import { AdminShell } from "@/components/shells/admin-shell";
 import { findScreen } from "@/screens/registry";
-import { ADMIN_SURFACE } from "@/surfaces/admin";
 import { loadApiStatus } from "@/utils/api-status";
 
 /** `/admin` — platform admins only (AC-6). Loader prefetches status and AdminHome queries safely. */
@@ -42,5 +41,9 @@ export const Route = createFileRoute("/admin")({
       ),
     ]);
   },
-  component: () => <GuardedSurface surface={ADMIN_SURFACE} />,
+  component: () => (
+    <AdminShell>
+      <Outlet />
+    </AdminShell>
+  ),
 });

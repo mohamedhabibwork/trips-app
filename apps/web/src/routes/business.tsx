@@ -1,9 +1,8 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { Outlet, createFileRoute } from "@tanstack/react-router";
 
 import { requireSurface } from "@/auth/guard";
-import { GuardedSurface } from "@/components/guarded-surface";
+import { OrganizationShell } from "@/components/shells/organization-shell";
 import { findScreen } from "@/screens/registry";
-import { BUSINESS_SURFACE } from "@/surfaces/business";
 import { loadApiStatus } from "@/utils/api-status";
 
 /** `/business` — organization owners and employees (AC-6). Loader prefetches status and WorkspaceHome queries safely. */
@@ -42,5 +41,9 @@ export const Route = createFileRoute("/business")({
       ),
     ]);
   },
-  component: () => <GuardedSurface surface={BUSINESS_SURFACE} />,
+  component: () => (
+    <OrganizationShell>
+      <Outlet />
+    </OrganizationShell>
+  ),
 });

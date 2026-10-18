@@ -1,5 +1,11 @@
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { HeadContent, Outlet, Scripts, createRootRouteWithContext } from "@tanstack/react-router";
+import {
+  HeadContent,
+  Outlet,
+  Scripts,
+  createRootRouteWithContext,
+  useMatches,
+} from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { Toaster } from "@trips-app/ui/components/sonner";
 import { setLocale, t } from "@trips-app/i18n";
@@ -8,7 +14,8 @@ import { AuthProvider } from "@/auth/auth-context";
 import { SessionExpiredDialog } from "@/auth/components/session-expired-dialog";
 import type { RouterAppContext } from "@/types";
 
-import Header from "../components/header";
+import { PublicShell } from "@/components/shells/public-shell";
+import { ScreenById } from "@/components/shells/shell-content";
 import appCss from "../index.css?url";
 
 // The document this app renders declares English (`<html lang="en">`). The server has no document
@@ -46,7 +53,23 @@ export const Route = createRootRouteWithContext<RouterAppContext>()({
   }),
 
   component: RootDocument,
+  notFoundComponent: () => <ScreenById screenId="SCR-SHR-03" />,
 });
+
+// Dashboard layouts draw their own chrome; every other page sits in the public shell.
+const DASHBOARD_LAYOUTS = new Set(["/business", "/admin"]);
+
+function PageFrame() {
+  const inDashboard = useMatches({
+    select: (matches) => matches.some((match) => DASHBOARD_LAYOUTS.has(match.routeId)),
+  });
+  if (inDashboard) return <Outlet />;
+  return (
+    <PublicShell>
+      <Outlet />
+    </PublicShell>
+  );
+}
 
 function RootDocument() {
   return (
@@ -61,10 +84,7 @@ function RootDocument() {
           rendered above the active route so drafts stay mounted (E2).
         */}
         <AuthProvider>
-          <div className="grid h-svh grid-rows-[auto_1fr]">
-            <Header />
-            <Outlet />
-          </div>
+          <PageFrame />
           <SessionExpiredDialog />
         </AuthProvider>
         <Toaster richColors />

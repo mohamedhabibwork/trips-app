@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SCR-ADM-14 Request lab test</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap">
+<style>
+body{margin:0}
+:root{--te-surface:#f6f3e4;--te-surface-raised:#ffffff;--te-surface-inverse:#262a67;--te-ink:#262a67;--te-ink-muted:#5b5f86;--te-ink-inverse:#f6f3e4;--te-hairline:#e3dfc9;--te-primary:#ff6c2e;--te-on-primary:#262a67;--te-primary-text:#c93a00;--te-accent:#fb8030;--te-focus-ring:#262a67;--te-control-border:#7b7fa6;--te-danger:#b42318;--te-on-danger:#ffffff;--te-danger-soft:#fde8e6;--te-success:#1f7a4d;--te-success-soft:#e3f3ea;--te-warning:#8a4b00;--te-warning-soft:#fff1d6;--te-info-soft:#e6e8f5;--te-brand-orange:#ff6527;--te-radius-sm:8px;--te-radius-md:12px;--te-radius-lg:20px;--te-radius-pill:999px;--te-space-2:8px;--te-space-3:12px;--te-space-4:16px;--te-space-6:24px;--te-font:Outfit,Nunito,system-ui,sans-serif}
+a{color:var(--te-primary-text)}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--te-focus-ring);outline-offset:2px}
+.te-ic{width:16px;height:16px;flex:none;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.te-h1{margin:0;font:700 40px/48px var(--te-font);color:var(--te-ink)}
+.te-h3{margin:0;font:600 20px/28px var(--te-font);color:var(--te-ink)}
+.te-p{margin:0;font:400 16px/24px var(--te-font);color:var(--te-ink)}
+.te-m{color:var(--te-ink-muted)}
+.te-l{font:600 14px/20px var(--te-font);color:var(--te-ink)}
+.te-c{font:500 13px/18px var(--te-font);color:var(--te-ink-muted)}
+.te-card{display:flex;flex-direction:column;gap:var(--te-space-3);min-width:0;padding:var(--te-space-6);box-sizing:border-box;background:var(--te-surface-raised);border:1px solid var(--te-hairline);border-radius:var(--te-radius-lg);box-shadow:0 1px 2px rgba(38,42,103,.06),0 6px 20px rgba(38,42,103,.08)}
+.te-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 20px;border:1px solid transparent;border-radius:var(--te-radius-md);font:600 14px/20px var(--te-font);color:var(--te-ink);background:transparent;white-space:nowrap;text-decoration:none}
+.te-p-btn{background:var(--te-primary);color:var(--te-on-primary)}
+.te-g-btn{background:var(--te-surface-raised);border-color:var(--te-control-border)}
+.te-badge{display:inline-flex;align-items:center;gap:6px;padding:2px 10px;border-radius:var(--te-radius-pill);font:500 13px/18px var(--te-font);white-space:nowrap}
+.te-warn{background:var(--te-warning-soft);color:var(--te-warning)}
+.te-info{background:var(--te-info-soft);color:var(--te-ink)}
+.te-alert{display:flex;gap:12px;align-items:flex-start;padding:16px;border-radius:var(--te-radius-md);font:400 16px/24px var(--te-font);color:var(--te-ink)}
+.te-in{width:100%;box-sizing:border-box;min-width:0;padding:10px 12px;font:400 16px/24px var(--te-font);color:var(--te-ink);background:var(--te-surface-raised);border:1px solid var(--te-control-border);border-radius:var(--te-radius-sm)}
+.te-radio{display:flex;gap:12px;align-items:center;font:400 16px/24px var(--te-font);color:var(--te-ink)}
+.te-radio input{width:18px;height:18px;margin:0;accent-color:var(--te-primary)}
+.te-nav a{display:flex;align-items:center;padding:10px 12px;border-radius:var(--te-radius-md);font:500 15px/20px var(--te-font);color:var(--te-ink-inverse);text-decoration:none}
+.te-nav a.on{background:var(--te-accent);color:var(--te-surface-inverse);font-weight:600}
+</style>
+</helmet>
+<div style="width:1280px;height:900px;display:flex;background:var(--te-surface);color:var(--te-ink);font-family:var(--te-font);overflow:hidden">
+<aside style="width:232px;flex:none;background:var(--te-surface-inverse);padding:24px 16px;box-sizing:border-box;display:flex;flex-direction:column;gap:24px">
+<div style="padding:0 12px"><div style="font:700 22px/28px var(--te-font);color:var(--te-ink-inverse)">Trips <span style="color:var(--te-brand-orange)">Enjoy</span></div><div class="te-c" style="color:var(--te-ink-inverse)">Admin console</div></div>
+<nav class="te-nav" aria-label="Admin sections" style="display:flex;flex-direction:column;gap:4px">
+<a href="#">Home</a>
+<a href="#">Applications</a>
+<a href="#">Users and entities</a>
+<a href="#" class="on">Lab tests</a>
+<a href="#">Plans and revenue</a>
+<a href="#">Coupons and deals</a>
+<a href="#">Disputes</a>
+<a href="#">Money</a>
+<a href="#">Trips</a>
+<a href="#">Audit log</a>
+<a href="#">Notifications</a>
+<a href="#">Platform</a>
+</nav>
+</aside>
+<div style="flex:1;min-width:0;display:flex;flex-direction:column">
+<header style="height:64px;flex:none;background:var(--te-surface-raised);border-bottom:1px solid var(--te-hairline);display:flex;align-items:center;justify-content:space-between;padding:0 32px;box-sizing:border-box">
+<span class="te-l te-m">Admin console / Lab tests / Request lab test</span>
+<span class="te-badge te-info">Platform admin</span>
+</header>
+<main style="flex:1;min-height:0;padding:32px;box-sizing:border-box;display:flex;flex-direction:column;gap:24px;overflow:hidden">
+<div style="display:flex;justify-content:space-between;align-items:flex-end;gap:24px">
+<div style="display:flex;flex-direction:column;gap:8px"><h1 class="te-h1">Request lab test</h1><p class="te-p te-m">Requesting a test pauses the driver at once.</p></div>
+<div style="display:flex;gap:12px"><button class="te-btn te-g-btn">Cancel</button><button class="te-btn te-p-btn">Request test</button></div>
+</div>
+<div style="display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:24px">
+<div style="display:flex;flex-direction:column;gap:24px;min-width:0">
+<div class="te-card">
+<span class="te-h3">Driver and test</span>
+<label style="display:flex;flex-direction:column;gap:6px"><span class="te-l">Driver</span><select class="te-in"><option>Driver A</option><option>Driver B</option></select></label>
+<span class="te-l">Test type</span>
+<label class="te-radio"><input type="radio" name="test" checked><span>Drug screening</span></label>
+<label class="te-radio"><input type="radio" name="test"><span>Medical fitness</span></label>
+<label class="te-radio"><input type="radio" name="test"><span>Both</span></label>
+</div>
+<div class="te-card">
+<span class="te-h3">Deadline</span>
+<span class="te-c">Choose 1 to 7 days. The default is 3 days.</span>
+<div style="display:flex;align-items:center;gap:16px">
+<button class="te-btn te-g-btn" aria-label="Decrease deadline" style="width:44px;height:44px;padding:0;font-size:20px">&minus;</button>
+<span class="te-h3" style="min-width:120px;text-align:center">3 days</span>
+<button class="te-btn te-g-btn" aria-label="Increase deadline" style="width:44px;height:44px;padding:0;font-size:20px">+</button>
+</div>
+<span class="te-c">Deadline date: [Date]</span>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:24px;min-width:0">
+<div class="te-alert" style="background:var(--te-warning-soft)"><svg class="te-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4 2.5 20h19zM12 10v4.5M12 17.5v.5"/></svg><div><span class="te-l">Effect of this request</span>
+<div class="te-p" style="margin-top:8px">The driver is paused at once and notified.</div>
+<div class="te-p" style="margin-top:4px">Four actions stay allowed while paused.</div>
+<div class="te-p" style="margin-top:4px">Upcoming trips return to organizers.</div></div></div>
+<div class="te-card"><span class="te-c">This request is recorded in the audit log. Test rules follow each market's legal review.</span></div>
+</div>
+</div>
+</main>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

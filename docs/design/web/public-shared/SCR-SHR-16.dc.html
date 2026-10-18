@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SCR-SHR-16 Document and photo upload</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Cairo:wght@500;600;700&display=swap" rel="stylesheet">
+<style>body{margin:0}a{color:var(--primary-text)}</style>
+</helmet>
+<div style="--surface:#f6f3e4;--surface-raised:#ffffff;--surface-inverse:#262a67;--ink:#262a67;--ink-muted:#5b5f86;--ink-inverse:#f6f3e4;--hairline:#e3dfc9;--primary:#ff6c2e;--on-primary:#262a67;--primary-text:#c93a00;--accent:#fb8030;--highlight:#f89e23;--focus-ring:#262a67;--control-border:#7b7fa6;--danger:#b42318;--danger-soft:#fde8e6;--success:#1f7a4d;--success-soft:#e3f3ea;--warning:#8a4b00;--warning-soft:#fff1d6;--info-soft:#e6e8f5;--glass-dim:rgba(16,18,48,.35);--card-shadow:0 1px 2px rgba(38,42,103,.06),0 6px 20px rgba(38,42,103,.08);--radius-sm:8px;--radius-md:12px;--radius-lg:20px;--radius-pill:999px;width:390px;height:844px;box-sizing:border-box;overflow:hidden;background:var(--surface);color:var(--ink);font-family:Outfit,Nunito,system-ui,sans-serif;display:flex;flex-direction:column">
+  <header style="display:flex;align-items:center;padding:16px;background:var(--surface-raised);border-bottom:1px solid var(--hairline)">
+    <a href="#" style="font-size:14px;font-weight:600;color:var(--ink)">Back</a>
+    <div style="flex:1;text-align:center;font-size:18px;font-weight:700">Portfolio</div>
+    <span style="width:40px"></span>
+  </header>
+  <main style="flex:1;display:flex;flex-direction:column;gap:14px;padding:16px;box-sizing:border-box">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <h1 style="margin:0;font-size:22px;line-height:30px;font-weight:700">Add your photos</h1>
+      <span style="font-size:14px;font-weight:600">[N] of 8 required</span>
+    </div>
+    <div style="border:2px dashed var(--control-border);border-radius:var(--radius-md);padding:18px;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;background:var(--surface-raised)">
+      <span style="font-size:15px;font-weight:600">Choose files or take a photo</span>
+      <span style="font-size:13px;color:var(--ink-muted)">JPG or PNG, up to [SIZE LIMIT] each</span>
+    </div>
+    <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px">
+      <li style="display:flex;gap:12px;align-items:center;padding:12px;border-radius:var(--radius-md);background:var(--surface-raised);box-shadow:var(--card-shadow)">
+        <span style="width:48px;height:48px;border-radius:var(--radius-sm);background:var(--hairline);flex:none"></span>
+        <span style="display:flex;flex-direction:column;gap:2px;flex:1;min-width:0;font-size:14px">
+          <span style="font-weight:600">[FILE NAME 1]</span>
+          <span style="display:inline-flex;gap:4px;align-items:center;color:var(--success);font-weight:600;font-size:13px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>Complete</span>
+        </span>
+        <button type="button" aria-label="Remove [FILE NAME 1]" style="min-width:44px;min-height:44px;border:0;background:transparent;color:var(--ink);font:inherit;font-size:13px;font-weight:600;cursor:pointer">Remove</button>
+      </li>
+      <li style="display:flex;gap:12px;align-items:center;padding:12px;border-radius:var(--radius-md);background:var(--surface-raised);box-shadow:var(--card-shadow)">
+        <span style="width:48px;height:48px;border-radius:var(--radius-sm);background:var(--hairline);flex:none"></span>
+        <span style="display:flex;flex-direction:column;gap:6px;flex:1;min-width:0;font-size:14px">
+          <span style="font-weight:600">[FILE NAME 2]</span>
+          <span role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="40" aria-label="Uploading [FILE NAME 2]" style="display:block;height:6px;border-radius:var(--radius-pill);background:var(--hairline);overflow:hidden"><span style="display:block;width:40%;height:100%;background:var(--primary)"></span></span>
+          <span style="font-size:13px;color:var(--ink-muted)">Uploading, [PERCENT]%</span>
+        </span>
+        <button type="button" aria-label="Cancel [FILE NAME 2]" style="min-width:44px;min-height:44px;border:0;background:transparent;color:var(--ink);font:inherit;font-size:13px;font-weight:600;cursor:pointer">Cancel</button>
+      </li>
+      <li style="display:flex;gap:12px;align-items:center;padding:12px;border-radius:var(--radius-md);background:var(--danger-soft);color:var(--danger)">
+        <span style="width:48px;height:48px;border-radius:var(--radius-sm);background:var(--surface-raised);flex:none"></span>
+        <span style="display:flex;flex-direction:column;gap:2px;flex:1;min-width:0;font-size:14px">
+          <span style="font-weight:600;color:var(--ink)">[FILE NAME 3]</span>
+          <span style="display:inline-flex;gap:4px;align-items:center;font-weight:600;font-size:13px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/></svg>Not accepted: file too large</span>
+        </span>
+        <button type="button" aria-label="Remove [FILE NAME 3]" style="min-width:44px;min-height:44px;border:0;background:transparent;color:var(--ink);font:inherit;font-size:13px;font-weight:600;cursor:pointer">Remove</button>
+      </li>
+    </ul>
+    <p style="margin:0;font-size:13px;line-height:18px;color:var(--ink-muted)">Photos are checked before they are shared. Location details are removed from each photo.</p>
+    <button type="button" disabled style="margin-top:auto;min-height:48px;padding:12px 24px;border:0;border-radius:var(--radius-md);background:var(--primary);color:var(--on-primary);font:inherit;font-size:16px;font-weight:600;opacity:.5;cursor:not-allowed">Continue after uploads finish</button>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>
