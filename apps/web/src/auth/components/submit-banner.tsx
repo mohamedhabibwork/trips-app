@@ -21,12 +21,12 @@ export function SubmitBanner({ view, locale, hint }: SubmitBannerProps) {
     <div
       role="alert"
       aria-live="assertive"
-      className="border-destructive/40 bg-destructive/10 text-destructive grid gap-1 border px-2.5 py-2 text-[11px]"
+      className="grid gap-1 rounded-[var(--te-radius-md)] bg-[var(--te-danger-soft)] px-3.5 py-3 text-sm leading-5 text-[var(--te-danger)]"
     >
-      <p>{message}</p>
-      {hint ? <p className="text-destructive/80">{hint}</p> : null}
+      <p className="m-0 font-semibold">{message}</p>
+      {hint ? <p className="m-0 text-[var(--te-ink)]">{hint}</p> : null}
       {showDetails ? (
-        <details className="text-destructive/70">
+        <details className="text-[13px] text-[var(--te-ink-muted)]">
           <summary className="cursor-pointer">{translate("auth.common.details", locale)}</summary>
           <code className="break-all">{view.requestId}</code>
         </details>

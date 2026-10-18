@@ -11,11 +11,74 @@ export const en = {
   "screen.pendingApprovalScreen.submitYourDocumentsAndDetails":
     "Submit your documents and details so our review team can approve your account.",
   "screen.pendingApprovalScreen.openApplicationForm": "Open application form",
-  "screen.pendingApprovalScreen.applicationStatus": "Application status:",
+  "screen.pendingApprovalScreen.applicationStatus": "Application status",
   "screen.pendingApprovalScreen.notes": "Notes:",
-  "screen.pendingApprovalScreen.viewStatusRespondToChanges": "View status & respond to changes",
-  "screen.pendingApprovalScreen.appealRejection": "Appeal rejection",
+  "screen.pendingApprovalScreen.viewStatusRespondToChanges": "View status and respond to changes",
+  "screen.pendingApprovalScreen.appealRejection": "Appeal the rejection",
   "screen.pendingApprovalScreen.trackApplicationStatus": "Track application status",
+  "screen.auth.pending.badge": "Submitted",
+  // apps/web/src/auth/screens/sign-in-screen.tsx
+  "screen.auth.signIn.lead": "For travelers and approved suppliers.",
+  "screen.auth.signIn.identifierPlaceholder": "name@example.com or +20 100 000 0000",
+  "screen.auth.signIn.methodOtp": "Code by message",
+  "screen.auth.signIn.submit": "Sign in",
+  "screen.auth.code.placeholder": "6-digit code",
+  // apps/web/src/auth/screens/otp-screen.tsx
+  "screen.auth.otp.title": "Enter the code",
+  "screen.auth.otp.sentTo": "We sent a 6-digit code to",
+  "screen.auth.otp.expires": ". The code expires in 5 minutes.",
+  "screen.auth.otp.resendIn": "You can resend a code in {seconds} seconds.",
+  "screen.auth.otp.resendReady": "You can resend a code now.",
+  // apps/web/src/auth/screens/sign-up-screen.tsx
+  "screen.auth.signUp.chooserTitle": "Create your account",
+  "screen.auth.signUp.chooserLead":
+    "Choose the role that fits you. Each role has its own sign-up form.",
+  "screen.auth.signUp.rolesLabel": "Account type",
+  "screen.auth.signUp.selected": "Selected",
+  "screen.auth.signUp.webOnly": "Web only",
+  "screen.auth.signUp.traveler": "Traveler",
+  "screen.auth.signUp.travelerBody": "Join group trips and book seats for your group. Free plan.",
+  "screen.auth.signUp.driver": "Platform driver",
+  "screen.auth.signUp.driverBody": "Apply to join the driver pool. Access after approval.",
+  "screen.auth.signUp.photographer": "Photographer",
+  "screen.auth.signUp.photographerBody":
+    "Apply to join the photographer pool. Access after approval.",
+  "screen.auth.signUp.organization": "Organization",
+  "screen.auth.signUp.organizationBody":
+    "Register a company to run group trips. Access after approval.",
+  "screen.auth.signUp.continue.traveler": "Continue as traveler",
+  "screen.auth.signUp.continue.driver": "Continue as platform driver",
+  "screen.auth.signUp.continue.photographer": "Continue as photographer",
+  "screen.auth.signUp.continue.organization": "Continue as organization",
+  "screen.auth.signUp.travelerTitle": "Create your traveler account",
+  "screen.auth.signUp.travelerLead":
+    "Add an email, a phone number, or both. You verify at least one.",
+  "screen.auth.signUp.emailPlaceholder": "name@example.com",
+  "screen.auth.signUp.phonePlaceholder": "+20 100 000 0000",
+  "screen.auth.signUp.selectCountry": "Select country",
+  "screen.auth.signUp.language": "Language",
+  "screen.auth.signUp.countryRequired": "Select your country to continue.",
+  "screen.auth.signUp.contactRequired": "Add an email or a phone number to continue.",
+  "screen.auth.signUp.changeEmail": "Change email",
+  // apps/web/src/auth/screens/admin-sign-in-screen.tsx
+  "screen.auth.admin.lead": "Staff only. There is no public sign-up for admin accounts.",
+  "screen.auth.admin.email": "Email",
+  "screen.auth.admin.passwordPlaceholder": "At least 12 characters",
+  // apps/web/src/auth/screens/staff-sign-in-screen.tsx
+  "screen.auth.staff.codeLead":
+    "Enter the code from your app or text message. A code is needed at every sign-in.",
+  "screen.auth.staff.passwordDone": "Signed in with password",
+  "screen.auth.staff.code": "Code",
+  "screen.auth.staff.orgChoice":
+    "If your email is linked to more than one organization, you choose one after this step.",
+  "screen.auth.staff.differentMethod": "Use a different method",
+  // apps/web/src/auth/screens/crew-sign-in-screen.tsx
+  "screen.auth.crew.title": "Moderator sign-in",
+  "screen.auth.crew.lead": "You see only the vehicle assigned to you for the trip.",
+  "screen.auth.crew.noCode":
+    "Without a staff code you cannot sign in. Ask the trip organizer for help.",
+  // apps/web/src/components/shells/public-shell.tsx
+  "component.shell.admin.signInLabel": "Admin",
   // apps/web/src/components/api-status.tsx
   "component.apiStatus.apiStatus": "API Status",
   "component.apiStatus.connected": "Connected",

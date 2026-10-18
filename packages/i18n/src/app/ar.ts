@@ -10,11 +10,71 @@ export const ar: AppMessages = {
   "screen.pendingApprovalScreen.submitYourDocumentsAndDetails":
     "أرسل مستنداتك وبياناتك حتى يتمكن فريق المراجعة من اعتماد حسابك.",
   "screen.pendingApprovalScreen.openApplicationForm": "فتح نموذج الطلب",
-  "screen.pendingApprovalScreen.applicationStatus": "حالة الطلب:",
+  "screen.pendingApprovalScreen.applicationStatus": "حالة الطلب",
   "screen.pendingApprovalScreen.notes": "ملاحظات:",
   "screen.pendingApprovalScreen.viewStatusRespondToChanges": "عرض الحالة والرد على التغييرات",
   "screen.pendingApprovalScreen.appealRejection": "الاعتراض على الرفض",
   "screen.pendingApprovalScreen.trackApplicationStatus": "تتبّع حالة الطلب",
+  "screen.auth.pending.badge": "تم الإرسال",
+  // apps/web/src/auth/screens/sign-in-screen.tsx
+  "screen.auth.signIn.lead": "للمسافرين والموردين المعتمدين.",
+  "screen.auth.signIn.identifierPlaceholder": "name@example.com أو ‎+20 100 000 0000",
+  "screen.auth.signIn.methodOtp": "رمز عبر رسالة",
+  "screen.auth.signIn.submit": "تسجيل الدخول",
+  "screen.auth.code.placeholder": "رمز من 6 أرقام",
+  // apps/web/src/auth/screens/otp-screen.tsx
+  "screen.auth.otp.title": "أدخل الرمز",
+  "screen.auth.otp.sentTo": "أرسلنا رمزًا من 6 أرقام إلى",
+  "screen.auth.otp.expires": ". تنتهي صلاحية الرمز خلال 5 دقائق.",
+  "screen.auth.otp.resendIn": "يمكنك إعادة إرسال الرمز بعد {seconds} ثانية.",
+  "screen.auth.otp.resendReady": "يمكنك إعادة إرسال الرمز الآن.",
+  // apps/web/src/auth/screens/sign-up-screen.tsx
+  "screen.auth.signUp.chooserTitle": "أنشئ حسابك",
+  "screen.auth.signUp.chooserLead": "اختر الدور المناسب لك. لكل دور نموذج تسجيل خاص به.",
+  "screen.auth.signUp.rolesLabel": "نوع الحساب",
+  "screen.auth.signUp.selected": "محدد",
+  "screen.auth.signUp.webOnly": "على الويب فقط",
+  "screen.auth.signUp.traveler": "مسافر",
+  "screen.auth.signUp.travelerBody":
+    "انضم إلى الرحلات الجماعية واحجز المقاعد لمجموعتك. الخطة المجانية.",
+  "screen.auth.signUp.driver": "سائق المنصة",
+  "screen.auth.signUp.driverBody": "قدّم طلبًا للانضمام إلى السائقين. يُتاح الدخول بعد الموافقة.",
+  "screen.auth.signUp.photographer": "مصوّر",
+  "screen.auth.signUp.photographerBody": "قدّم طلبًا للانضمام إلى المصورين. يُتاح الدخول بعد الموافقة.",
+  "screen.auth.signUp.organization": "مؤسسة",
+  "screen.auth.signUp.organizationBody": "سجّل شركة لتنظيم رحلات جماعية. يُتاح الدخول بعد الموافقة.",
+  "screen.auth.signUp.continue.traveler": "المتابعة كمسافر",
+  "screen.auth.signUp.continue.driver": "المتابعة كسائق للمنصة",
+  "screen.auth.signUp.continue.photographer": "المتابعة كمصوّر",
+  "screen.auth.signUp.continue.organization": "المتابعة كمؤسسة",
+  "screen.auth.signUp.travelerTitle": "أنشئ حساب المسافر",
+  "screen.auth.signUp.travelerLead":
+    "أضف بريدًا إلكترونيًا أو رقم هاتف أو كليهما. ستتحقق من واحد منهما على الأقل.",
+  "screen.auth.signUp.emailPlaceholder": "name@example.com",
+  "screen.auth.signUp.phonePlaceholder": "‎+20 100 000 0000",
+  "screen.auth.signUp.selectCountry": "اختر الدولة",
+  "screen.auth.signUp.language": "اللغة",
+  "screen.auth.signUp.countryRequired": "اختر دولتك للمتابعة.",
+  "screen.auth.signUp.contactRequired": "أضف بريدًا إلكترونيًا أو رقم هاتف للمتابعة.",
+  "screen.auth.signUp.changeEmail": "تغيير البريد الإلكتروني",
+  // apps/web/src/auth/screens/admin-sign-in-screen.tsx
+  "screen.auth.admin.lead": "للموظفين فقط. لا يوجد تسجيل عام لحسابات الإدارة.",
+  "screen.auth.admin.email": "البريد الإلكتروني",
+  "screen.auth.admin.passwordPlaceholder": "12 حرفًا على الأقل",
+  // apps/web/src/auth/screens/staff-sign-in-screen.tsx
+  "screen.auth.staff.codeLead":
+    "أدخل الرمز من تطبيقك أو من الرسالة النصية. الرمز مطلوب عند كل تسجيل دخول.",
+  "screen.auth.staff.passwordDone": "تم الدخول بكلمة المرور",
+  "screen.auth.staff.code": "الرمز",
+  "screen.auth.staff.orgChoice":
+    "إذا كان بريدك مرتبطًا بأكثر من مؤسسة، فستختار واحدة بعد هذه الخطوة.",
+  "screen.auth.staff.differentMethod": "استخدام طريقة أخرى",
+  // apps/web/src/auth/screens/crew-sign-in-screen.tsx
+  "screen.auth.crew.title": "دخول المشرف",
+  "screen.auth.crew.lead": "ترى فقط المركبة المخصصة لك في الرحلة.",
+  "screen.auth.crew.noCode": "لا يمكنك الدخول بدون رمز الموظف. اطلب المساعدة من منظم الرحلة.",
+  // apps/web/src/components/shells/public-shell.tsx
+  "component.shell.admin.signInLabel": "الإدارة",
   // apps/web/src/components/api-status.tsx
   "component.apiStatus.apiStatus": "حالة الواجهة البرمجية",
   "component.apiStatus.connected": "متصل",

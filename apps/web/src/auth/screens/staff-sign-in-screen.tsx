@@ -1,17 +1,17 @@
-// /business/sign-in — organization owner or employee: password then a second factor (WF-ID-05).
+// /business/sign-in (SCR-PUB-11) — organization owner or employee: password then a second factor (WF-ID-05).
 //
-// Correction 7: `staff_2fa_setup_required` (first sign-in) has no P0 screen. It is mapped to a clear
-// message plus a support hint; the setup screen itself is P1.
-import { Link, useNavigate } from "@tanstack/react-router";
+// `staff_2fa_setup_required` (first sign-in) continues on the code set-up page (SCR-PUB-12).
+import { useNavigate } from "@tanstack/react-router";
 import { AUTH_ERROR_VIEWS } from "@trips-app/auth";
 import type { AuthErrorView, SessionTokenPayload } from "@trips-app/auth";
-import { Button } from "@trips-app/ui/components/button";
 import { useState } from "react";
+
+import { Button, Notice, TextButton, TextLink } from "@/components/kit/controls";
+import { pathFor } from "@/navigation/web-routes";
 
 import { client } from "../../utils/orpc";
 import { useAuth } from "../auth-context";
-import { AuthField, AuthLinkRow, AuthShell } from "../components/auth-shell";
-import { OtpInput } from "../components/otp-input";
+import { AuthField, AuthShell } from "../components/auth-shell";
 import { SubmitBanner } from "../components/submit-banner";
 import { toAuthErrorView } from "../errors";
 
@@ -22,6 +22,9 @@ interface StaffSignInResult {
 }
 
 type Step = { kind: "password" } | { kind: "secondFactor"; challengeToken: string };
+
+/** Read by the staff code set-up page (SCR-PUB-12). */
+const STAFF_CHALLENGE_KEY = "te:staffChallengeToken";
 
 export function StaffSignInScreen() {
   const { t, locale, signInWithSession } = useAuth();
@@ -53,9 +56,14 @@ export function StaffSignInScreen() {
         return;
       }
 
-      // TODO(P1): replace this dead end with the 2FA setup screen
-      // (`auth/staffSetupSecondFactor`, QR + SMS dispatch). P0 has no enrollment UI (D4 scope);
-      // the mapped message already tells the user to contact their organization administrator.
+      // First staff sign-in: the second factor is set on SCR-PUB-12, which reads the challenge token
+      // from session storage. Without a token the mapped message tells the user to contact their
+      // organization administrator.
+      if (result.step === "staff_2fa_setup_required" && result.challengeToken) {
+        sessionStorage.setItem(STAFF_CHALLENGE_KEY, result.challengeToken);
+        await navigate({ to: pathFor("SCR-PUB-12") });
+        return;
+      }
       setError(AUTH_ERROR_VIEWS.staffTwoFactorSetupRequired ?? null);
     } catch (caught) {
       setError(toAuthErrorView(caught, { locale, procedure: "auth/staffSignIn" }));
@@ -94,20 +102,52 @@ export function StaffSignInScreen() {
   if (step.kind === "secondFactor") {
     return (
       <AuthShell
-        title={t("auth.staff.secondFactorTitle")}
-        subtitle={t("auth.staff.secondFactorSubtitle")}
+        layout="phone"
+        title={t("auth.staff.title")}
+        subtitle={t("screen.auth.staff.codeLead")}
+        footer={
+          <TextButton
+            onClick={() => {
+              setStep({ kind: "password" });
+              setCode("");
+              setError(null);
+            }}
+            disabled={submitting}
+          >
+            {t("screen.auth.staff.differentMethod")}
+          </TextButton>
+        }
       >
+        <div className="flex flex-col gap-1 rounded-[var(--te-radius-md)] border border-[var(--te-hairline)] bg-[var(--te-surface-raised)] px-3.5 py-3 text-sm">
+          <span dir="ltr" className="self-start font-semibold">
+            {email.trim()}
+          </span>
+          <span className="text-[var(--te-ink-muted)]">{t("screen.auth.staff.passwordDone")}</span>
+        </div>
         <form
-          className="grid gap-4"
+          className="flex flex-col gap-4"
           onSubmit={(event) => {
             event.preventDefault();
             if (code.length === 6) void submitSecondFactor(step.challengeToken, code);
           }}
         >
-          <OtpInput value={code} onChange={setCode} disabled={submitting} />
+          <AuthField
+            id="staffCode"
+            label={t("screen.auth.staff.code")}
+            placeholder={t("screen.auth.code.placeholder")}
+            value={code}
+            onChange={(value) => setCode(value.replace(/\D/g, "").slice(0, 6))}
+            inputMode="numeric"
+            autoComplete="one-time-code"
+            maxLength={6}
+            code
+            required
+            disabled={submitting}
+          />
+          <Notice tone="info">{t("screen.auth.staff.orgChoice")}</Notice>
           <SubmitBanner view={error} locale={locale} />
           <Button type="submit" disabled={submitting || code.length !== 6}>
-            {submitting ? t("auth.common.submitting") : t("auth.staff.secondFactorSubmit")}
+            {submitting ? t("auth.common.submitting") : t("screen.auth.signIn.submit")}
           </Button>
         </form>
       </AuthShell>
@@ -115,19 +155,9 @@ export function StaffSignInScreen() {
   }
 
   return (
-    <AuthShell
-      title={t("auth.staff.title")}
-      subtitle={t("auth.staff.subtitle")}
-      footer={
-        <AuthLinkRow>
-          <Link to="/sign-in" className="underline underline-offset-4">
-            {t("auth.signIn.title")}
-          </Link>
-        </AuthLinkRow>
-      }
-    >
+    <AuthShell layout="phone" title={t("auth.staff.title")} subtitle={t("auth.staff.subtitle")}>
       <form
-        className="grid gap-4"
+        className="flex flex-col gap-4"
         onSubmit={(event) => {
           event.preventDefault();
           void submitPassword();
@@ -137,6 +167,7 @@ export function StaffSignInScreen() {
           id="staffEmail"
           type="email"
           label={t("auth.staff.email")}
+          placeholder={t("screen.auth.signUp.emailPlaceholder")}
           value={email}
           onChange={setEmail}
           autoComplete="username"
@@ -161,6 +192,9 @@ export function StaffSignInScreen() {
         >
           {submitting ? t("auth.common.submitting") : t("auth.staff.submit")}
         </Button>
+        <TextLink to={pathFor("SCR-PUB-13")} tone="ink" className="self-center">
+          {t("auth.signIn.forgotPassword")}
+        </TextLink>
       </form>
     </AuthShell>
   );

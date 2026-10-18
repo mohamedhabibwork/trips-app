@@ -1,21 +1,31 @@
-// /sign-up — traveler, driver, photographer and organization owner (AC-1, P0-1).
+// /sign-up — the role chooser (SCR-PUB-02) and the traveler form (SCR-PUB-03) (AC-1, P0-1).
 //
-// Step machine: form → otp (one channel for a traveler, both for a supplier) → pending.
+// Step machine: choose → form → otp → pending. Drivers, photographers and organizations apply on
+// their own pages (SCR-PUB-04..06), so this form registers travelers only.
 // Country is required on every registration form (FR-AUTH-02) and is attached to the payload by the
 // single `withCountry()` adapter; the server strips it today (G3, TODO(FR-AUTH-02)).
-import { Link, useNavigate } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import {
   REGISTRATION_COUNTRIES,
   countryName,
-  defaultCountryForLocale,
   isRegistrationCountryEnabled,
   toRegistrationPayload,
 } from "@trips-app/auth";
 import type { AuthErrorView, SessionTokenPayload } from "@trips-app/auth";
-import { Button } from "@trips-app/ui/components/button";
-import { Input } from "@trips-app/ui/components/input";
-import { Label } from "@trips-app/ui/components/label";
+import { TeIcon } from "@trips-app/ui/components/te-icon";
+import { cn } from "@trips-app/ui/lib/utils";
 import { useState } from "react";
+
+import {
+  Button,
+  CheckField,
+  Notice,
+  SelectField,
+  StatusPill,
+  TextLink,
+} from "@/components/kit/controls";
+import { PageIntro, PageMain } from "@/components/kit/layout";
+import { pathFor } from "@/navigation/web-routes";
 
 import { client } from "../../utils/orpc";
 import { useAuth } from "../auth-context";
@@ -52,36 +62,58 @@ interface VerifyResult {
 }
 
 type Step =
+  | { kind: "choose" }
   | { kind: "form" }
   | { kind: "otp"; dispatches: OtpDispatchView[]; index: number }
-  | { kind: "pending"; contact: string }
-  | { kind: "webOnly" };
+  | { kind: "pending"; contact: string };
 
-const ROLE_OPTIONS: ReadonlyArray<{ role: RegistrationRole; labelKey: string }> = [
-  { role: "traveler", labelKey: "auth.signUp.roleTraveler" },
-  { role: "platform_driver", labelKey: "auth.signUp.roleDriver" },
-  { role: "platform_photographer", labelKey: "auth.signUp.rolePhotographer" },
-  { role: "organization_owner", labelKey: "auth.signUp.roleOrganization" },
+interface RoleOption {
+  role: RegistrationRole;
+  key: "traveler" | "driver" | "photographer" | "organization";
+  /** Supplier roles apply on their own page; the traveler continues here. */
+  screenId?: string;
+  webOnly?: boolean;
+}
+
+const ROLE_OPTIONS: readonly RoleOption[] = [
+  { role: "traveler", key: "traveler" },
+  { role: "platform_driver", key: "driver", screenId: "SCR-PUB-04" },
+  { role: "platform_photographer", key: "photographer", screenId: "SCR-PUB-05" },
+  { role: "organization_owner", key: "organization", screenId: "SCR-PUB-06", webOnly: true },
 ];
 
-export function SignUpScreen({ returnTo }: { returnTo?: string }) {
+interface SignUpScreenProps {
+  returnTo?: string;
+  /** `form` opens the traveler form directly (`/sign-up/traveler`). */
+  start?: "choose" | "form";
+}
+
+export function SignUpScreen({ returnTo, start = "choose" }: SignUpScreenProps) {
   const { t, locale, signInWithSession } = useAuth();
   const navigate = useNavigate();
 
-  const [step, setStep] = useState<Step>({ kind: "form" });
+  const [step, setStep] = useState<Step>({ kind: start });
   const [role, setRole] = useState<RegistrationRole>("traveler");
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
-  const [password, setPassword] = useState("");
-  const [country, setCountry] = useState(() => defaultCountryForLocale(locale));
+  const [country, setCountry] = useState("");
+  const [language, setLanguage] = useState<"ar" | "en">(locale);
   const [enableParentRole, setEnableParentRole] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<AuthErrorView | null>(null);
-
-  const isSupplier = role !== "traveler";
+  const [missing, setMissing] = useState<"country" | "contact" | null>(null);
 
   const submitForm = async (): Promise<void> => {
+    if (email.trim().length === 0 && phone.trim().length === 0) {
+      setMissing("contact");
+      return;
+    }
+    if (country.length === 0) {
+      setMissing("country");
+      return;
+    }
+    setMissing(null);
     setSubmitting(true);
     setError(null);
     try {
@@ -91,25 +123,17 @@ export function SignUpScreen({ returnTo }: { returnTo?: string }) {
         fullName: fullName.trim(),
         email: email.trim().length > 0 ? email.trim() : null,
         phone: phone.trim().length > 0 ? phone.trim() : null,
-        password: password.length > 0 ? password : null,
-        preferredLanguage: locale,
+        password: null,
+        preferredLanguage: language,
         surface: "web" as const,
         country,
       });
 
-      const result = (isSupplier
-        ? await client.auth.registerSupplierAccount({
-            ...payload,
-            role,
-            email: email.trim(),
-            phone: phone.trim(),
-            password,
-          })
-        : await client.auth.registerTraveler({
-            ...payload,
-            preferredSignInMethod: password.length > 0 ? "password" : "otp",
-            enableParentRole,
-          })) as unknown as RegistrationResult;
+      const result = (await client.auth.registerTraveler({
+        ...payload,
+        preferredSignInMethod: "otp",
+        enableParentRole,
+      })) as unknown as RegistrationResult;
 
       const dispatches = result.otpDispatches ?? [];
       if (dispatches.length === 0) {
@@ -118,16 +142,7 @@ export function SignUpScreen({ returnTo }: { returnTo?: string }) {
       }
       setStep({ kind: "otp", dispatches, index: 0 });
     } catch (caught) {
-      const view = toAuthErrorView(caught, {
-        locale,
-        procedure: isSupplier ? "auth/registerSupplierAccount" : "auth/registerTraveler",
-      });
-      // G5: a web-only rejection swaps the form for the R-ORG screen instead of a generic error.
-      if (view.key === "auth.error.webOnlyRegistration") {
-        setStep({ kind: "webOnly" });
-        return;
-      }
-      setError(view);
+      setError(toAuthErrorView(caught, { locale, procedure: "auth/registerTraveler" }));
     } finally {
       setSubmitting(false);
     }
@@ -150,23 +165,17 @@ export function SignUpScreen({ returnTo }: { returnTo?: string }) {
         surface: "web",
       })) as unknown as VerifyResult;
 
-      if (result.session && !isSupplier) {
+      if (result.session) {
         signInWithSession(result.session);
         await navigate({ to: returnToSafe(returnTo, result.session.activeRole) });
         return;
       }
 
-      // Supplier accounts need both channels verified (D2 covers travelers only).
       if (!result.allRequiredChannelsVerified && current.index + 1 < current.dispatches.length) {
         setStep({ kind: "otp", dispatches: current.dispatches, index: current.index + 1 });
         return;
       }
 
-      if (result.session && isSupplier) {
-        signInWithSession(result.session);
-      }
-
-      // AC-1: a supplier lands on the pending/onboarding screen after verifying both channels.
       setStep({ kind: "pending", contact: email.trim() || phone.trim() });
     } catch (caught) {
       setError(toAuthErrorView(caught, { locale, procedure: "auth/verifyOtp" }));
@@ -196,13 +205,20 @@ export function SignUpScreen({ returnTo }: { returnTo?: string }) {
     }
   };
 
-  if (step.kind === "webOnly") {
+  if (step.kind === "choose") {
     return (
-      <AuthShell title={t("auth.signUp.webOnlyTitle")} subtitle={t("auth.signUp.webOnlyBody")}>
-        <Link to="/sign-up" className="text-xs underline underline-offset-4">
-          {t("auth.signUp.webOnlyBack")}
-        </Link>
-      </AuthShell>
+      <RoleChooser
+        role={role}
+        onRole={setRole}
+        onContinue={() => {
+          const option = ROLE_OPTIONS.find((candidate) => candidate.role === role);
+          if (option?.screenId) {
+            void navigate({ to: pathFor(option.screenId) });
+            return;
+          }
+          setStep({ kind: "form" });
+        }}
+      />
     );
   }
 
@@ -226,6 +242,7 @@ export function SignUpScreen({ returnTo }: { returnTo?: string }) {
           setStep({ kind: "form" });
           setError(null);
         }}
+        changeLabel={dispatch.channel === "email" ? t("screen.auth.signUp.changeEmail") : undefined}
       />
     );
   }
@@ -235,7 +252,7 @@ export function SignUpScreen({ returnTo }: { returnTo?: string }) {
   }
 
   // M2: per-field issues render under their input; anything else goes to the banner.
-  const renderedFields = new Set(["fullName", "email", "phone", "password", "country"]);
+  const renderedFields = new Set(["fullName", "email", "phone", "country"]);
   const fieldIssues = error?.fieldErrors ?? [];
   const allRendered =
     fieldIssues.length > 0 && fieldIssues.every((issue) => renderedFields.has(issue.field));
@@ -247,46 +264,24 @@ export function SignUpScreen({ returnTo }: { returnTo?: string }) {
 
   return (
     <AuthShell
-      title={t("auth.signUp.title")}
-      subtitle={t("auth.signUp.subtitle")}
+      layout="phone"
+      title={t("screen.auth.signUp.travelerTitle")}
+      subtitle={t("screen.auth.signUp.travelerLead")}
       footer={
         <AuthLinkRow>
           <span>{t("auth.signUp.haveAccount")}</span>
-          <Link to="/sign-in" className="underline underline-offset-4">
-            {t("auth.signUp.signIn")}
-          </Link>
+          <TextLink to={pathFor("SCR-PUB-08")}>{t("auth.signUp.signIn")}</TextLink>
         </AuthLinkRow>
       }
     >
       <form
-        className="grid gap-4"
+        className="flex flex-1 flex-col gap-3.5"
+        noValidate
         onSubmit={(event) => {
           event.preventDefault();
           void submitForm();
         }}
       >
-        <div className="grid gap-1.5">
-          <span className="text-xs font-medium">{t("auth.signUp.roleLabel")}</span>
-          <div
-            className="flex flex-wrap gap-1"
-            role="group"
-            aria-label={t("auth.signUp.roleLabel")}
-          >
-            {ROLE_OPTIONS.map((option) => (
-              <Button
-                key={option.role}
-                type="button"
-                size="sm"
-                variant={role === option.role ? "secondary" : "outline"}
-                aria-pressed={role === option.role}
-                onClick={() => setRole(option.role)}
-              >
-                {t(option.labelKey)}
-              </Button>
-            ))}
-          </div>
-        </div>
-
         <AuthField
           id="fullName"
           label={t("auth.signUp.fullName")}
@@ -295,95 +290,169 @@ export function SignUpScreen({ returnTo }: { returnTo?: string }) {
           autoComplete="name"
           required
           disabled={submitting}
+          issues={issuesFor("fullName")}
         />
 
         <AuthField
           id="email"
           type="email"
           label={t("auth.signUp.email")}
+          placeholder={t("screen.auth.signUp.emailPlaceholder")}
           value={email}
           onChange={setEmail}
           autoComplete="email"
           inputMode="email"
-          required={isSupplier}
           disabled={submitting}
+          issues={issuesFor("email")}
         />
 
         <AuthField
           id="phone"
           type="tel"
           label={t("auth.signUp.phone")}
+          placeholder={t("screen.auth.signUp.phonePlaceholder")}
           value={phone}
           onChange={setPhone}
           autoComplete="tel"
           inputMode="tel"
-          required={isSupplier}
           disabled={submitting}
+          issues={issuesFor("phone")}
         />
 
-        <div className="grid gap-1.5">
-          <Label htmlFor="country">
-            {t("auth.signUp.country")}
-            <span className="text-destructive">*</span>
-          </Label>
-          <select
-            id="country"
-            name="country"
-            value={country}
-            required
-            disabled={submitting}
-            onChange={(event) => setCountry(event.target.value)}
-            className="border-input bg-transparent h-8 w-full border px-2.5 text-xs"
-          >
-            {REGISTRATION_COUNTRIES.map((option) => (
-              <option key={option.code} value={option.code} disabled={!option.enabled}>
-                {isRegistrationCountryEnabled(option.code)
-                  ? countryName(option.code, locale)
-                  : t("auth.signUp.countryComingSoon", {
-                      country: countryName(option.code, locale),
-                    })}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <AuthField
-          id="password"
-          type="password"
-          label={t("auth.signUp.password")}
-          hint={t("auth.signUp.passwordHint")}
-          value={password}
-          onChange={setPassword}
-          autoComplete="new-password"
-          required={isSupplier}
+        <SelectField
+          id="country"
+          label={t("auth.signUp.country")}
+          value={country}
+          required
           disabled={submitting}
-          issues={issuesFor("password")}
+          errors={issuesFor("country")}
+          onChange={(event) => setCountry(event.target.value)}
+        >
+          <option value="">{t("screen.auth.signUp.selectCountry")}</option>
+          {REGISTRATION_COUNTRIES.map((option) => (
+            <option key={option.code} value={option.code} disabled={!option.enabled}>
+              {isRegistrationCountryEnabled(option.code)
+                ? countryName(option.code, locale)
+                : t("auth.signUp.countryComingSoon", {
+                    country: countryName(option.code, locale),
+                  })}
+            </option>
+          ))}
+        </SelectField>
+
+        <SelectField
+          id="language"
+          label={t("screen.auth.signUp.language")}
+          value={language}
+          disabled={submitting}
+          onChange={(event) => setLanguage(event.target.value === "ar" ? "ar" : "en")}
+        >
+          <option value="en" lang="en">
+            {t("component.shell.language.english")}
+          </option>
+          <option value="ar" lang="ar">
+            {t("component.shell.language.arabic")}
+          </option>
+        </SelectField>
+
+        <CheckField
+          label={t("auth.signUp.parentToggle")}
+          checked={enableParentRole}
+          disabled={submitting}
+          onChange={(event) => setEnableParentRole(event.target.checked)}
         />
 
-        {!isSupplier ? (
-          <label className="flex items-center gap-2 text-xs">
-            <Input
-              type="checkbox"
-              checked={enableParentRole}
-              onChange={(event) => setEnableParentRole(event.target.checked)}
-              className="size-4"
-              disabled={submitting}
-            />
-            {t("auth.signUp.parentToggle")}
-          </label>
+        {missing ? (
+          <Notice tone="danger">
+            {missing === "country"
+              ? t("screen.auth.signUp.countryRequired")
+              : t("screen.auth.signUp.contactRequired")}
+          </Notice>
         ) : null}
-
-        <p className="text-muted-foreground text-[11px]">
-          {isSupplier ? t("auth.signUp.hintBoth") : t("auth.signUp.hintEither")}
-        </p>
 
         <SubmitBanner view={bannerView} locale={locale} />
 
-        <Button type="submit" disabled={submitting || fullName.trim().length === 0}>
+        <Button
+          type="submit"
+          className="mt-auto"
+          disabled={submitting || fullName.trim().length === 0}
+        >
           {submitting ? t("auth.common.submitting") : t("auth.signUp.submit")}
         </Button>
       </form>
     </AuthShell>
+  );
+}
+
+interface RoleChooserProps {
+  role: RegistrationRole;
+  onRole: (role: RegistrationRole) => void;
+  onContinue: () => void;
+}
+
+/** SCR-PUB-02: one card per role; the button names the role it continues with. */
+function RoleChooser({ role, onRole, onContinue }: RoleChooserProps) {
+  const { t } = useAuth();
+  const selected = ROLE_OPTIONS.find((option) => option.role === role) ?? ROLE_OPTIONS[0];
+
+  return (
+    <PageMain className="gap-8">
+      <PageIntro
+        title={t("screen.auth.signUp.chooserTitle")}
+        description={t("screen.auth.signUp.chooserLead")}
+      />
+      <section
+        role="radiogroup"
+        aria-label={t("screen.auth.signUp.rolesLabel")}
+        className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4"
+      >
+        {ROLE_OPTIONS.map((option) => {
+          const checked = option.role === role;
+          return (
+            <button
+              key={option.role}
+              type="button"
+              role="radio"
+              aria-checked={checked}
+              onClick={() => onRole(option.role)}
+              className={cn(
+                "flex cursor-pointer flex-col gap-3 rounded-[var(--te-radius-lg)] bg-[var(--te-surface-raised)] p-6 text-start text-[var(--te-ink)] shadow-[var(--te-card-shadow)]",
+                checked
+                  ? "border-2 border-[var(--te-ink)]"
+                  : "border-[1.5px] border-[var(--te-control-border)]",
+              )}
+            >
+              {checked ? (
+                <StatusPill tone="neutral" className="font-medium">
+                  <TeIcon name="check" className="size-4" />
+                  {t("screen.auth.signUp.selected")}
+                </StatusPill>
+              ) : null}
+              {option.webOnly && !checked ? (
+                <StatusPill tone="warning" className="font-medium">
+                  {t("screen.auth.signUp.webOnly")}
+                </StatusPill>
+              ) : null}
+              <span className="text-2xl leading-8 font-semibold">
+                {t(`screen.auth.signUp.${option.key}`)}
+              </span>
+              <span className="text-sm leading-5 text-[var(--te-ink-muted)]">
+                {t(`screen.auth.signUp.${option.key}Body`)}
+              </span>
+            </button>
+          );
+        })}
+      </section>
+      <section className="flex flex-wrap items-center gap-6">
+        <Button onClick={onContinue}>
+          {t(`screen.auth.signUp.continue.${selected?.key ?? "traveler"}`)}
+        </Button>
+        <span className="text-sm text-[var(--te-ink-muted)]">
+          {t("auth.signUp.haveAccount")}{" "}
+          <TextLink to={pathFor("SCR-PUB-08")}>{t("auth.signUp.signIn")}</TextLink>
+        </span>
+      </section>
+    </PageMain>
   );
 }
 

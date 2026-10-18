@@ -1,8 +1,10 @@
 // D5: shows the contact the applicant gave, plus live onboarding application status and actions
 // when the supplier has an authenticated session.
-import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 
+import { ActionRow, FactBox } from "@/components/kit/layout";
+import { Notice, StatusPill, TextLink } from "@/components/kit/controls";
+import { pathFor } from "@/navigation/web-routes";
 import { getApplicantRole, setApplicantApplicationId } from "@/screens/onboarding-state";
 import { client } from "../../utils/orpc";
 import { useAuth } from "../auth-context";
@@ -15,10 +17,10 @@ interface LiveApplicationSummary {
   decisionNotes?: string | null;
 }
 
-function signUpSlugForRole(role?: string | null): string {
-  if (role === "organization_owner") return "organization-sign-up";
-  if (role === "platform_photographer") return "photographer-sign-up";
-  return "platform-driver-sign-up";
+function signUpScreenForRole(role?: string | null): string {
+  if (role === "organization_owner") return "SCR-PUB-06";
+  if (role === "platform_photographer") return "SCR-PUB-05";
+  return "SCR-PUB-04";
 }
 
 export function PendingApprovalScreen({ contact, role }: { contact: string; role?: string }) {
@@ -49,76 +51,66 @@ export function PendingApprovalScreen({ contact, role }: { contact: string; role
   }, [authStatus]);
 
   const effectiveRole = role ?? getApplicantRole();
-  const targetSignUpSlug = signUpSlugForRole(effectiveRole);
+  const signUpPath = pathFor(signUpScreenForRole(effectiveRole));
 
   return (
-    <AuthShell title={t("auth.pending.title")} subtitle={t("auth.pending.body", { contact })}>
-      <p className="text-muted-foreground text-xs">{t("auth.error.pendingApproval")}</p>
+    <AuthShell
+      width={560}
+      badge={
+        <StatusPill tone="success" icon="check">
+          {t("screen.auth.pending.badge")}
+        </StatusPill>
+      }
+      title={t("auth.pending.title")}
+      subtitle={t("auth.pending.body", { contact })}
+      footer={
+        <ActionRow>
+          <TextLink to={pathFor("SCR-PUB-17")}>
+            {t("screen.pendingApprovalScreen.trackApplicationStatus")}
+          </TextLink>
+          <TextLink to={pathFor("SCR-PUB-08")} tone="ink">
+            {t("auth.pending.backToSignIn")}
+          </TextLink>
+        </ActionRow>
+      }
+    >
+      <Notice tone="info">{t("auth.error.pendingApproval")}</Notice>
 
       {checkedStatus && !app ? (
-        <div className="grid gap-2 rounded border p-3 text-xs">
-          <p className="font-medium">
-            {t("screen.pendingApprovalScreen.completeYourSupplierApplication")}
-          </p>
-          <p className="text-muted-foreground">
-            {t("screen.pendingApprovalScreen.submitYourDocumentsAndDetails")}
-          </p>
-          <div className="flex flex-wrap gap-2">
-            <Link
-              to="/screens/$surface/$slug"
-              params={{ surface: "public", slug: targetSignUpSlug }}
-              className="underline underline-offset-4"
-            >
+        <FactBox label={t("screen.pendingApprovalScreen.completeYourSupplierApplication")}>
+          <span className="flex flex-col gap-2">
+            <span className="text-[var(--te-ink-muted)]">
+              {t("screen.pendingApprovalScreen.submitYourDocumentsAndDetails")}
+            </span>
+            <TextLink to={signUpPath}>
               {t("screen.pendingApprovalScreen.openApplicationForm")}
-            </Link>
-          </div>
-        </div>
+            </TextLink>
+          </span>
+        </FactBox>
       ) : null}
 
       {app ? (
-        <div className="grid gap-2 rounded border p-3 text-xs">
-          <p className="font-medium">
-            {t("screen.pendingApprovalScreen.applicationStatus")}{" "}
-            <span className="uppercase">{app.state}</span>
-          </p>
-          {app.decisionNotes ? (
-            <p className="text-destructive">
-              {t("screen.pendingApprovalScreen.notes")} {app.decisionNotes}
-            </p>
-          ) : null}
-          <div className="flex flex-wrap gap-3">
-            <Link
-              to="/screens/$surface/$slug"
-              params={{ surface: "public", slug: "application-status-and-changes-response" }}
-              className="underline underline-offset-4"
-            >
-              {t("screen.pendingApprovalScreen.viewStatusRespondToChanges")}
-            </Link>
-            {app.state === "Rejected" ? (
-              <Link
-                to="/screens/$surface/$slug"
-                params={{ surface: "public", slug: "appeal-a-rejection" }}
-                className="underline underline-offset-4"
-              >
-                {t("screen.pendingApprovalScreen.appealRejection")}
-              </Link>
+        <FactBox label={t("screen.pendingApprovalScreen.applicationStatus")}>
+          <span className="flex flex-col gap-2">
+            <span className="font-semibold">{app.state}</span>
+            {app.decisionNotes ? (
+              <span className="text-[var(--te-danger)]">
+                {t("screen.pendingApprovalScreen.notes")} {app.decisionNotes}
+              </span>
             ) : null}
-          </div>
-        </div>
+            <span className="flex flex-wrap gap-4">
+              <TextLink to={pathFor("SCR-PUB-17")}>
+                {t("screen.pendingApprovalScreen.viewStatusRespondToChanges")}
+              </TextLink>
+              {app.state === "Rejected" ? (
+                <TextLink to={pathFor("SCR-PUB-18")}>
+                  {t("screen.pendingApprovalScreen.appealRejection")}
+                </TextLink>
+              ) : null}
+            </span>
+          </span>
+        </FactBox>
       ) : null}
-
-      <div className="flex flex-wrap gap-3 text-xs">
-        <Link
-          to="/screens/$surface/$slug"
-          params={{ surface: "public", slug: "application-status-and-changes-response" }}
-          className="underline underline-offset-4"
-        >
-          {t("screen.pendingApprovalScreen.trackApplicationStatus")}
-        </Link>
-        <Link to="/sign-in" className="underline underline-offset-4">
-          {t("auth.pending.backToSignIn")}
-        </Link>
-      </div>
     </AuthShell>
   );
 }

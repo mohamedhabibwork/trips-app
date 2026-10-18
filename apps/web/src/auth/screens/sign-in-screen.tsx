@@ -2,11 +2,13 @@
 //
 // One identifier field plus an OTP/password selector. The OTP branch is a local step machine:
 // `auth/signIn` (method otp) → `auth/signIn` (method otp + otpCode), exactly as AC-2 describes.
-import { Link, useNavigate } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { sanitizeReturnTo } from "@trips-app/auth";
 import type { AuthErrorView, SessionTokenPayload } from "@trips-app/auth";
-import { Button } from "@trips-app/ui/components/button";
 import { useState } from "react";
+
+import { Button, Segmented, TextLink } from "@/components/kit/controls";
+import { pathFor } from "@/navigation/web-routes";
 
 import { client } from "../../utils/orpc";
 import { useAuth } from "../auth-context";
@@ -166,35 +168,23 @@ export function SignInScreen({ returnTo }: { returnTo?: string }) {
 
   return (
     <AuthShell
+      layout="phone"
       title={t("auth.signIn.title")}
-      subtitle={t("auth.signIn.subtitle")}
+      subtitle={t("screen.auth.signIn.lead")}
       footer={
         <>
+          <TextLink to={pathFor("SCR-PUB-13")} tone="ink">
+            {t("auth.signIn.forgotPassword")}
+          </TextLink>
           <AuthLinkRow>
             <span>{t("auth.signIn.noAccount")}</span>
-            <Link to="/sign-up" className="underline underline-offset-4">
-              {t("auth.signIn.createAccount")}
-            </Link>
-          </AuthLinkRow>
-          <AuthLinkRow>
-            <span>{t("auth.signIn.otherSurfaces")}:</span>
-            <Link to="/business/sign-in" className="underline underline-offset-4">
-              {t("auth.signIn.business")}
-            </Link>
-            <span>·</span>
-            <Link to="/crew/sign-in" className="underline underline-offset-4">
-              {t("auth.signIn.crew")}
-            </Link>
-            <span>·</span>
-            <Link to="/admin/sign-in" className="underline underline-offset-4">
-              {t("auth.signIn.admin")}
-            </Link>
+            <TextLink to={pathFor("SCR-PUB-02")}>{t("auth.signIn.createAccount")}</TextLink>
           </AuthLinkRow>
         </>
       }
     >
       <form
-        className="grid gap-4"
+        className="flex flex-col gap-4"
         onSubmit={(event) => {
           event.preventDefault();
           void submitCredentials();
@@ -203,7 +193,7 @@ export function SignInScreen({ returnTo }: { returnTo?: string }) {
         <AuthField
           id="identifier"
           label={t("auth.signIn.identifierLabel")}
-          placeholder={t("auth.signIn.identifierPlaceholder")}
+          placeholder={t("screen.auth.signIn.identifierPlaceholder")}
           value={identifier}
           onChange={setIdentifier}
           autoComplete="username"
@@ -213,29 +203,16 @@ export function SignInScreen({ returnTo }: { returnTo?: string }) {
           issues={issuesFor("identifier")}
         />
 
-        <div className="grid gap-1.5">
-          <span className="text-xs font-medium">{t("auth.signIn.methodLabel")}</span>
-          <div className="flex gap-1" role="group" aria-label={t("auth.signIn.methodLabel")}>
-            <Button
-              type="button"
-              size="sm"
-              variant={method === "otp" ? "secondary" : "outline"}
-              aria-pressed={method === "otp"}
-              onClick={() => setMethod("otp")}
-            >
-              {t("auth.signIn.methodOtp")}
-            </Button>
-            <Button
-              type="button"
-              size="sm"
-              variant={method === "password" ? "secondary" : "outline"}
-              aria-pressed={method === "password"}
-              onClick={() => setMethod("password")}
-            >
-              {t("auth.signIn.methodPassword")}
-            </Button>
-          </div>
-        </div>
+        <Segmented
+          label={t("auth.signIn.methodLabel")}
+          value={method}
+          onChange={setMethod}
+          disabled={submitting}
+          options={[
+            { value: "otp", label: t("screen.auth.signIn.methodOtp") },
+            { value: "password", label: t("auth.signIn.methodPassword") },
+          ]}
+        />
 
         {method === "password" ? (
           <AuthField
@@ -254,13 +231,8 @@ export function SignInScreen({ returnTo }: { returnTo?: string }) {
         <SubmitBanner view={bannerView} locale={locale} />
 
         <Button type="submit" disabled={submitting || identifier.trim().length === 0}>
-          {submitting ? t("auth.common.submitting") : t("auth.signIn.submit")}
+          {submitting ? t("auth.common.submitting") : t("screen.auth.signIn.submit")}
         </Button>
-
-        <AuthLinkRow>
-          <span className="opacity-70">{t("auth.signIn.forgotPassword")}</span>
-          <span className="opacity-60">· {t("auth.signIn.forgotPasswordHint")}</span>
-        </AuthLinkRow>
       </form>
     </AuthShell>
   );

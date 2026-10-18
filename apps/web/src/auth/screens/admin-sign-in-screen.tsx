@@ -1,16 +1,17 @@
-// /admin/sign-in — password then mandatory TOTP (AC-2, WF-ID-04).
+// /admin/sign-in (SCR-PUB-09) — password then mandatory TOTP (AC-2, WF-ID-04).
 //
 // No token is stored after step 1: `adminSignIn` returns a challenge token, and only
 // `adminVerifyTotp` issues a session.
-import { Link, useNavigate } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import type { AuthErrorView, SessionTokenPayload } from "@trips-app/auth";
-import { Button } from "@trips-app/ui/components/button";
 import { useState } from "react";
+
+import { Button, TextLink } from "@/components/kit/controls";
+import { pathFor } from "@/navigation/web-routes";
 
 import { client } from "../../utils/orpc";
 import { useAuth } from "../auth-context";
-import { AuthField, AuthLinkRow, AuthShell } from "../components/auth-shell";
-import { OtpInput } from "../components/otp-input";
+import { AuthField, AuthShell } from "../components/auth-shell";
 import { SubmitBanner } from "../components/submit-banner";
 import { toAuthErrorView } from "../errors";
 
@@ -95,15 +96,31 @@ export function AdminSignInScreen() {
 
   if (step.kind === "totp") {
     return (
-      <AuthShell title={t("auth.admin.totpTitle")} subtitle={t("auth.admin.totpSubtitle")}>
+      <AuthShell
+        width={460}
+        title={t("auth.admin.totpTitle")}
+        subtitle={t("auth.admin.totpSubtitle")}
+      >
         <form
-          className="grid gap-4"
+          className="flex flex-col gap-[18px]"
           onSubmit={(event) => {
             event.preventDefault();
             if (totpCode.length === 6) void submitTotp(step.challengeToken, totpCode);
           }}
         >
-          <OtpInput value={totpCode} onChange={setTotpCode} disabled={submitting} />
+          <AuthField
+            id="adminTotp"
+            label={t("auth.admin.totpLabel")}
+            placeholder={t("screen.auth.code.placeholder")}
+            value={totpCode}
+            onChange={(value) => setTotpCode(value.replace(/\D/g, "").slice(0, 6))}
+            inputMode="numeric"
+            autoComplete="one-time-code"
+            maxLength={6}
+            code
+            required
+            disabled={submitting}
+          />
           <SubmitBanner view={error} locale={locale} />
           <Button type="submit" disabled={submitting || totpCode.length !== 6}>
             {submitting ? t("auth.common.submitting") : t("auth.admin.totpSubmit")}
@@ -114,19 +131,9 @@ export function AdminSignInScreen() {
   }
 
   return (
-    <AuthShell
-      title={t("auth.admin.title")}
-      subtitle={t("auth.admin.subtitle")}
-      footer={
-        <AuthLinkRow>
-          <Link to="/sign-in" className="underline underline-offset-4">
-            {t("auth.signIn.title")}
-          </Link>
-        </AuthLinkRow>
-      }
-    >
+    <AuthShell width={460} title={t("auth.admin.title")} subtitle={t("screen.auth.admin.lead")}>
       <form
-        className="grid gap-4"
+        className="flex flex-col gap-[18px]"
         onSubmit={(event) => {
           event.preventDefault();
           void submitPassword();
@@ -135,7 +142,8 @@ export function AdminSignInScreen() {
         <AuthField
           id="adminEmail"
           type="email"
-          label={t("auth.admin.email")}
+          label={t("screen.auth.admin.email")}
+          placeholder={t("screen.auth.signUp.emailPlaceholder")}
           value={email}
           onChange={setEmail}
           autoComplete="username"
@@ -147,6 +155,7 @@ export function AdminSignInScreen() {
           id="adminPassword"
           type="password"
           label={t("auth.admin.password")}
+          placeholder={t("screen.auth.admin.passwordPlaceholder")}
           value={password}
           onChange={setPassword}
           autoComplete="current-password"
@@ -160,6 +169,9 @@ export function AdminSignInScreen() {
         >
           {submitting ? t("auth.common.submitting") : t("auth.admin.submit")}
         </Button>
+        <TextLink to={pathFor("SCR-PUB-13")} className="self-center">
+          {t("auth.signIn.forgotPassword")}
+        </TextLink>
       </form>
     </AuthShell>
   );
