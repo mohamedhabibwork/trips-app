@@ -1,125 +1,180 @@
-import { useMemo, useState } from "react";
-
+// SCR-ORG-21 Find a platform supplier: search suppliers for the selected vehicle and send a proposal.
+import { useId, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { TeButton } from "@trips-app/ui/components/te-button";
-import { TeCard } from "@trips-app/ui/components/te-card";
-import { TeInlineAlert } from "@trips-app/ui/components/te-inline-alert";
-import { TeInput } from "@trips-app/ui/components/te-input";
-import { TePageHeader } from "@trips-app/ui/components/te-page-header";
-import { TeSearchField } from "@trips-app/ui/components/te-search-field";
+
 import { t } from "@trips-app/i18n";
+
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
 
-import { WorkspaceBackLink, useOrgNavigate } from "../common/org-link";
+import { OrgInput, OrgSelect } from "../common/org-form";
+import { useOrgNavigate } from "../common/org-link";
 import {
   getActiveWizardTripId,
   getSelectedVehicleId,
-  OrgSection,
+  isoDay,
   setActiveWizardTripId,
   setSelectedNegotiationId,
-  StateBadge,
+  tripTitle,
 } from "../common/org-shared";
-import { StatePreview } from "../common/organization-state-preview";
+import {
+  NO_VALUE,
+  OrgAlert,
+  OrgBadge,
+  OrgButton,
+  OrgCard,
+  OrgEmpty,
+  OrgError,
+  OrgLoading,
+  OrgPage,
+  OrgPageHeader,
+  OrgRow,
+} from "../common/org-ui";
+import { InlineDetail, platformRoleLabel, routeText, type PlatformRole } from "./staffing-parts";
+
+type Currency = "EGP" | "SAR" | "AED";
+const CURRENCIES: readonly Currency[] = ["EGP", "SAR", "AED"];
+const DAY_MS = 24 * 60 * 60 * 1000;
+const MIN_OFFER_MINOR = 100;
 
 interface SupplierCandidate {
   accountId: string;
   fullName: string;
-  role: "platform_driver" | "platform_photographer";
-  isAvailable: boolean;
+  role: PlatformRole;
+}
+
+interface SupplierCardProps {
+  supplier: SupplierCandidate;
+  date: string;
+  enabled: boolean;
+  selected: boolean;
+  onSelect: () => void;
+}
+
+function SupplierCard({ supplier, date, enabled, selected, onSelect }: SupplierCardProps) {
+  const start = date ? new Date(`${date}T00:00:00.000Z`) : null;
+  const validDate = start !== null && !Number.isNaN(start.getTime());
+  const availabilityQuery = useQuery({
+    ...orpc.availability.checkSupplierAvailability.queryOptions({
+      input: {
+        supplierAccountId: supplier.accountId,
+        startsAt: validDate ? start.toISOString() : "",
+        endsAt: validDate ? new Date(start.getTime() + DAY_MS).toISOString() : "",
+      },
+    }),
+    enabled: enabled && validDate,
+  });
+  const available = availabilityQuery.data?.isAvailable;
+  const shownDate = date || NO_VALUE;
+
+  return (
+    <section
+      aria-label={supplier.fullName}
+      className={`flex flex-col gap-4 rounded-xl border bg-[var(--te-surface-raised)] p-6 shadow-[var(--te-card-shadow)] ${
+        selected ? "border-2 border-[var(--te-primary)]" : "border-[var(--te-hairline)]"
+      }`}
+    >
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex min-w-0 flex-col gap-1">
+          <span className="text-sm leading-5 font-semibold">{supplier.fullName}</span>
+          <span className="te-caption text-[var(--te-ink-muted)]">
+            {platformRoleLabel(supplier.role)}
+          </span>
+        </div>
+        <OrgBadge tone="ok">
+          {t("screen.organization.staffing.platformSupplierSearchAndDealStart.verified")}
+        </OrgBadge>
+      </div>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        {available === false ? (
+          <OrgBadge tone="err">
+            {t(
+              "screen.organization.staffing.platformSupplierSearchAndDealStart.unavailableOnDate",
+              { date: shownDate },
+            )}
+          </OrgBadge>
+        ) : (
+          <OrgBadge tone={available ? "ok" : "neu"}>
+            {available
+              ? t(
+                  "screen.organization.staffing.platformSupplierSearchAndDealStart.availableOnDate",
+                  { date: shownDate },
+                )
+              : t(
+                  "screen.organization.staffing.platformSupplierSearchAndDealStart.availabilityUnknown",
+                )}
+          </OrgBadge>
+        )}
+        {available === false ? null : (
+          <OrgButton variant="secondary" aria-pressed={selected} onClick={onSelect}>
+            {selected
+              ? t("screen.organization.staffing.platformSupplierSearchAndDealStart.selected")
+              : t("screen.organization.staffing.platformSupplierSearchAndDealStart.selectSupplier")}
+          </OrgButton>
+        )}
+      </div>
+    </section>
+  );
 }
 
 export function PlatformSupplierSearchAndDealStart() {
   const goTo = useOrgNavigate();
   const queryClient = useQueryClient();
-  const { status: authStatus, actor } = useAuth();
+  const { status: authStatus, actor, locale } = useAuth();
+  const enabled = authStatus === "authenticated" && Boolean(actor?.activeTenantId);
   const [query, setQuery] = useState("");
-  const [selectedSupplierId, setSelectedSupplierId] = useState("");
-  const [selectedRole] = useState<"platform_driver" | "platform_photographer">("platform_driver");
+  const [roleFilter, setRoleFilter] = useState<PlatformRole>("platform_driver");
+  const [dateInput, setDateInput] = useState<string | null>(null);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
   const [price, setPrice] = useState("150.00");
-  const [currency, setCurrency] = useState<"EGP" | "SAR" | "AED" | "USD">("SAR");
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [currency, setCurrency] = useState<Currency>("SAR");
+  const [sendFailed, setSendFailed] = useState(false);
+  const sendHintId = useId();
 
-  const suppliersQuery = useQuery(
-    orpc.onboarding.listOrganizationSuppliers.queryOptions({
-      input: {},
-      enabled: authStatus === "authenticated" && Boolean(actor?.activeTenantId),
-    }),
+  const suppliersQuery = useQuery({
+    ...orpc.onboarding.listOrganizationSuppliers.queryOptions({ input: {} }),
+    enabled,
+  });
+  const negotiationsQuery = useQuery({
+    ...orpc.negotiation.listOrganizationNegotiations.queryOptions({ input: {} }),
+    enabled,
+  });
+  const tripsQuery = useQuery({
+    ...orpc.trips.listOrganizationTrips.queryOptions({ input: {} }),
+    enabled,
+  });
+
+  const trips = tripsQuery.data?.items ?? [];
+  const tripId = getActiveWizardTripId() ?? trips[0]?.id ?? null;
+  const trip = trips.find((item) => item.id === tripId);
+  const vehicleId = getSelectedVehicleId();
+  const plate = trip?.vehicles.find((vehicle) => vehicle.vehicleId === vehicleId)?.plateNumber;
+  const date = dateInput ?? isoDay(trip?.startsAt) ?? "";
+  const tripName = trip ? tripTitle(trip, locale) || NO_VALUE : NO_VALUE;
+
+  const candidates: SupplierCandidate[] = [];
+  for (const supplier of suppliersQuery.data?.suppliers ?? []) {
+    candidates.push({
+      accountId: supplier.supplierAccountId,
+      fullName: supplier.fullName,
+      role:
+        supplier.supplierRole === "org_photographer" ? "platform_photographer" : "platform_driver",
+    });
+  }
+  for (const deal of negotiationsQuery.data?.items ?? []) {
+    if (candidates.some((candidate) => candidate.accountId === deal.supplierAccountId)) continue;
+    candidates.push({
+      accountId: deal.supplierAccountId,
+      fullName: `${platformRoleLabel(deal.supplierRole)} ${deal.supplierAccountId.slice(0, 8)}`,
+      role: deal.supplierRole,
+    });
+  }
+  const normalizedQuery = query.trim().toLowerCase();
+  const visible = candidates.filter(
+    (candidate) =>
+      candidate.role === roleFilter && candidate.fullName.toLowerCase().includes(normalizedQuery),
   );
-
-  const negotiationsQuery = useQuery(
-    orpc.negotiation.listOrganizationNegotiations.queryOptions({
-      input: {},
-      enabled: authStatus === "authenticated" && Boolean(actor?.activeTenantId),
-    }),
-  );
-
-  const tripsQuery = useQuery(
-    orpc.trips.listOrganizationTrips.queryOptions({
-      input: {},
-      enabled: authStatus === "authenticated" && Boolean(actor?.activeTenantId),
-    }),
-  );
-
-  const rawCandidates = useMemo<SupplierCandidate[]>(() => {
-    const candidates: SupplierCandidate[] = [];
-    if (suppliersQuery.data?.suppliers) {
-      for (const s of suppliersQuery.data.suppliers) {
-        candidates.push({
-          accountId: s.supplierAccountId,
-          fullName: s.fullName,
-          role: s.supplierRole === "org_photographer" ? "platform_photographer" : "platform_driver",
-          isAvailable: true,
-        });
-      }
-    }
-    if (negotiationsQuery.data?.items) {
-      for (const n of negotiationsQuery.data.items) {
-        if (!candidates.some((c) => c.accountId === n.supplierAccountId)) {
-          candidates.push({
-            accountId: n.supplierAccountId,
-            fullName: `${n.supplierRole === "platform_driver" ? "Driver" : "Photographer"} (${n.supplierAccountId.slice(0, 8)})`,
-            role: n.supplierRole,
-            isAvailable: true,
-          });
-        }
-      }
-    }
-    return candidates;
-  }, [suppliersQuery.data, negotiationsQuery.data]);
-
-  const firstCandidate = rawCandidates[0];
-
-  const nowIso = useMemo(() => new Date().toISOString(), []);
-  const tomorrowIso = useMemo(() => new Date(Date.now() + 24 * 3600 * 1000).toISOString(), []);
-
-  const availabilityQuery = useQuery(
-    orpc.availability.checkSupplierAvailability.queryOptions({
-      input: {
-        supplierAccountId: firstCandidate?.accountId ?? "",
-        startsAt: nowIso,
-        endsAt: tomorrowIso,
-      },
-      enabled:
-        authStatus === "authenticated" &&
-        Boolean(actor?.activeTenantId) &&
-        Boolean(firstCandidate?.accountId),
-    }),
-  );
-
-  const suppliers = useMemo<readonly SupplierCandidate[]>(() => {
-    if (!rawCandidates.length) return [];
-    if (availabilityQuery.data && rawCandidates[0]) {
-      return [
-        {
-          ...rawCandidates[0],
-          isAvailable: availabilityQuery.data.isAvailable,
-        },
-        ...rawCandidates.slice(1),
-      ];
-    }
-    return rawCandidates;
-  }, [rawCandidates, availabilityQuery.data]);
+  const selected = candidates.find((candidate) => candidate.accountId === selectedId);
 
   const createOfferMutation = useMutation(
     orpc.negotiation.createOffer.mutationOptions({
@@ -129,202 +184,183 @@ export function PlatformSupplierSearchAndDealStart() {
     }),
   );
 
-  async function handleSendProposal(
-    supplierAccountId: string,
-    role: "platform_driver" | "platform_photographer",
-  ) {
-    if (authStatus === "authenticated" && actor?.activeTenantId && supplierAccountId) {
-      setErrorMsg(null);
-      try {
-        let tripId = getActiveWizardTripId();
-        if (!tripId) {
-          tripId = tripsQuery.data?.items[0]?.id ?? null;
-          if (tripId) setActiveWizardTripId(tripId);
-        }
-        if (tripId) {
-          const offerAmountMinor = Math.max(
-            100,
-            Math.round((Number.parseFloat(price) || 150) * 100),
-          );
-          const created = await createOfferMutation.mutateAsync({
-            tripId,
-            vehicleId: getSelectedVehicleId(),
-            supplierAccountId,
-            supplierRole: role,
-            offerAmountMinor,
-            currencyCode: currency === "USD" ? "SAR" : currency,
-          });
-          setSelectedNegotiationId(created.id);
-        }
-      } catch (caught) {
-        setErrorMsg(caught instanceof Error ? caught.message : "Could not send proposal.");
-        return;
-      }
+  async function handleSendProposal() {
+    if (!selected || !tripId) return;
+    setSendFailed(false);
+    try {
+      setActiveWizardTripId(tripId);
+      const created = await createOfferMutation.mutateAsync({
+        tripId,
+        vehicleId,
+        supplierAccountId: selected.accountId,
+        supplierRole: selected.role,
+        offerAmountMinor: Math.max(
+          MIN_OFFER_MINOR,
+          Math.round((Number.parseFloat(price) || 0) * 100),
+        ),
+        currencyCode: currency,
+      });
+      setSelectedNegotiationId(created.id);
+      void goTo("deal-detail-and-negotiation", { dealId: created.id });
+    } catch {
+      setSendFailed(true);
     }
-    void goTo("deal-detail-and-negotiation");
   }
 
-  const busy = createOfferMutation.isPending;
-
-  const normalizedQuery = query.trim().toLowerCase();
-  const visibleSuppliers = suppliers.filter((s) =>
-    s.fullName.toLowerCase().includes(normalizedQuery),
-  );
+  const loading = suppliersQuery.isLoading || negotiationsQuery.isLoading;
+  const failed = suppliersQuery.isError || negotiationsQuery.isError;
+  const canSend = enabled && Boolean(selected && tripId) && !createOfferMutation.isPending;
 
   return (
-    <StatePreview>
-      <div className="flex flex-col gap-8">
-        <WorkspaceBackLink
-          parent={{
-            slug: "staffing-board",
-            label: t(
-              "screen.organization.staffing.platformSupplierSearchAndDealStart.backToStaffingBoard",
-            ),
-          }}
-        />
-        <TePageHeader
-          title={t(
-            "screen.organization.staffing.platformSupplierSearchAndDealStart.platformSupplierSearchAndDeal",
-          )}
-        />
-        {errorMsg ? <TeInlineAlert tone="error">{errorMsg}</TeInlineAlert> : null}
-        <TeInlineAlert tone="info">
-          {t("screen.organization.staffing.platformSupplierSearchAndDealStart.theTripRouteDateAnd")}
-        </TeInlineAlert>
-        <OrgSection
-          title={t("screen.organization.staffing.platformSupplierSearchAndDealStart.findASupplier")}
+    <OrgPage>
+      <OrgPageHeader
+        title={t("screen.organization.staffing.platformSupplierSearchAndDealStart.title")}
+        caption={t("screen.organization.staffing.platformSupplierSearchAndDealStart.caption", {
+          trip: tripName,
+          plate: plate ?? NO_VALUE,
+        })}
+      />
+      <OrgRow align="start">
+        <div className="flex min-w-0 flex-col gap-4 lg:flex-[3]">
+          <div className="grid gap-4 md:grid-cols-4 md:items-end">
+            <OrgInput
+              label={t(
+                "screen.organization.staffing.platformSupplierSearchAndDealStart.searchSuppliers",
+              )}
+              type="search"
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              fieldClassName="md:col-span-2"
+            />
+            <OrgSelect
+              label={t(
+                "screen.organization.staffing.platformSupplierSearchAndDealStart.supplierType",
+              )}
+              options={[
+                { value: "platform_driver", label: platformRoleLabel("platform_driver") },
+                {
+                  value: "platform_photographer",
+                  label: platformRoleLabel("platform_photographer"),
+                },
+              ]}
+              value={roleFilter}
+              onValueChange={(value) =>
+                setRoleFilter(
+                  value === "platform_photographer" ? "platform_photographer" : "platform_driver",
+                )
+              }
+            />
+            <OrgInput
+              label={t("screen.organization.staffing.platformSupplierSearchAndDealStart.date")}
+              type="date"
+              value={date}
+              onChange={(event) => setDateInput(event.target.value)}
+            />
+          </div>
+          {failed ? (
+            <OrgError
+              onRetry={() => {
+                void suppliersQuery.refetch();
+                void negotiationsQuery.refetch();
+              }}
+            />
+          ) : null}
+          {loading ? <OrgLoading /> : null}
+          {!loading && !failed && visible.length === 0 ? (
+            <OrgEmpty
+              title={t(
+                "screen.organization.staffing.platformSupplierSearchAndDealStart.emptyTitle",
+              )}
+            >
+              {t("screen.organization.staffing.platformSupplierSearchAndDealStart.emptyBody")}
+            </OrgEmpty>
+          ) : null}
+          {visible.map((supplier) => (
+            <SupplierCard
+              key={supplier.accountId}
+              supplier={supplier}
+              date={date}
+              enabled={enabled}
+              selected={supplier.accountId === selectedId}
+              onSelect={() => setSelectedId(supplier.accountId)}
+            />
+          ))}
+        </div>
+        <OrgCard
+          title={t("screen.organization.staffing.platformSupplierSearchAndDealStart.startADeal")}
+          className="lg:flex-[2]"
         >
-          <TeSearchField
-            label={t(
-              "screen.organization.staffing.platformSupplierSearchAndDealStart.searchSuppliers",
+          <div className="flex flex-col gap-2">
+            <InlineDetail
+              label={t("screen.organization.staffing.platformSupplierSearchAndDealStart.trip")}
+            >
+              {tripName}
+            </InlineDetail>
+            <InlineDetail
+              label={t("screen.organization.staffing.platformSupplierSearchAndDealStart.route")}
+            >
+              {routeText(trip, locale)}
+            </InlineDetail>
+            <InlineDetail
+              label={t("screen.organization.staffing.platformSupplierSearchAndDealStart.date")}
+            >
+              {date || NO_VALUE}
+            </InlineDetail>
+            <InlineDetail
+              label={t("screen.organization.staffing.platformSupplierSearchAndDealStart.supplier")}
+            >
+              {selected?.fullName ?? NO_VALUE}
+            </InlineDetail>
+          </div>
+          <div className="grid grid-cols-[2fr_1fr] gap-4">
+            <OrgInput
+              label={t(
+                "screen.organization.staffing.platformSupplierSearchAndDealStart.proposedPay",
+              )}
+              inputMode="decimal"
+              value={price}
+              onChange={(event) => setPrice(event.target.value)}
+            />
+            <OrgSelect
+              label={t("screen.organization.staffing.platformSupplierSearchAndDealStart.currency")}
+              options={CURRENCIES.map((code) => ({ value: code, label: code }))}
+              value={currency}
+              onValueChange={(value) =>
+                setCurrency(CURRENCIES.find((code) => code === value) ?? "SAR")
+              }
+            />
+          </div>
+          <p className="te-caption m-0 text-[var(--te-ink-muted)]">
+            {t(
+              "screen.organization.staffing.platformSupplierSearchAndDealStart.supplierSeesDetails",
             )}
-            value={query}
-            onValueChange={setQuery}
-            clearLabel={t(
-              "screen.organization.staffing.platformSupplierSearchAndDealStart.clearSearch",
+          </p>
+          {sendFailed ? (
+            <OrgAlert
+              tone="err"
+              title={t(
+                "screen.organization.staffing.platformSupplierSearchAndDealStart.sendFailed",
+              )}
+            />
+          ) : null}
+          <div className="flex flex-wrap items-center justify-end gap-3">
+            {selected ? null : (
+              <span id={sendHintId} className="te-caption text-[var(--te-ink-muted)]">
+                {t(
+                  "screen.organization.staffing.platformSupplierSearchAndDealStart.selectSupplierFirst",
+                )}
+              </span>
             )}
-            placeholder={t(
-              "screen.organization.staffing.platformSupplierSearchAndDealStart.nameRoleOrArea",
-            )}
-          />
-          {visibleSuppliers.length > 0 ? (
-            visibleSuppliers.map((supplier) => (
-              <TeCard
-                key={supplier.accountId}
-                header={
-                  <div className="flex flex-wrap items-center justify-between gap-3">
-                    <h3 className="te-h3">{supplier.fullName}</h3>
-                    <StateBadge
-                      tone="success"
-                      icon="check"
-                      label={t(
-                        "screen.organization.staffing.platformSupplierSearchAndDealStart.verified",
-                      )}
-                    />
-                  </div>
-                }
-              >
-                <div className="flex flex-col gap-4">
-                  <StateBadge
-                    tone={supplier.isAvailable ? "info" : "warning"}
-                    icon="calendar"
-                    label={t(
-                      "screen.organization.staffing.platformSupplierSearchAndDealStart.availableOnDate",
-                    )}
-                  />
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    <TeInput
-                      label={t(
-                        "screen.organization.staffing.platformSupplierSearchAndDealStart.price",
-                      )}
-                      placeholder={t(
-                        "screen.organization.staffing.platformSupplierSearchAndDealStart.amount",
-                      )}
-                      inputMode="decimal"
-                      value={price}
-                      onChange={(e) => setPrice(e.target.value)}
-                    />
-                    <TeInput
-                      label={t(
-                        "screen.organization.staffing.platformSupplierSearchAndDealStart.currency",
-                      )}
-                      placeholder={t(
-                        "screen.organization.staffing.platformSupplierSearchAndDealStart.currencyCode",
-                      )}
-                      value={currency}
-                      onChange={(e) => {
-                        const code = e.target.value.toUpperCase();
-                        if (code === "EGP" || code === "SAR" || code === "AED" || code === "USD") {
-                          setCurrency(code);
-                        }
-                      }}
-                    />
-                  </div>
-                  <div className="flex justify-end">
-                    <TeButton
-                      disabled={busy}
-                      onClick={() => void handleSendProposal(supplier.accountId, supplier.role)}
-                    >
-                      {t(
-                        "screen.organization.staffing.platformSupplierSearchAndDealStart.sendProposal",
-                      )}
-                    </TeButton>
-                  </div>
-                </div>
-              </TeCard>
-            ))
-          ) : (
-            <TeCard>
-              <div className="flex flex-col gap-4">
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <TeInput
-                    label="Supplier Account ID"
-                    placeholder="UUID"
-                    value={selectedSupplierId}
-                    onChange={(e) => setSelectedSupplierId(e.target.value)}
-                  />
-                  <TeInput
-                    label={t(
-                      "screen.organization.staffing.platformSupplierSearchAndDealStart.price",
-                    )}
-                    placeholder={t(
-                      "screen.organization.staffing.platformSupplierSearchAndDealStart.amount",
-                    )}
-                    inputMode="decimal"
-                    value={price}
-                    onChange={(e) => setPrice(e.target.value)}
-                  />
-                  <TeInput
-                    label={t(
-                      "screen.organization.staffing.platformSupplierSearchAndDealStart.currency",
-                    )}
-                    placeholder={t(
-                      "screen.organization.staffing.platformSupplierSearchAndDealStart.currencyCode",
-                    )}
-                    value={currency}
-                    onChange={(e) => {
-                      const code = e.target.value.toUpperCase();
-                      if (code === "EGP" || code === "SAR" || code === "AED" || code === "USD") {
-                        setCurrency(code);
-                      }
-                    }}
-                  />
-                </div>
-                <div className="flex justify-end">
-                  <TeButton
-                    disabled={busy}
-                    onClick={() => void handleSendProposal(selectedSupplierId, selectedRole)}
-                  >
-                    {t(
-                      "screen.organization.staffing.platformSupplierSearchAndDealStart.sendProposal",
-                    )}
-                  </TeButton>
-                </div>
-              </div>
-            </TeCard>
-          )}
-        </OrgSection>
-      </div>
-    </StatePreview>
+            <OrgButton
+              disabled={!canSend}
+              aria-describedby={selected ? undefined : sendHintId}
+              onClick={() => void handleSendProposal()}
+            >
+              {t("screen.organization.staffing.platformSupplierSearchAndDealStart.sendProposal")}
+            </OrgButton>
+          </div>
+        </OrgCard>
+      </OrgRow>
+    </OrgPage>
   );
 }
