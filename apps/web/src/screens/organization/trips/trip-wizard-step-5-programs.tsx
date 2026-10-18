@@ -1,69 +1,94 @@
+// SCR-ORG-09 Trip wizard step 5: the programs offered on the trip, within the plan's limit.
+import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { TeDataTable, type TeDataTableColumn } from "@trips-app/ui/components/te-data-table";
-import { TeKpiTile } from "@trips-app/ui/components/te-kpi-tile";
 import { t } from "@trips-app/i18n";
 
-import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
 
 import { OrgButtonLink, OrgLink } from "../common/org-link";
-import {
-  OrgSection,
-  TripWizardFrame,
-  getActiveWizardTripId,
-  setSelectedProgramId,
-} from "../common/org-shared";
-import { StatePreview } from "../common/organization-state-preview";
+import { TripWizardFrame, getActiveWizardTripId, setSelectedProgramId } from "../common/org-shared";
+import { OrgTable, type OrgColumn } from "../common/org-table";
+import { NO_VALUE, OrgAlert, OrgBadge, OrgCard, OrgEmpty, OrgError } from "../common/org-ui";
+import { NEW_PROGRAM_ID, formatMoney, limitText, useOrgPlan, useWizardTrip } from "./trip-parts";
 
 interface TripProgramRow {
   id: string;
+  tripId: string;
   name: string;
   pricingModel: string;
   typeFlags: string;
   cap: string;
+  price: string;
 }
 
-const COLUMNS = (): readonly TeDataTableColumn<TripProgramRow>[] => [
-  {
-    key: "name",
-    header: t("screen.organization.trips.tripWizardStep5Programs.program"),
-    render: (row) => (
-      <OrgLink slug="program-editor" onClick={() => setSelectedProgramId(row.id)}>
-        {row.name}
-      </OrgLink>
-    ),
-  },
-  {
-    key: "pricingModel",
-    header: t("screen.organization.trips.tripWizardStep5Programs.pricingModel"),
-  },
-  { key: "typeFlags", header: t("screen.organization.trips.tripWizardStep5Programs.typeFlags") },
-  { key: "cap", header: t("screen.organization.trips.tripWizardStep5Programs.cap"), align: "end" },
-];
+function columns(): readonly OrgColumn<TripProgramRow>[] {
+  return [
+    {
+      key: "name",
+      header: t("screen.organization.trips.tripWizardStep5Programs.program"),
+      render: (row) => (
+        <OrgLink
+          slug="program-editor"
+          params={{ tripId: row.tripId, programId: row.id }}
+          className="text-[var(--te-ink)]"
+          onClick={() => setSelectedProgramId(row.id)}
+        >
+          {row.name}
+        </OrgLink>
+      ),
+    },
+    {
+      key: "pricingModel",
+      header: t("screen.organization.trips.tripWizardStep5Programs.pricingModel"),
+    },
+    { key: "typeFlags", header: t("screen.organization.trips.tripWizardStep5Programs.typeFlags") },
+    { key: "cap", header: t("screen.organization.trips.tripWizardStep5Programs.cap") },
+    { key: "price", header: t("screen.organization.trips.tripWizardStep5Programs.price") },
+  ];
+}
 
 export function TripWizardStep5Programs() {
-  const { status: authStatus } = useAuth();
+  const { authStatus, locale, tripId, tripName } = useWizardTrip();
   const queryClient = useQueryClient();
-  const tripId = getActiveWizardTripId();
+  const { limits } = useOrgPlan();
+  const [saveFailed, setSaveFailed] = useState(false);
 
   const programsQuery = useQuery({
-    ...orpc.programs.listTripPrograms.queryOptions({
-      input: { tripId: tripId ?? "" },
-    }),
+    ...orpc.programs.listTripPrograms.queryOptions({ input: { tripId: tripId ?? "" } }),
     enabled: authStatus === "authenticated" && Boolean(tripId),
   });
 
   const rows: readonly TripProgramRow[] =
-    programsQuery.data?.items.map((item) => ({
-      id: item.id,
-      name: item.titleEn || item.titleAr,
-      pricingModel: item.isIncludedInBase
-        ? "Included"
-        : `${(item.priceMinor / 100).toFixed(2)} ${item.currencyCode}`,
-      typeFlags: `Day ${item.dayNumber}`,
-      cap: item.capacity !== null ? String(item.capacity) : "Unlimited",
-    })) ?? [];
+    programsQuery.data?.items.map((item) => {
+      const free = item.priceMinor === 0;
+      const flags = [
+        item.isIncludedInBase
+          ? t("screen.organization.trips.tripWizardStep5Programs.preRequired")
+          : t("screen.organization.trips.tripWizardStep5Programs.optional"),
+        item.capacity !== null
+          ? t("screen.organization.trips.tripWizardStep5Programs.capacityLimited")
+          : null,
+      ].filter(Boolean);
+      return {
+        id: item.id,
+        tripId: item.tripId,
+        name:
+          (locale === "ar" ? item.titleAr || item.titleEn : item.titleEn || item.titleAr) ||
+          NO_VALUE,
+        pricingModel: free
+          ? t("screen.organization.trips.tripWizardStep5Programs.free")
+          : t("screen.organization.trips.tripWizardStep5Programs.perPerson"),
+        typeFlags: flags.join(t("screen.organization.trips.tripWizardStep5Programs.listSeparator")),
+        cap:
+          item.capacity !== null
+            ? String(item.capacity)
+            : t("screen.organization.trips.tripWizardStep5Programs.none"),
+        price: free
+          ? t("screen.organization.trips.tripWizardStep5Programs.free")
+          : formatMoney(item.priceMinor, item.currencyCode),
+      };
+    }) ?? [];
 
   const saveWizardStepMutation = useMutation(
     orpc.trips.saveWizardStep.mutationOptions({
@@ -77,6 +102,7 @@ export function TripWizardStep5Programs() {
     if (authStatus !== "authenticated") return true;
     const currentTripId = getActiveWizardTripId();
     if (!currentTripId) return true;
+    setSaveFailed(false);
     try {
       await saveWizardStepMutation.mutateAsync({
         tripId: currentTripId,
@@ -85,57 +111,81 @@ export function TripWizardStep5Programs() {
       });
       return true;
     } catch {
+      setSaveFailed(true);
       return false;
     }
   };
 
+  const programLimit = limits?.programsPerTrip ?? null;
+  const atLimit = programLimit !== null && rows.length >= programLimit;
+  const countText = t("screen.organization.trips.tripWizardStep5Programs.nOfLimitPrograms", {
+    n: programsQuery.isSuccess ? rows.length : NO_VALUE,
+    limit: limitText(limits, "programsPerTrip"),
+  });
+
+  const addProgram = (
+    <OrgButtonLink
+      slug="program-editor"
+      params={{ tripId, programId: NEW_PROGRAM_ID }}
+      variant="secondary"
+      onClick={() => setSelectedProgramId(null)}
+    >
+      {t("screen.organization.trips.tripWizardStep5Programs.addProgram")}
+    </OrgButtonLink>
+  );
+
   return (
-    <StatePreview>
-      <TripWizardFrame
-        title={t("screen.organization.trips.tripWizardStep5Programs.tripWizardStep5Programs")}
-        stepId="programs"
-        previousSlug="trip-wizard-step-4-staffing"
-        nextSlug="trip-wizard-step-6-seating"
-        beforeNext={saveStep}
-        onSaveDraft={async () => {
-          await saveStep();
-        }}
-      >
-        <TeKpiTile
-          label={t("screen.organization.trips.tripWizardStep5Programs.programsOnThisTrip")}
-          value={
-            authStatus === "authenticated"
-              ? `${rows.length} of 15`
-              : t("screen.organization.trips.tripWizardStep5Programs.0Of15")
-          }
-          hint={t("screen.organization.trips.tripWizardStep5Programs.growthPlanLimitPerTrip")}
-        />
-        <OrgSection
-          title={t("screen.organization.trips.tripWizardStep5Programs.programs")}
-          actions={
-            <OrgButtonLink
-              slug="program-editor"
-              variant="secondary"
-              onClick={() => setSelectedProgramId(null)}
-            >
-              {t("screen.organization.trips.tripWizardStep5Programs.addProgram")}
-            </OrgButtonLink>
-          }
+    <TripWizardFrame
+      stepId="programs"
+      tripName={tripName}
+      beforeNext={saveStep}
+      onSaveDraft={async () => {
+        await saveStep();
+      }}
+    >
+      {saveFailed ? (
+        <OrgAlert
+          tone="err"
+          title={t("screen.organization.trips.tripWizardStep5Programs.saveFailedTitle")}
         >
-          <TeDataTable
-            columns={COLUMNS()}
-            rows={rows}
-            getRowKey={(row) => row.id}
-            caption={t(
-              "screen.organization.trips.tripWizardStep5Programs.programsOnThisTripCaption",
-            )}
-            emptyTitle={t("screen.organization.trips.tripWizardStep5Programs.noProgramsYet")}
-            emptyDescription={t(
-              "screen.organization.trips.tripWizardStep5Programs.addAProgramOrContinue",
-            )}
-          />
-        </OrgSection>
-      </TripWizardFrame>
-    </StatePreview>
+          {t("screen.organization.trips.tripWizardStep5Programs.saveFailedBody")}
+        </OrgAlert>
+      ) : null}
+      <OrgCard
+        title={t("screen.organization.trips.tripWizardStep5Programs.programsOnThisTrip")}
+        actions={
+          <div className="flex flex-wrap items-center gap-3">
+            <OrgBadge tone="neu">{countText}</OrgBadge>
+            {atLimit ? null : addProgram}
+          </div>
+        }
+      >
+        {programsQuery.isError ? <OrgError onRetry={() => void programsQuery.refetch()} /> : null}
+        <OrgTable
+          columns={columns()}
+          rows={rows}
+          rowKey={(row) => row.id}
+          caption={t("screen.organization.trips.tripWizardStep5Programs.programsOnThisTrip")}
+          loading={programsQuery.isLoading}
+          empty={
+            programsQuery.isError ? undefined : (
+              <OrgEmpty
+                title={t("screen.organization.trips.tripWizardStep5Programs.noProgramsYet")}
+              >
+                {t("screen.organization.trips.tripWizardStep5Programs.noProgramsBody")}
+              </OrgEmpty>
+            )
+          }
+        />
+        {atLimit ? (
+          <p className="te-caption m-0 text-[var(--te-ink-muted)]">
+            {t("screen.organization.trips.tripWizardStep5Programs.atLimitNote")}
+          </p>
+        ) : null}
+      </OrgCard>
+      <OrgAlert tone="info">
+        {t("screen.organization.trips.tripWizardStep5Programs.onePricingModelNote")}
+      </OrgAlert>
+    </TripWizardFrame>
   );
 }

@@ -1,177 +1,125 @@
+// SCR-ORG-08 Trip wizard step 4: driver, moderator and photographer of each vehicle, with gaps.
 import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { TeCard } from "@trips-app/ui/components/te-card";
-import { TeInlineAlert } from "@trips-app/ui/components/te-inline-alert";
-import { TeSelect, type TeSelectOption } from "@trips-app/ui/components/te-select";
 import { t } from "@trips-app/i18n";
 
-import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
 
 import { OrgButtonLink } from "../common/org-link";
-import { StateBadge, TripWizardFrame, getActiveWizardTripId } from "../common/org-shared";
-import { StatePreview } from "../common/organization-state-preview";
+import { TripWizardFrame, getActiveWizardTripId } from "../common/org-shared";
+import { OrgTable, type OrgColumn } from "../common/org-table";
+import { OrgAlert, OrgBadge, OrgCard } from "../common/org-ui";
+import { useOrgPlan, useWizardTrip } from "./trip-parts";
 
-const DRIVER_OPTIONS = (): readonly TeSelectOption[] => [
-  { value: "none", label: t("screen.organization.trips.tripWizardStep4Staffing.notAssigned") },
-  {
-    value: "organization",
-    label: t("screen.organization.trips.tripWizardStep4Staffing.organizationOwned"),
-  },
-  {
-    value: "platform",
-    label: t("screen.organization.trips.tripWizardStep4Staffing.platformThroughADeal"),
-  },
-];
-
-const MODERATOR_OPTIONS = (): readonly TeSelectOption[] => [
-  { value: "none", label: t("screen.organization.trips.tripWizardStep4Staffing.notAssignedLabel") },
-  {
-    value: "organization",
-    label: t("screen.organization.trips.tripWizardStep4Staffing.organizationOwnedLabel"),
-  },
-];
-
-const PHOTOGRAPHER_OPTIONS = (): readonly TeSelectOption[] => [
-  { value: "none", label: t("screen.organization.trips.tripWizardStep4Staffing.notAssigned2") },
-  {
-    value: "organization",
-    label: t("screen.organization.trips.tripWizardStep4Staffing.organizationOwned2"),
-  },
-  {
-    value: "platform",
-    label: t("screen.organization.trips.tripWizardStep4Staffing.platformThroughADealLabel"),
-  },
-];
-
-interface VehicleStaffingCardProps {
-  vehicleLabel: string;
-  driver: string;
-  moderator: string;
-  photographer: string;
-  onChange: (next: { driver: string; moderator: string; photographer: string }) => void;
-}
-
-function VehicleStaffingCard({
-  vehicleLabel,
-  driver,
-  moderator,
-  photographer,
-  onChange,
-}: VehicleStaffingCardProps) {
-  const missingLabels = [
-    driver === "none" ? "Driver missing" : null,
-    moderator === "none" ? "Moderator missing" : null,
-  ].filter((label): label is string => label !== null);
-
-  const gapBadge =
-    missingLabels.length > 0 ? (
-      <StateBadge tone="warning" icon="alert" label={missingLabels.join(", ")} />
-    ) : (
-      <StateBadge
-        tone="success"
-        icon="check"
-        label={t("screen.organization.trips.tripWizardStep4Staffing.ready")}
-      />
-    );
-
-  return (
-    <TeCard
-      header={
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <h3 className="te-h3">{vehicleLabel}</h3>
-          {gapBadge}
-        </div>
-      }
-    >
-      <div className="flex flex-col gap-4">
-        <div className="grid gap-4 sm:grid-cols-3">
-          <TeSelect
-            label={t("screen.organization.trips.tripWizardStep4Staffing.driver")}
-            options={DRIVER_OPTIONS()}
-            value={driver}
-            onValueChange={(value) => onChange({ driver: value, moderator, photographer })}
-          />
-          <TeSelect
-            label={t("screen.organization.trips.tripWizardStep4Staffing.moderator")}
-            options={MODERATOR_OPTIONS()}
-            value={moderator}
-            onValueChange={(value) => onChange({ driver, moderator: value, photographer })}
-          />
-          <TeSelect
-            label={t("screen.organization.trips.tripWizardStep4Staffing.photographer")}
-            options={PHOTOGRAPHER_OPTIONS()}
-            value={photographer}
-            onValueChange={(value) => onChange({ driver, moderator, photographer: value })}
-          />
-        </div>
-        <div className="flex justify-end">
-          <OrgButtonLink slug="platform-supplier-search-and-deal-start" variant="ghost">
-            {t("screen.organization.trips.tripWizardStep4Staffing.findPlatformSupplier")}
-          </OrgButtonLink>
-        </div>
-      </div>
-    </TeCard>
-  );
-}
+type StaffChoice = "organization" | "platform" | "none";
+type StaffSource = "org_staff" | "platform_supplier" | "unassigned";
 
 interface VehicleStaffState {
   vehicleId: string;
-  vehicleLabel: string;
-  driver: string;
+  plate: string;
+  driver: StaffChoice;
   driverAccountId?: string | null;
-  moderator: string;
+  moderator: StaffChoice;
   moderatorAccountId?: string | null;
-  photographer: string;
+  photographer: StaffChoice;
   photographerAccountId?: string | null;
 }
 
-export function TripWizardStep4Staffing() {
-  const { status: authStatus } = useAuth();
-  const queryClient = useQueryClient();
-  const [vehicles, setVehicles] = useState<readonly VehicleStaffState[]>([]);
+type StaffRole = "driver" | "moderator" | "photographer";
 
-  const tripId = getActiveWizardTripId();
-  const tripQuery = useQuery({
-    ...orpc.trips.getOrganizationTrip.queryOptions({
-      input: { tripId: tripId ?? "" },
-    }),
-    enabled: authStatus === "authenticated" && Boolean(tripId),
+function toChoice(source: string): StaffChoice {
+  if (source === "org_staff") return "organization";
+  if (source === "platform_supplier") return "platform";
+  return "none";
+}
+
+function toStaffSource(choice: StaffChoice): StaffSource {
+  if (choice === "organization") return "org_staff";
+  if (choice === "platform") return "platform_supplier";
+  return "unassigned";
+}
+
+/** Names of the organization's employees and own suppliers, by account id. */
+function useStaffNames(enabled: boolean): ReadonlyMap<string, string> {
+  const employeesQuery = useQuery({
+    ...orpc.employees.list.queryOptions({ input: {} }),
+    enabled,
   });
+  const suppliersQuery = useQuery({
+    ...orpc.onboarding.listOrganizationSuppliers.queryOptions({ input: {} }),
+    enabled,
+  });
+  const names = new Map<string, string>();
+  for (const member of employeesQuery.data?.employees ?? []) {
+    if (member.accountId && member.fullName) names.set(member.accountId, member.fullName);
+  }
+  for (const supplier of suppliersQuery.data?.suppliers ?? []) {
+    if (supplier.fullName) names.set(supplier.supplierAccountId, supplier.fullName);
+  }
+  return names;
+}
+
+const MISSING_KEY: Record<Exclude<StaffRole, "photographer">, string> = {
+  driver: "screen.organization.trips.tripWizardStep4Staffing.missingDriver",
+  moderator: "screen.organization.trips.tripWizardStep4Staffing.missingModerator",
+};
+
+function StaffCell({
+  role,
+  choice,
+  accountId,
+  names,
+}: {
+  role: StaffRole;
+  choice: StaffChoice;
+  accountId: string | null | undefined;
+  names: ReadonlyMap<string, string>;
+}) {
+  if (choice === "none") {
+    if (role === "photographer") {
+      return (
+        <OrgBadge tone="neu">
+          {t("screen.organization.trips.tripWizardStep4Staffing.notAssigned")}
+        </OrgBadge>
+      );
+    }
+    return <OrgBadge tone="err">{t(MISSING_KEY[role])}</OrgBadge>;
+  }
+  const name =
+    (accountId && names.get(accountId)) ||
+    t("screen.organization.trips.tripWizardStep4Staffing.assigned");
+  const label =
+    choice === "organization"
+      ? t("screen.organization.trips.tripWizardStep4Staffing.nameOwnStaff", { name })
+      : t("screen.organization.trips.tripWizardStep4Staffing.namePlatform", { name });
+  return <OrgBadge tone="ok">{label}</OrgBadge>;
+}
+
+export function TripWizardStep4Staffing() {
+  const { authStatus, tripQuery, tripName } = useWizardTrip();
+  const queryClient = useQueryClient();
+  const { features } = useOrgPlan();
+  const names = useStaffNames(authStatus === "authenticated");
+  const [vehicles, setVehicles] = useState<readonly VehicleStaffState[]>([]);
+  const [saveFailed, setSaveFailed] = useState(false);
 
   useEffect(() => {
     if (tripQuery.data && tripQuery.data.vehicles.length > 0) {
       setVehicles(
-        tripQuery.data.vehicles.map((v) => ({
-          vehicleId: v.vehicleId,
-          vehicleLabel: `Vehicle ${v.plateNumber ?? v.vehicleId}`,
-          driver:
-            v.driverSource === "org_staff"
-              ? "organization"
-              : v.driverSource === "platform_supplier"
-                ? "platform"
-                : "none",
-          driverAccountId: v.driverAccountId,
-          moderator: v.moderatorSource === "org_staff" ? "organization" : "none",
-          moderatorAccountId: v.moderatorAccountId,
-          photographer:
-            v.photographerSource === "org_staff"
-              ? "organization"
-              : v.photographerSource === "platform_supplier"
-                ? "platform"
-                : "none",
-          photographerAccountId: v.photographerAccountId,
+        tripQuery.data.vehicles.map((vehicle) => ({
+          vehicleId: vehicle.vehicleId,
+          plate: vehicle.plateNumber ?? vehicle.vehicleId,
+          driver: toChoice(vehicle.driverSource),
+          driverAccountId: vehicle.driverAccountId,
+          moderator: vehicle.moderatorSource === "org_staff" ? "organization" : "none",
+          moderatorAccountId: vehicle.moderatorAccountId,
+          photographer: toChoice(vehicle.photographerSource),
+          photographerAccountId: vehicle.photographerAccountId,
         })),
       );
     }
   }, [tripQuery.data]);
-
-  const toStaffSource = (val: string): "org_staff" | "platform_supplier" | "unassigned" => {
-    if (val === "organization") return "org_staff";
-    if (val === "platform") return "platform_supplier";
-    return "unassigned";
-  };
 
   const saveWizardStepMutation = useMutation(
     orpc.trips.saveWizardStep.mutationOptions({
@@ -185,60 +133,119 @@ export function TripWizardStep4Staffing() {
     if (authStatus !== "authenticated") return true;
     const currentTripId = getActiveWizardTripId();
     if (!currentTripId) return true;
-    const validAssignments = vehicles
-      .filter((v) => v.vehicleId !== "vehicle-1")
-      .map((v) => ({
-        vehicleId: v.vehicleId,
-        driverSource: toStaffSource(v.driver),
-        driverAccountId: v.driver === "none" ? null : (v.driverAccountId ?? null),
-        moderatorSource: toStaffSource(v.moderator),
-        moderatorAccountId: v.moderator === "none" ? null : (v.moderatorAccountId ?? null),
-        photographerSource: toStaffSource(v.photographer),
-        photographerAccountId: v.photographer === "none" ? null : (v.photographerAccountId ?? null),
-      }));
-    if (validAssignments.length === 0) return true;
+    const assignments = vehicles.map((vehicle) => ({
+      vehicleId: vehicle.vehicleId,
+      driverSource: toStaffSource(vehicle.driver),
+      driverAccountId: vehicle.driver === "none" ? null : (vehicle.driverAccountId ?? null),
+      moderatorSource: toStaffSource(vehicle.moderator),
+      moderatorAccountId:
+        vehicle.moderator === "none" ? null : (vehicle.moderatorAccountId ?? null),
+      photographerSource: toStaffSource(vehicle.photographer),
+      photographerAccountId:
+        vehicle.photographer === "none" ? null : (vehicle.photographerAccountId ?? null),
+    }));
+    if (assignments.length === 0) return true;
+    setSaveFailed(false);
     try {
       await saveWizardStepMutation.mutateAsync({
         tripId: currentTripId,
         step: "staffing",
-        assignments: validAssignments,
+        assignments,
       });
       return true;
     } catch {
+      setSaveFailed(true);
       return false;
     }
   };
 
+  const columns: readonly OrgColumn<VehicleStaffState>[] = [
+    {
+      key: "plate",
+      header: t("screen.organization.trips.tripWizardStep4Staffing.vehicle"),
+      render: (row) => <b>{row.plate}</b>,
+    },
+    {
+      key: "driver",
+      header: t("screen.organization.trips.tripWizardStep4Staffing.driver"),
+      render: (row) => (
+        <StaffCell
+          role="driver"
+          choice={row.driver}
+          accountId={row.driverAccountId}
+          names={names}
+        />
+      ),
+    },
+    {
+      key: "moderator",
+      header: t("screen.organization.trips.tripWizardStep4Staffing.moderator"),
+      render: (row) => (
+        <StaffCell
+          role="moderator"
+          choice={row.moderator}
+          accountId={row.moderatorAccountId}
+          names={names}
+        />
+      ),
+    },
+    {
+      key: "photographer",
+      header: t("screen.organization.trips.tripWizardStep4Staffing.photographer"),
+      render: (row) => (
+        <StaffCell
+          role="photographer"
+          choice={row.photographer}
+          accountId={row.photographerAccountId}
+          names={names}
+        />
+      ),
+    },
+  ];
+
   return (
-    <StatePreview>
-      <TripWizardFrame
-        title={t("screen.organization.trips.tripWizardStep4Staffing.tripWizardStep4Staffing")}
-        stepId="staffing"
-        previousSlug="trip-wizard-step-3-vehicles"
-        nextSlug="trip-wizard-step-5-programs"
-        beforeNext={saveStep}
-        onSaveDraft={async () => {
-          await saveStep();
-        }}
-      >
-        <TeInlineAlert tone="info">
-          {t("screen.organization.trips.tripWizardStep4Staffing.aPlatformDriverOrPhotographer")}
-        </TeInlineAlert>
-        {vehicles.map((vehicle, index) => (
-          <VehicleStaffingCard
-            key={vehicle.vehicleId}
-            vehicleLabel={vehicle.vehicleLabel}
-            driver={vehicle.driver}
-            moderator={vehicle.moderator}
-            photographer={vehicle.photographer}
-            onChange={(next) =>
-              setVehicles((prev) =>
-                prev.map((item, idx) => (idx === index ? { ...item, ...next } : item)),
-              )
-            }
-          />
-        ))}
-      </TripWizardFrame>
-    </StatePreview>
+    <TripWizardFrame
+      stepId="staffing"
+      tripName={tripName}
+      beforeNext={saveStep}
+      onSaveDraft={async () => {
+        await saveStep();
+      }}
+    >
+      {features?.platformSuppliers ? null : (
+        <OrgAlert
+          tone="info"
+          title={t("screen.organization.trips.tripWizardStep4Staffing.platformStaffTitle")}
+        >
+          {t("screen.organization.trips.tripWizardStep4Staffing.platformStaffBody")}
+        </OrgAlert>
+      )}
+      {saveFailed ? (
+        <OrgAlert
+          tone="err"
+          title={t("screen.organization.trips.tripWizardStep4Staffing.saveFailedTitle")}
+        >
+          {t("screen.organization.trips.tripWizardStep4Staffing.saveFailedBody")}
+        </OrgAlert>
+      ) : null}
+      <OrgCard title={t("screen.organization.trips.tripWizardStep4Staffing.staffForEachVehicle")}>
+        <OrgTable
+          columns={columns}
+          rows={vehicles}
+          rowKey={(row) => row.vehicleId}
+          caption={t("screen.organization.trips.tripWizardStep4Staffing.staffForEachVehicle")}
+          loading={tripQuery.isLoading}
+          empty={t("screen.organization.trips.tripWizardStep4Staffing.noVehicles")}
+        />
+        <p className="te-caption m-0 text-[var(--te-ink-muted)]">
+          {t("screen.organization.trips.tripWizardStep4Staffing.readyNeedsNote")}
+        </p>
+        <div>
+          <OrgButtonLink slug="staffing-board" variant="text">
+            {t("screen.organization.trips.tripWizardStep4Staffing.assignOwnStaff")}
+          </OrgButtonLink>
+        </div>
+      </OrgCard>
+    </TripWizardFrame>
   );
 }

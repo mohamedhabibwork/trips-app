@@ -1,53 +1,60 @@
+// SCR-ORG-13 Program editor: name, pricing model, type flags and price of one trip program.
 import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { TeButton } from "@trips-app/ui/components/te-button";
-import { TeCard } from "@trips-app/ui/components/te-card";
-import { TeCheckbox } from "@trips-app/ui/components/te-checkbox";
-import { TeInlineAlert } from "@trips-app/ui/components/te-inline-alert";
-import { TeInput } from "@trips-app/ui/components/te-input";
-import { TePageHeader } from "@trips-app/ui/components/te-page-header";
-import { TeSelect, type TeSelectOption } from "@trips-app/ui/components/te-select";
 import { t } from "@trips-app/i18n";
+
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
 
-import { WorkspaceBackLink, useOrgNavigate } from "../common/org-link";
+import { OrgChoice, OrgInput, OrgSelect } from "../common/org-form";
+import { useOrgNavigate, useOrgParams } from "../common/org-link";
 import {
   getActiveWizardTripId,
   getSelectedProgramId,
-  OrgSection,
   setActiveWizardTripId,
   setSelectedProgramId,
+  tripTitle,
 } from "../common/org-shared";
-import { StatePreview } from "../common/organization-state-preview";
+import {
+  OrgAlert,
+  OrgButton,
+  OrgCard,
+  OrgError,
+  OrgLoading,
+  OrgPage,
+  OrgPageHeader,
+  OrgRow,
+} from "../common/org-ui";
+import {
+  CURRENCY_OPTIONS,
+  NEW_PROGRAM_ID,
+  OrgOptionCard,
+  toMinorUnits,
+  toTripCurrency,
+  type TripCurrency,
+} from "./trip-parts";
 
-const FLAG_IDS = ["optional", "preRequired", "capacityLimited", "vipOnly"] as const;
+const PRICING_MODELS = ["per-person", "free", "by-quantity", "per-group", "tiered"] as const;
+type PricingModel = (typeof PRICING_MODELS)[number];
 
-type FlagId = (typeof FLAG_IDS)[number];
-
-const FLAG_LABELS: Record<FlagId, string> = {
-  get optional() {
-    return t("screen.organization.trips.programEditor.labels.optional");
-  },
-  get preRequired() {
-    return t("screen.organization.trips.programEditor.labels.preRequired");
-  },
-  get capacityLimited() {
-    return t("screen.organization.trips.programEditor.labels.capacityLimitedWithCap");
-  },
-  get vipOnly() {
-    return t("screen.organization.trips.programEditor.labels.vipOnly");
-  },
+const PRICING_KEY: Record<PricingModel, string> = {
+  "per-person": "screen.organization.trips.programEditor.perPerson",
+  free: "screen.organization.trips.programEditor.free",
+  "by-quantity": "screen.organization.trips.programEditor.byQuantity",
+  "per-group": "screen.organization.trips.programEditor.perGroup",
+  tiered: "screen.organization.trips.programEditor.tiered",
 };
 
-const PRICING_OPTIONS = (): readonly TeSelectOption[] => [
-  { value: "free", label: t("screen.organization.trips.programEditor.free") },
-  { value: "per-person", label: t("screen.organization.trips.programEditor.perPerson") },
-  { value: "by-quantity", label: t("screen.organization.trips.programEditor.byQuantity") },
-  { value: "per-group", label: t("screen.organization.trips.programEditor.perGroup") },
-  { value: "tiered", label: t("screen.organization.trips.programEditor.tiered") },
-];
+const FLAG_IDS = ["optional", "preRequired", "capacityLimited", "vipOnly"] as const;
+type FlagId = (typeof FLAG_IDS)[number];
+
+const FLAG_KEY: Record<FlagId, string> = {
+  optional: "screen.organization.trips.programEditor.optional",
+  preRequired: "screen.organization.trips.programEditor.preRequired",
+  capacityLimited: "screen.organization.trips.programEditor.capacityLimited",
+  vipOnly: "screen.organization.trips.programEditor.vipOnly",
+};
 
 const INITIAL_FLAGS: Record<FlagId, boolean> = {
   optional: false,
@@ -56,79 +63,80 @@ const INITIAL_FLAGS: Record<FlagId, boolean> = {
   vipOnly: false,
 };
 
+const DEFAULT_CAP = 30;
+
 export function ProgramEditor() {
   const goTo = useOrgNavigate();
-  const { status: authStatus } = useAuth();
+  const params = useOrgParams();
+  const { status: authStatus, locale } = useAuth();
   const queryClient = useQueryClient();
-  const [programId, setProgramId] = useState<string | null>(getSelectedProgramId());
+  const isNew = params.programId === NEW_PROGRAM_ID;
+  const requestedProgramId = isNew ? null : (params.programId ?? getSelectedProgramId());
+  const [programId, setProgramId] = useState<string | null>(requestedProgramId);
   const [programName, setProgramName] = useState("");
-  const [pricingModel, setPricingModel] = useState("per-person");
+  const [pricingModel, setPricingModel] = useState<PricingModel>("per-person");
   const [flags, setFlags] = useState(INITIAL_FLAGS);
+  const [cap, setCap] = useState(String(DEFAULT_CAP));
   const [price, setPrice] = useState("0");
-  const [currency, setCurrency] = useState<"EGP" | "SAR" | "AED" | "USD">("SAR");
+  const [currency, setCurrency] = useState<TripCurrency>("EGP");
   const [busy, setBusy] = useState(false);
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [saveFailed, setSaveFailed] = useState(false);
+  const [nameError, setNameError] = useState<string | undefined>(undefined);
 
-  const activeTripId = getActiveWizardTripId();
-
+  const signedIn = authStatus === "authenticated";
+  const knownTripId = params.tripId ?? getActiveWizardTripId();
   const tripsQuery = useQuery({
     ...orpc.trips.listOrganizationTrips.queryOptions({ input: {} }),
-    enabled: authStatus === "authenticated" && !activeTripId,
+    enabled: signedIn && !knownTripId,
   });
-
-  const effectiveTripId = activeTripId || tripsQuery.data?.items[0]?.id || null;
+  const effectiveTripId = knownTripId || tripsQuery.data?.items[0]?.id || null;
 
   useEffect(() => {
-    if (!activeTripId && tripsQuery.data?.items[0]?.id) {
-      setActiveWizardTripId(tripsQuery.data.items[0].id);
-    }
-  }, [activeTripId, tripsQuery.data]);
+    if (!getActiveWizardTripId() && effectiveTripId) setActiveWizardTripId(effectiveTripId);
+  }, [effectiveTripId]);
 
+  const tripQuery = useQuery({
+    ...orpc.trips.getOrganizationTrip.queryOptions({ input: { tripId: effectiveTripId ?? "" } }),
+    enabled: signedIn && Boolean(effectiveTripId),
+  });
   const programsQuery = useQuery({
-    ...orpc.programs.listTripPrograms.queryOptions({
-      input: { tripId: effectiveTripId ?? "" },
-    }),
-    enabled: authStatus === "authenticated" && Boolean(effectiveTripId),
+    ...orpc.programs.listTripPrograms.queryOptions({ input: { tripId: effectiveTripId ?? "" } }),
+    enabled: signedIn && Boolean(effectiveTripId),
   });
 
+  const program = programsQuery.data
+    ? isNew
+      ? undefined
+      : requestedProgramId
+        ? programsQuery.data.items.find((item) => item.id === requestedProgramId)
+        : programsQuery.data.items[0]
+    : undefined;
+
   useEffect(() => {
-    if (programsQuery.data) {
-      const selectedId = getSelectedProgramId();
-      const found = selectedId
-        ? programsQuery.data.items.find((p) => p.id === selectedId)
-        : programsQuery.data.items[0];
-      if (found) {
-        setProgramId(found.id);
-        setProgramName(found.titleEn || found.titleAr);
-        setPricingModel(found.isIncludedInBase ? "free" : "per-person");
-        setPrice(String((found.priceMinor / 100).toFixed(2)));
-        setCurrency(found.currencyCode);
-        setFlags({
-          optional: !found.isIncludedInBase,
-          preRequired: found.isIncludedInBase,
-          capacityLimited: found.capacity !== null,
-          vipOnly: false,
-        });
-      }
-    }
-  }, [programsQuery.data]);
+    if (!program) return;
+    setProgramId(program.id);
+    setProgramName(program.titleEn || program.titleAr);
+    setPricingModel(program.priceMinor === 0 ? "free" : "per-person");
+    setPrice((program.priceMinor / 100).toFixed(2));
+    setCurrency(toTripCurrency(program.currencyCode));
+    if (program.capacity !== null) setCap(String(program.capacity));
+    setFlags({
+      optional: !program.isIncludedInBase,
+      preRequired: program.isIncludedInBase,
+      capacityLimited: program.capacity !== null,
+      vipOnly: false,
+    });
+  }, [program]);
 
+  const onSuccess = () => {
+    void queryClient.invalidateQueries({ queryKey: orpc.programs.key() });
+    void queryClient.invalidateQueries({ queryKey: orpc.trips.key() });
+  };
   const updateProgramMutation = useMutation(
-    orpc.programs.updateProgram.mutationOptions({
-      onSuccess: () => {
-        void queryClient.invalidateQueries({ queryKey: orpc.programs.key() });
-        void queryClient.invalidateQueries({ queryKey: orpc.trips.key() });
-      },
-    }),
+    orpc.programs.updateProgram.mutationOptions({ onSuccess }),
   );
-
   const createProgramMutation = useMutation(
-    orpc.programs.createProgram.mutationOptions({
-      onSuccess: () => {
-        void queryClient.invalidateQueries({ queryKey: orpc.programs.key() });
-        void queryClient.invalidateQueries({ queryKey: orpc.trips.key() });
-      },
-    }),
+    orpc.programs.createProgram.mutationOptions({ onSuccess }),
   );
 
   const setFlag = (flag: FlagId, checked: boolean) => {
@@ -136,44 +144,38 @@ export function ProgramEditor() {
   };
 
   async function handleSave() {
-    if (authStatus === "authenticated" && programName.trim()) {
+    const name = programName.trim();
+    if (!name) {
+      setNameError(t("screen.organization.trips.programEditor.nameRequired"));
+      return;
+    }
+    setNameError(undefined);
+    const tripId = effectiveTripId || getActiveWizardTripId();
+    if (signedIn && tripId) {
       setBusy(true);
-      setErrorMsg(null);
+      setSaveFailed(false);
+      const priceMinor = pricingModel === "free" ? 0 : toMinorUnits(price);
+      const isIncludedInBase = pricingModel === "free" || !flags.optional;
+      const capacity = flags.capacityLimited
+        ? Math.max(1, Number.parseInt(cap, 10) || DEFAULT_CAP)
+        : null;
+      const fields = {
+        titleEn: name,
+        titleAr: name,
+        priceMinor,
+        currencyCode: currency,
+        isIncludedInBase,
+        capacity,
+      };
       try {
-        const tripId = getActiveWizardTripId() || effectiveTripId;
-        if (tripId) {
-          const priceMinor =
-            pricingModel === "free"
-              ? 0
-              : Math.max(0, Math.round((Number.parseFloat(price) || 0) * 100));
-          const isIncludedInBase = pricingModel === "free" || !flags.optional;
-          const capacity = flags.capacityLimited ? 30 : null;
-          const supportedCurrency = currency === "USD" ? "SAR" : currency;
-          if (programId) {
-            await updateProgramMutation.mutateAsync({
-              programId,
-              titleEn: programName.trim(),
-              titleAr: programName.trim(),
-              priceMinor,
-              currencyCode: supportedCurrency,
-              isIncludedInBase,
-              capacity,
-            });
-          } else {
-            await createProgramMutation.mutateAsync({
-              tripId,
-              titleEn: programName.trim(),
-              titleAr: programName.trim(),
-              priceMinor,
-              currencyCode: supportedCurrency,
-              isIncludedInBase,
-              capacity,
-            });
-          }
-          setSelectedProgramId(null);
+        if (programId) {
+          await updateProgramMutation.mutateAsync({ programId, ...fields });
+        } else {
+          await createProgramMutation.mutateAsync({ tripId, ...fields });
         }
-      } catch (caught) {
-        setErrorMsg(caught instanceof Error ? caught.message : "Could not save program.");
+        setSelectedProgramId(null);
+      } catch {
+        setSaveFailed(true);
         setBusy(false);
         return;
       }
@@ -182,83 +184,130 @@ export function ProgramEditor() {
     void goTo("trip-wizard-step-5-programs");
   }
 
+  const tripName = tripQuery.data ? tripTitle(tripQuery.data, locale) : "";
+  const caption = [
+    tripName,
+    programName.trim()
+      ? t("screen.organization.trips.programEditor.programCaption", { name: programName.trim() })
+      : null,
+  ]
+    .filter(Boolean)
+    .join(" · ");
+  const hasBookings =
+    (program?.bookedCount ?? 0) > 0 || (tripQuery.data?.confirmedSeatsCount ?? 0) > 0;
+  const loadingProgram = programsQuery.isLoading && Boolean(requestedProgramId);
+
   return (
-    <StatePreview>
-      <div className="flex flex-col gap-8">
-        <WorkspaceBackLink
-          parent={{
-            slug: "trip-wizard-step-5-programs",
-            label: t("screen.organization.trips.programEditor.backToPrograms"),
-          }}
-        />
-        <TePageHeader
-          title={t("screen.organization.trips.programEditor.programEditor")}
-          actions={
-            <TeButton disabled={busy} onClick={() => void handleSave()}>
-              {t("screen.organization.trips.programEditor.save")}
-            </TeButton>
-          }
-        />
-        {errorMsg ? <TeInlineAlert tone="error">{errorMsg}</TeInlineAlert> : null}
-        <OrgSection title={t("screen.organization.trips.programEditor.details")}>
-          <TeCard>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <TeInput
+    <OrgPage>
+      <OrgPageHeader
+        title={
+          isNew
+            ? t("screen.organization.trips.programEditor.newProgram")
+            : t("screen.organization.trips.programEditor.editProgram")
+        }
+        caption={caption || undefined}
+        actions={
+          <OrgButton disabled={busy} onClick={() => void handleSave()}>
+            {t("screen.organization.trips.programEditor.saveProgram")}
+          </OrgButton>
+        }
+      />
+      {hasBookings ? (
+        <OrgAlert
+          tone="warn"
+          title={t("screen.organization.trips.programEditor.bookingsAffectedTitle")}
+        >
+          {t("screen.organization.trips.programEditor.bookingsAffectedBody")}
+        </OrgAlert>
+      ) : null}
+      {saveFailed ? (
+        <OrgAlert tone="err" title={t("screen.organization.trips.programEditor.saveFailedTitle")}>
+          {t("screen.organization.trips.programEditor.saveFailedBody")}
+        </OrgAlert>
+      ) : null}
+      {programsQuery.isError ? <OrgError onRetry={() => void programsQuery.refetch()} /> : null}
+      {loadingProgram ? (
+        <OrgLoading rows={6} />
+      ) : (
+        <>
+          <OrgRow align="start">
+            <OrgCard
+              title={t("screen.organization.trips.programEditor.programDetails")}
+              className="flex-1"
+            >
+              <OrgInput
                 label={t("screen.organization.trips.programEditor.programName")}
-                placeholder={t("screen.organization.trips.programEditor.programNamePlaceholder")}
                 dir="auto"
+                required
                 value={programName}
-                onChange={(e) => setProgramName(e.target.value)}
+                error={nameError}
+                onChange={(event) => setProgramName(event.target.value)}
               />
-              <TeSelect
-                label={t("screen.organization.trips.programEditor.pricingModel")}
-                options={PRICING_OPTIONS()}
-                value={pricingModel}
-                onValueChange={setPricingModel}
-                supportingText={t(
-                  "screen.organization.trips.programEditor.chooseExactlyOnePricingModel",
-                )}
+              <fieldset className="m-0 flex flex-col gap-2 border-0 p-0">
+                <legend className="mb-2 p-0 text-sm leading-5 font-semibold">
+                  {t("screen.organization.trips.programEditor.pricingModelChooseOne")}
+                </legend>
+                {PRICING_MODELS.map((model) => (
+                  <OrgOptionCard
+                    key={model}
+                    name="pricing-model"
+                    checked={pricingModel === model}
+                    onChange={() => setPricingModel(model)}
+                    className="items-center"
+                  >
+                    {t(PRICING_KEY[model])}
+                  </OrgOptionCard>
+                ))}
+              </fieldset>
+            </OrgCard>
+            <OrgCard
+              title={t("screen.organization.trips.programEditor.typeFlags")}
+              className="flex-1"
+            >
+              <div className="flex flex-col">
+                {FLAG_IDS.map((flag) => (
+                  <div key={flag} className="flex flex-col gap-2">
+                    <OrgChoice
+                      type="checkbox"
+                      checked={flags[flag]}
+                      onChange={(event) => setFlag(flag, event.target.checked)}
+                    >
+                      {t(FLAG_KEY[flag])}
+                    </OrgChoice>
+                    {flag === "capacityLimited" && flags.capacityLimited ? (
+                      <OrgInput
+                        label={t("screen.organization.trips.programEditor.cap")}
+                        hint={t("screen.organization.trips.programEditor.capHint")}
+                        inputMode="numeric"
+                        fieldClassName="ms-8 max-w-[240px] pb-2"
+                        value={cap}
+                        onChange={(event) => setCap(event.target.value)}
+                      />
+                    ) : null}
+                  </div>
+                ))}
+              </div>
+            </OrgCard>
+          </OrgRow>
+          <OrgCard title={t("screen.organization.trips.programEditor.prices")}>
+            <div className="grid max-w-[620px] gap-4 sm:grid-cols-[2fr_1fr]">
+              <OrgInput
+                label={t("screen.organization.trips.programEditor.pricePerPerson")}
+                inputMode="decimal"
+                disabled={pricingModel === "free"}
+                value={pricingModel === "free" ? "0.00" : price}
+                onChange={(event) => setPrice(event.target.value)}
+              />
+              <OrgSelect
+                label={t("screen.organization.trips.programEditor.currency")}
+                options={CURRENCY_OPTIONS}
+                value={currency}
+                onValueChange={(value) => setCurrency(toTripCurrency(value))}
               />
             </div>
-          </TeCard>
-        </OrgSection>
-        <OrgSection title={t("screen.organization.trips.programEditor.typeFlags")}>
-          <TeCard>
-            <div className="flex flex-col gap-4">
-              {FLAG_IDS.map((flag) => (
-                <TeCheckbox
-                  key={flag}
-                  label={FLAG_LABELS[flag]}
-                  checked={flags[flag]}
-                  onCheckedChange={(checked) => setFlag(flag, checked)}
-                />
-              ))}
-            </div>
-          </TeCard>
-        </OrgSection>
-        <OrgSection title={t("screen.organization.trips.programEditor.prices")}>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <TeInput
-              label={t("screen.organization.trips.programEditor.price")}
-              placeholder={t("screen.organization.trips.programEditor.amount")}
-              inputMode="decimal"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
-            />
-            <TeInput
-              label={t("screen.organization.trips.programEditor.currency")}
-              placeholder={t("screen.organization.trips.programEditor.currencyCode")}
-              value={currency}
-              onChange={(e) => {
-                const code = e.target.value.toUpperCase();
-                if (code === "EGP" || code === "SAR" || code === "AED" || code === "USD") {
-                  setCurrency(code);
-                }
-              }}
-            />
-          </div>
-        </OrgSection>
-      </div>
-    </StatePreview>
+          </OrgCard>
+        </>
+      )}
+    </OrgPage>
   );
 }
