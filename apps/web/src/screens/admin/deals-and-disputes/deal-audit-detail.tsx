@@ -1,257 +1,227 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { TeButton } from "@trips-app/ui/components/te-button";
-import { TeDataTable, type TeDataTableColumn } from "@trips-app/ui/components/te-data-table";
-import { TeInlineAlert } from "@trips-app/ui/components/te-inline-alert";
-import { TePageHeader } from "@trips-app/ui/components/te-page-header";
-import { TeTimeline, type TeTimelineItem } from "@trips-app/ui/components/te-timeline";
+// SCR-ADM-22 Deal audit detail (docs/design/web/admin/SCR-ADM-22.dc.html): the parties of one deal,
+// every offer and state change in order, and the deal cost and commission. The negotiation record
+// keeps the first offer, the latest counter offer and the outcome, so those are the steps shown.
+import { useQuery } from "@tanstack/react-query";
 import { t } from "@trips-app/i18n";
-import { orpc } from "@/utils/orpc";
-import { StatePreview } from "../common/admin-state-preview";
-import { AdminScreenLink } from "../common/admin-links";
-import {
-  AdminActions,
-  AdminFacts,
-  AdminPage,
-  AdminPanel,
-  AdminStatus,
-  getSelectedAdminDealId,
-  type AdminStatusPresentation,
-} from "../common/admin-shared";
 
-interface OfferRow {
+import { useAuth } from "@/auth/auth-context";
+import { orpc } from "@/utils/orpc";
+
+import { AdminLink, useAdminParam } from "../common/admin-actions";
+import { getSelectedAdminDealId } from "../common/admin-selection";
+import { AdminEmpty, AdminQueryState } from "../common/admin-states";
+import {
+  AdminBadge,
+  AdminCard,
+  AdminPage,
+  AdminRow,
+  AdminSplit,
+  AdminTable,
+  type AdminColumn,
+} from "../common/admin-ui";
+import { DealStateBadge, dealState, dealStateLabel } from "./deal-state";
+import { formatDateTime, formatMinor, shortId } from "./deals-format";
+
+/** Placeholder deal cost rate until the commission decision closes: 10% of the base trip price. */
+const DEAL_COST_RATE = 0.1;
+
+interface Deal {
   id: string;
-  step: string;
+  tenantId: string;
+  tripId: string;
+  vehicleId: string | null;
+  supplierAccountId: string;
+  status: string;
+  initialOfferMinor: number;
+  currentOfferMinor: number;
+  agreedPriceMinor: number | null;
+  currencyCode: string;
+  lastOfferedBy: "organization" | "supplier";
+  roundsCount: number;
+  respondedAt: Date | string | null;
+  createdAt: Date | string;
+  updatedAt: Date | string;
+}
+
+interface StepRow {
+  step: number;
+  event: string;
   amount: string;
   actor: string;
   time: string;
 }
 
-const DEFAULT_OFFER_ROWS: readonly OfferRow[] = [];
+function buildSteps(deal: Deal, locale: string | undefined): readonly StepRow[] {
+  const money = (minor: number) => formatMinor(minor, deal.currencyCode, locale);
+  const organization = shortId(deal.tenantId);
+  const supplier = shortId(deal.supplierAccountId);
+  const lastActor = deal.lastOfferedBy === "organization" ? organization : supplier;
+  const state = dealState(deal.status);
+  const firstOffer = {
+    event: t("screen.admin.dealsAndDisputes.dealAuditDetail.offer"),
+    amount: money(deal.initialOfferMinor),
+    actor: organization,
+    time: formatDateTime(deal.createdAt, locale),
+  };
+  const latestCounter = {
+    event: t("screen.admin.dealsAndDisputes.dealAuditDetail.counterOffer"),
+    amount: money(deal.currentOfferMinor),
+    actor: lastActor,
+    time: formatDateTime(deal.updatedAt, locale),
+  };
+  const outcome = {
+    event: dealStateLabel(state),
+    amount: deal.agreedPriceMinor !== null ? money(deal.agreedPriceMinor) : "—",
+    actor: deal.lastOfferedBy === "organization" ? supplier : organization,
+    time: formatDateTime(deal.respondedAt ?? deal.updatedAt, locale),
+  };
+  const events: readonly Omit<StepRow, "step">[] = [
+    firstOffer,
+    ...(deal.roundsCount > 1 ? [latestCounter] : []),
+    ...(state !== "open" ? [outcome] : []),
+  ];
+  return events.map((event, index) => ({ ...event, step: index + 1 }));
+}
 
-const DEFAULT_HISTORY = (): readonly TeTimelineItem[] => [
+const stepColumns = (): readonly AdminColumn<StepRow>[] => [
   {
-    id: "open",
-    time: "-",
-    label: t("screen.admin.dealsAndDisputes.dealAuditDetail.dealOpened"),
-    state: "done",
+    key: "step",
+    header: t("screen.admin.dealsAndDisputes.dealAuditDetail.step"),
+    render: (row) => row.step,
   },
   {
-    id: "counter",
-    time: "-",
-    label: t("screen.admin.dealsAndDisputes.dealAuditDetail.counterOfferMade"),
-    state: "done",
+    key: "event",
+    header: t("screen.admin.dealsAndDisputes.dealAuditDetail.event"),
+    render: (row) => row.event,
   },
   {
-    id: "final",
-    time: "-",
-    label: t("screen.admin.dealsAndDisputes.dealAuditDetail.dealFinalizedOrRejected"),
-    state: "upcoming",
+    key: "amount",
+    header: t("screen.admin.dealsAndDisputes.dealAuditDetail.amount"),
+    render: (row) => row.amount,
+  },
+  {
+    key: "actor",
+    header: t("screen.admin.dealsAndDisputes.dealAuditDetail.actor"),
+    render: (row) => row.actor,
+  },
+  {
+    key: "time",
+    header: t("screen.admin.dealsAndDisputes.dealAuditDetail.time"),
+    render: (row) => row.time,
   },
 ];
 
-const OPEN = (): AdminStatusPresentation => ({
-  tone: "info",
-  icon: "clock",
-  label: t("screen.admin.dealsAndDisputes.dealAuditDetail.open"),
-});
-
-const OFFER_COLUMNS = (): readonly TeDataTableColumn<OfferRow>[] => [
-  { key: "step", header: t("screen.admin.dealsAndDisputes.dealAuditDetail.step") },
-  { key: "amount", header: t("screen.admin.dealsAndDisputes.dealAuditDetail.amount") },
-  { key: "actor", header: t("screen.admin.dealsAndDisputes.dealAuditDetail.actor") },
-  { key: "time", header: t("screen.admin.dealsAndDisputes.dealAuditDetail.time") },
-];
+function DealBody({ deal, locale }: { deal: Deal; locale: string | undefined }) {
+  const baseMinor = deal.agreedPriceMinor ?? deal.currentOfferMinor;
+  const vehicleOrTrip = deal.vehicleId
+    ? t("screen.admin.dealsAndDisputes.dealAuditDetail.vehicleRef", {
+        reference: shortId(deal.vehicleId),
+      })
+    : t("screen.admin.dealsAndDisputes.dealAuditDetail.tripRef", {
+        reference: shortId(deal.tripId),
+      });
+  return (
+    <AdminSplit
+      main={
+        <>
+          <AdminCard title={t("screen.admin.dealsAndDisputes.dealAuditDetail.parties")}>
+            <div>
+              <AdminRow label={t("screen.admin.dealsAndDisputes.dealAuditDetail.organization")}>
+                {shortId(deal.tenantId)}
+              </AdminRow>
+              <AdminRow label={t("screen.admin.dealsAndDisputes.dealAuditDetail.supplier")}>
+                {shortId(deal.supplierAccountId)}
+              </AdminRow>
+              <AdminRow
+                label={t("screen.admin.dealsAndDisputes.dealAuditDetail.vehicleOrTrip")}
+                last
+              >
+                {vehicleOrTrip}
+              </AdminRow>
+            </div>
+          </AdminCard>
+          <AdminTable
+            caption={t("screen.admin.dealsAndDisputes.dealAuditDetail.offersAndStateHistory")}
+            title={t("screen.admin.dealsAndDisputes.dealAuditDetail.offersAndStateHistory")}
+            columns={stepColumns()}
+            rows={buildSteps(deal, locale)}
+            getRowKey={(row) => String(row.step)}
+          />
+        </>
+      }
+      side={
+        <>
+          <AdminCard
+            title={t("screen.admin.dealsAndDisputes.dealAuditDetail.dealCostAndCommission")}
+          >
+            <div>
+              <AdminRow label={t("screen.admin.dealsAndDisputes.dealAuditDetail.baseTripPrice")}>
+                {formatMinor(baseMinor, deal.currencyCode, locale)}
+              </AdminRow>
+              <AdminRow label={t("screen.admin.dealsAndDisputes.dealAuditDetail.commission")}>
+                —
+              </AdminRow>
+              <AdminRow label={t("screen.admin.dealsAndDisputes.dealAuditDetail.dealCost")} last>
+                {formatMinor(Math.round(baseMinor * DEAL_COST_RATE), deal.currencyCode, locale)}
+              </AdminRow>
+            </div>
+            <AdminBadge tone="warn" icon={false}>
+              {t("screen.admin.dealsAndDisputes.dealAuditDetail.placeholderRate")}
+            </AdminBadge>
+          </AdminCard>
+          <AdminCard>
+            <span className="te-label">
+              {t("screen.admin.dealsAndDisputes.dealAuditDetail.ledger")}
+            </span>
+            <p className="te-body">
+              {t("screen.admin.dealsAndDisputes.dealAuditDetail.dealCostEntryLinked", {
+                reference: "—",
+              })}
+            </p>
+            <AdminLink screen="SCR-ADM-25" variant="secondary" className="self-start">
+              {t("screen.admin.dealsAndDisputes.dealAuditDetail.viewLedgerEntries")}
+            </AdminLink>
+          </AdminCard>
+        </>
+      }
+    />
+  );
+}
 
 export function DealAuditDetail() {
-  const queryClient = useQueryClient();
-  const selectedId = getSelectedAdminDealId();
-  const dealsQuery = useQuery(
-    orpc.negotiation.listOrganizationNegotiations.queryOptions({ input: {} }),
-  );
+  const { status: authStatus, locale } = useAuth();
+  const dealId = useAdminParam("dealId", getSelectedAdminDealId);
+  const dealsQuery = useQuery({
+    ...orpc.negotiation.listOrganizationNegotiations.queryOptions({ input: {} }),
+    enabled: authStatus === "authenticated",
+  });
 
-  const flagMutation = useMutation(
-    orpc.accounting.flagReconciliationException.mutationOptions({
-      onSuccess: () => {
-        void queryClient.invalidateQueries({ queryKey: orpc.accounting.key() });
-      },
-    }),
-  );
-
-  const deal =
-    (selectedId
-      ? dealsQuery.data?.items.find((item) => item.id === selectedId)
-      : dealsQuery.data?.items[0]) ?? dealsQuery.data?.items[0];
-
-  const effectiveMinor = deal ? (deal.agreedPriceMinor ?? deal.currentOfferMinor) : 0;
-  const createdStr = deal
-    ? new Date(deal.createdAt).toISOString().slice(0, 16).replace("T", " ")
-    : "-";
-  const updatedStr = deal
-    ? new Date(deal.updatedAt).toISOString().slice(0, 16).replace("T", " ")
-    : "-";
-
-  const organization = deal ? deal.tenantId.slice(0, 8) : "-";
-  const supplier = deal ? deal.supplierAccountId.slice(0, 8) : "-";
-  const vehicle = deal
-    ? deal.vehicleId
-      ? `Vehicle ${deal.vehicleId.slice(0, 8)}`
-      : `Trip ${deal.tripId.slice(0, 8)}`
-    : "-";
-  const finalAmount = deal
-    ? `${(effectiveMinor / 100).toFixed(2)} ${deal.currencyCode}`
-    : "0.00 EGP";
-  const dealCost = finalAmount;
-  const commission = deal
-    ? `${(Math.round(effectiveMinor * 0.1) / 100).toFixed(2)} ${deal.currencyCode}`
-    : "0.00 EGP";
-
-  const offers: readonly OfferRow[] = deal
-    ? [
-        {
-          id: `${deal.id}-1`,
-          step: "Offer",
-          amount: `${(deal.initialOfferMinor / 100).toFixed(2)} ${deal.currencyCode}`,
-          actor: deal.tenantId.slice(0, 8),
-          time: createdStr,
-        },
-        ...(deal.roundsCount > 1
-          ? [
-              {
-                id: `${deal.id}-2`,
-                step: "Counter offer",
-                amount: `${(deal.currentOfferMinor / 100).toFixed(2)} ${deal.currencyCode}`,
-                actor: deal.supplierAccountId.slice(0, 8),
-                time: updatedStr,
-              },
-            ]
-          : []),
-      ]
-    : DEFAULT_OFFER_ROWS;
-
-  const history: readonly TeTimelineItem[] = deal
-    ? [
-        {
-          id: "open",
-          time: createdStr,
-          label: t("screen.admin.dealsAndDisputes.dealAuditDetail.dealOpened"),
-          state: "done",
-        },
-        {
-          id: "counter",
-          time: updatedStr,
-          label: t("screen.admin.dealsAndDisputes.dealAuditDetail.counterOfferMade"),
-          state: deal.roundsCount > 1 ? "done" : "upcoming",
-        },
-        {
-          id: "final",
-          time: deal.status === "accepted" || deal.status === "declined" ? updatedStr : "Pending",
-          label: t("screen.admin.dealsAndDisputes.dealAuditDetail.dealFinalizedOrRejected"),
-          state: deal.status === "accepted" || deal.status === "declined" ? "done" : "upcoming",
-        },
-      ]
-    : DEFAULT_HISTORY();
-
-  const handleFlag = async () => {
-    try {
-      await flagMutation.mutateAsync({
-        entryId: getSelectedAdminDealId() ?? "00000000-0000-0000-0000-000000000001",
-        reason: `Admin flagged deal for ${supplier} (${vehicle})`,
-      });
-    } catch {
-      // Ignore error when unauthenticated
-    }
-  };
+  const deal = dealsQuery.data?.items.find((item) => item.id === dealId);
 
   return (
-    <AdminPage>
-      <TePageHeader
-        title={t("screen.admin.dealsAndDisputes.dealAuditDetail.dealAuditDetail")}
-        description={t("screen.admin.dealsAndDisputes.dealAuditDetail.dealReferenceEveryOfferAnd")}
-        actions={
-          <TeButton variant="secondary" onClick={() => void handleFlag()}>
-            {t("screen.admin.dealsAndDisputes.dealAuditDetail.flagForReview")}
-          </TeButton>
-        }
-      />
-      <StatePreview
-        emptyTitle={t("screen.admin.dealsAndDisputes.dealAuditDetail.noOffers")}
-        emptyDescription={t("screen.admin.dealsAndDisputes.dealAuditDetail.thisDealHasNoOffers")}
-        loadingLabel={t("screen.admin.dealsAndDisputes.dealAuditDetail.loadingTheDeal")}
+    <AdminPage
+      title={t("screen.admin.dealsAndDisputes.dealAuditDetail.title")}
+      description={t("screen.admin.dealsAndDisputes.dealAuditDetail.description")}
+      actions={deal ? <DealStateBadge state={dealState(deal.status)} large /> : undefined}
+    >
+      <AdminQueryState
+        query={dealsQuery}
+        loadingLabel={t("screen.admin.dealsAndDisputes.dealAuditDetail.loading")}
       >
-        <AdminPanel
-          title={t("screen.admin.dealsAndDisputes.dealAuditDetail.partiesAndVehicleOrTrip")}
-        >
-          <AdminStatus status={OPEN()} />
-          <AdminFacts
-            items={[
-              {
-                label: t("screen.admin.dealsAndDisputes.dealAuditDetail.organization"),
-                value: organization,
-              },
-              {
-                label: t("screen.admin.dealsAndDisputes.dealAuditDetail.supplier"),
-                value: supplier,
-              },
-              {
-                label: t("screen.admin.dealsAndDisputes.dealAuditDetail.vehicleOrTrip"),
-                value: vehicle,
-              },
-              {
-                label: t("screen.admin.dealsAndDisputes.dealAuditDetail.finalAmount"),
-                value: finalAmount,
-              },
-            ]}
-          />
-        </AdminPanel>
-        <AdminPanel title={t("screen.admin.dealsAndDisputes.dealAuditDetail.offersInOrder")}>
-          <TeDataTable
-            columns={OFFER_COLUMNS()}
-            rows={offers}
-            getRowKey={(row) => row.id}
-            caption={t("screen.admin.dealsAndDisputes.dealAuditDetail.offersInOrderCaption")}
-            emptyTitle={t("screen.admin.dealsAndDisputes.dealAuditDetail.noOffersEmptyTitle")}
-            emptyDescription={t(
-              "screen.admin.dealsAndDisputes.dealAuditDetail.thisDealHasNoOffersEmptyDescription",
-            )}
-          />
-        </AdminPanel>
-        <AdminPanel title={t("screen.admin.dealsAndDisputes.dealAuditDetail.stateHistory")}>
-          <TeTimeline
-            items={history}
-            ariaLabel={t("screen.admin.dealsAndDisputes.dealAuditDetail.dealStateHistory")}
-          />
-        </AdminPanel>
-        <AdminPanel
-          title={t("screen.admin.dealsAndDisputes.dealAuditDetail.dealCostAndCommission")}
-        >
-          <AdminFacts
-            items={[
-              {
-                label: t("screen.admin.dealsAndDisputes.dealAuditDetail.dealCost"),
-                value: dealCost,
-              },
-              {
-                label: t("screen.admin.dealsAndDisputes.dealAuditDetail.commission"),
-                value: commission,
-              },
-            ]}
-          />
-          <TeInlineAlert
-            tone="warning"
-            title={t("screen.admin.dealsAndDisputes.dealAuditDetail.placeholderRate")}
-          >
-            {t("screen.admin.dealsAndDisputes.dealAuditDetail.theDealCostIs10")}
-          </TeInlineAlert>
-        </AdminPanel>
-        <AdminActions>
-          <AdminScreenLink slug="platform-financial-view" variant="ghost">
-            {t("screen.admin.dealsAndDisputes.dealAuditDetail.viewLedgerEntries")}
-          </AdminScreenLink>
-          <AdminScreenLink slug="deal-audit-list" variant="secondary">
-            {t("screen.admin.dealsAndDisputes.dealAuditDetail.backToDealList")}
-          </AdminScreenLink>
-        </AdminActions>
-      </StatePreview>
+        {deal ? (
+          <DealBody deal={deal} locale={locale} />
+        ) : (
+          <AdminCard>
+            <AdminEmpty
+              title={t("screen.admin.dealsAndDisputes.dealAuditDetail.notFoundTitle")}
+              description={t("screen.admin.dealsAndDisputes.dealAuditDetail.notFoundBody")}
+            />
+            <AdminLink screen="SCR-ADM-21" variant="secondary" className="self-start">
+              {t("screen.admin.dealsAndDisputes.dealAuditDetail.backToDeals")}
+            </AdminLink>
+          </AdminCard>
+        )}
+      </AdminQueryState>
     </AdminPage>
   );
 }

@@ -1,66 +1,64 @@
+// SCR-ADM-21 Deal audit list (docs/design/web/admin/SCR-ADM-21.dc.html): find deals by
+// organization, supplier or reference, state and date, and see their state, counter count and
+// final amount. A deal can be opened or flagged for review.
+import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { TeButton } from "@trips-app/ui/components/te-button";
-import { TeDataTable, type TeDataTableColumn } from "@trips-app/ui/components/te-data-table";
-import { TePageHeader } from "@trips-app/ui/components/te-page-header";
-import type { TeSelectOption } from "@trips-app/ui/components/te-select";
 import { t } from "@trips-app/i18n";
+
+import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
-import { StatePreview } from "../common/admin-state-preview";
-import { AdminScreenLink } from "../common/admin-links";
+
+import { AdminButton, AdminLink } from "../common/admin-actions";
+import { AdminInput, AdminSelect, type AdminOption } from "../common/admin-form";
+import { setSelectedAdminDealId } from "../common/admin-selection";
+import { AdminEmpty, AdminQueryState } from "../common/admin-states";
 import {
-  AdminFilterSelect,
-  AdminFilters,
+  AdminAlert,
+  AdminFilterBar,
   AdminPage,
-  AdminPagination,
-  AdminPanel,
-  AdminSearch,
-  AdminStatus,
-  setSelectedAdminDealId,
-  type AdminStatusPresentation,
-} from "../common/admin-shared";
+  AdminTable,
+  type AdminColumn,
+} from "../common/admin-ui";
+import { DealStateBadge, dealState, type DealState } from "./deal-state";
+import { formatMinor, shortId } from "./deals-format";
 
 interface DealRow {
   id: string;
   organization: string;
   supplier: string;
-  vehicle: string;
-  state: "open" | "finalized" | "rejected";
-  counters: string;
+  vehicleOrTrip: string;
+  state: DealState;
+  counters: number;
   finalAmount: string;
+  createdOn: string;
 }
 
-const DEFAULT_DEAL_ROWS: readonly DealRow[] = [];
-
-const STATE_PRESENTATION = (): Record<DealRow["state"], AdminStatusPresentation> => ({
-  open: {
-    tone: "info",
-    icon: "clock",
-    label: t("screen.admin.dealsAndDisputes.dealAuditList.open"),
-  },
-  finalized: {
-    tone: "success",
-    icon: "check",
-    label: t("screen.admin.dealsAndDisputes.dealAuditList.finalized"),
-  },
-  rejected: {
-    tone: "danger",
-    icon: "close",
-    label: t("screen.admin.dealsAndDisputes.dealAuditList.rejected"),
-  },
-});
-
-const STATE_OPTIONS = (): readonly TeSelectOption[] => [
-  { value: "all", label: t("screen.admin.dealsAndDisputes.dealAuditList.anyState") },
-  { value: "open", label: t("screen.admin.dealsAndDisputes.dealAuditList.openLabel") },
-  { value: "finalized", label: t("screen.admin.dealsAndDisputes.dealAuditList.finalizedLabel") },
-  { value: "rejected", label: t("screen.admin.dealsAndDisputes.dealAuditList.rejectedLabel") },
+const stateOptions = (): readonly AdminOption[] => [
+  { value: "all", label: t("screen.admin.dealsAndDisputes.dealAuditList.allStates") },
+  { value: "open", label: t("screen.admin.dealsAndDisputes.dealAuditList.open") },
+  { value: "finalized", label: t("screen.admin.dealsAndDisputes.dealAuditList.finalized") },
+  { value: "rejected", label: t("screen.admin.dealsAndDisputes.dealAuditList.rejected") },
 ];
 
-export function DealAuditList() {
-  const queryClient = useQueryClient();
-  const dealsQuery = useQuery(
-    orpc.negotiation.listOrganizationNegotiations.queryOptions({ input: {} }),
+function matchesSearch(row: DealRow, search: string): boolean {
+  const needle = search.trim().toLowerCase();
+  if (!needle) return true;
+  return [row.id, row.organization, row.supplier, row.vehicleOrTrip].some((value) =>
+    value.toLowerCase().includes(needle),
   );
+}
+
+export function DealAuditList() {
+  const { status: authStatus, locale } = useAuth();
+  const queryClient = useQueryClient();
+  const [search, setSearch] = useState("");
+  const [stateFilter, setStateFilter] = useState("all");
+  const [dateFilter, setDateFilter] = useState("");
+
+  const dealsQuery = useQuery({
+    ...orpc.negotiation.listOrganizationNegotiations.queryOptions({ input: {} }),
+    enabled: authStatus === "authenticated",
+  });
 
   const flagMutation = useMutation(
     orpc.accounting.flagReconciliationException.mutationOptions({
@@ -70,119 +68,163 @@ export function DealAuditList() {
     }),
   );
 
-  const rows: readonly DealRow[] =
-    dealsQuery.data?.items && dealsQuery.data.items.length > 0
-      ? dealsQuery.data.items.map((offer) => ({
-          id: offer.id,
-          organization: offer.tenantId.slice(0, 8),
-          supplier: offer.supplierAccountId.slice(0, 8),
-          vehicle: offer.vehicleId
-            ? `Vehicle ${offer.vehicleId.slice(0, 8)}`
-            : `Trip ${offer.tripId.slice(0, 8)}`,
-          state: (offer.status === "accepted"
-            ? "finalized"
-            : offer.status === "declined" || offer.status === "expired"
-              ? "rejected"
-              : "open") as DealRow["state"],
-          counters: String(Math.max(0, offer.roundsCount - 1)),
-          finalAmount: `${((offer.agreedPriceMinor ?? offer.currentOfferMinor) / 100).toFixed(
-            2,
-          )} ${offer.currencyCode}`,
-        }))
-      : DEFAULT_DEAL_ROWS;
+  const allRows: readonly DealRow[] = (dealsQuery.data?.items ?? []).map((deal) => {
+    const state = dealState(deal.status);
+    return {
+      id: deal.id,
+      organization: shortId(deal.tenantId),
+      supplier: shortId(deal.supplierAccountId),
+      vehicleOrTrip: deal.vehicleId
+        ? t("screen.admin.dealsAndDisputes.dealAuditList.vehicleRef", {
+            reference: shortId(deal.vehicleId),
+          })
+        : t("screen.admin.dealsAndDisputes.dealAuditList.tripRef", {
+            reference: shortId(deal.tripId),
+          }),
+      state,
+      counters: Math.max(0, deal.roundsCount - 1),
+      finalAmount:
+        state === "finalized" && deal.agreedPriceMinor !== null
+          ? formatMinor(deal.agreedPriceMinor, deal.currencyCode, locale)
+          : state === "rejected"
+            ? t("screen.admin.dealsAndDisputes.dealAuditList.notApplicable")
+            : "—",
+      createdOn: new Date(deal.createdAt).toISOString().slice(0, 10),
+    };
+  });
 
-  const handleFlag = async (row: DealRow) => {
-    try {
-      await flagMutation.mutateAsync({
-        entryId: row.id,
-        reason: `Deal audit review flagged for ${row.supplier} (${row.vehicle})`,
-      });
-    } catch {
-      // Ignore error when unauthenticated in preview
-    }
+  const rows = allRows.filter(
+    (row) =>
+      matchesSearch(row, search) &&
+      (stateFilter === "all" || row.state === stateFilter) &&
+      (!dateFilter || row.createdOn === dateFilter),
+  );
+
+  const flag = (row: DealRow) => {
+    flagMutation.mutate({
+      entryId: row.id,
+      reason: t("screen.admin.dealsAndDisputes.dealAuditList.flagReason", {
+        reference: shortId(row.id),
+      }),
+    });
   };
 
-  const columns: readonly TeDataTableColumn<DealRow>[] = [
-    { key: "organization", header: t("screen.admin.dealsAndDisputes.dealAuditList.organization") },
-    { key: "supplier", header: t("screen.admin.dealsAndDisputes.dealAuditList.supplier") },
-    { key: "vehicle", header: t("screen.admin.dealsAndDisputes.dealAuditList.vehicleOrTrip") },
+  const columns: readonly AdminColumn<DealRow>[] = [
+    {
+      key: "organization",
+      header: t("screen.admin.dealsAndDisputes.dealAuditList.organization"),
+      render: (row) => row.organization,
+    },
+    {
+      key: "supplier",
+      header: t("screen.admin.dealsAndDisputes.dealAuditList.supplier"),
+      render: (row) => row.supplier,
+    },
+    {
+      key: "vehicleOrTrip",
+      header: t("screen.admin.dealsAndDisputes.dealAuditList.vehicleOrTrip"),
+      render: (row) => row.vehicleOrTrip,
+    },
     {
       key: "state",
       header: t("screen.admin.dealsAndDisputes.dealAuditList.state"),
-      render: (row) => <AdminStatus status={STATE_PRESENTATION()[row.state]} />,
+      render: (row) => <DealStateBadge state={row.state} />,
     },
     {
       key: "counters",
-      header: t("screen.admin.dealsAndDisputes.dealAuditList.counterOffers"),
+      header: t("screen.admin.dealsAndDisputes.dealAuditList.counterCount"),
+      render: (row) => row.counters,
       align: "end",
     },
-    { key: "finalAmount", header: t("screen.admin.dealsAndDisputes.dealAuditList.finalAmount") },
     {
-      key: "open",
-      header: t("screen.admin.dealsAndDisputes.dealAuditList.action"),
+      key: "finalAmount",
+      header: t("screen.admin.dealsAndDisputes.dealAuditList.finalAmount"),
+      render: (row) => row.finalAmount,
+    },
+    {
+      key: "actions",
+      header: (
+        <span className="te-caption">
+          {t("screen.admin.dealsAndDisputes.dealAuditList.actions")}
+        </span>
+      ),
       render: (row) => (
-        <span className="flex flex-wrap gap-2">
-          <span onClick={() => setSelectedAdminDealId(row.id)}>
-            <AdminScreenLink
-              slug="deal-audit-detail"
-              variant="secondary"
-              ariaLabel={t("screen.admin.dealsAndDisputes.dealAuditList.openDealFor", {
-                supplier: row.supplier,
-              })}
-            >
-              {t("screen.admin.dealsAndDisputes.dealAuditList.openDeal")}
-            </AdminScreenLink>
-          </span>
-          <TeButton
-            variant="ghost"
-            aria-label={t("screen.admin.dealsAndDisputes.dealAuditList.flagDealForForReview", {
-              supplier: row.supplier,
+        <span className="flex flex-wrap items-center gap-4">
+          <AdminLink
+            screen="SCR-ADM-22"
+            params={{ dealId: row.id }}
+            ariaLabel={t("screen.admin.dealsAndDisputes.dealAuditList.openDealFor", {
+              reference: shortId(row.id),
             })}
-            onClick={() => void handleFlag(row)}
+            onClick={() => setSelectedAdminDealId(row.id)}
           >
+            {t("screen.admin.dealsAndDisputes.dealAuditList.openDeal")}
+          </AdminLink>
+          <AdminButton variant="link" disabled={flagMutation.isPending} onClick={() => flag(row)}>
             {t("screen.admin.dealsAndDisputes.dealAuditList.flagForReview")}
-          </TeButton>
+          </AdminButton>
         </span>
       ),
     },
   ];
 
   return (
-    <AdminPage>
-      <TePageHeader
-        title={t("screen.admin.dealsAndDisputes.dealAuditList.dealAuditList")}
-        description={t("screen.admin.dealsAndDisputes.dealAuditList.findDealsAndSeeTheir")}
-      />
-      <StatePreview
-        emptyTitle={t("screen.admin.dealsAndDisputes.dealAuditList.noDeals")}
-        emptyDescription={t("screen.admin.dealsAndDisputes.dealAuditList.noDealsMatchTheseFilters")}
-        loadingLabel={t("screen.admin.dealsAndDisputes.dealAuditList.loadingTheDeals")}
+    <AdminPage
+      title={t("screen.admin.dealsAndDisputes.dealAuditList.title")}
+      description={t("screen.admin.dealsAndDisputes.dealAuditList.description")}
+    >
+      <AdminFilterBar label={t("screen.admin.dealsAndDisputes.dealAuditList.filters")}>
+        <AdminInput
+          type="search"
+          label={t("screen.admin.dealsAndDisputes.dealAuditList.organizationOrSupplier")}
+          placeholder={t("screen.admin.dealsAndDisputes.dealAuditList.searchPlaceholder")}
+          value={search}
+          className="lg:flex-[2]"
+          onChange={(event) => setSearch(event.target.value)}
+        />
+        <AdminSelect
+          label={t("screen.admin.dealsAndDisputes.dealAuditList.state")}
+          options={stateOptions()}
+          value={stateFilter}
+          onValueChange={setStateFilter}
+        />
+        <AdminInput
+          type="date"
+          label={t("screen.admin.dealsAndDisputes.dealAuditList.date")}
+          value={dateFilter}
+          onChange={(event) => setDateFilter(event.target.value)}
+        />
+      </AdminFilterBar>
+      {flagMutation.isSuccess ? (
+        <AdminAlert tone="success">
+          {t("screen.admin.dealsAndDisputes.dealAuditList.flagged")}
+        </AdminAlert>
+      ) : null}
+      {flagMutation.isError ? (
+        <AdminAlert
+          tone="danger"
+          title={t("screen.admin.dealsAndDisputes.dealAuditList.flagFailed")}
+        >
+          {t("screen.admin.dealsAndDisputes.dealAuditList.flagFailedBody")}
+        </AdminAlert>
+      ) : null}
+      <AdminQueryState
+        query={dealsQuery}
+        loadingLabel={t("screen.admin.dealsAndDisputes.dealAuditList.loading")}
       >
-        <AdminFilters>
-          <AdminSearch
-            label={t("screen.admin.dealsAndDisputes.dealAuditList.organizationOrSupplier")}
-            placeholder={t("screen.admin.dealsAndDisputes.dealAuditList.nameOrDealReference")}
-            clearLabel={t("screen.admin.dealsAndDisputes.dealAuditList.clearSearch")}
-          />
-          <AdminFilterSelect
-            label={t("screen.admin.dealsAndDisputes.dealAuditList.stateLabel")}
-            options={STATE_OPTIONS()}
-          />
-        </AdminFilters>
-        <AdminPanel title={t("screen.admin.dealsAndDisputes.dealAuditList.deals")}>
-          <TeDataTable
-            columns={columns}
-            rows={rows}
-            getRowKey={(row) => row.id}
-            caption={t("screen.admin.dealsAndDisputes.dealAuditList.dealAuditListCaption")}
-            emptyTitle={t("screen.admin.dealsAndDisputes.dealAuditList.noDealsEmptyTitle")}
-            emptyDescription={t(
-              "screen.admin.dealsAndDisputes.dealAuditList.noDealsMatchTheseFiltersEmptyDescription",
-            )}
-          />
-          <AdminPagination pageCount={1} />
-        </AdminPanel>
-      </StatePreview>
+        <AdminTable
+          caption={t("screen.admin.dealsAndDisputes.dealAuditList.tableCaption")}
+          columns={columns}
+          rows={rows}
+          getRowKey={(row) => row.id}
+          empty={
+            <AdminEmpty
+              title={t("screen.admin.dealsAndDisputes.dealAuditList.emptyTitle")}
+              description={t("screen.admin.dealsAndDisputes.dealAuditList.emptyBody")}
+            />
+          }
+        />
+      </AdminQueryState>
     </AdminPage>
   );
 }

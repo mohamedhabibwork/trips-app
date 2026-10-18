@@ -367,238 +367,233 @@ export const en = {
   "screen.admin.common.adminStates.retryHelp":
     "The rest of the page is current. Retry to load this section.",
   // apps/web/src/screens/admin/coupons/platform-coupon-editor.tsx
-  "screen.admin.coupons.platformCouponEditor.percentage": "Percentage",
-  "screen.admin.coupons.platformCouponEditor.fixedAmount": "Fixed amount",
-  "screen.admin.coupons.platformCouponEditor.platformCouponEditor": "Platform coupon editor",
-  "screen.admin.coupons.platformCouponEditor.createACouponThatApplies":
-    "Create a coupon that applies across the whole platform.",
-  "screen.admin.coupons.platformCouponEditor.noCouponYet": "No coupon yet",
-  "screen.admin.coupons.platformCouponEditor.fillInTheCouponDetails":
-    "Fill in the coupon details to create one.",
-  "screen.admin.coupons.platformCouponEditor.loadingTheCoupon": "Loading the coupon.",
-  "screen.admin.coupons.platformCouponEditor.coupon": "Coupon",
-  "screen.admin.coupons.platformCouponEditor.code": "Code",
-  "screen.admin.coupons.platformCouponEditor.couponCode": "[Coupon code]",
-  "screen.admin.coupons.platformCouponEditor.type": "Type",
-  "screen.admin.coupons.platformCouponEditor.value": "Value",
-  "screen.admin.coupons.platformCouponEditor.valuePlaceholder": "[Value]",
-  "screen.admin.coupons.platformCouponEditor.usageLimit": "Usage limit",
-  "screen.admin.coupons.platformCouponEditor.limit": "[Limit]",
-  "screen.admin.coupons.platformCouponEditor.validFrom": "Valid from",
-  "screen.admin.coupons.platformCouponEditor.yyyyMmDd": "YYYY-MM-DD",
-  "screen.admin.coupons.platformCouponEditor.validUntil": "Valid until",
-  "screen.admin.coupons.platformCouponEditor.yyyyMmDdPlaceholder": "YYYY-MM-DD",
-  "screen.admin.coupons.platformCouponEditor.programs": "Programs",
-  "screen.admin.coupons.platformCouponEditor.programsThisCouponAppliesTo":
-    "[Programs this coupon applies to]",
-  "screen.admin.coupons.platformCouponEditor.audience": "Audience",
-  "screen.admin.coupons.platformCouponEditor.audiencePlaceholder": "[Audience]",
-  "screen.admin.coupons.platformCouponEditor.scope": "Scope",
-  "screen.admin.coupons.platformCouponEditor.scopeIsFixedAtPlatform":
-    "Scope is fixed at platform-wide.",
-  "screen.admin.coupons.platformCouponEditor.stackableWithOtherCoupons":
-    "Stackable with other coupons",
+  "screen.admin.coupons.platformCouponEditor.title": "Create platform coupon",
+  "screen.admin.coupons.platformCouponEditor.description":
+    "A platform-wide coupon applies across the whole platform.",
   "screen.admin.coupons.platformCouponEditor.cancel": "Cancel",
   "screen.admin.coupons.platformCouponEditor.saveCoupon": "Save coupon",
+  "screen.admin.coupons.platformCouponEditor.discount": "Discount",
+  "screen.admin.coupons.platformCouponEditor.code": "Code",
+  "screen.admin.coupons.platformCouponEditor.codeError": "Enter a code of 3 to 40 characters.",
+  "screen.admin.coupons.platformCouponEditor.type": "Type",
+  "screen.admin.coupons.platformCouponEditor.percentage": "Percentage",
+  "screen.admin.coupons.platformCouponEditor.fixedAmount": "Fixed amount",
+  "screen.admin.coupons.platformCouponEditor.value": "Value",
+  "screen.admin.coupons.platformCouponEditor.valueError": "Enter a value greater than zero.",
+  "screen.admin.coupons.platformCouponEditor.percentError":
+    "Enter a whole percentage from 1 to 100.",
+  "screen.admin.coupons.platformCouponEditor.maximumRedemptions": "Maximum redemptions",
+  "screen.admin.coupons.platformCouponEditor.maxRedemptionsError":
+    "Enter a whole number greater than zero, or leave it empty.",
+  "screen.admin.coupons.platformCouponEditor.validityAndPrograms": "Validity and programs",
+  "screen.admin.coupons.platformCouponEditor.validFrom": "Valid from",
+  "screen.admin.coupons.platformCouponEditor.validTo": "Valid to",
+  "screen.admin.coupons.platformCouponEditor.validToError":
+    "The end date must be on or after the start date.",
+  "screen.admin.coupons.platformCouponEditor.programs": "Programs",
+  "screen.admin.coupons.platformCouponEditor.programsUnavailable":
+    "Program selection is not available yet. The coupon applies to all programs.",
+  "screen.admin.coupons.platformCouponEditor.audienceAndStacking": "Audience and stacking",
+  "screen.admin.coupons.platformCouponEditor.audience": "Audience",
+  "screen.admin.coupons.platformCouponEditor.allAudiences": "All audiences",
+  "screen.admin.coupons.platformCouponEditor.stackable": "Stackable with other coupons",
+  "screen.admin.coupons.platformCouponEditor.audienceUnavailable":
+    "Audience and stacking cannot be set yet.",
+  "screen.admin.coupons.platformCouponEditor.scope": "Scope",
+  "screen.admin.coupons.platformCouponEditor.platformWideFixed": "Platform-wide, fixed",
+  "screen.admin.coupons.platformCouponEditor.scopeCannotChange":
+    "The scope cannot be changed on a platform coupon.",
+  "screen.admin.coupons.platformCouponEditor.validationHint":
+    "Validation errors appear next to the field that needs a fix.",
+  "screen.admin.coupons.platformCouponEditor.saveFailed": "The coupon was not saved",
+  "screen.admin.coupons.platformCouponEditor.saveFailedBody":
+    "Check the code is not already in use, then try again.",
   // apps/web/src/screens/admin/coupons/platform-coupons.tsx
-  "screen.admin.coupons.platformCoupons.active": "Active",
-  "screen.admin.coupons.platformCoupons.revoked": "Revoked",
-  "screen.admin.coupons.platformCoupons.expired": "Expired",
-  "screen.admin.coupons.platformCoupons.abuseFlag": "Abuse flag",
-  "screen.admin.coupons.platformCoupons.anyStatus": "Any status",
-  "screen.admin.coupons.platformCoupons.activeLabel": "Active",
-  "screen.admin.coupons.platformCoupons.revokedLabel": "Revoked",
-  "screen.admin.coupons.platformCoupons.expiredLabel": "Expired",
+  "screen.admin.coupons.platformCoupons.title": "Platform coupons",
+  "screen.admin.coupons.platformCoupons.description":
+    "Coupons from all creators. Revoke any coupon, and see abuse flags.",
+  "screen.admin.coupons.platformCoupons.createCoupon": "Create coupon",
+  "screen.admin.coupons.platformCoupons.abuseThresholdsNotSet": "Abuse thresholds are not set",
+  "screen.admin.coupons.platformCoupons.abuseThresholdsBody":
+    "Flags show the rule that raised them. The threshold values are still open.",
+  "screen.admin.coupons.platformCoupons.tableCaption": "Platform coupons",
   "screen.admin.coupons.platformCoupons.creatorType": "Creator type",
   "screen.admin.coupons.platformCoupons.code": "Code",
   "screen.admin.coupons.platformCoupons.status": "Status",
   "screen.admin.coupons.platformCoupons.redemptions": "Redemptions",
-  "screen.admin.coupons.platformCoupons.abuseFlagHeader": "Abuse flag",
-  "screen.admin.coupons.platformCoupons.none": "None",
+  "screen.admin.coupons.platformCoupons.abuseFlag": "Abuse flag",
   "screen.admin.coupons.platformCoupons.actions": "Actions",
-  "screen.admin.coupons.platformCoupons.revoke": "Revoke {code}",
-  "screen.admin.coupons.platformCoupons.revoke2": "Revoke",
-  "screen.admin.coupons.platformCoupons.openAnalyticsFor": "Open analytics for {code}",
+  "screen.admin.coupons.platformCoupons.organization": "Organization",
+  "screen.admin.coupons.platformCoupons.platform": "Platform",
+  "screen.admin.coupons.platformCoupons.active": "Active",
+  "screen.admin.coupons.platformCoupons.revoked": "Revoked",
+  "screen.admin.coupons.platformCoupons.expired": "Expired",
+  "screen.admin.coupons.platformCoupons.none": "None",
+  "screen.admin.coupons.platformCoupons.flaggedBy": "Flagged by {rule}",
+  "screen.admin.coupons.platformCoupons.usageLimitRule": "usage limit reached",
+  "screen.admin.coupons.platformCoupons.revoke": "Revoke",
+  "screen.admin.coupons.platformCoupons.revokeCode": "Revoke {code}",
   "screen.admin.coupons.platformCoupons.analytics": "Analytics",
-  "screen.admin.coupons.platformCoupons.platformCoupons": "Platform coupons",
-  "screen.admin.coupons.platformCoupons.couponsFromAllCreatorsRevoke":
-    "Coupons from all creators. Revoke any coupon.",
-  "screen.admin.coupons.platformCoupons.createPlatformCoupon": "Create platform coupon",
-  "screen.admin.coupons.platformCoupons.noCoupons": "No coupons",
-  "screen.admin.coupons.platformCoupons.noCouponsMatchThisFilter": "No coupons match this filter.",
-  "screen.admin.coupons.platformCoupons.loadingTheCoupons": "Loading the coupons.",
-  "screen.admin.coupons.platformCoupons.abuseThresholds": "Abuse thresholds",
-  "screen.admin.coupons.platformCoupons.thresholdsAreNotYetSet":
-    "Thresholds are not yet set (D-216). A flag shows the rule that raised it.",
-  "screen.admin.coupons.platformCoupons.statusLabel": "Status",
-  "screen.admin.coupons.platformCoupons.coupons": "Coupons",
-  "screen.admin.coupons.platformCoupons.platformCouponsCaption": "Platform coupons",
-  "screen.admin.coupons.platformCoupons.noCouponsEmptyTitle": "No coupons",
-  "screen.admin.coupons.platformCoupons.noCouponsMatchThisFilterEmptyDescription":
-    "No coupons match this filter.",
+  "screen.admin.coupons.platformCoupons.revokeFailed": "The coupon was not revoked",
+  "screen.admin.coupons.platformCoupons.revokeFailedBody":
+    "Try again. The coupon stays active until the revoke is saved.",
+  "screen.admin.coupons.platformCoupons.loading": "Loading the coupons…",
+  "screen.admin.coupons.platformCoupons.emptyTitle": "No coupons",
+  "screen.admin.coupons.platformCoupons.emptyBody": "No coupons have been created yet.",
   // apps/web/src/screens/admin/deals-and-disputes/deal-audit-detail.tsx
-  "screen.admin.dealsAndDisputes.dealAuditDetail.dealOpened": "Deal opened",
-  "screen.admin.dealsAndDisputes.dealAuditDetail.counterOfferMade": "Counter offer made",
-  "screen.admin.dealsAndDisputes.dealAuditDetail.dealFinalizedOrRejected":
-    "Deal finalized or rejected",
-  "screen.admin.dealsAndDisputes.dealAuditDetail.open": "Open",
-  "screen.admin.dealsAndDisputes.dealAuditDetail.step": "Step",
-  "screen.admin.dealsAndDisputes.dealAuditDetail.amount": "Amount",
-  "screen.admin.dealsAndDisputes.dealAuditDetail.actor": "Actor",
-  "screen.admin.dealsAndDisputes.dealAuditDetail.time": "Time",
-  "screen.admin.dealsAndDisputes.dealAuditDetail.dealAuditDetail": "Deal audit detail",
-  "screen.admin.dealsAndDisputes.dealAuditDetail.dealReferenceEveryOfferAnd":
-    "[Deal reference]. Every offer and state change, in order.",
-  "screen.admin.dealsAndDisputes.dealAuditDetail.flagForReview": "Flag for review",
-  "screen.admin.dealsAndDisputes.dealAuditDetail.noOffers": "No offers",
-  "screen.admin.dealsAndDisputes.dealAuditDetail.thisDealHasNoOffers":
-    "This deal has no offers yet.",
-  "screen.admin.dealsAndDisputes.dealAuditDetail.loadingTheDeal": "Loading the deal.",
-  "screen.admin.dealsAndDisputes.dealAuditDetail.partiesAndVehicleOrTrip":
-    "Parties and vehicle or trip",
+  "screen.admin.dealsAndDisputes.dealAuditDetail.title": "Deal audit detail",
+  "screen.admin.dealsAndDisputes.dealAuditDetail.description":
+    "Every offer and state change of this deal, in order.",
+  "screen.admin.dealsAndDisputes.dealAuditDetail.parties": "Parties",
   "screen.admin.dealsAndDisputes.dealAuditDetail.organization": "Organization",
   "screen.admin.dealsAndDisputes.dealAuditDetail.supplier": "Supplier",
   "screen.admin.dealsAndDisputes.dealAuditDetail.vehicleOrTrip": "Vehicle or trip",
-  "screen.admin.dealsAndDisputes.dealAuditDetail.finalAmount": "Final amount",
-  "screen.admin.dealsAndDisputes.dealAuditDetail.offersInOrder": "Offers, in order",
-  "screen.admin.dealsAndDisputes.dealAuditDetail.offersInOrderCaption": "Offers in order",
-  "screen.admin.dealsAndDisputes.dealAuditDetail.noOffersEmptyTitle": "No offers",
-  "screen.admin.dealsAndDisputes.dealAuditDetail.thisDealHasNoOffersEmptyDescription":
-    "This deal has no offers yet.",
-  "screen.admin.dealsAndDisputes.dealAuditDetail.stateHistory": "State history",
-  "screen.admin.dealsAndDisputes.dealAuditDetail.dealStateHistory": "Deal state history",
+  "screen.admin.dealsAndDisputes.dealAuditDetail.vehicleRef": "Vehicle {reference}",
+  "screen.admin.dealsAndDisputes.dealAuditDetail.tripRef": "Trip {reference}",
+  "screen.admin.dealsAndDisputes.dealAuditDetail.offersAndStateHistory": "Offers and state history",
+  "screen.admin.dealsAndDisputes.dealAuditDetail.step": "Step",
+  "screen.admin.dealsAndDisputes.dealAuditDetail.event": "Event",
+  "screen.admin.dealsAndDisputes.dealAuditDetail.amount": "Amount",
+  "screen.admin.dealsAndDisputes.dealAuditDetail.actor": "Actor",
+  "screen.admin.dealsAndDisputes.dealAuditDetail.time": "Time",
+  "screen.admin.dealsAndDisputes.dealAuditDetail.offer": "Offer",
+  "screen.admin.dealsAndDisputes.dealAuditDetail.counterOffer": "Counter offer",
   "screen.admin.dealsAndDisputes.dealAuditDetail.dealCostAndCommission": "Deal cost and commission",
-  "screen.admin.dealsAndDisputes.dealAuditDetail.dealCost": "Deal cost",
+  "screen.admin.dealsAndDisputes.dealAuditDetail.baseTripPrice": "Base trip price",
   "screen.admin.dealsAndDisputes.dealAuditDetail.commission": "Commission",
-  "screen.admin.dealsAndDisputes.dealAuditDetail.placeholderRate": "Placeholder rate",
-  "screen.admin.dealsAndDisputes.dealAuditDetail.theDealCostIs10":
-    "The deal cost is 10% of the base trip price. This rate is a placeholder and stays open until Finance confirms it (D-15).",
+  "screen.admin.dealsAndDisputes.dealAuditDetail.dealCost": "Deal cost",
+  "screen.admin.dealsAndDisputes.dealAuditDetail.placeholderRate":
+    "Placeholder: 10% of base trip price [OPEN]",
+  "screen.admin.dealsAndDisputes.dealAuditDetail.ledger": "Ledger",
+  "screen.admin.dealsAndDisputes.dealAuditDetail.dealCostEntryLinked":
+    "Deal cost entry linked: {reference}",
   "screen.admin.dealsAndDisputes.dealAuditDetail.viewLedgerEntries": "View ledger entries",
-  "screen.admin.dealsAndDisputes.dealAuditDetail.backToDealList": "Back to deal list",
+  "screen.admin.dealsAndDisputes.dealAuditDetail.loading": "Loading the deal…",
+  "screen.admin.dealsAndDisputes.dealAuditDetail.notFoundTitle": "Deal not found",
+  "screen.admin.dealsAndDisputes.dealAuditDetail.notFoundBody":
+    "Open a deal from the deal audit list.",
+  "screen.admin.dealsAndDisputes.dealAuditDetail.backToDeals": "Back to deal audit",
   // apps/web/src/screens/admin/deals-and-disputes/deal-audit-list.tsx
+  "screen.admin.dealsAndDisputes.dealAuditList.title": "Deal audit",
+  "screen.admin.dealsAndDisputes.dealAuditList.description": "Find deals and see their state.",
+  "screen.admin.dealsAndDisputes.dealAuditList.filters": "Filters",
+  "screen.admin.dealsAndDisputes.dealAuditList.organizationOrSupplier": "Organization or supplier",
+  "screen.admin.dealsAndDisputes.dealAuditList.searchPlaceholder": "Search by name or reference",
+  "screen.admin.dealsAndDisputes.dealAuditList.state": "State",
+  "screen.admin.dealsAndDisputes.dealAuditList.allStates": "All states",
   "screen.admin.dealsAndDisputes.dealAuditList.open": "Open",
   "screen.admin.dealsAndDisputes.dealAuditList.finalized": "Finalized",
   "screen.admin.dealsAndDisputes.dealAuditList.rejected": "Rejected",
-  "screen.admin.dealsAndDisputes.dealAuditList.anyState": "Any state",
-  "screen.admin.dealsAndDisputes.dealAuditList.openLabel": "Open",
-  "screen.admin.dealsAndDisputes.dealAuditList.finalizedLabel": "Finalized",
-  "screen.admin.dealsAndDisputes.dealAuditList.rejectedLabel": "Rejected",
+  "screen.admin.dealsAndDisputes.dealAuditList.date": "Date",
+  "screen.admin.dealsAndDisputes.dealAuditList.tableCaption": "Deals",
   "screen.admin.dealsAndDisputes.dealAuditList.organization": "Organization",
   "screen.admin.dealsAndDisputes.dealAuditList.supplier": "Supplier",
   "screen.admin.dealsAndDisputes.dealAuditList.vehicleOrTrip": "Vehicle or trip",
-  "screen.admin.dealsAndDisputes.dealAuditList.state": "State",
-  "screen.admin.dealsAndDisputes.dealAuditList.counterOffers": "Counter offers",
+  "screen.admin.dealsAndDisputes.dealAuditList.vehicleRef": "Vehicle {reference}",
+  "screen.admin.dealsAndDisputes.dealAuditList.tripRef": "Trip {reference}",
+  "screen.admin.dealsAndDisputes.dealAuditList.counterCount": "Counter count",
   "screen.admin.dealsAndDisputes.dealAuditList.finalAmount": "Final amount",
-  "screen.admin.dealsAndDisputes.dealAuditList.action": "Action",
-  "screen.admin.dealsAndDisputes.dealAuditList.openDealFor": "Open deal for {supplier}",
+  "screen.admin.dealsAndDisputes.dealAuditList.notApplicable": "Not applicable",
+  "screen.admin.dealsAndDisputes.dealAuditList.actions": "Actions",
   "screen.admin.dealsAndDisputes.dealAuditList.openDeal": "Open deal",
-  "screen.admin.dealsAndDisputes.dealAuditList.flagDealForForReview":
-    "Flag deal for {supplier} for review",
+  "screen.admin.dealsAndDisputes.dealAuditList.openDealFor": "Open deal {reference}",
   "screen.admin.dealsAndDisputes.dealAuditList.flagForReview": "Flag for review",
-  "screen.admin.dealsAndDisputes.dealAuditList.dealAuditList": "Deal audit list",
-  "screen.admin.dealsAndDisputes.dealAuditList.findDealsAndSeeTheir":
-    "Find deals and see their state.",
-  "screen.admin.dealsAndDisputes.dealAuditList.noDeals": "No deals",
-  "screen.admin.dealsAndDisputes.dealAuditList.noDealsMatchTheseFilters":
-    "No deals match these filters.",
-  "screen.admin.dealsAndDisputes.dealAuditList.loadingTheDeals": "Loading the deals.",
-  "screen.admin.dealsAndDisputes.dealAuditList.organizationOrSupplier": "Organization or supplier",
-  "screen.admin.dealsAndDisputes.dealAuditList.nameOrDealReference": "Name or deal reference",
-  "screen.admin.dealsAndDisputes.dealAuditList.clearSearch": "Clear search",
-  "screen.admin.dealsAndDisputes.dealAuditList.stateLabel": "State",
-  "screen.admin.dealsAndDisputes.dealAuditList.deals": "Deals",
-  "screen.admin.dealsAndDisputes.dealAuditList.dealAuditListCaption": "Deal audit list",
-  "screen.admin.dealsAndDisputes.dealAuditList.noDealsEmptyTitle": "No deals",
-  "screen.admin.dealsAndDisputes.dealAuditList.noDealsMatchTheseFiltersEmptyDescription":
-    "No deals match these filters.",
+  "screen.admin.dealsAndDisputes.dealAuditList.flagReason":
+    "Deal {reference} flagged for review from the deal audit",
+  "screen.admin.dealsAndDisputes.dealAuditList.flagged": "The deal is flagged for review.",
+  "screen.admin.dealsAndDisputes.dealAuditList.flagFailed": "The deal was not flagged",
+  "screen.admin.dealsAndDisputes.dealAuditList.flagFailedBody": "Try again in a moment.",
+  "screen.admin.dealsAndDisputes.dealAuditList.loading": "Loading the deals…",
+  "screen.admin.dealsAndDisputes.dealAuditList.emptyTitle": "No deals",
+  "screen.admin.dealsAndDisputes.dealAuditList.emptyBody": "No deals match these filters.",
+  // apps/web/src/screens/admin/deals-and-disputes/deal-state.tsx
+  "screen.admin.dealsAndDisputes.dealState.open": "Open",
+  "screen.admin.dealsAndDisputes.dealState.finalized": "Finalized",
+  "screen.admin.dealsAndDisputes.dealState.rejected": "Rejected",
   // apps/web/src/screens/admin/deals-and-disputes/dispute-detail-and-refund-decision.tsx
-  "screen.admin.dealsAndDisputes.disputeDetailAndRefundDecision.labels.noRefundIsQueued":
-    "No refund is queued when you save.",
-  "screen.admin.dealsAndDisputes.disputeDetailAndRefundDecision.labels.theRefundIsLinked":
-    "The refund is linked to this dispute and booking and is queued when you save.",
-  "screen.admin.dealsAndDisputes.disputeDetailAndRefundDecision.labels.aRefundOutsidePolicy":
-    "A refund outside policy needs a reason. Your identity is recorded in the audit log.",
-  "screen.admin.dealsAndDisputes.disputeDetailAndRefundDecision.open": "Open",
-  "screen.admin.dealsAndDisputes.disputeDetailAndRefundDecision.noRefund": "No refund",
-  "screen.admin.dealsAndDisputes.disputeDetailAndRefundDecision.refundWithinPolicy":
-    "Refund within policy",
-  "screen.admin.dealsAndDisputes.disputeDetailAndRefundDecision.refundOutsidePolicy":
-    "Refund outside policy",
-  "screen.admin.dealsAndDisputes.disputeDetailAndRefundDecision.disputeDetailAndRefundDecision":
-    "Dispute detail and refund decision",
-  "screen.admin.dealsAndDisputes.disputeDetailAndRefundDecision.recordTheOutcomeAndAny":
+  "screen.admin.dealsAndDisputes.disputeDetailAndRefundDecision.title": "Dispute detail",
+  "screen.admin.dealsAndDisputes.disputeDetailAndRefundDecision.description":
     "Record the outcome and any refund linked to this dispute.",
-  "screen.admin.dealsAndDisputes.disputeDetailAndRefundDecision.noOutcomeYet": "No outcome yet",
-  "screen.admin.dealsAndDisputes.disputeDetailAndRefundDecision.recordTheOutcomeOnceBoth":
-    "Record the outcome once both parties have been heard.",
-  "screen.admin.dealsAndDisputes.disputeDetailAndRefundDecision.loadingTheDispute":
-    "Loading the dispute.",
-  "screen.admin.dealsAndDisputes.disputeDetailAndRefundDecision.partiesAndBooking":
-    "Parties and booking",
+  "screen.admin.dealsAndDisputes.disputeDetailAndRefundDecision.cancel": "Cancel",
+  "screen.admin.dealsAndDisputes.disputeDetailAndRefundDecision.saveOutcome": "Save outcome",
+  "screen.admin.dealsAndDisputes.disputeDetailAndRefundDecision.parties":
+    "Parties, booking and payment",
   "screen.admin.dealsAndDisputes.disputeDetailAndRefundDecision.traveler": "Traveler",
   "screen.admin.dealsAndDisputes.disputeDetailAndRefundDecision.organization": "Organization",
   "screen.admin.dealsAndDisputes.disputeDetailAndRefundDecision.booking": "Booking",
   "screen.admin.dealsAndDisputes.disputeDetailAndRefundDecision.payment": "Payment",
-  "screen.admin.dealsAndDisputes.disputeDetailAndRefundDecision.amountPaid": "Amount paid",
-  "screen.admin.dealsAndDisputes.disputeDetailAndRefundDecision.outcomeAndRefund":
-    "Outcome and refund",
-  "screen.admin.dealsAndDisputes.disputeDetailAndRefundDecision.outcomeSummaryRequired":
-    "Outcome summary (required)",
-  "screen.admin.dealsAndDisputes.disputeDetailAndRefundDecision.outcomeOfTheDispute":
-    "[Outcome of the dispute]",
+  "screen.admin.dealsAndDisputes.disputeDetailAndRefundDecision.paymentValue":
+    "{reference}, {amount}",
+  "screen.admin.dealsAndDisputes.disputeDetailAndRefundDecision.outcome": "Outcome",
+  "screen.admin.dealsAndDisputes.disputeDetailAndRefundDecision.withinPolicy":
+    "Resolved within policy",
+  "screen.admin.dealsAndDisputes.disputeDetailAndRefundDecision.withinPolicyBody":
+    "A refund is queued and linked to this dispute and booking.",
+  "screen.admin.dealsAndDisputes.disputeDetailAndRefundDecision.outsidePolicy":
+    "Resolved outside policy",
+  "screen.admin.dealsAndDisputes.disputeDetailAndRefundDecision.outsidePolicyBody":
+    "A reason is required and is audited with your admin identity.",
+  "screen.admin.dealsAndDisputes.disputeDetailAndRefundDecision.stillOpen": "Still open",
+  "screen.admin.dealsAndDisputes.disputeDetailAndRefundDecision.stillOpenBody":
+    "No refund is queued.",
   "screen.admin.dealsAndDisputes.disputeDetailAndRefundDecision.refund": "Refund",
-  "screen.admin.dealsAndDisputes.disputeDetailAndRefundDecision.aRefundStaysPendingUntil":
-    "A refund stays pending until the gateway confirms it.",
-  "screen.admin.dealsAndDisputes.disputeDetailAndRefundDecision.refundTitle": "Refund",
-  "screen.admin.dealsAndDisputes.disputeDetailAndRefundDecision.reasonForThisOutcomeRequired":
-    "Reason for this outcome (required)",
-  "screen.admin.dealsAndDisputes.disputeDetailAndRefundDecision.requiredForEveryOutcomeA":
-    "Required for every outcome. A refund outside policy is audited with this reason.",
-  "screen.admin.dealsAndDisputes.disputeDetailAndRefundDecision.saveOutcome": "Save outcome",
-  "screen.admin.dealsAndDisputes.disputeDetailAndRefundDecision.saveThisOutcomeAndRefund":
-    "Save this outcome and refund?",
-  "screen.admin.dealsAndDisputes.disputeDetailAndRefundDecision.aRefundIsQueuedThrough":
-    "A refund is queued through the original gateway. The decision is audited.",
-  "screen.admin.dealsAndDisputes.disputeDetailAndRefundDecision.saveOutcomeConfirmLabel":
-    "Save outcome",
-  "screen.admin.dealsAndDisputes.disputeDetailAndRefundDecision.cancel": "Cancel",
+  "screen.admin.dealsAndDisputes.disputeDetailAndRefundDecision.refundAmount": "Refund amount",
+  "screen.admin.dealsAndDisputes.disputeDetailAndRefundDecision.amountError":
+    "Enter a refund amount greater than zero.",
+  "screen.admin.dealsAndDisputes.disputeDetailAndRefundDecision.linkedTo":
+    "Linked to dispute {dispute} and booking {booking}",
+  "screen.admin.dealsAndDisputes.disputeDetailAndRefundDecision.refundPending":
+    "Refund pending gateway confirmation",
+  "screen.admin.dealsAndDisputes.disputeDetailAndRefundDecision.reason": "Reason",
+  "screen.admin.dealsAndDisputes.disputeDetailAndRefundDecision.reasonPlaceholder":
+    "Required for an outside-policy outcome",
+  "screen.admin.dealsAndDisputes.disputeDetailAndRefundDecision.reasonError":
+    "Enter a reason for an outside-policy outcome.",
+  "screen.admin.dealsAndDisputes.disputeDetailAndRefundDecision.auditNote":
+    "Your admin identity and the time are recorded in the audit log.",
+  "screen.admin.dealsAndDisputes.disputeDetailAndRefundDecision.outsidePolicyRule":
+    "An outside-policy outcome cannot be saved without a reason.",
+  "screen.admin.dealsAndDisputes.disputeDetailAndRefundDecision.saveFailed":
+    "The outcome was not saved",
+  "screen.admin.dealsAndDisputes.disputeDetailAndRefundDecision.saveFailedBody":
+    "The refund could not be queued. Check the payment, then try again.",
+  "screen.admin.dealsAndDisputes.disputeDetailAndRefundDecision.loading": "Loading the dispute…",
+  "screen.admin.dealsAndDisputes.disputeDetailAndRefundDecision.notFoundTitle": "Dispute not found",
+  "screen.admin.dealsAndDisputes.disputeDetailAndRefundDecision.notFoundBody":
+    "Open a dispute from the disputes queue.",
+  "screen.admin.dealsAndDisputes.disputeDetailAndRefundDecision.backToDisputes":
+    "Back to disputes queue",
   // apps/web/src/screens/admin/deals-and-disputes/disputes-queue.tsx
-  "screen.admin.dealsAndDisputes.disputesQueue.awaitingAcknowledgement": "Awaiting acknowledgement",
+  "screen.admin.dealsAndDisputes.disputesQueue.title": "Disputes queue",
+  "screen.admin.dealsAndDisputes.disputesQueue.description": "Work disputes between parties.",
+  "screen.admin.dealsAndDisputes.disputesQueue.deadlines":
+    "Acknowledge each dispute within {acknowledge} working days. Resolve it within {resolve} working days.",
+  "screen.admin.dealsAndDisputes.disputesQueue.filters": "Filters",
+  "screen.admin.dealsAndDisputes.disputesQueue.type": "Type",
+  "screen.admin.dealsAndDisputes.disputesQueue.allTypes": "All types",
+  "screen.admin.dealsAndDisputes.disputesQueue.state": "State",
+  "screen.admin.dealsAndDisputes.disputesQueue.allStates": "All states",
+  "screen.admin.dealsAndDisputes.disputesQueue.open": "Open",
   "screen.admin.dealsAndDisputes.disputesQueue.acknowledged": "Acknowledged",
   "screen.admin.dealsAndDisputes.disputesQueue.resolved": "Resolved",
-  "screen.admin.dealsAndDisputes.disputesQueue.allTypes": "All types",
-  "screen.admin.dealsAndDisputes.disputesQueue.disputeTypesPendingD251":
-    "[Dispute types, pending D-251]",
-  "screen.admin.dealsAndDisputes.disputesQueue.anyState": "Any state",
-  "screen.admin.dealsAndDisputes.disputesQueue.awaitingAcknowledgementLabel":
-    "Awaiting acknowledgement",
-  "screen.admin.dealsAndDisputes.disputesQueue.acknowledgedLabel": "Acknowledged",
-  "screen.admin.dealsAndDisputes.disputesQueue.resolvedLabel": "Resolved",
-  "screen.admin.dealsAndDisputes.disputesQueue.parties": "Parties",
-  "screen.admin.dealsAndDisputes.disputesQueue.bookingOrTrip": "Booking or trip",
-  "screen.admin.dealsAndDisputes.disputesQueue.type": "Type",
+  "screen.admin.dealsAndDisputes.disputesQueue.openAcknowledgementOverdue":
+    "Open, acknowledgement overdue",
   "screen.admin.dealsAndDisputes.disputesQueue.age": "Age",
-  "screen.admin.dealsAndDisputes.disputesQueue.state": "State",
+  "screen.admin.dealsAndDisputes.disputesQueue.anyAge": "Any age",
+  "screen.admin.dealsAndDisputes.disputesQueue.moreThanDays": "More than {days} working days",
+  "screen.admin.dealsAndDisputes.disputesQueue.tableCaption": "Disputes",
+  "screen.admin.dealsAndDisputes.disputesQueue.parties": "Parties",
+  "screen.admin.dealsAndDisputes.disputesQueue.organizationRef": "Organization {reference}",
+  "screen.admin.dealsAndDisputes.disputesQueue.bookingOrTrip": "Booking or trip",
+  "screen.admin.dealsAndDisputes.disputesQueue.bookingRef": "Booking {reference}",
+  "screen.admin.dealsAndDisputes.disputesQueue.tripRef": "Trip {reference}",
+  "screen.admin.dealsAndDisputes.disputesQueue.workingDays": "{days} working days",
   "screen.admin.dealsAndDisputes.disputesQueue.action": "Action",
-  "screen.admin.dealsAndDisputes.disputesQueue.openDispute": "Open dispute {reference}",
-  "screen.admin.dealsAndDisputes.disputesQueue.openDispute2": "Open dispute",
-  "screen.admin.dealsAndDisputes.disputesQueue.disputesQueue": "Disputes queue",
-  "screen.admin.dealsAndDisputes.disputesQueue.workDisputesBetweenParties":
-    "Work disputes between parties.",
-  "screen.admin.dealsAndDisputes.disputesQueue.noOpenDisputes": "No open disputes",
-  "screen.admin.dealsAndDisputes.disputesQueue.noDisputesMatchTheseFilters":
-    "No disputes match these filters.",
-  "screen.admin.dealsAndDisputes.disputesQueue.loadingTheDisputes": "Loading the disputes.",
-  "screen.admin.dealsAndDisputes.disputesQueue.deadlines": "Deadlines",
-  "screen.admin.dealsAndDisputes.disputesQueue.acknowledgeADisputeWithin2":
-    "Acknowledge a dispute within 2 working days. Resolve it within 10 working days (D-32).",
-  "screen.admin.dealsAndDisputes.disputesQueue.typeLabel": "Type",
-  "screen.admin.dealsAndDisputes.disputesQueue.stateLabel": "State",
-  "screen.admin.dealsAndDisputes.disputesQueue.disputes": "Disputes",
-  "screen.admin.dealsAndDisputes.disputesQueue.disputesQueueCaption": "Disputes queue",
-  "screen.admin.dealsAndDisputes.disputesQueue.noOpenDisputesEmptyTitle": "No open disputes",
-  "screen.admin.dealsAndDisputes.disputesQueue.noDisputesMatchTheseFiltersEmptyDescription":
-    "No disputes match these filters.",
+  "screen.admin.dealsAndDisputes.disputesQueue.openDispute": "Open dispute",
+  "screen.admin.dealsAndDisputes.disputesQueue.openDisputeFor": "Open dispute for {reference}",
+  "screen.admin.dealsAndDisputes.disputesQueue.loading": "Loading the disputes…",
+  "screen.admin.dealsAndDisputes.disputesQueue.emptyTitle": "No disputes",
+  "screen.admin.dealsAndDisputes.disputesQueue.emptyBody": "No disputes match these filters.",
   // apps/web/src/screens/admin/directory/admin-staff-accounts.tsx
   "screen.admin.directory.adminStaffAccounts.title": "Admin staff accounts",
   "screen.admin.directory.adminStaffAccounts.description":
@@ -923,37 +918,39 @@ export const en = {
   "screen.admin.finance.reconciliationExceptions.backToFinancialView": "Back to financial view",
   "screen.admin.finance.reconciliationExceptions.resolveException2": "Resolve exception",
   // apps/web/src/screens/admin/finance/revenue-dashboard.tsx
+  "screen.admin.finance.revenueDashboard.title": "Revenue dashboard",
+  "screen.admin.finance.revenueDashboard.description":
+    "MRR, churn, upgrades, downgrades and plan distribution for a period.",
+  "screen.admin.finance.revenueDashboard.period": "Period",
   "screen.admin.finance.revenueDashboard.thisMonth": "This month",
   "screen.admin.finance.revenueDashboard.thisQuarter": "This quarter",
   "screen.admin.finance.revenueDashboard.thisYear": "This year",
+  "screen.admin.finance.revenueDashboard.openFinancialView": "Open financial view",
+  "screen.admin.finance.revenueDashboard.filters": "Filters",
+  "screen.admin.finance.revenueDashboard.role": "Role",
   "screen.admin.finance.revenueDashboard.allRoles": "All roles",
   "screen.admin.finance.revenueDashboard.plan": "Plan",
-  "screen.admin.finance.revenueDashboard.subscriptions": "Subscriptions",
-  "screen.admin.finance.revenueDashboard.share": "Share",
-  "screen.admin.finance.revenueDashboard.revenueDashboard": "Revenue dashboard",
-  "screen.admin.finance.revenueDashboard.mrrChurnUpgradesAndDowngrades":
-    "MRR, churn, upgrades and downgrades for the selected period.",
-  "screen.admin.finance.revenueDashboard.openFinancialView": "Open financial view",
-  "screen.admin.finance.revenueDashboard.noDataForThisPeriod": "No data for this period",
-  "screen.admin.finance.revenueDashboard.noSubscriptionsWereActiveIn":
-    "No subscriptions were active in the selected period.",
-  "screen.admin.finance.revenueDashboard.loadingTheRevenueFigures": "Loading the revenue figures.",
-  "screen.admin.finance.revenueDashboard.period": "Period",
-  "screen.admin.finance.revenueDashboard.role": "Role",
-  "screen.admin.finance.revenueDashboard.monthlyRecurringRevenueInThe":
-    "Monthly recurring revenue, in the ISO currency code",
+  "screen.admin.finance.revenueDashboard.allPlans": "All plans",
+  "screen.admin.finance.revenueDashboard.billingStatus": "Billing status",
+  "screen.admin.finance.revenueDashboard.allStatuses": "All statuses",
+  "screen.admin.finance.revenueDashboard.organization": "Organization",
+  "screen.admin.finance.revenueDashboard.platformDriver": "Platform driver",
+  "screen.admin.finance.revenueDashboard.photographer": "Photographer",
+  "screen.admin.finance.revenueDashboard.traveler": "Traveler",
+  "screen.admin.finance.revenueDashboard.mrr": "MRR",
+  "screen.admin.finance.revenueDashboard.currencyForThePeriod": "{currency}, for the period",
   "screen.admin.finance.revenueDashboard.churn": "Churn",
-  "screen.admin.finance.revenueDashboard.subscriptionsCancelledInThePeriod":
-    "Subscriptions cancelled in the period",
+  "screen.admin.finance.revenueDashboard.shareOfSubscriptionsLost": "Share of subscriptions lost",
   "screen.admin.finance.revenueDashboard.upgrades": "Upgrades",
-  "screen.admin.finance.revenueDashboard.planChangesToAHigher": "Plan changes to a higher tier",
+  "screen.admin.finance.revenueDashboard.planMovedUp": "Plan moved up",
   "screen.admin.finance.revenueDashboard.downgrades": "Downgrades",
-  "screen.admin.finance.revenueDashboard.planChangesToALower": "Plan changes to a lower tier",
+  "screen.admin.finance.revenueDashboard.planMovedDown": "Plan moved down",
   "screen.admin.finance.revenueDashboard.planDistribution": "Plan distribution",
-  "screen.admin.finance.revenueDashboard.planDistributionCaption": "Plan distribution",
-  "screen.admin.finance.revenueDashboard.noDataForThisPeriodEmptyTitle": "No data for this period",
-  "screen.admin.finance.revenueDashboard.noSubscriptionsWereActiveInEmptyDescription":
-    "No subscriptions were active in the selected period.",
+  "screen.admin.finance.revenueDashboard.subscriptions": "Subscriptions",
+  "screen.admin.finance.revenueDashboard.shareOfTotal": "Share of total",
+  "screen.admin.finance.revenueDashboard.loading": "Loading the plan catalog…",
+  "screen.admin.finance.revenueDashboard.emptyTitle": "No plans",
+  "screen.admin.finance.revenueDashboard.emptyBody": "No plans match these filters.",
   // apps/web/src/screens/admin/finance/settlements-tracker.tsx
   "screen.admin.finance.settlementsTracker.open": "Open",
   "screen.admin.finance.settlementsTracker.settled": "Settled",

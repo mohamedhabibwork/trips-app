@@ -1,69 +1,68 @@
+// SCR-ADM-19 Platform coupons (docs/design/web/admin/SCR-ADM-19.dc.html): coupons from all
+// creators with their status, redemptions and abuse flag; an admin can revoke any active coupon.
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { TeButton } from "@trips-app/ui/components/te-button";
-import { TeDataTable, type TeDataTableColumn } from "@trips-app/ui/components/te-data-table";
-import { TeInlineAlert } from "@trips-app/ui/components/te-inline-alert";
-import { TePageHeader } from "@trips-app/ui/components/te-page-header";
-import type { TeSelectOption } from "@trips-app/ui/components/te-select";
 import { t } from "@trips-app/i18n";
+
+import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
-import { StatePreview } from "../common/admin-state-preview";
-import { AdminScreenLink } from "../common/admin-links";
+
+import { AdminButton, AdminLink } from "../common/admin-actions";
+import { setSelectedAdminCouponId } from "../common/admin-selection";
+import { AdminEmpty, AdminQueryState } from "../common/admin-states";
 import {
-  AdminFilterSelect,
-  AdminFilters,
+  AdminAlert,
+  AdminBadge,
   AdminPage,
-  AdminPagination,
-  AdminPanel,
-  AdminStatus,
-  setSelectedAdminCouponId,
-  type AdminStatusPresentation,
-} from "../common/admin-shared";
+  AdminTable,
+  type AdminColumn,
+  type AdminTone,
+} from "../common/admin-ui";
+
+/** The editor route needs an ID; "new" opens it for a coupon that does not exist yet. */
+export const NEW_COUPON_ID = "new";
+
+type CouponStatus = "active" | "paused" | "expired";
 
 interface CouponRow {
   id: string;
   creator: string;
   code: string;
-  state: "active" | "revoked" | "expired";
-  redemptions: string;
-  abuseRule: string | null;
+  status: CouponStatus;
+  redemptions: number;
+  usageLimitReached: boolean;
 }
 
-const DEFAULT_COUPON_ROWS: readonly CouponRow[] = [];
+const STATUS_PRESENTATION: Record<CouponStatus, { key: string; tone: AdminTone }> = {
+  active: { key: "screen.admin.coupons.platformCoupons.active", tone: "ok" },
+  paused: { key: "screen.admin.coupons.platformCoupons.revoked", tone: "info" },
+  expired: { key: "screen.admin.coupons.platformCoupons.expired", tone: "neutral" },
+};
 
-const STATE_PRESENTATION = (): Record<CouponRow["state"], AdminStatusPresentation> => ({
-  active: {
-    tone: "success",
-    icon: "check",
-    label: t("screen.admin.coupons.platformCoupons.active"),
-  },
-  revoked: {
-    tone: "danger",
-    icon: "close",
-    label: t("screen.admin.coupons.platformCoupons.revoked"),
-  },
-  expired: {
-    tone: "neutral",
-    icon: "clock",
-    label: t("screen.admin.coupons.platformCoupons.expired"),
-  },
-});
+function creatorLabel(scope: string): string {
+  if (scope === "organization") return t("screen.admin.coupons.platformCoupons.organization");
+  return t("screen.admin.coupons.platformCoupons.platform");
+}
 
-const ABUSE_FLAG = (): AdminStatusPresentation => ({
-  tone: "warning",
-  icon: "alert",
-  label: t("screen.admin.coupons.platformCoupons.abuseFlag"),
-});
-
-const STATE_OPTIONS = (): readonly TeSelectOption[] => [
-  { value: "all", label: t("screen.admin.coupons.platformCoupons.anyStatus") },
-  { value: "active", label: t("screen.admin.coupons.platformCoupons.activeLabel") },
-  { value: "revoked", label: t("screen.admin.coupons.platformCoupons.revokedLabel") },
-  { value: "expired", label: t("screen.admin.coupons.platformCoupons.expiredLabel") },
-];
+function AbuseFlag({ row }: { row: CouponRow }) {
+  if (!row.usageLimitReached) {
+    return <span className="te-caption">{t("screen.admin.coupons.platformCoupons.none")}</span>;
+  }
+  return (
+    <AdminBadge tone="warn">
+      {t("screen.admin.coupons.platformCoupons.flaggedBy", {
+        rule: t("screen.admin.coupons.platformCoupons.usageLimitRule"),
+      })}
+    </AdminBadge>
+  );
+}
 
 export function PlatformCoupons() {
+  const { status: authStatus } = useAuth();
   const queryClient = useQueryClient();
-  const couponsQuery = useQuery(orpc.coupons.listPlatformCoupons.queryOptions({ input: {} }));
+  const couponsQuery = useQuery({
+    ...orpc.coupons.listPlatformCoupons.queryOptions({ input: {} }),
+    enabled: authStatus === "authenticated",
+  });
 
   const revokeMutation = useMutation(
     orpc.coupons.updateStatus.mutationOptions({
@@ -73,130 +72,120 @@ export function PlatformCoupons() {
     }),
   );
 
-  const rows: readonly CouponRow[] =
-    couponsQuery.data?.items && couponsQuery.data.items.length > 0
-      ? couponsQuery.data.items.map((coupon) => ({
-          id: coupon.id,
-          creator: coupon.scope === "platform" ? "Platform" : "Organization",
-          code: coupon.code,
-          state: (coupon.status === "paused"
-            ? "revoked"
-            : coupon.status === "expired"
-              ? "expired"
-              : "active") as CouponRow["state"],
-          redemptions: String(coupon.redemptionsCount ?? 0),
-          abuseRule:
-            coupon.maxRedemptions !== null && coupon.redemptionsCount >= coupon.maxRedemptions
-              ? "Usage limit reached"
-              : null,
-        }))
-      : DEFAULT_COUPON_ROWS;
+  const rows: readonly CouponRow[] = (couponsQuery.data?.items ?? []).map((coupon) => ({
+    id: coupon.id,
+    creator: creatorLabel(coupon.scope),
+    code: coupon.code,
+    status: coupon.status,
+    redemptions: coupon.redemptionsCount,
+    usageLimitReached:
+      coupon.maxRedemptions !== null && coupon.redemptionsCount >= coupon.maxRedemptions,
+  }));
 
-  const handleRevoke = async (row: CouponRow) => {
-    try {
-      await revokeMutation.mutateAsync({
-        couponId: row.id,
-        status: "paused",
-      });
-    } catch {
-      // Optimistic fallback kept
-    }
+  const revoke = (row: CouponRow) => {
+    revokeMutation.mutate({ couponId: row.id, status: "paused" });
   };
 
-  const columns: readonly TeDataTableColumn<CouponRow>[] = [
-    { key: "creator", header: t("screen.admin.coupons.platformCoupons.creatorType") },
-    { key: "code", header: t("screen.admin.coupons.platformCoupons.code") },
+  const columns: readonly AdminColumn<CouponRow>[] = [
     {
-      key: "state",
+      key: "creator",
+      header: t("screen.admin.coupons.platformCoupons.creatorType"),
+      render: (row) => row.creator,
+    },
+    {
+      key: "code",
+      header: t("screen.admin.coupons.platformCoupons.code"),
+      render: (row) => row.code,
+    },
+    {
+      key: "status",
       header: t("screen.admin.coupons.platformCoupons.status"),
-      render: (row) => <AdminStatus status={STATE_PRESENTATION()[row.state]} />,
+      render: (row) => (
+        <AdminBadge tone={STATUS_PRESENTATION[row.status].tone} icon={false}>
+          {t(STATUS_PRESENTATION[row.status].key)}
+        </AdminBadge>
+      ),
     },
     {
       key: "redemptions",
       header: t("screen.admin.coupons.platformCoupons.redemptions"),
+      render: (row) => row.redemptions,
       align: "end",
     },
     {
-      key: "abuseRule",
-      header: t("screen.admin.coupons.platformCoupons.abuseFlagHeader"),
-      render: (row) =>
-        row.abuseRule === null ? (
-          <span>{t("screen.admin.coupons.platformCoupons.none")}</span>
-        ) : (
-          <span className="flex flex-col gap-1">
-            <AdminStatus status={ABUSE_FLAG()} />
-            <span className="te-caption">{row.abuseRule}</span>
-          </span>
-        ),
+      key: "abuse",
+      header: t("screen.admin.coupons.platformCoupons.abuseFlag"),
+      render: (row) => <AbuseFlag row={row} />,
     },
     {
       key: "actions",
-      header: t("screen.admin.coupons.platformCoupons.actions"),
+      header: (
+        <span className="te-caption">{t("screen.admin.coupons.platformCoupons.actions")}</span>
+      ),
       render: (row) => (
-        <span className="flex flex-wrap gap-2">
-          <TeButton
-            variant="secondary"
-            aria-label={t("screen.admin.coupons.platformCoupons.revoke", { code: row.code })}
-            onClick={() => void handleRevoke(row)}
-          >
-            {t("screen.admin.coupons.platformCoupons.revoke2")}
-          </TeButton>
-          <TeButton
-            variant="ghost"
-            aria-label={t("screen.admin.coupons.platformCoupons.openAnalyticsFor", {
-              code: row.code,
-            })}
-            onClick={() => setSelectedAdminCouponId(row.id)}
-          >
+        <span className="flex flex-wrap items-center gap-4">
+          {row.status === "active" ? (
+            <AdminButton
+              variant="link"
+              disabled={revokeMutation.isPending}
+              aria-label={t("screen.admin.coupons.platformCoupons.revokeCode", { code: row.code })}
+              onClick={() => revoke(row)}
+            >
+              {t("screen.admin.coupons.platformCoupons.revoke")}
+            </AdminButton>
+          ) : null}
+          {/* No coupon analytics screen exists yet, so the link renders dimmed. */}
+          <span aria-disabled="true" className="te-caption cursor-not-allowed opacity-50">
             {t("screen.admin.coupons.platformCoupons.analytics")}
-          </TeButton>
+          </span>
         </span>
       ),
     },
   ];
 
   return (
-    <AdminPage>
-      <TePageHeader
-        title={t("screen.admin.coupons.platformCoupons.platformCoupons")}
-        description={t("screen.admin.coupons.platformCoupons.couponsFromAllCreatorsRevoke")}
-        actions={
-          <AdminScreenLink slug="platform-coupon-editor" variant="primary">
-            {t("screen.admin.coupons.platformCoupons.createPlatformCoupon")}
-          </AdminScreenLink>
-        }
-      />
-      <StatePreview
-        emptyTitle={t("screen.admin.coupons.platformCoupons.noCoupons")}
-        emptyDescription={t("screen.admin.coupons.platformCoupons.noCouponsMatchThisFilter")}
-        loadingLabel={t("screen.admin.coupons.platformCoupons.loadingTheCoupons")}
-      >
-        <TeInlineAlert
-          tone="info"
-          title={t("screen.admin.coupons.platformCoupons.abuseThresholds")}
+    <AdminPage
+      title={t("screen.admin.coupons.platformCoupons.title")}
+      description={t("screen.admin.coupons.platformCoupons.description")}
+      actions={
+        <AdminLink
+          screen="SCR-ADM-20"
+          params={{ couponId: NEW_COUPON_ID }}
+          variant="primary"
+          onClick={() => setSelectedAdminCouponId(null)}
         >
-          {t("screen.admin.coupons.platformCoupons.thresholdsAreNotYetSet")}
-        </TeInlineAlert>
-        <AdminFilters>
-          <AdminFilterSelect
-            label={t("screen.admin.coupons.platformCoupons.statusLabel")}
-            options={STATE_OPTIONS()}
-          />
-        </AdminFilters>
-        <AdminPanel title={t("screen.admin.coupons.platformCoupons.coupons")}>
-          <TeDataTable
-            columns={columns}
-            rows={rows}
-            getRowKey={(row) => row.id}
-            caption={t("screen.admin.coupons.platformCoupons.platformCouponsCaption")}
-            emptyTitle={t("screen.admin.coupons.platformCoupons.noCouponsEmptyTitle")}
-            emptyDescription={t(
-              "screen.admin.coupons.platformCoupons.noCouponsMatchThisFilterEmptyDescription",
-            )}
-          />
-          <AdminPagination pageCount={1} />
-        </AdminPanel>
-      </StatePreview>
+          {t("screen.admin.coupons.platformCoupons.createCoupon")}
+        </AdminLink>
+      }
+    >
+      <AdminAlert
+        tone="warning"
+        title={t("screen.admin.coupons.platformCoupons.abuseThresholdsNotSet")}
+      >
+        {t("screen.admin.coupons.platformCoupons.abuseThresholdsBody")}
+      </AdminAlert>
+      {revokeMutation.isError ? (
+        <AdminAlert tone="danger" title={t("screen.admin.coupons.platformCoupons.revokeFailed")}>
+          {t("screen.admin.coupons.platformCoupons.revokeFailedBody")}
+        </AdminAlert>
+      ) : null}
+      <AdminQueryState
+        query={couponsQuery}
+        loadingLabel={t("screen.admin.coupons.platformCoupons.loading")}
+      >
+        <AdminTable
+          caption={t("screen.admin.coupons.platformCoupons.tableCaption")}
+          columns={columns}
+          rows={rows}
+          getRowKey={(row) => row.id}
+          empty={
+            <AdminEmpty
+              title={t("screen.admin.coupons.platformCoupons.emptyTitle")}
+              description={t("screen.admin.coupons.platformCoupons.emptyBody")}
+            />
+          }
+        />
+      </AdminQueryState>
     </AdminPage>
   );
 }
