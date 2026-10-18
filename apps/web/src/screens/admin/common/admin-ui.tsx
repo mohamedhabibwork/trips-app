@@ -273,7 +273,7 @@ export function AdminTable<Row>({
         </div>
       ) : null}
       <div className={cn("overflow-x-auto", hasHeading && "mt-3")}>
-        <table className="w-full min-w-[40rem] border-collapse text-sm leading-5 text-[var(--te-ink)]">
+        <table className="w-full border-collapse text-sm leading-5 text-[var(--te-ink)]">
           <caption className="sr-only">{caption}</caption>
           <thead>
             <tr>
@@ -300,7 +300,7 @@ export function AdminTable<Row>({
                     key={column.key}
                     className={cn(
                       "border-b border-[var(--te-hairline)] p-3 align-middle first:ps-6 last:pe-6",
-                      column.wrap ? "min-w-[9.5rem]" : "whitespace-nowrap",
+                      column.wrap ? "min-w-[7rem]" : "whitespace-nowrap",
                       column.align === "end" && "text-end",
                     )}
                   >

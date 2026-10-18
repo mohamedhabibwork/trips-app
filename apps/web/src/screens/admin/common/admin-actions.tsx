@@ -1,10 +1,9 @@
 // Links, buttons and URL params of the admin console. Every link is built with `pathFor()` from
 // navigation/web-routes.ts, so it points at the real `/admin/...` URL of the screen.
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import type { ComponentProps, ReactNode } from "react";
 import { cn } from "@trips-app/ui/lib/utils";
 
-import { usePathname } from "@/components/shells/shell-content";
 import { matchWebRoute, pathFor } from "@/navigation/web-routes";
 
 /** Screen ID of an admin page, such as `SCR-ADM-03`. */
@@ -114,7 +113,9 @@ export function useAdminNavigate(): (screen: AdminScreenId, params?: AdminParams
  * `fallback` then supplies the record picked on the previous page.
  */
 export function useAdminParam(name: string, fallback?: () => string | null): string | null {
-  const pathname = usePathname();
+  // Read from the router here, not from shells/shell-content: that module imports the screen
+  // registry, which imports every screen, so going through it makes an import cycle.
+  const pathname = useRouterState({ select: (state) => state.location.pathname });
   const fromUrl = matchWebRoute("admin", pathname)?.params[name];
   if (fromUrl) return fromUrl;
   return fallback ? fallback() : null;
