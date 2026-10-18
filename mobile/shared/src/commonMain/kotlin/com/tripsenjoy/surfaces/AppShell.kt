@@ -27,6 +27,7 @@ import com.tripsenjoy.auth.SignInConfig
 import com.tripsenjoy.auth.screens.AccountMenuSheet
 import com.tripsenjoy.surfaces.traveler.TravelerSurface
 import com.tripsenjoy.ui.TripsApp
+import com.tripsenjoy.ui.TripsAppRoot
 import com.tripsenjoy.ui.components.IconName
 import com.tripsenjoy.ui.components.TeGlassButton
 import com.tripsenjoy.ui.components.TeGlassNavBar
@@ -50,8 +51,10 @@ fun AppShell(
 ) {
     require(role != SurfaceRole.TRAVELER) { "The traveler app has no role tab. Use TravelerSurface directly." }
 
-    AuthProvider(config = SignInConfig.forRole(role), locale = locale) {
-        SignedInShell(role = role, locale = locale, roleContent = roleContent)
+    TripsAppRoot(rtl = locale == "ar") {
+        AuthProvider(config = SignInConfig.forRole(role), locale = locale) {
+            SignedInShell(role = role, locale = locale, roleContent = roleContent)
+        }
     }
 }
 

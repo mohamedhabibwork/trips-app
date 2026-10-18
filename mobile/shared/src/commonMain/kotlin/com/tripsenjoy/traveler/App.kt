@@ -8,6 +8,7 @@ import com.tripsenjoy.auth.AuthStrings
 import com.tripsenjoy.auth.LocalAuthApi
 import com.tripsenjoy.auth.SignInConfig
 import com.tripsenjoy.surfaces.traveler.TravelerSurface
+import com.tripsenjoy.ui.TripsAppRoot
 
 /**
  * Traveler app entry, shared by Android, iOS and web.
@@ -19,10 +20,12 @@ import com.tripsenjoy.surfaces.traveler.TravelerSurface
 @Composable
 @Preview
 fun App(locale: String = AuthStrings.defaultLocale) {
-    AuthProvider(config = SignInConfig.TRAVELER, locale = locale) {
-        val api = LocalAuthApi.current
-        AuthGate {
-            TravelerSurface(api)
+    TripsAppRoot(rtl = locale == "ar") {
+        AuthProvider(config = SignInConfig.TRAVELER, locale = locale) {
+            val api = LocalAuthApi.current
+            AuthGate {
+                TravelerSurface(api)
+            }
         }
     }
 }

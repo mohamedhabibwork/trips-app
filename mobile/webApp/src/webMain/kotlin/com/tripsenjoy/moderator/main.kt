@@ -20,7 +20,7 @@ import com.tripsenjoy.surfaces.driver.DriverApp
 import com.tripsenjoy.surfaces.moderator.ModeratorApp
 import com.tripsenjoy.surfaces.photographer.PhotographerApp
 import com.tripsenjoy.traveler.App
-import com.tripsenjoy.ui.TripsApp
+import com.tripsenjoy.ui.TripsAppRoot
 
 // Test harness for the mobile apps in a browser: pick an app to run its screens.
 // Production web is apps/web, not this module.
@@ -35,7 +35,7 @@ fun main() {
 fun TestHarness(uiSelected: SurfaceRole?) {
     var selected by remember { mutableStateOf<SurfaceRole?>(uiSelected?:SurfaceRole.MODERATOR) }
 
-    TripsApp {
+    TripsAppRoot {
         val role = selected
         if (role == null) {
             Column(modifier = Modifier.fillMaxSize()) {
