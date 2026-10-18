@@ -1,16 +1,25 @@
 import { useState, type ReactNode } from "react";
 import { Skeleton } from "@trips-app/ui/components/skeleton";
 import { TeTabs, type TeTab } from "@trips-app/ui/components/te-tabs";
+import { t } from "@trips-app/i18n";
 
 export const DEFAULT_LOADING_LINES = 3;
 
 type PreviewView = "main" | "loading" | "empty" | "error";
 
 const VIEW_LABELS: Readonly<Record<PreviewView, string>> = {
-  main: "Main",
-  loading: "Loading",
-  empty: "Empty",
-  error: "Error",
+  get main() {
+    return t("screen.shared.statePreview.labels.main");
+  },
+  get loading() {
+    return t("screen.shared.statePreview.labels.loading");
+  },
+  get empty() {
+    return t("screen.shared.statePreview.labels.empty");
+  },
+  get error() {
+    return t("screen.shared.statePreview.labels.error");
+  },
 };
 
 const PREVIEW_VIEWS: readonly PreviewView[] = ["main", "loading", "empty", "error"];
@@ -51,7 +60,12 @@ export function StatePreview({ main, loading, empty, error }: StatePreviewProps)
 
   return (
     <div className="flex flex-col gap-6">
-      <TeTabs tabs={tabs} activeId={active} onSelect={handleSelect} ariaLabel="Preview state" />
+      <TeTabs
+        tabs={tabs}
+        activeId={active}
+        onSelect={handleSelect}
+        ariaLabel={t("screen.shared.statePreview.previewState")}
+      />
       {views[active] ?? main}
     </div>
   );
@@ -60,7 +74,11 @@ export function StatePreview({ main, loading, empty, error }: StatePreviewProps)
 /** Placeholder rows shown while a screen waits for data or for a submit to finish. */
 export function StateLoading({ lines = DEFAULT_LOADING_LINES }: { lines?: number }) {
   return (
-    <div role="status" aria-label="Loading" className="flex flex-col gap-3">
+    <div
+      role="status"
+      aria-label={t("screen.shared.statePreview.loading")}
+      className="flex flex-col gap-3"
+    >
       {Array.from({ length: lines }, (_, index) => (
         <Skeleton key={index} className="h-10 w-full" />
       ))}

@@ -1,7 +1,10 @@
+import { useQuery } from "@tanstack/react-query";
 import { TeDataTable, type TeDataTableColumn } from "@trips-app/ui/components/te-data-table";
 import { TeInlineAlert } from "@trips-app/ui/components/te-inline-alert";
 import { TePageHeader } from "@trips-app/ui/components/te-page-header";
 import type { TeSelectOption } from "@trips-app/ui/components/te-select";
+import { t } from "@trips-app/i18n";
+import { orpc } from "@/utils/orpc";
 import { StatePreview } from "../common/admin-state-preview";
 import {
   AdminFilterSelect,
@@ -23,76 +26,89 @@ interface AuditRow {
   requestId: string;
 }
 
-const AUDIT_ROWS: readonly AuditRow[] = [
-  {
-    id: "audit-1",
-    time: "[Date and time]",
-    actor: "[Admin name]",
-    action: "[Action]",
-    target: "[Target]",
-    before: "[Before value]",
-    after: "[After value]",
-    requestId: "[Request ID]",
-  },
-  {
-    id: "audit-2",
-    time: "[Date and time]",
-    actor: "[Admin name]",
-    action: "[Action]",
-    target: "[Target]",
-    before: "[Before value]",
-    after: "[After value]",
-    requestId: "[Request ID]",
-  },
+const DEFAULT_AUDIT_ROWS: readonly AuditRow[] = [];
+
+const RANGE_OPTIONS = (): readonly TeSelectOption[] => [
+  { value: "24h", label: t("screen.admin.platform.auditLog.last24Hours") },
+  { value: "7d", label: t("screen.admin.platform.auditLog.last7Days") },
+  { value: "30d", label: t("screen.admin.platform.auditLog.last30Days") },
+  { value: "custom", label: t("screen.admin.platform.auditLog.customRange") },
+];
+const ACTION_OPTIONS = (): readonly TeSelectOption[] => [
+  { value: "all", label: t("screen.admin.platform.auditLog.anyAction") },
 ];
 
-const RANGE_OPTIONS: readonly TeSelectOption[] = [
-  { value: "24h", label: "Last 24 hours" },
-  { value: "7d", label: "Last 7 days" },
-  { value: "30d", label: "Last 30 days" },
-  { value: "custom", label: "Custom range" },
-];
-const ACTION_OPTIONS: readonly TeSelectOption[] = [{ value: "all", label: "Any action" }];
-
-const COLUMNS: readonly TeDataTableColumn<AuditRow>[] = [
-  { key: "time", header: "Time" },
-  { key: "actor", header: "Actor" },
-  { key: "action", header: "Action" },
-  { key: "target", header: "Target" },
-  { key: "before", header: "Before" },
-  { key: "after", header: "After" },
-  { key: "requestId", header: "Request ID" },
+const COLUMNS = (): readonly TeDataTableColumn<AuditRow>[] => [
+  { key: "time", header: t("screen.admin.platform.auditLog.time") },
+  { key: "actor", header: t("screen.admin.platform.auditLog.actor") },
+  { key: "action", header: t("screen.admin.platform.auditLog.action") },
+  { key: "target", header: t("screen.admin.platform.auditLog.target") },
+  { key: "before", header: t("screen.admin.platform.auditLog.before") },
+  { key: "after", header: t("screen.admin.platform.auditLog.after") },
+  { key: "requestId", header: t("screen.admin.platform.auditLog.requestId") },
 ];
 
 export function AuditLog() {
+  const queueQuery = useQuery(orpc.onboarding.listReviewQueue.queryOptions({ input: {} }));
+
+  const rows: readonly AuditRow[] =
+    queueQuery.data && queueQuery.data.length > 0
+      ? queueQuery.data.map((entry) => ({
+          id: entry.id,
+          time: new Date(entry.updatedAt).toISOString().slice(0, 16).replace("T", " "),
+          actor: entry.applicantAccountId.slice(0, 8) || "System",
+          action: `onboarding.${entry.state.toLowerCase().replace(/\s+/g, "_")}`,
+          target: `${entry.applicationType}:${entry.id.slice(0, 8)}`,
+          before: "Submitted",
+          after: entry.state,
+          requestId: entry.id.slice(0, 8),
+        }))
+      : DEFAULT_AUDIT_ROWS;
+
   return (
     <AdminPage>
       <TePageHeader
-        title="Audit log"
-        description="Every admin action and permission change. Read only."
+        title={t("screen.admin.platform.auditLog.auditLog")}
+        description={t("screen.admin.platform.auditLog.everyAdminActionAndPermission")}
       />
       <StatePreview
-        emptyTitle="No entries"
-        emptyDescription="No audit entries match these filters."
-        loadingLabel="Loading the audit entries."
+        emptyTitle={t("screen.admin.platform.auditLog.noEntries")}
+        emptyDescription={t("screen.admin.platform.auditLog.noAuditEntriesMatchThese")}
+        loadingLabel={t("screen.admin.platform.auditLog.loadingTheAuditEntries")}
       >
-        <TeInlineAlert tone="info" title="Read only">
-          Entries cannot be edited or deleted. The log is kept for 7 years (D-04).
+        <TeInlineAlert tone="info" title={t("screen.admin.platform.auditLog.readOnly")}>
+          {t("screen.admin.platform.auditLog.entriesCannotBeEditedOr")}
         </TeInlineAlert>
         <AdminFilters>
-          <AdminSearch label="Actor" placeholder="Name or email" clearLabel="Clear actor" />
-          <AdminFilterSelect label="Action" options={ACTION_OPTIONS} />
-          <AdminSearch label="Target" placeholder="Name or reference" clearLabel="Clear target" />
-          <AdminFilterSelect label="Time range" options={RANGE_OPTIONS} />
+          <AdminSearch
+            label={t("screen.admin.platform.auditLog.actorLabel")}
+            placeholder={t("screen.admin.platform.auditLog.nameOrEmail")}
+            clearLabel={t("screen.admin.platform.auditLog.clearActor")}
+          />
+          <AdminFilterSelect
+            label={t("screen.admin.platform.auditLog.actionLabel")}
+            options={ACTION_OPTIONS()}
+          />
+          <AdminSearch
+            label={t("screen.admin.platform.auditLog.targetLabel")}
+            placeholder={t("screen.admin.platform.auditLog.nameOrReference")}
+            clearLabel={t("screen.admin.platform.auditLog.clearTarget")}
+          />
+          <AdminFilterSelect
+            label={t("screen.admin.platform.auditLog.timeRange")}
+            options={RANGE_OPTIONS()}
+          />
         </AdminFilters>
-        <AdminPanel title="Entries">
+        <AdminPanel title={t("screen.admin.platform.auditLog.entries")}>
           <TeDataTable
-            columns={COLUMNS}
-            rows={AUDIT_ROWS}
+            columns={COLUMNS()}
+            rows={rows}
             getRowKey={(row) => row.id}
-            caption="Audit log entries"
-            emptyTitle="No entries"
-            emptyDescription="No audit entries match these filters."
+            caption={t("screen.admin.platform.auditLog.auditLogEntries")}
+            emptyTitle={t("screen.admin.platform.auditLog.noEntriesEmptyTitle")}
+            emptyDescription={t(
+              "screen.admin.platform.auditLog.noAuditEntriesMatchTheseEmptyDescription",
+            )}
           />
           <AdminPagination pageCount={1} />
         </AdminPanel>

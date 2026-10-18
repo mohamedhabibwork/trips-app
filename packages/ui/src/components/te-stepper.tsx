@@ -1,5 +1,6 @@
 import { cn } from "@trips-app/ui/lib/utils";
 import { TeIcon, type TeIconName } from "@trips-app/ui/components/te-icon";
+import { t } from "@trips-app/i18n";
 
 export interface TeStep {
   id: string;
@@ -13,9 +14,15 @@ export interface TeResolvedStep extends TeStep {
 }
 
 export const TE_STEP_STATE_LABELS: Record<TeStepState, string> = {
-  done: "Done",
-  current: "Current",
-  upcoming: "Upcoming",
+  get done() {
+    return t("ui.teStepper.labels.done");
+  },
+  get current() {
+    return t("ui.teStepper.labels.current");
+  },
+  get upcoming() {
+    return t("ui.teStepper.labels.upcoming");
+  },
 };
 
 const STEP_STATE_ICON: Record<TeStepState, TeIconName> = {

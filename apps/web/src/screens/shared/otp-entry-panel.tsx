@@ -1,5 +1,6 @@
 import { TeButton } from "@trips-app/ui/components/te-button";
 import { TeOtpInput, TE_OTP_DEFAULT_LENGTH } from "@trips-app/ui/components/te-otp-input";
+import { t } from "@trips-app/i18n";
 
 // The resend action unlocks after a 45 to 60 second countdown (A1). The upper bound is shown.
 export const RESEND_COUNTDOWN_SECONDS = 60;
@@ -23,20 +24,21 @@ export function OtpEntryPanel({ destination, code, onCodeChange, error }: OtpEnt
   return (
     <div className="flex flex-col gap-4">
       <p className="te-body">
-        Enter the {TE_OTP_DEFAULT_LENGTH}-digit code sent to <strong>{destination}</strong>. The
-        code expires in {CODE_EXPIRY_MINUTES} minutes.
+        {t("screen.shared.otpEntryPanel.enterDigitCode", { length: TE_OTP_DEFAULT_LENGTH })}{" "}
+        <strong>{destination}</strong>
+        {t("screen.shared.otpEntryPanel.codeExpiry", { minutes: CODE_EXPIRY_MINUTES })}
       </p>
       <TeOtpInput
-        label="Verification code"
-        cellLabel="Digit {position} of {length}"
+        label={t("screen.shared.otpEntryPanel.verificationCode")}
+        cellLabel={t("screen.shared.otpEntryPanel.digitOf")}
         value={code}
         onValueChange={onCodeChange}
         error={error}
       />
       <div className="flex flex-wrap gap-2">
-        <TeButton variant="ghost">Change email or phone</TeButton>
+        <TeButton variant="ghost">{t("screen.shared.otpEntryPanel.changeEmailOrPhone")}</TeButton>
         <TeButton variant="ghost" disabled>
-          Resend code in {RESEND_COUNTDOWN_SECONDS} seconds
+          {t("screen.shared.otpEntryPanel.resendIn", { seconds: RESEND_COUNTDOWN_SECONDS })}
         </TeButton>
       </div>
     </div>

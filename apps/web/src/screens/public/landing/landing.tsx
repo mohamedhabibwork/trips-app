@@ -1,13 +1,14 @@
+import { useQuery } from "@tanstack/react-query";
 import { TeButton } from "@trips-app/ui/components/te-button";
 import { TeCard } from "@trips-app/ui/components/te-card";
 import { TeEmptyState } from "@trips-app/ui/components/te-empty-state";
 import { TeIcon, type TeIconName } from "@trips-app/ui/components/te-icon";
 import { TeInlineAlert } from "@trips-app/ui/components/te-inline-alert";
+import { t } from "@trips-app/i18n";
+import { orpc } from "@/utils/orpc";
 import { buttonLinkClass } from "../../shared/button-link";
 import { ScreenLink } from "../../shared/screen-link";
 import { StateLoading, StatePreview } from "../../shared/state-preview";
-import { LanguageSelect } from "../common/language-select";
-import { PublicNav } from "../common/public-nav";
 
 interface RoleEntry {
   id: string;
@@ -16,48 +17,48 @@ interface RoleEntry {
   icon: TeIconName;
 }
 
-const ROLE_ENTRIES: readonly RoleEntry[] = [
+const ROLE_ENTRIES = (): readonly RoleEntry[] => [
   {
     id: "traveler",
-    label: "Traveler",
-    description: "Create a traveler account and book trips.",
+    label: t("screen.public.landing.landing.traveler"),
+    description: t("screen.public.landing.landing.createATravelerAccountAnd"),
     icon: "ticket",
   },
   {
     id: "driver",
-    label: "Platform driver",
-    description: "Apply to join the platform driver pool.",
+    label: t("screen.public.landing.landing.platformDriver"),
+    description: t("screen.public.landing.landing.applyToJoinThePlatform"),
     icon: "bus",
   },
   {
     id: "photographer",
-    label: "Photographer",
-    description: "Apply to join the platform photographer pool.",
+    label: t("screen.public.landing.landing.photographer"),
+    description: t("screen.public.landing.landing.applyToJoinThePlatformDescription"),
     icon: "camera",
   },
   {
     id: "organization",
-    label: "Organization",
-    description: "Register your organization. Web only.",
+    label: t("screen.public.landing.landing.organization"),
+    description: t("screen.public.landing.landing.registerYourOrganizationWebOnly"),
     icon: "users",
   },
 ];
 
-const SHARED_STATES: readonly { slug: string; label: string }[] = [
-  { slug: "permission-denied", label: "Permission denied" },
-  { slug: "not-found", label: "Not found" },
-  { slug: "unauthorized", label: "Unauthorized" },
-  { slug: "server-error", label: "Server error" },
-  { slug: "service-unavailable", label: "Service unavailable" },
-  { slug: "maintenance-page", label: "Maintenance page" },
+const SHARED_STATES = (): readonly { slug: string; label: string }[] => [
+  { slug: "permission-denied", label: t("screen.public.landing.landing.permissionDenied") },
+  { slug: "not-found", label: t("screen.public.landing.landing.notFound") },
+  { slug: "unauthorized", label: t("screen.public.landing.landing.unauthorized") },
+  { slug: "server-error", label: t("screen.public.landing.landing.serverError") },
+  { slug: "service-unavailable", label: t("screen.public.landing.landing.serviceUnavailable") },
+  { slug: "maintenance-page", label: t("screen.public.landing.landing.maintenancePage") },
 ];
 
 function SharedStateLinks() {
   return (
     <footer className="flex flex-col gap-3">
-      <h2 className="te-h3">Shared states</h2>
+      <h2 className="te-h3">{t("screen.public.landing.landing.sharedStates")}</h2>
       <ul className="flex flex-wrap gap-4">
-        {SHARED_STATES.map((state) => (
+        {SHARED_STATES().map((state) => (
           <li key={state.slug}>
             <ScreenLink surface="shared" slug={state.slug}>
               {state.label}
@@ -71,49 +72,61 @@ function SharedStateLinks() {
 
 /** Public entry point. It only routes: browse trips, or sign up for a role. */
 export function Landing() {
-  return (
-    <div className="mx-auto flex w-full max-w-5xl flex-col gap-10 px-4 py-6">
-      <header className="flex flex-wrap items-center justify-between gap-4">
-        <a href="/" aria-label="Trips Enjoy home" className="inline-flex">
-          <img
-            src="/brand/trips-enjoy-horizontal-fullcolor.svg"
-            alt="Trips Enjoy"
-            width={962}
-            height={289}
-            className="h-10 w-auto"
-          />
-        </a>
-        <div className="flex flex-wrap items-center gap-4">
-          <PublicNav current="landing" />
-          <LanguageSelect />
-        </div>
-      </header>
+  const tripsQuery = useQuery(orpc.trips.browsePublicTrips.queryOptions({ input: {} }));
+  const trips = (tripsQuery.data?.items ?? []).map((trip) => ({
+    id: trip.id,
+    title: trip.titleEn || trip.titleAr || trip.id,
+    destination:
+      trip.destinations[0]?.nameEn || trip.destinations[0]?.nameAr || trip.origin?.nameEn || "-",
+    departure: trip.startsAt ? new Date(trip.startsAt).toISOString().slice(0, 10) : "-",
+  }));
 
+  return (
+    <div className="mx-auto flex w-full max-w-[1280px] flex-col gap-10 px-4 py-8 md:px-12 md:py-12">
       <section className="flex flex-col gap-4" aria-labelledby="landing-trips-heading">
-        <h1 id="landing-trips-heading" className="te-h1">
-          Public trips
-        </h1>
+        <div className="flex flex-wrap items-end justify-between gap-6">
+          <div>
+            <h1 id="landing-trips-heading" className="te-h1">
+              {t("screen.public.landing.landing.publicTrips")}
+            </h1>
+            <p className="te-body mt-2 text-[var(--te-ink-muted)]">
+              {t("screen.public.landing.landing.browseTheTripsThatAre")}
+            </p>
+          </div>
+          <TeButton variant="primary" size="lg">
+            {t("screen.public.landing.landing.browseTrips")}
+          </TeButton>
+        </div>
         <StatePreview
           main={
             <div className="flex flex-col gap-4">
-              <p className="te-body">Browse the trips that are published to the public.</p>
-              <div>
-                <TeButton variant="primary" size="lg">
-                  Browse trips
-                </TeButton>
-              </div>
+              {trips.length > 0 ? (
+                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                  {trips.map((trip) => (
+                    <TeCard key={trip.id}>
+                      <p className="te-h3">{trip.title}</p>
+                      <p className="te-caption">
+                        {trip.destination} · {trip.departure}
+                      </p>
+                    </TeCard>
+                  ))}
+                </div>
+              ) : null}
             </div>
           }
           loading={<StateLoading lines={2} />}
           empty={
             <TeEmptyState
-              title="No public trips right now"
-              description="Trips appear here once they are published. You can still sign up for a role below."
+              title={t("screen.public.landing.landing.noPublicTripsRightNow")}
+              description={t("screen.public.landing.landing.tripsAppearHereOnceThey")}
             />
           }
           error={
-            <TeInlineAlert tone="error" title="Trips could not load">
-              Try again in a few minutes.
+            <TeInlineAlert
+              tone="error"
+              title={t("screen.public.landing.landing.tripsCouldNotLoad")}
+            >
+              {t("screen.public.landing.landing.tryAgainInAFew")}
             </TeInlineAlert>
           }
         />
@@ -121,22 +134,22 @@ export function Landing() {
 
       <section className="flex flex-col gap-4" aria-labelledby="landing-roles-heading">
         <h2 id="landing-roles-heading" className="te-h2">
-          Sign up as
+          {t("screen.public.landing.landing.signUpAs")}
         </h2>
-        <div className="grid gap-4 sm:grid-cols-2">
-          {ROLE_ENTRIES.map((role) => (
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {ROLE_ENTRIES().map((role) => (
             <TeCard as="article" key={role.id}>
-              <div className="flex flex-col gap-3">
+              <div className="flex h-full flex-col gap-3">
                 <TeIcon name={role.icon} />
                 <h3 className="te-h3">{role.label}</h3>
-                <p className="te-body">{role.description}</p>
-                <div>
+                <p className="te-body text-[var(--te-ink-muted)]">{role.description}</p>
+                <div className="mt-auto pt-2">
                   <ScreenLink
                     surface="public"
                     slug="sign-up-chooser"
                     className={buttonLinkClass("secondary")}
                   >
-                    Sign up as {role.label.toLowerCase()}
+                    {t("screen.public.landing.landing.signUpAs2")} {role.label.toLowerCase()}
                   </ScreenLink>
                 </div>
               </div>

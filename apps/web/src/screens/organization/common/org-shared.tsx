@@ -5,6 +5,7 @@ import { TeButton } from "@trips-app/ui/components/te-button";
 import { TeIcon, type TeIconName } from "@trips-app/ui/components/te-icon";
 import { TePageHeader } from "@trips-app/ui/components/te-page-header";
 import { TeStepper, type TeStep } from "@trips-app/ui/components/te-stepper";
+import { t } from "@trips-app/i18n";
 
 import { OrgButtonLink, WorkspaceBackLink, useOrgNavigate } from "./org-link";
 import type { OrgSlug } from "./org-routes";
@@ -59,20 +60,82 @@ const TRIP_STATE_STYLE: Record<TripState, Omit<StatePresentation, "label">> = {
   "Refunds Issued": { tone: "danger", icon: "close" },
 };
 
+const BACKEND_TRIP_STATE_MAP: Record<string, TripState> = {
+  draft: "Draft",
+  published: "Published",
+  negotiating: "Negotiating",
+  scheduled: "Ready",
+  ready: "Ready",
+  Selection: "Filling Up",
+  filling_up: "Filling Up",
+  sold_out: "Sold Out",
+  in_progress: "In Progress",
+  partially_completed: "Partially Completed",
+  completed: "Completed",
+  post_processing: "Post-Processing",
+  archived: "Archived",
+  cancelled: "Cancelled",
+  refunds_issued: "Refunds Issued",
+};
+
+export function toTripState(state: string): TripState {
+  return BACKEND_TRIP_STATE_MAP[state] ?? "Draft";
+}
+
 /** Trip state names as written in SRS 7.1. */
 export function TripStateBadge({ state }: { state: TripState }) {
   return <StateBadge {...TRIP_STATE_STYLE[state]} label={state} />;
 }
 
 export const TRIP_WIZARD_STEPS: readonly TeStep[] = [
-  { id: "basics", label: "Basics" },
-  { id: "schedule", label: "Schedule and route" },
-  { id: "vehicles", label: "Vehicles" },
-  { id: "staffing", label: "Staffing" },
-  { id: "programs", label: "Programs" },
-  { id: "seating", label: "Seating" },
-  { id: "pricing", label: "Pricing and capacity" },
-  { id: "publish", label: "Publish" },
+  {
+    id: "basics",
+    get label() {
+      return t("screen.organization.common.orgShared.step.basics");
+    },
+  },
+  {
+    id: "schedule",
+    get label() {
+      return t("screen.organization.common.orgShared.step.schedule");
+    },
+  },
+  {
+    id: "vehicles",
+    get label() {
+      return t("screen.organization.common.orgShared.step.vehicles");
+    },
+  },
+  {
+    id: "staffing",
+    get label() {
+      return t("screen.organization.common.orgShared.step.staffing");
+    },
+  },
+  {
+    id: "programs",
+    get label() {
+      return t("screen.organization.common.orgShared.step.programs");
+    },
+  },
+  {
+    id: "seating",
+    get label() {
+      return t("screen.organization.common.orgShared.step.seating");
+    },
+  },
+  {
+    id: "pricing",
+    get label() {
+      return t("screen.organization.common.orgShared.step.pricing");
+    },
+  },
+  {
+    id: "publish",
+    get label() {
+      return t("screen.organization.common.orgShared.step.publish");
+    },
+  },
 ];
 
 interface OrgSectionProps {
@@ -93,6 +156,100 @@ export function OrgSection({ title, actions, children }: OrgSectionProps) {
   );
 }
 
+const ACTIVE_WIZARD_TRIP_KEY = "trips.activeWizardTripId";
+const SELECTED_EMPLOYEE_KEY = "trips.selectedEmployeeId";
+const SELECTED_VEHICLE_KEY = "trips.selectedVehicleId";
+const SELECTED_BOOKING_KEY = "trips.selectedBookingId";
+const SELECTED_NEGOTIATION_KEY = "trips.selectedNegotiationId";
+const SELECTED_COUPON_KEY = "trips.selectedCouponId";
+const SELECTED_PROGRAM_KEY = "trips.selectedProgramId";
+
+function readStorageKey(key: string): string | null {
+  if (typeof window === "undefined") return null;
+  try {
+    return window.sessionStorage.getItem(key);
+  } catch {
+    return null;
+  }
+}
+
+function writeStorageKey(key: string, value: string | null): void {
+  if (typeof window === "undefined") return;
+  try {
+    if (value === null) {
+      window.sessionStorage.removeItem(key);
+    } else {
+      window.sessionStorage.setItem(key, value);
+    }
+  } catch {
+    // Ignore storage access errors in restricted environments
+  }
+}
+
+export function getActiveWizardTripId(): string | null {
+  return readStorageKey(ACTIVE_WIZARD_TRIP_KEY);
+}
+
+export function setActiveWizardTripId(tripId: string): void {
+  writeStorageKey(ACTIVE_WIZARD_TRIP_KEY, tripId);
+}
+
+export function getSelectedTripId(): string | null {
+  return getActiveWizardTripId();
+}
+
+export function setSelectedTripId(tripId: string | null): void {
+  writeStorageKey(ACTIVE_WIZARD_TRIP_KEY, tripId);
+}
+
+export function getSelectedEmployeeId(): string | null {
+  return readStorageKey(SELECTED_EMPLOYEE_KEY);
+}
+
+export function setSelectedEmployeeId(id: string | null): void {
+  writeStorageKey(SELECTED_EMPLOYEE_KEY, id);
+}
+
+export function getSelectedVehicleId(): string | null {
+  return readStorageKey(SELECTED_VEHICLE_KEY);
+}
+
+export function setSelectedVehicleId(id: string | null): void {
+  writeStorageKey(SELECTED_VEHICLE_KEY, id);
+}
+
+export function getSelectedBookingId(): string | null {
+  return readStorageKey(SELECTED_BOOKING_KEY);
+}
+
+export function setSelectedBookingId(id: string | null): void {
+  writeStorageKey(SELECTED_BOOKING_KEY, id);
+}
+
+export function getSelectedNegotiationId(): string | null {
+  return readStorageKey(SELECTED_NEGOTIATION_KEY);
+}
+
+export function setSelectedNegotiationId(id: string | null): void {
+  writeStorageKey(SELECTED_NEGOTIATION_KEY, id);
+}
+
+export function getSelectedCouponId(): string | null {
+  return readStorageKey(SELECTED_COUPON_KEY);
+}
+
+export function setSelectedCouponId(id: string | null): void {
+  writeStorageKey(SELECTED_COUPON_KEY, id);
+}
+
+export function getSelectedProgramId(): string | null {
+  return readStorageKey(SELECTED_PROGRAM_KEY);
+}
+
+export function setSelectedProgramId(id: string | null): void {
+  writeStorageKey(SELECTED_PROGRAM_KEY, id);
+}
+
 interface TripWizardFrameProps {
   title: string;
   stepId: string;
@@ -101,7 +258,8 @@ interface TripWizardFrameProps {
   primaryLabel?: string;
   secondaryLabel?: string;
   /** Return false to keep the user on this step, for example when a required field is empty. */
-  beforeNext?: () => boolean;
+  beforeNext?: () => boolean | Promise<boolean>;
+  onSaveDraft?: () => void | Promise<void>;
   children: ReactNode;
 }
 
@@ -114,6 +272,7 @@ export function TripWizardFrame({
   primaryLabel = "Next",
   secondaryLabel = "Save as draft",
   beforeNext,
+  onSaveDraft,
   children,
 }: TripWizardFrameProps) {
   const goTo = useOrgNavigate();
@@ -124,8 +283,17 @@ export function TripWizardFrame({
   const completedIds = TRIP_WIZARD_STEPS.slice(0, stepIndex).map((step) => step.id);
 
   const handleNext = () => {
-    if (beforeNext && !beforeNext()) {
-      return;
+    if (beforeNext) {
+      const result = beforeNext();
+      if (result instanceof Promise) {
+        void result.then((ok) => {
+          if (ok) void goTo(nextSlug);
+        });
+        return;
+      }
+      if (!result) {
+        return;
+      }
     }
     void goTo(nextSlug);
   };
@@ -138,14 +306,21 @@ export function TripWizardFrame({
         steps={TRIP_WIZARD_STEPS}
         currentId={stepId}
         completedIds={completedIds}
-        ariaLabel="Trip wizard progress"
+        ariaLabel={t("screen.organization.common.orgShared.tripWizardProgress")}
       />
       <div className="flex flex-col gap-4">{children}</div>
       <div className="flex flex-wrap justify-end gap-3">
         <OrgButtonLink slug={previousSlug} variant="ghost">
-          Back
+          {t("screen.organization.common.orgShared.back")}
         </OrgButtonLink>
-        <TeButton variant="secondary">{secondaryLabel}</TeButton>
+        <TeButton
+          variant="secondary"
+          onClick={() => {
+            if (onSaveDraft) void onSaveDraft();
+          }}
+        >
+          {secondaryLabel}
+        </TeButton>
         <TeButton onClick={handleNext}>{primaryLabel}</TeButton>
       </div>
     </div>

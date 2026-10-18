@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   TeApplicationCard,
   type TeApplicationStatus,
@@ -10,12 +11,13 @@ import { TeInlineAlert } from "@trips-app/ui/components/te-inline-alert";
 import { TePageHeader } from "@trips-app/ui/components/te-page-header";
 import type { TeRole } from "@trips-app/ui/components/te-role-badge";
 import { TeStepper, type TeStep } from "@trips-app/ui/components/te-stepper";
+import { t } from "@trips-app/i18n";
 import { useAuth } from "@/auth/auth-context";
 import {
   getSelectedAdminApplicationId,
   setSelectedAdminApplicationId,
 } from "@/screens/onboarding-state";
-import { client } from "@/utils/orpc";
+import { orpc } from "@/utils/orpc";
 import { StatePreview } from "../common/admin-state-preview";
 import { AdminScreenLink, useAdminNavigate } from "../common/admin-links";
 import {
@@ -33,31 +35,63 @@ interface DocumentRow {
   verified: boolean;
 }
 
-const DEFAULT_DOCUMENTS: readonly DocumentRow[] = [
-  { id: "doc-1", label: "Identity document", verified: false },
-  { id: "doc-2", label: "Insurance certificate", verified: false },
-  { id: "doc-3", label: "Initial lab result", verified: false },
+const DEFAULT_DOCUMENTS = (): readonly DocumentRow[] => [
+  {
+    id: "doc-1",
+    label: t("screen.admin.applications.applicationReviewDetail.identityDocument"),
+    verified: false,
+  },
+  {
+    id: "doc-2",
+    label: t("screen.admin.applications.applicationReviewDetail.insuranceCertificate"),
+    verified: false,
+  },
+  {
+    id: "doc-3",
+    label: t("screen.admin.applications.applicationReviewDetail.initialLabResult"),
+    verified: false,
+  },
 ];
 
-const VERIFIED: AdminStatusPresentation = { tone: "success", icon: "check", label: "Verified" };
-const NOT_VERIFIED: AdminStatusPresentation = {
+const VERIFIED = (): AdminStatusPresentation => ({
+  tone: "success",
+  icon: "check",
+  label: t("screen.admin.applications.applicationReviewDetail.verified"),
+});
+const NOT_VERIFIED = (): AdminStatusPresentation => ({
   tone: "warning",
   icon: "alert",
-  label: "Not verified",
-};
+  label: t("screen.admin.applications.applicationReviewDetail.notVerified"),
+});
 
-const STEPS: readonly TeStep[] = [
-  { id: "submitted", label: "Submitted" },
-  { id: "documents", label: "Documents" },
-  { id: "checks", label: "Checks" },
-  { id: "decision", label: "Decision" },
+const STEPS = (): readonly TeStep[] => [
+  { id: "submitted", label: t("screen.admin.applications.applicationReviewDetail.submitted") },
+  { id: "documents", label: t("screen.admin.applications.applicationReviewDetail.documents") },
+  { id: "checks", label: t("screen.admin.applications.applicationReviewDetail.checks") },
+  { id: "decision", label: t("screen.admin.applications.applicationReviewDetail.decision") },
 ];
 
-const INITIAL_CHECKS: readonly TeChecklistItem[] = [
-  { id: "background", label: "Background check consent signed", checked: false },
-  { id: "lab-consent", label: "Lab consent signed", checked: false },
-  { id: "lab-result", label: "Initial lab result dated within 30 days", checked: false },
-  { id: "insurance", label: "Insurance valid for 3 months or more", checked: false },
+const INITIAL_CHECKS = (): readonly TeChecklistItem[] => [
+  {
+    id: "background",
+    label: t("screen.admin.applications.applicationReviewDetail.backgroundCheckConsentSigned"),
+    checked: false,
+  },
+  {
+    id: "lab-consent",
+    label: t("screen.admin.applications.applicationReviewDetail.labConsentSigned"),
+    checked: false,
+  },
+  {
+    id: "lab-result",
+    label: t("screen.admin.applications.applicationReviewDetail.initialLabResultDatedWithin"),
+    checked: false,
+  },
+  {
+    id: "insurance",
+    label: t("screen.admin.applications.applicationReviewDetail.insuranceValidFor3Months"),
+    checked: false,
+  },
 ];
 
 function mapRole(applicationType: string): TeRole {
@@ -75,117 +109,122 @@ function mapStatus(state: string): TeApplicationStatus {
 
 export function ApplicationReviewDetail() {
   const { status: authStatus } = useAuth();
-  const [applicationId, setApplicationId] = useState<string | null>(() =>
-    getSelectedAdminApplicationId(),
-  );
-  const [applicantName, setApplicantName] = useState("[Applicant name]");
-  const [applicantEmail, setApplicantEmail] = useState("[Email]");
-  const [applicantPhone, setApplicantPhone] = useState("[Phone]");
-  const [applicantCountry, setApplicantCountry] = useState("[Country]");
-  const [role, setRole] = useState<TeRole>("driver");
-  const [submittedAt, setSubmittedAt] = useState("[Date and time]");
-  const [appStatus, setAppStatus] = useState<TeApplicationStatus>("pending");
-  const [documents, setDocuments] = useState<readonly DocumentRow[]>(DEFAULT_DOCUMENTS);
-  const [duplicateHold, setDuplicateHold] = useState(false);
-  const [checks, setChecks] = useState(INITIAL_CHECKS);
+  const queryClient = useQueryClient();
+  const goTo = useAdminNavigate();
+
+  const [checkOverrides, setCheckOverrides] = useState<Record<string, boolean>>({});
+  const [verifiedDocOverrides, setVerifiedDocOverrides] = useState<Record<string, boolean>>({});
   const [openedPreviewKey, setOpenedPreviewKey] = useState<string | null>(null);
-  const [busy, setBusy] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  const goTo = useAdminNavigate();
+  const queueQuery = useQuery({
+    ...orpc.onboarding.listReviewQueue.queryOptions({ input: {} }),
+    enabled: authStatus === "authenticated",
+  });
+
+  const selectedId = getSelectedAdminApplicationId();
+  const fallbackId = queueQuery.data?.[0]?.id ?? null;
+  const targetId = selectedId || fallbackId;
+
+  if (targetId && !selectedId) {
+    setSelectedAdminApplicationId(targetId);
+  }
+
+  const detailQuery = useQuery({
+    ...orpc.onboarding.getApplicationDetail.queryOptions({
+      input: { applicationId: targetId ?? "" },
+    }),
+    enabled: authStatus === "authenticated" && Boolean(targetId),
+  });
+
+  const openDocMutation = useMutation(orpc.onboarding.openApplicationDocument.mutationOptions({}));
+  const verifyDocMutation = useMutation(
+    orpc.onboarding.verifyApplicationDocument.mutationOptions({
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: orpc.onboarding.key() });
+      },
+    }),
+  );
+  const approveMutation = useMutation(
+    orpc.onboarding.approveApplication.mutationOptions({
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: orpc.onboarding.key() });
+      },
+    }),
+  );
+
+  const detail = detailQuery.data;
+  const applicationId = detail?.application.id ?? targetId;
+  const payload = (detail?.application.payload ?? {}) as Record<string, unknown>;
+  const applicantName =
+    detail?.applicant?.fullName ??
+    (typeof payload.legalEntityName === "string"
+      ? payload.legalEntityName
+      : (detail?.application.applicantAccountId ?? "-"));
+  const applicantEmail =
+    detail?.applicant?.email ??
+    (typeof payload.billingContactEmail === "string" ? payload.billingContactEmail : "-");
+  const applicantPhone =
+    detail?.applicant?.phone ??
+    (typeof payload.billingContactPhone === "string" ? payload.billingContactPhone : "-");
+  const applicantCountry =
+    typeof payload.countryCode === "string"
+      ? payload.countryCode
+      : typeof payload.country === "string"
+        ? payload.country
+        : "EG";
+  const role: TeRole = detail?.application.applicationType
+    ? mapRole(detail.application.applicationType)
+    : "driver";
+  const submittedAt = detail?.application.createdAt
+    ? new Date(detail.application.createdAt).toLocaleString()
+    : "-";
+  const appStatus: TeApplicationStatus = detail?.application.state
+    ? mapStatus(detail.application.state)
+    : "pending";
+  const duplicateHold = Boolean(detail?.duplicateHold);
+
+  const documents: readonly DocumentRow[] =
+    detail?.documents && detail.documents.length > 0
+      ? detail.documents.map((doc) => ({
+          id: doc.id,
+          label: doc.documentType.replace(/_/g, " "),
+          verified:
+            verifiedDocOverrides[doc.id] !== undefined
+              ? verifiedDocOverrides[doc.id]
+              : doc.verifiedStatus === "verified",
+        }))
+      : DEFAULT_DOCUMENTS().map((doc) => ({
+          ...doc,
+          verified:
+            verifiedDocOverrides[doc.id] !== undefined
+              ? verifiedDocOverrides[doc.id]
+              : doc.verified,
+        }));
+
+  const hasBgConsent = Boolean(
+    detail?.consents?.some((c) => c.consentType === "driver_background_check"),
+  );
+  const hasLabConsent = Boolean(detail?.consents?.some((c) => c.consentType === "driver_lab_test"));
+
+  const checks: readonly TeChecklistItem[] = INITIAL_CHECKS().map((item) => {
+    let checked = checkOverrides[item.id];
+    if (checked === undefined) {
+      if (item.id === "background" && hasBgConsent) checked = true;
+      else if (item.id === "lab-consent" && hasLabConsent) checked = true;
+      else checked = false;
+    }
+    return { ...item, checked };
+  });
+
   const allChecked = checks.every((item) => item.checked);
   const allVerified = documents.length > 0 && documents.every((document) => document.verified);
+  const busy = approveMutation.isPending;
   const canApprove = allChecked && allVerified && !duplicateHold && !busy;
 
-  useEffect(() => {
-    if (authStatus !== "authenticated") return;
-    let cancelled = false;
-
-    async function load() {
-      let targetId = getSelectedAdminApplicationId();
-      if (!targetId || targetId.startsWith("app-")) {
-        const queue = await client.onboarding.listReviewQueue({});
-        targetId = queue[0]?.id ?? null;
-        if (targetId) {
-          setSelectedAdminApplicationId(targetId);
-        }
-      }
-      if (!targetId) return;
-
-      const detail = await client.onboarding.getApplicationDetail({ applicationId: targetId });
-      if (cancelled) return;
-
-      setApplicationId(detail.application.id);
-      const payload = (detail.application.payload ?? {}) as Record<string, unknown>;
-      setApplicantName(
-        detail.applicant?.fullName ??
-          (typeof payload.legalEntityName === "string"
-            ? payload.legalEntityName
-            : "[Applicant name]"),
-      );
-      setApplicantEmail(
-        detail.applicant?.email ??
-          (typeof payload.billingContactEmail === "string"
-            ? payload.billingContactEmail
-            : "[Email]"),
-      );
-      setApplicantPhone(
-        detail.applicant?.phone ??
-          (typeof payload.billingContactPhone === "string"
-            ? payload.billingContactPhone
-            : "[Phone]"),
-      );
-      setApplicantCountry(
-        typeof payload.countryCode === "string"
-          ? payload.countryCode
-          : typeof payload.country === "string"
-            ? payload.country
-            : "EG",
-      );
-      setRole(mapRole(detail.application.applicationType));
-      setSubmittedAt(new Date(detail.application.createdAt).toLocaleString());
-      setAppStatus(mapStatus(detail.application.state));
-      setDuplicateHold(Boolean(detail.duplicateHold));
-
-      if (detail.documents.length > 0) {
-        setDocuments(
-          detail.documents.map((doc) => ({
-            id: doc.id,
-            label: doc.documentType.replace(/_/g, " "),
-            verified: doc.verifiedStatus === "verified",
-          })),
-        );
-      }
-
-      const hasBgConsent = (detail.consents ?? []).some(
-        (c) => c.consentType === "driver_background_check",
-      );
-      const hasLabConsent = (detail.consents ?? []).some(
-        (c) => c.consentType === "driver_lab_test",
-      );
-      if (hasBgConsent || hasLabConsent) {
-        setChecks((prev) =>
-          prev.map((item) => {
-            if (item.id === "background" && hasBgConsent) return { ...item, checked: true };
-            if (item.id === "lab-consent" && hasLabConsent) return { ...item, checked: true };
-            return item;
-          }),
-        );
-      }
-    }
-
-    void load().catch(() => {
-      // Keep default preview data when no backend session is active
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, [authStatus]);
-
   function toggleCheck(id: string) {
-    setChecks((current) =>
-      current.map((item) => (item.id === id ? { ...item, checked: !item.checked } : item)),
-    );
+    const currentChecked = checks.find((item) => item.id === id)?.checked ?? false;
+    setCheckOverrides((prev) => ({ ...prev, [id]: !currentChecked }));
   }
 
   async function handleViewDocument(row: DocumentRow) {
@@ -194,7 +233,7 @@ export function ApplicationReviewDetail() {
       return;
     }
     try {
-      const opened = await client.onboarding.openApplicationDocument({
+      const opened = await openDocMutation.mutateAsync({
         applicationId,
         documentId: row.id,
       });
@@ -206,12 +245,10 @@ export function ApplicationReviewDetail() {
 
   async function handleToggleVerifyDocument(row: DocumentRow) {
     const nextVerified = !row.verified;
-    setDocuments((prev) =>
-      prev.map((doc) => (doc.id === row.id ? { ...doc, verified: nextVerified } : doc)),
-    );
+    setVerifiedDocOverrides((prev) => ({ ...prev, [row.id]: nextVerified }));
     if (!applicationId || row.id.startsWith("doc-")) return;
     try {
-      await client.onboarding.verifyApplicationDocument({
+      await verifyDocMutation.mutateAsync({
         applicationId,
         documentId: row.id,
         verifiedStatus: nextVerified ? "verified" : "rejected",
@@ -228,46 +265,47 @@ export function ApplicationReviewDetail() {
       await goTo("application-queue");
       return;
     }
-    setBusy(true);
     setErrorMsg(null);
     try {
-      await client.onboarding.approveApplication({
+      await approveMutation.mutateAsync({
         applicationId,
         decisionReasonCode: "verified_complete",
       });
       await goTo("application-queue");
     } catch (caught) {
       setErrorMsg(caught instanceof Error ? caught.message : "Could not approve application.");
-    } finally {
-      setBusy(false);
     }
   }
 
   const documentColumns: readonly TeDataTableColumn<DocumentRow>[] = [
-    { key: "label", header: "Document" },
+    { key: "label", header: t("screen.admin.applications.applicationReviewDetail.document") },
     {
       key: "verified",
-      header: "Status",
-      render: (row) => <AdminStatus status={row.verified ? VERIFIED : NOT_VERIFIED} />,
+      header: t("screen.admin.applications.applicationReviewDetail.status"),
+      render: (row) => <AdminStatus status={row.verified ? VERIFIED() : NOT_VERIFIED()} />,
     },
     {
       key: "view",
-      header: "Restricted view",
+      header: t("screen.admin.applications.applicationReviewDetail.restrictedView"),
       render: (row) => (
         <div className="flex flex-wrap gap-2">
           <TeButton
             variant="ghost"
-            aria-label={`View ${row.label}`}
+            aria-label={t("screen.admin.applications.applicationReviewDetail.view", {
+              label: row.label,
+            })}
             onClick={() => void handleViewDocument(row)}
           >
-            View
+            {t("screen.admin.applications.applicationReviewDetail.view2")}
           </TeButton>
           <TeButton
             variant="secondary"
             aria-label={row.verified ? `Unverify ${row.label}` : `Verify ${row.label}`}
             onClick={() => void handleToggleVerifyDocument(row)}
           >
-            {row.verified ? "Unverify" : "Verify"}
+            {row.verified
+              ? t("screen.admin.applications.applicationReviewDetail.unverify")
+              : t("screen.admin.applications.applicationReviewDetail.verify")}
           </TeButton>
         </div>
       ),
@@ -277,19 +315,23 @@ export function ApplicationReviewDetail() {
   return (
     <AdminPage>
       <TePageHeader
-        title="Application review detail"
-        description="Check the submitted data and documents, then decide."
+        title={t("screen.admin.applications.applicationReviewDetail.applicationReviewDetail")}
+        description={t(
+          "screen.admin.applications.applicationReviewDetail.checkTheSubmittedDataAnd",
+        )}
       />
       <StatePreview
-        emptyTitle="No documents"
-        emptyDescription="The applicant has not uploaded documents."
-        loadingLabel="Loading the application."
+        emptyTitle={t("screen.admin.applications.applicationReviewDetail.noDocuments")}
+        emptyDescription={t(
+          "screen.admin.applications.applicationReviewDetail.theApplicantHasNotUploaded",
+        )}
+        loadingLabel={t("screen.admin.applications.applicationReviewDetail.loadingTheApplication")}
       >
         <TeStepper
-          steps={STEPS}
+          steps={STEPS()}
           currentId="checks"
           completedIds={["submitted", "documents"]}
-          ariaLabel="Review steps"
+          ariaLabel={t("screen.admin.applications.applicationReviewDetail.reviewSteps")}
         />
         <TeApplicationCard
           applicant={applicantName}
@@ -299,67 +341,105 @@ export function ApplicationReviewDetail() {
           documents={documents}
         />
         {duplicateHold ? (
-          <TeInlineAlert tone="error" title="Duplicate registration hold">
-            Another organization already uses this commercial registration number or tax number.
-            Approval is blocked while this duplicate hold is active.
+          <TeInlineAlert
+            tone="error"
+            title={t("screen.admin.applications.applicationReviewDetail.duplicateRegistrationHold")}
+          >
+            {t(
+              "screen.admin.applications.applicationReviewDetail.anotherOrganizationAlreadyUsesThis",
+            )}
           </TeInlineAlert>
         ) : null}
         {openedPreviewKey ? (
-          <TeInlineAlert tone="info" title="Restricted document opened (audit logged)">
-            Viewing: {openedPreviewKey}
+          <TeInlineAlert
+            tone="info"
+            title={t(
+              "screen.admin.applications.applicationReviewDetail.restrictedDocumentOpenedAuditLogged",
+            )}
+          >
+            {t("screen.admin.applications.applicationReviewDetail.viewing")} {openedPreviewKey}
           </TeInlineAlert>
         ) : null}
         {errorMsg ? (
-          <TeInlineAlert tone="error" title="Action failed">
+          <TeInlineAlert
+            tone="error"
+            title={t("screen.admin.applications.applicationReviewDetail.actionFailed")}
+          >
             {errorMsg}
           </TeInlineAlert>
         ) : null}
-        <AdminPanel title="Applicant data">
+        <AdminPanel title={t("screen.admin.applications.applicationReviewDetail.applicantData")}>
           <AdminFacts
             items={[
-              { label: "Applicant name", value: applicantName },
-              { label: "Email", value: applicantEmail },
-              { label: "Phone", value: applicantPhone },
-              { label: "Country", value: applicantCountry },
+              {
+                label: t("screen.admin.applications.applicationReviewDetail.applicantName"),
+                value: applicantName,
+              },
+              {
+                label: t("screen.admin.applications.applicationReviewDetail.email"),
+                value: applicantEmail,
+              },
+              {
+                label: t("screen.admin.applications.applicationReviewDetail.phone"),
+                value: applicantPhone,
+              },
+              {
+                label: t("screen.admin.applications.applicationReviewDetail.country"),
+                value: applicantCountry,
+              },
             ]}
           />
         </AdminPanel>
-        <AdminPanel title="Documents">
+        <AdminPanel title={t("screen.admin.applications.applicationReviewDetail.documentsTitle")}>
           <TeDataTable
             columns={documentColumns}
             rows={documents}
             getRowKey={(row) => row.id}
-            caption="Submitted documents"
-            emptyTitle="No documents"
-            emptyDescription="The applicant has not uploaded documents."
+            caption={t("screen.admin.applications.applicationReviewDetail.submittedDocuments")}
+            emptyTitle={t(
+              "screen.admin.applications.applicationReviewDetail.noDocumentsEmptyTitle",
+            )}
+            emptyDescription={t(
+              "screen.admin.applications.applicationReviewDetail.theApplicantHasNotUploadedEmptyDescription",
+            )}
           />
         </AdminPanel>
-        <AdminPanel title="Checks (driver)">
-          <TeChecklist items={checks} onToggle={toggleCheck} ariaLabel="Driver checks" />
+        <AdminPanel title={t("screen.admin.applications.applicationReviewDetail.checksDriver")}>
+          <TeChecklist
+            items={checks}
+            onToggle={toggleCheck}
+            ariaLabel={t("screen.admin.applications.applicationReviewDetail.driverChecks")}
+          />
         </AdminPanel>
-        <TeInlineAlert tone="warning" title="Approve is blocked">
-          Approve stays off until every check passes and every document is verified. Approval
-          assigns the Starter plan (D-24).
+        <TeInlineAlert
+          tone="warning"
+          title={t("screen.admin.applications.applicationReviewDetail.approveIsBlocked")}
+        >
+          {t("screen.admin.applications.applicationReviewDetail.approveStaysOffUntilEvery")}
         </TeInlineAlert>
         <AdminPanel
-          title="Decision"
+          title={t("screen.admin.applications.applicationReviewDetail.decisionTitle")}
           footer={
             <AdminActions>
-              <AdminScreenLink slug="application-queue">Back to queue</AdminScreenLink>
+              <AdminScreenLink slug="application-queue">
+                {t("screen.admin.applications.applicationReviewDetail.backToQueue")}
+              </AdminScreenLink>
               <AdminScreenLink slug="reject-with-reason-decision" variant="ghost">
-                Reject
+                {t("screen.admin.applications.applicationReviewDetail.reject")}
               </AdminScreenLink>
               <AdminScreenLink slug="request-changes-decision" variant="secondary">
-                Request changes
+                {t("screen.admin.applications.applicationReviewDetail.requestChanges")}
               </AdminScreenLink>
               <TeButton disabled={!canApprove} onClick={() => void handleApprove()}>
-                {busy ? "Approving..." : "Approve application"}
+                {busy
+                  ? t("screen.admin.applications.applicationReviewDetail.approving")
+                  : t("screen.admin.applications.applicationReviewDetail.approveApplication")}
               </TeButton>
             </AdminActions>
           }
         >
           <p className="te-caption">
-            Choose one decision. Each decision is written to the audit log.
+            {t("screen.admin.applications.applicationReviewDetail.chooseOneDecisionEachDecision")}
           </p>
         </AdminPanel>
       </StatePreview>

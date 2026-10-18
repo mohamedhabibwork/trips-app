@@ -1,6 +1,7 @@
 import { cn } from "@trips-app/ui/lib/utils";
 import { TeButton } from "@trips-app/ui/components/te-button";
 import { TeIcon } from "@trips-app/ui/components/te-icon";
+import { t } from "@trips-app/i18n";
 
 export interface TePaginationLabels {
   previous: string;
@@ -10,9 +11,15 @@ export interface TePaginationLabels {
 }
 
 export const TE_PAGINATION_DEFAULT_LABELS: TePaginationLabels = {
-  previous: "Previous page",
-  next: "Next page",
-  current: "Page {page} of {pageCount}",
+  get previous() {
+    return t("ui.tePagination.labels.previousPage");
+  },
+  get next() {
+    return t("ui.tePagination.labels.nextPage");
+  },
+  get current() {
+    return t("ui.tePagination.labels.pageOf");
+  },
 };
 
 export function formatPageStatus(pattern: string, page: number, pageCount: number): string {

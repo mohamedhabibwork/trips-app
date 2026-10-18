@@ -27,148 +27,390 @@ export const ORGANIZATION_SCREENS_PART_B: readonly ScreenEntry[] = [
   {
     id: "SCR-ORG-22",
     slug: "deal-detail-and-negotiation",
-    title: "Deal detail and negotiation",
+    titleKey: "screen.registry.organization.dealDetailAndNegotiation.title",
     surface: "organization",
     component: DealDetailAndNegotiation,
+    loader: async ({ queryClient, orpc, auth }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+      try {
+        await Promise.allSettled([
+          queryClient.prefetchQuery(
+            orpc.negotiation.listOrganizationNegotiations.queryOptions({ input: {} }),
+          ),
+        ]);
+      } catch {
+        // Gracefully ignore SSR errors
+      }
+    },
   },
   {
     id: "SCR-ORG-23",
     slug: "bookings-and-travelers",
-    title: "Bookings and travelers",
+    titleKey: "screen.registry.organization.bookingsAndTravelers.title",
     surface: "organization",
     component: BookingsAndTravelers,
+    loader: async ({ queryClient, orpc, auth }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+      try {
+        await queryClient.ensureQueryData(
+          orpc.booking.listOrganizationBookings.queryOptions({ input: {} }),
+        );
+      } catch {
+        // Gracefully ignore SSR errors
+      }
+    },
   },
   {
     id: "SCR-ORG-24",
     slug: "booking-detail",
-    title: "Booking detail",
+    titleKey: "screen.registry.organization.bookingDetail.title",
     surface: "organization",
     component: BookingDetail,
+    loader: async ({ queryClient, orpc, auth }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+      try {
+        await Promise.allSettled([
+          queryClient.prefetchQuery(
+            orpc.booking.listOrganizationBookings.queryOptions({ input: {} }),
+          ),
+          queryClient.prefetchQuery(orpc.payments.listPayments.queryOptions({ input: undefined })),
+        ]);
+      } catch {
+        // Gracefully ignore SSR errors
+      }
+    },
   },
   {
     id: "SCR-ORG-25",
     slug: "seat-map-and-seat-assignment",
-    title: "Seat map and seat assignment",
+    titleKey: "screen.registry.organization.seatMapAndSeatAssignment.title",
     surface: "organization",
     component: SeatMapAndSeatAssignment,
+    loader: async ({ queryClient, orpc, auth }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+      try {
+        await Promise.allSettled([
+          queryClient.prefetchQuery(orpc.trips.listOrganizationTrips.queryOptions({ input: {} })),
+        ]);
+      } catch {
+        // Gracefully ignore SSR errors
+      }
+    },
   },
   {
     id: "SCR-ORG-26",
     slug: "program-enrollment-report",
-    title: "Program enrollment report",
+    titleKey: "screen.registry.organization.programEnrollmentReport.title",
     surface: "organization",
     component: ProgramEnrollmentReport,
+    loader: async ({ queryClient, orpc, auth }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+      try {
+        await Promise.allSettled([
+          queryClient.prefetchQuery(orpc.trips.listOrganizationTrips.queryOptions({ input: {} })),
+        ]);
+      } catch {
+        // Gracefully ignore SSR errors
+      }
+    },
   },
   {
     id: "SCR-ORG-27",
     slug: "coupons-list",
-    title: "Coupons list",
+    titleKey: "screen.registry.organization.couponsList.title",
     surface: "organization",
     component: CouponsList,
+    loader: async ({ queryClient, orpc, auth }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+      try {
+        await Promise.allSettled([
+          queryClient.prefetchQuery(
+            orpc.coupons.listOrganizationCoupons.queryOptions({ input: {} }),
+          ),
+          queryClient.prefetchQuery(
+            orpc.plans.getOrganizationSubscription.queryOptions({ input: undefined }),
+          ),
+        ]);
+      } catch {
+        // Gracefully ignore SSR errors
+      }
+    },
   },
   {
     id: "SCR-ORG-28",
     slug: "coupon-editor",
-    title: "Coupon editor",
+    titleKey: "screen.registry.organization.couponEditor.title",
     surface: "organization",
     component: CouponEditor,
+    loader: async ({ queryClient, orpc, auth }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+      try {
+        await Promise.allSettled([
+          queryClient.prefetchQuery(
+            orpc.coupons.listOrganizationCoupons.queryOptions({ input: {} }),
+          ),
+        ]);
+      } catch {
+        // Gracefully ignore SSR errors
+      }
+    },
   },
   {
     id: "SCR-ORG-29",
     slug: "coupon-analytics",
-    title: "Coupon analytics",
+    titleKey: "screen.registry.organization.couponAnalytics.title",
     surface: "organization",
     component: CouponAnalytics,
+    loader: async ({ queryClient, orpc, auth }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+      try {
+        await queryClient.ensureQueryData(
+          orpc.coupons.listOrganizationCoupons.queryOptions({ input: {} }),
+        );
+      } catch {
+        // Gracefully ignore SSR errors
+      }
+    },
   },
   {
     id: "SCR-ORG-30",
     slug: "trip-accounting",
-    title: "Trip accounting",
+    titleKey: "screen.registry.organization.tripAccounting.title",
     surface: "organization",
     component: TripAccounting,
+    loader: async ({ queryClient, orpc, auth }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+      try {
+        await Promise.allSettled([
+          queryClient.prefetchQuery(
+            orpc.accounting.getOrganizationSummary.queryOptions({ input: undefined }),
+          ),
+          queryClient.prefetchQuery(orpc.trips.listOrganizationTrips.queryOptions({ input: {} })),
+        ]);
+      } catch {
+        // Gracefully ignore SSR errors
+      }
+    },
   },
   {
     id: "SCR-ORG-31",
     slug: "ledger-and-exports",
-    title: "Ledger and exports",
+    titleKey: "screen.registry.organization.ledgerAndExports.title",
     surface: "organization",
     component: LedgerAndExports,
+    loader: async ({ queryClient, orpc, auth }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+      try {
+        await queryClient.ensureQueryData(
+          orpc.accounting.listLedgerEntries.queryOptions({ input: {} }),
+        );
+      } catch {
+        // Gracefully ignore SSR errors
+      }
+    },
   },
   {
     id: "SCR-ORG-32",
     slug: "settlements",
-    title: "Settlements",
+    titleKey: "screen.registry.organization.settlements.title",
     surface: "organization",
     component: Settlements,
+    loader: async ({ queryClient, orpc, auth }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+      try {
+        await queryClient.ensureQueryData(
+          orpc.accounting.listLedgerEntries.queryOptions({ input: {} }),
+        );
+      } catch {
+        // Gracefully ignore SSR errors
+      }
+    },
   },
   {
     id: "SCR-ORG-33",
     slug: "subscription-and-billing",
-    title: "Subscription and billing",
+    titleKey: "screen.registry.organization.subscriptionAndBilling.title",
     surface: "organization",
     component: SubscriptionAndBilling,
+    loader: async ({ queryClient, orpc, auth }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+      try {
+        await Promise.allSettled([
+          queryClient.prefetchQuery(
+            orpc.plans.getOrganizationSubscription.queryOptions({ input: undefined }),
+          ),
+          queryClient.prefetchQuery(orpc.trips.listOrganizationTrips.queryOptions({ input: {} })),
+          queryClient.prefetchQuery(orpc.employees.list.queryOptions({ input: {} })),
+          queryClient.prefetchQuery(
+            orpc.coupons.listOrganizationCoupons.queryOptions({ input: {} }),
+          ),
+        ]);
+      } catch {
+        // Gracefully ignore SSR errors
+      }
+    },
   },
   {
     id: "SCR-ORG-34",
     slug: "employees-list",
-    title: "Employees list",
+    titleKey: "screen.registry.organization.employeesList.title",
     surface: "organization",
     component: EmployeesList,
+    loader: async ({ queryClient, orpc, auth }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+      try {
+        await queryClient.ensureQueryData(orpc.employees.list.queryOptions({ input: {} }));
+      } catch {
+        // Gracefully ignore SSR errors
+      }
+    },
   },
   {
     id: "SCR-ORG-35",
     slug: "employee-invitation-and-permissions",
-    title: "Employee invitation and permissions",
+    titleKey: "screen.registry.organization.employeeInvitationAndPermissions.title",
     surface: "organization",
     component: EmployeeInvitationAndPermissions,
+    loader: async ({ queryClient, orpc, auth }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+      try {
+        await Promise.allSettled([
+          queryClient.prefetchQuery(orpc.employees.list.queryOptions({ input: {} })),
+        ]);
+      } catch {
+        // Gracefully ignore SSR errors
+      }
+    },
   },
   {
     id: "SCR-ORG-36",
     slug: "crm-and-webhooks",
-    title: "CRM and webhooks",
+    titleKey: "screen.registry.organization.crmAndWebhooks.title",
     surface: "organization",
     component: CrmAndWebhooks,
+    loader: async ({ queryClient, orpc, auth }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+      try {
+        await queryClient.ensureQueryData(
+          orpc.organization.getOrganizationSettings.queryOptions({ input: {} }),
+        );
+      } catch {
+        // Gracefully ignore SSR errors
+      }
+    },
   },
   {
     id: "SCR-ORG-37",
     slug: "invoices-list",
-    title: "Invoices list",
+    titleKey: "screen.registry.organization.invoicesList.title",
     surface: "organization",
     component: InvoicesList,
+    loader: async ({ queryClient, orpc, auth }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+      try {
+        await queryClient.ensureQueryData(
+          orpc.accounting.listLedgerEntries.queryOptions({ input: {} }),
+        );
+      } catch {
+        // Gracefully ignore SSR errors
+      }
+    },
   },
   {
     id: "SCR-ORG-38",
     slug: "issue-invoice-b2b-or-b2c",
-    title: "Issue invoice (B2B or B2C)",
+    titleKey: "screen.registry.organization.issueInvoiceB2bOrB2c.title",
     surface: "organization",
     component: IssueInvoiceB2bOrB2c,
+    loader: async ({ queryClient, orpc, auth }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+      try {
+        await Promise.allSettled([
+          queryClient.prefetchQuery(
+            orpc.booking.listOrganizationBookings.queryOptions({ input: {} }),
+          ),
+        ]);
+      } catch {
+        // Gracefully ignore SSR errors
+      }
+    },
   },
   {
     id: "SCR-ORG-39",
     slug: "analytics-and-reports",
-    title: "Analytics and reports",
+    titleKey: "screen.registry.organization.analyticsAndReports.title",
     surface: "organization",
     component: AnalyticsAndReports,
+    loader: async ({ queryClient, orpc, auth }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+      try {
+        await Promise.allSettled([
+          queryClient.prefetchQuery(
+            orpc.booking.listOrganizationBookings.queryOptions({ input: {} }),
+          ),
+          queryClient.prefetchQuery(
+            orpc.coupons.listOrganizationCoupons.queryOptions({ input: {} }),
+          ),
+          queryClient.prefetchQuery(
+            orpc.accounting.getOrganizationSummary.queryOptions({ input: undefined }),
+          ),
+        ]);
+      } catch {
+        // Gracefully ignore SSR errors
+      }
+    },
   },
   {
     id: "SCR-ORG-40",
     slug: "live-operations",
-    title: "Live operations",
+    titleKey: "screen.registry.organization.liveOperations.title",
     surface: "organization",
     component: LiveOperations,
+    loader: async ({ queryClient, orpc, auth }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+      try {
+        await Promise.allSettled([
+          queryClient.prefetchQuery(orpc.trips.listOrganizationTrips.queryOptions({ input: {} })),
+          queryClient.prefetchQuery(orpc.fleet.listVehicles.queryOptions({ input: {} })),
+        ]);
+      } catch {
+        // Gracefully ignore SSR errors
+      }
+    },
   },
   {
     id: "SCR-ORG-41",
     slug: "trip-report-review",
-    title: "Trip report review",
+    titleKey: "screen.registry.organization.tripReportReview.title",
     surface: "organization",
     component: TripReportReview,
+    loader: async ({ queryClient, orpc, auth }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+      try {
+        await Promise.allSettled([
+          queryClient.prefetchQuery(orpc.trips.listOrganizationTrips.queryOptions({ input: {} })),
+          queryClient.prefetchQuery(orpc.fleet.listVehicles.queryOptions({ input: {} })),
+        ]);
+      } catch {
+        // Gracefully ignore SSR errors
+      }
+    },
   },
   {
     id: "SCR-ORG-42",
     slug: "child-safety-reports",
-    title: "Child-safety reports",
+    titleKey: "screen.registry.organization.childSafetyReports.title",
     surface: "organization",
     component: ChildSafetyReports,
+    loader: async ({ queryClient, orpc, auth }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+      try {
+        await Promise.allSettled([
+          queryClient.prefetchQuery(orpc.trips.listOrganizationTrips.queryOptions({ input: {} })),
+        ]);
+      } catch {
+        // Gracefully ignore SSR errors
+      }
+    },
   },
 ];

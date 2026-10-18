@@ -20,113 +20,202 @@ export const SHARED_SCREENS: readonly ScreenEntry[] = [
   {
     id: "SCR-SHR-01",
     slug: "plan-limit-upgrade-prompt",
-    title: "Plan-limit upgrade prompt",
+    titleKey: "screen.registry.shared.planLimitUpgradePrompt.title",
     surface: "shared",
     component: ScrShr01PlanLimitUpgradePrompt,
+    loader: async ({ auth }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+    },
   },
   {
     id: "SCR-SHR-02",
     slug: "permission-denied",
-    title: "Permission denied (403)",
+    titleKey: "screen.registry.shared.permissionDenied.title",
     surface: "shared",
     component: ScrShr02PermissionDenied,
+    loader: async ({ auth }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+    },
   },
   {
     id: "SCR-SHR-03",
     slug: "not-found",
-    title: "Not found (404)",
+    titleKey: "screen.registry.shared.notFound.title",
     surface: "shared",
     component: ScrShr03NotFound,
+    loader: async ({ auth }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+    },
   },
   {
     id: "SCR-SHR-04",
     slug: "unauthorized",
-    title: "Unauthorized (401)",
+    titleKey: "screen.registry.shared.unauthorized.title",
     surface: "shared",
     component: ScrShr04Unauthorized,
+    loader: async ({ auth }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+    },
   },
   {
     id: "SCR-SHR-05",
     slug: "server-error",
-    title: "Server error (500)",
+    titleKey: "screen.registry.shared.serverError.title",
     surface: "shared",
     component: ScrShr05ServerError,
+    loader: async ({ auth }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+    },
   },
   {
     id: "SCR-SHR-06",
     slug: "service-unavailable",
-    title: "Service unavailable (503)",
+    titleKey: "screen.registry.shared.serviceUnavailable.title",
     surface: "shared",
     component: ScrShr06ServiceUnavailable,
+    loader: async ({ auth }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+    },
   },
   {
     id: "SCR-SHR-07",
     slug: "maintenance-page",
-    title: "Maintenance page",
+    titleKey: "screen.registry.shared.maintenancePage.title",
     surface: "shared",
     component: ScrShr07MaintenancePage,
+    loader: async ({ auth }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+    },
   },
   {
     id: "SCR-SHR-08",
     slug: "offline-banner",
-    title: "Offline banner",
+    titleKey: "screen.registry.shared.offlineBanner.title",
     surface: "shared",
     component: ScrShr08OfflineBanner,
+    loader: async ({ auth }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+    },
   },
   {
     id: "SCR-SHR-09",
     slug: "confirmation-dialog",
-    title: "Confirmation dialog",
+    titleKey: "screen.registry.shared.confirmationDialog.title",
     surface: "shared",
     component: ScrShr09ConfirmationDialog,
+    loader: async ({ auth }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+    },
   },
   {
     id: "SCR-SHR-10",
     slug: "language-switch-and-rtl",
-    title: "Language switch and RTL",
+    titleKey: "screen.registry.shared.languageSwitchAndRtl.title",
     surface: "shared",
     component: ScrShr10LanguageSwitchAndRtl,
+    loader: async ({ auth }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+    },
   },
   {
     id: "SCR-SHR-11",
     slug: "notification-centre",
-    title: "Notification centre",
+    titleKey: "screen.registry.shared.notificationCentre.title",
     surface: "shared",
     component: ScrShr11NotificationCentre,
+    loader: async ({ queryClient, orpc, auth }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+      try {
+        await queryClient.ensureQueryData(orpc.notifications.listInbox.queryOptions({ input: {} }));
+      } catch {
+        // Graceful handling for SSR
+      }
+    },
   },
   {
     id: "SCR-SHR-12",
     slug: "receipt-and-invoice-view",
-    title: "Receipt and invoice view",
+    titleKey: "screen.registry.shared.receiptAndInvoiceView.title",
     surface: "shared",
     component: ScrShr12ReceiptAndInvoiceView,
+    loader: async ({ queryClient, orpc, auth }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+      try {
+        await queryClient.ensureQueryData(
+          orpc.accounting.listLedgerEntries.queryOptions({ input: {} }),
+        );
+      } catch {
+        // Graceful handling for SSR
+      }
+    },
   },
   {
     id: "SCR-SHR-13",
     slug: "role-and-organization-switcher",
-    title: "Role and organization switcher",
+    titleKey: "screen.registry.shared.roleAndOrganizationSwitcher.title",
     surface: "shared",
     component: ScrShr13RoleAndOrganizationSwitcher,
+    loader: async ({ queryClient, orpc, auth }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+      try {
+        await Promise.allSettled([
+          queryClient.ensureQueryData(
+            orpc.auth.listMyRolesAndOrganizations.queryOptions({ input: undefined }),
+          ),
+          queryClient.ensureQueryData(
+            orpc.organization.getOrganizationSettings.queryOptions({ input: {} }),
+          ),
+        ]);
+      } catch {
+        // Graceful handling for SSR
+      }
+    },
   },
   {
     id: "SCR-SHR-14",
     slug: "otp-entry",
-    title: "OTP entry",
+    titleKey: "screen.registry.shared.otpEntry.title",
     surface: "shared",
     component: ScrShr14OtpEntry,
+    loader: async ({ auth }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+    },
   },
   {
     id: "SCR-SHR-15",
     slug: "seat-map",
-    title: "Seat map",
+    titleKey: "screen.registry.shared.seatMap.title",
     surface: "shared",
     component: ScrShr15SeatMap,
+    loader: async ({ queryClient, orpc }) => {
+      try {
+        const trips = await queryClient.ensureQueryData(
+          orpc.trips.browsePublicTrips.queryOptions({ input: {} }),
+        );
+        const firstTrip = trips?.items?.[0];
+        if (firstTrip) {
+          await queryClient.ensureQueryData(
+            orpc.seats.getSeatMap.queryOptions({ input: { tripId: firstTrip.id } }),
+          );
+        }
+      } catch {
+        // Graceful handling for SSR
+      }
+    },
   },
   {
     id: "SCR-SHR-16",
     slug: "document-and-photo-upload",
-    title: "Document and photo upload",
+    titleKey: "screen.registry.shared.documentAndPhotoUpload.title",
     surface: "shared",
     component: ScrShr16DocumentAndPhotoUpload,
+    loader: async ({ queryClient, orpc, auth }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+      try {
+        await queryClient.ensureQueryData(orpc.media.listFiles.queryOptions({ input: {} }));
+      } catch {
+        // Graceful handling for SSR
+      }
+    },
   },
 ];

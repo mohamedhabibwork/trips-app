@@ -7,6 +7,7 @@ import { TeSearchField } from "@trips-app/ui/components/te-search-field";
 import { TeSelect, type TeSelectOption } from "@trips-app/ui/components/te-select";
 import { TeSwitch } from "@trips-app/ui/components/te-switch";
 import { TeTabs, type TeTab } from "@trips-app/ui/components/te-tabs";
+import { t } from "@trips-app/i18n";
 import { AdminScreenLink } from "./admin-links";
 
 export interface AdminStatusPresentation {
@@ -34,7 +35,11 @@ export interface AdminPageProps {
 export function AdminPage({ children, backHome = true }: AdminPageProps) {
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-6 sm:px-6">
-      {backHome ? <AdminScreenLink slug="admin-home">Back to admin home</AdminScreenLink> : null}
+      {backHome ? (
+        <AdminScreenLink slug="admin-home">
+          {t("screen.admin.common.adminShared.backToAdminHome")}
+        </AdminScreenLink>
+      ) : null}
       {children}
     </div>
   );
@@ -144,10 +149,56 @@ export function AdminChartPlaceholder({ label }: { label: string }) {
   return (
     <div
       role="img"
-      aria-label={`${label}. Chart data pending.`}
+      aria-label={t("screen.admin.common.adminShared.chartDataPending", { label })}
       className="flex h-48 items-center justify-center rounded-md border border-dashed p-4"
     >
-      <p className="te-caption">{label}. Chart data pending.</p>
+      <p className="te-caption">
+        {label}
+        {t("screen.admin.common.adminShared.chartDataPending2")}
+      </p>
     </div>
   );
 }
+
+const ADMIN_ENTITY_KEY = "trips.admin.selectedEntityId";
+const ADMIN_LAB_TEST_KEY = "trips.admin.selectedLabTestId";
+const ADMIN_DEAL_KEY = "trips.admin.selectedDealId";
+const ADMIN_DISPUTE_KEY = "trips.admin.selectedDisputeId";
+const ADMIN_COUPON_KEY = "trips.admin.selectedCouponId";
+const ADMIN_PLAN_KEY = "trips.admin.selectedPlanId";
+
+function readStorage(key: string): string | null {
+  if (typeof window === "undefined") return null;
+  try {
+    return window.sessionStorage.getItem(key);
+  } catch {
+    return null;
+  }
+}
+
+function writeStorage(key: string, id: string | null): void {
+  if (typeof window === "undefined") return;
+  try {
+    if (id === null) {
+      window.sessionStorage.removeItem(key);
+    } else {
+      window.sessionStorage.setItem(key, id);
+    }
+  } catch {
+    // Ignore storage errors
+  }
+}
+
+export const getSelectedAdminEntityId = () => readStorage(ADMIN_ENTITY_KEY);
+export const setSelectedAdminEntityId = (id: string | null) => writeStorage(ADMIN_ENTITY_KEY, id);
+export const getSelectedAdminLabTestId = () => readStorage(ADMIN_LAB_TEST_KEY);
+export const setSelectedAdminLabTestId = (id: string | null) =>
+  writeStorage(ADMIN_LAB_TEST_KEY, id);
+export const getSelectedAdminDealId = () => readStorage(ADMIN_DEAL_KEY);
+export const setSelectedAdminDealId = (id: string | null) => writeStorage(ADMIN_DEAL_KEY, id);
+export const getSelectedAdminDisputeId = () => readStorage(ADMIN_DISPUTE_KEY);
+export const setSelectedAdminDisputeId = (id: string | null) => writeStorage(ADMIN_DISPUTE_KEY, id);
+export const getSelectedAdminCouponId = () => readStorage(ADMIN_COUPON_KEY);
+export const setSelectedAdminCouponId = (id: string | null) => writeStorage(ADMIN_COUPON_KEY, id);
+export const getSelectedAdminPlanId = () => readStorage(ADMIN_PLAN_KEY);
+export const setSelectedAdminPlanId = (id: string | null) => writeStorage(ADMIN_PLAN_KEY, id);

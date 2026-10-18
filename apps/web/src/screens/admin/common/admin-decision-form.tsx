@@ -2,6 +2,7 @@ import { useState, type ReactNode } from "react";
 import { TeButton } from "@trips-app/ui/components/te-button";
 import { TeDialog, type TeDialogTone } from "@trips-app/ui/components/te-dialog";
 import { TeTextarea } from "@trips-app/ui/components/te-textarea";
+import { t } from "@trips-app/i18n";
 import { AdminScreenLink, type AdminSlug } from "./admin-links";
 import { AdminActions } from "./admin-shared";
 
@@ -81,7 +82,7 @@ export function AdminDecisionForm({
           void onConfirm(reason.trim());
         }}
         confirmDisabled={!canConfirm}
-        secondaryLabel="Keep editing"
+        secondaryLabel={t("screen.admin.common.adminDecisionForm.keepEditing")}
         onSecondary={() => setDialogOpen(false)}
       >
         {dialogEffect}

@@ -3,6 +3,7 @@ import { ORGANIZATION_SCREENS } from "./organization";
 import { PUBLIC_SCREENS } from "./public";
 import { SHARED_SCREENS } from "./shared";
 import type { ScreenEntry, ScreenSurface } from "./types";
+import { t } from "@trips-app/i18n";
 
 // Every generated screen across the web surfaces, in spec order per surface.
 export const ALL_SCREENS: readonly ScreenEntry[] = [
@@ -13,10 +14,18 @@ export const ALL_SCREENS: readonly ScreenEntry[] = [
 ];
 
 export const SURFACE_LABELS: Readonly<Record<ScreenSurface, string>> = {
-  public: "Public and sign-in",
-  shared: "Shared states",
-  organization: "Organization dashboard",
-  admin: "Admin console",
+  get public() {
+    return t("screen.registry.surface.publicAndSignIn");
+  },
+  get shared() {
+    return t("screen.registry.surface.sharedStates");
+  },
+  get organization() {
+    return t("screen.registry.surface.organizationDashboard");
+  },
+  get admin() {
+    return t("screen.registry.surface.adminConsole");
+  },
 };
 
 export function screenPath(screen: Pick<ScreenEntry, "surface" | "slug">): string {

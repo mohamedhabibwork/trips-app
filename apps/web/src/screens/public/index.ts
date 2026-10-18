@@ -1,4 +1,5 @@
 import type { ScreenEntry } from "@/screens/types";
+import { ensureLookupTypes } from "@/utils/lookups";
 import { Landing } from "./landing/landing";
 import { SignUpChooser } from "./sign-up/sign-up-chooser";
 import { TravelerSignUp } from "./sign-up/traveler-sign-up";
@@ -23,134 +24,233 @@ export const PUBLIC_SCREENS: readonly ScreenEntry[] = [
   {
     id: "SCR-PUB-01",
     slug: "landing",
-    title: "Landing",
+    titleKey: "screen.registry.public.landing.title",
     surface: "public",
     component: Landing,
+    loader: async ({ queryClient, orpc }) => {
+      try {
+        await queryClient.ensureQueryData(orpc.trips.browsePublicTrips.queryOptions({ input: {} }));
+      } catch {
+        // Graceful handling for SSR
+      }
+    },
   },
   {
     id: "SCR-PUB-02",
     slug: "sign-up-chooser",
-    title: "Sign-up chooser (/register)",
+    titleKey: "screen.registry.public.signUpChooser.title",
     surface: "public",
     component: SignUpChooser,
+    loader: async ({ auth }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+    },
   },
   {
     id: "SCR-PUB-03",
     slug: "traveler-sign-up",
-    title: "Traveler sign-up",
+    titleKey: "screen.registry.public.travelerSignUp.title",
     surface: "public",
     component: TravelerSignUp,
+    loader: async ({ auth }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+    },
   },
   {
     id: "SCR-PUB-04",
     slug: "platform-driver-sign-up",
-    title: "Platform driver sign-up",
+    titleKey: "screen.registry.public.platformDriverSignUp.title",
     surface: "public",
     component: PlatformDriverSignUp,
+    loader: async ({ queryClient }) => {
+      try {
+        await ensureLookupTypes(queryClient);
+      } catch {
+        // Graceful handling for SSR
+      }
+    },
   },
   {
     id: "SCR-PUB-05",
     slug: "photographer-sign-up",
-    title: "Photographer sign-up",
+    titleKey: "screen.registry.public.photographerSignUp.title",
     surface: "public",
     component: PhotographerSignUp,
+    loader: async ({ queryClient }) => {
+      try {
+        await ensureLookupTypes(queryClient);
+      } catch {
+        // Graceful handling for SSR
+      }
+    },
   },
   {
     id: "SCR-PUB-06",
     slug: "organization-sign-up",
-    title: "Organization sign-up (web only)",
+    titleKey: "screen.registry.public.organizationSignUp.title",
     surface: "public",
     component: OrganizationSignUp,
+    loader: async ({ queryClient }) => {
+      try {
+        await ensureLookupTypes(queryClient);
+      } catch {
+        // Graceful handling for SSR
+      }
+    },
   },
   {
     id: "SCR-PUB-07",
     slug: "verification-by-code",
-    title: "Verification by code",
+    titleKey: "screen.registry.public.verificationByCode.title",
     surface: "public",
     component: VerificationByCode,
+    loader: async ({ auth }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+    },
   },
   {
     id: "SCR-PUB-08",
     slug: "sign-in",
-    title: "Sign-in (traveler and supplier)",
+    titleKey: "screen.registry.public.signIn.title",
     surface: "public",
     component: SignIn,
+    loader: async ({ auth }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+    },
   },
   {
     id: "SCR-PUB-09",
     slug: "admin-sign-in",
-    title: "Admin sign-in",
+    titleKey: "screen.registry.public.adminSignIn.title",
     surface: "public",
     component: AdminSignIn,
+    loader: async ({ auth }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+    },
   },
   {
     id: "SCR-PUB-10",
     slug: "admin-authenticator-set-up-and-code",
-    title: "Admin authenticator set-up and code",
+    titleKey: "screen.registry.public.adminAuthenticatorSetUpAndCode.title",
     surface: "public",
     component: AdminAuthenticatorSetUpAndCode,
+    loader: async ({ auth }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+    },
   },
   {
     id: "SCR-PUB-11",
     slug: "organization-staff-sign-in-with-code",
-    title: "Organization staff sign-in with code",
+    titleKey: "screen.registry.public.organizationStaffSignInWithCode.title",
     surface: "public",
     component: OrganizationStaffSignInWithCode,
+    loader: async ({ auth }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+    },
   },
   {
     id: "SCR-PUB-12",
     slug: "staff-code-set-up",
-    title: "Staff code set-up (first sign-in)",
+    titleKey: "screen.registry.public.staffCodeSetUp.title",
     surface: "public",
     component: StaffCodeSetUp,
+    loader: async ({ auth }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+    },
   },
   {
     id: "SCR-PUB-13",
     slug: "password-reset",
-    title: "Password reset",
+    titleKey: "screen.registry.public.passwordReset.title",
     surface: "public",
     component: PasswordReset,
+    loader: async ({ auth }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+    },
   },
   {
     id: "SCR-PUB-14",
     slug: "session-expired",
-    title: "Session expired",
+    titleKey: "screen.registry.public.sessionExpired.title",
     surface: "public",
     component: SessionExpired,
+    loader: async ({ auth }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+    },
   },
   {
     id: "SCR-PUB-15",
     slug: "account-suspended",
-    title: "Account suspended",
+    titleKey: "screen.registry.public.accountSuspended.title",
     surface: "public",
     component: AccountSuspended,
+    loader: async ({ auth }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+    },
   },
   {
     id: "SCR-PUB-16",
     slug: "deletion-grace-period",
-    title: "Deletion grace period",
+    titleKey: "screen.registry.public.deletionGracePeriod.title",
     surface: "public",
     component: DeletionGracePeriod,
+    loader: async ({ queryClient, orpc }) => {
+      try {
+        await queryClient.ensureQueryData(
+          orpc.auth.getAuthSettings.queryOptions({ input: undefined }),
+        );
+      } catch {
+        // Graceful handling for SSR
+      }
+    },
   },
   {
     id: "SCR-PUB-17",
     slug: "application-status-and-changes-response",
-    title: "Application status and changes response",
+    titleKey: "screen.registry.public.applicationStatusAndChangesResponse.title",
     surface: "public",
     component: ApplicationStatusAndChangesResponse,
+    loader: async ({ queryClient, orpc, auth, search }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+      const appId = search?.applicationId ? String(search.applicationId) : undefined;
+      try {
+        await queryClient.ensureQueryData(
+          orpc.onboarding.getApplicationStatus.queryOptions({
+            input: appId ? { applicationId: appId } : {},
+          }),
+        );
+      } catch {
+        // Graceful handling for SSR
+      }
+    },
   },
   {
     id: "SCR-PUB-18",
     slug: "appeal-a-rejection",
-    title: "Appeal a rejection",
+    titleKey: "screen.registry.public.appealARejection.title",
     surface: "public",
     component: AppealARejection,
+    loader: async ({ queryClient, orpc, auth, search }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+      const appId = search?.applicationId ? String(search.applicationId) : undefined;
+      try {
+        await queryClient.ensureQueryData(
+          orpc.onboarding.getApplicationStatus.queryOptions({
+            input: appId ? { applicationId: appId } : {},
+          }),
+        );
+      } catch {
+        // Graceful handling for SSR
+      }
+    },
   },
   {
     id: "SCR-PUB-19",
     slug: "moderator-sign-in-with-staff-code",
-    title: "Moderator sign-in with staff code",
+    titleKey: "screen.registry.public.moderatorSignInWithStaffCode.title",
     surface: "public",
     component: ModeratorSignInWithStaffCode,
+    loader: async ({ auth }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+    },
   },
 ];

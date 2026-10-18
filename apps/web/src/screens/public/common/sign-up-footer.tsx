@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { TeButton } from "@trips-app/ui/components/te-button";
+import { t } from "@trips-app/i18n";
 import { ScreenLink } from "../../shared/screen-link";
 import { AUTH_ROUTES } from "./auth-routes";
 
@@ -18,15 +19,15 @@ export function SignUpFooter({ submitLabel, disabled }: SignUpFooterProps) {
         </TeButton>
       </div>
       <p className="te-body">
-        Next, confirm your details with a code:{" "}
+        {t("screen.public.common.signUpFooter.nextConfirmYourDetailsWith")}{" "}
         <ScreenLink surface="public" slug="verification-by-code">
-          Verification by code
+          {t("screen.public.common.signUpFooter.verificationByCode")}
         </ScreenLink>
       </p>
       <p className="te-body">
-        Already have an account?{" "}
+        {t("screen.public.common.signUpFooter.alreadyHaveAnAccount")}{" "}
         <Link to={AUTH_ROUTES.signIn} className="te-link">
-          Sign in
+          {t("screen.public.common.signUpFooter.signIn")}
         </Link>
       </p>
     </div>

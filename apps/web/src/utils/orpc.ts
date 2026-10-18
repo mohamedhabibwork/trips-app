@@ -39,4 +39,4 @@ const link = buildAuthLink({ controller: authController, baseUrl: ENV.VITE_SERVE
 
 export const client: AppRouterClient = createORPCClient(link);
 
-export const orpc = createTanstackQueryUtils(client);
+export const orpc = createTanstackQueryUtils<AppRouterClient>(client);

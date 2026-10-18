@@ -1,15 +1,17 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { TeButton } from "@trips-app/ui/components/te-button";
 import { TeInlineAlert } from "@trips-app/ui/components/te-inline-alert";
 import { TeInput } from "@trips-app/ui/components/te-input";
 import { TePageHeader } from "@trips-app/ui/components/te-page-header";
 import { TeSelect, type TeSelectOption } from "@trips-app/ui/components/te-select";
+import { t } from "@trips-app/i18n";
 import { useAuth } from "@/auth/auth-context";
 import {
   getSelectedAdminApplicationId,
   setSelectedAdminApplicationId,
 } from "@/screens/onboarding-state";
-import { client } from "@/utils/orpc";
+import { orpc } from "@/utils/orpc";
 import { StatePreview } from "../common/admin-state-preview";
 import { AdminScreenLink, useAdminNavigate } from "../common/admin-links";
 import {
@@ -21,91 +23,89 @@ import {
   type AdminStatusPresentation,
 } from "../common/admin-shared";
 
-const APPEALED: AdminStatusPresentation = {
+const APPEALED = (): AdminStatusPresentation => ({
   tone: "warning",
   icon: "clock",
-  label: "Appealed (pending)",
-};
+  label: t("screen.admin.applications.appealReview.appealedPending"),
+});
 
-const DECISION_OPTIONS: readonly TeSelectOption[] = [
-  { value: "", label: "Select a decision" },
-  { value: "uphold-appeal", label: "Uphold appeal (application becomes Approved)" },
-  { value: "uphold-rejection", label: "Uphold rejection (application stays Rejected)" },
+const DECISION_OPTIONS = (): readonly TeSelectOption[] => [
+  { value: "", label: t("screen.admin.applications.appealReview.selectADecision") },
+  {
+    value: "uphold-appeal",
+    label: t("screen.admin.applications.appealReview.upholdAppealApplicationBecomesApproved"),
+  },
+  {
+    value: "uphold-rejection",
+    label: t("screen.admin.applications.appealReview.upholdRejectionApplicationStaysRejected"),
+  },
 ];
 
 export function AppealReview() {
   const { status: authStatus } = useAuth();
-  const [applicationId, setApplicationId] = useState<string | null>(() =>
-    getSelectedAdminApplicationId(),
-  );
-  const [applicantName, setApplicantName] = useState("[Applicant name]");
-  const [applicationType, setApplicationType] = useState("[Application type]");
-  const [rejectedOn, setRejectedOn] = useState("[Date]");
-  const [rejectionReason, setRejectionReason] = useState("[Reason code]");
-  const [appealStatement, setAppealStatement] = useState("[Appeal statement from the applicant]");
-  const [appealReceived, setAppealReceived] = useState("[Date]");
-  const [appealWindowCloses, setAppealWindowCloses] = useState("[Date]");
+  const queryClient = useQueryClient();
+  const goTo = useAdminNavigate();
+
   const [decision, setDecision] = useState("");
   const [reason, setReason] = useState("");
-  const [busy, setBusy] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const goTo = useAdminNavigate();
+
+  const appealsQuery = useQuery({
+    ...orpc.onboarding.listReviewQueue.queryOptions({
+      input: { state: "Appealed" },
+    }),
+    enabled: authStatus === "authenticated",
+  });
+
+  const selectedId = getSelectedAdminApplicationId();
+  const fallbackId = appealsQuery.data?.[0]?.id ?? null;
+  const targetId = selectedId || fallbackId;
+
+  if (targetId && !selectedId) {
+    setSelectedAdminApplicationId(targetId);
+  }
+
+  const detailQuery = useQuery({
+    ...orpc.onboarding.getApplicationDetail.queryOptions({
+      input: { applicationId: targetId ?? "" },
+    }),
+    enabled: authStatus === "authenticated" && Boolean(targetId),
+  });
+
+  const decideAppealMutation = useMutation(
+    orpc.onboarding.decideAppeal.mutationOptions({
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: orpc.onboarding.key() });
+      },
+    }),
+  );
+
+  const detail = detailQuery.data;
+  const applicationId = detail?.application.id ?? targetId;
+  const applicantName =
+    detail?.applicant?.fullName ?? detail?.application.applicantAccountId ?? "-";
+  const applicationType = detail?.application.applicationType ?? "-";
+  const rejectedOn = detail?.application.reviewedAt
+    ? new Date(detail.application.reviewedAt).toLocaleDateString()
+    : "-";
+  const rejectionReason = detail?.application.decisionNotes ?? "-";
+  const appealStatement = detail?.application.appealStatement ?? "-";
+  const appealReceived = detail?.application.appealedAt
+    ? new Date(detail.application.appealedAt).toLocaleDateString()
+    : "-";
+  const appealWindowCloses = detail?.application.reapplyBlockedUntil
+    ? new Date(detail.application.reapplyBlockedUntil).toLocaleDateString()
+    : "-";
+
+  const busy = decideAppealMutation.isPending;
   const canSave = decision !== "" && reason.trim() !== "" && !busy;
-
-  useEffect(() => {
-    if (authStatus !== "authenticated") return;
-    let cancelled = false;
-
-    async function load() {
-      let targetId = getSelectedAdminApplicationId();
-      if (!targetId || targetId.startsWith("app-")) {
-        const appeals = await client.onboarding.listReviewQueue({
-          state: "Appealed",
-        });
-        targetId = appeals[0]?.id ?? null;
-        if (targetId) setSelectedAdminApplicationId(targetId);
-      }
-      if (!targetId) return;
-
-      const detail = await client.onboarding.getApplicationDetail({ applicationId: targetId });
-      if (cancelled) return;
-      setApplicationId(detail.application.id);
-      setApplicantName(detail.applicant?.fullName ?? "[Applicant name]");
-      setApplicationType(detail.application.applicationType);
-      if (detail.application.reviewedAt) {
-        setRejectedOn(new Date(detail.application.reviewedAt).toLocaleDateString());
-      }
-      if (detail.application.decisionNotes) {
-        setRejectionReason(detail.application.decisionNotes);
-      }
-      if (detail.application.appealStatement) {
-        setAppealStatement(detail.application.appealStatement);
-      }
-      if (detail.application.appealedAt) {
-        setAppealReceived(new Date(detail.application.appealedAt).toLocaleDateString());
-      }
-      if (detail.application.reapplyBlockedUntil) {
-        setAppealWindowCloses(
-          new Date(detail.application.reapplyBlockedUntil).toLocaleDateString(),
-        );
-      }
-    }
-
-    void load().catch(() => {
-      // Ignore when previewed without session
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, [authStatus]);
 
   async function handleSaveDecision() {
     if (!canSave) return;
     if (authStatus === "authenticated" && applicationId && !applicationId.startsWith("app-")) {
-      setBusy(true);
       setErrorMsg(null);
       try {
-        await client.onboarding.decideAppeal({
+        await decideAppealMutation.mutateAsync({
           applicationId,
           decision: decision === "uphold-appeal" ? "approve" : "uphold_rejection",
           decisionReasonCode:
@@ -114,10 +114,8 @@ export function AppealReview() {
         });
       } catch (caught) {
         setErrorMsg(caught instanceof Error ? caught.message : "Could not save appeal decision.");
-        setBusy(false);
         return;
       }
-      setBusy(false);
     }
     await goTo("application-review-detail");
   }
@@ -125,66 +123,86 @@ export function AppealReview() {
   return (
     <AdminPage>
       <TePageHeader
-        title="Appeal review"
-        description="Decide an appeal from a rejected applicant."
+        title={t("screen.admin.applications.appealReview.appealReview")}
+        description={t("screen.admin.applications.appealReview.decideAnAppealFromA")}
       />
       <StatePreview
-        emptyTitle="No appeal statement"
-        emptyDescription="The applicant has not added a statement to this appeal."
-        loadingLabel="Loading the appeal."
+        emptyTitle={t("screen.admin.applications.appealReview.noAppealStatement")}
+        emptyDescription={t("screen.admin.applications.appealReview.theApplicantHasNotAdded")}
+        loadingLabel={t("screen.admin.applications.appealReview.loadingTheAppeal")}
       >
-        <AdminPanel title="Original application">
-          <AdminStatus status={APPEALED} />
+        <AdminPanel title={t("screen.admin.applications.appealReview.originalApplication")}>
+          <AdminStatus status={APPEALED()} />
           <AdminFacts
             items={[
-              { label: "Applicant name", value: applicantName },
-              { label: "Application type", value: applicationType },
-              { label: "Rejected on", value: rejectedOn },
-              { label: "Rejection reason", value: rejectionReason },
+              {
+                label: t("screen.admin.applications.appealReview.applicantName"),
+                value: applicantName,
+              },
+              {
+                label: t("screen.admin.applications.appealReview.applicationType"),
+                value: applicationType,
+              },
+              { label: t("screen.admin.applications.appealReview.rejectedOn"), value: rejectedOn },
+              {
+                label: t("screen.admin.applications.appealReview.rejectionReason"),
+                value: rejectionReason,
+              },
             ]}
           />
           <AdminScreenLink slug="application-review-detail">
-            Open original application
+            {t("screen.admin.applications.appealReview.openOriginalApplication")}
           </AdminScreenLink>
         </AdminPanel>
-        <AdminPanel title="Appeal statement">
+        <AdminPanel title={t("screen.admin.applications.appealReview.appealStatement")}>
           <p>{appealStatement}</p>
           <AdminFacts
             items={[
-              { label: "Appeal received", value: appealReceived },
-              { label: "Appeal window closes", value: appealWindowCloses },
+              {
+                label: t("screen.admin.applications.appealReview.appealReceived"),
+                value: appealReceived,
+              },
+              {
+                label: t("screen.admin.applications.appealReview.appealWindowCloses"),
+                value: appealWindowCloses,
+              },
             ]}
           />
         </AdminPanel>
         {errorMsg ? (
-          <TeInlineAlert tone="error" title="Could not save decision">
+          <TeInlineAlert
+            tone="error"
+            title={t("screen.admin.applications.appealReview.couldNotSaveDecision")}
+          >
             {errorMsg}
           </TeInlineAlert>
         ) : null}
-        <AdminPanel title="Decision">
+        <AdminPanel title={t("screen.admin.applications.appealReview.decision")}>
           <TeSelect
-            label="Decision (required)"
-            options={DECISION_OPTIONS}
+            label={t("screen.admin.applications.appealReview.decisionRequired")}
+            options={DECISION_OPTIONS()}
             value={decision}
             onValueChange={setDecision}
           />
           <TeInput
-            label="Reason (required)"
+            label={t("screen.admin.applications.appealReview.reasonRequired")}
             value={reason}
             onChange={(event) => setReason(event.target.value)}
-            placeholder="[Reason for the decision]"
-            supportingText="Recorded with the decision in the audit log."
+            placeholder={t("screen.admin.applications.appealReview.reasonForTheDecision")}
+            supportingText={t("screen.admin.applications.appealReview.recordedWithTheDecisionIn")}
           />
         </AdminPanel>
-        <TeInlineAlert tone="info" title="Appeal window">
-          A decision can be saved only while the appeal window is open.
+        <TeInlineAlert tone="info" title={t("screen.admin.applications.appealReview.appealWindow")}>
+          {t("screen.admin.applications.appealReview.aDecisionCanBeSaved")}
         </TeInlineAlert>
         <AdminActions>
           <AdminScreenLink slug="application-review-detail" variant="secondary">
-            Cancel
+            {t("screen.admin.applications.appealReview.cancel")}
           </AdminScreenLink>
           <TeButton disabled={!canSave} onClick={() => void handleSaveDecision()}>
-            {busy ? "Saving..." : "Save decision"}
+            {busy
+              ? t("screen.admin.applications.appealReview.saving")
+              : t("screen.admin.applications.appealReview.saveDecision")}
           </TeButton>
         </AdminActions>
       </StatePreview>

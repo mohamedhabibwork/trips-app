@@ -4,8 +4,10 @@ import { TeFileUpload, type TeFileUploadItem } from "@trips-app/ui/components/te
 import { TeInlineAlert } from "@trips-app/ui/components/te-inline-alert";
 import { TeInput } from "@trips-app/ui/components/te-input";
 import { TeSelect } from "@trips-app/ui/components/te-select";
+import { t } from "@trips-app/i18n";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/auth/auth-context";
-import { client } from "@/utils/orpc";
+import { orpc } from "@/utils/orpc";
 import {
   ensureSupplierSession,
   setApplicantApplicationId,
@@ -29,6 +31,14 @@ function PhotographerSignUpForm({
 }) {
   const { status, locale, signInWithSession } = useAuth();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const submitMutation = useMutation(
+    orpc.onboarding.submitPhotographerApplication.mutationOptions({
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: orpc.onboarding.key() });
+      },
+    }),
+  );
   const [country, setCountry] = useState("");
   const [portfolio, setPortfolio] = useState<readonly TeFileUploadItem[]>([]);
   const [submitting, setSubmitting] = useState(false);
@@ -62,7 +72,7 @@ function PhotographerSignUpForm({
         "portfolio_sample",
         "image/jpeg",
       );
-      const result = await client.onboarding.submitPhotographerApplication({
+      const result = await submitMutation.mutateAsync({
         nationalId: "29201011234567",
         yearsOfExperience: 4,
         cameraBodies: [`${displayName || "Pro"} Camera Kit`],
@@ -106,42 +116,68 @@ function PhotographerSignUpForm({
     >
       <input type="hidden" name="role" value="photographer" />
       <TeInput
-        label="Name or studio name"
+        label={t("screen.public.signUp.photographerSignUp.nameOrStudioName")}
         name="displayName"
         autoComplete="organization"
         required
       />
-      <TeInput label="Email" name="email" type="email" autoComplete="email" required />
-      <TeInput label="Phone" name="phone" type="tel" autoComplete="tel" required />
+      <TeInput
+        label={t("screen.public.signUp.photographerSignUp.email")}
+        name="email"
+        type="email"
+        autoComplete="email"
+        required
+      />
+      <TeInput
+        label={t("screen.public.signUp.photographerSignUp.phone")}
+        name="phone"
+        type="tel"
+        autoComplete="tel"
+        required
+      />
       <TeSelect
-        label="Country"
+        label={t("screen.public.signUp.photographerSignUp.country")}
         name="country"
         options={COUNTRY_OPTIONS}
         value={country}
         onValueChange={setCountry}
-        supportingText="Required."
+        supportingText={t("screen.public.signUp.photographerSignUp.required")}
         required
       />
-      <TeInlineAlert tone="info" title="Portfolio photos needed">
-        Upload at least {MIN_PORTFOLIO_PHOTOS} photos. Uploaded: {portfolio.length} of{" "}
-        {MIN_PORTFOLIO_PHOTOS}.
+      <TeInlineAlert
+        tone="info"
+        title={t("screen.public.signUp.photographerSignUp.portfolioPhotosNeeded")}
+      >
+        {t("screen.public.signUp.photographerSignUp.uploadProgress", {
+          min: MIN_PORTFOLIO_PHOTOS,
+          uploaded: portfolio.length,
+        })}
       </TeInlineAlert>
       <TeFileUpload
-        label="Portfolio photos"
+        label={t("screen.public.signUp.photographerSignUp.portfolioPhotos")}
         accept="image/*"
         multiple
         files={portfolio}
         onFilesSelected={(files) => setPortfolio([...portfolio, ...toPendingItems(files)])}
         onRemove={(name) => setPortfolio(withoutItem(portfolio, name))}
-        hint={`Minimum ${MIN_PORTFOLIO_PHOTOS} photos. Submit stays blocked until the minimum is met.`}
+        hint={t("screen.public.signUp.photographerSignUp.minimumPhotosSubmitStaysBlocked", {
+          min: MIN_PORTFOLIO_PHOTOS,
+        })}
       />
       {errorMsg ? (
-        <TeInlineAlert tone="error" title="Submission failed">
+        <TeInlineAlert
+          tone="error"
+          title={t("screen.public.signUp.photographerSignUp.submissionFailed")}
+        >
           {errorMsg}
         </TeInlineAlert>
       ) : null}
       <SignUpFooter
-        submitLabel={submitting ? "Submitting..." : "Submit application"}
+        submitLabel={
+          submitting
+            ? t("screen.public.signUp.photographerSignUp.submitting")
+            : t("screen.public.signUp.photographerSignUp.submitApplication")
+        }
         disabled={submitDisabled || !portfolioReady || submitting}
       />
     </form>
@@ -156,15 +192,20 @@ export function PhotographerSignUp({
 } = {}) {
   return (
     <AuthFrame
-      title="Photographer sign-up"
-      description="Apply to join the platform photographer pool. Photographers verify both email and phone."
+      title={t("screen.public.signUp.photographerSignUp.photographerSignUp")}
+      description={t("screen.public.signUp.photographerSignUp.applyToJoinThePlatform")}
     >
       <StatePreview
         main={<PhotographerSignUpForm onSubmitted={onSubmitted} />}
         loading={<StateLoading />}
         error={
-          <TeInlineAlert tone="warning" title="Add more photos">
-            Your portfolio has fewer than {MIN_PORTFOLIO_PHOTOS} photos. Add more to submit.
+          <TeInlineAlert
+            tone="warning"
+            title={t("screen.public.signUp.photographerSignUp.addMorePhotos")}
+          >
+            {t("screen.public.signUp.photographerSignUp.yourPortfolioHasFewerThan")}{" "}
+            {MIN_PORTFOLIO_PHOTOS}{" "}
+            {t("screen.public.signUp.photographerSignUp.photosAddMoreToSubmit")}
           </TeInlineAlert>
         }
       />

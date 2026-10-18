@@ -1,8 +1,19 @@
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
 import { TeDataTable, type TeDataTableColumn } from "@trips-app/ui/components/te-data-table";
 import { TeKpiTile } from "@trips-app/ui/components/te-kpi-tile";
+import { t } from "@trips-app/i18n";
+
+import { useAuth } from "@/auth/auth-context";
+import { orpc } from "@/utils/orpc";
 
 import { OrgButtonLink, OrgLink } from "../common/org-link";
-import { OrgSection, TripWizardFrame } from "../common/org-shared";
+import {
+  OrgSection,
+  TripWizardFrame,
+  getActiveWizardTripId,
+  setSelectedProgramId,
+} from "../common/org-shared";
 import { StatePreview } from "../common/organization-state-preview";
 
 interface TripProgramRow {
@@ -13,56 +24,115 @@ interface TripProgramRow {
   cap: string;
 }
 
-const PROGRAM_ROWS: readonly TripProgramRow[] = [
-  {
-    id: "program-1",
-    name: "[Program name]",
-    pricingModel: "[Pricing model]",
-    typeFlags: "[Type flags]",
-    cap: "[Cap]",
-  },
-];
-
-const COLUMNS: readonly TeDataTableColumn<TripProgramRow>[] = [
+const COLUMNS = (): readonly TeDataTableColumn<TripProgramRow>[] => [
   {
     key: "name",
-    header: "Program",
-    render: (row) => <OrgLink slug="program-editor">{row.name}</OrgLink>,
+    header: t("screen.organization.trips.tripWizardStep5Programs.program"),
+    render: (row) => (
+      <OrgLink slug="program-editor" onClick={() => setSelectedProgramId(row.id)}>
+        {row.name}
+      </OrgLink>
+    ),
   },
-  { key: "pricingModel", header: "Pricing model" },
-  { key: "typeFlags", header: "Type flags" },
-  { key: "cap", header: "Cap", align: "end" },
+  {
+    key: "pricingModel",
+    header: t("screen.organization.trips.tripWizardStep5Programs.pricingModel"),
+  },
+  { key: "typeFlags", header: t("screen.organization.trips.tripWizardStep5Programs.typeFlags") },
+  { key: "cap", header: t("screen.organization.trips.tripWizardStep5Programs.cap"), align: "end" },
 ];
 
 export function TripWizardStep5Programs() {
+  const { status: authStatus } = useAuth();
+  const queryClient = useQueryClient();
+  const tripId = getActiveWizardTripId();
+
+  const programsQuery = useQuery({
+    ...orpc.programs.listTripPrograms.queryOptions({
+      input: { tripId: tripId ?? "" },
+    }),
+    enabled: authStatus === "authenticated" && Boolean(tripId),
+  });
+
+  const rows: readonly TripProgramRow[] =
+    programsQuery.data?.items.map((item) => ({
+      id: item.id,
+      name: item.titleEn || item.titleAr,
+      pricingModel: item.isIncludedInBase
+        ? "Included"
+        : `${(item.priceMinor / 100).toFixed(2)} ${item.currencyCode}`,
+      typeFlags: `Day ${item.dayNumber}`,
+      cap: item.capacity !== null ? String(item.capacity) : "Unlimited",
+    })) ?? [];
+
+  const saveWizardStepMutation = useMutation(
+    orpc.trips.saveWizardStep.mutationOptions({
+      onSuccess: () => {
+        void queryClient.invalidateQueries({ queryKey: orpc.trips.key() });
+      },
+    }),
+  );
+
+  const saveStep = async (): Promise<boolean> => {
+    if (authStatus !== "authenticated") return true;
+    const currentTripId = getActiveWizardTripId();
+    if (!currentTripId) return true;
+    try {
+      await saveWizardStepMutation.mutateAsync({
+        tripId: currentTripId,
+        step: "programs",
+        notes: "Programs reviewed",
+      });
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
   return (
     <StatePreview>
       <TripWizardFrame
-        title="Trip wizard step 5: programs"
+        title={t("screen.organization.trips.tripWizardStep5Programs.tripWizardStep5Programs")}
         stepId="programs"
         previousSlug="trip-wizard-step-4-staffing"
         nextSlug="trip-wizard-step-6-seating"
+        beforeNext={saveStep}
+        onSaveDraft={async () => {
+          await saveStep();
+        }}
       >
         <TeKpiTile
-          label="Programs on this trip"
-          value="0 of 15"
-          hint="Growth plan limit per trip"
+          label={t("screen.organization.trips.tripWizardStep5Programs.programsOnThisTrip")}
+          value={
+            authStatus === "authenticated"
+              ? `${rows.length} of 15`
+              : t("screen.organization.trips.tripWizardStep5Programs.0Of15")
+          }
+          hint={t("screen.organization.trips.tripWizardStep5Programs.growthPlanLimitPerTrip")}
         />
         <OrgSection
-          title="Programs"
+          title={t("screen.organization.trips.tripWizardStep5Programs.programs")}
           actions={
-            <OrgButtonLink slug="program-editor" variant="secondary">
-              Add program
+            <OrgButtonLink
+              slug="program-editor"
+              variant="secondary"
+              onClick={() => setSelectedProgramId(null)}
+            >
+              {t("screen.organization.trips.tripWizardStep5Programs.addProgram")}
             </OrgButtonLink>
           }
         >
           <TeDataTable
-            columns={COLUMNS}
-            rows={PROGRAM_ROWS}
+            columns={COLUMNS()}
+            rows={rows}
             getRowKey={(row) => row.id}
-            caption="Programs on this trip"
-            emptyTitle="No programs yet"
-            emptyDescription="Add a program, or continue without one."
+            caption={t(
+              "screen.organization.trips.tripWizardStep5Programs.programsOnThisTripCaption",
+            )}
+            emptyTitle={t("screen.organization.trips.tripWizardStep5Programs.noProgramsYet")}
+            emptyDescription={t(
+              "screen.organization.trips.tripWizardStep5Programs.addAProgramOrContinue",
+            )}
           />
         </OrgSection>
       </TripWizardFrame>

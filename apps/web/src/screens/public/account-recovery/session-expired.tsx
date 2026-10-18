@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { TeInlineAlert } from "@trips-app/ui/components/te-inline-alert";
+import { t } from "@trips-app/i18n";
 import { buttonLinkClass } from "../../shared/button-link";
 import { AuthFrame } from "../common/auth-frame";
 import { AUTH_ROUTES } from "../common/auth-routes";
@@ -8,15 +9,18 @@ import { AUTH_ROUTES } from "../common/auth-routes";
 export function SessionExpired() {
   return (
     <AuthFrame
-      title="Session expired"
-      description="For your security you were signed out. Your unsaved drafts are kept."
+      title={t("screen.public.accountRecovery.sessionExpired.sessionExpired")}
+      description={t("screen.public.accountRecovery.sessionExpired.forYourSecurityYouWere")}
     >
-      <TeInlineAlert tone="info" title="Drafts kept">
-        Sign in to continue where you left off, in the same app.
+      <TeInlineAlert
+        tone="info"
+        title={t("screen.public.accountRecovery.sessionExpired.draftsKept")}
+      >
+        {t("screen.public.accountRecovery.sessionExpired.signInToContinueWhere")}
       </TeInlineAlert>
       <div>
         <Link to={AUTH_ROUTES.signIn} className={buttonLinkClass("primary", "lg")}>
-          Sign in
+          {t("screen.public.accountRecovery.sessionExpired.signIn")}
         </Link>
       </div>
     </AuthFrame>

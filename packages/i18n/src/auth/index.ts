@@ -4,7 +4,6 @@
 // demand the Arabic translation. Look strings up with `t(key)`, which resolves the current locale
 // through `getLocale()`; an untranslated key renders as the key itself, never as English and never
 // as an empty string, so a gap is obvious in review and in tests.
-import { getLocale } from "../locale";
 import type { Locale } from "../types";
 
 import { ar } from "./ar";
@@ -12,6 +11,7 @@ import { en } from "./en";
 import type { AuthMessageKey, AuthMessages } from "./en";
 
 export type { AuthMessageKey, AuthMessages } from "./en";
+export { interpolate, t } from "../catalog";
 
 const CATALOG: Readonly<Record<Locale, AuthMessages>> = { ar, en };
 
@@ -40,47 +40,4 @@ export function hasTranslation(locale: Locale, key: string): boolean {
 /** The key set of one locale, used to prove the two locales stay in lockstep. */
 export function authMessageKeys(locale: Locale = DEFAULT_AUTH_LOCALE): readonly string[] {
   return Object.keys(CATALOG[locale]).sort();
-}
-
-/**
- * Looks a key up in the current locale and interpolates `{name}` placeholders.
- *
- * Fallback order: requested locale → the key itself. Returning the key (rather than English or an
- * empty string) makes a missing translation obvious in review, in tests and in the UI.
- *
- * Pass `locale` explicitly when the caller already knows it (a server response, a React context
- * that renders one locale); omit it to follow the current locale.
- *
- * ```ts
- * t("auth.signIn.title");                    // current locale
- * t("auth.signIn.title", "en");              // explicit locale
- * t("auth.error.accountLocked", { seconds: 30 });       // params only
- * t("auth.error.accountLocked", "ar", { seconds: 30 }); // locale and params
- * ```
- */
-export function t(key: string, params?: Record<string, string | number>): string;
-export function t(key: string, locale: Locale, params?: Record<string, string | number>): string;
-export function t(
-  key: string,
-  localeOrParams?: Locale | Record<string, string | number>,
-  params?: Record<string, string | number>,
-): string {
-  if (typeof key !== "string" || key.length === 0) return "";
-
-  const locale = typeof localeOrParams === "string" ? localeOrParams : getLocale();
-  const values =
-    typeof localeOrParams === "object" && localeOrParams !== null ? localeOrParams : params;
-
-  const template = CATALOG[locale]?.[key as AuthMessageKey];
-  if (typeof template !== "string" || template.length === 0) return key;
-
-  return values ? interpolate(template, values) : template;
-}
-
-/** Replaces `{name}` with `params.name`; unknown placeholders are left untouched. */
-export function interpolate(template: string, params: Record<string, string | number>): string {
-  return template.replace(/\{(\w+)\}/g, (match, name: string) => {
-    const value = params[name];
-    return value === undefined ? match : String(value);
-  });
 }

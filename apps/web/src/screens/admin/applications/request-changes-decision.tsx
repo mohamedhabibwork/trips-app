@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { TeCheckbox } from "@trips-app/ui/components/te-checkbox";
 import { TeInlineAlert } from "@trips-app/ui/components/te-inline-alert";
 import { TePageHeader } from "@trips-app/ui/components/te-page-header";
 import { TeSelect, type TeSelectOption } from "@trips-app/ui/components/te-select";
+import { t } from "@trips-app/i18n";
 import { useAuth } from "@/auth/auth-context";
 import { getSelectedAdminApplicationId } from "@/screens/onboarding-state";
-import { client } from "@/utils/orpc";
+import { orpc } from "@/utils/orpc";
 import { AdminDecisionForm } from "../common/admin-decision-form";
 import { StatePreview } from "../common/admin-state-preview";
 import { useAdminNavigate } from "../common/admin-links";
@@ -16,44 +18,62 @@ interface FixItem {
   label: string;
 }
 
-const FIX_ITEMS: readonly FixItem[] = [
-  { id: "identity", label: "Readable identity document" },
-  { id: "insurance", label: "Valid insurance certificate" },
-  { id: "lab-consent", label: "Signed lab consent" },
-  { id: "background", label: "Signed background check consent" },
-  { id: "photos", label: "At least 8 portfolio photos (photographers)" },
+const FIX_ITEMS = (): readonly FixItem[] => [
+  {
+    id: "identity",
+    label: t("screen.admin.applications.requestChangesDecision.readableIdentityDocument"),
+  },
+  {
+    id: "insurance",
+    label: t("screen.admin.applications.requestChangesDecision.validInsuranceCertificate"),
+  },
+  {
+    id: "lab-consent",
+    label: t("screen.admin.applications.requestChangesDecision.signedLabConsent"),
+  },
+  {
+    id: "background",
+    label: t("screen.admin.applications.requestChangesDecision.signedBackgroundCheckConsent"),
+  },
+  {
+    id: "photos",
+    label: t("screen.admin.applications.requestChangesDecision.atLeast8PortfolioPhotos"),
+  },
 ];
 
-const LANGUAGE_OPTIONS: readonly TeSelectOption[] = [
-  { value: "en", label: "English" },
-  { value: "ar", label: "Arabic" },
+const LANGUAGE_OPTIONS = (): readonly TeSelectOption[] => [
+  { value: "en", label: t("screen.admin.applications.requestChangesDecision.english") },
+  { value: "ar", label: t("screen.admin.applications.requestChangesDecision.arabic") },
 ];
 
 export function RequestChangesDecision() {
   const { status: authStatus } = useAuth();
+  const queryClient = useQueryClient();
   const [selected, setSelected] = useState<readonly string[]>([]);
   const [language, setLanguage] = useState("en");
-  const [applicantName, setApplicantName] = useState("[Applicant name]");
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const goTo = useAdminNavigate();
 
-  useEffect(() => {
-    const appId = getSelectedAdminApplicationId();
-    if (authStatus !== "authenticated" || !appId || appId.startsWith("app-")) return;
-    let cancelled = false;
-    void client.onboarding
-      .getApplicationDetail({ applicationId: appId })
-      .then((detail) => {
-        if (cancelled) return;
-        setApplicantName(detail.applicant?.fullName ?? "[Applicant name]");
-      })
-      .catch(() => {
-        // Ignore when previewed without session
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [authStatus]);
+  const appId = getSelectedAdminApplicationId();
+  const detailQuery = useQuery({
+    ...orpc.onboarding.getApplicationDetail.queryOptions({
+      input: { applicationId: appId ?? "" },
+    }),
+    enabled: authStatus === "authenticated" && Boolean(appId),
+  });
+
+  const applicantName =
+    detailQuery.data?.applicant?.fullName ??
+    detailQuery.data?.application.applicantAccountId ??
+    "-";
+
+  const requestChangesMutation = useMutation(
+    orpc.onboarding.requestApplicationChanges.mutationOptions({
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: orpc.onboarding.key() });
+      },
+    }),
+  );
 
   function toggleItem(id: string) {
     setSelected((current) =>
@@ -62,16 +82,16 @@ export function RequestChangesDecision() {
   }
 
   async function handleConfirm(reason: string) {
-    const appId = getSelectedAdminApplicationId();
-    if (authStatus === "authenticated" && appId && !appId.startsWith("app-")) {
+    const targetAppId = getSelectedAdminApplicationId();
+    if (authStatus === "authenticated" && targetAppId && !targetAppId.startsWith("app-")) {
       setErrorMsg(null);
       try {
-        await client.onboarding.requestApplicationChanges({
-          applicationId: appId,
+        await requestChangesMutation.mutateAsync({
+          applicationId: targetAppId,
           decisionReasonCode: "changes_requested",
           decisionNotes: reason.length >= 5 ? reason : `${reason} (changes requested)`,
           checklist: selected.map((id) => {
-            const found = FIX_ITEMS.find((f) => f.id === id);
+            const found = FIX_ITEMS().find((f) => f.id === id);
             return {
               field: id,
               instruction: found?.label ?? id,
@@ -91,25 +111,37 @@ export function RequestChangesDecision() {
   return (
     <AdminPage>
       <TePageHeader
-        title="Request changes (decision)"
-        description="Ask the applicant for specific fixes within 14 days."
+        title={t("screen.admin.applications.requestChangesDecision.requestChangesDecision")}
+        description={t(
+          "screen.admin.applications.requestChangesDecision.askTheApplicantForSpecific",
+        )}
       />
       <StatePreview
-        emptyTitle="No items to fix"
-        emptyDescription="Select at least one item before you send the request."
-        loadingLabel="Loading the application."
+        emptyTitle={t("screen.admin.applications.requestChangesDecision.noItemsToFix")}
+        emptyDescription={t(
+          "screen.admin.applications.requestChangesDecision.selectAtLeastOneItem",
+        )}
+        loadingLabel={t("screen.admin.applications.requestChangesDecision.loadingTheApplication")}
       >
-        <AdminPanel title="Applicant">
+        <AdminPanel title={t("screen.admin.applications.requestChangesDecision.applicant")}>
           <AdminFacts
             items={[
-              { label: "Applicant name", value: applicantName },
-              { label: "Application state", value: "Changes requested after sending" },
+              {
+                label: t("screen.admin.applications.requestChangesDecision.applicantName"),
+                value: applicantName,
+              },
+              {
+                label: t("screen.admin.applications.requestChangesDecision.applicationState"),
+                value: "Changes requested after sending",
+              },
             ]}
           />
         </AdminPanel>
-        <AdminPanel title="Items to fix">
-          <p className="te-caption">Select at least one item. Send stays off until then.</p>
-          {FIX_ITEMS.map((item) => (
+        <AdminPanel title={t("screen.admin.applications.requestChangesDecision.itemsToFix")}>
+          <p className="te-caption">
+            {t("screen.admin.applications.requestChangesDecision.selectAtLeastOneItem2")}
+          </p>
+          {FIX_ITEMS().map((item) => (
             <TeCheckbox
               key={item.id}
               label={item.label}
@@ -119,36 +151,60 @@ export function RequestChangesDecision() {
           ))}
         </AdminPanel>
         {errorMsg ? (
-          <TeInlineAlert tone="error" title="Could not send request">
+          <TeInlineAlert
+            tone="error"
+            title={t("screen.admin.applications.requestChangesDecision.couldNotSendRequest")}
+          >
             {errorMsg}
           </TeInlineAlert>
         ) : null}
-        <AdminPanel title="Message to applicant">
+        <AdminPanel
+          title={t("screen.admin.applications.requestChangesDecision.messageToApplicant")}
+        >
           <TeSelect
-            label="Message language"
-            options={LANGUAGE_OPTIONS}
+            label={t("screen.admin.applications.requestChangesDecision.messageLanguage")}
+            options={LANGUAGE_OPTIONS()}
             value={language}
             onValueChange={setLanguage}
-            supportingText="Use the applicant's language."
+            supportingText={t(
+              "screen.admin.applications.requestChangesDecision.useTheApplicantSLanguage",
+            )}
           />
           <AdminDecisionForm
-            reasonLabel="Message to applicant (required)"
-            reasonHelp="Say exactly what to fix. The 14-day deadline is added for you."
-            submitLabel="Send request"
-            dialogTitle="Send this request to the applicant?"
-            dialogDescription="The applicant gets 14 days to fix the items. If they do not, the application closes."
-            confirmLabel="Send request"
+            reasonLabel={t(
+              "screen.admin.applications.requestChangesDecision.messageToApplicantRequired",
+            )}
+            reasonHelp={t("screen.admin.applications.requestChangesDecision.sayExactlyWhatToFix")}
+            submitLabel={t("screen.admin.applications.requestChangesDecision.sendRequest")}
+            dialogTitle={t("screen.admin.applications.requestChangesDecision.sendThisRequestToThe")}
+            dialogDescription={t(
+              "screen.admin.applications.requestChangesDecision.theApplicantGets14Days",
+            )}
+            confirmLabel={t(
+              "screen.admin.applications.requestChangesDecision.sendRequestConfirmLabel",
+            )}
             extraValid={selected.length > 0}
             dialogEffect={
-              <p className="te-caption">Application state becomes Changes Requested.</p>
+              <p className="te-caption">
+                {t(
+                  "screen.admin.applications.requestChangesDecision.applicationStateBecomesChangesRequested",
+                )}
+              </p>
             }
-            cancel={{ slug: "application-review-detail", label: "Cancel" }}
+            cancel={{
+              slug: "application-review-detail",
+              label: t("screen.admin.applications.requestChangesDecision.cancel"),
+            }}
             onConfirm={(reason) => handleConfirm(reason)}
           />
         </AdminPanel>
-        <TeInlineAlert tone="info" title="Response deadline">
-          The applicant has 14 days to respond. Deadline: {deadlineDate}. If the deadline passes,
-          the application closes.
+        <TeInlineAlert
+          tone="info"
+          title={t("screen.admin.applications.requestChangesDecision.responseDeadline")}
+        >
+          {t("screen.admin.applications.requestChangesDecision.deadlineNotice", {
+            date: deadlineDate,
+          })}
         </TeInlineAlert>
       </StatePreview>
     </AdminPage>

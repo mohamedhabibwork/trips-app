@@ -1,6 +1,11 @@
+import { useCallback } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { TeDataTable, type TeDataTableColumn } from "@trips-app/ui/components/te-data-table";
 import { TePageHeader } from "@trips-app/ui/components/te-page-header";
 import { TeRetryBanner } from "@trips-app/ui/components/te-retry-banner";
+import { t } from "@trips-app/i18n";
+import { useAuth } from "@/auth/auth-context";
+import { orpc } from "@/utils/orpc";
 import { AdminNav } from "../common/admin-nav";
 import { StatePreview } from "../common/admin-state-preview";
 import { AdminScreenLink, type AdminSlug } from "../common/admin-links";
@@ -14,104 +19,192 @@ interface QueueRow {
   target: AdminSlug;
 }
 
-const QUEUE_ROWS: readonly QueueRow[] = [
+const INITIAL_QUEUE_ROWS: readonly QueueRow[] = [
   {
     id: "applications",
     queue: "Applications to review",
     count: "0",
-    oldest: "[Date]",
+    oldest: "-",
     target: "application-queue",
   },
   {
     id: "lab-tests",
     queue: "Lab tests due or overdue",
     count: "0",
-    oldest: "[Date]",
+    oldest: "-",
     target: "lab-tests-queue",
   },
   {
     id: "disputes",
     queue: "Open disputes",
     count: "0",
-    oldest: "[Date]",
+    oldest: "-",
     target: "disputes-queue",
   },
   {
     id: "deletions",
     queue: "Deletion requests",
     count: "0",
-    oldest: "[Grace end date]",
+    oldest: "-",
     target: "deletion-and-data-requests",
   },
   {
     id: "coupon-flags",
     queue: "Coupon abuse flags",
     count: "0",
-    oldest: "[Date]",
+    oldest: "-",
     target: "platform-coupons",
   },
   {
     id: "settlements",
     queue: "Open settlements",
     count: "0",
-    oldest: "[Date]",
+    oldest: "-",
     target: "settlements-tracker",
   },
 ];
 
-const COLUMNS: readonly TeDataTableColumn<QueueRow>[] = [
-  { key: "queue", header: "Queue" },
-  { key: "count", header: "Items", align: "end" },
-  { key: "oldest", header: "Oldest item" },
+const COLUMNS = (): readonly TeDataTableColumn<QueueRow>[] => [
+  { key: "queue", header: t("screen.admin.home.adminHome.queue") },
+  { key: "count", header: t("screen.admin.home.adminHome.items"), align: "end" },
+  { key: "oldest", header: t("screen.admin.home.adminHome.oldestItem") },
   {
     key: "open",
-    header: "Action",
+    header: t("screen.admin.home.adminHome.action"),
     render: (row) => (
-      <AdminScreenLink slug={row.target} variant="secondary" ariaLabel={`Open ${row.queue}`}>
-        Open queue
+      <AdminScreenLink
+        slug={row.target}
+        variant="secondary"
+        ariaLabel={t("screen.admin.home.adminHome.open", { queue: row.queue })}
+      >
+        {t("screen.admin.home.adminHome.openQueue")}
       </AdminScreenLink>
     ),
   },
 ];
 
-const MORE_AREAS: readonly { slug: AdminSlug; label: string }[] = [
-  { slug: "admin-staff-accounts", label: "Admin staff accounts" },
-  { slug: "subscriptions-and-overrides", label: "Subscriptions and overrides" },
-  { slug: "revenue-dashboard", label: "Revenue dashboard" },
-  { slug: "notification-templates", label: "Notification templates" },
+const MORE_AREAS = (): readonly { slug: AdminSlug; label: string }[] => [
+  { slug: "admin-staff-accounts", label: t("screen.admin.home.adminHome.adminStaffAccounts") },
+  {
+    slug: "subscriptions-and-overrides",
+    label: t("screen.admin.home.adminHome.subscriptionsAndOverrides"),
+  },
+  { slug: "revenue-dashboard", label: t("screen.admin.home.adminHome.revenueDashboard") },
+  { slug: "notification-templates", label: t("screen.admin.home.adminHome.notificationTemplates") },
 ];
 
 export function AdminHome() {
+  const { status: authStatus } = useAuth();
+  const queueQuery = useQuery({
+    ...orpc.onboarding.listReviewQueue.queryOptions({ input: {} }),
+    enabled: authStatus === "authenticated",
+  });
+  const exceptionsQuery = useQuery({
+    ...orpc.accounting.listAdminReconciliationExceptions.queryOptions(),
+    enabled: authStatus === "authenticated",
+  });
+  const couponsQuery = useQuery({
+    ...orpc.coupons.listPlatformCoupons.queryOptions({ input: {} }),
+    enabled: authStatus === "authenticated",
+  });
+
+  const loadFailed = queueQuery.isError || exceptionsQuery.isError || couponsQuery.isError;
+
+  const handleRetry = useCallback(() => {
+    void queueQuery.refetch();
+    void exceptionsQuery.refetch();
+    void couponsQuery.refetch();
+  }, [queueQuery, exceptionsQuery, couponsQuery]);
+
+  const apps = queueQuery.data ?? [];
+  const exceptions = exceptionsQuery.data ?? [];
+  const coupons = couponsQuery.data ?? { items: [] };
+
+  const driverApps = apps.filter((a) => a.applicationType === "platform_driver");
+  const closedApps = apps.filter((a) => a.state === "Closed");
+  const formatDate = (d: Date | string | undefined) =>
+    d ? new Date(d).toISOString().slice(0, 10) : "-";
+
+  const queueRows: readonly QueueRow[] =
+    queueQuery.data || exceptionsQuery.data || couponsQuery.data
+      ? [
+          {
+            id: "applications",
+            queue: "Applications to review",
+            count: String(apps.length),
+            oldest: formatDate(apps[apps.length - 1]?.createdAt),
+            target: "application-queue",
+          },
+          {
+            id: "lab-tests",
+            queue: "Lab tests due or overdue",
+            count: String(driverApps.length),
+            oldest: formatDate(driverApps[driverApps.length - 1]?.createdAt),
+            target: "lab-tests-queue",
+          },
+          {
+            id: "disputes",
+            queue: "Open disputes",
+            count: String(exceptions.length),
+            oldest: formatDate(exceptions[exceptions.length - 1]?.createdAt),
+            target: "disputes-queue",
+          },
+          {
+            id: "deletions",
+            queue: "Deletion requests",
+            count: String(closedApps.length),
+            oldest: formatDate(closedApps[closedApps.length - 1]?.updatedAt),
+            target: "deletion-and-data-requests",
+          },
+          {
+            id: "coupon-flags",
+            queue: "Coupon abuse flags",
+            count: String(coupons.items.filter((c) => c.status === "paused").length),
+            oldest: formatDate(coupons.items[0]?.createdAt),
+            target: "platform-coupons",
+          },
+          {
+            id: "settlements",
+            queue: "Open settlements",
+            count: String(exceptions.length),
+            oldest: formatDate(exceptions[0]?.createdAt),
+            target: "settlements-tracker",
+          },
+        ]
+      : INITIAL_QUEUE_ROWS;
+
   return (
     <AdminPage backHome={false}>
       <AdminNav current="admin-home" />
       <TePageHeader
-        title="Admin home"
-        description="Queues that need action now. Applications are flagged overdue after 2 working days."
+        title={t("screen.admin.home.adminHome.adminHome")}
+        description={t("screen.admin.home.adminHome.queuesThatNeedActionNow")}
       />
       <StatePreview
-        emptyTitle="All clear"
-        emptyDescription="No queue has items that need action."
-        loadingLabel="Loading the queues."
+        emptyTitle={t("screen.admin.home.adminHome.allClear")}
+        emptyDescription={t("screen.admin.home.adminHome.noQueueHasItemsThat")}
+        loadingLabel={t("screen.admin.home.adminHome.loadingTheQueues")}
       >
-        <TeRetryBanner
-          message="The lab tests queue could not load. The other queues are shown."
-          onRetry={() => undefined}
-          retryLabel="Retry lab tests"
-        />
-        <AdminPanel title="Queues">
+        {loadFailed ? (
+          <TeRetryBanner
+            message={t("screen.admin.home.adminHome.theLabTestsQueueCould")}
+            onRetry={handleRetry}
+            retryLabel={t("screen.admin.home.adminHome.retryLabTests")}
+          />
+        ) : null}
+        <AdminPanel title={t("screen.admin.home.adminHome.queues")}>
           <TeDataTable
-            columns={COLUMNS}
-            rows={QUEUE_ROWS}
+            columns={COLUMNS()}
+            rows={queueRows}
             getRowKey={(row) => row.id}
-            caption="Queues that need action"
-            emptyTitle="All clear"
-            emptyDescription="No queue has items that need action."
+            caption={t("screen.admin.home.adminHome.queuesThatNeedAction")}
+            emptyTitle={t("screen.admin.home.adminHome.allClearEmptyTitle")}
+            emptyDescription={t("screen.admin.home.adminHome.noQueueHasItemsThatEmptyDescription")}
           />
         </AdminPanel>
-        <AdminPanel title="More areas">
+        <AdminPanel title={t("screen.admin.home.adminHome.moreAreas")}>
           <ul className="flex flex-col gap-2">
-            {MORE_AREAS.map((area) => (
+            {MORE_AREAS().map((area) => (
               <li key={area.slug}>
                 <AdminScreenLink slug={area.slug}>{area.label}</AdminScreenLink>
               </li>

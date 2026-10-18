@@ -1,6 +1,7 @@
 import { cn } from "@trips-app/ui/lib/utils";
 import { TeButton } from "@trips-app/ui/components/te-button";
 import { TeCard } from "@trips-app/ui/components/te-card";
+import { t } from "@trips-app/i18n";
 
 export interface TeAssignmentCardLabels {
   route: string;
@@ -9,9 +10,15 @@ export interface TeAssignmentCardLabels {
 }
 
 export const TE_ASSIGNMENT_DEFAULT_LABELS: TeAssignmentCardLabels = {
-  route: "Route",
-  departure: "Departure",
-  vehicle: "Vehicle",
+  get route() {
+    return t("ui.teAssignmentCard.labels.route");
+  },
+  get departure() {
+    return t("ui.teAssignmentCard.labels.departure");
+  },
+  get vehicle() {
+    return t("ui.teAssignmentCard.labels.vehicle");
+  },
 };
 
 export interface TeAssignmentCardProps {

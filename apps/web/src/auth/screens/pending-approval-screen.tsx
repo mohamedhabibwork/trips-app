@@ -57,9 +57,11 @@ export function PendingApprovalScreen({ contact, role }: { contact: string; role
 
       {checkedStatus && !app ? (
         <div className="grid gap-2 rounded border p-3 text-xs">
-          <p className="font-medium">Complete your supplier application</p>
+          <p className="font-medium">
+            {t("screen.pendingApprovalScreen.completeYourSupplierApplication")}
+          </p>
           <p className="text-muted-foreground">
-            Submit your documents and details so our review team can approve your account.
+            {t("screen.pendingApprovalScreen.submitYourDocumentsAndDetails")}
           </p>
           <div className="flex flex-wrap gap-2">
             <Link
@@ -67,7 +69,7 @@ export function PendingApprovalScreen({ contact, role }: { contact: string; role
               params={{ surface: "public", slug: targetSignUpSlug }}
               className="underline underline-offset-4"
             >
-              Open application form
+              {t("screen.pendingApprovalScreen.openApplicationForm")}
             </Link>
           </div>
         </div>
@@ -76,10 +78,13 @@ export function PendingApprovalScreen({ contact, role }: { contact: string; role
       {app ? (
         <div className="grid gap-2 rounded border p-3 text-xs">
           <p className="font-medium">
-            Application status: <span className="uppercase">{app.state}</span>
+            {t("screen.pendingApprovalScreen.applicationStatus")}{" "}
+            <span className="uppercase">{app.state}</span>
           </p>
           {app.decisionNotes ? (
-            <p className="text-destructive">Notes: {app.decisionNotes}</p>
+            <p className="text-destructive">
+              {t("screen.pendingApprovalScreen.notes")} {app.decisionNotes}
+            </p>
           ) : null}
           <div className="flex flex-wrap gap-3">
             <Link
@@ -87,7 +92,7 @@ export function PendingApprovalScreen({ contact, role }: { contact: string; role
               params={{ surface: "public", slug: "application-status-and-changes-response" }}
               className="underline underline-offset-4"
             >
-              View status & respond to changes
+              {t("screen.pendingApprovalScreen.viewStatusRespondToChanges")}
             </Link>
             {app.state === "Rejected" ? (
               <Link
@@ -95,7 +100,7 @@ export function PendingApprovalScreen({ contact, role }: { contact: string; role
                 params={{ surface: "public", slug: "appeal-a-rejection" }}
                 className="underline underline-offset-4"
               >
-                Appeal rejection
+                {t("screen.pendingApprovalScreen.appealRejection")}
               </Link>
             ) : null}
           </div>
@@ -108,7 +113,7 @@ export function PendingApprovalScreen({ contact, role }: { contact: string; role
           params={{ surface: "public", slug: "application-status-and-changes-response" }}
           className="underline underline-offset-4"
         >
-          Track application status
+          {t("screen.pendingApprovalScreen.trackApplicationStatus")}
         </Link>
         <Link to="/sign-in" className="underline underline-offset-4">
           {t("auth.pending.backToSignIn")}

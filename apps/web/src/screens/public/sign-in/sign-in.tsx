@@ -1,9 +1,12 @@
-import { useState } from "react";
+import { useState, type FormEvent } from "react";
 import { Link } from "@tanstack/react-router";
 import { TeButton } from "@trips-app/ui/components/te-button";
 import { TeInlineAlert } from "@trips-app/ui/components/te-inline-alert";
 import { TeInput } from "@trips-app/ui/components/te-input";
 import { TeTabs, type TeTab } from "@trips-app/ui/components/te-tabs";
+import { t } from "@trips-app/i18n";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { orpc } from "@/utils/orpc";
 import { ScreenLink } from "../../shared/screen-link";
 import { StateLoading, StatePreview } from "../../shared/state-preview";
 import { AuthFrame } from "../common/auth-frame";
@@ -12,35 +15,83 @@ import { useFormReady } from "../common/use-form-ready";
 
 type SignInMethod = "code" | "password";
 
-const METHOD_TABS: readonly TeTab[] = [
-  { id: "code", label: "One-time code" },
-  { id: "password", label: "Password" },
+const METHOD_TABS = (): readonly TeTab[] => [
+  { id: "code", label: t("screen.public.signIn.signIn.oneTimeCode") },
+  { id: "password", label: t("screen.public.signIn.signIn.password") },
 ];
 
-const OTHER_OUTCOMES: readonly { slug: string; label: string }[] = [
-  { slug: "session-expired", label: "Session expired" },
-  { slug: "account-suspended", label: "Account suspended" },
-  { slug: "deletion-grace-period", label: "Deletion requested" },
-  { slug: "application-status-and-changes-response", label: "Application pending" },
+const OTHER_OUTCOMES = (): readonly { slug: string; label: string }[] => [
+  { slug: "session-expired", label: t("screen.public.signIn.signIn.sessionExpired") },
+  { slug: "account-suspended", label: t("screen.public.signIn.signIn.accountSuspended") },
+  { slug: "deletion-grace-period", label: t("screen.public.signIn.signIn.deletionRequested") },
+  {
+    slug: "application-status-and-changes-response",
+    label: t("screen.public.signIn.signIn.applicationPending"),
+  },
 ];
 
 function SignInForm() {
+  const queryClient = useQueryClient();
+  const signInMutation = useMutation(
+    orpc.auth.signIn.mutationOptions({
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: orpc.auth.key() });
+      },
+    }),
+  );
   const [method, setMethod] = useState<SignInMethod>("code");
+  const [submitting, setSubmitting] = useState(false);
   const { submitDisabled, formProps } = useFormReady();
 
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (submitting) return;
+    const formData = new FormData(event.currentTarget);
+    const identifier = String(formData.get("identifier") ?? "").trim();
+    const password = String(formData.get("password") ?? "");
+    if (!identifier) return;
+    if (typeof sessionStorage !== "undefined") {
+      sessionStorage.setItem("te:lastOtpTarget", identifier);
+    }
+    setSubmitting(true);
+    try {
+      await signInMutation.mutateAsync({
+        identifier,
+        method: method === "password" ? "password" : "otp",
+        ...(method === "password" ? { password } : {}),
+        surface: "web",
+      });
+    } catch {
+      // Handled via StatePreview or caller
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
   return (
-    <form action={AUTH_ROUTES.signIn} method="post" className="flex flex-col gap-4" {...formProps}>
+    <form
+      action={AUTH_ROUTES.signIn}
+      method="post"
+      className="flex flex-col gap-4"
+      {...formProps}
+      onSubmit={(e) => void handleSubmit(e)}
+    >
       <input type="hidden" name="method" value={method} />
-      <TeInput label="Email or phone" name="identifier" autoComplete="username" required />
+      <TeInput
+        label={t("screen.public.signIn.signIn.emailOrPhone")}
+        name="identifier"
+        autoComplete="username"
+        required
+      />
       <TeTabs
-        tabs={METHOD_TABS}
+        tabs={METHOD_TABS()}
         activeId={method}
         onSelect={(id) => setMethod(id === "password" ? "password" : "code")}
-        ariaLabel="Sign-in method"
+        ariaLabel={t("screen.public.signIn.signIn.signInMethod")}
       />
       {method === "password" ? (
         <TeInput
-          label="Password"
+          label={t("screen.public.signIn.signIn.passwordLabel")}
           name="password"
           type="password"
           autoComplete="current-password"
@@ -48,19 +99,19 @@ function SignInForm() {
           required
         />
       ) : (
-        <p className="te-body">We send a one-time code to the email or phone you enter.</p>
+        <p className="te-body">{t("screen.public.signIn.signIn.weSendAOneTime")}</p>
       )}
       <div>
-        <TeButton type="submit" variant="primary" size="lg" disabled={submitDisabled}>
-          Sign in
+        <TeButton type="submit" variant="primary" size="lg" disabled={submitDisabled || submitting}>
+          {t("screen.public.signIn.signIn.signIn")}
         </TeButton>
       </div>
       <div className="flex flex-wrap gap-4">
         <Link to={AUTH_ROUTES.signUp} className="te-link">
-          Create an account
+          {t("screen.public.signIn.signIn.createAnAccount")}
         </Link>
         <ScreenLink surface="public" slug="password-reset">
-          Forgot password?
+          {t("screen.public.signIn.signIn.forgotPassword")}
         </ScreenLink>
       </div>
     </form>
@@ -69,10 +120,13 @@ function SignInForm() {
 
 function SignInOutcomes() {
   return (
-    <nav aria-label="Other sign-in outcomes" className="flex flex-col gap-3">
-      <h2 className="te-h3">Other outcomes</h2>
+    <nav
+      aria-label={t("screen.public.signIn.signIn.otherSignInOutcomes")}
+      className="flex flex-col gap-3"
+    >
+      <h2 className="te-h3">{t("screen.public.signIn.signIn.otherOutcomes")}</h2>
       <ul className="flex flex-wrap gap-4">
-        {OTHER_OUTCOMES.map((outcome) => (
+        {OTHER_OUTCOMES().map((outcome) => (
           <li key={outcome.slug}>
             <ScreenLink surface="public" slug={outcome.slug}>
               {outcome.label}
@@ -88,15 +142,15 @@ function SignInOutcomes() {
 export function SignIn() {
   return (
     <AuthFrame
-      title="Sign-in (traveler and supplier)"
-      description="Travelers and approved suppliers sign in here."
+      title={t("screen.public.signIn.signIn.signInTravelerAndSupplier")}
+      description={t("screen.public.signIn.signIn.travelersAndApprovedSuppliersSign")}
     >
       <StatePreview
         main={<SignInForm />}
         loading={<StateLoading />}
         error={
-          <TeInlineAlert tone="error" title="Details do not match">
-            Check your details and try again. Repeated failures pause sign-in for a short time.
+          <TeInlineAlert tone="error" title={t("screen.public.signIn.signIn.detailsDoNotMatch")}>
+            {t("screen.public.signIn.signIn.checkYourDetailsAndTry")}
           </TeInlineAlert>
         }
       />

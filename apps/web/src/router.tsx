@@ -1,4 +1,5 @@
 import { createRouter as createTanStackRouter } from "@tanstack/react-router";
+import { t } from "@trips-app/i18n";
 import { setupRouterSsrQueryIntegration } from "@tanstack/react-router-ssr-query";
 
 import { authController } from "./auth/instance";
@@ -17,7 +18,7 @@ export const getRouter = () => {
     // import cycle with utils/orpc.ts, which needs it to build the link.
     context: { orpc, queryClient, auth: authController },
     defaultPendingComponent: () => <Loader />,
-    defaultNotFoundComponent: () => <div>Not Found</div>,
+    defaultNotFoundComponent: () => <div>{t("route.notFound")}</div>,
   });
 
   setupRouterSsrQueryIntegration({

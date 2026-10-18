@@ -1,6 +1,7 @@
 import { cn } from "@trips-app/ui/lib/utils";
 import { TeButton } from "@trips-app/ui/components/te-button";
 import { TeIcon } from "@trips-app/ui/components/te-icon";
+import { t } from "@trips-app/i18n";
 import { useEffect, useId, useRef, useState, type KeyboardEvent } from "react";
 
 /** 0 = Sunday ... 6 = Saturday. Middle East calendars usually start on Saturday (6). */
@@ -263,7 +264,7 @@ export function TeCalendar({
       <div className="te-calendar__header">
         <TeButton
           variant="ghost"
-          aria-label="Previous month"
+          aria-label={t("ui.teCalendar.previousMonth")}
           className="te-calendar__nav"
           onClick={() => changeMonth(shiftMonth(visibleMonth, -1))}
         >
@@ -274,7 +275,7 @@ export function TeCalendar({
         </p>
         <TeButton
           variant="ghost"
-          aria-label="Next month"
+          aria-label={t("ui.teCalendar.nextMonth")}
           className="te-calendar__nav"
           onClick={() => changeMonth(shiftMonth(visibleMonth, 1))}
         >
@@ -312,7 +313,11 @@ export function TeCalendar({
                       type="button"
                       data-date={cell.iso}
                       tabIndex={cell.iso === focusDate ? 0 : -1}
-                      aria-label={`${formatLongDate(cell.iso)}${isSelected ? ", selected" : ""}`}
+                      aria-label={
+                        isSelected
+                          ? t("ui.teCalendar.dateSelected", { date: formatLongDate(cell.iso) })
+                          : formatLongDate(cell.iso)
+                      }
                       aria-current={isToday ? "date" : undefined}
                       aria-disabled={disabled || undefined}
                       className={cn(

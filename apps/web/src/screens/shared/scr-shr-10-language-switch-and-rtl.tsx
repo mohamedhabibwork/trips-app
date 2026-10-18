@@ -5,6 +5,7 @@ import { TeIcon } from "@trips-app/ui/components/te-icon";
 import { TeInput } from "@trips-app/ui/components/te-input";
 import { TePageHeader } from "@trips-app/ui/components/te-page-header";
 import { TeSelect } from "@trips-app/ui/components/te-select";
+import { t } from "@trips-app/i18n";
 import { COUNTRY_OPTIONS } from "../public/common/country-options";
 import { LanguageSelect } from "../public/common/language-select";
 import { goBack, preventSubmit } from "./screen-actions";
@@ -22,22 +23,30 @@ export function ScrShr10LanguageSwitchAndRtl() {
       className="mx-auto flex w-full max-w-2xl flex-col gap-6 px-4 py-6"
     >
       <TePageHeader
-        title="Language switch and RTL"
-        description={isArabic ? "Layout: right to left" : "Layout: left to right"}
+        title={t("screen.shared.scrShr10LanguageSwitchAndRtl.languageSwitchAndRtl")}
+        description={
+          isArabic
+            ? t("screen.shared.scrShr10LanguageSwitchAndRtl.layoutRightToLeft")
+            : t("screen.shared.scrShr10LanguageSwitchAndRtl.layoutLeftToRight")
+        }
         actions={
           <div className="flex flex-wrap items-center gap-2">
             <LanguageSelect defaultValue={language} onValueChange={setLanguage} />
             <TeButton variant="ghost" onClick={goBack}>
-              Back
+              {t("screen.shared.scrShr10LanguageSwitchAndRtl.back")}
             </TeButton>
           </div>
         }
       />
       <TeCard>
         <form className="flex flex-col gap-4" onSubmit={preventSubmit}>
-          <TeInput label="Full name" name="fullName" autoComplete="name" />
+          <TeInput
+            label={t("screen.shared.scrShr10LanguageSwitchAndRtl.fullName")}
+            name="fullName"
+            autoComplete="name"
+          />
           <TeSelect
-            label="Country"
+            label={t("screen.shared.scrShr10LanguageSwitchAndRtl.country")}
             name="country"
             options={COUNTRY_OPTIONS}
             value={country}
@@ -45,7 +54,7 @@ export function ScrShr10LanguageSwitchAndRtl() {
           />
           <div>
             <TeButton type="submit" variant="primary">
-              Continue
+              {t("screen.shared.scrShr10LanguageSwitchAndRtl.continue")}{" "}
               <TeIcon name="arrow" flipInRtl />
             </TeButton>
           </div>

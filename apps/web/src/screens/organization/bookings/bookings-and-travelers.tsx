@@ -1,13 +1,18 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
+import { useQuery } from "@tanstack/react-query";
 import { TeDataTable, type TeDataTableColumn } from "@trips-app/ui/components/te-data-table";
 import { TeEmptyState } from "@trips-app/ui/components/te-empty-state";
 import { TePageHeader } from "@trips-app/ui/components/te-page-header";
 import { TeSearchField } from "@trips-app/ui/components/te-search-field";
 import { TeTabs, type TeTab } from "@trips-app/ui/components/te-tabs";
+import { t } from "@trips-app/i18n";
+
+import { useAuth } from "@/auth/auth-context";
+import { orpc } from "@/utils/orpc";
 
 import { OrgButtonLink, OrgLink, WorkspaceBackLink } from "../common/org-link";
-import { StateBadge } from "../common/org-shared";
+import { getActiveWizardTripId, setSelectedBookingId, StateBadge } from "../common/org-shared";
 import { StatePreview } from "../common/organization-state-preview";
 
 interface BookingRow {
@@ -19,90 +24,125 @@ interface BookingRow {
   payment: string;
 }
 
-const BOOKING_ROWS: readonly BookingRow[] = [
-  {
-    id: "booking-1",
-    reference: "[Booking reference]",
-    travelers: "0",
-    programs: "[Programs]",
-    seat: "[Seat]",
-    payment: "[Payment status]",
-  },
-];
-
-const COLUMNS: readonly TeDataTableColumn<BookingRow>[] = [
+const COLUMNS = (): readonly TeDataTableColumn<BookingRow>[] => [
   {
     key: "reference",
-    header: "Booking",
-    render: (row) => <OrgLink slug="booking-detail">{row.reference}</OrgLink>,
+    header: t("screen.organization.bookings.bookingsAndTravelers.booking"),
+    render: (row) => (
+      <OrgLink slug="booking-detail" onClick={() => setSelectedBookingId(row.id)}>
+        {row.reference}
+      </OrgLink>
+    ),
   },
   {
     key: "state",
-    header: "State",
-    render: () => <StateBadge tone="success" icon="check" label="Confirmed" />,
+    header: t("screen.organization.bookings.bookingsAndTravelers.state"),
+    render: () => (
+      <StateBadge
+        tone="success"
+        icon="check"
+        label={t("screen.organization.bookings.bookingsAndTravelers.confirmed")}
+      />
+    ),
   },
-  { key: "travelers", header: "Travelers", align: "end" },
-  { key: "programs", header: "Programs" },
-  { key: "seat", header: "Seat" },
+  {
+    key: "travelers",
+    header: t("screen.organization.bookings.bookingsAndTravelers.travelers"),
+    align: "end",
+  },
+  { key: "programs", header: t("screen.organization.bookings.bookingsAndTravelers.programs") },
+  { key: "seat", header: t("screen.organization.bookings.bookingsAndTravelers.seat") },
   {
     key: "payment",
-    header: "Payment",
+    header: t("screen.organization.bookings.bookingsAndTravelers.payment"),
     render: (row) => <StateBadge tone="neutral" icon="file" label={row.payment} />,
   },
 ];
 
-const TABS: readonly TeTab[] = [
-  { id: "bookings", label: "Bookings" },
-  { id: "cancellations", label: "Cancellation requests", count: 0 },
+const TABS = (): readonly TeTab[] => [
+  { id: "bookings", label: t("screen.organization.bookings.bookingsAndTravelers.bookings") },
+  {
+    id: "cancellations",
+    label: t("screen.organization.bookings.bookingsAndTravelers.cancellationRequests"),
+    count: 0,
+  },
 ];
 
 export function BookingsAndTravelers() {
+  const { status: authStatus } = useAuth();
   const [activeTab, setActiveTab] = useState("bookings");
   const [query, setQuery] = useState("");
 
-  const normalizedQuery = query.trim().toLowerCase();
-  const visibleRows = BOOKING_ROWS.filter((row) =>
-    row.reference.toLowerCase().includes(normalizedQuery),
+  const tripId = getActiveWizardTripId() ?? undefined;
+  const bookingsQuery = useQuery(
+    orpc.booking.listOrganizationBookings.queryOptions({
+      input: { tripId },
+      enabled: authStatus === "authenticated",
+    }),
   );
+
+  const rows = useMemo<readonly BookingRow[]>(() => {
+    if (!bookingsQuery.data) return [];
+    return bookingsQuery.data.map((b) => ({
+      id: b.id,
+      reference: b.bookingReference,
+      travelers: String(b.passengersCount),
+      programs: `${b.selectedProgramIds.length}`,
+      seat: b.seatLabels.join(", ") || "-",
+      payment: b.status,
+    }));
+  }, [bookingsQuery.data]);
+
+  const normalizedQuery = query.trim().toLowerCase();
+  const visibleRows = rows.filter((row) => row.reference.toLowerCase().includes(normalizedQuery));
 
   return (
     <StatePreview>
       <div className="flex flex-col gap-6">
-        <WorkspaceBackLink parent={{ slug: "trip-command-view", label: "Back to trip" }} />
+        <WorkspaceBackLink
+          parent={{
+            slug: "trip-command-view",
+            label: t("screen.organization.bookings.bookingsAndTravelers.backToTrip"),
+          }}
+        />
         <TePageHeader
-          title="Bookings and travelers"
-          description="[Trip name]"
+          title={t("screen.organization.bookings.bookingsAndTravelers.bookingsAndTravelers")}
+          description={t("screen.organization.bookings.bookingsAndTravelers.tripName")}
           actions={
             <OrgButtonLink slug="seat-map-and-seat-assignment" variant="secondary">
-              Seat map
+              {t("screen.organization.bookings.bookingsAndTravelers.seatMap")}
             </OrgButtonLink>
           }
         />
         <TeTabs
-          tabs={TABS}
+          tabs={TABS()}
           activeId={activeTab}
           onSelect={setActiveTab}
-          ariaLabel="Booking views"
+          ariaLabel={t("screen.organization.bookings.bookingsAndTravelers.bookingViews")}
         />
         <TeSearchField
-          label="Search travelers or bookings"
+          label={t("screen.organization.bookings.bookingsAndTravelers.searchTravelersOrBookings")}
           value={query}
           onValueChange={setQuery}
-          clearLabel="Clear search"
+          clearLabel={t("screen.organization.bookings.bookingsAndTravelers.clearSearch")}
         />
         {activeTab === "bookings" ? (
           <TeDataTable
-            columns={COLUMNS}
+            columns={COLUMNS()}
             rows={visibleRows}
             getRowKey={(row) => row.id}
-            caption="Bookings on this trip"
-            emptyTitle="No bookings yet"
-            emptyDescription="Bookings appear here when travelers book this trip."
+            caption={t("screen.organization.bookings.bookingsAndTravelers.bookingsOnThisTrip")}
+            emptyTitle={t("screen.organization.bookings.bookingsAndTravelers.noBookingsYet")}
+            emptyDescription={t(
+              "screen.organization.bookings.bookingsAndTravelers.bookingsAppearHereWhenTravelers",
+            )}
           />
         ) : (
           <TeEmptyState
-            title="No cancellation requests"
-            description="Requests from travelers appear here for approval or decline."
+            title={t("screen.organization.bookings.bookingsAndTravelers.noCancellationRequests")}
+            description={t(
+              "screen.organization.bookings.bookingsAndTravelers.requestsFromTravelersAppearHere",
+            )}
           />
         )}
       </div>

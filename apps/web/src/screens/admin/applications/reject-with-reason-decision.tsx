@@ -1,9 +1,11 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { TeInlineAlert } from "@trips-app/ui/components/te-inline-alert";
 import { TePageHeader } from "@trips-app/ui/components/te-page-header";
+import { t } from "@trips-app/i18n";
 import { useAuth } from "@/auth/auth-context";
 import { getSelectedAdminApplicationId } from "@/screens/onboarding-state";
-import { client } from "@/utils/orpc";
+import { orpc } from "@/utils/orpc";
 import { AdminDecisionForm } from "../common/admin-decision-form";
 import { StatePreview } from "../common/admin-state-preview";
 import { useAdminNavigate } from "../common/admin-links";
@@ -11,37 +13,39 @@ import { AdminFacts, AdminPage, AdminPanel } from "../common/admin-shared";
 
 export function RejectWithReasonDecision() {
   const { status: authStatus } = useAuth();
-  const [applicantName, setApplicantName] = useState("[Applicant name]");
-  const [applicationType, setApplicationType] = useState("[Application type]");
+  const queryClient = useQueryClient();
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const goTo = useAdminNavigate();
 
-  useEffect(() => {
-    const appId = getSelectedAdminApplicationId();
-    if (authStatus !== "authenticated" || !appId || appId.startsWith("app-")) return;
-    let cancelled = false;
-    void client.onboarding
-      .getApplicationDetail({ applicationId: appId })
-      .then((detail) => {
-        if (cancelled) return;
-        setApplicantName(detail.applicant?.fullName ?? "[Applicant name]");
-        setApplicationType(detail.application.applicationType);
-      })
-      .catch(() => {
-        // Ignore when previewed without session
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [authStatus]);
+  const appId = getSelectedAdminApplicationId();
+  const detailQuery = useQuery({
+    ...orpc.onboarding.getApplicationDetail.queryOptions({
+      input: { applicationId: appId ?? "" },
+    }),
+    enabled: authStatus === "authenticated" && Boolean(appId),
+  });
+
+  const applicantName =
+    detailQuery.data?.applicant?.fullName ??
+    detailQuery.data?.application.applicantAccountId ??
+    "-";
+  const applicationType = detailQuery.data?.application.applicationType ?? "-";
+
+  const rejectMutation = useMutation(
+    orpc.onboarding.rejectApplication.mutationOptions({
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: orpc.onboarding.key() });
+      },
+    }),
+  );
 
   async function handleConfirm(reason: string) {
-    const appId = getSelectedAdminApplicationId();
-    if (authStatus === "authenticated" && appId && !appId.startsWith("app-")) {
+    const targetAppId = getSelectedAdminApplicationId();
+    if (authStatus === "authenticated" && targetAppId && !targetAppId.startsWith("app-")) {
       setErrorMsg(null);
       try {
-        await client.onboarding.rejectApplication({
-          applicationId: appId,
+        await rejectMutation.mutateAsync({
+          applicationId: targetAppId,
           decisionReasonCode: "rejected_by_admin",
           decisionNotes: reason.length >= 5 ? reason : `${reason} (rejected by admin)`,
         });
@@ -56,42 +60,73 @@ export function RejectWithReasonDecision() {
   return (
     <AdminPage>
       <TePageHeader
-        title="Reject with reason (decision)"
-        description="Reject this application. The applicant is told the reason."
+        title={t("screen.admin.applications.rejectWithReasonDecision.rejectWithReasonDecision")}
+        description={t(
+          "screen.admin.applications.rejectWithReasonDecision.rejectThisApplicationTheApplicant",
+        )}
       />
       <StatePreview
-        emptyTitle="No reason entered"
-        emptyDescription="Enter a reason before you reject the application."
-        loadingLabel="Loading the application."
+        emptyTitle={t("screen.admin.applications.rejectWithReasonDecision.noReasonEntered")}
+        emptyDescription={t(
+          "screen.admin.applications.rejectWithReasonDecision.enterAReasonBeforeYou",
+        )}
+        loadingLabel={t("screen.admin.applications.rejectWithReasonDecision.loadingTheApplication")}
       >
-        <AdminPanel title="Applicant">
+        <AdminPanel title={t("screen.admin.applications.rejectWithReasonDecision.applicant")}>
           <AdminFacts
             items={[
-              { label: "Applicant name", value: applicantName },
-              { label: "Application type", value: applicationType },
+              {
+                label: t("screen.admin.applications.rejectWithReasonDecision.applicantName"),
+                value: applicantName,
+              },
+              {
+                label: t("screen.admin.applications.rejectWithReasonDecision.applicationType"),
+                value: applicationType,
+              },
             ]}
           />
         </AdminPanel>
         {errorMsg ? (
-          <TeInlineAlert tone="error" title="Could not reject application">
+          <TeInlineAlert
+            tone="error"
+            title={t(
+              "screen.admin.applications.rejectWithReasonDecision.couldNotRejectApplication",
+            )}
+          >
             {errorMsg}
           </TeInlineAlert>
         ) : null}
-        <AdminPanel title="Reason">
+        <AdminPanel title={t("screen.admin.applications.rejectWithReasonDecision.reason")}>
           <AdminDecisionForm
-            reasonLabel="Reason for rejection (required)"
-            reasonHelp="Reason codes are proposed (D-234). This text is sent to the applicant."
-            submitLabel="Reject application"
-            dialogTitle="Reject this application?"
-            dialogDescription="The applicant is told the reason. They can re-apply after 30 days, or appeal."
-            confirmLabel="Reject application"
+            reasonLabel={t(
+              "screen.admin.applications.rejectWithReasonDecision.reasonForRejectionRequired",
+            )}
+            reasonHelp={t(
+              "screen.admin.applications.rejectWithReasonDecision.reasonCodesAreProposedD",
+            )}
+            submitLabel={t("screen.admin.applications.rejectWithReasonDecision.rejectApplication")}
+            dialogTitle={t(
+              "screen.admin.applications.rejectWithReasonDecision.rejectThisApplication",
+            )}
+            dialogDescription={t(
+              "screen.admin.applications.rejectWithReasonDecision.theApplicantIsToldThe",
+            )}
+            confirmLabel={t(
+              "screen.admin.applications.rejectWithReasonDecision.rejectApplicationConfirmLabel",
+            )}
             tone="danger"
-            cancel={{ slug: "application-review-detail", label: "Cancel" }}
+            cancel={{
+              slug: "application-review-detail",
+              label: t("screen.admin.applications.rejectWithReasonDecision.cancel"),
+            }}
             onConfirm={(reason) => handleConfirm(reason)}
           />
         </AdminPanel>
-        <TeInlineAlert tone="info" title="What the applicant can do next">
-          The applicant can re-apply after 30 days. The applicant can also appeal this decision.
+        <TeInlineAlert
+          tone="info"
+          title={t("screen.admin.applications.rejectWithReasonDecision.whatTheApplicantCanDo")}
+        >
+          {t("screen.admin.applications.rejectWithReasonDecision.theApplicantCanReApply")}
         </TeInlineAlert>
       </StatePreview>
     </AdminPage>

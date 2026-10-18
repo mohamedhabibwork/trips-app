@@ -1,6 +1,7 @@
 import { cn } from "@trips-app/ui/lib/utils";
 import { TeCheckbox } from "@trips-app/ui/components/te-checkbox";
 import { TeIcon } from "@trips-app/ui/components/te-icon";
+import { t } from "@trips-app/i18n";
 
 export interface TeChecklistItem {
   id: string;
@@ -15,8 +16,12 @@ export interface TeChecklistStateLabels {
 }
 
 export const TE_CHECKLIST_STATE_LABELS: TeChecklistStateLabels = {
-  checked: "Checked",
-  notYet: "Not yet",
+  get checked() {
+    return t("ui.teChecklist.labels.checked");
+  },
+  get notYet() {
+    return t("ui.teChecklist.labels.notYet");
+  },
 };
 
 export interface TeChecklistProps {

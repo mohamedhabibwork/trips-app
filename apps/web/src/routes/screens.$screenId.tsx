@@ -1,6 +1,7 @@
 import { Link, createFileRoute, notFound, redirect } from "@tanstack/react-router";
 
 import { findScreenById, screenPath } from "@/screens/registry";
+import { t } from "@trips-app/i18n";
 
 // Old SCR-… addresses redirect to the readable path of the same screen.
 export const Route = createFileRoute("/screens/$screenId")({
@@ -13,9 +14,9 @@ export const Route = createFileRoute("/screens/$screenId")({
   },
   notFoundComponent: () => (
     <main className="container mx-auto max-w-5xl px-4 py-6">
-      <p className="te-body">No screen matches this address.</p>
+      <p className="te-body">{t("route.screens$screenId.noScreenMatchesThisAddress")}</p>
       <Link to="/screens" className="te-label underline">
-        All screens
+        {t("route.screens$screenId.allScreens")}
       </Link>
     </main>
   ),

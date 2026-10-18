@@ -4,6 +4,7 @@ import { TeButton } from "@trips-app/ui/components/te-button";
 import { TeCard } from "@trips-app/ui/components/te-card";
 import { TeIcon, type TeIconName } from "@trips-app/ui/components/te-icon";
 import { TeMoney } from "@trips-app/ui/components/te-money";
+import { t } from "@trips-app/i18n";
 
 export const TE_OFFER_STATUSES = ["open", "accepted", "declined", "countered"] as const;
 export type TeOfferStatus = (typeof TE_OFFER_STATUSES)[number];
@@ -15,10 +16,34 @@ export interface TeOfferStatusPresentation {
 }
 
 export const TE_OFFER_STATUS_PRESENTATION: Record<TeOfferStatus, TeOfferStatusPresentation> = {
-  open: { icon: "clock", tone: "info", label: "Open" },
-  accepted: { icon: "check", tone: "success", label: "Accepted" },
-  declined: { icon: "close", tone: "danger", label: "Declined" },
-  countered: { icon: "refresh", tone: "warning", label: "Countered" },
+  open: {
+    icon: "clock",
+    tone: "info",
+    get label() {
+      return t("ui.teOfferCard.labels.open");
+    },
+  },
+  accepted: {
+    icon: "check",
+    tone: "success",
+    get label() {
+      return t("ui.teOfferCard.labels.accepted");
+    },
+  },
+  declined: {
+    icon: "close",
+    tone: "danger",
+    get label() {
+      return t("ui.teOfferCard.labels.declined");
+    },
+  },
+  countered: {
+    icon: "refresh",
+    tone: "warning",
+    get label() {
+      return t("ui.teOfferCard.labels.countered");
+    },
+  },
 };
 
 export interface TeOfferCardProps {

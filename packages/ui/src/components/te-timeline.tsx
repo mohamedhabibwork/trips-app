@@ -1,5 +1,6 @@
 import { cn } from "@trips-app/ui/lib/utils";
 import { TeIcon, type TeIconName } from "@trips-app/ui/components/te-icon";
+import { t } from "@trips-app/i18n";
 
 export const TE_TIMELINE_STATES = ["done", "current", "upcoming", "missed"] as const;
 export type TeTimelineState = (typeof TE_TIMELINE_STATES)[number];
@@ -14,10 +15,18 @@ export interface TeTimelineItem {
 export type TeTimelineStateLabels = Record<TeTimelineState, string>;
 
 export const TE_TIMELINE_STATE_LABELS: TeTimelineStateLabels = {
-  done: "Done",
-  current: "Current",
-  upcoming: "Upcoming",
-  missed: "Missed",
+  get done() {
+    return t("ui.teTimeline.labels.done");
+  },
+  get current() {
+    return t("ui.teTimeline.labels.current");
+  },
+  get upcoming() {
+    return t("ui.teTimeline.labels.upcoming");
+  },
+  get missed() {
+    return t("ui.teTimeline.labels.missed");
+  },
 };
 
 const TIMELINE_STATE_ICON: Record<TeTimelineState, TeIconName> = {

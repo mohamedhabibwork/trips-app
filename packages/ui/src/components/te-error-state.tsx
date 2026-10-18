@@ -1,6 +1,7 @@
 import { cn } from "@trips-app/ui/lib/utils";
 import { TeButton } from "@trips-app/ui/components/te-button";
 import { TeIcon, type TeIconName } from "@trips-app/ui/components/te-icon";
+import { t } from "@trips-app/i18n";
 
 export const TE_ERROR_KINDS = [
   "not-found",
@@ -23,48 +24,47 @@ export interface TeErrorCopy {
 }
 
 /** English defaults. Every field can be overridden through props. Never mentions stack traces. */
-const ERROR_COPY: Record<TeErrorKind, TeErrorCopy> = {
+const ERROR_COPY = (): Record<TeErrorKind, TeErrorCopy> => ({
   "not-found": {
-    title: "We can't find this page",
-    description:
-      "The link may be out of date or the page may have moved. Check the address, or go back to your trips.",
-    actionLabel: "Go to my trips",
+    title: t("ui.teErrorState.weCanTFindThis"),
+    description: t("ui.teErrorState.theLinkMayBeOut"),
+    actionLabel: t("ui.teErrorState.goToMyTrips"),
     icon: "alert",
   },
   server: {
-    title: "Something went wrong on our side",
-    description: "Your booking and payments are safe. Please try again in a few minutes.",
-    actionLabel: "Try again",
+    title: t("ui.teErrorState.somethingWentWrongOnOur"),
+    description: t("ui.teErrorState.yourBookingAndPaymentsAre"),
+    actionLabel: t("ui.teErrorState.tryAgain"),
     icon: "alert",
   },
   offline: {
-    title: "You're offline",
-    description: "Check your internet connection, then try again.",
-    actionLabel: "Try again",
+    title: t("ui.teErrorState.youReOffline"),
+    description: t("ui.teErrorState.checkYourInternetConnectionThen"),
+    actionLabel: t("ui.teErrorState.tryAgainActionLabel"),
     icon: "offline",
   },
   forbidden: {
-    title: "You don't have access to this page",
-    description: "Ask the trip organizer for access, or sign in with the account that has it.",
-    actionLabel: "Sign in",
+    title: t("ui.teErrorState.youDonTHaveAccess"),
+    description: t("ui.teErrorState.askTheTripOrganizerFor"),
+    actionLabel: t("ui.teErrorState.signIn"),
     icon: "lock",
   },
   unauthorized: {
-    title: "Sign in to continue",
-    description: "Your session has ended. Sign in again to see this page.",
-    actionLabel: "Sign in",
+    title: t("ui.teErrorState.signInToContinue"),
+    description: t("ui.teErrorState.yourSessionHasEndedSign"),
+    actionLabel: t("ui.teErrorState.signInActionLabel"),
     icon: "lock",
   },
   unavailable: {
-    title: "Service temporarily unavailable",
-    description: "We are working on it. Try again in a few minutes.",
-    actionLabel: "Try again",
+    title: t("ui.teErrorState.serviceTemporarilyUnavailable"),
+    description: t("ui.teErrorState.weAreWorkingOnIt"),
+    actionLabel: t("ui.teErrorState.tryAgain2"),
     icon: "alert",
   },
-};
+});
 
 export function errorStateCopy(kind: TeErrorKind): TeErrorCopy {
-  return ERROR_COPY[kind];
+  return ERROR_COPY()[kind];
 }
 
 /** Support reference IDs appear on server errors only. */

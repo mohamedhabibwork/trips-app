@@ -1,5 +1,6 @@
 import { cn } from "@trips-app/ui/lib/utils";
 import { TeIcon, type TeIconName } from "@trips-app/ui/components/te-icon";
+import { t } from "@trips-app/i18n";
 
 export const TE_SEAT_STATES = [
   "available",
@@ -28,15 +29,33 @@ export interface TeSeatRow {
 export type TeSeatStateLabels = Record<TeSeatState, string>;
 
 export const TE_SEAT_STATE_LABELS: TeSeatStateLabels = {
-  available: "Available",
-  selected: "Selected",
-  held: "Held",
-  reserved: "Reserved",
-  "checked-in": "Checked in",
-  "checked-out": "Checked out",
-  cancelled: "Cancelled",
-  taken: "Taken",
-  blocked: "Blocked",
+  get available() {
+    return t("ui.teSeatMap.labels.available");
+  },
+  get selected() {
+    return t("ui.teSeatMap.labels.selected");
+  },
+  get held() {
+    return t("ui.teSeatMap.labels.held");
+  },
+  get reserved() {
+    return t("ui.teSeatMap.labels.reserved");
+  },
+  get "checked-in"() {
+    return t("ui.teSeatMap.labels.checkedIn");
+  },
+  get "checked-out"() {
+    return t("ui.teSeatMap.labels.checkedOut");
+  },
+  get cancelled() {
+    return t("ui.teSeatMap.labels.cancelled");
+  },
+  get taken() {
+    return t("ui.teSeatMap.labels.taken");
+  },
+  get blocked() {
+    return t("ui.teSeatMap.labels.blocked");
+  },
 };
 
 /** Icons add a second cue beside the colour. Available seats have none. */

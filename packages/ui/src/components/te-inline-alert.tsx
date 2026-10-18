@@ -1,5 +1,6 @@
 import { cn } from "@trips-app/ui/lib/utils";
 import { TeIcon, type TeIconName } from "@trips-app/ui/components/te-icon";
+import { t } from "@trips-app/i18n";
 import type { ReactNode } from "react";
 
 export const TE_ALERT_TONES = ["error", "warning", "info", "success"] as const;
@@ -12,12 +13,12 @@ interface AlertPresentation {
 }
 
 /** Each tone pairs an icon and a word, so meaning never rests on colour alone. */
-const ALERT_PRESENTATION: Record<TeAlertTone, AlertPresentation> = {
-  error: { icon: "alert", title: "Error" },
-  warning: { icon: "alert", title: "Warning" },
-  info: { icon: "info", title: "Info" },
-  success: { icon: "check", title: "Success" },
-};
+const ALERT_PRESENTATION = (): Record<TeAlertTone, AlertPresentation> => ({
+  error: { icon: "alert", title: t("ui.teInlineAlert.error") },
+  warning: { icon: "alert", title: t("ui.teInlineAlert.warning") },
+  info: { icon: "info", title: t("ui.teInlineAlert.info") },
+  success: { icon: "check", title: t("ui.teInlineAlert.success") },
+});
 
 /** Errors interrupt assistive tech (alert); the other tones are polite updates (status). */
 export function inlineAlertRole(tone: TeAlertTone): "alert" | "status" {
@@ -25,7 +26,7 @@ export function inlineAlertRole(tone: TeAlertTone): "alert" | "status" {
 }
 
 export function inlineAlertPresentation(tone: TeAlertTone): AlertPresentation {
-  return ALERT_PRESENTATION[tone];
+  return ALERT_PRESENTATION()[tone];
 }
 
 export interface TeInlineAlertProps {

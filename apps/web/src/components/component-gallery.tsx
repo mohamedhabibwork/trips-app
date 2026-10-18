@@ -24,23 +24,25 @@ import {
   TeTrackingStatus,
 } from "@trips-app/ui/components/te-tracking-status";
 import { TeTripCard } from "@trips-app/ui/components/te-trip-card";
+import { t } from "@trips-app/i18n";
 
 // Inline placeholder so the gallery needs no network image.
-const TRIP_IMAGE = {
+const TRIP_IMAGE = () => ({
   url: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 3'><rect width='4' height='3' fill='%23fb8030'/></svg>",
-  alt: "Placeholder trip image",
-};
+  alt: t("component.componentGallery.placeholderTripImage"),
+});
 
-const CHIP_OPTIONS = [
-  { id: "beach", label: "Beach" },
-  { id: "desert", label: "Desert safari" },
-  { id: "museums", label: "Museums" },
-] as const;
+const CHIP_OPTIONS = () =>
+  [
+    { id: "beach", label: t("component.componentGallery.beach") },
+    { id: "desert", label: t("component.componentGallery.desertSafari") },
+    { id: "museums", label: t("component.componentGallery.museums") },
+  ] as const;
 
-const GLASS_TABS: readonly TeGlassTab[] = [
-  { id: "trips", label: "Trips", icon: "bus" },
-  { id: "track", label: "Track", icon: "clock" },
-  { id: "profile", label: "Profile", icon: "user" },
+const GLASS_TABS = (): readonly TeGlassTab[] => [
+  { id: "trips", label: t("component.componentGallery.trips"), icon: "bus" },
+  { id: "track", label: t("component.componentGallery.track"), icon: "clock" },
+  { id: "profile", label: t("component.componentGallery.profile"), icon: "user" },
 ];
 
 const MIN_PHONE_LENGTH = 10;
@@ -61,26 +63,26 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
 
 function BrandSection() {
   return (
-    <Section title="Brand">
+    <Section title={t("component.componentGallery.brand")}>
       <div className="grid gap-4 sm:grid-cols-2">
         <figure className="m-0 grid place-items-center gap-3 rounded-[20px] bg-[var(--te-brand-cream)] p-8">
           <img
             src="/brand/trips-enjoy-horizontal-fullcolor.svg"
-            alt="Trips Enjoy logo, full colour, horizontal layout"
+            alt={t("component.componentGallery.tripsEnjoyLogoFullColour")}
             className="h-16 w-auto"
           />
           <figcaption className="te-caption text-[color:var(--te-brand-navy)]">
-            Horizontal logo on cream
+            {t("component.componentGallery.horizontalLogoOnCream")}
           </figcaption>
         </figure>
         <figure className="m-0 grid place-items-center gap-3 rounded-[20px] bg-[var(--te-brand-navy)] p-8">
           <img
             src="/brand/trips-enjoy-horizontal-reversed.svg"
-            alt="Trips Enjoy logo, reversed for dark backgrounds, horizontal layout"
+            alt={t("component.componentGallery.tripsEnjoyLogoReversedFor")}
             className="h-16 w-auto"
           />
           <figcaption className="te-caption text-[color:var(--te-brand-cream)]">
-            Reversed logo on navy
+            {t("component.componentGallery.reversedLogoOnNavy")}
           </figcaption>
         </figure>
       </div>
@@ -90,12 +92,12 @@ function BrandSection() {
 
 function ActionsSection() {
   return (
-    <Section title="Actions">
+    <Section title={t("component.componentGallery.actions")}>
       <div className="flex flex-wrap items-center gap-3">
-        <TeButton>Book trip</TeButton>
-        <TeButton variant="secondary">Add activity</TeButton>
-        <TeButton variant="ghost">View itinerary</TeButton>
-        <TeButton size="lg">Pay now</TeButton>
+        <TeButton>{t("component.componentGallery.bookTrip")}</TeButton>
+        <TeButton variant="secondary">{t("component.componentGallery.addActivity")}</TeButton>
+        <TeButton variant="ghost">{t("component.componentGallery.viewItinerary")}</TeButton>
+        <TeButton size="lg">{t("component.componentGallery.payNow")}</TeButton>
       </div>
     </Section>
   );
@@ -104,9 +106,9 @@ function ActionsSection() {
 function ChipsSection() {
   const [selectedId, setSelectedId] = useState<string>("desert");
   return (
-    <Section title="Chips">
+    <Section title={t("component.componentGallery.chips")}>
       <div className="flex flex-wrap gap-2">
-        {CHIP_OPTIONS.map((option) => (
+        {CHIP_OPTIONS().map((option) => (
           <TeChip
             key={option.id}
             selected={selectedId === option.id}
@@ -124,15 +126,15 @@ function InputsSection() {
   const [phone, setPhone] = useState("0100");
   const phoneError = phone.length < MIN_PHONE_LENGTH ? PHONE_ERROR : undefined;
   return (
-    <Section title="Inputs">
-      <TeInput label="Traveler name" defaultValue="Omar Habib" />
+    <Section title={t("component.componentGallery.inputs")}>
+      <TeInput label={t("component.componentGallery.travelerName")} defaultValue="Omar Habib" />
       <TeInput
-        label="Parent phone"
+        label={t("component.componentGallery.parentPhone")}
         type="tel"
         value={phone}
         onChange={(event) => setPhone(event.target.value)}
         error={phoneError}
-        supportingText="Used for live bus updates."
+        supportingText={t("component.componentGallery.usedForLiveBusUpdates")}
       />
     </Section>
   );
@@ -140,13 +142,13 @@ function InputsSection() {
 
 function ContentSection() {
   return (
-    <Section title="Trip card and roles">
+    <Section title={t("component.componentGallery.tripCardAndRoles")}>
       <div className="max-w-sm">
         <TeTripCard
-          title="Bus 3 · Hurghada"
+          title={t("component.componentGallery.bus3Hurghada")}
           meta="Departs 07:30 from Nasr City"
-          image={TRIP_IMAGE}
-          status={<TeBadge tone="success">Seat confirmed</TeBadge>}
+          image={TRIP_IMAGE()}
+          status={<TeBadge tone="success">{t("component.componentGallery.seatConfirmed")}</TeBadge>}
         />
       </div>
       <div className="flex flex-wrap gap-2">
@@ -160,15 +162,15 @@ function ContentSection() {
 
 function BadgesSection() {
   return (
-    <Section title="Status">
+    <Section title={t("component.componentGallery.status")}>
       <div className="flex flex-wrap gap-2">
-        <TeBadge tone="neutral">Neutral</TeBadge>
-        <TeBadge tone="accent">Accent</TeBadge>
-        <TeBadge tone="highlight">New</TeBadge>
-        <TeBadge tone="success">Boarded</TeBadge>
-        <TeBadge tone="warning">Delayed</TeBadge>
-        <TeBadge tone="danger">Not boarded</TeBadge>
-        <TeBadge tone="info">Organization</TeBadge>
+        <TeBadge tone="neutral">{t("component.componentGallery.neutral")}</TeBadge>
+        <TeBadge tone="accent">{t("component.componentGallery.accent")}</TeBadge>
+        <TeBadge tone="highlight">{t("component.componentGallery.new")}</TeBadge>
+        <TeBadge tone="success">{t("component.componentGallery.boarded")}</TeBadge>
+        <TeBadge tone="warning">{t("component.componentGallery.delayed")}</TeBadge>
+        <TeBadge tone="danger">{t("component.componentGallery.notBoarded")}</TeBadge>
+        <TeBadge tone="info">{t("component.componentGallery.organization")}</TeBadge>
       </div>
       <div className="flex flex-col gap-2">
         {TE_TRACKING_STATUSES.map((status) => (
@@ -183,27 +185,27 @@ function FeedbackSection() {
   const [retrying, setRetrying] = useState(false);
   const [toastOpen, setToastOpen] = useState(true);
   return (
-    <Section title="Feedback">
-      <TeInlineAlert tone="error" title="Payment not completed">
-        Your bank declined the card ending 4421. No money was taken.
+    <Section title={t("component.componentGallery.feedback")}>
+      <TeInlineAlert tone="error" title={t("component.componentGallery.paymentNotCompleted")}>
+        {t("component.componentGallery.yourBankDeclinedTheCard")}
       </TeInlineAlert>
-      <TeInlineAlert tone="warning" title="Seats are on hold">
-        Pay within 10 minutes to keep your seats.
+      <TeInlineAlert tone="warning" title={t("component.componentGallery.seatsAreOnHold")}>
+        {t("component.componentGallery.payWithin10MinutesTo")}
       </TeInlineAlert>
-      <TeInlineAlert tone="info" title="Trip updated">
-        The departure point moved to Gate 2.
+      <TeInlineAlert tone="info" title={t("component.componentGallery.tripUpdated")}>
+        {t("component.componentGallery.theDeparturePointMovedTo")}
       </TeInlineAlert>
-      <TeInlineAlert tone="success" title="Booking saved">
-        Seat confirmed for Bus 3.
+      <TeInlineAlert tone="success" title={t("component.componentGallery.bookingSaved")}>
+        {t("component.componentGallery.seatConfirmedForBus3")}
       </TeInlineAlert>
       <TeRetryBanner
-        message="Connection lost. Retrying in 5 seconds."
+        message={t("component.componentGallery.connectionLostRetryingIn5")}
         onRetry={() => setRetrying((value) => !value)}
         retrying={retrying}
       />
       {toastOpen ? (
         <TeToast
-          message="Seat confirmed for Bus 3. Your booking is saved."
+          message={t("component.componentGallery.seatConfirmedForBus3Message")}
           onClose={() => setToastOpen(false)}
         />
       ) : null}
@@ -213,13 +215,15 @@ function FeedbackSection() {
 
 function StatesSection() {
   return (
-    <Section title="Error and empty states">
+    <Section title={t("component.componentGallery.errorAndEmptyStates")}>
       <TeErrorState kind="server" referenceId="TE-4821" onAction={noop} />
       <TeErrorState kind="offline" platform="mobile" onAction={noop} />
       <TeEmptyState
-        title="No trips yet"
-        description="When your company adds a trip, it will appear here."
-        action={<TeButton variant="secondary">Browse trips</TeButton>}
+        title={t("component.componentGallery.noTripsYet")}
+        description={t("component.componentGallery.whenYourCompanyAddsA")}
+        action={
+          <TeButton variant="secondary">{t("component.componentGallery.browseTrips")}</TeButton>
+        }
       />
     </Section>
   );
@@ -228,19 +232,19 @@ function StatesSection() {
 function GlassSection() {
   const [activeTab, setActiveTab] = useState("trips");
   return (
-    <Section title="Liquid Glass">
+    <Section title={t("component.componentGallery.liquidGlass")}>
       <TeGlassSurface className="grid gap-4 rounded-[20px] bg-[var(--te-brand-navy)] p-8">
-        <TeGlassNavBar aria-label="Main">
-          <span className="te-label">Trips Enjoy</span>
+        <TeGlassNavBar aria-label={t("component.componentGallery.main")}>
+          <span className="te-label">{t("component.componentGallery.tripsEnjoy")}</span>
         </TeGlassNavBar>
         <TeGlassTabBar
-          tabs={GLASS_TABS}
+          tabs={GLASS_TABS()}
           activeId={activeTab}
           onSelect={setActiveTab}
-          ariaLabel="Sections"
+          ariaLabel={t("component.componentGallery.sections")}
         />
         <div className="flex justify-end">
-          <TeGlassButton tint>Track bus</TeGlassButton>
+          <TeGlassButton tint>{t("component.componentGallery.trackBus")}</TeGlassButton>
         </div>
       </TeGlassSurface>
     </Section>
@@ -249,7 +253,7 @@ function GlassSection() {
 
 function IconsSection() {
   return (
-    <Section title="Icons">
+    <Section title={t("component.componentGallery.icons")}>
       <div className="flex flex-wrap gap-4">
         {TE_ICON_NAMES.map((name) => (
           <TeIcon key={name} name={name} label={name} className="size-6" />
@@ -264,10 +268,8 @@ export function ComponentGallery() {
   return (
     <main className="container mx-auto grid max-w-5xl gap-10 px-4 py-6">
       <header className="grid gap-2">
-        <h1 className="te-h1">Trips Enjoy components</h1>
-        <p className="te-body">
-          Every component reads the Trips Enjoy tokens. One primary action per view.
-        </p>
+        <h1 className="te-h1">{t("component.componentGallery.tripsEnjoyComponents")}</h1>
+        <p className="te-body">{t("component.componentGallery.everyComponentReadsTheTrips")}</p>
       </header>
       <BrandSection />
       <ActionsSection />

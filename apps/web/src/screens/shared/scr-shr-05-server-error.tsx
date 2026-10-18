@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { TeErrorState } from "@trips-app/ui/components/te-error-state";
+import { t } from "@trips-app/i18n";
 import { retryPage } from "./screen-actions";
 
 // Placeholder. Each response carries its own request identifier (IF-03).
@@ -12,12 +13,12 @@ export function ScrShr05ServerError() {
       <TeErrorState
         kind="server"
         referenceId={REQUEST_REFERENCE}
-        referenceLabel="Request ID"
-        actionLabel="Try again"
+        referenceLabel={t("screen.shared.scrShr05ServerError.requestId")}
+        actionLabel={t("screen.shared.scrShr05ServerError.tryAgain")}
         onAction={retryPage}
       />
       <Link to="/" className="te-link">
-        Go to home
+        {t("screen.shared.scrShr05ServerError.goToHome")}
       </Link>
     </div>
   );

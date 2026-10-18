@@ -3,6 +3,7 @@ import { TeBadge } from "@trips-app/ui/components/te-badge";
 import { TeCard } from "@trips-app/ui/components/te-card";
 import { TeIcon, type TeIconName } from "@trips-app/ui/components/te-icon";
 import { TeInlineAlert } from "@trips-app/ui/components/te-inline-alert";
+import { t } from "@trips-app/i18n";
 import { buttonLinkClass } from "../../shared/button-link";
 import { ScreenLink } from "../../shared/screen-link";
 import { StateLoading, StatePreview } from "../../shared/state-preview";
@@ -17,32 +18,32 @@ interface RoleChoice {
   webOnly: boolean;
 }
 
-const ROLE_CHOICES: readonly RoleChoice[] = [
+const ROLE_CHOICES = (): readonly RoleChoice[] => [
   {
     slug: "traveler-sign-up",
-    title: "Traveler",
-    description: "Create a traveler account on the Free plan.",
+    title: t("screen.public.signUp.signUpChooser.traveler"),
+    description: t("screen.public.signUp.signUpChooser.createATravelerAccountOn"),
     icon: "ticket",
     webOnly: false,
   },
   {
     slug: "platform-driver-sign-up",
-    title: "Platform driver",
-    description: "Apply to join the platform driver pool.",
+    title: t("screen.public.signUp.signUpChooser.platformDriver"),
+    description: t("screen.public.signUp.signUpChooser.applyToJoinThePlatform"),
     icon: "bus",
     webOnly: false,
   },
   {
     slug: "photographer-sign-up",
-    title: "Photographer",
-    description: "Apply to join the platform photographer pool.",
+    title: t("screen.public.signUp.signUpChooser.photographer"),
+    description: t("screen.public.signUp.signUpChooser.applyToJoinThePlatformDescription"),
     icon: "camera",
     webOnly: false,
   },
   {
     slug: "organization-sign-up",
-    title: "Organization",
-    description: "Register an organization for admin review.",
+    title: t("screen.public.signUp.signUpChooser.organization"),
+    description: t("screen.public.signUp.signUpChooser.registerAnOrganizationForAdmin"),
     icon: "users",
     webOnly: true,
   },
@@ -51,7 +52,7 @@ const ROLE_CHOICES: readonly RoleChoice[] = [
 function RoleCards() {
   return (
     <div className="flex flex-col gap-4">
-      {ROLE_CHOICES.map((choice) => (
+      {ROLE_CHOICES().map((choice) => (
         <TeCard as="article" key={choice.slug}>
           <div className="flex flex-col gap-3">
             <div className="flex flex-wrap items-center gap-2">
@@ -60,7 +61,7 @@ function RoleCards() {
               {choice.webOnly ? (
                 <TeBadge tone="info">
                   <TeIcon name="info" />
-                  Web only
+                  {t("screen.public.signUp.signUpChooser.webOnly")}
                 </TeBadge>
               ) : null}
             </div>
@@ -71,7 +72,7 @@ function RoleCards() {
                 slug={choice.slug}
                 className={buttonLinkClass("primary")}
               >
-                Continue as {choice.title.toLowerCase()}
+                {t("screen.public.signUp.signUpChooser.continueAs")} {choice.title.toLowerCase()}
               </ScreenLink>
             </div>
           </div>
@@ -84,20 +85,26 @@ function RoleCards() {
 /** One card per role. Choosing a card opens only that role's form. */
 export function SignUpChooser() {
   return (
-    <AuthFrame title="Sign-up chooser (/register)" description="Pick the role that fits you.">
+    <AuthFrame
+      title={t("screen.public.signUp.signUpChooser.signUpChooserRegister")}
+      description={t("screen.public.signUp.signUpChooser.pickTheRoleThatFits")}
+    >
       <StatePreview
         main={<RoleCards />}
         loading={<StateLoading lines={4} />}
         error={
-          <TeInlineAlert tone="error" title="Roles could not load">
-            Refresh the page to try again.
+          <TeInlineAlert
+            tone="error"
+            title={t("screen.public.signUp.signUpChooser.rolesCouldNotLoad")}
+          >
+            {t("screen.public.signUp.signUpChooser.refreshThePageToTry")}
           </TeInlineAlert>
         }
       />
       <p className="te-body">
-        Already have an account?{" "}
+        {t("screen.public.signUp.signUpChooser.alreadyHaveAnAccount")}{" "}
         <Link to={AUTH_ROUTES.signIn} className="te-link">
-          Sign in
+          {t("screen.public.signUp.signUpChooser.signIn")}
         </Link>
       </p>
     </AuthFrame>

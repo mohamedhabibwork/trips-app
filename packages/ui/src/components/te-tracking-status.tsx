@@ -1,6 +1,7 @@
 import { cn } from "@trips-app/ui/lib/utils";
 import { TeBadge, type TeBadgeTone } from "@trips-app/ui/components/te-badge";
 import { TeIcon, type TeIconName } from "@trips-app/ui/components/te-icon";
+import { t } from "@trips-app/i18n";
 
 export const TE_TRACKING_STATUSES = [
   "on-time",
@@ -19,16 +20,16 @@ export interface TeTrackingPresentation {
 }
 
 /** Status is always word + icon. Tone is secondary, never the only cue. */
-const TRACKING_PRESENTATION: Record<TeTrackingStatusValue, TeTrackingPresentation> = {
-  "on-time": { tone: "info", icon: "clock", label: "On time" },
-  delayed: { tone: "warning", icon: "alert", label: "Delayed" },
-  boarded: { tone: "success", icon: "check", label: "Boarded" },
-  "not-boarded": { tone: "danger", icon: "user", label: "Not boarded" },
-  arrived: { tone: "success", icon: "bus", label: "Arrived" },
-};
+const TRACKING_PRESENTATION = (): Record<TeTrackingStatusValue, TeTrackingPresentation> => ({
+  "on-time": { tone: "info", icon: "clock", label: t("ui.teTrackingStatus.onTime") },
+  delayed: { tone: "warning", icon: "alert", label: t("ui.teTrackingStatus.delayed") },
+  boarded: { tone: "success", icon: "check", label: t("ui.teTrackingStatus.boarded") },
+  "not-boarded": { tone: "danger", icon: "user", label: t("ui.teTrackingStatus.notBoarded") },
+  arrived: { tone: "success", icon: "bus", label: t("ui.teTrackingStatus.arrived") },
+});
 
 export function trackingStatusPresentation(status: TeTrackingStatusValue): TeTrackingPresentation {
-  return TRACKING_PRESENTATION[status];
+  return TRACKING_PRESENTATION()[status];
 }
 
 export interface TeTrackingStatusProps {

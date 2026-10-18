@@ -1,5 +1,6 @@
 import { cn } from "@trips-app/ui/lib/utils";
 import { TeBadge, type TeBadgeTone } from "@trips-app/ui/components/te-badge";
+import { t } from "@trips-app/i18n";
 
 export const TE_ROLES = [
   "traveler",
@@ -29,12 +30,24 @@ const ROLE_TONES: Record<TeRole, TeBadgeTone> = {
 };
 
 const ROLE_LABELS: Record<TeRole, string> = {
-  traveler: "Traveler",
-  parent: "Parent",
-  driver: "Driver",
-  photographer: "Photographer",
-  organization: "Organization",
-  admin: "Admin",
+  get traveler() {
+    return t("ui.teRoleBadge.labels.traveler");
+  },
+  get parent() {
+    return t("ui.teRoleBadge.labels.parent");
+  },
+  get driver() {
+    return t("ui.teRoleBadge.labels.driver");
+  },
+  get photographer() {
+    return t("ui.teRoleBadge.labels.photographer");
+  },
+  get organization() {
+    return t("ui.teRoleBadge.labels.organization");
+  },
+  get admin() {
+    return t("ui.teRoleBadge.labels.admin");
+  },
 };
 
 export function roleToTone(role: TeRole): TeBadgeTone {

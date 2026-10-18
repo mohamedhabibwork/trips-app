@@ -21,120 +21,284 @@ export const ADMIN_SCREENS_PART_2: readonly ScreenEntry[] = [
   {
     id: "SCR-ADM-17",
     slug: "subscriptions-and-overrides",
-    title: "Subscriptions and overrides",
+    titleKey: "screen.registry.admin.subscriptionsAndOverrides.title",
     surface: "admin",
     component: SubscriptionsAndOverrides,
+    loader: async ({ queryClient, orpc, auth }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+      try {
+        await Promise.allSettled([
+          queryClient.ensureQueryData(orpc.onboarding.listReviewQueue.queryOptions({ input: {} })),
+          queryClient.ensureQueryData(orpc.plans.getCatalog.queryOptions({ input: {} })),
+        ]);
+      } catch {
+        // Gracefully ignore SSR errors
+      }
+    },
   },
   {
     id: "SCR-ADM-18",
     slug: "revenue-dashboard",
-    title: "Revenue dashboard",
+    titleKey: "screen.registry.admin.revenueDashboard.title",
     surface: "admin",
     component: RevenueDashboard,
+    loader: async ({ queryClient, orpc, auth }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+      try {
+        await queryClient.ensureQueryData(orpc.plans.getCatalog.queryOptions({ input: {} }));
+      } catch {
+        // Gracefully ignore SSR errors
+      }
+    },
   },
   {
     id: "SCR-ADM-19",
     slug: "platform-coupons",
-    title: "Platform coupons",
+    titleKey: "screen.registry.admin.platformCoupons.title",
     surface: "admin",
     component: PlatformCoupons,
+    loader: async ({ queryClient, orpc, auth }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+      try {
+        await queryClient.ensureQueryData(
+          orpc.coupons.listPlatformCoupons.queryOptions({ input: {} }),
+        );
+      } catch {
+        // Gracefully ignore SSR errors
+      }
+    },
   },
   {
     id: "SCR-ADM-20",
     slug: "platform-coupon-editor",
-    title: "Platform coupon editor",
+    titleKey: "screen.registry.admin.platformCouponEditor.title",
     surface: "admin",
     component: PlatformCouponEditor,
+    loader: async ({ auth }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+    },
   },
   {
     id: "SCR-ADM-21",
     slug: "deal-audit-list",
-    title: "Deal audit list",
+    titleKey: "screen.registry.admin.dealAuditList.title",
     surface: "admin",
     component: DealAuditList,
+    loader: async ({ queryClient, orpc, auth }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+      try {
+        await queryClient.ensureQueryData(
+          orpc.negotiation.listOrganizationNegotiations.queryOptions({ input: {} }),
+        );
+      } catch {
+        // Gracefully ignore SSR errors
+      }
+    },
   },
   {
     id: "SCR-ADM-22",
     slug: "deal-audit-detail",
-    title: "Deal audit detail",
+    titleKey: "screen.registry.admin.dealAuditDetail.title",
     surface: "admin",
     component: DealAuditDetail,
+    loader: async ({ queryClient, orpc, auth }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+      try {
+        await queryClient.ensureQueryData(
+          orpc.negotiation.listOrganizationNegotiations.queryOptions({ input: {} }),
+        );
+      } catch {
+        // Gracefully ignore SSR errors
+      }
+    },
   },
   {
     id: "SCR-ADM-23",
     slug: "disputes-queue",
-    title: "Disputes queue",
+    titleKey: "screen.registry.admin.disputesQueue.title",
     surface: "admin",
     component: DisputesQueue,
+    loader: async ({ queryClient, orpc, auth }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+      try {
+        await queryClient.ensureQueryData(
+          orpc.accounting.listAdminReconciliationExceptions.queryOptions(),
+        );
+      } catch {
+        // Gracefully ignore SSR errors
+      }
+    },
   },
   {
     id: "SCR-ADM-24",
     slug: "dispute-detail-and-refund-decision",
-    title: "Dispute detail and refund decision",
+    titleKey: "screen.registry.admin.disputeDetailAndRefundDecision.title",
     surface: "admin",
     component: DisputeDetailAndRefundDecision,
+    loader: async ({ queryClient, orpc, auth }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+      try {
+        await queryClient.ensureQueryData(
+          orpc.accounting.listAdminReconciliationExceptions.queryOptions(),
+        );
+      } catch {
+        // Gracefully ignore SSR errors
+      }
+    },
   },
   {
     id: "SCR-ADM-25",
     slug: "platform-financial-view",
-    title: "Platform financial view",
+    titleKey: "screen.registry.admin.platformFinancialView.title",
     surface: "admin",
     component: PlatformFinancialView,
+    loader: async ({ queryClient, orpc, auth }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+      try {
+        await Promise.allSettled([
+          queryClient.ensureQueryData(orpc.plans.getCatalog.queryOptions({ input: {} })),
+          queryClient.ensureQueryData(orpc.coupons.listPlatformCoupons.queryOptions({ input: {} })),
+          queryClient.ensureQueryData(
+            orpc.accounting.listAdminReconciliationExceptions.queryOptions(),
+          ),
+          queryClient.ensureQueryData(
+            orpc.negotiation.listOrganizationNegotiations.queryOptions({ input: {} }),
+          ),
+        ]);
+      } catch {
+        // Gracefully ignore SSR errors
+      }
+    },
   },
   {
     id: "SCR-ADM-26",
     slug: "payout-runs",
-    title: "Payout runs",
+    titleKey: "screen.registry.admin.payoutRuns.title",
     surface: "admin",
     component: PayoutRuns,
+    loader: async ({ queryClient, orpc, auth }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+      try {
+        await queryClient.ensureQueryData(
+          orpc.accounting.listLedgerEntries.queryOptions({ input: {} }),
+        );
+      } catch {
+        // Gracefully ignore SSR errors
+      }
+    },
   },
   {
     id: "SCR-ADM-27",
     slug: "reconciliation-exceptions",
-    title: "Reconciliation exceptions",
+    titleKey: "screen.registry.admin.reconciliationExceptions.title",
     surface: "admin",
     component: ReconciliationExceptions,
+    loader: async ({ queryClient, orpc, auth }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+      try {
+        await queryClient.ensureQueryData(
+          orpc.accounting.listAdminReconciliationExceptions.queryOptions(),
+        );
+      } catch {
+        // Gracefully ignore SSR errors
+      }
+    },
   },
   {
     id: "SCR-ADM-28",
     slug: "settlements-tracker",
-    title: "Settlements tracker",
+    titleKey: "screen.registry.admin.settlementsTracker.title",
     surface: "admin",
     component: SettlementsTracker,
+    loader: async ({ queryClient, orpc, auth }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+      try {
+        await queryClient.ensureQueryData(
+          orpc.accounting.listLedgerEntries.queryOptions({ input: {} }),
+        );
+      } catch {
+        // Gracefully ignore SSR errors
+      }
+    },
   },
   {
     id: "SCR-ADM-29",
     slug: "trip-oversight",
-    title: "Trip oversight",
+    titleKey: "screen.registry.admin.tripOversight.title",
     surface: "admin",
     component: TripOversight,
+    loader: async ({ queryClient, orpc, auth }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+      try {
+        await queryClient.ensureQueryData(orpc.trips.browsePublicTrips.queryOptions({ input: {} }));
+      } catch {
+        // Gracefully ignore SSR errors
+      }
+    },
   },
   {
     id: "SCR-ADM-30",
     slug: "audit-log",
-    title: "Audit log",
+    titleKey: "screen.registry.admin.auditLog.title",
     surface: "admin",
     component: AuditLog,
+    loader: async ({ queryClient, orpc, auth }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+      try {
+        await queryClient.ensureQueryData(
+          orpc.onboarding.listReviewQueue.queryOptions({ input: {} }),
+        );
+      } catch {
+        // Gracefully ignore SSR errors
+      }
+    },
   },
   {
     id: "SCR-ADM-31",
     slug: "notification-templates",
-    title: "Notification templates",
+    titleKey: "screen.registry.admin.notificationTemplates.title",
     surface: "admin",
     component: NotificationTemplates,
+    loader: async ({ queryClient, orpc, auth }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+      try {
+        await queryClient.ensureQueryData(orpc.notifications.listInbox.queryOptions({ input: {} }));
+      } catch {
+        // Gracefully ignore SSR errors
+      }
+    },
   },
   {
     id: "SCR-ADM-32",
     slug: "feature-flags-and-platform-configuration",
-    title: "Feature flags and platform configuration",
+    titleKey: "screen.registry.admin.featureFlagsAndPlatformConfiguration.title",
     surface: "admin",
     component: FeatureFlagsAndPlatformConfiguration,
+    loader: async ({ queryClient, orpc, auth }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+      try {
+        await queryClient.ensureQueryData(orpc.admin.getSystemSettings.queryOptions());
+      } catch {
+        // Gracefully ignore SSR errors
+      }
+    },
   },
   {
     id: "SCR-ADM-33",
     slug: "operations-health-dashboard",
-    title: "Operations health dashboard",
+    titleKey: "screen.registry.admin.operationsHealthDashboard.title",
     surface: "admin",
     component: OperationsHealthDashboard,
+    loader: async ({ queryClient, orpc, auth }) => {
+      if (typeof window === "undefined" && !auth.accessToken()) return;
+      try {
+        await Promise.allSettled([
+          queryClient.ensureQueryData(orpc.trips.browsePublicTrips.queryOptions({ input: {} })),
+          queryClient.ensureQueryData(orpc.notifications.listInbox.queryOptions({ input: {} })),
+        ]);
+      } catch {
+        // Gracefully ignore SSR errors
+      }
+    },
   },
 ];

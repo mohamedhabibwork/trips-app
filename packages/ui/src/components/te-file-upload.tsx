@@ -1,6 +1,7 @@
 import { cn } from "@trips-app/ui/lib/utils";
 import { TeIcon, type TeIconName } from "@trips-app/ui/components/te-icon";
 import { useId } from "react";
+import { t } from "@trips-app/i18n";
 
 export const TE_FILE_STATUSES = ["pending", "uploading", "done", "failed"] as const;
 export type TeFileStatus = (typeof TE_FILE_STATUSES)[number];
@@ -19,10 +20,30 @@ export interface TeFileStatusPresentation {
 
 /** Status is always word plus icon. */
 export const TE_FILE_STATUS_PRESENTATION: Record<TeFileStatus, TeFileStatusPresentation> = {
-  pending: { icon: "clock", label: "Waiting" },
-  uploading: { icon: "refresh", label: "Uploading" },
-  done: { icon: "check", label: "Uploaded" },
-  failed: { icon: "alert", label: "Failed" },
+  pending: {
+    icon: "clock",
+    get label() {
+      return t("ui.teFileUpload.labels.waiting");
+    },
+  },
+  uploading: {
+    icon: "refresh",
+    get label() {
+      return t("ui.teFileUpload.labels.uploading");
+    },
+  },
+  done: {
+    icon: "check",
+    get label() {
+      return t("ui.teFileUpload.labels.uploaded");
+    },
+  },
+  failed: {
+    icon: "alert",
+    get label() {
+      return t("ui.teFileUpload.labels.failed");
+    },
+  },
 };
 
 export interface TeFileUploadProps {

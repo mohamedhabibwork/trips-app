@@ -8,6 +8,7 @@ import {
 } from "@shadcn/react/message-scroller";
 import { Button } from "@trips-app/ui/components/button";
 import { cn } from "@trips-app/ui/lib/utils";
+import { t } from "@trips-app/i18n";
 import { ArrowDownIcon } from "lucide-react";
 import * as React from "react";
 
@@ -108,7 +109,9 @@ function MessageScrollerButton({
         <>
           <ArrowDownIcon />
           <span className="sr-only">
-            {direction === "end" ? "Scroll to end" : "Scroll to start"}
+            {direction === "end"
+              ? t("ui.messageScroller.scrollToEnd")
+              : t("ui.messageScroller.scrollToStart")}
           </span>
         </>
       )}

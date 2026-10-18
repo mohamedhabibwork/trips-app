@@ -1,12 +1,16 @@
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 
 import { TeDataTable, type TeDataTableColumn } from "@trips-app/ui/components/te-data-table";
 import { TePageHeader } from "@trips-app/ui/components/te-page-header";
 import { TeSearchField } from "@trips-app/ui/components/te-search-field";
 import { TeSelect, type TeSelectOption } from "@trips-app/ui/components/te-select";
+import { t } from "@trips-app/i18n";
+import { useAuth } from "@/auth/auth-context";
+import { orpc } from "@/utils/orpc";
 
 import { OrgButtonLink, OrgLink, WorkspaceBackLink } from "../common/org-link";
-import { StateBadge } from "../common/org-shared";
+import { setSelectedVehicleId, StateBadge } from "../common/org-shared";
 import { StatePreview } from "../common/organization-state-preview";
 
 interface VehicleRow {
@@ -19,46 +23,65 @@ interface VehicleRow {
   registration: string;
 }
 
-const VEHICLE_ROWS: readonly VehicleRow[] = [
-  {
-    id: "vehicle-1",
-    plate: "[Plate]",
-    model: "[Model]",
-    year: "[Year]",
-    vehicleType: "[Vehicle type]",
-    seats: "0",
-    registration: "[Registration status]",
-  },
-];
-
-const COLUMNS: readonly TeDataTableColumn<VehicleRow>[] = [
+const COLUMNS = (): readonly TeDataTableColumn<VehicleRow>[] => [
   {
     key: "plate",
-    header: "Plate",
-    render: (row) => <OrgLink slug="vehicle-editor">{row.plate}</OrgLink>,
+    header: t("screen.organization.vehicles.vehicleRegistry.plate"),
+    render: (row) => (
+      <OrgLink slug="vehicle-editor" onClick={() => setSelectedVehicleId(row.id)}>
+        {row.plate}
+      </OrgLink>
+    ),
   },
-  { key: "model", header: "Model" },
-  { key: "year", header: "Year" },
-  { key: "vehicleType", header: "Vehicle type" },
-  { key: "seats", header: "Seats", align: "end" },
+  { key: "model", header: t("screen.organization.vehicles.vehicleRegistry.model") },
+  { key: "year", header: t("screen.organization.vehicles.vehicleRegistry.year") },
+  { key: "vehicleType", header: t("screen.organization.vehicles.vehicleRegistry.vehicleType") },
+  { key: "seats", header: t("screen.organization.vehicles.vehicleRegistry.seats"), align: "end" },
   {
     key: "registration",
-    header: "Registration",
+    header: t("screen.organization.vehicles.vehicleRegistry.registration"),
     render: (row) => <StateBadge tone="neutral" icon="file" label={row.registration} />,
   },
 ];
 
-const FILTER_OPTIONS: readonly TeSelectOption[] = [
-  { value: "all", label: "All vehicle types" },
-  { value: "[Vehicle type]", label: "[Vehicle type]" },
-];
-
 export function VehicleRegistry() {
+  const { status: authStatus, actor } = useAuth();
   const [query, setQuery] = useState("");
   const [typeFilter, setTypeFilter] = useState("all");
 
+  const enabled = authStatus === "authenticated" && Boolean(actor?.activeTenantId);
+
+  const vehiclesQuery = useQuery({
+    ...orpc.fleet.listVehicles.queryOptions({ input: {} }),
+    enabled,
+  });
+
+  const typesQuery = useQuery({
+    ...orpc.fleet.listVehicleTypes.queryOptions({ input: {} }),
+    enabled,
+  });
+
+  const rows: readonly VehicleRow[] =
+    vehiclesQuery.data?.items.map((v) => ({
+      id: v.id,
+      plate: v.plateNumber,
+      model: v.model,
+      year: String(v.manufacturingYear),
+      vehicleType: v.vehicleType?.nameEn ?? v.vehicleTypeId,
+      seats: String(v.seatCount),
+      registration: v.registrationStatus,
+    })) ?? [];
+
+  const filterOptions: readonly TeSelectOption[] = [
+    {
+      value: "all",
+      label: t("screen.organization.vehicles.vehicleRegistry.allVehicleTypesLabel"),
+    },
+    ...(typesQuery.data?.items.map((item) => ({ value: item.nameEn, label: item.nameEn })) ?? []),
+  ];
+
   const normalizedQuery = query.trim().toLowerCase();
-  const visibleRows = VEHICLE_ROWS.filter(
+  const visibleRows = rows.filter(
     (row) =>
       (typeFilter === "all" || row.vehicleType === typeFilter) &&
       row.plate.toLowerCase().includes(normalizedQuery),
@@ -69,37 +92,39 @@ export function VehicleRegistry() {
       <div className="flex flex-col gap-6">
         <WorkspaceBackLink />
         <TePageHeader
-          title="Vehicle registry"
+          title={t("screen.organization.vehicles.vehicleRegistry.vehicleRegistry")}
           actions={
             <div className="flex flex-wrap gap-3">
               <OrgButtonLink slug="vehicle-types-and-seat-layout" variant="secondary">
-                Vehicle types
+                {t("screen.organization.vehicles.vehicleRegistry.vehicleTypes")}
               </OrgButtonLink>
-              <OrgButtonLink slug="vehicle-editor">Add vehicle</OrgButtonLink>
+              <OrgButtonLink slug="vehicle-editor">
+                {t("screen.organization.vehicles.vehicleRegistry.addVehicle")}
+              </OrgButtonLink>
             </div>
           }
         />
         <div className="grid gap-4 sm:grid-cols-2">
           <TeSearchField
-            label="Search by plate"
+            label={t("screen.organization.vehicles.vehicleRegistry.searchByPlate")}
             value={query}
             onValueChange={setQuery}
-            clearLabel="Clear search"
+            clearLabel={t("screen.organization.vehicles.vehicleRegistry.clearSearch")}
           />
           <TeSelect
-            label="Vehicle type"
-            options={FILTER_OPTIONS}
+            label={t("screen.organization.vehicles.vehicleRegistry.vehicleType2")}
+            options={filterOptions}
             value={typeFilter}
             onValueChange={setTypeFilter}
           />
         </div>
         <TeDataTable
-          columns={COLUMNS}
+          columns={COLUMNS()}
           rows={visibleRows}
           getRowKey={(row) => row.id}
-          caption="Vehicles"
-          emptyTitle="No vehicles yet"
-          emptyDescription="Add a vehicle to use it on trips."
+          caption={t("screen.organization.vehicles.vehicleRegistry.vehicles")}
+          emptyTitle={t("screen.organization.vehicles.vehicleRegistry.noVehiclesYet")}
+          emptyDescription={t("screen.organization.vehicles.vehicleRegistry.addAVehicleToUse")}
         />
       </div>
     </StatePreview>

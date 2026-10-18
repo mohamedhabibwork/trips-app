@@ -5,6 +5,9 @@ import { TeInlineAlert } from "@trips-app/ui/components/te-inline-alert";
 import { TeNotificationItem } from "@trips-app/ui/components/te-notification-item";
 import { TePageHeader } from "@trips-app/ui/components/te-page-header";
 import { TeTabs } from "@trips-app/ui/components/te-tabs";
+import { t } from "@trips-app/i18n";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { orpc } from "@/utils/orpc";
 import { goBack } from "./screen-actions";
 import { StateLoading, StatePreview } from "./state-preview";
 
@@ -16,56 +19,94 @@ interface NotificationRow {
   unread: boolean;
 }
 
-const NOTIFICATIONS: readonly NotificationRow[] = [
+const DEFAULT_NOTIFICATIONS = (): readonly NotificationRow[] => [
   {
     id: "n-1",
-    title: "Application status changed",
-    body: "Your application is now pending review.",
+    title: t("screen.shared.scrShr11NotificationCentre.applicationStatusChanged"),
+    body: t("screen.shared.scrShr11NotificationCentre.yourApplicationIsNowPending"),
     time: "2 h ago",
     unread: true,
   },
   {
     id: "n-2",
-    title: "Verification code sent",
-    body: "Check your email for the code. Codes expire after 5 minutes.",
+    title: t("screen.shared.scrShr11NotificationCentre.verificationCodeSent"),
+    body: t("screen.shared.scrShr11NotificationCentre.checkYourEmailForThe"),
     time: "07:32",
     unread: true,
   },
   {
     id: "n-3",
-    title: "Trip time changed",
-    body: "Email delivery failed. Delivery status: retry scheduled.",
+    title: t("screen.shared.scrShr11NotificationCentre.tripTimeChanged"),
+    body: t("screen.shared.scrShr11NotificationCentre.emailDeliveryFailedDeliveryStatus"),
     time: "Yesterday",
     unread: false,
   },
 ];
 
-const FILTER_TABS = [
-  { id: "all", label: "All", count: NOTIFICATIONS.length },
-  {
-    id: "unread",
-    label: "Unread",
-    count: NOTIFICATIONS.filter((item) => item.unread).length,
-  },
-] as const;
-
 function NotificationList() {
+  const queryClient = useQueryClient();
+  const notificationsQuery = useQuery(orpc.notifications.listInbox.queryOptions({ input: {} }));
+  const markReadMutation = useMutation(
+    orpc.notifications.markRead.mutationOptions({
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: orpc.notifications.key() });
+      },
+    }),
+  );
+
   const [filter, setFilter] = useState("all");
   const [allRead, setAllRead] = useState(false);
 
-  const visible = NOTIFICATIONS.filter((item) => filter !== "unread" || (item.unread && !allRead));
+  const items: readonly NotificationRow[] =
+    notificationsQuery.data && notificationsQuery.data.length > 0
+      ? notificationsQuery.data.map((item) => ({
+          id: item.id,
+          title: item.titleEn || item.titleAr || item.category,
+          body: item.bodyEn || item.bodyAr || "",
+          time: new Date(item.createdAt).toISOString().slice(0, 16).replace("T", " "),
+          unread: allRead ? false : !item.isRead,
+        }))
+      : DEFAULT_NOTIFICATIONS().map((item) => (allRead ? { ...item, unread: false } : item));
+
+  const handleMarkAllAsRead = async () => {
+    setAllRead(true);
+    for (const item of items) {
+      if (item.unread) {
+        try {
+          await markReadMutation.mutateAsync({ notificationId: item.id });
+        } catch {
+          // Ignore unauthenticated preview errors
+        }
+      }
+    }
+  };
+
+  const tabs = [
+    {
+      id: "all",
+      label: t("screen.shared.scrShr11NotificationCentre.all"),
+      count: items.length,
+    },
+    {
+      id: "unread",
+      label: t("screen.shared.scrShr11NotificationCentre.unread"),
+      count: allRead ? 0 : items.filter((item) => item.unread).length,
+    },
+  ] as const;
+
+  const visible = items.filter((item) => filter !== "unread" || (item.unread && !allRead));
 
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <TeTabs
-          tabs={FILTER_TABS}
+          tabs={tabs}
           activeId={filter}
           onSelect={setFilter}
-          ariaLabel="Filter notifications"
+          ariaLabel={t("screen.shared.scrShr11NotificationCentre.filterNotifications")}
         />
-        <TeButton variant="ghost" onClick={() => setAllRead(true)}>
-          Mark all as read
+        <TeButton variant="ghost" onClick={() => void handleMarkAllAsRead()}>
+          {t("screen.shared.scrShr11NotificationCentre.markAllAsRead")}
         </TeButton>
       </div>
       {visible.length > 0 ? (
@@ -82,7 +123,10 @@ function NotificationList() {
           ))}
         </ul>
       ) : (
-        <TeEmptyState title="No unread notifications" description="You are all caught up." />
+        <TeEmptyState
+          title={t("screen.shared.scrShr11NotificationCentre.noUnreadNotifications")}
+          description={t("screen.shared.scrShr11NotificationCentre.youAreAllCaughtUp")}
+        />
       )}
     </div>
   );
@@ -93,11 +137,13 @@ export function ScrShr11NotificationCentre() {
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col gap-6 px-4 py-6">
       <TePageHeader
-        title="Notification centre"
-        description="Your notifications, with delivery status for each one."
+        title={t("screen.shared.scrShr11NotificationCentre.notificationCentre")}
+        description={t(
+          "screen.shared.scrShr11NotificationCentre.yourNotificationsWithDeliveryStatus",
+        )}
         actions={
           <TeButton variant="secondary" onClick={goBack}>
-            Back
+            {t("screen.shared.scrShr11NotificationCentre.back")}
           </TeButton>
         }
       />
@@ -106,13 +152,18 @@ export function ScrShr11NotificationCentre() {
         loading={<StateLoading />}
         empty={
           <TeEmptyState
-            title="No notifications yet"
-            description="Notifications about your bookings and applications appear here."
+            title={t("screen.shared.scrShr11NotificationCentre.noNotificationsYet")}
+            description={t(
+              "screen.shared.scrShr11NotificationCentre.notificationsAboutYourBookingsAnd",
+            )}
           />
         }
         error={
-          <TeInlineAlert tone="error" title="Notifications could not load">
-            Try again in a few minutes.
+          <TeInlineAlert
+            tone="error"
+            title={t("screen.shared.scrShr11NotificationCentre.notificationsCouldNotLoad")}
+          >
+            {t("screen.shared.scrShr11NotificationCentre.tryAgainInAFew")}
           </TeInlineAlert>
         }
       />

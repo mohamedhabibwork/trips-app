@@ -6,8 +6,10 @@ import { TeInlineAlert } from "@trips-app/ui/components/te-inline-alert";
 import { TeInput } from "@trips-app/ui/components/te-input";
 import { TeSelect } from "@trips-app/ui/components/te-select";
 import { TeSwitch } from "@trips-app/ui/components/te-switch";
+import { t } from "@trips-app/i18n";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/auth/auth-context";
-import { client } from "@/utils/orpc";
+import { orpc } from "@/utils/orpc";
 import {
   ensureSupplierSession,
   setApplicantApplicationId,
@@ -27,10 +29,13 @@ const DATE_PATTERN = "\\d{4}-\\d{2}-\\d{2}";
 
 type DriverDocumentKey = "registration" | "insurance" | "lab";
 
-const DRIVER_DOCUMENTS: readonly { key: DriverDocumentKey; label: string }[] = [
-  { key: "registration", label: "Registration document" },
-  { key: "insurance", label: "Insurance document" },
-  { key: "lab", label: "Lab result" },
+const DRIVER_DOCUMENTS = (): readonly { key: DriverDocumentKey; label: string }[] => [
+  {
+    key: "registration",
+    label: t("screen.public.signUp.platformDriverSignUp.registrationDocument"),
+  },
+  { key: "insurance", label: t("screen.public.signUp.platformDriverSignUp.insuranceDocument") },
+  { key: "lab", label: t("screen.public.signUp.platformDriverSignUp.labResult") },
 ];
 
 type DriverUploads = Readonly<Record<DriverDocumentKey, readonly TeFileUploadItem[]>>;
@@ -53,7 +58,7 @@ function DriverDocuments({
 }) {
   return (
     <>
-      {DRIVER_DOCUMENTS.map((doc) => (
+      {DRIVER_DOCUMENTS().map((doc) => (
         <TeFileUpload
           key={doc.key}
           label={doc.label}
@@ -63,7 +68,7 @@ function DriverDocuments({
             onChange(doc.key, [...uploads[doc.key], ...toPendingItems(files)])
           }
           onRemove={(name) => onChange(doc.key, withoutItem(uploads[doc.key], name))}
-          hint="A clear photo or scan."
+          hint={t("screen.public.signUp.platformDriverSignUp.aClearPhotoOrScan")}
         />
       ))}
     </>
@@ -73,6 +78,14 @@ function DriverDocuments({
 function DriverSignUpForm({ onSubmitted }: { onSubmitted?: (applicationId: string) => void }) {
   const { status, locale, signInWithSession } = useAuth();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const submitMutation = useMutation(
+    orpc.onboarding.submitDriverApplication.mutationOptions({
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: orpc.onboarding.key() });
+      },
+    }),
+  );
   const [country, setCountry] = useState("");
   const [hasOwnVehicle, setHasOwnVehicle] = useState(true);
   const [uploads, setUploads] = useState<DriverUploads>(NO_UPLOADS);
@@ -81,7 +94,7 @@ function DriverSignUpForm({ onSubmitted }: { onSubmitted?: (applicationId: strin
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const { submitDisabled, formProps } = useFormReady();
 
-  const documentsReady = DRIVER_DOCUMENTS.every((doc) => uploads[doc.key].length > 0);
+  const documentsReady = DRIVER_DOCUMENTS().every((doc) => uploads[doc.key].length > 0);
   const consentsReady = consents.backgroundCheck && consents.labTest;
 
   function setUpload(key: DriverDocumentKey, items: readonly TeFileUploadItem[]) {
@@ -122,7 +135,7 @@ function DriverSignUpForm({ onSubmitted }: { onSubmitted?: (applicationId: strin
         ...uploadItemsToDocuments(uploads.lab, "lab_test_result"),
       ];
 
-      const result = await client.onboarding.submitDriverApplication({
+      const result = await submitMutation.mutateAsync({
         nationalId: "28801011234567",
         licenseNumber: plate ? `LIC-${plate}` : `LIC-${Date.now()}`,
         licenseCategory: "First Degree Bus",
@@ -173,81 +186,118 @@ function DriverSignUpForm({ onSubmitted }: { onSubmitted?: (applicationId: strin
 
       <section className="flex flex-col gap-4" aria-labelledby="driver-identity-heading">
         <h2 id="driver-identity-heading" className="te-h3">
-          Identity
+          {t("screen.public.signUp.platformDriverSignUp.identity")}
         </h2>
-        <TeInput label="Full name" name="fullName" autoComplete="name" required />
-        <TeInput label="Email" name="email" type="email" autoComplete="email" required />
-        <TeInput label="Phone" name="phone" type="tel" autoComplete="tel" required />
+        <TeInput
+          label={t("screen.public.signUp.platformDriverSignUp.fullName")}
+          name="fullName"
+          autoComplete="name"
+          required
+        />
+        <TeInput
+          label={t("screen.public.signUp.platformDriverSignUp.email")}
+          name="email"
+          type="email"
+          autoComplete="email"
+          required
+        />
+        <TeInput
+          label={t("screen.public.signUp.platformDriverSignUp.phone")}
+          name="phone"
+          type="tel"
+          autoComplete="tel"
+          required
+        />
         <TeSelect
-          label="Country"
+          label={t("screen.public.signUp.platformDriverSignUp.country")}
           name="country"
           options={COUNTRY_OPTIONS}
           value={country}
           onValueChange={setCountry}
-          supportingText="Required."
+          supportingText={t("screen.public.signUp.platformDriverSignUp.required")}
           required
         />
       </section>
 
       <section className="flex flex-col gap-4" aria-labelledby="driver-vehicle-heading">
         <h2 id="driver-vehicle-heading" className="te-h3">
-          Vehicle
+          {t("screen.public.signUp.platformDriverSignUp.vehicle")}
         </h2>
         <TeSwitch
-          label="I drive my own vehicle"
+          label={t("screen.public.signUp.platformDriverSignUp.iDriveMyOwnVehicle")}
           checked={hasOwnVehicle}
           onCheckedChange={setHasOwnVehicle}
         />
         {hasOwnVehicle ? (
           <div className="grid gap-4 sm:grid-cols-2">
-            <TeInput label="Plate number" name="plate" required />
-            <TeInput label="Model" name="model" required />
-            <TeInput label="Year" name="year" inputMode="numeric" required />
-            <TeInput label="Seats" name="seats" inputMode="numeric" required />
+            <TeInput
+              label={t("screen.public.signUp.platformDriverSignUp.plateNumber")}
+              name="plate"
+              required
+            />
+            <TeInput
+              label={t("screen.public.signUp.platformDriverSignUp.model")}
+              name="model"
+              required
+            />
+            <TeInput
+              label={t("screen.public.signUp.platformDriverSignUp.year")}
+              name="year"
+              inputMode="numeric"
+              required
+            />
+            <TeInput
+              label={t("screen.public.signUp.platformDriverSignUp.seats")}
+              name="seats"
+              inputMode="numeric"
+              required
+            />
           </div>
         ) : null}
       </section>
 
       <section className="flex flex-col gap-4" aria-labelledby="driver-documents-heading">
         <h2 id="driver-documents-heading" className="te-h3">
-          Documents
+          {t("screen.public.signUp.platformDriverSignUp.documents")}
         </h2>
         <DriverDocuments uploads={uploads} onChange={setUpload} />
         <TeInput
-          label="Insurance valid until"
+          label={t("screen.public.signUp.platformDriverSignUp.insuranceValidUntil")}
           name="insuranceExpiry"
           inputMode="numeric"
-          placeholder="YYYY-MM-DD"
+          placeholder={t("screen.public.signUp.platformDriverSignUp.yyyyMmDd")}
           pattern={DATE_PATTERN}
-          supportingText="Insurance must be valid for at least 3 more months."
+          supportingText={t("screen.public.signUp.platformDriverSignUp.insuranceMustBeValidFor")}
           required
         />
         <TeInput
-          label="Lab test date"
+          label={t("screen.public.signUp.platformDriverSignUp.labTestDate")}
           name="labTestDate"
           inputMode="numeric"
-          placeholder="YYYY-MM-DD"
+          placeholder={t("screen.public.signUp.platformDriverSignUp.yyyyMmDdPlaceholder")}
           pattern={DATE_PATTERN}
-          supportingText="The lab result must be less than 30 days old."
+          supportingText={t("screen.public.signUp.platformDriverSignUp.theLabResultMustBe")}
           required
         />
       </section>
 
       <section className="flex flex-col gap-4" aria-labelledby="driver-consent-heading">
         <h2 id="driver-consent-heading" className="te-h3">
-          Consent
+          {t("screen.public.signUp.platformDriverSignUp.consent")}
         </h2>
         <TeCheckbox
-          label="I consent to a background check"
-          description="Required to join the driver pool."
+          label={t("screen.public.signUp.platformDriverSignUp.iConsentToABackground")}
+          description={t("screen.public.signUp.platformDriverSignUp.requiredToJoinTheDriver")}
           checked={consents.backgroundCheck}
           onCheckedChange={(checked) =>
             setConsents((current) => ({ ...current, backgroundCheck: checked }))
           }
         />
         <TeCheckbox
-          label="I consent to a lab test"
-          description="Required to join the driver pool."
+          label={t("screen.public.signUp.platformDriverSignUp.iConsentToALab")}
+          description={t(
+            "screen.public.signUp.platformDriverSignUp.requiredToJoinTheDriverDescription",
+          )}
           checked={consents.labTest}
           onCheckedChange={(checked) =>
             setConsents((current) => ({ ...current, labTest: checked }))
@@ -256,13 +306,20 @@ function DriverSignUpForm({ onSubmitted }: { onSubmitted?: (applicationId: strin
       </section>
 
       {errorMsg ? (
-        <TeInlineAlert tone="error" title="Application blocked">
+        <TeInlineAlert
+          tone="error"
+          title={t("screen.public.signUp.platformDriverSignUp.applicationBlocked")}
+        >
           {errorMsg}
         </TeInlineAlert>
       ) : null}
 
       <SignUpFooter
-        submitLabel={submitting ? "Submitting..." : "Submit application"}
+        submitLabel={
+          submitting
+            ? t("screen.public.signUp.platformDriverSignUp.submitting")
+            : t("screen.public.signUp.platformDriverSignUp.submitApplication")
+        }
         disabled={submitDisabled || !documentsReady || !consentsReady || submitting}
       />
     </form>
@@ -277,16 +334,18 @@ export function PlatformDriverSignUp({
 } = {}) {
   return (
     <AuthFrame
-      title="Platform driver sign-up"
-      description="Apply to join the platform driver pool. Drivers verify both email and phone."
+      title={t("screen.public.signUp.platformDriverSignUp.platformDriverSignUp")}
+      description={t("screen.public.signUp.platformDriverSignUp.applyToJoinThePlatform")}
     >
       <StatePreview
         main={<DriverSignUpForm onSubmitted={onSubmitted} />}
         loading={<StateLoading />}
         error={
-          <TeInlineAlert tone="error" title="Application blocked">
-            Insurance must be valid for at least 3 more months, and the lab result must be less than
-            30 days old.
+          <TeInlineAlert
+            tone="error"
+            title={t("screen.public.signUp.platformDriverSignUp.applicationBlockedTitle")}
+          >
+            {t("screen.public.signUp.platformDriverSignUp.insuranceMustBeValidFor2")}
           </TeInlineAlert>
         }
       />

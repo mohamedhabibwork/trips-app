@@ -1,4 +1,5 @@
 import { cn } from "@trips-app/ui/lib/utils";
+import { t } from "@trips-app/i18n";
 import type { ComponentProps } from "react";
 
 export interface TeLinkProps extends Omit<ComponentProps<"a">, "href"> {
@@ -21,7 +22,9 @@ export function TeLink({ href, external = false, className, children, ...props }
       className={cn("te-link", className)}
     >
       {children}
-      {external ? <span className="te-visually-hidden"> (opens in a new tab)</span> : null}
+      {external ? (
+        <span className="te-visually-hidden"> {t("ui.teLink.opensInANewTab")}</span>
+      ) : null}
     </a>
   );
 }

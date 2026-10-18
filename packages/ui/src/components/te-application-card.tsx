@@ -4,6 +4,7 @@ import { TeButton } from "@trips-app/ui/components/te-button";
 import { TeCard } from "@trips-app/ui/components/te-card";
 import { TeIcon, type TeIconName } from "@trips-app/ui/components/te-icon";
 import { TeRoleBadge, type TeRole } from "@trips-app/ui/components/te-role-badge";
+import { t } from "@trips-app/i18n";
 
 export const TE_APPLICATION_STATUSES = [
   "pending",
@@ -28,10 +29,34 @@ export const TE_APPLICATION_STATUS_PRESENTATION: Record<
   TeApplicationStatus,
   TeApplicationStatusPresentation
 > = {
-  pending: { icon: "clock", tone: "info", label: "Pending review" },
-  "changes-requested": { icon: "alert", tone: "warning", label: "Changes requested" },
-  approved: { icon: "check", tone: "success", label: "Approved" },
-  rejected: { icon: "close", tone: "danger", label: "Rejected" },
+  pending: {
+    icon: "clock",
+    tone: "info",
+    get label() {
+      return t("ui.teApplicationCard.labels.pendingReview");
+    },
+  },
+  "changes-requested": {
+    icon: "alert",
+    tone: "warning",
+    get label() {
+      return t("ui.teApplicationCard.labels.changesRequested");
+    },
+  },
+  approved: {
+    icon: "check",
+    tone: "success",
+    get label() {
+      return t("ui.teApplicationCard.labels.approved");
+    },
+  },
+  rejected: {
+    icon: "close",
+    tone: "danger",
+    get label() {
+      return t("ui.teApplicationCard.labels.rejected");
+    },
+  },
 };
 
 export interface TeApplicationCardProps {

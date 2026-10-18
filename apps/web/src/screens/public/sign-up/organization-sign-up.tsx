@@ -4,8 +4,10 @@ import { TeFileUpload, type TeFileUploadItem } from "@trips-app/ui/components/te
 import { TeInlineAlert } from "@trips-app/ui/components/te-inline-alert";
 import { TeInput } from "@trips-app/ui/components/te-input";
 import { TeSelect } from "@trips-app/ui/components/te-select";
+import { t } from "@trips-app/i18n";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/auth/auth-context";
-import { client } from "@/utils/orpc";
+import { orpc } from "@/utils/orpc";
 import {
   ensureSupplierSession,
   setApplicantApplicationId,
@@ -33,6 +35,14 @@ function OrganizationSignUpForm({
 }) {
   const { status, locale, signInWithSession } = useAuth();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const submitMutation = useMutation(
+    orpc.onboarding.submitOrganizationApplication.mutationOptions({
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: orpc.onboarding.key() });
+      },
+    }),
+  );
   const [country, setCountry] = useState("");
   const [registration, setRegistration] = useState<readonly TeFileUploadItem[]>([]);
   const [submitting, setSubmitting] = useState(false);
@@ -67,7 +77,7 @@ function OrganizationSignUpForm({
         preferredLanguage: locale,
       });
 
-      const result = await client.onboarding.submitOrganizationApplication({
+      const result = await submitMutation.mutateAsync({
         legalEntityName: legalName,
         displayNameAr: legalName,
         displayNameEn: legalName,
@@ -122,61 +132,107 @@ function OrganizationSignUpForm({
 
       <section className="flex flex-col gap-4" aria-labelledby="org-owner-heading">
         <h2 id="org-owner-heading" className="te-h3">
-          Owner
+          {t("screen.public.signUp.organizationSignUp.owner")}
         </h2>
-        <TeInput label="Owner name" name="ownerName" autoComplete="name" required />
-        <TeInput label="Owner email" name="ownerEmail" type="email" autoComplete="email" required />
-        <TeInput label="Owner phone" name="ownerPhone" type="tel" autoComplete="tel" required />
+        <TeInput
+          label={t("screen.public.signUp.organizationSignUp.ownerName")}
+          name="ownerName"
+          autoComplete="name"
+          required
+        />
+        <TeInput
+          label={t("screen.public.signUp.organizationSignUp.ownerEmail")}
+          name="ownerEmail"
+          type="email"
+          autoComplete="email"
+          required
+        />
+        <TeInput
+          label={t("screen.public.signUp.organizationSignUp.ownerPhone")}
+          name="ownerPhone"
+          type="tel"
+          autoComplete="tel"
+          required
+        />
       </section>
 
       <section className="flex flex-col gap-4" aria-labelledby="org-company-heading">
         <h2 id="org-company-heading" className="te-h3">
-          Organization
+          {t("screen.public.signUp.organizationSignUp.organization")}
         </h2>
-        <TeInput label="Legal name" name="legalName" autoComplete="organization" required />
+        <TeInput
+          label={t("screen.public.signUp.organizationSignUp.legalName")}
+          name="legalName"
+          autoComplete="organization"
+          required
+        />
         <TeSelect
-          label="Country"
+          label={t("screen.public.signUp.organizationSignUp.country")}
           name="country"
           options={COUNTRY_OPTIONS}
           value={country}
           onValueChange={setCountry}
-          supportingText="Required."
+          supportingText={t("screen.public.signUp.organizationSignUp.required")}
           required
         />
-        <TeInput label="Commercial registration number" name="commercialRegistration" required />
-        <TeInput label="Tax number" name="taxNumber" required />
+        <TeInput
+          label={t("screen.public.signUp.organizationSignUp.commercialRegistrationNumber")}
+          name="commercialRegistration"
+          required
+        />
+        <TeInput
+          label={t("screen.public.signUp.organizationSignUp.taxNumber")}
+          name="taxNumber"
+          required
+        />
         <TeFileUpload
-          label="Commercial registration document"
+          label={t("screen.public.signUp.organizationSignUp.commercialRegistrationDocument")}
           accept="image/*,application/pdf"
           multiple
           files={registration}
           onFilesSelected={(files) => setRegistration([...registration, ...toPendingItems(files)])}
           onRemove={(name) => setRegistration(withoutItem(registration, name))}
-          hint="A clear photo or scan."
+          hint={t("screen.public.signUp.organizationSignUp.aClearPhotoOrScan")}
         />
       </section>
 
       <section className="flex flex-col gap-4" aria-labelledby="org-billing-heading">
         <h2 id="org-billing-heading" className="te-h3">
-          Billing contact
+          {t("screen.public.signUp.organizationSignUp.billingContact")}
         </h2>
-        <TeInput label="Billing contact name" name="billingName" autoComplete="name" required />
-        <TeInput label="Billing contact email" name="billingEmail" type="email" required />
+        <TeInput
+          label={t("screen.public.signUp.organizationSignUp.billingContactName")}
+          name="billingName"
+          autoComplete="name"
+          required
+        />
+        <TeInput
+          label={t("screen.public.signUp.organizationSignUp.billingContactEmail")}
+          name="billingEmail"
+          type="email"
+          required
+        />
       </section>
 
       {errorMsg ? (
-        <TeInlineAlert tone="error" title="Submission failed">
+        <TeInlineAlert
+          tone="error"
+          title={t("screen.public.signUp.organizationSignUp.submissionFailed")}
+        >
           {errorMsg}
         </TeInlineAlert>
       ) : null}
 
-      <TeInlineAlert tone="info" title="Plan and review">
-        The Starter plan is assigned when your organization is approved. The registry check is
-        manual. No staff access is granted before approval.
+      <TeInlineAlert tone="info" title={t("screen.public.signUp.organizationSignUp.planAndReview")}>
+        {t("screen.public.signUp.organizationSignUp.theStarterPlanIsAssigned")}
       </TeInlineAlert>
 
       <SignUpFooter
-        submitLabel={submitting ? "Submitting..." : "Submit for review"}
+        submitLabel={
+          submitting
+            ? t("screen.public.signUp.organizationSignUp.submitting")
+            : t("screen.public.signUp.organizationSignUp.submitForReview")
+        }
         disabled={submitDisabled || !registrationReady || submitting}
       />
     </form>
@@ -191,15 +247,18 @@ export function OrganizationSignUp({
 } = {}) {
   return (
     <AuthFrame
-      title="Organization sign-up (web only)"
-      description="Register your organization for admin review. Owners verify both email and phone."
+      title={t("screen.public.signUp.organizationSignUp.organizationSignUpWebOnly")}
+      description={t("screen.public.signUp.organizationSignUp.registerYourOrganizationForAdmin")}
     >
       <StatePreview
         main={<OrganizationSignUpForm onSubmitted={onSubmitted} />}
         loading={<StateLoading />}
         error={
-          <TeInlineAlert tone="error" title="Country is missing">
-            Select a country. Submit is refused until it is set.
+          <TeInlineAlert
+            tone="error"
+            title={t("screen.public.signUp.organizationSignUp.countryIsMissing")}
+          >
+            {t("screen.public.signUp.organizationSignUp.selectACountrySubmitIs")}
           </TeInlineAlert>
         }
       />

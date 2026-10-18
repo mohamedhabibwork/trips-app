@@ -1,4 +1,5 @@
 import { cn } from "@trips-app/ui/lib/utils";
+import { t } from "@trips-app/i18n";
 
 export interface TeBarChartDatum {
   label: string;
@@ -65,8 +66,8 @@ export function TeBarChart({
       <table className="te-visually-hidden">
         <thead>
           <tr>
-            <th scope="col">Item</th>
-            <th scope="col">Value</th>
+            <th scope="col">{t("ui.teBarChart.item")}</th>
+            <th scope="col">{t("ui.teBarChart.value")}</th>
           </tr>
         </thead>
         <tbody>

@@ -1,6 +1,6 @@
 import type { SessionTokenPayload } from "@trips-app/auth";
 import type { TeFileUploadItem } from "@trips-app/ui/components/te-file-upload";
-import { client } from "../utils/orpc";
+import { orpc } from "../utils/orpc";
 
 const SELECTED_APP_KEY = "trips.onboarding.selectedApplicationId";
 const APPLICANT_APP_KEY = "trips.onboarding.applicantApplicationId";
@@ -131,7 +131,7 @@ export async function ensureSupplierSession(params: {
 }): Promise<void> {
   if (params.isAuthenticated) return;
 
-  const reg = (await client.auth.registerSupplierAccount({
+  const reg = (await orpc.auth.registerSupplierAccount.call({
     role: params.role,
     fullName: params.fullName.trim(),
     email: params.email.trim(),
@@ -148,7 +148,7 @@ export async function ensureSupplierSession(params: {
 
   for (const dispatch of reg.otpDispatches ?? []) {
     if (!dispatch.devCodePreview) continue;
-    const verified = (await client.auth.verifyOtp({
+    const verified = (await orpc.auth.verifyOtp.call({
       targetIdentifier: dispatch.targetIdentifier,
       purpose: "registration",
       code: dispatch.devCodePreview,
