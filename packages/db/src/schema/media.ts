@@ -45,6 +45,7 @@ export const uploadedFiles = pgTable(
   (table) => [
     uniqueIndex("uploaded_files_storage_key_uidx").on(table.storageKey),
     index("uploaded_files_uploader_idx").on(table.uploaderAccountId),
+    index("uploaded_files_tenant_idx").on(table.tenantId),
     index("uploaded_files_status_expires_idx").on(table.status, table.expiresAt),
     index("uploaded_files_linked_entity_idx").on(table.linkedEntityType, table.linkedEntityId),
   ],

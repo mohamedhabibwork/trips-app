@@ -1,2 +1,4 @@
-// Request and response shapes derived from the validation schemas.
-export {};
+import { selectPlanCatalogSchema, selectSubscriptionRecordsSchema } from "@trips-app/db/zod";
+
+export const planCatalogDtoSchema = selectPlanCatalogSchema;
+export const subscriptionRecordDtoSchema = selectSubscriptionRecordsSchema;

@@ -1,2 +1,3 @@
-// Entities and aggregates with their invariants. No I/O.
-export {};
+import type { TripPhotoAlbumStatus } from "@trips-app/domain";
+
+export type { TripPhotoAlbumStatus };

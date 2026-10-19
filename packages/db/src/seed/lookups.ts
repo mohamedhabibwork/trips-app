@@ -1,9 +1,15 @@
 import { randomUUID } from "node:crypto";
 
-import { DEFAULT_LOOKUP_TYPES, DEFAULT_LOOKUPS, normalizeLookupCode } from "@trips-app/domain";
+import {
+  DEFAULT_LOOKUP_TYPES,
+  DEFAULT_LOOKUPS,
+  LOOKUP_TYPE_CODES,
+  normalizeLookupCode,
+} from "@trips-app/domain";
+import { eq } from "drizzle-orm";
 
 import { lookups, lookupTypes } from "../schema";
-import type { Database, LookupSeedSummary } from "../types";
+import type { Database, LookupSeedSummary, LookupSeedVerification } from "../types";
 
 export interface SeedLookupsOptions {
   actorAccountId?: string | null;
@@ -42,6 +48,7 @@ export async function seedLookupsData(
         sortBy: def.sortBy,
         isPublic: def.isPublic,
         isSystem: def.isSystem,
+        isActive: true,
         isDeleted: false,
         createdBy: actorAccountId,
         updatedBy: actorAccountId,
@@ -60,6 +67,7 @@ export async function seedLookupsData(
           sortBy: def.sortBy,
           isPublic: def.isPublic,
           isSystem: def.isSystem,
+          isActive: true,
           isDeleted: false,
           updatedBy: actorAccountId,
           updatedAt: now,
@@ -90,6 +98,7 @@ export async function seedLookupsData(
         sortBy: def.sortBy,
         isPublic: def.isPublic,
         isSystem: def.isSystem,
+        isActive: true,
         isDeleted: false,
         createdBy: actorAccountId,
         updatedBy: actorAccountId,
@@ -108,6 +117,7 @@ export async function seedLookupsData(
           sortBy: def.sortBy,
           isPublic: def.isPublic,
           isSystem: def.isSystem,
+          isActive: true,
           isDeleted: false,
           updatedBy: actorAccountId,
           updatedAt: now,
@@ -144,6 +154,7 @@ export async function seedLookupsData(
         parentId: null,
         sortBy: item.sortBy,
         isPublic: item.isPublic,
+        isActive: true,
         isDeleted: false,
         createdBy: actorAccountId,
         updatedBy: actorAccountId,
@@ -161,6 +172,7 @@ export async function seedLookupsData(
           parentId: null,
           sortBy: item.sortBy,
           isPublic: item.isPublic,
+          isActive: true,
           isDeleted: false,
           updatedBy: actorAccountId,
           updatedAt: now,
@@ -203,6 +215,7 @@ export async function seedLookupsData(
         parentId,
         sortBy: item.sortBy,
         isPublic: item.isPublic,
+        isActive: true,
         isDeleted: false,
         createdBy: actorAccountId,
         updatedBy: actorAccountId,
@@ -220,6 +233,7 @@ export async function seedLookupsData(
           parentId,
           sortBy: item.sortBy,
           isPublic: item.isPublic,
+          isActive: true,
           isDeleted: false,
           updatedBy: actorAccountId,
           updatedAt: now,
@@ -235,7 +249,37 @@ export async function seedLookupsData(
   return {
     lookupTypesSeeded: DEFAULT_LOOKUP_TYPES.length,
     lookupsSeeded: DEFAULT_LOOKUPS.length,
+    expectedTypeCount: LOOKUP_TYPE_CODES.length,
     typeIdsByCode,
     lookupIdsByKey,
+  };
+}
+
+/**
+ * Proves the database actually holds every registered lookup type (LK-07).
+ *
+ * The runtime static fallback is gone, so an unseeded or partially seeded database now surfaces as
+ * `not_seeded` to every client. This check is what turns that from a silent, weeks-long outage into
+ * a failed deploy: it counts distinct `lookup_types.code` rows and lists the registered codes that
+ * have no row at all.
+ *
+ * @param db Database handle; any drizzle client works.
+ * @returns `ok` plus the seeded count, the expected count and the missing codes.
+ */
+export async function verifyLookupSeed(db: Database): Promise<LookupSeedVerification> {
+  const rows = await db
+    .select({ code: lookupTypes.code })
+    .from(lookupTypes)
+    .where(eq(lookupTypes.isDeleted, false));
+
+  const seededCodes = new Set(rows.map((row) => normalizeLookupCode(row.code)));
+  const expectedCodes = LOOKUP_TYPE_CODES.map((code) => normalizeLookupCode(code));
+  const missing = expectedCodes.filter((code) => !seededCodes.has(code)).sort();
+
+  return {
+    ok: missing.length === 0,
+    seededTypes: seededCodes.size,
+    expectedTypes: expectedCodes.length,
+    missing,
   };
 }

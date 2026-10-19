@@ -1,4 +1,13 @@
 // Business logic for Auth. Routes call this factory with context.db; repositories are created here.
+import {
+  type AuthNotificationEvent,
+  type AuthNotifier,
+  type DeliveryOutcome,
+  maskContact,
+  type NotificationRecipient,
+  type NotifyOptions,
+} from "@trips-app/service-notifications";
+
 import { AuthServiceError } from "../errors";
 import {
   type AdminSubRole,
@@ -72,10 +81,62 @@ import type {
   UpdateAuthSettingsInput,
   VerifyOtpInput,
 } from "../schemas/dtos";
-import type { AuthRequestMeta, OtpDispatchResult } from "../types";
+import type { AuthRequestMeta, AuthServiceDeps, InviteDelivery, OtpDispatchResult } from "../types";
 
-export function createAuthService(db: ServiceDatabase) {
+const DEFAULT_WEB_BASE_URL = "http://localhost:3001";
+const SECONDS_PER_MINUTE = 60;
+
+/** Used when no notifier is injected (unit tests, scripts): nothing is sent. */
+const SILENT_NOTIFIER: AuthNotifier = { notify: async () => [] };
+
+interface NotifiableAccount {
+  emailNormalized: string | null;
+  phoneE164: string | null;
+  fullName: string;
+  preferredLanguage: "ar" | "en";
+}
+
+function recipientOf(account: NotifiableAccount): NotificationRecipient {
+  return {
+    email: account.emailNormalized,
+    phone: account.phoneE164,
+    name: account.fullName,
+    locale: account.preferredLanguage,
+  };
+}
+
+function summarizeDelivery(outcomes: readonly { status: InviteDelivery }[]): InviteDelivery {
+  if (outcomes.some((o) => o.status === "sent")) return "sent";
+  if (outcomes.some((o) => o.status === "failed")) return "failed";
+  return "skipped";
+}
+
+export function createAuthService(db: ServiceDatabase, deps: AuthServiceDeps = {}) {
   const repo = createAuthRepository(db);
+  const notifier = deps.notifier ?? SILENT_NOTIFIER;
+  const webBaseUrl = (deps.webBaseUrl ?? DEFAULT_WEB_BASE_URL).replace(/\/$/, "");
+
+  /**
+   * `notify` is specified never to reject. This guards a custom notifier so that a delivery fault is
+   * reported as a failed outcome and can never abort the database work that already happened.
+   */
+  async function safeNotify(
+    recipient: NotificationRecipient,
+    event: AuthNotificationEvent,
+    options?: NotifyOptions,
+  ): Promise<readonly DeliveryOutcome[]> {
+    try {
+      return await notifier.notify(recipient, event, options);
+    } catch {
+      const channel = event.type === "otp" ? event.channel : "email";
+      return [{ channel, status: "failed", attempts: 0, reason: "notifier_error" }];
+    }
+  }
+
+  /** Sends a security notice without making the caller wait. */
+  function sendAlert(account: NotifiableAccount, event: AuthNotificationEvent): void {
+    void safeNotify(recipientOf(account), event);
+  }
 
   async function loadEffectiveAuthSettings(): Promise<AuthSettingsData> {
     const row = await repo.getAuthSettingsRow();
@@ -136,7 +197,7 @@ export function createAuthService(db: ServiceDatabase) {
   }): Promise<OtpDispatchResult> {
     const code = generateNumericOtp(6);
     const expiresAt = new Date(Date.now() + params.authSettings.otpExpirySeconds * 1000);
-    await repo.createOtpVerification({
+    const created = await repo.createOtpVerification({
       accountId: params.accountId ?? null,
       targetIdentifier: params.targetIdentifier,
       channel: params.channel,
@@ -146,14 +207,64 @@ export function createAuthService(db: ServiceDatabase) {
       deliveryStatus: "sent",
     });
 
+    const deliveryStatus = await deliverOtpCode(params, code);
+    if (deliveryStatus === "failed_fallback_available") {
+      await repo.updateOtpVerification(created.id, { deliveryStatus });
+    }
+
     return {
       channel: params.channel,
       targetIdentifier: params.targetIdentifier,
       expiresAt: expiresAt.toISOString(),
       resendAvailableInSeconds: params.authSettings.otpResendCooldownSeconds,
       fallbackChannelAvailable: params.authSettings.otpFallbackChannelEnabled,
+      deliveryStatus,
       devCodePreview: process.env.NODE_ENV === "production" ? undefined : code,
     };
+  }
+
+  /**
+   * Sends the code to the target. An unknown identifier gets no message, so a reset or sign-in request
+   * cannot be used to spam or probe an address. With no provider configured, delivery counts as
+   * sent outside production (QA reads `devCodePreview`) and as failed in production.
+   */
+  async function deliverOtpCode(
+    params: {
+      accountId?: string | null;
+      targetIdentifier: string;
+      channel: OtpChannel;
+      purpose: OtpPurpose;
+      authSettings: AuthSettingsData;
+    },
+    code: string,
+  ): Promise<OtpDispatchResult["deliveryStatus"]> {
+    if (!params.accountId) return "sent";
+
+    const account = await repo.findAccountById(params.accountId);
+    const recipient: NotificationRecipient = {
+      accountId: params.accountId,
+      name: account?.fullName,
+      locale: account?.preferredLanguage,
+      ...(params.channel === "email"
+        ? { email: params.targetIdentifier }
+        : { phone: params.targetIdentifier }),
+    };
+    const outcomes = await safeNotify(
+      recipient,
+      {
+        type: "otp",
+        purpose: params.purpose,
+        channel: params.channel,
+        code,
+        expiresInMinutes: Math.ceil(params.authSettings.otpExpirySeconds / SECONDS_PER_MINUTE),
+      },
+      { maxRetries: params.authSettings.otpDeliveryMaxRetries },
+    );
+
+    if (outcomes.some((o) => o.status === "sent")) return "sent";
+    const onlySkipped = outcomes.every((o) => o.status === "skipped");
+    if (onlySkipped && process.env.NODE_ENV !== "production") return "sent";
+    return "failed_fallback_available";
   }
 
   async function createSessionAndTokens(params: {
@@ -209,6 +320,12 @@ export function createAuthService(db: ServiceDatabase) {
         newDeviceAlertTriggered = true;
         await repo.updateAccount(account.id, {
           knownDeviceFingerprints: [...known, params.meta.deviceFingerprint],
+        });
+        sendAlert(account, {
+          type: "new_device_sign_in",
+          device: params.meta.userAgent ?? "Unknown device",
+          ipAddress: params.meta.ipAddress ?? "unknown",
+          occurredAt: now.toISOString(),
         });
       }
     }
@@ -823,6 +940,11 @@ export function createAuthService(db: ServiceDatabase) {
 
       if (!authenticated) {
         if (lockoutEval.locked) {
+          // Reaching here means the account was not locked on entry, so this is the lock transition.
+          sendAlert(account, {
+            type: "account_locked",
+            lockedUntil: lockoutEval.nextLockedUntil?.toISOString() ?? now.toISOString(),
+          });
           throw new AuthServiceError(
             "RATE_LIMITED",
             "Account is locked for 15 minutes after 5 failed sign-in attempts.",
@@ -1114,12 +1236,25 @@ export function createAuthService(db: ServiceDatabase) {
         requestId: meta?.requestId,
       });
 
+      const delivery = summarizeDelivery(
+        await safeNotify(
+          { email: emailNorm, name: input.fullName, locale: meta?.locale },
+          {
+            type: "admin_invite",
+            subRole: input.subRole,
+            inviteUrl: `${webBaseUrl}/admin/accept-invite?token=${encodeURIComponent(rawToken)}`,
+            expiresInHours: settings.adminInviteTtlHours,
+          },
+        ),
+      );
+
       return {
         inviteId: invite.id,
         email: emailNorm,
         subRole: input.subRole,
         expiresAt: expiresAt.toISOString(),
         inviteToken: rawToken,
+        delivery,
       };
     },
 
@@ -1211,6 +1346,7 @@ export function createAuthService(db: ServiceDatabase) {
         totpEnabledAt: null,
       });
       await repo.revokeAllSessionsForAccount(target.id, "totp_reset_by_super_admin");
+      sendAlert(target, { type: "totp_reset" });
 
       await repo.writeAuditLog({
         actorAccountId: actor.accountId,
@@ -1564,6 +1700,19 @@ export function createAuthService(db: ServiceDatabase) {
         requestId: meta?.requestId,
       });
 
+      const delivery = summarizeDelivery(
+        await safeNotify(
+          { email: membership.invitedEmail, locale: meta?.locale },
+          {
+            type: "employee_invite",
+            organizationName: meta?.locale === "ar" ? org.displayNameAr : org.displayNameEn,
+            roleTitle: membership.roleTitle,
+            inviteUrl: `${webBaseUrl}/business/accept-invite?token=${encodeURIComponent(rawToken)}`,
+            expiresInDays: settings.employeeInviteTtlDays,
+          },
+        ),
+      );
+
       return {
         membershipId: membership.id,
         tenantId: org.id,
@@ -1572,6 +1721,7 @@ export function createAuthService(db: ServiceDatabase) {
         permissions: membership.permissions,
         inviteExpiresAt: inviteExpiresAt.toISOString(),
         inviteToken: rawToken,
+        delivery,
       };
     },
 
@@ -1997,6 +2147,7 @@ export function createAuthService(db: ServiceDatabase) {
         lockedUntil: null,
       });
       await repo.revokeAllSessionsForAccount(account.id, "password_reset");
+      sendAlert(account, { type: "password_changed" });
 
       return { passwordReset: true };
     },
@@ -2032,6 +2183,16 @@ export function createAuthService(db: ServiceDatabase) {
 
       await repo.updateOtpVerification(latestOtp.id, { consumedAt: new Date() });
       const now = new Date();
+
+      // Tell the previous contact details, so a hijacked change is visible to the real owner.
+      const before = await repo.findAccountById(accountId);
+      if (before) {
+        sendAlert(before, {
+          type: "contact_changed",
+          changedChannel: input.channel === "email" ? "email" : "sms",
+          maskedValue: maskContact(normalized),
+        });
+      }
 
       if (input.channel === "email") {
         await repo.updateAccount(accountId, {
@@ -2113,6 +2274,7 @@ export function createAuthService(db: ServiceDatabase) {
       });
       await repo.updateAccountRolesStatus(target.id, "suspended");
       await repo.revokeAllSessionsForAccount(target.id, "account_suspended");
+      sendAlert(target, { type: "account_suspended", reason: input.reason });
 
       await repo.writeAuditLog({
         actorAccountId: actor.accountId,
@@ -2156,6 +2318,7 @@ export function createAuthService(db: ServiceDatabase) {
         suspendedReason: null,
       });
       await repo.updateAccountRolesStatus(target.id, "active");
+      sendAlert(target, { type: "account_reinstated" });
 
       await repo.writeAuditLog({
         actorAccountId: actor.accountId,
@@ -2189,6 +2352,15 @@ export function createAuthService(db: ServiceDatabase) {
         deletionRequestedAt: now,
       });
       await repo.revokeAllSessionsForAccount(actor.accountId, "account_deletion_requested");
+
+      const deletingAccount = await repo.findAccountById(actor.accountId);
+      if (deletingAccount) {
+        sendAlert(deletingAccount, {
+          type: "deletion_requested",
+          graceDays: settings.deletionGraceDays,
+          purgeScheduledAt: purgeScheduledAt.toISOString(),
+        });
+      }
 
       await repo.writeAuditLog({
         actorAccountId: actor.accountId,
@@ -2240,6 +2412,7 @@ export function createAuthService(db: ServiceDatabase) {
         status: "active",
         deletionRequestedAt: null,
       });
+      sendAlert(account, { type: "account_restored" });
 
       return { restored: true, accountId: account.id, status: "active" as const };
     },

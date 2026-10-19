@@ -45,6 +45,7 @@
         "elysia": "^1.4.30",
         "evlog": "catalog:",
         "firebase-admin": "catalog:",
+        "nodemailer": "^10.1.2",
         "varlock": "catalog:",
         "zod": "catalog:",
       },
@@ -60,7 +61,7 @@
       "dependencies": {
         "@orpc/client": "catalog:",
         "@orpc/server": "catalog:",
-        "@orpc/tanstack-query": "^1.15.6",
+        "@orpc/tanstack-query": "catalog:",
         "@tailwindcss/vite": "^4.3.3",
         "@tanstack/react-query": "^5.104.2",
         "@tanstack/react-router": "^1.170.44",
@@ -139,6 +140,7 @@
       },
       "devDependencies": {
         "@trips-app/config": "workspace:*",
+        "@trips-app/domain": "workspace:*",
         "typescript": "catalog:",
       },
     },
@@ -277,6 +279,7 @@
         "@trips-app/db": "workspace:*",
         "@trips-app/domain": "workspace:*",
         "@trips-app/rpc": "workspace:*",
+        "@trips-app/service-notifications": "workspace:*",
         "zod": "catalog:",
       },
       "devDependencies": {
@@ -727,6 +730,7 @@
       "dependencies": {
         "@base-ui/react": "^1.8.0",
         "@shadcn/react": "^0.3.1",
+        "@trips-app/i18n": "workspace:*",
         "class-variance-authority": "^0.7.1",
         "cn": "^0.2.5",
         "lucide-react": "^1.41.0",
@@ -759,6 +763,7 @@
     "@orpc/client": "^1.15.6",
     "@orpc/openapi": "^1.15.6",
     "@orpc/server": "^1.15.6",
+    "@orpc/tanstack-query": "^1.15.6",
     "@orpc/zod": "^1.15.6",
     "@types/bun": "^1.4.2",
     "evlog": "^2.30.1",
@@ -2411,6 +2416,8 @@
     "node-fetch": ["node-fetch@2.7.0", "", { "dependencies": { "whatwg-url": "^5.0.0" }, "peerDependencies": { "encoding": "^0.1.0" }, "optionalPeers": ["encoding"] }, "sha512-c4FRfUm/dbcWZ7U+1Wq0AwCyFL+3nt2bEw05wfxSz+DWpWsitgmSgYmy2dQdWyKC1694ELPqMs/YzUSNozLt8A=="],
 
     "node-releases": ["node-releases@2.0.59", "", {}, "sha512-5qr2okC4ItAI0hG5SaV0HoYMpnM/Y6+Oqr7AmPYy/2uEoGvS+GbSKLeRxSS1uAdu59yz0ouzcuXievSgg///WA=="],
+
+    "nodemailer": ["nodemailer@10.1.2", "", {}, "sha512-rnQn9Rzh8RAwcp42MVsIvxbsv6YZ2a2/av+uyJ/LPU1+2QSlrRgFsWWZTKenyRUqkIl8urOI0c4+CEcmFdsvQw=="],
 
     "npm-run-path": ["npm-run-path@6.0.0", "", { "dependencies": { "path-key": "^4.0.0", "unicorn-magic": "^0.3.0" } }, "sha512-9qny7Z9DsQU8Ou39ERsPU4OZQlSTP47ShQzuKZ6PRXpYLtIFgl/DEBYEXKlvcEa+9tHVcK8CF81Y2V72qaZhWA=="],
 

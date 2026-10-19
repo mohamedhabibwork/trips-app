@@ -33,7 +33,7 @@ export const getPlanCatalogSchema = z
 
 export const registerTravelerSchema = z.object({
   fullName: z.string().min(2).max(120),
-  email: z.string().email().optional().nullable(),
+  email: z.email().optional().nullable(),
   phone: z.string().min(8).max(20).optional().nullable(),
   password: z.string().min(12).max(128).optional().nullable(),
   preferredSignInMethod: z.enum(["otp", "password"]).default("otp"),
@@ -45,7 +45,7 @@ export const registerTravelerSchema = z.object({
 export const registerSupplierAccountSchema = z.object({
   role: z.enum(["platform_driver", "platform_photographer", "organization_owner"]),
   fullName: z.string().min(2).max(120),
-  email: z.string().email(),
+  email: z.email(),
   phone: z.string().min(8).max(20),
   password: z.string().min(12).max(128),
   preferredLanguage: z.enum(["ar", "en"]).default("ar"),
@@ -86,7 +86,7 @@ export const signInSchema = z.object({
 });
 
 export const adminSignInSchema = z.object({
-  email: z.string().email(),
+  email: z.email(),
   password: z.string().min(1),
 });
 
@@ -101,7 +101,7 @@ export const adminVerifyTotpSchema = z.object({
 });
 
 export const adminInviteStaffSchema = z.object({
-  email: z.string().email(),
+  email: z.email(),
   fullName: z.string().min(2).max(120),
   subRole: z.enum(ADMIN_SUB_ROLES),
 });
@@ -113,12 +113,12 @@ export const adminAcceptInviteSchema = z.object({
 });
 
 export const adminResetTotpSchema = z.object({
-  targetAdminAccountId: z.string().uuid(),
+  targetAdminAccountId: z.uuid(),
   reason: z.string().min(5).max(500),
 });
 
 export const staffSignInSchema = z.object({
-  email: z.string().email(),
+  email: z.email(),
   password: z.string().min(1),
 });
 
@@ -131,11 +131,11 @@ export const staffSetupSecondFactorSchema = z.object({
 export const staffVerifySecondFactorSchema = z.object({
   challengeToken: z.string().min(8),
   code: z.string().regex(/^\d{6}$/),
-  tenantId: z.string().uuid().optional(),
+  tenantId: z.uuid().optional(),
 });
 
 export const inviteEmployeeSchema = z.object({
-  email: z.string().email(),
+  email: z.email(),
   phone: z.string().min(8).max(20).optional(),
   roleTitle: z.string().min(2).max(100),
   preset: z
@@ -174,11 +174,11 @@ export const signOutSchema = z.object({
 
 export const switchRoleSchema = z.object({
   targetRole: z.enum(USER_ROLES),
-  tenantId: z.string().uuid().optional(),
+  tenantId: z.uuid().optional(),
 });
 
 export const switchOrganizationSchema = z.object({
-  targetTenantId: z.string().uuid(),
+  targetTenantId: z.uuid(),
 });
 
 export const requestPasswordResetSchema = z.object({
@@ -208,12 +208,12 @@ export const changeSignInMethodSchema = z.object({
 });
 
 export const suspendAccountSchema = z.object({
-  targetAccountId: z.string().uuid(),
+  targetAccountId: z.uuid(),
   reason: z.string().min(5).max(500),
 });
 
 export const reinstateAccountSchema = z.object({
-  targetAccountId: z.string().uuid(),
+  targetAccountId: z.uuid(),
   reason: z.string().min(5).max(500),
 });
 

@@ -526,7 +526,10 @@ export function buildNotificationConfigs(): Record<string, BuiltInNotificationCo
 }
 
 const configuredNotificationProviders = buildNotificationConfigs();
-const defaultNotificationProviderKey = Object.keys(configuredNotificationProviders)[0];
+const defaultNotificationProviderKey =
+  "fcm" in configuredNotificationProviders
+    ? "fcm"
+    : Object.keys(configuredNotificationProviders)[0];
 
 export const notifications: NotificationManager<
   Record<string, BuiltInNotificationConfig>,

@@ -6,8 +6,8 @@
     "./*": "./src/*.ts"
   },
   "scripts": {
-    "build": "tsc -b",
-    "check-types": "tsc -b"
+    "build": "tsc --noEmit",
+    "check-types": "tsc --noEmit"
   },
   "dependencies": {
     "@orpc/client": "catalog:",
@@ -46,6 +46,7 @@
   },
   "devDependencies": {
     "@trips-app/config": "workspace:*",
+    "@trips-app/domain": "workspace:*",
     "typescript": "catalog:"
   }
 }

@@ -9,6 +9,7 @@ import { RPCHandler } from "@orpc/server/fetch";
 import { ZodToJsonSchemaConverter } from "@orpc/zod/zod4";
 import {
   createErrorResponse,
+  createMediaService,
   createOpenAPISpecGenerateOptions,
   createSuccessResponse,
   encodeOpenAPIErrorResponse,
@@ -23,7 +24,15 @@ import { evlog } from "evlog/elysia";
 
 import { createContext } from "./context";
 import { ENV } from "./env.server";
-import { getKitsHealth, logContext, logger, shutdownKits } from "./services";
+import {
+  disks,
+  getKitsHealth,
+  logContext,
+  logger,
+  queue,
+  shutdownKits,
+  startUnlinkedMediaCleanupWorker,
+} from "./services";
 import type { OpenAPIDocumentation } from "./types";
 
 export type * from "./types";
@@ -259,9 +268,90 @@ export const app = new Elysia()
         service: "system",
       },
     );
-  });
+  })
+  .post(
+    "/upload",
+    async (context) => {
+      const rpcContext = await createContext({ context });
+      const requestId = rpcContext.requestId ?? randomUUID();
+      const locale = rpcContext.locale ?? "ar";
+      context.set.headers["x-request-id"] = requestId;
+
+      if (!rpcContext.auth) {
+        context.set.status = 401;
+        return createErrorResponse({
+          code: "UNAUTHORIZED",
+          locale,
+          requestId,
+          service: "media",
+        });
+      }
+
+      const formData = await context.request.formData();
+      const fileEntry = formData.get("file");
+      if (!(fileEntry instanceof File)) {
+        context.set.status = 400;
+        return createErrorResponse({
+          code: "VALIDATION_ERROR",
+          message: "Multipart form field 'file' is required.",
+          locale,
+          requestId,
+          service: "media",
+        });
+      }
+
+      const url = new URL(context.request.url);
+      const purposeRaw = formData.get("purpose") ?? url.searchParams.get("purpose") ?? "general";
+      const purpose = String(purposeRaw);
+      const diskRaw = formData.get("disk") ?? url.searchParams.get("disk");
+      const intentIdRaw = formData.get("intentId") ?? url.searchParams.get("intentId");
+
+      try {
+        const result = await createMediaService(rpcContext.db, {
+          storage: disks,
+          queue,
+        }).uploadWebFile(
+          {
+            accountId: rpcContext.auth.accountId,
+            role: rpcContext.auth.activeRole,
+            tenantId: rpcContext.auth.activeTenantId ?? null,
+            adminSubRole: rpcContext.auth.adminSubRole ?? null,
+          },
+          {
+            file: fileEntry,
+            purpose,
+            ...(typeof diskRaw === "string" && diskRaw.length > 0
+              ? { disk: diskRaw as "uploads" | "documents" | "temp" }
+              : {}),
+            ...(typeof intentIdRaw === "string" && intentIdRaw.length > 0
+              ? { intentId: intentIdRaw }
+              : {}),
+          },
+        );
+
+        return createSuccessResponse(result, {
+          requestId,
+          locale,
+          service: "media",
+        });
+      } catch (err) {
+        const envelope = normalizeErrorToEnvelope(err, {
+          locale,
+          requestId,
+          service: "media",
+        });
+        context.set.status = envelope.error.status;
+        return envelope;
+      }
+    },
+    {
+      parse: "none",
+    },
+  );
 
 if (import.meta.main) {
+  const cleanupWorker = await startUnlinkedMediaCleanupWorker();
+
   app.listen(3000, () => {
     logger.info("Server is running on http://localhost:3000", {
       kits: getKitsHealth(),
@@ -270,6 +360,7 @@ if (import.meta.main) {
 
   const handleShutdown = async (signal: string) => {
     logger.info(`Received ${signal}, shutting down kits...`);
+    await cleanupWorker.stop();
     await shutdownKits();
     process.exit(0);
   };

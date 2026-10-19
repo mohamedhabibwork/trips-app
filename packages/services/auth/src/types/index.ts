@@ -1,4 +1,5 @@
 // Shared TypeScript types, ids and enums. No I/O.
+import type { AuthNotifier } from "@trips-app/service-notifications";
 import type { z } from "zod";
 
 import type {
@@ -58,8 +59,20 @@ export interface OtpDispatchResult {
   expiresAt: string;
   resendAvailableInSeconds: number;
   fallbackChannelAvailable: boolean;
+  /** `failed_fallback_available` tells the client to offer the other channel (D-59, WF-NTF-06). */
+  deliveryStatus: "sent" | "failed_fallback_available";
   devCodePreview?: string;
 }
+
+/** Collaborators the auth service sends messages through. Both are optional so unit tests stay offline. */
+export interface AuthServiceDeps {
+  notifier?: AuthNotifier;
+  /** Public web origin for links in emails, for example an invite link. */
+  webBaseUrl?: string;
+}
+
+/** Outcome of a message that a caller may want to report, such as an invite email. */
+export type InviteDelivery = "sent" | "failed" | "skipped";
 
 export type GetPlanCatalogInput = z.infer<typeof getPlanCatalogSchema>;
 export type RegisterTravelerInput = z.infer<typeof registerTravelerSchema>;

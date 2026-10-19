@@ -1,2 +1,3 @@
-// Request and response shapes derived from the validation schemas.
-export {};
+import { selectPaymentTransactionsSchema } from "@trips-app/db/zod";
+
+export const paymentTransactionDtoSchema = selectPaymentTransactionsSchema;

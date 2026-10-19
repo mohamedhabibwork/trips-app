@@ -31,6 +31,7 @@
     "elysia": "^1.4.30",
     "evlog": "catalog:",
     "firebase-admin": "catalog:",
+    "nodemailer": "^10.1.2",
     "varlock": "catalog:",
     "zod": "catalog:"
   },

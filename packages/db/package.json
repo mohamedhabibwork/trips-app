@@ -15,7 +15,8 @@
     "db:migrate": "drizzle-kit migrate",
     "db:seed": "bun src/seed/cli.ts default",
     "db:seed:default": "bun src/seed/cli.ts default",
-    "db:seed:demo": "bun src/seed/cli.ts demo"
+    "db:seed:demo": "bun src/seed/cli.ts demo",
+    "test": "bun test"
   },
   "dependencies": {
     "@trips-app/domain": "workspace:*",

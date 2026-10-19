@@ -1,21 +1,36 @@
-// Error categories from SRS IF-04 and this service's error classes referencing centralized shared error codes.
 import {
   createServiceErrorMapper,
   ServiceError,
   type ServiceErrorOptions,
+  type SharedErrorCode,
 } from "@trips-app/domain";
 
-import type { SharedErrorCode } from "../types";
+export type { SharedErrorCode };
 
-export const CHECK_IN_ERROR_CODE_MAP: Readonly<Record<string, SharedErrorCode>> = {};
+export type CheckInErrorCode =
+  | "CHECK_IN_NOT_FOUND"
+  | "BOARDING_PASS_NOT_FOUND"
+  | "ALREADY_CHECKED_IN"
+  | "FORBIDDEN_CHECK_IN";
+
+export const CHECK_IN_ERROR_CODE_MAP: Readonly<Record<CheckInErrorCode, SharedErrorCode>> = {
+  CHECK_IN_NOT_FOUND: "RESOURCE_NOT_FOUND",
+  BOARDING_PASS_NOT_FOUND: "RESOURCE_NOT_FOUND",
+  ALREADY_CHECKED_IN: "CONFLICT",
+  FORBIDDEN_CHECK_IN: "FORBIDDEN",
+};
 
 export class CheckInServiceError extends ServiceError {
   constructor(
-    code: SharedErrorCode,
+    code: CheckInErrorCode | SharedErrorCode,
     message?: string,
     detailsOrOptions?: Record<string, unknown> | ServiceErrorOptions,
   ) {
-    super(code, message, detailsOrOptions, "check-in");
+    const sharedCode =
+      code in CHECK_IN_ERROR_CODE_MAP
+        ? CHECK_IN_ERROR_CODE_MAP[code as CheckInErrorCode]
+        : (code as SharedErrorCode);
+    super(sharedCode, message, detailsOrOptions, "check-in");
     this.name = "CheckInServiceError";
   }
 }

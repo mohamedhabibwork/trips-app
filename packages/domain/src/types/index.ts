@@ -594,7 +594,45 @@ export type LookupTypeCode =
   | "PHOTOGRAPHER_SPECIALTY"
   | "TRIP_CATEGORY"
   | "VEHICLE_TYPE"
-  | "CANCELLATION_REASON";
+  | "CANCELLATION_REASON"
+  // 36 types added by PRD LK-20 (+ `VEHICLE_AMENITY`, which replaces the hardcoded
+  // `VEHICLE_AMENITY_CODES` enum in `packages/services/fleet/src/model/index.ts`).
+  | "TRIP_STATE"
+  | "COUPON_TYPE"
+  | "COUPON_AUDIENCE"
+  | "COUPON_STATE"
+  | "DISPUTE_STATE"
+  | "SETTLEMENT_STATE"
+  | "RECONCILIATION_STATE"
+  | "LAB_TEST_STATE"
+  | "LAB_TEST_TYPE"
+  | "ACCOUNT_STATUS"
+  | "ACCOUNT_ACTION"
+  | "DATA_REQUEST_TYPE"
+  | "DATA_REQUEST_STATE"
+  | "DEAL_STATE"
+  | "REFUND_DECISION"
+  | "SUBSCRIPTION_BILLING_STATUS"
+  | "INVOICE_TYPE"
+  | "STAFF_ASSIGNMENT_SOURCE"
+  | "PUBLISH_MODE"
+  | "PROGRAM_PRICING_MODEL"
+  | "VEHICLE_REGISTRATION_STATUS"
+  | "VEHICLE_AMENITY"
+  | "SUPPLIER_STATUS"
+  | "SAFETY_CASE_STATE"
+  | "SEAT_STATE"
+  | "CONTACT_CHANNEL"
+  | "ALBUM_PRIVACY"
+  | "PROFILE_VISIBILITY"
+  | "INCIDENT_CATEGORY"
+  | "HEADCOUNT_DIFFERENCE_REASON"
+  | "TIMEZONE"
+  | "WEBHOOK_EVENT_TYPE"
+  | "APPEAL_DECISION"
+  | "SEAT_ASSIGNMENT_MODE"
+  | "DRIVER_RUN_STATE"
+  | "ORG_ROLE_TITLE";
 
 export interface LookupTypeSeedDefinition {
   readonly code: LookupTypeCode;
@@ -630,6 +668,7 @@ export interface LookupTypeRecord {
   sortBy: number;
   isPublic: boolean;
   isSystem: boolean;
+  isActive: boolean;
   isDeleted: boolean;
   createdBy: string | null;
   updatedBy: string | null;
@@ -650,6 +689,7 @@ export interface LookupRecord {
   parentId: number | null;
   sortBy: number;
   isPublic: boolean;
+  isActive: boolean;
   isDeleted: boolean;
   createdBy: string | null;
   updatedBy: string | null;
@@ -662,7 +702,9 @@ export interface LookupRecord {
 export interface LookupItemDto {
   id: number;
   uuid: string;
+  /** The public identifier; the only value an entity ever stores or a select ever submits. */
   code: string;
+  /** Legacy machine token. Never rendered, never compared, never sent as a select value. */
   value: string;
   name: LookupLocalizedText;
   description: LookupLocalizedText | null;
@@ -672,6 +714,8 @@ export interface LookupItemDto {
   parentCode: string | null;
   sortBy: number;
   isPublic: boolean;
+  /** `false` means retired from option lists but still resolvable (LK-01). */
+  isActive: boolean;
 }
 
 export interface LookupTypeDto {
@@ -686,8 +730,210 @@ export interface LookupTypeDto {
   sortBy: number;
   isPublic: boolean;
   isSystem: boolean;
+  /** `false` means the whole type is unavailable; its fields render the PRD §5 case (a). */
+  isActive: boolean;
 }
 
 export interface LookupTypeWithItemsDto extends LookupTypeDto {
   items: LookupItemDto[];
 }
+
+/** `itemCount` counts active, non-deleted items only (LK-08). */
+export interface LookupTypeSummaryDto extends LookupTypeDto {
+  itemCount: number;
+}
+
+/**
+ * Closed read-status vocabulary (design §11.4). `not_seeded` replaces the deleted static fallback:
+ * an empty table is a visible, retryable state, never fabricated rows (LK-07).
+ */
+export type LookupTypeReadStatus = "ok" | "type_not_found" | "not_seeded";
+
+/** Status of resolving one stored value against the table, across all four flag combinations. */
+export type LookupResolveStatus =
+  | "active"
+  | "inactive"
+  | "deleted"
+  | "not_found"
+  | "type_not_found";
+
+/** Verdict for one submitted code (LK-12). */
+export type LookupValidateReason = "ok" | "inactive" | "deleted" | "unknown_code" | "unknown_type";
+
+/** Compact form used by services on the write path (design §1, layering constraint). */
+export type LookupStatus = "active" | "inactive" | "deleted" | "unknown" | "unknown_type";
+
+/** One entry of a `validate` response (LK-12). */
+export interface LookupValidateResult {
+  code: string;
+  valid: boolean;
+  reason: LookupValidateReason;
+}
+
+export type TravelerPlanCode = "free" | "explorer" | "vip";
+
+export type PrivacyRequestType = "data_export" | "account_deletion";
+export type PrivacyRequestStatus = "pending" | "processing" | "completed" | "cancelled";
+
+export type VehicleTypeScope = "platform" | "organization";
+export type VehicleTypeStatus = "active" | "archived";
+export type VehicleRegistrationStatus = "valid" | "pending_renewal" | "expired";
+export type VehicleStatus = "active" | "maintenance" | "retired";
+
+export type SeatLayoutCellType = "seat" | "aisle" | "driver" | "moderator" | "door" | "empty";
+
+export interface SeatLayoutCell {
+  row: number;
+  col: number;
+  type: SeatLayoutCellType;
+  seatLabel?: string | null;
+  isAccessible?: boolean;
+  isPriority?: boolean;
+}
+
+export interface SeatLayoutConfig {
+  rows: number;
+  cols: number;
+  cells: readonly SeatLayoutCell[];
+}
+
+export type TripState =
+  | "draft"
+  | "published"
+  | "scheduled"
+  | "Selection"
+  | "in_progress"
+  | "completed"
+  | "cancelled";
+
+export type TripSeatAssignmentMode = "organization_assigned" | "traveler_choice";
+export type TripPublishMode = "draft" | "public" | "targeted";
+export type TripStaffSource = "org_staff" | "platform_supplier" | "unassigned";
+
+export interface TripRoutePoint {
+  nameAr: string;
+  nameEn: string;
+  latitude?: number | null;
+  longitude?: number | null;
+  regionLookupCode?: string | null;
+}
+
+export interface TripWizardStepCompletion {
+  basics: boolean;
+  schedule: boolean;
+  vehicles: boolean;
+  staffing: boolean;
+  programs: boolean;
+  seating: boolean;
+  pricing: boolean;
+  publish: boolean;
+}
+
+export type TripProgramStatus = "active" | "cancelled";
+
+export type SupplierRole =
+  | "platform_driver"
+  | "org_driver"
+  | "platform_photographer"
+  | "org_photographer";
+
+export type PlatformSupplierRole = "platform_driver" | "platform_photographer";
+
+export type AvailabilityBlockType = "available" | "unavailable" | "assigned_trip";
+
+export type NegotiationStatus =
+  | "pending_supplier"
+  | "countered_by_supplier"
+  | "countered_by_org"
+  | "accepted"
+  | "declined"
+  | "expired"
+  | "cancelled";
+
+export type NegotiationOfferParty = "organization" | "supplier";
+
+export type SeatInventoryStatus = "available" | "held" | "reserved" | "blocked";
+
+export type CouponScope = "organization" | "platform" | "driver";
+export type CouponDiscountType = "percentage" | "fixed_amount";
+export type CouponStatus = "active" | "paused" | "expired";
+
+export type BookingStatus =
+  | "pending_payment"
+  | "confirmed"
+  | "checked_in"
+  | "completed"
+  | "cancelled"
+  | "refunded";
+
+export interface BookingPassenger {
+  id: string;
+  fullName: string;
+  isChild: boolean;
+  age?: number | null;
+  seatLabel?: string | null;
+  guardianPhoneE164?: string | null;
+}
+
+export type PaymentPurpose = "trip_booking" | "subscription_upgrade";
+export type PaymentTransactionStatus =
+  | "pending"
+  | "requires_action"
+  | "succeeded"
+  | "failed"
+  | "refunded"
+  | "disputed";
+export type DisputeResolutionStatus = "open" | "resolved_refund" | "resolved_merchant";
+
+export type SubscriptionBillingCycle = "monthly" | "annual";
+export type SubscriptionRecordStatus = "active" | "trialing" | "past_due" | "cancelled";
+
+export type LedgerEntryType =
+  | "booking_revenue"
+  | "platform_commission"
+  | "supplier_payout"
+  | "refund_debit"
+  | "payout_settlement";
+export type LedgerEntryDirection = "credit" | "debit";
+export type LedgerEntryStatus = "posted" | "settled" | "reconciliation_exception";
+
+export type CheckInStatus = "pending" | "checked_in" | "no_show";
+export type CheckInMethod = "qr_scan" | "manual_override";
+
+export type TrackingEventType =
+  | "gps_ping"
+  | "checkpoint_reached"
+  | "child_boarded"
+  | "child_disembarked"
+  | "safety_alert"
+  | "headcount_verified";
+export type TrackingAlertSeverity = "info" | "warning" | "critical";
+
+export interface TrackingCoordinates {
+  latitude: number;
+  longitude: number;
+  speedKmh?: number | null;
+  headingDeg?: number | null;
+}
+
+export type ParentChildLinkStatus = "active" | "revoked";
+
+export type TripPhotoAlbumStatus = "draft" | "published" | "archived";
+
+export type DriverLabTestStatus =
+  | "requested"
+  | "booked"
+  | "result_uploaded"
+  | "verified_pass"
+  | "verified_fail"
+  | "expired";
+
+export type NotificationCategory =
+  | "bookings"
+  | "trip_updates"
+  | "promotions"
+  | "security"
+  | "safety"
+  | "operations";
+
+export type NotificationDeliveryChannel = "in_app" | "email" | "sms" | "push";

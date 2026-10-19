@@ -38,8 +38,22 @@ export type Database = ReturnType<typeof createDb>;
 export interface LookupSeedSummary {
   lookupTypesSeeded: number;
   lookupsSeeded: number;
+  /**
+   * Size of the registered catalog (`LOOKUP_TYPE_CODES.length`). A deployment whose
+   * `lookupTypesSeeded` is below this value is silently missing types (LK-07).
+   */
+  expectedTypeCount: number;
   typeIdsByCode: Record<string, number>;
   lookupIdsByKey: Record<string, number>;
+}
+
+/** Result of `verifyLookupSeed`: proves every registered type code has a row (LK-07). */
+export interface LookupSeedVerification {
+  ok: boolean;
+  seededTypes: number;
+  expectedTypes: number;
+  /** Registered type codes with no `lookup_types` row, sorted for stable output. */
+  missing: string[];
 }
 
 export interface DefaultSeedSummary {

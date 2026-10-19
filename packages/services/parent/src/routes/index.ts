@@ -1,15 +1,57 @@
-// oRPC procedures for Parent. Validate input with schemas, call services, map errors.
-// Every service exposes at least one procedure. Build them on the local procedure in ./procedure.
-import { procedure } from "./procedure";
+import {
+  childTripLiveStatusDtoSchema,
+  getChildTripLiveStatusSchema,
+  linkChildToParentSchema,
+  parentChildLinkDtoSchema,
+  revokeChildLinkSchema,
+} from "../schemas";
+import { createParentService } from "../services";
+import { parentAuthenticatedProcedure, procedure } from "./procedure";
+
+const status = procedure
+  .route({
+    method: "GET",
+    path: "/parent/status",
+    summary: "Health check for the parent service",
+    tags: ["parent"],
+  })
+  .handler(async () => ({ service: "parent" as const, status: "ok" as const }));
+
+const listLinkedChildren = parentAuthenticatedProcedure
+  .output(parentChildLinkDtoSchema.array())
+  .handler(async ({ context }) => {
+    const svc = createParentService({ db: context.db });
+    return await svc.listLinkedChildren(context.auth.accountId);
+  });
+
+const linkChildToParent = parentAuthenticatedProcedure
+  .input(linkChildToParentSchema)
+  .output(parentChildLinkDtoSchema)
+  .handler(async ({ context, input }) => {
+    const svc = createParentService({ db: context.db });
+    return await svc.linkChildToParent(context.auth.accountId, input);
+  });
+
+const revokeChildLink = parentAuthenticatedProcedure
+  .input(revokeChildLinkSchema)
+  .output(parentChildLinkDtoSchema)
+  .handler(async ({ context, input }) => {
+    const svc = createParentService({ db: context.db });
+    return await svc.revokeChildLink(context.auth.accountId, input);
+  });
+
+const getChildTripLiveStatus = parentAuthenticatedProcedure
+  .input(getChildTripLiveStatusSchema)
+  .output(childTripLiveStatusDtoSchema)
+  .handler(async ({ context, input }) => {
+    const svc = createParentService({ db: context.db });
+    return await svc.getChildTripLiveStatus(context.auth.accountId, input.linkId);
+  });
 
 export const routes = {
-  status: procedure
-    .route({
-      method: "GET",
-      path: "/parent/status",
-      operationId: "parentStatus",
-      summary: "Parent service health status",
-      tags: ["parent"],
-    })
-    .handler(() => ({ service: "parent", status: "ok" as const })),
+  status,
+  listLinkedChildren,
+  linkChildToParent,
+  revokeChildLink,
+  getChildTripLiveStatus,
 };

@@ -6,6 +6,7 @@ import {
   desc,
   eq,
   inArray,
+  linkUploadedFilesOnItemSave,
   lte,
   schema,
 } from "@trips-app/db";
@@ -271,7 +272,7 @@ export function createOnboardingRepository(db: Database) {
       }[],
     ) {
       if (docs.length === 0) return [];
-      return db
+      const inserted = await db
         .insert(applicationDocuments)
         .values(
           docs.map((d) => ({
@@ -284,6 +285,17 @@ export function createOnboardingRepository(db: Database) {
           })),
         )
         .returning();
+
+      const storageKeys = [...new Set(docs.map((d) => d.storageKey).filter(Boolean))];
+      if (storageKeys.length > 0) {
+        await linkUploadedFilesOnItemSave(db, {
+          entityType: "application",
+          entityId: applicationId,
+          storageKeys,
+        });
+      }
+
+      return inserted;
     },
 
     async listDocumentsForApplication(applicationId: string) {

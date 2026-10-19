@@ -1,0 +1,36 @@
+classDiagram
+  class LookupLocalizedText { +string ar; +string en }
+  class LookupTypeDto { +string code; +LookupLocalizedText name; +string parentCode; +number sortBy; +boolean isActive }
+  class LookupTypeSummaryDto { +number itemCount }
+  class LookupTypeWithItemsDto { +LookupItemDto[] items }
+  class LookupItemDto { +number id; +string code; +string value; +LookupLocalizedText name; +string parentCode; +number sortBy; +boolean isActive }
+  class ResolveResponse { +LookupItemDto item; +LookupResolveStatus status }
+  class ValidateResponse { +ValidateResult[] results }
+  class LookupOptionItem { +string code; +LookupLocalizedText name; +string parentCode; +number sortBy; +boolean isActive }
+  class LookupResolution { +LookupResolveStatus status; +LookupOptionItem item }
+  class LookupLoadState { union loading / error / loaded }
+  class LookupFieldInput { +string typeCode; +string storedValue; +string locale; +boolean required; +string cachedLabel }
+  class LookupOptionView { +string value; +string label; +boolean disabled; +string reason }
+  class LookupFieldView { +LookupFieldState state; +string selectedValue; +boolean disabled; +boolean canSave; +boolean canReselect; +string notice }
+  class LookupsRepository { +listTypes() +getTypeByCode() +getByTypeCodes() +resolve() +validate() }
+  class useLookupField { +LookupFieldView view +retry() }
+  class LookupStateHolder { +view() +load() +retry() }
+
+  LookupTypeDto <|-- LookupTypeSummaryDto
+  LookupTypeDto <|-- LookupTypeWithItemsDto
+  LookupTypeWithItemsDto "1" o-- "*" LookupItemDto
+  LookupItemDto --> LookupLocalizedText
+  LookupTypeDto --> LookupLocalizedText
+  ResolveResponse --> LookupItemDto
+  ValidateResponse --> LookupItemDto
+  LookupFieldInput --> LookupLoadState
+  LookupFieldInput --> LookupResolution
+  LookupLoadState --> LookupOptionItem
+  LookupResolution --> LookupOptionItem
+  LookupFieldView "1" o-- "*" LookupOptionView
+  LookupFieldInput ..> LookupFieldView : deriveLookupFieldView()
+  LookupsRepository ..> LookupTypeWithItemsDto : produces
+  LookupsRepository ..> ResolveResponse : produces
+  useLookupField ..> LookupFieldView : derives
+  LookupStateHolder --> LookupsRepository
+  LookupStateHolder ..> LookupFieldView : derives

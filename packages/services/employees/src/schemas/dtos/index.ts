@@ -1,2 +1,2 @@
 // Request and response shapes derived from the validation schemas.
-export {};
+export type * from "../../types";

@@ -101,6 +101,23 @@ export interface AuthActor {
   moderatorTripId?: string | null;
 }
 
+/** Credentials for the Twilio-compatible SMS gateway (WF-NTF channel list). Absent when not configured. */
+export interface SmsGatewaySettings {
+  accountSid: string;
+  authToken: string;
+  from: string;
+  baseUrl?: string;
+}
+
+/** Runtime facts the notification dispatcher needs that the raw provider manager cannot report. */
+export interface NotificationSettings {
+  /** Names of providers present in the manager, for example `email`. */
+  providers: readonly string[];
+  /** Public web origin used to build links in emails, for example an invite link. */
+  webBaseUrl?: string;
+  sms?: SmsGatewaySettings;
+}
+
 // Procedure context shared by every router. Routes read db, auth, and kits from here and pass them to services.
 export type Context = {
   db: Database;
@@ -115,6 +132,7 @@ export type Context = {
     Record<string, BuiltInNotificationConfig>,
     string | undefined
   >;
+  notificationSettings?: NotificationSettings;
   requestId?: string;
   locale?: SupportedLocale;
   ipAddress?: string;

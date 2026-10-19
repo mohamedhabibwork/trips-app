@@ -1,7 +1,16 @@
-// Shared TypeScript types, ids and enums. No I/O.
-export type {
-  ErrorCategory,
-  ErrorHttpStatus,
-  SharedErrorCode,
-  SharedErrorCode as PaymentsErrorCode,
-} from "@trips-app/domain";
+import type { z } from "zod/v4";
+import type { paymentTransactionDtoSchema } from "../schemas";
+import type {
+  confirmPaymentSchema,
+  createPaymentIntentSchema,
+  openDisputeSchema,
+  refundPaymentSchema,
+  resolveDisputeSchema,
+} from "../schemas/validation";
+
+export type CreatePaymentIntentInput = z.infer<typeof createPaymentIntentSchema>;
+export type ConfirmPaymentInput = z.infer<typeof confirmPaymentSchema>;
+export type RefundPaymentInput = z.infer<typeof refundPaymentSchema>;
+export type OpenDisputeInput = z.infer<typeof openDisputeSchema>;
+export type ResolveDisputeInput = z.infer<typeof resolveDisputeSchema>;
+export type PaymentTransactionDto = z.infer<typeof paymentTransactionDtoSchema>;

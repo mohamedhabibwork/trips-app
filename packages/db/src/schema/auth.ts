@@ -7,8 +7,11 @@ import type {
   OtpChannel,
   OtpPurpose,
   PrimarySignInMethod,
+  PrivacyRequestStatus,
+  PrivacyRequestType,
   SupportedCountryCode,
   SupportedLocale,
+  TravelerPlanCode,
   UserRole,
 } from "@trips-app/domain";
 import {
@@ -46,7 +49,12 @@ export const accounts = pgTable(
     staffSecondFactorMethod: text("staff_second_factor_method").$type<"sms" | "totp" | null>(),
     fullName: text("full_name").notNull(),
     avatarUrl: text("avatar_url"),
+    countryCode: text("country_code").$type<SupportedCountryCode>().default("EG").notNull(),
     preferredLanguage: text("preferred_language").$type<SupportedLocale>().default("ar").notNull(),
+    travelerPlanTier: text("traveler_plan_tier")
+      .$type<TravelerPlanCode>()
+      .default("free")
+      .notNull(),
     status: text("status").$type<AccountStatus>().default("pending_verification").notNull(),
     failedSignInAttempts: integer("failed_sign_in_attempts").default(0).notNull(),
     lockedUntil: timestamp("locked_until", { withTimezone: true }),
@@ -329,4 +337,26 @@ export const idempotencyKeys = pgTable(
     createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   },
   (table) => [index("idempotency_keys_expires_idx").on(table.expiresAt)],
+);
+
+export const privacyRequests = pgTable(
+  "privacy_requests",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    accountId: uuid("account_id")
+      .references(() => accounts.id, { onDelete: "cascade" })
+      .notNull(),
+    requestType: text("request_type").$type<PrivacyRequestType>().notNull(),
+    status: text("status").$type<PrivacyRequestStatus>().default("pending").notNull(),
+    reason: text("reason"),
+    downloadUrl: text("download_url"),
+    scheduledPurgeAt: timestamp("scheduled_purge_at", { withTimezone: true }),
+    completedAt: timestamp("completed_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => [
+    index("privacy_requests_account_idx").on(table.accountId),
+    index("privacy_requests_status_idx").on(table.status),
+  ],
 );

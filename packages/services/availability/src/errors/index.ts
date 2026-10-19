@@ -7,7 +7,10 @@ import {
 
 import type { SharedErrorCode } from "../types";
 
-export const AVAILABILITY_ERROR_CODE_MAP: Readonly<Record<string, SharedErrorCode>> = {};
+export const AVAILABILITY_ERROR_CODE_MAP: Readonly<Record<string, SharedErrorCode>> = {
+  BLOCK_NOT_FOUND: "RESOURCE_NOT_FOUND",
+  AVAILABILITY_CONFLICT: "CONFLICT",
+};
 
 export class AvailabilityServiceError extends ServiceError {
   constructor(
