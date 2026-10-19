@@ -91,6 +91,9 @@ export function PlatformDriverSignUp() {
           hasOwnVehicle: true,
           vehicleMakeModel: read("model"),
           vehiclePlateNumber: read("plate"),
+          // The artboard asks only for plate and model; the rest is completed during review.
+          vehicleYear: null,
+          vehicleSeatCapacity: null,
           labResultSubmittedAt: labIso,
           labTestConsentSigned: labConsent,
           backgroundCheckConsentSigned: backgroundConsent,
