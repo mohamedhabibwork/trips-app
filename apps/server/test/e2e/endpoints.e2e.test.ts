@@ -93,7 +93,10 @@ describe("E2E: every RPC endpoint is mounted, guarded, and never crashes over HT
         return;
       }
       if (isPublic) {
-        expect(response.status).toBe(HTTP_OK);
+        // A public procedure never asks for a session; one with a required input (an invite
+        // token, a lookup code) answers an empty body with a validation error instead.
+        const publicStatuses = hasInputSchema(procedure) ? [HTTP_OK, HTTP_BAD_REQUEST] : [HTTP_OK];
+        expect(publicStatuses).toContain(response.status);
         return;
       }
       const expectedStatuses = hasInputSchema(procedure)
