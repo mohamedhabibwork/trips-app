@@ -1,5 +1,5 @@
 // Data access through @trips-app/db. Every tenant-owned query filters by tenant (DAT-01).
-import { type Database, eq, schema } from "@trips-app/db";
+import { type Database, eq, linkUploadedFilesOnItemSave, schema } from "@trips-app/db";
 
 import type { OrganizationSettingsData, OrganizationWebhookEndpoint, UserRole } from "../model";
 
@@ -49,6 +49,17 @@ export function createOrganizationRepository(db: Database) {
           },
         })
         .returning();
+
+      await linkUploadedFilesOnItemSave(db, {
+        entityType: "organization",
+        entityId: tenantId,
+        tenantId,
+        urls: [values.logoUrl],
+        storageKeys: values.logoUrl ? [values.logoUrl] : [],
+        replaceExistingForEntity: true,
+        now,
+      });
+
       return upserted!;
     },
 

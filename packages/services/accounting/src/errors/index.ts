@@ -1,21 +1,34 @@
-// Error categories from SRS IF-04 and this service's error classes referencing centralized shared error codes.
 import {
   createServiceErrorMapper,
   ServiceError,
   type ServiceErrorOptions,
+  type SharedErrorCode,
 } from "@trips-app/domain";
 
-import type { SharedErrorCode } from "../types";
+export type { SharedErrorCode };
 
-export const ACCOUNTING_ERROR_CODE_MAP: Readonly<Record<string, SharedErrorCode>> = {};
+export type AccountingErrorCode =
+  | "ACCOUNTING_NOT_FOUND"
+  | "LEDGER_ENTRY_NOT_FOUND"
+  | "INSUFFICIENT_SETTLEMENT_BALANCE";
+
+export const ACCOUNTING_ERROR_CODE_MAP: Readonly<Record<AccountingErrorCode, SharedErrorCode>> = {
+  ACCOUNTING_NOT_FOUND: "RESOURCE_NOT_FOUND",
+  LEDGER_ENTRY_NOT_FOUND: "RESOURCE_NOT_FOUND",
+  INSUFFICIENT_SETTLEMENT_BALANCE: "CONFLICT",
+};
 
 export class AccountingServiceError extends ServiceError {
   constructor(
-    code: SharedErrorCode,
+    code: AccountingErrorCode | SharedErrorCode,
     message?: string,
     detailsOrOptions?: Record<string, unknown> | ServiceErrorOptions,
   ) {
-    super(code, message, detailsOrOptions, "accounting");
+    const sharedCode =
+      code in ACCOUNTING_ERROR_CODE_MAP
+        ? ACCOUNTING_ERROR_CODE_MAP[code as AccountingErrorCode]
+        : (code as SharedErrorCode);
+    super(sharedCode, message, detailsOrOptions, "accounting");
     this.name = "AccountingServiceError";
   }
 }

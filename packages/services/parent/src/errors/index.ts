@@ -1,21 +1,36 @@
-// Error categories from SRS IF-04 and this service's error classes referencing centralized shared error codes.
 import {
   createServiceErrorMapper,
   ServiceError,
   type ServiceErrorOptions,
+  type SharedErrorCode,
 } from "@trips-app/domain";
 
-import type { SharedErrorCode } from "../types";
+export type { SharedErrorCode };
 
-export const PARENT_ERROR_CODE_MAP: Readonly<Record<string, SharedErrorCode>> = {};
+export type ParentErrorCode =
+  | "PARENT_NOT_FOUND"
+  | "CHILD_LINK_NOT_FOUND"
+  | "BOOKING_NOT_FOUND"
+  | "FORBIDDEN_PARENT_ACCESS";
+
+export const PARENT_ERROR_CODE_MAP: Readonly<Record<ParentErrorCode, SharedErrorCode>> = {
+  PARENT_NOT_FOUND: "RESOURCE_NOT_FOUND",
+  CHILD_LINK_NOT_FOUND: "RESOURCE_NOT_FOUND",
+  BOOKING_NOT_FOUND: "RESOURCE_NOT_FOUND",
+  FORBIDDEN_PARENT_ACCESS: "FORBIDDEN",
+};
 
 export class ParentServiceError extends ServiceError {
   constructor(
-    code: SharedErrorCode,
+    code: ParentErrorCode | SharedErrorCode,
     message?: string,
     detailsOrOptions?: Record<string, unknown> | ServiceErrorOptions,
   ) {
-    super(code, message, detailsOrOptions, "parent");
+    const sharedCode =
+      code in PARENT_ERROR_CODE_MAP
+        ? PARENT_ERROR_CODE_MAP[code as ParentErrorCode]
+        : (code as SharedErrorCode);
+    super(sharedCode, message, detailsOrOptions, "parent");
     this.name = "ParentServiceError";
   }
 }

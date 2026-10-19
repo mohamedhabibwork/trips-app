@@ -20,4 +20,58 @@ export const appRouter = {
     }),
   lookups: lookupsRouter,
   ...serviceRouters,
+  organization: {
+    ...serviceRouters.organization,
+    employees: {
+      list: serviceRouters.employees.list.route({
+        method: "POST",
+        path: "/organization/employees/list",
+        operationId: "organizationEmployeesList",
+        summary: "Backward-compatible alias for /employees/list",
+        tags: ["organization"],
+      }),
+      getById: serviceRouters.employees.getById.route({
+        method: "POST",
+        path: "/organization/employees/getById",
+        operationId: "organizationEmployeesGetById",
+        summary: "Backward-compatible alias for /employees/getById",
+        tags: ["organization"],
+      }),
+      invite: serviceRouters.employees.invite.route({
+        method: "POST",
+        path: "/organization/employees/invite",
+        operationId: "organizationEmployeesInvite",
+        summary: "Backward-compatible alias for /employees/invite",
+        tags: ["organization"],
+      }),
+      resendInvite: serviceRouters.employees.resendInvite.route({
+        method: "POST",
+        path: "/organization/employees/resendInvite",
+        operationId: "organizationEmployeesResendInvite",
+        summary: "Backward-compatible alias for /employees/resendInvite",
+        tags: ["organization"],
+      }),
+      acceptInvite: serviceRouters.employees.acceptInvite.route({
+        method: "POST",
+        path: "/organization/employees/acceptInvite",
+        operationId: "organizationEmployeesAcceptInvite",
+        summary: "Backward-compatible alias for /employees/acceptInvite",
+        tags: ["organization"],
+      }),
+      updatePermissions: serviceRouters.employees.updatePermissions.route({
+        method: "POST",
+        path: "/organization/employees/updatePermissions",
+        operationId: "organizationEmployeesUpdatePermissions",
+        summary: "Backward-compatible alias for /employees/updatePermissions",
+        tags: ["organization"],
+      }),
+      updateStatus: serviceRouters.employees.updateStatus.route({
+        method: "POST",
+        path: "/organization/employees/updateStatus",
+        operationId: "organizationEmployeesUpdateStatus",
+        summary: "Backward-compatible alias for /employees/updateStatus",
+        tags: ["organization"],
+      }),
+    },
+  },
 };

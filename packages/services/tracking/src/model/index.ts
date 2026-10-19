@@ -1,2 +1,7 @@
-// Entities and aggregates with their invariants. No I/O.
-export {};
+import type {
+  TrackingAlertSeverity,
+  TrackingCoordinates,
+  TrackingEventType,
+} from "@trips-app/domain";
+
+export type { TrackingAlertSeverity, TrackingCoordinates, TrackingEventType };

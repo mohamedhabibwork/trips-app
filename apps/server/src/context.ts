@@ -1,21 +1,42 @@
 import { randomUUID } from "node:crypto";
 
 import { verifyAccessToken } from "@trips-app/domain";
+import type { NotificationSettings } from "@trips-app/rpc";
 
 import {
   cache,
   caches,
   db,
   disks,
+  getKitsHealth,
   logger,
   notifications,
   queue,
   queues,
   storage,
 } from "./services";
+import { ENV } from "./env.server";
 import type { AuthActor, CreateContextOptions, RpcContext } from "./types";
 
 export type { Context, CreateContextOptions } from "./types";
+
+function buildNotificationSettings(): NotificationSettings {
+  // Dry run means nothing leaves the machine: advertise no providers so every channel is skipped.
+  const dryRun = Boolean(ENV.NOTIFY_DRY_RUN);
+  const hasSms = !dryRun && ENV.SMS_ACCOUNT_SID && ENV.SMS_AUTH_TOKEN && ENV.SMS_FROM;
+  return {
+    providers: dryRun ? [] : getKitsHealth().notifications.configuredProviders,
+    webBaseUrl: ENV.WEB_APP_URL,
+    sms: hasSms
+      ? {
+          accountSid: ENV.SMS_ACCOUNT_SID as string,
+          authToken: ENV.SMS_AUTH_TOKEN as string,
+          from: ENV.SMS_FROM as string,
+          baseUrl: ENV.SMS_BASE_URL || undefined,
+        }
+      : undefined,
+  };
+}
 
 export async function createContext(options: CreateContextOptions): Promise<RpcContext> {
   const headers = options.context.request.headers;
@@ -73,6 +94,7 @@ export async function createContext(options: CreateContextOptions): Promise<RpcC
     storage,
     disks,
     notifications,
+    notificationSettings: buildNotificationSettings(),
     requestId,
     locale,
     ipAddress,

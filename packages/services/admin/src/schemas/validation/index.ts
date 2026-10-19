@@ -44,6 +44,6 @@ export const updateSystemSettingsSchema = z.object({
   featureFlags: featureFlagsPatchSchema.optional(),
   operational: operationalSettingsPatchSchema.optional(),
   maintenanceAndSupport: maintenanceSettingsPatchSchema.optional(),
-  secondApproverAdminAccountId: z.string().uuid().optional(),
+  secondApproverAdminAccountId: z.uuid().optional(),
   reason: z.string().min(5).max(500),
 });

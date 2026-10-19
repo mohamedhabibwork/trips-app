@@ -7,7 +7,12 @@ import {
 
 import type { SharedErrorCode } from "../types";
 
-export const TRAVELER_ERROR_CODE_MAP: Readonly<Record<string, SharedErrorCode>> = {};
+export const TRAVELER_ERROR_CODE_MAP: Readonly<Record<string, SharedErrorCode>> = {
+  ACCOUNT_NOT_FOUND: "RESOURCE_NOT_FOUND",
+  CONTACT_REQUIRED: "VALIDATION_ERROR",
+  DUPLICATE_CONTACT: "DUPLICATE_RESOURCE",
+  INVALID_COUNTRY: "VALIDATION_ERROR",
+};
 
 export class TravelerServiceError extends ServiceError {
   constructor(

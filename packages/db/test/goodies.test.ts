@@ -145,3 +145,24 @@ describe("Unit: query logging and mock database (@trips-app/db)", () => {
     await expect(run()).rejects.toThrow();
   });
 });
+
+describe("Unit: Drizzle-Zod table schemas (@trips-app/db/zod)", () => {
+  test("exports select, insert, and update schemas for privacyRequests, vehicleTypes, vehicles, trips, and tripVehicles", async () => {
+    const zodModule = await import("../src/zod");
+    expect(typeof zodModule.selectPrivacyRequestsSchema.safeParse).toBe("function");
+    expect(typeof zodModule.insertPrivacyRequestsSchema.safeParse).toBe("function");
+    expect(typeof zodModule.updatePrivacyRequestsSchema.safeParse).toBe("function");
+    expect(typeof zodModule.selectVehicleTypesSchema.safeParse).toBe("function");
+    expect(typeof zodModule.insertVehicleTypesSchema.safeParse).toBe("function");
+    expect(typeof zodModule.updateVehicleTypesSchema.safeParse).toBe("function");
+    expect(typeof zodModule.selectVehiclesSchema.safeParse).toBe("function");
+    expect(typeof zodModule.insertVehiclesSchema.safeParse).toBe("function");
+    expect(typeof zodModule.updateVehiclesSchema.safeParse).toBe("function");
+    expect(typeof zodModule.selectTripsSchema.safeParse).toBe("function");
+    expect(typeof zodModule.insertTripsSchema.safeParse).toBe("function");
+    expect(typeof zodModule.updateTripsSchema.safeParse).toBe("function");
+    expect(typeof zodModule.selectTripVehiclesSchema.safeParse).toBe("function");
+    expect(typeof zodModule.insertTripVehiclesSchema.safeParse).toBe("function");
+    expect(typeof zodModule.updateTripVehiclesSchema.safeParse).toBe("function");
+  });
+});

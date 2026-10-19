@@ -13,6 +13,7 @@ import {
   seedDefaultData,
   seedDemoData,
 } from "@trips-app/db";
+import { DEFAULT_LOOKUPS, LOOKUP_TYPE_CODES } from "@trips-app/domain";
 import { createAdminService } from "@trips-app/service-admin";
 import { computeTotpCode, createAuthService } from "@trips-app/service-auth";
 import { createOnboardingService } from "@trips-app/service-onboarding";
@@ -52,16 +53,16 @@ describe("Integration: Two-Tier Seeder, Auth, Roles, Settings & Onboarding", () 
 
   test("1. Default & Demo Seeders populate roles, permissions, plans, settings, organizations, and accounts idempotently", async () => {
     const defaultResult = await seedDefaultData(db);
-    expect(defaultResult.lookupTypesSeeded).toBe(23);
-    expect(defaultResult.lookupsSeeded).toBeGreaterThanOrEqual(95);
+    expect(defaultResult.lookupTypesSeeded).toBe(LOOKUP_TYPE_CODES.length);
+    expect(defaultResult.lookupsSeeded).toBeGreaterThanOrEqual(DEFAULT_LOOKUPS.length);
     expect(defaultResult.rolesSeeded).toBe(10);
     expect(defaultResult.permissionsSeeded).toBe(9);
     expect(defaultResult.plansSeeded).toBe(12);
     expect(defaultResult.bootstrapSuperAdmin.email).toBe("admin@trips-enjoy.com");
 
     const demoResult = await seedDemoData(db);
-    expect(demoResult.defaultSummary.lookupTypesSeeded).toBe(23);
-    expect(demoResult.defaultSummary.lookupsSeeded).toBeGreaterThanOrEqual(95);
+    expect(demoResult.defaultSummary.lookupTypesSeeded).toBe(LOOKUP_TYPE_CODES.length);
+    expect(demoResult.defaultSummary.lookupsSeeded).toBeGreaterThanOrEqual(DEFAULT_LOOKUPS.length);
     expect(demoResult.organizationsSeeded).toBe(3);
     expect(demoResult.accountsSeeded).toBeGreaterThanOrEqual(25);
     expect(demoResult.applicationsSeeded).toBe(8);

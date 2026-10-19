@@ -1,0 +1,64 @@
+%% Lookup system call flows. Diagram 1: web field, stale value resolved via `resolve`.
+%% Diagram 2: mobile field, cache-then-offline, same decision table.
+%% Source of truth: docs/lookups-architecture.md sections 4.2 and 6.
+
+sequenceDiagram
+  autonumber
+  participant S as LookupSelect
+  participant H as useLookupField
+  participant Q as TanStack Query
+  participant API as lookupsRouter
+  participant R as LookupsRepository
+  participant D as deriveLookupFieldView
+  participant T as TeSelect
+
+  S->>H: render(typeCode, value="DAY_EXCURSION", required)
+  H->>Q: getTypeByCode({ code: "TRIP_CATEGORY" })
+  Q->>API: POST /lookups/getTypeByCode
+  API->>R: getType(typeCode)
+  R-->>API: { type, items(active only), status: "ok" }
+  API-->>Q: 200 { lookupType, items, status }
+  Q-->>H: items (DAY_EXCURSION absent)
+  Note over H: stored code not in the active list
+  H->>Q: resolve({ typeCode, code: "DAY_EXCURSION" })
+  Q->>API: POST /lookups/resolve
+  API->>R: resolve(typeCode, code)
+  R-->>API: { item, status: "inactive" }
+  API-->>Q: 200 { item, status: "inactive" }
+  Q-->>H: resolved
+  H->>D: deriveLookupFieldView({ items, storedValue, resolved, required })
+  D-->>H: state="stale-inactive", options=[...active, disabled entry], canSave=true, canReselect=false
+  H-->>S: LookupFieldView
+  S->>T: options + selectedValue + notice="lookups.notice.staleInactive"
+  T-->>S: <option disabled>DAY_EXCURSION "Day Excursion (no longer available)"
+  Note over S,T: the user may pick another value, never re-pick the retired one; an untouched field still saves
+
+%% ---------------------------------------------------------------------------
+
+sequenceDiagram
+  autonumber
+  participant C as TeLookupSelect
+  participant H as LookupStateHolder
+  participant R as LookupsRepository
+  participant API as lookupsRouter
+  participant D as deriveLookupFieldView
+  participant T as TeSelect
+
+  C->>H: view("TRIP_CATEGORY", storedValue="DAY_EXCURSION")
+  H->>R: getTypeByCode("TRIP_CATEGORY")
+  alt cache hit within TTL
+    R-->>H: LookupTypeWithItems (cached)
+  else cache miss
+    R->>API: POST /lookups/getTypeByCode
+    API-->>R: 200 { lookupType, items, status }
+    R-->>H: LookupTypeWithItems
+  end
+  H->>R: resolve("TRIP_CATEGORY", "DAY_EXCURSION")
+  R-->>H: { item, status: "inactive" } (cached or fetched)
+  H->>D: deriveLookupFieldView(loaded status="ok", items, resolved)
+  D-->>H: LookupFieldView(state="stale-inactive")
+  H-->>C: LookupFieldView
+  C->>T: options + TeOption(enabled=false) for the retired entry
+  Note over C,T: identical state strings and identical ordering as web - one decision table
+  C->>H: (offline) retry("TRIP_CATEGORY")
+  H-->>C: LookupLoadState.Error + last-known list => state="error", notice="lookups.notice.loadFailed"

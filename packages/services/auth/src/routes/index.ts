@@ -1,6 +1,11 @@
 // oRPC procedures for Auth. Validate input with schemas, call services, map errors.
 // Every service exposes at least one procedure. Build them on the local procedure in ./procedure.
 import {
+  createAuthNotifierFromContext,
+  webBaseUrlFromContext,
+} from "@trips-app/service-notifications";
+
+import {
   acceptEmployeeInviteSchema,
   adminAcceptInviteSchema,
   adminEnrollTotpSchema,
@@ -43,6 +48,18 @@ import {
   superAdminProcedure,
 } from "./procedure";
 
+type RouteContext = Parameters<typeof createAuthNotifierFromContext>[0] & {
+  db: Parameters<typeof createAuthService>[0];
+};
+
+/** Builds the auth service for one request, wired to that request's mail and SMS providers. */
+function authService(context: RouteContext) {
+  return createAuthService(context.db, {
+    notifier: createAuthNotifierFromContext(context),
+    webBaseUrl: webBaseUrlFromContext(context),
+  });
+}
+
 export const routes = {
   status: procedure
     .route({
@@ -63,7 +80,7 @@ export const routes = {
       summary: "Get all 10 user roles and their authentication rules",
       tags: ["auth"],
     })
-    .handler(({ context }) => createAuthService(context.db).getRoleCatalog()),
+    .handler(({ context }) => authService(context).getRoleCatalog()),
 
   getPermissionCatalog: procedure
     .route({
@@ -73,7 +90,7 @@ export const routes = {
       summary: "Get the 9-area employee permission catalog and presets (D-284)",
       tags: ["auth"],
     })
-    .handler(({ context }) => createAuthService(context.db).getPermissionCatalog()),
+    .handler(({ context }) => authService(context).getPermissionCatalog()),
 
   getPlanCatalog: procedure
     .route({
@@ -84,7 +101,7 @@ export const routes = {
       tags: ["auth"],
     })
     .input(getPlanCatalogSchema)
-    .handler(({ context, input }) => createAuthService(context.db).getPlanCatalog(input)),
+    .handler(({ context, input }) => authService(context).getPlanCatalog(input)),
 
   getAuthSettings: procedure
     .route({
@@ -94,7 +111,7 @@ export const routes = {
       summary: "Get global authentication and security policy settings",
       tags: ["auth"],
     })
-    .handler(({ context }) => createAuthService(context.db).getAuthSettings()),
+    .handler(({ context }) => authService(context).getAuthSettings()),
 
   updateAuthSettings: superAdminProcedure
     .route({
@@ -106,7 +123,7 @@ export const routes = {
     })
     .input(updateAuthSettingsSchema)
     .handler(({ context, input }) =>
-      createAuthService(context.db).updateAuthSettings(context.auth, input, context),
+      authService(context).updateAuthSettings(context.auth, input, context),
     ),
 
   // Registration & OTP Verification
@@ -119,9 +136,7 @@ export const routes = {
       tags: ["auth"],
     })
     .input(registerTravelerSchema)
-    .handler(({ context, input }) =>
-      createAuthService(context.db).registerTraveler(input, context),
-    ),
+    .handler(({ context, input }) => authService(context).registerTraveler(input, context)),
 
   registerSupplierAccount: procedure
     .route({
@@ -132,9 +147,7 @@ export const routes = {
       tags: ["auth"],
     })
     .input(registerSupplierAccountSchema)
-    .handler(({ context, input }) =>
-      createAuthService(context.db).registerSupplierAccount(input, context),
-    ),
+    .handler(({ context, input }) => authService(context).registerSupplierAccount(input, context)),
 
   verifyOtp: procedure
     .route({
@@ -145,7 +158,7 @@ export const routes = {
       tags: ["auth"],
     })
     .input(verifyOtpSchema)
-    .handler(({ context, input }) => createAuthService(context.db).verifyOtp(input, context)),
+    .handler(({ context, input }) => authService(context).verifyOtp(input, context)),
 
   resendOtp: procedure
     .route({
@@ -156,7 +169,7 @@ export const routes = {
       tags: ["auth"],
     })
     .input(resendOtpSchema)
-    .handler(({ context, input }) => createAuthService(context.db).resendOtp(input)),
+    .handler(({ context, input }) => authService(context).resendOtp(input)),
 
   // Sign-In for Traveler, Parent, Driver, Photographer
   signIn: procedure
@@ -168,7 +181,7 @@ export const routes = {
       tags: ["auth"],
     })
     .input(signInSchema)
-    .handler(({ context, input }) => createAuthService(context.db).signIn(input, context)),
+    .handler(({ context, input }) => authService(context).signIn(input, context)),
 
   // Platform Admin Sign-In, TOTP & Invites (WF-ID-04)
   adminSignIn: procedure
@@ -180,7 +193,7 @@ export const routes = {
       tags: ["auth"],
     })
     .input(adminSignInSchema)
-    .handler(({ context, input }) => createAuthService(context.db).adminSignIn(input)),
+    .handler(({ context, input }) => authService(context).adminSignIn(input)),
 
   adminEnrollTotp: procedure
     .route({
@@ -191,7 +204,7 @@ export const routes = {
       tags: ["auth"],
     })
     .input(adminEnrollTotpSchema)
-    .handler(({ context, input }) => createAuthService(context.db).adminEnrollTotp(input, context)),
+    .handler(({ context, input }) => authService(context).adminEnrollTotp(input, context)),
 
   adminVerifyTotp: procedure
     .route({
@@ -202,7 +215,7 @@ export const routes = {
       tags: ["auth"],
     })
     .input(adminVerifyTotpSchema)
-    .handler(({ context, input }) => createAuthService(context.db).adminVerifyTotp(input, context)),
+    .handler(({ context, input }) => authService(context).adminVerifyTotp(input, context)),
 
   adminInviteStaff: superAdminProcedure
     .route({
@@ -214,7 +227,7 @@ export const routes = {
     })
     .input(adminInviteStaffSchema)
     .handler(({ context, input }) =>
-      createAuthService(context.db).adminInviteStaff(context.auth, input, context),
+      authService(context).adminInviteStaff(context.auth, input, context),
     ),
 
   adminAcceptInvite: procedure
@@ -226,9 +239,7 @@ export const routes = {
       tags: ["auth"],
     })
     .input(adminAcceptInviteSchema)
-    .handler(({ context, input }) =>
-      createAuthService(context.db).adminAcceptInvite(input, context),
-    ),
+    .handler(({ context, input }) => authService(context).adminAcceptInvite(input, context)),
 
   adminResetTotp: superAdminProcedure
     .route({
@@ -240,7 +251,7 @@ export const routes = {
     })
     .input(adminResetTotpSchema)
     .handler(({ context, input }) =>
-      createAuthService(context.db).adminResetTotp(context.auth, input, context),
+      authService(context).adminResetTotp(context.auth, input, context),
     ),
 
   // Organization Owner & Employee Sign-In, 2FA & Invites (WF-ID-05)
@@ -253,7 +264,7 @@ export const routes = {
       tags: ["auth"],
     })
     .input(staffSignInSchema)
-    .handler(({ context, input }) => createAuthService(context.db).staffSignIn(input)),
+    .handler(({ context, input }) => authService(context).staffSignIn(input)),
 
   staffSetupSecondFactor: procedure
     .route({
@@ -264,9 +275,7 @@ export const routes = {
       tags: ["auth"],
     })
     .input(staffSetupSecondFactorSchema)
-    .handler(({ context, input }) =>
-      createAuthService(context.db).staffSetupSecondFactor(input, context),
-    ),
+    .handler(({ context, input }) => authService(context).staffSetupSecondFactor(input, context)),
 
   staffVerifySecondFactor: procedure
     .route({
@@ -277,9 +286,7 @@ export const routes = {
       tags: ["auth"],
     })
     .input(staffVerifySecondFactorSchema)
-    .handler(({ context, input }) =>
-      createAuthService(context.db).staffVerifySecondFactor(input, context),
-    ),
+    .handler(({ context, input }) => authService(context).staffVerifySecondFactor(input, context)),
 
   inviteEmployee: orgEmployeeManageProcedure
     .route({
@@ -291,7 +298,7 @@ export const routes = {
     })
     .input(inviteEmployeeSchema)
     .handler(({ context, input }) =>
-      createAuthService(context.db).inviteEmployee(context.auth, input, context),
+      authService(context).inviteEmployee(context.auth, input, context),
     ),
 
   acceptEmployeeInvite: procedure
@@ -303,9 +310,7 @@ export const routes = {
       tags: ["auth"],
     })
     .input(acceptEmployeeInviteSchema)
-    .handler(({ context, input }) =>
-      createAuthService(context.db).acceptEmployeeInvite(input, context),
-    ),
+    .handler(({ context, input }) => authService(context).acceptEmployeeInvite(input, context)),
 
   // Vehicle Moderator Sign-In (SCR-PUB-19, D-107)
   moderatorSignIn: procedure
@@ -317,7 +322,7 @@ export const routes = {
       tags: ["auth"],
     })
     .input(moderatorSignInSchema)
-    .handler(({ context, input }) => createAuthService(context.db).moderatorSignIn(input, context)),
+    .handler(({ context, input }) => authService(context).moderatorSignIn(input, context)),
 
   // Session Management, Role Switcher & Organization Switcher (FR-AUTH-06..07, FR-AUTH-10)
   refreshSession: procedure
@@ -329,7 +334,7 @@ export const routes = {
       tags: ["auth"],
     })
     .input(refreshSessionSchema)
-    .handler(({ context, input }) => createAuthService(context.db).refreshSession(input)),
+    .handler(({ context, input }) => authService(context).refreshSession(input)),
 
   signOut: procedure
     .route({
@@ -340,9 +345,7 @@ export const routes = {
       tags: ["auth"],
     })
     .input(signOutSchema)
-    .handler(({ context, input }) =>
-      createAuthService(context.db).signOut(context.auth ?? null, input),
-    ),
+    .handler(({ context, input }) => authService(context).signOut(context.auth ?? null, input)),
 
   getSession: authedProcedure
     .route({
@@ -366,7 +369,7 @@ export const routes = {
       tags: ["auth"],
     })
     .handler(({ context }) =>
-      createAuthService(context.db).listMyRolesAndOrganizations(context.auth.accountId),
+      authService(context).listMyRolesAndOrganizations(context.auth.accountId),
     ),
 
   switchRole: authedProcedure
@@ -378,7 +381,7 @@ export const routes = {
       tags: ["auth"],
     })
     .input(switchRoleSchema)
-    .handler(({ context, input }) => createAuthService(context.db).switchRole(context.auth, input)),
+    .handler(({ context, input }) => authService(context).switchRole(context.auth, input)),
 
   switchOrganization: authedProcedure
     .route({
@@ -389,9 +392,7 @@ export const routes = {
       tags: ["auth"],
     })
     .input(switchOrganizationSchema)
-    .handler(({ context, input }) =>
-      createAuthService(context.db).switchOrganization(context.auth, input),
-    ),
+    .handler(({ context, input }) => authService(context).switchOrganization(context.auth, input)),
 
   // Password Reset, Contact Change & Account Lifecycle (FR-AUTH-08..09)
   requestPasswordReset: procedure
@@ -403,7 +404,7 @@ export const routes = {
       tags: ["auth"],
     })
     .input(requestPasswordResetSchema)
-    .handler(({ context, input }) => createAuthService(context.db).requestPasswordReset(input)),
+    .handler(({ context, input }) => authService(context).requestPasswordReset(input)),
 
   confirmPasswordReset: procedure
     .route({
@@ -414,7 +415,7 @@ export const routes = {
       tags: ["auth"],
     })
     .input(confirmPasswordResetSchema)
-    .handler(({ context, input }) => createAuthService(context.db).confirmPasswordReset(input)),
+    .handler(({ context, input }) => authService(context).confirmPasswordReset(input)),
 
   requestContactChange: authedProcedure
     .route({
@@ -426,7 +427,7 @@ export const routes = {
     })
     .input(requestContactChangeSchema)
     .handler(({ context, input }) =>
-      createAuthService(context.db).requestContactChange(context.auth.accountId, input),
+      authService(context).requestContactChange(context.auth.accountId, input),
     ),
 
   confirmContactChange: authedProcedure
@@ -439,7 +440,7 @@ export const routes = {
     })
     .input(confirmContactChangeSchema)
     .handler(({ context, input }) =>
-      createAuthService(context.db).confirmContactChange(context.auth.accountId, input),
+      authService(context).confirmContactChange(context.auth.accountId, input),
     ),
 
   changeSignInMethod: authedProcedure
@@ -452,7 +453,7 @@ export const routes = {
     })
     .input(changeSignInMethodSchema)
     .handler(({ context, input }) =>
-      createAuthService(context.db).changeSignInMethod(context.auth.accountId, input),
+      authService(context).changeSignInMethod(context.auth.accountId, input),
     ),
 
   suspendAccount: opsOrSuperAdminProcedure
@@ -465,7 +466,7 @@ export const routes = {
     })
     .input(suspendAccountSchema)
     .handler(({ context, input }) =>
-      createAuthService(context.db).suspendAccount(context.auth, input, context),
+      authService(context).suspendAccount(context.auth, input, context),
     ),
 
   reinstateAccount: opsOrSuperAdminProcedure
@@ -478,7 +479,7 @@ export const routes = {
     })
     .input(reinstateAccountSchema)
     .handler(({ context, input }) =>
-      createAuthService(context.db).reinstateAccount(context.auth, input, context),
+      authService(context).reinstateAccount(context.auth, input, context),
     ),
 
   requestAccountDeletion: authedProcedure
@@ -491,7 +492,7 @@ export const routes = {
     })
     .input(requestAccountDeletionSchema)
     .handler(({ context, input }) =>
-      createAuthService(context.db).requestAccountDeletion(context.auth, input, context),
+      authService(context).requestAccountDeletion(context.auth, input, context),
     ),
 
   restoreAccountFromDeletion: procedure
@@ -503,9 +504,7 @@ export const routes = {
       tags: ["auth"],
     })
     .input(restoreAccountFromDeletionSchema)
-    .handler(({ context, input }) =>
-      createAuthService(context.db).restoreAccountFromDeletion(input),
-    ),
+    .handler(({ context, input }) => authService(context).restoreAccountFromDeletion(input)),
 
   runDeletionPurgeSweep: superAdminProcedure
     .route({
@@ -515,5 +514,5 @@ export const routes = {
       summary: "Execute daily 05:00 UTC data-erasure sweep for accounts past day 30 (BRL-15)",
       tags: ["auth"],
     })
-    .handler(({ context }) => createAuthService(context.db).runDeletionPurgeSweep()),
+    .handler(({ context }) => authService(context).runDeletionPurgeSweep()),
 };

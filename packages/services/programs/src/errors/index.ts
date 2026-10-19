@@ -7,7 +7,11 @@ import {
 
 import type { SharedErrorCode } from "../types";
 
-export const PROGRAMS_ERROR_CODE_MAP: Readonly<Record<string, SharedErrorCode>> = {};
+export const PROGRAMS_ERROR_CODE_MAP: Readonly<Record<string, SharedErrorCode>> = {
+  PROGRAM_NOT_FOUND: "RESOURCE_NOT_FOUND",
+  TRIP_NOT_FOUND: "RESOURCE_NOT_FOUND",
+  PROGRAM_LIMIT_EXCEEDED: "PLAN_LIMIT_EXCEEDED",
+};
 
 export class ProgramsServiceError extends ServiceError {
   constructor(

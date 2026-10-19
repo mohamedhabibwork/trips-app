@@ -7,7 +7,11 @@ import {
 
 import type { SharedErrorCode } from "../types";
 
-export const STAFFING_ERROR_CODE_MAP: Readonly<Record<string, SharedErrorCode>> = {};
+export const STAFFING_ERROR_CODE_MAP: Readonly<Record<string, SharedErrorCode>> = {
+  TRIP_NOT_FOUND: "RESOURCE_NOT_FOUND",
+  VEHICLE_NOT_FOUND: "RESOURCE_NOT_FOUND",
+  ASSIGNMENT_NOT_FOUND: "RESOURCE_NOT_FOUND",
+};
 
 export class StaffingServiceError extends ServiceError {
   constructor(

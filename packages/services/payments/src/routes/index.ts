@@ -1,15 +1,87 @@
-// oRPC procedures for Payments. Validate input with schemas, call services, map errors.
-// Every service exposes at least one procedure. Build them on the local procedure in ./procedure.
-import { procedure } from "./procedure";
+import {
+  confirmPaymentSchema,
+  createPaymentIntentSchema,
+  openDisputeSchema,
+  paymentTransactionDtoSchema,
+  refundPaymentSchema,
+  resolveDisputeSchema,
+} from "../schemas";
+import { createPaymentsService } from "../services";
+import { paymentsAdminProcedure, paymentsAuthenticatedProcedure, procedure } from "./procedure";
+
+const status = procedure
+  .route({
+    method: "GET",
+    path: "/payments/status",
+    summary: "Health check for the payments service",
+    tags: ["payments"],
+  })
+  .handler(async () => ({ service: "payments" as const, status: "ok" as const }));
+
+const createPaymentIntent = paymentsAuthenticatedProcedure
+  .input(createPaymentIntentSchema)
+  .output(paymentTransactionDtoSchema)
+  .handler(async ({ context, input }) => {
+    const svc = createPaymentsService({ db: context.db });
+    return await svc.createPaymentIntent(context.auth.accountId, input);
+  });
+
+const confirmPayment = paymentsAuthenticatedProcedure
+  .input(confirmPaymentSchema)
+  .output(paymentTransactionDtoSchema)
+  .handler(async ({ context, input }) => {
+    const svc = createPaymentsService({ db: context.db });
+    return await svc.confirmPayment(input, {
+      accountId: context.auth.accountId,
+      tenantId: context.auth.activeTenantId,
+      role: context.auth.activeRole,
+    });
+  });
+
+const refundPayment = paymentsAuthenticatedProcedure
+  .input(refundPaymentSchema)
+  .output(paymentTransactionDtoSchema)
+  .handler(async ({ context, input }) => {
+    const svc = createPaymentsService({ db: context.db });
+    return await svc.refundPayment(
+      {
+        accountId: context.auth.accountId,
+        tenantId: context.auth.activeTenantId,
+        role: context.auth.activeRole,
+      },
+      input,
+    );
+  });
+
+const openDispute = paymentsAuthenticatedProcedure
+  .input(openDisputeSchema)
+  .output(paymentTransactionDtoSchema)
+  .handler(async ({ context, input }) => {
+    const svc = createPaymentsService({ db: context.db });
+    return await svc.openDispute(context.auth.accountId, input);
+  });
+
+const resolveDispute = paymentsAdminProcedure
+  .input(resolveDisputeSchema)
+  .output(paymentTransactionDtoSchema)
+  .handler(async ({ context, input }) => {
+    const svc = createPaymentsService({ db: context.db });
+    return await svc.resolveDispute(input);
+  });
+
+const listPayments = paymentsAuthenticatedProcedure
+  .output(paymentTransactionDtoSchema.array())
+  .handler(async ({ context }) => {
+    const svc = createPaymentsService({ db: context.db });
+    return await svc.listMyPayments(context.auth.accountId, context.auth.activeTenantId);
+  });
 
 export const routes = {
-  status: procedure
-    .route({
-      method: "GET",
-      path: "/payments/status",
-      operationId: "paymentsStatus",
-      summary: "Payments service health status",
-      tags: ["payments"],
-    })
-    .handler(() => ({ service: "payments", status: "ok" as const })),
+  status,
+  createPaymentIntent,
+  confirmPayment,
+  refundPayment,
+  openDispute,
+  resolveDispute,
+  listPayments,
 };

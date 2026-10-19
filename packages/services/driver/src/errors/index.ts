@@ -1,21 +1,36 @@
-// Error categories from SRS IF-04 and this service's error classes referencing centralized shared error codes.
 import {
   createServiceErrorMapper,
   ServiceError,
   type ServiceErrorOptions,
+  type SharedErrorCode,
 } from "@trips-app/domain";
 
-import type { SharedErrorCode } from "../types";
+export type { SharedErrorCode };
 
-export const DRIVER_ERROR_CODE_MAP: Readonly<Record<string, SharedErrorCode>> = {};
+export type DriverErrorCode =
+  | "DRIVER_NOT_FOUND"
+  | "DRIVER_PROFILE_NOT_FOUND"
+  | "LAB_TEST_NOT_FOUND"
+  | "FORBIDDEN_LAB_TEST_ACCESS";
+
+export const DRIVER_ERROR_CODE_MAP: Readonly<Record<DriverErrorCode, SharedErrorCode>> = {
+  DRIVER_NOT_FOUND: "RESOURCE_NOT_FOUND",
+  DRIVER_PROFILE_NOT_FOUND: "RESOURCE_NOT_FOUND",
+  LAB_TEST_NOT_FOUND: "RESOURCE_NOT_FOUND",
+  FORBIDDEN_LAB_TEST_ACCESS: "FORBIDDEN",
+};
 
 export class DriverServiceError extends ServiceError {
   constructor(
-    code: SharedErrorCode,
+    code: DriverErrorCode | SharedErrorCode,
     message?: string,
     detailsOrOptions?: Record<string, unknown> | ServiceErrorOptions,
   ) {
-    super(code, message, detailsOrOptions, "driver");
+    const sharedCode =
+      code in DRIVER_ERROR_CODE_MAP
+        ? DRIVER_ERROR_CODE_MAP[code as DriverErrorCode]
+        : (code as SharedErrorCode);
+    super(sharedCode, message, detailsOrOptions, "driver");
     this.name = "DriverServiceError";
   }
 }

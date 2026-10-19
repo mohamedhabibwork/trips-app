@@ -25,4 +25,10 @@ export {
   OPENAPI_SERVICE_TAGS,
   openAPIGenerator,
 } from "./openapi";
+export {
+  createMediaService,
+  MEDIA_CLEANUP_QUEUE_NAME,
+  UNLINKED_FILE_TTL_HOURS,
+  UNLINKED_FILE_TTL_MS,
+} from "@trips-app/service-media";
 export type * from "./types";

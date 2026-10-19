@@ -7,7 +7,11 @@ import {
 
 import type { SharedErrorCode } from "../types";
 
-export const COUPONS_ERROR_CODE_MAP: Readonly<Record<string, SharedErrorCode>> = {};
+export const COUPONS_ERROR_CODE_MAP: Readonly<Record<string, SharedErrorCode>> = {
+  COUPON_NOT_FOUND: "RESOURCE_NOT_FOUND",
+  COUPON_EXPIRED: "COUPON_INVALID_OR_EXPIRED",
+  COUPON_INVALID: "COUPON_INVALID_OR_EXPIRED",
+};
 
 export class CouponsServiceError extends ServiceError {
   constructor(

@@ -56,7 +56,7 @@ export const submitOrganizationApplicationSchema = organizationBaseInsertSchema.
   signatoryNationalId: z.string().min(6).max(30),
   payoutIbanOrWallet: z.string().min(6).max(64),
   billingContactName: z.string().min(2).max(120),
-  billingContactEmail: z.string().email(),
+  billingContactEmail: z.email(),
   billingContactPhone: z.string().min(8).max(25),
   billingAddress: z.string().min(5).max(300),
   invoiceLanguage: z.enum(["ar", "en"]).default("ar"),
@@ -138,23 +138,23 @@ export const submitPhotographerApplicationSchema = photographerProfileBaseInsert
 
 export const getApplicationStatusSchema = z
   .object({
-    applicationId: z.string().uuid().optional(),
+    applicationId: z.uuid().optional(),
   })
   .optional();
 
 export const requestChangesExtensionSchema = z.object({
-  applicationId: z.string().uuid(),
+  applicationId: z.uuid(),
   reason: z.string().min(3).max(300).optional(),
 });
 
 export const resubmitApplicationSchema = z.object({
-  applicationId: z.string().uuid(),
+  applicationId: z.uuid(),
   updatedPayload: z.record(z.string(), z.unknown()),
   documents: z.array(documentUploadInputSchema).optional(),
 });
 
 export const submitAppealSchema = z.object({
-  applicationId: z.string().uuid(),
+  applicationId: z.uuid(),
   appealStatement: z.string().min(10).max(2000),
   documents: z.array(documentUploadInputSchema).optional(),
 });
@@ -163,7 +163,7 @@ export const onboardOrganizationSupplierSchema = z.object({
   supplierRole: z.enum(["org_driver", "org_photographer"]),
   fullName: z.string().min(2).max(120),
   phone: z.string().min(8).max(25),
-  email: z.string().email().optional().nullable(),
+  email: z.email().optional().nullable(),
   password: z.string().min(12).max(128).optional(),
   nationalId: z.string().min(6).max(30),
   // Driver-specific fields
@@ -183,7 +183,7 @@ export const listOrganizationSuppliersSchema = z
   .optional();
 
 export const removeOrganizationSupplierSchema = z.object({
-  supplierAccountId: z.string().uuid(),
+  supplierAccountId: z.uuid(),
   supplierRole: z.enum(["org_driver", "org_photographer"]).optional(),
   reason: z.string().min(3).max(500).optional(),
 });
@@ -198,7 +198,7 @@ export const listReviewQueueSchema = z
   .optional();
 
 export const getApplicationDetailSchema = z.object({
-  applicationId: z.string().uuid(),
+  applicationId: z.uuid(),
 });
 
 export const verifyApplicationDocumentSchema = createUpdateSchema(schema.applicationDocuments, {
@@ -210,14 +210,14 @@ export const verifyApplicationDocumentSchema = createUpdateSchema(schema.applica
     rejectionNote: true,
   })
   .extend({
-    applicationId: z.string().uuid(),
-    documentId: z.string().uuid(),
+    applicationId: z.uuid(),
+    documentId: z.uuid(),
     verifiedStatus: z.enum(["verified", "rejected"]),
   });
 
 export const openApplicationDocumentSchema = z.object({
-  applicationId: z.string().uuid(),
-  documentId: z.string().uuid(),
+  applicationId: z.uuid(),
+  documentId: z.uuid(),
   reason: z.string().max(300).optional(),
 });
 
@@ -229,13 +229,13 @@ export const approveApplicationSchema = createUpdateSchema(schema.applications, 
     decisionNotes: true,
   })
   .extend({
-    applicationId: z.string().uuid(),
+    applicationId: z.uuid(),
     decisionReasonCode: z.string().min(2).max(80).default("verified_complete"),
     decisionNotes: z.string().max(1000).optional(),
   });
 
 export const requestApplicationChangesSchema = z.object({
-  applicationId: z.string().uuid(),
+  applicationId: z.uuid(),
   decisionReasonCode: z.string().min(2).max(80),
   decisionNotes: z.string().min(5).max(1000),
   checklist: z
@@ -249,13 +249,13 @@ export const requestApplicationChangesSchema = z.object({
 });
 
 export const rejectApplicationSchema = z.object({
-  applicationId: z.string().uuid(),
+  applicationId: z.uuid(),
   decisionReasonCode: z.string().min(2).max(80),
   decisionNotes: z.string().min(5).max(1000),
 });
 
 export const decideAppealSchema = z.object({
-  applicationId: z.string().uuid(),
+  applicationId: z.uuid(),
   decision: z.enum(["approve", "uphold_rejection"]),
   decisionReasonCode: z.string().min(2).max(80),
   decisionNotes: z.string().min(5).max(1000),

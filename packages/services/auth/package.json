@@ -18,6 +18,7 @@
     "@trips-app/db": "workspace:*",
     "@trips-app/domain": "workspace:*",
     "@trips-app/rpc": "workspace:*",
+    "@trips-app/service-notifications": "workspace:*",
     "zod": "catalog:"
   },
   "devDependencies": {

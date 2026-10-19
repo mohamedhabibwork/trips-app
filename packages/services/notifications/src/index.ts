@@ -5,5 +5,20 @@ export {
   NotificationsServiceError,
   mapNotificationsError,
 } from "./errors";
-export { routes } from "./routes";
+export { maskContact, renderAuthMessage } from "./model";
+export { createNotificationsRepository, type NotificationsRepository } from "./repository";
+export {
+  createAuthNotifierFromContext,
+  type NotifierContext,
+  routes,
+  webBaseUrlFromContext,
+} from "./routes";
+export * from "./schemas";
+export {
+  createAuthNotifier,
+  createEmailSender,
+  createNotificationsService,
+  createTwilioSmsSender,
+  type NotificationsService,
+} from "./services";
 export type * from "./types";

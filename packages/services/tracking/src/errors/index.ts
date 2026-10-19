@@ -1,21 +1,34 @@
-// Error categories from SRS IF-04 and this service's error classes referencing centralized shared error codes.
 import {
   createServiceErrorMapper,
   ServiceError,
   type ServiceErrorOptions,
+  type SharedErrorCode,
 } from "@trips-app/domain";
 
-import type { SharedErrorCode } from "../types";
+export type { SharedErrorCode };
 
-export const TRACKING_ERROR_CODE_MAP: Readonly<Record<string, SharedErrorCode>> = {};
+export type TrackingErrorCode =
+  | "TRACKING_NOT_FOUND"
+  | "TRIP_NOT_FOUND"
+  | "FORBIDDEN_TRACKING_ACCESS";
+
+export const TRACKING_ERROR_CODE_MAP: Readonly<Record<TrackingErrorCode, SharedErrorCode>> = {
+  TRACKING_NOT_FOUND: "RESOURCE_NOT_FOUND",
+  TRIP_NOT_FOUND: "RESOURCE_NOT_FOUND",
+  FORBIDDEN_TRACKING_ACCESS: "FORBIDDEN",
+};
 
 export class TrackingServiceError extends ServiceError {
   constructor(
-    code: SharedErrorCode,
+    code: TrackingErrorCode | SharedErrorCode,
     message?: string,
     detailsOrOptions?: Record<string, unknown> | ServiceErrorOptions,
   ) {
-    super(code, message, detailsOrOptions, "tracking");
+    const sharedCode =
+      code in TRACKING_ERROR_CODE_MAP
+        ? TRACKING_ERROR_CODE_MAP[code as TrackingErrorCode]
+        : (code as SharedErrorCode);
+    super(sharedCode, message, detailsOrOptions, "tracking");
     this.name = "TrackingServiceError";
   }
 }

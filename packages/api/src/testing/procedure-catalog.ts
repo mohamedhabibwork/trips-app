@@ -28,6 +28,12 @@ export const INTENTIONALLY_PUBLIC: Readonly<Record<string, string>> = {
     "Read-only batch query for public lookup lists by lookup_types.code array used by web and mobile bootstrap.",
   "lookups.getByCode":
     "Read-only public lookup item query by lookups.code (and child lookups) used by web and mobile screens.",
+  "trips.browsePublicTrips":
+    "Read-only public trip discovery endpoint for web and mobile travelers (SCR-TRV-01, FR-TRIP-02); filters out draft, cancelled, targeted, and active VIP early-access trips.",
+  "trips.getPublicTripDetail":
+    "Read-only public trip detail endpoint for web and mobile travelers (SCR-TRV-02, FR-TRIP-02); enforces visibility and VIP early-access rules.",
+  "programs.listPublicTripPrograms":
+    "Read-only public trip program itinerary endpoint for web and mobile travelers viewing published trips (SCR-TRV-02).",
 };
 
 function isProcedure(node: unknown): node is AnyProcedure {

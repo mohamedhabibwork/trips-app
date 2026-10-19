@@ -7,7 +7,10 @@ import {
 
 import type { SharedErrorCode } from "../types";
 
-export const NEGOTIATION_ERROR_CODE_MAP: Readonly<Record<string, SharedErrorCode>> = {};
+export const NEGOTIATION_ERROR_CODE_MAP: Readonly<Record<string, SharedErrorCode>> = {
+  NEGOTIATION_NOT_FOUND: "RESOURCE_NOT_FOUND",
+  NEGOTIATION_EXPIRED: "INVALID_STATE_TRANSITION",
+};
 
 export class NegotiationServiceError extends ServiceError {
   constructor(

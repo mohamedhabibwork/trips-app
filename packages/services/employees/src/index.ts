@@ -2,4 +2,5 @@
 export const SERVICE_ID = "employees";
 export { EMPLOYEES_ERROR_CODE_MAP, EmployeesServiceError, mapEmployeesError } from "./errors";
 export { routes } from "./routes";
+export { createEmployeesService } from "./services";
 export type * from "./types";

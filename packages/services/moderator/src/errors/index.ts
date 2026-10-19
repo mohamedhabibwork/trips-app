@@ -1,21 +1,34 @@
-// Error categories from SRS IF-04 and this service's error classes referencing centralized shared error codes.
 import {
   createServiceErrorMapper,
   ServiceError,
   type ServiceErrorOptions,
+  type SharedErrorCode,
 } from "@trips-app/domain";
 
-import type { SharedErrorCode } from "../types";
+export type { SharedErrorCode };
 
-export const MODERATOR_ERROR_CODE_MAP: Readonly<Record<string, SharedErrorCode>> = {};
+export type ModeratorErrorCode =
+  | "MODERATOR_NOT_FOUND"
+  | "ASSIGNMENT_NOT_FOUND"
+  | "PASSENGER_NOT_IN_VEHICLE_MANIFEST";
+
+export const MODERATOR_ERROR_CODE_MAP: Readonly<Record<ModeratorErrorCode, SharedErrorCode>> = {
+  MODERATOR_NOT_FOUND: "RESOURCE_NOT_FOUND",
+  ASSIGNMENT_NOT_FOUND: "RESOURCE_NOT_FOUND",
+  PASSENGER_NOT_IN_VEHICLE_MANIFEST: "FORBIDDEN",
+};
 
 export class ModeratorServiceError extends ServiceError {
   constructor(
-    code: SharedErrorCode,
+    code: ModeratorErrorCode | SharedErrorCode,
     message?: string,
     detailsOrOptions?: Record<string, unknown> | ServiceErrorOptions,
   ) {
-    super(code, message, detailsOrOptions, "moderator");
+    const sharedCode =
+      code in MODERATOR_ERROR_CODE_MAP
+        ? MODERATOR_ERROR_CODE_MAP[code as ModeratorErrorCode]
+        : (code as SharedErrorCode);
+    super(sharedCode, message, detailsOrOptions, "moderator");
     this.name = "ModeratorServiceError";
   }
 }

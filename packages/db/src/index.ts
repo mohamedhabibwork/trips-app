@@ -24,6 +24,7 @@ export {
 } from "drizzle-orm";
 export * from "./columns";
 export * from "./lookups";
+export * from "./media-links";
 export * as schema from "./schema";
 export { createInsertSchema, createSelectSchema, createUpdateSchema } from "./zod";
 export * from "./seed";

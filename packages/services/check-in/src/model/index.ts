@@ -1,2 +1,3 @@
-// Entities and aggregates with their invariants. No I/O.
-export {};
+import type { CheckInMethod, CheckInStatus } from "@trips-app/domain";
+
+export type { CheckInMethod, CheckInStatus };

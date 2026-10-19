@@ -5,6 +5,7 @@ import { resolve } from "node:path";
 import { createDb } from "../index";
 import { seedDefaultData } from "./default";
 import { seedDemoData } from "./demo";
+import { verifyLookupSeed } from "./lookups";
 
 function resolveDatabaseUrl(): string | undefined {
   if (process.env.DATABASE_URL) return process.env.DATABASE_URL;
@@ -53,6 +54,7 @@ async function main() {
         note: cred.secondFactorNote ?? "",
       })),
     );
+    await assertLookupSeedComplete(db);
     process.exit(0);
   }
 
@@ -63,7 +65,29 @@ async function main() {
   console.log(
     `Seeded ${result.lookupTypesSeeded} lookup types, ${result.lookupsSeeded} lookups, ${result.rolesSeeded} roles, ${result.permissionsSeeded} permissions, ${result.plansSeeded} plans, and bootstrap Super Admin (${result.bootstrapSuperAdmin.email}).`,
   );
+  await assertLookupSeedComplete(db);
   process.exit(0);
+}
+
+/**
+ * Post-seed assertion (LK-07): the runtime static fallback is gone, so a database missing a
+ * registered lookup type would serve `not_seeded` to every client. Fail the seed run instead of
+ * reporting success for a half-populated catalog.
+ */
+async function assertLookupSeedComplete(db: ReturnType<typeof createDb>): Promise<void> {
+  const verification = await verifyLookupSeed(db);
+  if (verification.ok) {
+    console.log(
+      `Lookup seed verified: ${verification.seededTypes}/${verification.expectedTypes} registered lookup types present.`,
+    );
+    return;
+  }
+
+  console.error(
+    `Lookup seed INCOMPLETE: ${verification.seededTypes}/${verification.expectedTypes} registered lookup types present.`,
+  );
+  console.error(`Missing lookup types: ${verification.missing.join(", ")}`);
+  process.exit(1);
 }
 
 if (import.meta.main) {

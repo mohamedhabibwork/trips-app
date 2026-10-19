@@ -7,7 +7,13 @@ import {
 
 import type { SharedErrorCode } from "../types";
 
-export const EMPLOYEES_ERROR_CODE_MAP: Readonly<Record<string, SharedErrorCode>> = {};
+export const EMPLOYEES_ERROR_CODE_MAP: Readonly<Record<string, SharedErrorCode>> = {
+  EMPLOYEE_NOT_FOUND: "RESOURCE_NOT_FOUND",
+  EMPLOYEE_QUOTA_EXCEEDED: "PLAN_LIMIT_EXCEEDED",
+  EMPLOYEE_ALREADY_EXISTS: "DUPLICATE_RESOURCE",
+  INVITE_EXPIRED: "PRECONDITION_FAILED",
+  INVALID_STATUS_TRANSITION: "INVALID_STATE_TRANSITION",
+};
 
 export class EmployeesServiceError extends ServiceError {
   constructor(
