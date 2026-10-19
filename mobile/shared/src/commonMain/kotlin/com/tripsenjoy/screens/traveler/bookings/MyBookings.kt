@@ -1,10 +1,12 @@
 package com.tripsenjoy.screens.traveler.bookings
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import com.tripsenjoy.auth.LocalAuthApiOrNull
 import com.tripsenjoy.screens.moderator.common.icon
 import com.tripsenjoy.screens.traveler.common.BackButton
 import com.tripsenjoy.screens.traveler.common.LabelValue
@@ -21,15 +23,64 @@ import com.tripsenjoy.ui.components.TeTab
 import com.tripsenjoy.ui.components.TeTabs
 import com.tripsenjoy.ui.components.TeTrackingStatus
 import com.tripsenjoy.ui.components.TrackingStatus
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonNull
+import kotlinx.serialization.json.contentOrNull
+import kotlinx.serialization.json.jsonArray
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 
 private const val UPCOMING_TAB = "upcoming"
 private const val PAST_TAB = "past"
 
-// SCR-TRV-10. Every booking with its state. History depth follows the plan: basic for Free, full for Explorer and VIP.
-// Booking states copy SRS 7.2: Confirmed, Payment Failed, Checked In, Checked Out, Cancelled, Refund Pending, Refunded.
+internal object TravelerBookingState {
+    var selectedBookingId: String? = null
+    var leadPassengerName: String = "Traveler"
+    var passengerCount: Int = 1
+    var selectedProgramIds: List<String> = emptyList()
+    var selectedSeatLabel: String = "1A"
+    var couponCode: String? = null
+    var lastPaymentId: String? = null
+    var selectedAlbumId: String? = null
+}
+
+private data class BookingCardData(
+    val id: String,
+    val tripTitle: String,
+    val datesSummary: String,
+    val status: String,
+)
+
 @Composable
 fun MyBookings() {
+    val api = LocalAuthApiOrNull.current
     var period by remember { mutableStateOf(UPCOMING_TAB) }
+    var bookings by remember { mutableStateOf<List<BookingCardData>>(emptyList()) }
+
+    LaunchedEffect(api) {
+        val client = api ?: return@LaunchedEffect
+        runCatching {
+            val arr = client.call("booking/listMyBookings", JsonNull, JsonElement.serializer()).jsonArray
+            bookings = arr.map { el ->
+                val obj = el.jsonObject
+                BookingCardData(
+                    id = obj["id"]?.jsonPrimitive?.contentOrNull ?: "",
+                    tripTitle = obj["bookingReference"]?.jsonPrimitive?.contentOrNull
+                        ?: obj["tripTitle"]?.jsonPrimitive?.contentOrNull
+                        ?: "Booked trip",
+                    datesSummary = obj["createdAt"]?.jsonPrimitive?.contentOrNull
+                        ?: obj["departureAt"]?.jsonPrimitive?.contentOrNull
+                        ?: "Scheduled dates",
+                    status = obj["status"]?.jsonPrimitive?.contentOrNull ?: "Confirmed",
+                )
+            }
+            if (TravelerBookingState.selectedBookingId == null) {
+                TravelerBookingState.selectedBookingId = bookings.firstOrNull()?.id
+            }
+        }
+    }
+
+    val first = bookings.firstOrNull()
     ScreenPage(title = "My bookings") {
         StatePreview(
             listedStates = setOf(TravelerScreenState.Loading, TravelerScreenState.Empty, TravelerScreenState.Error),
@@ -46,26 +97,26 @@ fun MyBookings() {
                 onSelect = { period = it },
                 ariaLabel = "Booking periods",
             )
-            if (period == UPCOMING_TAB) UpcomingBookingCard() else PastBookingCard()
+            if (period == UPCOMING_TAB) UpcomingBookingCard(first) else PastBookingCard(first)
             BackButton()
         }
     }
 }
 
 @Composable
-private fun UpcomingBookingCard() {
-    TeCard(header = "Trip name") {
-        LabelValue(label = "Dates", value = "Dates and route summary")
-        TeBadge(label = "Confirmed", tone = BadgeTone.Success, icon = IconName.Check)
+private fun UpcomingBookingCard(booking: BookingCardData?) {
+    TeCard(header = booking?.tripTitle ?: "Booked trip") {
+        LabelValue(label = "Dates", value = booking?.datesSummary ?: "Scheduled dates")
+        TeBadge(label = booking?.status ?: "Confirmed", tone = BadgeTone.Success, icon = IconName.Check)
         TeTrackingStatus(status = TrackingStatus.NotBoarded, label = "Not boarded")
         OpenScreenButton(text = "Open booking", screenId = "SCR-TRV-11")
     }
 }
 
 @Composable
-private fun PastBookingCard() {
-    TeCard(header = "Trip name") {
-        LabelValue(label = "Dates", value = "Dates and route summary")
+private fun PastBookingCard(booking: BookingCardData?) {
+    TeCard(header = booking?.tripTitle ?: "Completed trip") {
+        LabelValue(label = "Dates", value = booking?.datesSummary ?: "Completed dates")
         TeBadge(label = "Checked out", tone = BadgeTone.Neutral, icon = IconName.Check)
         OpenScreenButton(text = "Open booking", screenId = "SCR-TRV-11", variant = TeButtonVariant.Secondary)
     }

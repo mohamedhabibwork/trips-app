@@ -34,7 +34,10 @@ class TeBarChartTest {
     fun `summary names the caption and every labelled value`() {
         val data = listOf(TeBarValue("Mon", 3.0), TeBarValue("Tue", 7.5))
 
-        val summary = barChartSummary("Bookings", data) { "%.1f".format(it) }
+        val summary = barChartSummary("Bookings", data) {
+            val tenths = (it * 10).toInt()
+            "${tenths / 10}.${tenths % 10}"
+        }
 
         assertEquals("Bookings. Mon 3.0, Tue 7.5", summary)
     }

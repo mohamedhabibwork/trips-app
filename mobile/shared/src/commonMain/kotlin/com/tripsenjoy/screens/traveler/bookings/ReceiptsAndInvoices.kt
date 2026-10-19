@@ -1,6 +1,12 @@
 package com.tripsenjoy.screens.traveler.bookings
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import com.tripsenjoy.auth.LocalAuthApiOrNull
 import com.tripsenjoy.screens.traveler.common.BackButton
 import com.tripsenjoy.screens.traveler.common.ScreenPage
 import com.tripsenjoy.screens.traveler.common.StatePreview
@@ -10,8 +16,13 @@ import com.tripsenjoy.ui.components.TeButtonVariant
 import com.tripsenjoy.ui.components.TeColumn
 import com.tripsenjoy.ui.components.TeColumnAlign
 import com.tripsenjoy.ui.components.TeDataTable
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonNull
+import kotlinx.serialization.json.contentOrNull
+import kotlinx.serialization.json.jsonArray
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 
-// SCR-TRV-14. Receipts and invoices for confirmed bookings. Export is VIP only; Free sees the basic list.
 private data class ReceiptRow(
     val id: String,
     val date: String,
@@ -34,19 +45,29 @@ private val RECEIPT_COLUMNS = listOf(
     ),
 )
 
-private val RECEIPT_ROWS = listOf(
-    ReceiptRow(
-        id = "receipt-1",
-        date = "Date",
-        booking = "Booking reference",
-        number = "Receipt number",
-        type = "Receipt",
-        amount = "Amount and currency",
-    ),
-)
-
 @Composable
 fun ReceiptsAndInvoices() {
+    val api = LocalAuthApiOrNull.current
+    var rows by remember { mutableStateOf<List<ReceiptRow>>(emptyList()) }
+
+    LaunchedEffect(api) {
+        val client = api ?: return@LaunchedEffect
+        runCatching {
+            val arr = client.call("payments/listPayments", JsonNull, JsonElement.serializer()).jsonArray
+            rows = arr.map { el ->
+                val obj = el.jsonObject
+                ReceiptRow(
+                    id = obj["id"]?.jsonPrimitive?.contentOrNull ?: "",
+                    date = obj["createdAt"]?.jsonPrimitive?.contentOrNull ?: "—",
+                    booking = obj["bookingId"]?.jsonPrimitive?.contentOrNull ?: "—",
+                    number = obj["receiptNumber"]?.jsonPrimitive?.contentOrNull ?: "—",
+                    type = obj["type"]?.jsonPrimitive?.contentOrNull ?: "Receipt",
+                    amount = "${obj["amountMinor"]?.jsonPrimitive?.contentOrNull ?: "0"} ${obj["currency"]?.jsonPrimitive?.contentOrNull ?: "USD"}",
+                )
+            }
+        }
+    }
+
     ScreenPage(title = "Receipts and invoices") {
         StatePreview(
             listedStates = setOf(TravelerScreenState.Loading, TravelerScreenState.Empty, TravelerScreenState.Error),
@@ -55,7 +76,7 @@ fun ReceiptsAndInvoices() {
         ) {
             TeDataTable(
                 columns = RECEIPT_COLUMNS,
-                rows = RECEIPT_ROWS,
+                rows = rows,
                 rowKey = { it.id },
                 caption = "Receipts and invoices",
                 emptyTitle = "No receipts yet",

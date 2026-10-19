@@ -8,6 +8,7 @@ import androidx.compose.runtime.setValue
 import com.tripsenjoy.screens.LocalScreenNavigator
 import com.tripsenjoy.screens.ScreenNavigator
 import com.tripsenjoy.screens.moderator.common.icon
+import com.tripsenjoy.screens.photographer.common.LocalPhotographerSession
 import com.tripsenjoy.screens.photographer.common.PhotoScreenId
 import com.tripsenjoy.screens.photographer.common.StatePreview
 import com.tripsenjoy.screens.shared.common.ScreenBody
@@ -28,7 +29,6 @@ import com.tripsenjoy.ui.components.UploadStatus
 
 // SCR-PHO-08 Album upload: album title, batch of photos, watermark state. Saving moves to the privacy screen
 // (SCR-PHO-09), which replaces this one so Back returns to the trip albums. Files are stripped of EXIF (FR-MED-02).
-// Nothing is sent to a server here: the batch is only listed.
 @Composable
 fun AlbumUpload() {
     val nav = LocalScreenNavigator.current
@@ -44,6 +44,7 @@ fun AlbumUpload() {
 
 @Composable
 private fun AlbumUploadContent(nav: ScreenNavigator) {
+    val session = LocalPhotographerSession.current
     var albumTitle by remember { mutableStateOf("") }
     var files by remember { mutableStateOf<List<TeUploadFile>>(emptyList()) }
     var pickedCount by remember { mutableStateOf(0) }
@@ -83,7 +84,10 @@ private fun AlbumUploadContent(nav: ScreenNavigator) {
     )
     TeButton(
         text = "Save album and set privacy",
-        onClick = { nav.replace(PhotoScreenId.ALBUM_PRIVACY) },
+        onClick = {
+            session.createAndUploadAlbum(albumTitle, files.map { it.name })
+            nav.replace(PhotoScreenId.ALBUM_PRIVACY)
+        },
         enabled = albumTitle.isNotBlank() && files.isNotEmpty() && rightsConfirmed,
     )
     TeButton(text = "Back to trip albums", onClick = { nav.back() }, variant = TeButtonVariant.Ghost)

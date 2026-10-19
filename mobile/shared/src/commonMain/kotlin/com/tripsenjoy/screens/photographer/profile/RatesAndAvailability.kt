@@ -8,6 +8,7 @@ import androidx.compose.runtime.setValue
 import com.tripsenjoy.screens.LocalScreenNavigator
 import com.tripsenjoy.screens.ScreenNavigator
 import com.tripsenjoy.screens.photographer.common.DEMO_CALENDAR_MONTH
+import com.tripsenjoy.screens.photographer.common.LocalPhotographerSession
 import com.tripsenjoy.screens.photographer.common.StatePreview
 import com.tripsenjoy.screens.shared.common.PLACEHOLDER_CURRENCY
 import com.tripsenjoy.screens.shared.common.ScreenBody
@@ -47,9 +48,11 @@ fun RatesAndAvailability() {
 
 @Composable
 private fun RatesContent(nav: ScreenNavigator) {
-    var form by remember { mutableStateOf(RateForm()) }
+    val session = LocalPhotographerSession.current
+    var form by remember(session.serviceRateName, session.serviceRateAmount) {
+        mutableStateOf(RateForm(serviceName = session.serviceRateName, rate = session.serviceRateAmount))
+    }
     var month by remember { mutableStateOf(DEMO_CALENDAR_MONTH) }
-    var unavailable by remember { mutableStateOf<List<TeDate>>(emptyList()) }
     val dateColumn = TeColumn<TeDate>(
         key = "date",
         header = "Date",
@@ -73,13 +76,13 @@ private fun RatesContent(nav: ScreenNavigator) {
         TeCalendar(
             label = "Pick dates to mark unavailable",
             selected = null,
-            onSelect = { unavailable = unavailable.toggled(it) },
+            onSelect = { session.toggleUnavailableDate(it) },
             visibleMonth = month,
             onMonthChange = { month = it },
         )
         TeDataTable(
             columns = listOf(dateColumn),
-            rows = unavailable,
+            rows = session.unavailableDates.toList(),
             rowKey = { it },
             caption = "Unavailable dates",
             emptyTitle = "No unavailable dates",
@@ -90,11 +93,10 @@ private fun RatesContent(nav: ScreenNavigator) {
     TeButton(text = "Bulk edit", onClick = {}, variant = TeButtonVariant.Ghost, enabled = false)
     TeButton(
         text = "Save rates",
-        onClick = { nav.back() },
+        onClick = {
+            session.saveRatesAndAvailability(form.serviceName, form.rate)
+            nav.back()
+        },
         enabled = form.serviceName.isNotBlank() && form.rate.isNotBlank(),
     )
 }
-
-// Adds the date when it is not marked, and removes it when it is. Keeps the list sorted.
-private fun List<TeDate>.toggled(date: TeDate): List<TeDate> =
-    if (date in this) this - date else (this + date).sorted()

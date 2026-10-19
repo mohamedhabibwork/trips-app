@@ -9,6 +9,7 @@ import com.tripsenjoy.screens.LocalScreenNavigator
 import com.tripsenjoy.screens.ScreenNavigator
 import com.tripsenjoy.screens.moderator.common.icon
 import com.tripsenjoy.screens.photographer.common.CURRENT_PLAN
+import com.tripsenjoy.screens.photographer.common.LocalPhotographerSession
 import com.tripsenjoy.screens.photographer.common.PhotoScreenId
 import com.tripsenjoy.screens.photographer.common.PhotographerPlan
 import com.tripsenjoy.screens.photographer.common.StatePreview
@@ -64,7 +65,18 @@ fun ProfileAndVisibility() {
 
 @Composable
 private fun ProfileContent(nav: ScreenNavigator) {
-    var form by remember { mutableStateOf(ProfileForm()) }
+    val session = LocalPhotographerSession.current
+    var form by remember(session.studioName, session.contactEmail) {
+        mutableStateOf(
+            ProfileForm(
+                name = session.studioName,
+                description = session.description,
+                serviceArea = session.serviceArea,
+                email = session.contactEmail,
+                phone = session.contactPhone,
+            ),
+        )
+    }
     var visibility by remember { mutableStateOf(ProfileVisibility.Standard) }
     val canSave = form.name.isNotBlank() && form.email.isNotBlank()
     TeCard(header = "Profile") {
@@ -120,7 +132,17 @@ private fun ProfileContent(nav: ScreenNavigator) {
     }
     TeButton(
         text = "Save profile",
-        onClick = { nav.back() },
+        onClick = {
+            session.saveProfile(
+                name = form.name,
+                desc = form.description,
+                area = form.serviceArea,
+                email = form.email,
+                phone = form.phone,
+                visibility = visibility.value,
+            )
+            nav.back()
+        },
         enabled = canSave,
     )
 }

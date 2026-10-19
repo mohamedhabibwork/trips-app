@@ -8,7 +8,7 @@ import androidx.compose.runtime.setValue
 import com.tripsenjoy.screens.LocalScreenNavigator
 import com.tripsenjoy.screens.ScreenNavigator
 import com.tripsenjoy.screens.photographer.common.CURRENT_PLAN
-import com.tripsenjoy.screens.photographer.common.DEMO_PORTFOLIO_IMAGES
+import com.tripsenjoy.screens.photographer.common.LocalPhotographerSession
 import com.tripsenjoy.screens.photographer.common.PhotoScreenId
 import com.tripsenjoy.screens.photographer.common.StatePreview
 import com.tripsenjoy.screens.photographer.common.isWithinAllowance
@@ -33,12 +33,12 @@ private const val PORTFOLIO_GRID_COLUMNS = 2
 
 // SCR-PHO-02 Portfolio manager: image grid, upload within the plan allowance, and delete with confirmation.
 // Upload opens SCR-SHR-16 when the allowance has room, and the plan prompt (SCR-SHR-01) when it does not.
-// The confirmation returns here; the removal itself is not wired because there is no service yet.
 @Composable
 fun PortfolioManager() {
     val nav = LocalScreenNavigator.current
+    val session = LocalPhotographerSession.current
     var selectedId by remember { mutableStateOf<String?>(null) }
-    val photos = portfolioPhotos()
+    val photos = portfolioPhotos(session.portfolioImagesCount)
     ScreenBody {
         TePageHeader(title = "Portfolio manager", description = "Images on your public profile")
         StatePreview(
@@ -47,8 +47,14 @@ fun PortfolioManager() {
                 PortfolioContent(
                     nav = nav,
                     photos = photos,
+                    portfolioCount = session.portfolioImagesCount,
                     selectedId = selectedId,
                     onSelect = { selectedId = it },
+                    onRemoveSelected = {
+                        selectedId?.let { session.removePortfolioImage(it) }
+                        selectedId = null
+                        nav.open(SharedScreenId.CONFIRMATION_DIALOG)
+                    },
                 )
             },
             loading = { StateLoadingCard(subject = "your portfolio") },
@@ -67,18 +73,20 @@ fun PortfolioManager() {
 private fun PortfolioContent(
     nav: ScreenNavigator,
     photos: List<TePhoto>,
+    portfolioCount: Int,
     selectedId: String?,
     onSelect: (String) -> Unit,
+    onRemoveSelected: () -> Unit,
 ) {
     val selectedAlt = photos.firstOrNull { it.id == selectedId }?.alt
     TeKpiTile(
         label = "Portfolio images",
-        value = usageText(DEMO_PORTFOLIO_IMAGES, CURRENT_PLAN.portfolioImages),
+        value = usageText(portfolioCount, CURRENT_PLAN.portfolioImages),
         hint = "${CURRENT_PLAN.label} plan allowance. Minimum $MINIMUM_PORTFOLIO_IMAGES.",
     )
     TePhotoGrid(photos = photos, onOpen = onSelect, columns = PORTFOLIO_GRID_COLUMNS)
     ScreenNote(text = if (selectedAlt != null) "Selected: $selectedAlt" else "Tap an image to select it.")
-    val uploadTarget = if (isWithinAllowance(DEMO_PORTFOLIO_IMAGES, CURRENT_PLAN.portfolioImages)) {
+    val uploadTarget = if (isWithinAllowance(portfolioCount, CURRENT_PLAN.portfolioImages)) {
         SharedScreenId.DOCUMENT_UPLOAD
     } else {
         SharedScreenId.PLAN_LIMIT_PROMPT
@@ -86,7 +94,7 @@ private fun PortfolioContent(
     TeButton(text = "Upload images", onClick = { nav.open(uploadTarget) })
     TeButton(
         text = "Remove selected image",
-        onClick = { nav.open(SharedScreenId.CONFIRMATION_DIALOG) },
+        onClick = onRemoveSelected,
         variant = TeButtonVariant.Destructive,
         enabled = selectedId != null,
     )
@@ -98,10 +106,10 @@ private fun PortfolioContent(
 }
 
 @Composable
-private fun portfolioPhotos(): List<TePhoto> {
+private fun portfolioPhotos(count: Int): List<TePhoto> {
     val colors = TripsEnjoyTheme.colors
     val tones = listOf(colors.brandNavy, colors.brandOrange, colors.brandCoral, colors.brandAmber)
-    return List(DEMO_PORTFOLIO_IMAGES) { index ->
+    return List(count) { index ->
         TePhoto(
             id = "portfolio-$index",
             painter = placeholderPhoto(tones[index % tones.size]),

@@ -5,10 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -17,7 +14,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import com.tripsenjoy.auth.AuthGate
 import com.tripsenjoy.auth.AuthProvider
 import com.tripsenjoy.auth.AuthStrings
@@ -28,12 +24,23 @@ import com.tripsenjoy.auth.screens.AccountMenuSheet
 import com.tripsenjoy.surfaces.traveler.TravelerSurface
 import com.tripsenjoy.ui.TripsApp
 import com.tripsenjoy.ui.TripsAppRoot
+import com.tripsenjoy.ui.TripsSideGutter
 import com.tripsenjoy.ui.components.IconName
 import com.tripsenjoy.ui.components.TeGlassButton
 import com.tripsenjoy.ui.components.TeGlassNavBar
+import com.tripsenjoy.ui.components.TeGlassTab
+import com.tripsenjoy.ui.components.TeGlassTabBar
+import com.tripsenjoy.ui.theme.TripsEnjoyTheme
 import kotlinx.coroutines.launch
 
 private enum class ShellTab { ROLE, TRAVELER }
+
+private fun SurfaceRole.icon(): IconName = when (this) {
+    SurfaceRole.DRIVER -> IconName.Bus
+    SurfaceRole.MODERATOR -> IconName.Shield
+    SurfaceRole.PHOTOGRAPHER -> IconName.Camera
+    SurfaceRole.TRAVELER -> IconName.Ticket
+}
 
 /**
  * Shell for a role app (driver, photographer, moderator).
@@ -70,50 +77,52 @@ private fun SignedInShell(
     val scope = rememberCoroutineScope()
     var tab by remember { mutableStateOf(ShellTab.ROLE) }
     var menuOpen by remember { mutableStateOf(false) }
+    val spacing = TripsEnjoyTheme.spacing
 
     TripsApp {
-        Scaffold(
-            bottomBar = {
-                if (state.isAuthenticated) {
-                    NavigationBar {
-                        NavigationBarItem(
-                            selected = tab == ShellTab.ROLE,
-                            onClick = { tab = ShellTab.ROLE },
-                            icon = { Text(role.title.take(1)) },
-                            label = { Text(role.title) },
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .let { base -> if (state.isAuthenticated) base.safeDrawingPadding() else base },
+        ) {
+            if (state.isAuthenticated) {
+                TeGlassNavBar(
+                    title = if (tab == ShellTab.ROLE) role.title else SurfaceRole.TRAVELER.title,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = TripsSideGutter, vertical = spacing.space2),
+                    actions = {
+                        TeGlassButton(
+                            label = AuthStrings.t("auth.account.menu", locale),
+                            onClick = { menuOpen = true },
+                            icon = IconName.User,
                         )
-                        NavigationBarItem(
-                            selected = tab == ShellTab.TRAVELER,
-                            onClick = { tab = ShellTab.TRAVELER },
-                            icon = { Text(SurfaceRole.TRAVELER.title.take(1)) },
-                            label = { Text(SurfaceRole.TRAVELER.title) },
-                        )
+                    },
+                )
+            }
+            Box(modifier = Modifier.weight(1f).fillMaxSize()) {
+                AuthGate {
+                    when (tab) {
+                        ShellTab.ROLE -> roleContent()
+                        ShellTab.TRAVELER -> TravelerSurface(api, embeddedInRoleShell = true)
                     }
                 }
-            },
-        ) { padding ->
-            Column(modifier = Modifier.fillMaxSize().padding(padding)) {
-                if (state.isAuthenticated) {
-                    TeGlassNavBar(
-                        title = role.title,
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
-                        actions = {
-                            TeGlassButton(
-                                label = AuthStrings.t("auth.account.menu", locale),
-                                onClick = { menuOpen = true },
-                                icon = IconName.User,
-                            )
-                        },
+            }
+            if (state.isAuthenticated) {
+                val tabs = remember(role) {
+                    listOf(
+                        TeGlassTab(label = role.title, icon = role.icon()),
+                        TeGlassTab(label = SurfaceRole.TRAVELER.title, icon = SurfaceRole.TRAVELER.icon()),
                     )
                 }
-                Box(modifier = Modifier.fillMaxSize()) {
-                    AuthGate {
-                        when (tab) {
-                            ShellTab.ROLE -> roleContent()
-                            ShellTab.TRAVELER -> TravelerSurface(api)
-                        }
-                    }
-                }
+                TeGlassTabBar(
+                    tabs = tabs,
+                    selectedIndex = if (tab == ShellTab.ROLE) 0 else 1,
+                    onSelect = { index -> tab = if (index == 0) ShellTab.ROLE else ShellTab.TRAVELER },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = TripsSideGutter, vertical = spacing.space2),
+                )
             }
         }
 
@@ -140,3 +149,4 @@ private fun SignedInShell(
 fun RoleHome(role: SurfaceRole) {
     SurfaceScreen(title = role.title, subtitle = role.subtitle)
 }
+

@@ -283,13 +283,13 @@ private fun SignInForm(
         if (config.allowRegistration) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(spacing.space2),
+                horizontalArrangement = Arrangement.spacedBy(spacing.space2, androidx.compose.ui.Alignment.CenterHorizontally),
+                verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
             ) {
-                TeButton(
+                androidx.compose.material3.Text(
                     text = AuthStrings.t("auth.signIn.noAccount", locale),
-                    onClick = {},
-                    variant = TeButtonVariant.Ghost,
-                    enabled = false,
+                    style = TripsEnjoyTheme.typography.body,
+                    color = TripsEnjoyTheme.colors.inkMuted,
                 )
                 TeButton(
                     text = AuthStrings.t("auth.signIn.createAccount", locale),

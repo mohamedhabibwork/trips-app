@@ -40,7 +40,7 @@ fun DriverHome() {
 private fun DriverHomeMain() {
     val nav = LocalScreenNavigator.current
     val session = LocalDriverSession.current
-    val assignment = DriverSampleData.assignment
+    val assignment = session.assignment
     TeBadge(label = "Active", tone = BadgeTone.Success, icon = IconName.Check)
     TeAssignmentCard(
         tripName = assignment.tripName,

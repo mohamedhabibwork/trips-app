@@ -28,6 +28,9 @@ val LocalAuthApi = staticCompositionLocalOf<ApiClient> {
     error("No ApiClient provided. Wrap the app in AuthProvider.")
 }
 
+/** Optional API client for screen catalog views that may render inside or outside [AuthProvider]. */
+val LocalAuthApiOrNull = staticCompositionLocalOf<ApiClient?> { null }
+
 /** The per-app configuration of the current surface (ARCHITECTURE §5.3). */
 val LocalSignInConfig = staticCompositionLocalOf<SignInConfig> {
     error("No SignInConfig provided. Wrap the app in AuthProvider.")
@@ -73,6 +76,7 @@ fun AuthProvider(
         LocalAuthSession provides session,
         LocalAuthSessionOrNull provides session,
         LocalAuthApi provides api,
+        LocalAuthApiOrNull provides api,
         LocalSignInConfig provides config,
         LocalAuthLocale provides locale,
         content = content,

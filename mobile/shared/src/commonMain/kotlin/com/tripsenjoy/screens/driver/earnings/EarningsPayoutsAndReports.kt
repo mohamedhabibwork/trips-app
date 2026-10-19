@@ -44,16 +44,16 @@ private fun EarningsMain() {
     val isBasic = session.plan == DrvPlan.Basic
     TeKpiTile(
         label = "Earned this week",
-        value = formatMoney(DriverSampleData.WEEK_EARNINGS_MINOR, currency),
+        value = formatMoney(session.weekEarningsMinor, currency),
         hint = if (isBasic) "Basic earnings view. Upgrade for the advanced view." else "Advanced earnings view.",
     )
     TeBarChart(
-        data = DriverSampleData.weeklyEarnings,
+        data = session.weeklyEarnings,
         caption = "Earnings by week, last 4 weeks",
         formatValue = { value -> value.toLong().toString() },
     )
     TeCard(header = "Payouts") {
-        DriverSampleData.payouts.forEach { payout ->
+        session.payouts.forEach { payout ->
             DrvField(
                 label = payout.date,
                 value = "${formatMoney(payout.amountMinor, currency)}, ${if (payout.paid) "paid" else "scheduled"}",

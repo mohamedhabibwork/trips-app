@@ -47,7 +47,7 @@ fun AssignmentsAndVehicleRun() {
 @Composable
 private fun AssignmentMain() {
     val session = LocalDriverSession.current
-    val assignment = DriverSampleData.assignment
+    val assignment = session.assignment
     TeAssignmentCard(
         tripName = assignment.tripName,
         route = assignment.route,

@@ -4,10 +4,10 @@ import androidx.compose.runtime.Composable
 import com.tripsenjoy.screens.LocalScreenNavigator
 import com.tripsenjoy.screens.ScreenNavigator
 import com.tripsenjoy.screens.photographer.common.CURRENT_PLAN
+import com.tripsenjoy.screens.photographer.common.LocalPhotographerSession
 import com.tripsenjoy.screens.photographer.common.PhotographerPlan
 import com.tripsenjoy.screens.photographer.common.StatePreview
 import com.tripsenjoy.screens.photographer.common.includes
-import com.tripsenjoy.screens.shared.common.PLACEHOLDER_AMOUNT_MINOR
 import com.tripsenjoy.screens.shared.common.PLACEHOLDER_CURRENCY
 import com.tripsenjoy.screens.shared.common.ScreenBody
 import com.tripsenjoy.screens.shared.common.ScreenNote
@@ -50,13 +50,21 @@ fun EarningsAndPayouts() {
 
 @Composable
 private fun EarningsContent(nav: ScreenNavigator) {
-    val amount = formatMoney(PLACEHOLDER_AMOUNT_MINOR, PLACEHOLDER_CURRENCY)
+    val session = LocalPhotographerSession.current
+    val amount = formatMoney(session.periodEarningsMinor, PLACEHOLDER_CURRENCY)
     val payoutColumns = listOf(
         TeColumn<PayoutRow>(key = "date", header = "Date", render = { it.date }),
         TeColumn<PayoutRow>(key = "amount", header = "Amount", align = TeColumnAlign.End, render = { it.amount }),
         TeColumn<PayoutRow>(key = "state", header = "State", render = { it.state }),
     )
-    val payouts = listOf(PayoutRow(id = "payout-1", date = "Monday 06:00", amount = amount, state = "Pending"))
+    val payouts = session.payoutHistory.map {
+        PayoutRow(
+            id = it.id,
+            date = it.date,
+            amount = formatMoney(it.amountMinor, PLACEHOLDER_CURRENCY),
+            state = it.state,
+        )
+    }
     TeKpiTile(label = "Earnings this period", value = amount, hint = "Currency: $PLACEHOLDER_CURRENCY")
     TeCard(header = "Payouts") {
         ScreenNote(text = "Payouts are made weekly, on Monday at 06:00.")

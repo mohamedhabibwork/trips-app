@@ -9,6 +9,7 @@ import com.tripsenjoy.screens.LocalScreenNavigator
 import com.tripsenjoy.screens.ScreenNavigator
 import com.tripsenjoy.screens.moderator.common.icon
 import com.tripsenjoy.screens.photographer.common.CURRENT_PLAN
+import com.tripsenjoy.screens.photographer.common.LocalPhotographerSession
 import com.tripsenjoy.screens.photographer.common.PhotographerPlan
 import com.tripsenjoy.screens.photographer.common.StatePreview
 import com.tripsenjoy.screens.photographer.common.includes
@@ -56,8 +57,9 @@ fun WatermarkSettings() {
 
 @Composable
 private fun WatermarkContent(nav: ScreenNavigator) {
-    var watermarkOn by remember { mutableStateOf(false) }
-    var position by remember { mutableStateOf(DEFAULT_POSITION) }
+    val session = LocalPhotographerSession.current
+    var watermarkOn by remember(session.watermarkEnabled) { mutableStateOf(session.watermarkEnabled) }
+    var position by remember(session.watermarkPosition) { mutableStateOf(session.watermarkPosition) }
     val available = CURRENT_PLAN.includes(PhotographerPlan.Studio)
     if (!available) {
         TeCard(header = "Watermark") {
@@ -93,7 +95,14 @@ private fun WatermarkContent(nav: ScreenNavigator) {
             TePhotoGrid(photos = listOf(previewPhoto()), columns = 1)
         }
     }
-    TeButton(text = "Save watermark", onClick = { nav.back() }, enabled = available)
+    TeButton(
+        text = "Save watermark",
+        onClick = {
+            session.saveWatermark(watermarkOn, position)
+            nav.back()
+        },
+        enabled = available,
+    )
 }
 
 @Composable

@@ -1,6 +1,13 @@
 package com.tripsenjoy.screens.shared.documents
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import com.tripsenjoy.auth.LocalAuthApiOrNull
 import com.tripsenjoy.screens.LocalScreenNavigator
 import com.tripsenjoy.screens.moderator.common.icon
 import com.tripsenjoy.screens.photographer.common.StatePreview
@@ -24,6 +31,13 @@ import com.tripsenjoy.ui.components.TeMoney
 import com.tripsenjoy.ui.components.TePageHeader
 import com.tripsenjoy.ui.components.TePlanGate
 import com.tripsenjoy.ui.components.formatMoney
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonNull
+import kotlinx.serialization.json.contentOrNull
+import kotlinx.serialization.json.jsonArray
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
+import kotlinx.serialization.json.longOrNull
 
 private data class InvoiceLine(val id: String, val description: String, val amount: String)
 
@@ -32,11 +46,26 @@ private const val EXPORT_LOCKED_IN_GALLERY = true
 
 // SCR-SHR-12 Receipt and invoice view. Shows the number, lines, tax and totals with currency.
 // Export depends on the plan (FR-ORG-07); a locked export opens the plan prompt (SCR-SHR-01). Back returns to the caller.
-// The file download is not wired here.
 @Composable
 fun ReceiptAndInvoiceView() {
     val nav = LocalScreenNavigator.current
-    val lineAmount = formatMoney(PLACEHOLDER_AMOUNT_MINOR, PLACEHOLDER_CURRENCY)
+    val api = LocalAuthApiOrNull.current
+    var invoiceNumber by remember { mutableStateOf("Invoice number") }
+    var issueDate by remember { mutableStateOf("Issue date") }
+    var totalMinor by remember { mutableLongStateOf(PLACEHOLDER_AMOUNT_MINOR) }
+
+    LaunchedEffect(api) {
+        val client = api ?: return@LaunchedEffect
+        runCatching {
+            val arr = client.call("payments/listPayments", JsonNull, JsonElement.serializer()).jsonArray
+            val first = arr.firstOrNull()?.jsonObject ?: return@runCatching
+            invoiceNumber = first["providerReference"]?.jsonPrimitive?.contentOrNull ?: invoiceNumber
+            issueDate = first["createdAt"]?.jsonPrimitive?.contentOrNull ?: issueDate
+            totalMinor = first["amountMinor"]?.jsonPrimitive?.longOrNull ?: totalMinor
+        }
+    }
+
+    val lineAmount = formatMoney(totalMinor, PLACEHOLDER_CURRENCY)
     val lineColumns = listOf(
         TeColumn<InvoiceLine>(key = "description", header = "Description", render = { it.description }),
         TeColumn<InvoiceLine>(key = "amount", header = "Amount", align = TeColumnAlign.End, render = { it.amount }),
@@ -49,8 +78,8 @@ fun ReceiptAndInvoiceView() {
             main = {
                 TeBadge(label = "Issued", tone = BadgeTone.Success, icon = IconName.Check)
                 TeCard(header = "Document") {
-                    ScreenNote(text = "Invoice number")
-                    ScreenNote(text = "Issue date")
+                    ScreenNote(text = invoiceNumber)
+                    ScreenNote(text = issueDate)
                     ScreenNote(text = "Buyer name")
                 }
                 TeDataTable(
@@ -62,7 +91,7 @@ fun ReceiptAndInvoiceView() {
                 )
                 TeCard(header = "Totals") {
                     TeMoney(amountMinor = PLACEHOLDER_AMOUNT_MINOR, currencyCode = PLACEHOLDER_CURRENCY, label = "Tax")
-                    TeMoney(amountMinor = PLACEHOLDER_AMOUNT_MINOR, currencyCode = PLACEHOLDER_CURRENCY, label = "Total")
+                    TeMoney(amountMinor = totalMinor, currencyCode = PLACEHOLDER_CURRENCY, label = "Total")
                 }
                 TeButton(text = "Download", onClick = {})
                 if (EXPORT_LOCKED_IN_GALLERY) {

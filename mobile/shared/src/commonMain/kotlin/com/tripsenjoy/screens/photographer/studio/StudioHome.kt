@@ -5,8 +5,7 @@ import com.tripsenjoy.screens.LocalScreenNavigator
 import com.tripsenjoy.screens.ScreenNavigator
 import com.tripsenjoy.screens.moderator.common.icon
 import com.tripsenjoy.screens.photographer.common.CURRENT_PLAN
-import com.tripsenjoy.screens.photographer.common.DEMO_BOOKINGS_USED
-import com.tripsenjoy.screens.photographer.common.DEMO_DEAL_OFFERS
+import com.tripsenjoy.screens.photographer.common.LocalPhotographerSession
 import com.tripsenjoy.screens.photographer.common.PhotoScreenId
 import com.tripsenjoy.screens.photographer.common.StatePreview
 import com.tripsenjoy.screens.photographer.common.usageText
@@ -49,19 +48,20 @@ fun StudioHome() {
 
 @Composable
 private fun StudioHomeContent(nav: ScreenNavigator) {
+    val session = LocalPhotographerSession.current
     TeRoleBadge(role = UserRole.Photographer)
-    TeKpiTile(label = "Open deal requests", value = DEMO_DEAL_OFFERS.size.toString())
+    TeKpiTile(label = "Open deal requests", value = session.dealOffers.size.toString())
     TeKpiTile(
         label = "Active bookings this month",
-        value = usageText(DEMO_BOOKINGS_USED, CURRENT_PLAN.bookingsPerMonth),
+        value = usageText(session.bookingsUsed, CURRENT_PLAN.bookingsPerMonth),
         hint = "${CURRENT_PLAN.label} plan limit",
     )
     TeCard(header = "Assignments") {
         TeAssignmentCard(
-            tripName = "Trip name",
-            route = "Route",
-            departure = "Departure date",
-            vehicle = "Vehicle",
+            tripName = session.assignedTripName,
+            route = session.assignedRoute,
+            departure = session.assignedDeparture,
+            vehicle = session.assignedVehicle,
             actionLabel = "Open brief",
             onAction = { nav.open(PhotoScreenId.TRIP_BRIEF) },
         )

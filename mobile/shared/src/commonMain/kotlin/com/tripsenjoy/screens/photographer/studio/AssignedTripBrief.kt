@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import com.tripsenjoy.screens.LocalScreenNavigator
 import com.tripsenjoy.screens.ScreenNavigator
 import com.tripsenjoy.screens.moderator.common.icon
-import com.tripsenjoy.screens.photographer.common.DEMO_BRIEF_TRIP_COMPLETED
+import com.tripsenjoy.screens.photographer.common.LocalPhotographerSession
 import com.tripsenjoy.screens.photographer.common.PhotoScreenId
 import com.tripsenjoy.screens.photographer.common.StatePreview
 import com.tripsenjoy.screens.shared.common.ScreenBody
@@ -41,40 +41,45 @@ fun AssignedTripBrief() {
 
 @Composable
 private fun BriefContent(nav: ScreenNavigator) {
+    val session = LocalPhotographerSession.current
     TeBadge(label = "Assigned", tone = BadgeTone.Info, icon = IconName.Check)
     TeAssignmentCard(
-        tripName = "Trip name",
-        route = "Route",
-        departure = "Departure time",
-        vehicle = "Vehicle",
+        tripName = session.assignedTripName,
+        route = session.assignedRoute,
+        departure = session.assignedDeparture,
+        vehicle = session.assignedVehicle,
         actionLabel = "Open trip albums",
         onAction = { nav.open(PhotoScreenId.TRIP_ALBUMS) },
     )
     TeCard(header = "Schedule") {
         TeTimeline(
             items = listOf(
-                TeTimelineItem(id = "stop-1", time = "Time", label = "Program name", state = TimelineState.Current),
-                TeTimelineItem(id = "stop-2", time = "Time", label = "Program name", state = TimelineState.Upcoming),
-                TeTimelineItem(id = "stop-3", time = "Time", label = "Program name", state = TimelineState.Upcoming),
+                TeTimelineItem(
+                    id = "stop-1",
+                    time = session.assignedDeparture,
+                    label = session.assignedTripName,
+                    state = TimelineState.Current,
+                ),
+                TeTimelineItem(id = "stop-2", time = "Scheduled", label = session.assignedRoute, state = TimelineState.Upcoming),
             ),
         )
     }
     TeCard(header = "Scope notes") {
-        ScreenNote(text = "Scope notes from the organization appear here.")
+        ScreenNote(text = session.description.ifBlank { "Scope notes from the organization appear here." })
     }
     TeCard(header = "Album upload window") {
         ScreenNote(text = "Opens when the trip is completed.")
     }
     TeCard(header = "Organization contact") {
-        ScreenNote(text = "Organization name and contact details")
+        ScreenNote(text = session.contactEmail.ifBlank { "Organization name and contact details" })
     }
     TeButton(
         text = "Upload album",
         onClick = { nav.open(PhotoScreenId.ALBUM_UPLOAD) },
         variant = TeButtonVariant.Secondary,
-        enabled = DEMO_BRIEF_TRIP_COMPLETED,
+        enabled = session.assignedTripCompleted,
     )
-    if (!DEMO_BRIEF_TRIP_COMPLETED) {
+    if (!session.assignedTripCompleted) {
         ScreenNote(text = "Album upload unlocks when the trip is completed.")
     }
 }

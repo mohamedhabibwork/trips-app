@@ -165,7 +165,7 @@ class ConventionsParityTest {
     }
 
     @Test
-    fun `the moderator app declares the crew surface, which the schema accepts`() {
+    fun `the moderator app declares the crew surface which the schema accepts`() {
         // The moderator is the crew surface. `moderatorSignInSchema` accepts "mobile" and "pwa"; the
         // mobile moderator app sends "pwa" so it is indistinguishable from the /crew PWA, which is
         // what the auth e2e flow uses. Everything else declares "mobile".
@@ -297,7 +297,7 @@ class ConventionsParityTest {
     }
 
     @Test
-    fun `the generated country list equals the contract exactly, Arabic included`() {
+    fun `the generated country list equals the contract exactly with Arabic included`() {
         // PRD §7.10 G6: the option list must be byte-identical on web and mobile and asserted from
         // one fixture. This is the mobile half: the full expected list, field by field, in order.
         val expected = listOf(
@@ -319,7 +319,7 @@ class ConventionsParityTest {
     }
 
     @Test
-    fun `the country list has three entries, EG first, and exactly one enabled`() {
+    fun `the country list has three entries with EG first and exactly one enabled`() {
         val countries = AuthConventions.AuthCountries
         assertEquals(3, countries.size)
         assertEquals("EG", countries.first().code)

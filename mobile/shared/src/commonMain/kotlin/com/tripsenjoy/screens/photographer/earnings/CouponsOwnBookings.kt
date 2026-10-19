@@ -9,7 +9,7 @@ import com.tripsenjoy.screens.LocalScreenNavigator
 import com.tripsenjoy.screens.ScreenNavigator
 import com.tripsenjoy.screens.moderator.common.icon
 import com.tripsenjoy.screens.photographer.common.CURRENT_PLAN
-import com.tripsenjoy.screens.photographer.common.DEMO_COUPONS_USED
+import com.tripsenjoy.screens.photographer.common.LocalPhotographerSession
 import com.tripsenjoy.screens.photographer.common.StatePreview
 import com.tripsenjoy.screens.photographer.common.isWithinAllowance
 import com.tripsenjoy.screens.photographer.common.usageText
@@ -65,6 +65,7 @@ fun CouponsOwnBookings() {
 
 @Composable
 private fun CouponsContent(nav: ScreenNavigator) {
+    val session = LocalPhotographerSession.current
     var form by remember { mutableStateOf(CouponForm()) }
     val couponColumns = listOf(
         TeColumn<CouponRow>(key = "code", header = "Code", render = { it.code }),
@@ -76,11 +77,11 @@ private fun CouponsContent(nav: ScreenNavigator) {
             render = { it.redemptions },
         ),
     )
-    val withinLimit = isWithinAllowance(DEMO_COUPONS_USED, CURRENT_PLAN.coupons)
+    val withinLimit = isWithinAllowance(session.couponsUsed, CURRENT_PLAN.coupons)
     TeBadge(label = "Scope: your assigned bookings", tone = BadgeTone.Info, icon = IconName.Lock)
     TeKpiTile(
         label = "Coupons created",
-        value = usageText(DEMO_COUPONS_USED, CURRENT_PLAN.coupons),
+        value = usageText(session.couponsUsed, CURRENT_PLAN.coupons),
         hint = "${CURRENT_PLAN.label} plan limit",
     )
     TeCard(header = "Coupons") {
@@ -115,7 +116,10 @@ private fun CouponsContent(nav: ScreenNavigator) {
         }
         TeButton(
             text = "Create coupon",
-            onClick = { nav.back() },
+            onClick = {
+                session.createCoupon(form.code, form.discountType ?: "percentage", form.value)
+                nav.back()
+            },
             enabled = form.code.isNotBlank() && form.discountType != null && form.value.isNotBlank(),
         )
     } else {
