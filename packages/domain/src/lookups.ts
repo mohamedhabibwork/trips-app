@@ -94,10 +94,8 @@ type MutuallyAssignable<A, B> = [A] extends [B] ? ([B] extends [A] ? true : fals
  * fails `bun run check-types` naming this line. That is the whole point: the drift is caught at
  * build time, not in review.
  */
-const lookupTypeCodeParity: MutuallyAssignable<
-  LookupTypeCode,
-  (typeof LOOKUP_TYPE_CODES)[number]
-> = true;
+const lookupTypeCodeParity: MutuallyAssignable<LookupTypeCode, (typeof LOOKUP_TYPE_CODES)[number]> =
+  true;
 
 export { lookupTypeCodeParity };
 
@@ -2480,7 +2478,10 @@ export const DEFAULT_LOOKUPS: readonly LookupSeedDefinition[] = [
     code: "DRAFT",
     value: "draft",
     name: { en: "Draft", ar: "مسودة" },
-    description: { en: "Trip is being prepared and is not visible", ar: "الرحلة قيد الإعداد وغير ظاهرة" },
+    description: {
+      en: "Trip is being prepared and is not visible",
+      ar: "الرحلة قيد الإعداد وغير ظاهرة",
+    },
     sortBy: 1,
     isPublic: true,
   },
@@ -2908,7 +2909,10 @@ export const DEFAULT_LOOKUPS: readonly LookupSeedDefinition[] = [
     code: "EN_ROUTE",
     value: "en_route",
     name: { en: "En Route", ar: "في الطريق" },
-    description: { en: "Driver is driving to the pickup point", ar: "السائق في الطريق إلى نقطة التجمع" },
+    description: {
+      en: "Driver is driving to the pickup point",
+      ar: "السائق في الطريق إلى نقطة التجمع",
+    },
     sortBy: 3,
     isPublic: true,
   },
@@ -2926,7 +2930,10 @@ export const DEFAULT_LOOKUPS: readonly LookupSeedDefinition[] = [
     code: "IN_TRANSIT",
     value: "in_transit",
     name: { en: "In Transit", ar: "أثناء الرحلة" },
-    description: { en: "Passengers are on board and the run is under way", ar: "المسافرون على المتن والمهمة جارية" },
+    description: {
+      en: "Passengers are on board and the run is under way",
+      ar: "المسافرون على المتن والمهمة جارية",
+    },
     sortBy: 5,
     isPublic: true,
   },
@@ -2935,7 +2942,10 @@ export const DEFAULT_LOOKUPS: readonly LookupSeedDefinition[] = [
     code: "COMPLETED",
     value: "completed",
     name: { en: "Completed", ar: "مكتملة" },
-    description: { en: "Run finished and passengers dropped off", ar: "انتهت المهمة ونزل المسافرون" },
+    description: {
+      en: "Run finished and passengers dropped off",
+      ar: "انتهت المهمة ونزل المسافرون",
+    },
     sortBy: 6,
     isPublic: true,
   },
@@ -3029,7 +3039,10 @@ export const DEFAULT_LOOKUPS: readonly LookupSeedDefinition[] = [
     code: "TV",
     value: "tv",
     name: { en: "Television", ar: "شاشة تلفزيون" },
-    description: { en: "Shared television screen on board", ar: "شاشة تلفزيون مشتركة داخل المركبة" },
+    description: {
+      en: "Shared television screen on board",
+      ar: "شاشة تلفزيون مشتركة داخل المركبة",
+    },
     sortBy: 5,
     isPublic: true,
   },
@@ -3204,7 +3217,10 @@ export const DEFAULT_LOOKUPS: readonly LookupSeedDefinition[] = [
     code: "OPEN",
     value: "open",
     name: { en: "Open", ar: "مفتوح" },
-    description: { en: "Safety case raised and awaiting triage", ar: "بلاغ السلامة مفتوح وبانتظار التصنيف" },
+    description: {
+      en: "Safety case raised and awaiting triage",
+      ar: "بلاغ السلامة مفتوح وبانتظار التصنيف",
+    },
     sortBy: 1,
     isPublic: true,
   },
@@ -3213,7 +3229,10 @@ export const DEFAULT_LOOKUPS: readonly LookupSeedDefinition[] = [
     code: "INVESTIGATING",
     value: "investigating",
     name: { en: "Investigating", ar: "قيد التحقيق" },
-    description: { en: "Operations is investigating the report", ar: "فريق العمليات يحقق في البلاغ" },
+    description: {
+      en: "Operations is investigating the report",
+      ar: "فريق العمليات يحقق في البلاغ",
+    },
     sortBy: 2,
     isPublic: true,
   },
@@ -3243,7 +3262,10 @@ export const DEFAULT_LOOKUPS: readonly LookupSeedDefinition[] = [
     code: "CLOSED",
     value: "closed",
     name: { en: "Closed", ar: "مغلق" },
-    description: { en: "Case is closed with no further action", ar: "تم إغلاق البلاغ دون إجراء إضافي" },
+    description: {
+      en: "Case is closed with no further action",
+      ar: "تم إغلاق البلاغ دون إجراء إضافي",
+    },
     sortBy: 5,
     isPublic: true,
   },
@@ -3305,7 +3327,10 @@ export const DEFAULT_LOOKUPS: readonly LookupSeedDefinition[] = [
     code: "WEATHER",
     value: "weather",
     name: { en: "Severe Weather", ar: "أحوال جوية سيئة" },
-    description: { en: "Weather forced a change to the plan", ar: "أدت الأحوال الجوية إلى تغيير الخطة" },
+    description: {
+      en: "Weather forced a change to the plan",
+      ar: "أدت الأحوال الجوية إلى تغيير الخطة",
+    },
     sortBy: 6,
     isPublic: true,
   },
@@ -3314,7 +3339,10 @@ export const DEFAULT_LOOKUPS: readonly LookupSeedDefinition[] = [
     code: "OTHER",
     value: "other",
     name: { en: "Other", ar: "أخرى" },
-    description: { en: "Anything not covered by the categories above", ar: "أي حالة لا تغطيها الفئات السابقة" },
+    description: {
+      en: "Anything not covered by the categories above",
+      ar: "أي حالة لا تغطيها الفئات السابقة",
+    },
     sortBy: 7,
     isPublic: true,
   },
@@ -3375,7 +3403,10 @@ export const DEFAULT_LOOKUPS: readonly LookupSeedDefinition[] = [
     code: "REQUESTED",
     value: "requested",
     name: { en: "Requested", ar: "مطلوب" },
-    description: { en: "Test has been requested but not booked", ar: "تم طلب التحليل ولم يتم حجزه بعد" },
+    description: {
+      en: "Test has been requested but not booked",
+      ar: "تم طلب التحليل ولم يتم حجزه بعد",
+    },
     sortBy: 1,
     isPublic: true,
   },
@@ -3402,7 +3433,10 @@ export const DEFAULT_LOOKUPS: readonly LookupSeedDefinition[] = [
     code: "PASSED",
     value: "passed",
     name: { en: "Passed", ar: "ناجح" },
-    description: { en: "Result meets the platform safety standard", ar: "النتيجة مطابقة لمعيار السلامة" },
+    description: {
+      en: "Result meets the platform safety standard",
+      ar: "النتيجة مطابقة لمعيار السلامة",
+    },
     sortBy: 4,
     isPublic: true,
   },
@@ -3587,7 +3621,10 @@ export const DEFAULT_LOOKUPS: readonly LookupSeedDefinition[] = [
     code: "DRAFT",
     value: "draft",
     name: { en: "Draft", ar: "مسودة" },
-    description: { en: "Coupon is configured but not redeemable", ar: "الكوبون معد وغير قابل للاستخدام" },
+    description: {
+      en: "Coupon is configured but not redeemable",
+      ar: "الكوبون معد وغير قابل للاستخدام",
+    },
     sortBy: 1,
     isPublic: true,
   },
@@ -3652,7 +3689,10 @@ export const DEFAULT_LOOKUPS: readonly LookupSeedDefinition[] = [
     code: "DRAFT",
     value: "draft",
     name: { en: "Draft", ar: "مسودة" },
-    description: { en: "Deal is being prepared and not yet sent", ar: "الصفقة قيد الإعداد ولم تُرسل بعد" },
+    description: {
+      en: "Deal is being prepared and not yet sent",
+      ar: "الصفقة قيد الإعداد ولم تُرسل بعد",
+    },
     sortBy: 1,
     isPublic: true,
   },
@@ -3691,7 +3731,10 @@ export const DEFAULT_LOOKUPS: readonly LookupSeedDefinition[] = [
     code: "EXPIRED",
     value: "expired",
     name: { en: "Expired", ar: "منتهية" },
-    description: { en: "The offer expired before acceptance", ar: "انتهت صلاحية العرض قبل الموافقة" },
+    description: {
+      en: "The offer expired before acceptance",
+      ar: "انتهت صلاحية العرض قبل الموافقة",
+    },
     sortBy: 5,
     isPublic: true,
   },
@@ -3700,7 +3743,10 @@ export const DEFAULT_LOOKUPS: readonly LookupSeedDefinition[] = [
     code: "CANCELLED",
     value: "cancelled",
     name: { en: "Cancelled", ar: "ملغاة" },
-    description: { en: "The deal was cancelled by either party", ar: "تم إلغاء الصفقة من أحد الطرفين" },
+    description: {
+      en: "The deal was cancelled by either party",
+      ar: "تم إلغاء الصفقة من أحد الطرفين",
+    },
     sortBy: 6,
     isPublic: true,
   },
@@ -3711,7 +3757,10 @@ export const DEFAULT_LOOKUPS: readonly LookupSeedDefinition[] = [
     code: "OPEN",
     value: "open",
     name: { en: "Open", ar: "مفتوح" },
-    description: { en: "Dispute submitted and awaiting triage", ar: "تم تقديم النزاع وبانتظار التصنيف" },
+    description: {
+      en: "Dispute submitted and awaiting triage",
+      ar: "تم تقديم النزاع وبانتظار التصنيف",
+    },
     sortBy: 1,
     isPublic: true,
   },
@@ -3774,7 +3823,10 @@ export const DEFAULT_LOOKUPS: readonly LookupSeedDefinition[] = [
     code: "CLOSED",
     value: "closed",
     name: { en: "Closed", ar: "مغلق" },
-    description: { en: "Dispute closed with no further action", ar: "تم إغلاق النزاع دون إجراء إضافي" },
+    description: {
+      en: "Dispute closed with no further action",
+      ar: "تم إغلاق النزاع دون إجراء إضافي",
+    },
     sortBy: 7,
     isPublic: true,
   },
@@ -3832,7 +3884,10 @@ export const DEFAULT_LOOKUPS: readonly LookupSeedDefinition[] = [
     code: "PENDING",
     value: "pending",
     name: { en: "Pending", ar: "معلقة" },
-    description: { en: "Settlement is calculated but not started", ar: "التسوية محسوبة ولم تبدأ بعد" },
+    description: {
+      en: "Settlement is calculated but not started",
+      ar: "التسوية محسوبة ولم تبدأ بعد",
+    },
     sortBy: 1,
     isPublic: true,
   },
@@ -3927,7 +3982,10 @@ export const DEFAULT_LOOKUPS: readonly LookupSeedDefinition[] = [
     code: "RESOLVED",
     value: "resolved",
     name: { en: "Resolved", ar: "تم حلها" },
-    description: { en: "A mismatch was investigated and corrected", ar: "تم التحقق من الاختلاف وتصحيحه" },
+    description: {
+      en: "A mismatch was investigated and corrected",
+      ar: "تم التحقق من الاختلاف وتصحيحه",
+    },
     sortBy: 4,
     isPublic: true,
   },
@@ -3950,7 +4008,10 @@ export const DEFAULT_LOOKUPS: readonly LookupSeedDefinition[] = [
     code: "TRIALING",
     value: "trialing",
     name: { en: "Trialing", ar: "فترة تجريبية" },
-    description: { en: "Subscription is inside its trial window", ar: "الاشتراك داخل الفترة التجريبية" },
+    description: {
+      en: "Subscription is inside its trial window",
+      ar: "الاشتراك داخل الفترة التجريبية",
+    },
     sortBy: 1,
     isPublic: true,
   },
@@ -4133,7 +4194,10 @@ export const DEFAULT_LOOKUPS: readonly LookupSeedDefinition[] = [
     code: "SUSPEND",
     value: "suspend",
     name: { en: "Suspend Account", ar: "إيقاف الحساب" },
-    description: { en: "Blocks sign-in and all writes", ar: "يمنع تسجيل الدخول وجميع عمليات الكتابة" },
+    description: {
+      en: "Blocks sign-in and all writes",
+      ar: "يمنع تسجيل الدخول وجميع عمليات الكتابة",
+    },
     sortBy: 1,
     isPublic: false,
   },
@@ -4457,7 +4521,10 @@ export const DEFAULT_LOOKUPS: readonly LookupSeedDefinition[] = [
     code: "PHONE",
     value: "phone",
     name: { en: "Phone Call", ar: "اتصال هاتفي" },
-    description: { en: "Contact by phone call or SMS", ar: "التواصل عبر مكالمة هاتفية أو رسالة نصية" },
+    description: {
+      en: "Contact by phone call or SMS",
+      ar: "التواصل عبر مكالمة هاتفية أو رسالة نصية",
+    },
     sortBy: 1,
     isPublic: true,
   },
