@@ -1,196 +1,232 @@
+// SCR-ADM-27 Reconciliation exceptions (docs/design/web/admin/SCR-ADM-27.dc.html): gateway records
+// that do not match the ledger, filtered by type and state, with the resolve panel beside the
+// table. A note is required to resolve an exception.
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { TeButton } from "@trips-app/ui/components/te-button";
-import { TeDataTable, type TeDataTableColumn } from "@trips-app/ui/components/te-data-table";
-import { TeInlineAlert } from "@trips-app/ui/components/te-inline-alert";
-import { TeInput } from "@trips-app/ui/components/te-input";
-import { TePageHeader } from "@trips-app/ui/components/te-page-header";
-import type { TeSelectOption } from "@trips-app/ui/components/te-select";
 import { t } from "@trips-app/i18n";
+
+import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
-import { StatePreview } from "../common/admin-state-preview";
-import { AdminScreenLink } from "../common/admin-links";
+
+import { AdminButton } from "../common/admin-actions";
+import { AdminSelect, AdminTextarea, type AdminOption } from "../common/admin-form";
+import { AdminEmpty, AdminQueryState } from "../common/admin-states";
 import {
-  AdminActions,
-  AdminFilterSelect,
-  AdminFilters,
+  AdminAlert,
+  AdminBadge,
+  AdminCard,
+  AdminFilterBar,
   AdminPage,
-  AdminPagination,
-  AdminPanel,
-  AdminStatus,
-  type AdminStatusPresentation,
-} from "../common/admin-shared";
+  AdminRow,
+  AdminSplit,
+  AdminTable,
+  type AdminColumn,
+} from "../common/admin-ui";
+import { formatMinor } from "./finance-format";
+
+type ExceptionType = "missing" | "mismatch";
+type ExceptionState = "open" | "resolved";
 
 interface ExceptionRow {
   id: string;
   reference: string;
   amount: string;
-  type: "missing" | "mismatch";
-  state: "open" | "resolved";
+  type: ExceptionType;
+  state: ExceptionState;
 }
 
-const DEFAULT_EXCEPTION_ROWS: readonly ExceptionRow[] = [];
+const REFERENCE_ID_LENGTH = 8;
 
-const TYPE_PRESENTATION = (): Record<ExceptionRow["type"], AdminStatusPresentation> => ({
-  missing: {
-    tone: "warning",
-    icon: "alert",
-    label: t("screen.admin.finance.reconciliationExceptions.missingFromLedger"),
-  },
-  mismatch: {
-    tone: "danger",
-    icon: "alert",
-    label: t("screen.admin.finance.reconciliationExceptions.amountMismatch"),
-  },
-});
-
-const STATE_PRESENTATION = (): Record<ExceptionRow["state"], AdminStatusPresentation> => ({
-  open: {
-    tone: "warning",
-    icon: "clock",
-    label: t("screen.admin.finance.reconciliationExceptions.open"),
-  },
-  resolved: {
-    tone: "success",
-    icon: "check",
-    label: t("screen.admin.finance.reconciliationExceptions.resolved"),
-  },
-});
-
-const STATE_OPTIONS = (): readonly TeSelectOption[] => [
-  { value: "all", label: t("screen.admin.finance.reconciliationExceptions.anyState") },
-  { value: "open", label: t("screen.admin.finance.reconciliationExceptions.openLabel") },
-  { value: "resolved", label: t("screen.admin.finance.reconciliationExceptions.resolvedLabel") },
+const typeOptions = (): readonly AdminOption[] => [
+  { value: "all", label: t("screen.admin.finance.reconciliationExceptions.allTypes") },
+  { value: "missing", label: t("screen.admin.finance.reconciliationExceptions.missingFromLedger") },
+  { value: "mismatch", label: t("screen.admin.finance.reconciliationExceptions.mismatch") },
 ];
 
-export function ReconciliationExceptions() {
-  const exceptionsQuery = useQuery(
-    orpc.accounting.listAdminReconciliationExceptions.queryOptions(),
+const stateOptions = (): readonly AdminOption[] => [
+  { value: "open", label: t("screen.admin.finance.reconciliationExceptions.open") },
+  { value: "resolved", label: t("screen.admin.finance.reconciliationExceptions.resolved") },
+  { value: "all", label: t("screen.admin.finance.reconciliationExceptions.allStates") },
+];
+
+function typeLabel(type: ExceptionType): string {
+  return type === "missing"
+    ? t("screen.admin.finance.reconciliationExceptions.missingFromLedger")
+    : t("screen.admin.finance.reconciliationExceptions.mismatch");
+}
+
+function StateBadge({ state }: { state: ExceptionState }) {
+  return state === "resolved" ? (
+    <AdminBadge tone="ok" icon={false}>
+      {t("screen.admin.finance.reconciliationExceptions.resolved")}
+    </AdminBadge>
+  ) : (
+    <AdminBadge tone="warn" icon={false}>
+      {t("screen.admin.finance.reconciliationExceptions.open")}
+    </AdminBadge>
   );
+}
+
+export function ReconciliationExceptions() {
+  const { status: authStatus, locale } = useAuth();
+  const [typeFilter, setTypeFilter] = useState("all");
+  const [stateFilter, setStateFilter] = useState("open");
+  // Resolution is recorded on this page only: the API has no resolve procedure yet.
   const [resolvedIds, setResolvedIds] = useState<ReadonlySet<string>>(new Set());
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [note, setNote] = useState("");
-  const canResolve = note.trim() !== "";
 
-  const rows: readonly ExceptionRow[] =
-    exceptionsQuery.data && exceptionsQuery.data.length > 0
-      ? exceptionsQuery.data.map((exc) => {
-          const refId = exc.bookingId ?? exc.tripId ?? exc.id;
-          const isLocallyResolved = resolvedIds.has(exc.id);
-          return {
-            id: exc.id,
-            reference: `${exc.entryType.toUpperCase()}-${refId.slice(0, 8)}`,
-            amount: `${(Math.abs(exc.grossAmountMinor) / 100).toFixed(2)} ${exc.currencyCode}`,
-            type: exc.grossAmountMinor === 0 ? "missing" : "mismatch",
-            state: (isLocallyResolved || exc.status === "settled"
-              ? "resolved"
-              : "open") as ExceptionRow["state"],
-          };
-        })
-      : DEFAULT_EXCEPTION_ROWS;
+  const exceptionsQuery = useQuery({
+    ...orpc.accounting.listAdminReconciliationExceptions.queryOptions(),
+    enabled: authStatus === "authenticated",
+  });
 
-  const handleResolve = (id?: string) => {
-    const targetId = id ?? selectedId ?? rows[0]?.id;
-    if (!targetId) return;
-    setResolvedIds((prev) => new Set([...prev, targetId]));
+  const allRows: readonly ExceptionRow[] = (exceptionsQuery.data ?? []).map((entry) => ({
+    id: entry.id,
+    reference:
+      entry.invoiceNumber ??
+      `${entry.entryType.toUpperCase()}-${(entry.bookingId ?? entry.tripId ?? entry.id).slice(0, REFERENCE_ID_LENGTH)}`,
+    amount: formatMinor(Math.abs(entry.grossAmountMinor), entry.currencyCode, locale),
+    type: entry.grossAmountMinor === 0 ? "missing" : "mismatch",
+    state: resolvedIds.has(entry.id) || entry.status === "settled" ? "resolved" : "open",
+  }));
+  const rows = allRows.filter(
+    (row) =>
+      (typeFilter === "all" || row.type === typeFilter) &&
+      (stateFilter === "all" || row.state === stateFilter),
+  );
+  const selected =
+    allRows.find((row) => row.id === selectedId) ?? rows.find((row) => row.state === "open");
+  const canResolve = selected?.state === "open" && note.trim() !== "";
+
+  const handleResolve = () => {
+    if (!selected || !canResolve) return;
+    setResolvedIds((previous) => new Set([...previous, selected.id]));
     setNote("");
   };
 
-  const columns: readonly TeDataTableColumn<ExceptionRow>[] = [
+  const columns: readonly AdminColumn<ExceptionRow>[] = [
     {
       key: "reference",
       header: t("screen.admin.finance.reconciliationExceptions.gatewayReference"),
+      render: (row) => row.reference,
     },
-    { key: "amount", header: t("screen.admin.finance.reconciliationExceptions.amount") },
+    {
+      key: "amount",
+      header: t("screen.admin.finance.reconciliationExceptions.amount"),
+      render: (row) => row.amount,
+    },
     {
       key: "type",
       header: t("screen.admin.finance.reconciliationExceptions.type"),
-      render: (row) => <AdminStatus status={TYPE_PRESENTATION()[row.type]} />,
+      render: (row) => typeLabel(row.type),
     },
     {
       key: "state",
       header: t("screen.admin.finance.reconciliationExceptions.state"),
-      render: (row) => <AdminStatus status={STATE_PRESENTATION()[row.state]} />,
+      render: (row) => <StateBadge state={row.state} />,
     },
     {
-      key: "open",
-      header: t("screen.admin.finance.reconciliationExceptions.action"),
+      key: "action",
+      header: (
+        <span className="te-caption">
+          {t("screen.admin.finance.reconciliationExceptions.action")}
+        </span>
+      ),
       render: (row) => (
-        <TeButton
-          variant="secondary"
-          aria-label={t("screen.admin.finance.reconciliationExceptions.resolveException", {
+        <AdminButton
+          variant="link"
+          aria-pressed={row.id === selected?.id}
+          aria-label={t("screen.admin.finance.reconciliationExceptions.selectException", {
             reference: row.reference,
           })}
-          onClick={() => {
-            setSelectedId(row.id);
-            handleResolve(row.id);
-          }}
+          onClick={() => setSelectedId(row.id)}
         >
-          {t("screen.admin.finance.reconciliationExceptions.resolve")}
-        </TeButton>
+          {row.state === "open"
+            ? t("screen.admin.finance.reconciliationExceptions.select")
+            : t("screen.admin.finance.reconciliationExceptions.view")}
+        </AdminButton>
       ),
     },
   ];
 
   return (
-    <AdminPage>
-      <TePageHeader
-        title={t("screen.admin.finance.reconciliationExceptions.reconciliationExceptions")}
-        description={t("screen.admin.finance.reconciliationExceptions.gatewayRecordsThatDoNot")}
-      />
-      <StatePreview
-        emptyTitle={t("screen.admin.finance.reconciliationExceptions.noExceptions")}
-        emptyDescription={t(
-          "screen.admin.finance.reconciliationExceptions.gatewayRecordsMatchTheLedger",
-        )}
-        loadingLabel={t("screen.admin.finance.reconciliationExceptions.loadingTheExceptions")}
+    <AdminPage
+      title={t("screen.admin.finance.reconciliationExceptions.title")}
+      description={t("screen.admin.finance.reconciliationExceptions.description")}
+    >
+      <AdminFilterBar label={t("screen.admin.finance.reconciliationExceptions.filters")}>
+        <AdminSelect
+          label={t("screen.admin.finance.reconciliationExceptions.type")}
+          options={typeOptions()}
+          value={typeFilter}
+          onValueChange={setTypeFilter}
+        />
+        <AdminSelect
+          label={t("screen.admin.finance.reconciliationExceptions.state")}
+          options={stateOptions()}
+          value={stateFilter}
+          onValueChange={setStateFilter}
+        />
+      </AdminFilterBar>
+      <AdminQueryState
+        query={exceptionsQuery}
+        loadingLabel={t("screen.admin.finance.reconciliationExceptions.loading")}
       >
-        <TeInlineAlert
-          tone="info"
-          title={t("screen.admin.finance.reconciliationExceptions.schedule")}
-        >
-          {t("screen.admin.finance.reconciliationExceptions.reconciliationRunsDailyD29")}
-        </TeInlineAlert>
-        <AdminFilters>
-          <AdminFilterSelect
-            label={t("screen.admin.finance.reconciliationExceptions.stateLabel")}
-            options={STATE_OPTIONS()}
-          />
-        </AdminFilters>
-        <AdminPanel title={t("screen.admin.finance.reconciliationExceptions.exceptions")}>
-          <TeDataTable
-            columns={columns}
-            rows={rows}
-            getRowKey={(row) => row.id}
-            caption={t(
-              "screen.admin.finance.reconciliationExceptions.reconciliationExceptionsCaption",
-            )}
-            emptyTitle={t("screen.admin.finance.reconciliationExceptions.noExceptionsEmptyTitle")}
-            emptyDescription={t(
-              "screen.admin.finance.reconciliationExceptions.gatewayRecordsMatchTheLedgerEmptyDescription",
-            )}
-          />
-          <AdminPagination pageCount={1} />
-        </AdminPanel>
-        <AdminPanel
-          title={t("screen.admin.finance.reconciliationExceptions.resolveSelectedException")}
-        >
-          <TeInput
-            label={t("screen.admin.finance.reconciliationExceptions.resolutionNoteRequired")}
-            value={note}
-            onChange={(event) => setNote(event.target.value)}
-            placeholder={t("screen.admin.finance.reconciliationExceptions.whatWasCheckedAndWhy")}
-          />
-          <AdminActions>
-            <AdminScreenLink slug="platform-financial-view" variant="secondary">
-              {t("screen.admin.finance.reconciliationExceptions.backToFinancialView")}
-            </AdminScreenLink>
-            <TeButton disabled={!canResolve} onClick={() => handleResolve()}>
-              {t("screen.admin.finance.reconciliationExceptions.resolveException2")}
-            </TeButton>
-          </AdminActions>
-        </AdminPanel>
-      </StatePreview>
+        <AdminSplit
+          main={
+            <AdminTable
+              caption={t("screen.admin.finance.reconciliationExceptions.tableCaption")}
+              columns={columns}
+              rows={rows}
+              getRowKey={(row) => row.id}
+              empty={
+                <AdminEmpty
+                  title={t("screen.admin.finance.reconciliationExceptions.emptyTitle")}
+                  description={t("screen.admin.finance.reconciliationExceptions.emptyBody")}
+                />
+              }
+            />
+          }
+          side={
+            <AdminCard title={t("screen.admin.finance.reconciliationExceptions.resolveException")}>
+              <AdminRow
+                label={t("screen.admin.finance.reconciliationExceptions.gatewayReference")}
+                last={selected?.state !== "resolved"}
+              >
+                {selected?.reference ?? "—"}
+              </AdminRow>
+              {selected?.state === "resolved" ? (
+                <AdminRow label={t("screen.admin.finance.reconciliationExceptions.state")} last>
+                  <StateBadge state="resolved" />
+                </AdminRow>
+              ) : (
+                <>
+                  <AdminTextarea
+                    label={t("screen.admin.finance.reconciliationExceptions.resolutionNote")}
+                    placeholder={t("screen.admin.finance.reconciliationExceptions.notePlaceholder")}
+                    rows={4}
+                    value={note}
+                    disabled={!selected}
+                    onChange={(event) => setNote(event.target.value)}
+                  />
+                  <AdminButton
+                    variant="primary"
+                    className="self-start"
+                    disabled={!canResolve}
+                    onClick={handleResolve}
+                  >
+                    {t("screen.admin.finance.reconciliationExceptions.markResolved")}
+                  </AdminButton>
+                </>
+              )}
+            </AdminCard>
+          }
+        />
+      </AdminQueryState>
+      <AdminAlert tone="info">
+        {t("screen.admin.finance.reconciliationExceptions.typesNote")}
+      </AdminAlert>
     </AdminPage>
   );
 }

@@ -1,164 +1,224 @@
+// SCR-ADM-23 Disputes queue (docs/design/web/admin/SCR-ADM-23.dc.html): disputes between parties,
+// filtered by type, state and age. A dispute is acknowledged within 2 working days and resolved
+// within 10; an open dispute past the first deadline shows as acknowledgement overdue.
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { TeDataTable, type TeDataTableColumn } from "@trips-app/ui/components/te-data-table";
-import { TeInlineAlert } from "@trips-app/ui/components/te-inline-alert";
-import { TePageHeader } from "@trips-app/ui/components/te-page-header";
-import type { TeSelectOption } from "@trips-app/ui/components/te-select";
 import { t } from "@trips-app/i18n";
-import { orpc } from "@/utils/orpc";
-import { StatePreview } from "../common/admin-state-preview";
-import { AdminScreenLink } from "../common/admin-links";
-import {
-  AdminFilterSelect,
-  AdminFilters,
-  AdminPage,
-  AdminPagination,
-  AdminPanel,
-  AdminStatus,
-  setSelectedAdminDisputeId,
-  type AdminStatusPresentation,
-} from "../common/admin-shared";
 
-interface DisputeRow {
-  id: string;
-  parties: string;
-  reference: string;
-  type: string;
-  age: string;
-  state: "awaiting" | "acknowledged" | "resolved";
+import { useAuth } from "@/auth/auth-context";
+import { orpc } from "@/utils/orpc";
+
+import { AdminLink } from "../common/admin-actions";
+import { AdminSelect, type AdminOption } from "../common/admin-form";
+import { setSelectedAdminDisputeId } from "../common/admin-selection";
+import { AdminEmpty, AdminQueryState } from "../common/admin-states";
+import {
+  AdminAlert,
+  AdminBadge,
+  AdminFilterBar,
+  AdminPage,
+  AdminTable,
+  type AdminColumn,
+} from "../common/admin-ui";
+import { ACKNOWLEDGE_WITHIN_WORKING_DAYS, RESOLVE_WITHIN_WORKING_DAYS } from "./deals-format";
+import { toDispute, type Dispute, type DisputeState } from "./dispute-model";
+
+const STATE_FILTER: Record<string, readonly DisputeState[]> = {
+  open: ["open", "openOverdue"],
+  acknowledged: ["acknowledged"],
+  resolved: ["resolved"],
+};
+
+const AGE_FILTER: Record<string, number> = {
+  overAcknowledge: ACKNOWLEDGE_WITHIN_WORKING_DAYS,
+  overResolve: RESOLVE_WITHIN_WORKING_DAYS,
+};
+
+const stateOptions = (): readonly AdminOption[] => [
+  { value: "all", label: t("screen.admin.dealsAndDisputes.disputesQueue.allStates") },
+  { value: "open", label: t("screen.admin.dealsAndDisputes.disputesQueue.open") },
+  { value: "acknowledged", label: t("screen.admin.dealsAndDisputes.disputesQueue.acknowledged") },
+  { value: "resolved", label: t("screen.admin.dealsAndDisputes.disputesQueue.resolved") },
+];
+
+const ageOptions = (): readonly AdminOption[] => [
+  { value: "any", label: t("screen.admin.dealsAndDisputes.disputesQueue.anyAge") },
+  {
+    value: "overAcknowledge",
+    label: t("screen.admin.dealsAndDisputes.disputesQueue.moreThanDays", {
+      days: ACKNOWLEDGE_WITHIN_WORKING_DAYS,
+    }),
+  },
+  {
+    value: "overResolve",
+    label: t("screen.admin.dealsAndDisputes.disputesQueue.moreThanDays", {
+      days: RESOLVE_WITHIN_WORKING_DAYS,
+    }),
+  },
+];
+
+function DisputeStateBadge({ state }: { state: DisputeState }) {
+  if (state === "openOverdue") {
+    return (
+      <AdminBadge tone="bad" icon="alert">
+        {t("screen.admin.dealsAndDisputes.disputesQueue.openAcknowledgementOverdue")}
+      </AdminBadge>
+    );
+  }
+  if (state === "open") {
+    return (
+      <AdminBadge tone="warn" icon={false}>
+        {t("screen.admin.dealsAndDisputes.disputesQueue.open")}
+      </AdminBadge>
+    );
+  }
+  if (state === "acknowledged") {
+    return (
+      <AdminBadge tone="info" icon={false}>
+        {t("screen.admin.dealsAndDisputes.disputesQueue.acknowledged")}
+      </AdminBadge>
+    );
+  }
+  return (
+    <AdminBadge tone="ok">{t("screen.admin.dealsAndDisputes.disputesQueue.resolved")}</AdminBadge>
+  );
 }
 
-const DEFAULT_DISPUTE_ROWS: readonly DisputeRow[] = [];
+function partiesLabel(dispute: Dispute): string {
+  return t("screen.admin.dealsAndDisputes.disputesQueue.organizationRef", {
+    reference: dispute.organization,
+  });
+}
 
-const STATE_PRESENTATION = (): Record<DisputeRow["state"], AdminStatusPresentation> => ({
-  awaiting: {
-    tone: "warning",
-    icon: "clock",
-    label: t("screen.admin.dealsAndDisputes.disputesQueue.awaitingAcknowledgement"),
-  },
-  acknowledged: {
-    tone: "info",
-    icon: "check",
-    label: t("screen.admin.dealsAndDisputes.disputesQueue.acknowledged"),
-  },
-  resolved: {
-    tone: "success",
-    icon: "check",
-    label: t("screen.admin.dealsAndDisputes.disputesQueue.resolved"),
-  },
-});
+function referenceLabel(dispute: Dispute): string {
+  return dispute.isBooking
+    ? t("screen.admin.dealsAndDisputes.disputesQueue.bookingRef", { reference: dispute.reference })
+    : t("screen.admin.dealsAndDisputes.disputesQueue.tripRef", { reference: dispute.reference });
+}
 
-const TYPE_OPTIONS = (): readonly TeSelectOption[] => [
-  { value: "all", label: t("screen.admin.dealsAndDisputes.disputesQueue.allTypes") },
+const columns = (): readonly AdminColumn<Dispute>[] => [
   {
-    value: "placeholder",
-    label: t("screen.admin.dealsAndDisputes.disputesQueue.disputeTypesPendingD251"),
-  },
-];
-const STATE_OPTIONS = (): readonly TeSelectOption[] => [
-  { value: "all", label: t("screen.admin.dealsAndDisputes.disputesQueue.anyState") },
-  {
-    value: "awaiting",
-    label: t("screen.admin.dealsAndDisputes.disputesQueue.awaitingAcknowledgementLabel"),
+    key: "parties",
+    header: t("screen.admin.dealsAndDisputes.disputesQueue.parties"),
+    render: partiesLabel,
+    wrap: true,
   },
   {
-    value: "acknowledged",
-    label: t("screen.admin.dealsAndDisputes.disputesQueue.acknowledgedLabel"),
+    key: "reference",
+    header: t("screen.admin.dealsAndDisputes.disputesQueue.bookingOrTrip"),
+    render: referenceLabel,
   },
-  { value: "resolved", label: t("screen.admin.dealsAndDisputes.disputesQueue.resolvedLabel") },
-];
-
-const COLUMNS = (): readonly TeDataTableColumn<DisputeRow>[] => [
-  { key: "parties", header: t("screen.admin.dealsAndDisputes.disputesQueue.parties") },
-  { key: "reference", header: t("screen.admin.dealsAndDisputes.disputesQueue.bookingOrTrip") },
-  { key: "type", header: t("screen.admin.dealsAndDisputes.disputesQueue.type") },
-  { key: "age", header: t("screen.admin.dealsAndDisputes.disputesQueue.age"), align: "end" },
+  {
+    key: "type",
+    header: t("screen.admin.dealsAndDisputes.disputesQueue.type"),
+    render: (row) => row.type,
+    wrap: true,
+  },
+  {
+    key: "age",
+    header: t("screen.admin.dealsAndDisputes.disputesQueue.age"),
+    render: (row) =>
+      t("screen.admin.dealsAndDisputes.disputesQueue.workingDays", { days: row.ageWorkingDays }),
+  },
   {
     key: "state",
     header: t("screen.admin.dealsAndDisputes.disputesQueue.state"),
-    render: (row) => <AdminStatus status={STATE_PRESENTATION()[row.state]} />,
+    render: (row) => <DisputeStateBadge state={row.state} />,
   },
   {
-    key: "open",
-    header: t("screen.admin.dealsAndDisputes.disputesQueue.action"),
+    key: "action",
+    header: (
+      <span className="te-caption">{t("screen.admin.dealsAndDisputes.disputesQueue.action")}</span>
+    ),
     render: (row) => (
-      <span onClick={() => setSelectedAdminDisputeId(row.id)}>
-        <AdminScreenLink
-          slug="dispute-detail-and-refund-decision"
-          variant="secondary"
-          ariaLabel={t("screen.admin.dealsAndDisputes.disputesQueue.openDispute", {
-            reference: row.reference,
-          })}
-        >
-          {t("screen.admin.dealsAndDisputes.disputesQueue.openDispute2")}
-        </AdminScreenLink>
-      </span>
+      <AdminLink
+        screen="SCR-ADM-24"
+        params={{ disputeId: row.id }}
+        ariaLabel={t("screen.admin.dealsAndDisputes.disputesQueue.openDisputeFor", {
+          reference: referenceLabel(row),
+        })}
+        onClick={() => setSelectedAdminDisputeId(row.id)}
+      >
+        {t("screen.admin.dealsAndDisputes.disputesQueue.openDispute")}
+      </AdminLink>
     ),
   },
 ];
 
 export function DisputesQueue() {
-  const exceptionsQuery = useQuery(
-    orpc.accounting.listAdminReconciliationExceptions.queryOptions(),
+  const { status: authStatus } = useAuth();
+  const [typeFilter, setTypeFilter] = useState("all");
+  const [stateFilter, setStateFilter] = useState("all");
+  const [ageFilter, setAgeFilter] = useState("any");
+
+  const exceptionsQuery = useQuery({
+    ...orpc.accounting.listAdminReconciliationExceptions.queryOptions(),
+    enabled: authStatus === "authenticated",
+  });
+
+  const disputes = (exceptionsQuery.data ?? []).map((source) => toDispute(source));
+  const types = [...new Set(disputes.map((dispute) => dispute.type))].sort();
+  const typeOptions: readonly AdminOption[] = [
+    { value: "all", label: t("screen.admin.dealsAndDisputes.disputesQueue.allTypes") },
+    ...types.map((type) => ({ value: type, label: type })),
+  ];
+  const minAge = AGE_FILTER[ageFilter];
+  const allowedStates = STATE_FILTER[stateFilter];
+  const rows = disputes.filter(
+    (dispute) =>
+      (typeFilter === "all" || dispute.type === typeFilter) &&
+      (!allowedStates || allowedStates.includes(dispute.state)) &&
+      (minAge === undefined || dispute.ageWorkingDays > minAge),
   );
 
-  const rows: readonly DisputeRow[] =
-    exceptionsQuery.data && exceptionsQuery.data.length > 0
-      ? exceptionsQuery.data.map((exc) => {
-          const refId = exc.bookingId ?? exc.tripId ?? exc.id;
-          return {
-            id: exc.id,
-            parties: `Tenant ${exc.tenantId.slice(0, 8)}`,
-            reference: `${exc.entryType.toUpperCase()}-${refId.slice(0, 8)}`,
-            type: exc.description || exc.entryType,
-            age: new Date(exc.createdAt).toISOString().slice(0, 10),
-            state: (exc.status === "settled" ? "resolved" : "awaiting") as DisputeRow["state"],
-          };
-        })
-      : DEFAULT_DISPUTE_ROWS;
-
   return (
-    <AdminPage>
-      <TePageHeader
-        title={t("screen.admin.dealsAndDisputes.disputesQueue.disputesQueue")}
-        description={t("screen.admin.dealsAndDisputes.disputesQueue.workDisputesBetweenParties")}
-      />
-      <StatePreview
-        emptyTitle={t("screen.admin.dealsAndDisputes.disputesQueue.noOpenDisputes")}
-        emptyDescription={t(
-          "screen.admin.dealsAndDisputes.disputesQueue.noDisputesMatchTheseFilters",
-        )}
-        loadingLabel={t("screen.admin.dealsAndDisputes.disputesQueue.loadingTheDisputes")}
+    <AdminPage
+      title={t("screen.admin.dealsAndDisputes.disputesQueue.title")}
+      description={t("screen.admin.dealsAndDisputes.disputesQueue.description")}
+    >
+      <AdminAlert tone="info">
+        {t("screen.admin.dealsAndDisputes.disputesQueue.deadlines", {
+          acknowledge: ACKNOWLEDGE_WITHIN_WORKING_DAYS,
+          resolve: RESOLVE_WITHIN_WORKING_DAYS,
+        })}
+      </AdminAlert>
+      <AdminFilterBar label={t("screen.admin.dealsAndDisputes.disputesQueue.filters")}>
+        <AdminSelect
+          label={t("screen.admin.dealsAndDisputes.disputesQueue.type")}
+          options={typeOptions}
+          value={typeFilter}
+          onValueChange={setTypeFilter}
+        />
+        <AdminSelect
+          label={t("screen.admin.dealsAndDisputes.disputesQueue.state")}
+          options={stateOptions()}
+          value={stateFilter}
+          onValueChange={setStateFilter}
+        />
+        <AdminSelect
+          label={t("screen.admin.dealsAndDisputes.disputesQueue.age")}
+          options={ageOptions()}
+          value={ageFilter}
+          onValueChange={setAgeFilter}
+        />
+      </AdminFilterBar>
+      <AdminQueryState
+        query={exceptionsQuery}
+        loadingLabel={t("screen.admin.dealsAndDisputes.disputesQueue.loading")}
       >
-        <TeInlineAlert
-          tone="info"
-          title={t("screen.admin.dealsAndDisputes.disputesQueue.deadlines")}
-        >
-          {t("screen.admin.dealsAndDisputes.disputesQueue.acknowledgeADisputeWithin2")}
-        </TeInlineAlert>
-        <AdminFilters>
-          <AdminFilterSelect
-            label={t("screen.admin.dealsAndDisputes.disputesQueue.typeLabel")}
-            options={TYPE_OPTIONS()}
-          />
-          <AdminFilterSelect
-            label={t("screen.admin.dealsAndDisputes.disputesQueue.stateLabel")}
-            options={STATE_OPTIONS()}
-          />
-        </AdminFilters>
-        <AdminPanel title={t("screen.admin.dealsAndDisputes.disputesQueue.disputes")}>
-          <TeDataTable
-            columns={COLUMNS()}
-            rows={rows}
-            getRowKey={(row) => row.id}
-            caption={t("screen.admin.dealsAndDisputes.disputesQueue.disputesQueueCaption")}
-            emptyTitle={t("screen.admin.dealsAndDisputes.disputesQueue.noOpenDisputesEmptyTitle")}
-            emptyDescription={t(
-              "screen.admin.dealsAndDisputes.disputesQueue.noDisputesMatchTheseFiltersEmptyDescription",
-            )}
-          />
-          <AdminPagination pageCount={1} />
-        </AdminPanel>
-      </StatePreview>
+        <AdminTable
+          caption={t("screen.admin.dealsAndDisputes.disputesQueue.tableCaption")}
+          columns={columns()}
+          rows={rows}
+          getRowKey={(row) => row.id}
+          empty={
+            <AdminEmpty
+              title={t("screen.admin.dealsAndDisputes.disputesQueue.emptyTitle")}
+              description={t("screen.admin.dealsAndDisputes.disputesQueue.emptyBody")}
+            />
+          }
+        />
+      </AdminQueryState>
     </AdminPage>
   );
 }

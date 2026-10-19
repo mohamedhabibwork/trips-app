@@ -1,206 +1,200 @@
-import { useEffect, useState } from "react";
+// SCR-ADM-32 Feature flags and platform configuration
+// (docs/design/web/admin/SCR-ADM-32.dc.html): phase feature flags, gateway routing by market, the
+// fixed OTP and session policy and the quiet-hours urgent categories. Only the flags can be saved
+// (updateSystemSettings); a flag change needs a reason and a second admin (four-eyes, D-233).
+import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { TeButton } from "@trips-app/ui/components/te-button";
-import { TeInlineAlert } from "@trips-app/ui/components/te-inline-alert";
-import { TeInput } from "@trips-app/ui/components/te-input";
-import { TePageHeader } from "@trips-app/ui/components/te-page-header";
-import type { TeSelectOption } from "@trips-app/ui/components/te-select";
 import { t } from "@trips-app/i18n";
-import { orpc } from "@/utils/orpc";
-import { StatePreview } from "../common/admin-state-preview";
-import {
-  AdminActions,
-  AdminFilterSelect,
-  AdminPage,
-  AdminPanel,
-  AdminToggle,
-} from "../common/admin-shared";
 
-const GATEWAY_OPTIONS = (): readonly TeSelectOption[] => [
-  {
-    value: "stripe",
-    label: t("screen.admin.platform.featureFlagsAndPlatformConfiguration.stripeInternational"),
-  },
-  {
-    value: "paymob",
-    label: t("screen.admin.platform.featureFlagsAndPlatformConfiguration.paymobLocalMena"),
-  },
-  {
-    value: "tap",
-    label: t("screen.admin.platform.featureFlagsAndPlatformConfiguration.tapLocalMena"),
-  },
-  {
-    value: "fawry",
-    label: t("screen.admin.platform.featureFlagsAndPlatformConfiguration.fawryCashInEgypt"),
-  },
-];
+import { useAuth } from "@/auth/auth-context";
+import { orpc } from "@/utils/orpc";
+
+import { AdminButton } from "../common/admin-actions";
+import { AdminInput, AdminTextarea } from "../common/admin-form";
+import { AdminQueryState } from "../common/admin-states";
+import {
+  AdminAlert,
+  AdminBadge,
+  AdminCard,
+  AdminGrid,
+  AdminPage,
+  AdminRow,
+} from "../common/admin-ui";
+import { FeatureFlagTable, FLAG_KEYS, type FlagKey, type FlagValues } from "./feature-flag-table";
+import { GatewayRoutingCard, type MarketGateways } from "./gateway-routing-card";
+
+const MIN_REASON_LENGTH = 5;
+const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+type FlagDraft = Partial<Record<FlagKey, boolean>>;
+
+/** The flags whose draft value differs from the saved one. */
+function changedFlags(saved: FlagValues, draft: FlagDraft): FlagDraft {
+  return Object.fromEntries(
+    FLAG_KEYS.filter((key) => draft[key] !== undefined && draft[key] !== saved[key]).map((key) => [
+      key,
+      draft[key],
+    ]),
+  );
+}
+
+function PolicyCard() {
+  return (
+    <AdminCard title={t("screen.admin.platform.featureFlagsAndPlatformConfiguration.otpTitle")}>
+      <div>
+        <AdminRow label={t("screen.admin.platform.featureFlagsAndPlatformConfiguration.otpPolicy")}>
+          <AdminBadge icon="lock">
+            {t("screen.admin.platform.featureFlagsAndPlatformConfiguration.fixedByBrl20")}
+          </AdminBadge>
+        </AdminRow>
+        <AdminRow
+          last
+          label={t("screen.admin.platform.featureFlagsAndPlatformConfiguration.sessionPolicy")}
+        >
+          <AdminBadge icon="lock">
+            {t("screen.admin.platform.featureFlagsAndPlatformConfiguration.fixedByBrl22")}
+          </AdminBadge>
+        </AdminRow>
+      </div>
+      <p className="te-caption">
+        {t("screen.admin.platform.featureFlagsAndPlatformConfiguration.policyNotDecided")}
+      </p>
+    </AdminCard>
+  );
+}
+
+function QuietHoursCard({ categories }: { categories: readonly string[] }) {
+  return (
+    <AdminCard
+      title={t("screen.admin.platform.featureFlagsAndPlatformConfiguration.quietHoursTitle")}
+    >
+      <AdminInput
+        label={t("screen.admin.platform.featureFlagsAndPlatformConfiguration.urgentCategories")}
+        value={categories.length > 0 ? categories.join(", ") : "—"}
+        readOnly
+      />
+      <p className="te-caption">
+        {t("screen.admin.platform.featureFlagsAndPlatformConfiguration.quietHoursNote")}
+      </p>
+    </AdminCard>
+  );
+}
 
 export function FeatureFlagsAndPlatformConfiguration() {
+  const { status: authStatus } = useAuth();
   const queryClient = useQueryClient();
-  const settingsQuery = useQuery(orpc.admin.getSystemSettings.queryOptions());
+  const [draft, setDraft] = useState<FlagDraft>({});
+  const [reason, setReason] = useState("");
+  const [approverId, setApproverId] = useState("");
 
-  const [market, setMarket] = useState("EG");
-  const [flagPhase5, setFlagPhase5] = useState(true);
-  const [flagPhase6, setFlagPhase6] = useState(true);
-
-  useEffect(() => {
-    if (settingsQuery.data) {
-      setFlagPhase5(Boolean(settingsQuery.data.featureFlags.p5_subscriptions_coupons));
-      setFlagPhase6(Boolean(settingsQuery.data.featureFlags.p6_live_tracking_public_api));
-      const firstMarket = Object.values(settingsQuery.data.markets)[0];
-      if (firstMarket) {
-        setMarket(firstMarket.countryCode);
-      }
-    }
-  }, [settingsQuery.data]);
+  const settingsQuery = useQuery({
+    ...orpc.admin.getSystemSettings.queryOptions(),
+    enabled: authStatus === "authenticated",
+  });
 
   const updateSettingsMutation = useMutation(
     orpc.admin.updateSystemSettings.mutationOptions({
       onSuccess: () => {
+        setDraft({});
+        setReason("");
+        setApproverId("");
         void queryClient.invalidateQueries({ queryKey: orpc.admin.key() });
       },
     }),
   );
 
-  const handleSave = async () => {
-    const validMarket =
-      market === "EG" || market === "SA" || market === "AE" ? market : ("EG" as const);
-    try {
-      await updateSettingsMutation.mutateAsync({
-        marketCountryCode: validMarket,
-        marketEnabled: true,
-        featureFlags: {
-          p5_subscriptions_coupons: flagPhase5,
-          p6_live_tracking_public_api: flagPhase6,
-        },
-        reason: "Updated feature flags and market gateway from Admin console",
-      });
-    } catch {
-      // Allow optimistic state in preview
-    }
+  const settings = settingsQuery.data;
+  const saved: FlagValues | undefined = settings?.featureFlags;
+  const pending = saved ? changedFlags(saved, draft) : {};
+  const isDirty = Object.keys(pending).length > 0;
+  const canSave =
+    isDirty &&
+    reason.trim().length >= MIN_REASON_LENGTH &&
+    UUID_PATTERN.test(approverId.trim()) &&
+    !updateSettingsMutation.isPending;
+
+  const handleToggle = (key: FlagKey) => {
+    if (!saved) return;
+    updateSettingsMutation.reset();
+    setDraft((current) => ({ ...current, [key]: !(current[key] ?? saved[key]) }));
   };
 
+  const handleSave = () => {
+    if (!canSave) return;
+    updateSettingsMutation.mutate({
+      featureFlags: pending,
+      reason: reason.trim(),
+      secondApproverAdminAccountId: approverId.trim(),
+    });
+  };
+
+  const markets: readonly MarketGateways[] = settings ? Object.values(settings.markets) : [];
+
   return (
-    <AdminPage>
-      <TePageHeader
-        title={t(
-          "screen.admin.platform.featureFlagsAndPlatformConfiguration.featureFlagsAndPlatformConfiguration",
-        )}
-        description={t(
-          "screen.admin.platform.featureFlagsAndPlatformConfiguration.turnFeaturesOnOrOff",
-        )}
-        actions={
-          <TeButton onClick={() => void handleSave()}>
-            {t("screen.admin.platform.featureFlagsAndPlatformConfiguration.saveConfiguration")}
-          </TeButton>
-        }
-      />
-      <StatePreview
-        emptyTitle={t("screen.admin.platform.featureFlagsAndPlatformConfiguration.noFeatureFlags")}
-        emptyDescription={t(
-          "screen.admin.platform.featureFlagsAndPlatformConfiguration.noFeatureFlagsAreDefined",
-        )}
-        loadingLabel={t(
-          "screen.admin.platform.featureFlagsAndPlatformConfiguration.loadingTheConfiguration",
-        )}
+    <AdminPage
+      title={t("screen.admin.platform.featureFlagsAndPlatformConfiguration.title")}
+      description={t("screen.admin.platform.featureFlagsAndPlatformConfiguration.description")}
+      actions={
+        <AdminButton variant="primary" disabled={!canSave} onClick={handleSave}>
+          {t("screen.admin.platform.featureFlagsAndPlatformConfiguration.saveConfiguration")}
+        </AdminButton>
+      }
+    >
+      <AdminQueryState
+        query={settingsQuery}
+        loadingLabel={t("screen.admin.platform.featureFlagsAndPlatformConfiguration.loading")}
       >
-        <AdminPanel
-          title={t("screen.admin.platform.featureFlagsAndPlatformConfiguration.featureFlags")}
-        >
-          <p className="te-caption">
-            {t("screen.admin.platform.featureFlagsAndPlatformConfiguration.aFlagChangeAppliesTo")}
-          </p>
-          <div onClick={() => setFlagPhase5((v) => !v)}>
-            <AdminToggle
-              label={t(
-                "screen.admin.platform.featureFlagsAndPlatformConfiguration.featureFlagName",
+        {isDirty ? (
+          <>
+            <AdminAlert tone="warning">
+              {t("screen.admin.platform.featureFlagsAndPlatformConfiguration.unsavedChanges")}
+            </AdminAlert>
+            <AdminCard
+              title={t("screen.admin.platform.featureFlagsAndPlatformConfiguration.approvalTitle")}
+              caption={t(
+                "screen.admin.platform.featureFlagsAndPlatformConfiguration.approvalCaption",
               )}
-            />
-          </div>
-          <p className="te-caption">
-            {t("screen.admin.platform.featureFlagsAndPlatformConfiguration.phasePhase")}
-          </p>
-          <div onClick={() => setFlagPhase6((v) => !v)}>
-            <AdminToggle
-              label={t(
-                "screen.admin.platform.featureFlagsAndPlatformConfiguration.featureFlagNameLabel",
-              )}
-            />
-          </div>
-          <p className="te-caption">
-            {t("screen.admin.platform.featureFlagsAndPlatformConfiguration.phasePhase2")}
-          </p>
-        </AdminPanel>
-        <AdminPanel
-          title={t(
-            "screen.admin.platform.featureFlagsAndPlatformConfiguration.paymentGatewayByMarket",
-          )}
-        >
-          <TeInput
-            label={t("screen.admin.platform.featureFlagsAndPlatformConfiguration.market")}
-            placeholder={t("screen.admin.platform.featureFlagsAndPlatformConfiguration.marketCode")}
-            value={market}
-            onChange={(event) => setMarket(event.target.value)}
-            required
+            >
+              <AdminTextarea
+                label={t("screen.admin.platform.featureFlagsAndPlatformConfiguration.reason")}
+                rows={3}
+                required
+                value={reason}
+                onChange={(event) => setReason(event.target.value)}
+              />
+              <AdminInput
+                label={t("screen.admin.platform.featureFlagsAndPlatformConfiguration.approver")}
+                help={t("screen.admin.platform.featureFlagsAndPlatformConfiguration.approverHelp")}
+                required
+                value={approverId}
+                onChange={(event) => setApproverId(event.target.value)}
+              />
+            </AdminCard>
+          </>
+        ) : null}
+        {updateSettingsMutation.isError ? (
+          <AdminAlert
+            tone="danger"
+            title={t("screen.admin.platform.featureFlagsAndPlatformConfiguration.saveFailedTitle")}
+          >
+            {t("screen.admin.platform.featureFlagsAndPlatformConfiguration.saveFailedBody")}
+          </AdminAlert>
+        ) : null}
+        {updateSettingsMutation.isSuccess ? (
+          <AdminAlert tone="success">
+            {t("screen.admin.platform.featureFlagsAndPlatformConfiguration.saved")}
+          </AdminAlert>
+        ) : null}
+        <AdminGrid columns={2}>
+          <FeatureFlagTable
+            values={saved ? { ...saved, ...draft } : undefined}
+            onToggle={handleToggle}
           />
-          <AdminFilterSelect
-            label={t("screen.admin.platform.featureFlagsAndPlatformConfiguration.gateway")}
-            options={GATEWAY_OPTIONS()}
-          />
-          <p className="te-caption">
-            {t(
-              "screen.admin.platform.featureFlagsAndPlatformConfiguration.stripeForInternationalPaymentsPaymob",
-            )}
-          </p>
-        </AdminPanel>
-        <AdminPanel
-          title={t(
-            "screen.admin.platform.featureFlagsAndPlatformConfiguration.otpAndSessionPolicy",
-          )}
-        >
-          <TeInput
-            label={t("screen.admin.platform.featureFlagsAndPlatformConfiguration.otpPolicy")}
-            value="Fixed by BRL-20"
-            readOnly
-            supportingText={t(
-              "screen.admin.platform.featureFlagsAndPlatformConfiguration.editabilityIsUnderReviewD",
-            )}
-          />
-          <TeInput
-            label={t("screen.admin.platform.featureFlagsAndPlatformConfiguration.sessionPolicy")}
-            value="Fixed by BRL-22"
-            readOnly
-            supportingText={t(
-              "screen.admin.platform.featureFlagsAndPlatformConfiguration.editabilityIsUnderReviewDSupportingText",
-            )}
-          />
-        </AdminPanel>
-        <AdminPanel
-          title={t("screen.admin.platform.featureFlagsAndPlatformConfiguration.quietHours")}
-        >
-          <TeInput
-            label={t("screen.admin.platform.featureFlagsAndPlatformConfiguration.urgentCategories")}
-            placeholder={t(
-              "screen.admin.platform.featureFlagsAndPlatformConfiguration.urgentNotificationCategories",
-            )}
-            disabled
-            supportingText={t(
-              "screen.admin.platform.featureFlagsAndPlatformConfiguration.setByD288",
-            )}
-          />
-        </AdminPanel>
-        <TeInlineAlert
-          tone="info"
-          title={t("screen.admin.platform.featureFlagsAndPlatformConfiguration.audit")}
-        >
-          {t("screen.admin.platform.featureFlagsAndPlatformConfiguration.everyChangeOnThisPage")}
-        </TeInlineAlert>
-        <AdminActions>
-          <TeButton variant="secondary" onClick={() => setMarket("EG")}>
-            {t("screen.admin.platform.featureFlagsAndPlatformConfiguration.cancel")}
-          </TeButton>
-        </AdminActions>
-      </StatePreview>
+          <GatewayRoutingCard markets={markets} />
+          <PolicyCard />
+          <QuietHoursCard categories={settings?.notifications.urgentCategories ?? []} />
+        </AdminGrid>
+      </AdminQueryState>
     </AdminPage>
   );
 }

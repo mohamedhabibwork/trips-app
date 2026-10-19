@@ -1,80 +1,57 @@
+// SCR-ADM-07 Users and entities (docs/design/web/admin/SCR-ADM-07.dc.html): search any
+// organization, driver or photographer, filter by role, and open the account. The directory is
+// built from the onboarding applications, the only account list the API serves today.
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { TeButton } from "@trips-app/ui/components/te-button";
-import { TeDataTable, type TeDataTableColumn } from "@trips-app/ui/components/te-data-table";
-import { TePageHeader } from "@trips-app/ui/components/te-page-header";
-import {
-  TE_ROLES,
-  TeRoleBadge,
-  roleLabel,
-  type TeRole,
-} from "@trips-app/ui/components/te-role-badge";
-import { TeSearchField } from "@trips-app/ui/components/te-search-field";
-import { TeSelect, type TeSelectOption } from "@trips-app/ui/components/te-select";
 import { t } from "@trips-app/i18n";
+
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
-import { StatePreview } from "../common/admin-state-preview";
-import { AdminScreenLink, useAdminNavigate } from "../common/admin-links";
+
+import { AdminLink } from "../common/admin-actions";
+import { AdminInput, AdminSelect, type AdminOption } from "../common/admin-form";
+import { setSelectedAdminEntityId } from "../common/admin-selection";
+import { AdminEmpty, AdminQueryState } from "../common/admin-states";
+import { AdminFilterBar, AdminPage, AdminTable, type AdminColumn } from "../common/admin-ui";
 import {
-  AdminActions,
-  AdminFilters,
-  AdminPage,
-  AdminPagination,
-  AdminPanel,
-  AdminStatus,
-  setSelectedAdminEntityId,
-  type AdminStatusPresentation,
-} from "../common/admin-shared";
+  AccountStatusBadge,
+  entityName,
+  entityRole,
+  readLegalName,
+  readPayload,
+  roleLabel,
+  type EntityRole,
+} from "./directory-shared";
 
 interface EntityRow {
   id: string;
   name: string;
-  role: TeRole;
-  organization: string;
-  status: "active" | "suspended";
+  role: EntityRole;
+  email: string | null;
+  searchText: string;
 }
 
-const STATUS_PRESENTATION = (): Record<EntityRow["status"], AdminStatusPresentation> => ({
-  active: {
-    tone: "success",
-    icon: "check",
-    label: t("screen.admin.directory.usersAndEntitiesDirectory.active"),
-  },
-  suspended: {
-    tone: "danger",
-    icon: "lock",
-    label: t("screen.admin.directory.usersAndEntitiesDirectory.suspended"),
-  },
-});
+const ROLE_FILTERS = ["organization", "driver", "photographer", "traveler", "moderator"] as const;
 
-const ROLE_OPTIONS = (): readonly TeSelectOption[] => [
+const roleOptions = (): readonly AdminOption[] => [
   { value: "all", label: t("screen.admin.directory.usersAndEntitiesDirectory.allRoles") },
-  ...TE_ROLES.map((role) => ({ value: role, label: roleLabel(role) })),
-];
-const STATUS_OPTIONS = (): readonly TeSelectOption[] => [
-  { value: "all", label: t("screen.admin.directory.usersAndEntitiesDirectory.allStatuses") },
-  { value: "active", label: t("screen.admin.directory.usersAndEntitiesDirectory.activeLabel") },
-  {
-    value: "suspended",
-    label: t("screen.admin.directory.usersAndEntitiesDirectory.suspendedLabel"),
-  },
-  {
-    value: "deletion",
-    label: t("screen.admin.directory.usersAndEntitiesDirectory.deletionRequested"),
-  },
+  ...ROLE_FILTERS.map((role) => ({ value: role, label: roleLabel(role) })),
 ];
 
-function mapAppRole(applicationType: string): TeRole {
-  if (applicationType === "organization") return "organization";
-  if (applicationType === "platform_photographer") return "photographer";
-  return "driver";
+const statusOptions = (): readonly AdminOption[] => [
+  { value: "all", label: t("screen.admin.directory.usersAndEntitiesDirectory.allStatuses") },
+  { value: "active", label: t("screen.admin.directory.usersAndEntitiesDirectory.active") },
+  { value: "suspended", label: t("screen.admin.directory.usersAndEntitiesDirectory.suspended") },
+];
+
+function matchesSearch(row: EntityRow, search: string): boolean {
+  const needle = search.trim().toLowerCase();
+  return needle === "" || row.searchText.includes(needle);
 }
 
 export function UsersAndEntitiesDirectory() {
   const { status: authStatus } = useAuth();
-  const goTo = useAdminNavigate();
-  const [query, setQuery] = useState("");
+  const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
 
@@ -83,130 +60,114 @@ export function UsersAndEntitiesDirectory() {
     enabled: authStatus === "authenticated",
   });
 
-  const rows: readonly EntityRow[] = (queueQuery.data ?? []).map((app) => {
-    const payload = (app.payload ?? {}) as Record<string, unknown>;
-    const legalEntity = typeof payload.legalEntityName === "string" ? payload.legalEntityName : "-";
+  const allRows: readonly EntityRow[] = (queueQuery.data ?? []).map((item) => {
+    const payload = readPayload(item.payload);
+    const name = entityName(item);
+    const email = item.applicant?.email ?? null;
+    const searchable = [name, email, item.applicant?.phone, readLegalName(payload), item.id];
     return {
-      id: app.id,
-      name: app.applicant?.fullName ?? legalEntity ?? app.applicantAccountId,
-      role: mapAppRole(app.applicationType),
-      organization: legalEntity,
-      status: app.state === "Rejected" || app.state === "Closed" ? "suspended" : "active",
+      id: item.id,
+      name,
+      role: entityRole(item.applicationType),
+      email,
+      searchText: searchable.filter(Boolean).join(" ").toLowerCase(),
     };
   });
+  const rows = allRows.filter(
+    (row) => (roleFilter === "all" || row.role === roleFilter) && matchesSearch(row, search),
+  );
 
-  const normalizedQuery = query.trim().toLowerCase();
-  const visibleRows = rows.filter((row) => {
-    if (roleFilter !== "all" && row.role !== roleFilter) return false;
-    if (statusFilter !== "all" && row.status !== statusFilter) return false;
-    if (
-      normalizedQuery &&
-      !row.name.toLowerCase().includes(normalizedQuery) &&
-      !row.organization.toLowerCase().includes(normalizedQuery)
-    ) {
-      return false;
-    }
-    return true;
-  });
-
-  const columns: readonly TeDataTableColumn<EntityRow>[] = [
-    { key: "name", header: t("screen.admin.directory.usersAndEntitiesDirectory.name") },
+  const columns: readonly AdminColumn<EntityRow>[] = [
+    {
+      key: "name",
+      header: t("screen.admin.directory.usersAndEntitiesDirectory.name"),
+      render: (row) => row.name,
+      wrap: true,
+    },
     {
       key: "role",
       header: t("screen.admin.directory.usersAndEntitiesDirectory.role"),
-      render: (row) => <TeRoleBadge role={row.role} />,
+      render: (row) => roleLabel(row.role),
     },
     {
-      key: "organization",
-      header: t("screen.admin.directory.usersAndEntitiesDirectory.organization"),
+      key: "email",
+      header: t("screen.admin.directory.usersAndEntitiesDirectory.email"),
+      render: (row) => row.email ?? "—",
     },
     {
+      // The application list carries no account status; the detail page shows it.
       key: "status",
       header: t("screen.admin.directory.usersAndEntitiesDirectory.status"),
-      render: (row) => <AdminStatus status={STATUS_PRESENTATION()[row.status]} />,
+      render: () => <AccountStatusBadge status={null} />,
     },
     {
-      key: "open",
-      header: t("screen.admin.directory.usersAndEntitiesDirectory.action"),
+      key: "action",
+      header: (
+        <span className="te-caption">
+          {t("screen.admin.directory.usersAndEntitiesDirectory.action")}
+        </span>
+      ),
       render: (row) => (
-        <TeButton
-          variant="secondary"
-          aria-label={t("screen.admin.directory.usersAndEntitiesDirectory.open", {
+        <AdminLink
+          screen="SCR-ADM-08"
+          params={{ entityId: row.id }}
+          ariaLabel={t("screen.admin.directory.usersAndEntitiesDirectory.openAccountFor", {
             name: row.name,
           })}
-          onClick={() => {
-            setSelectedAdminEntityId(row.id);
-            void goTo("entity-detail");
-          }}
+          onClick={() => setSelectedAdminEntityId(row.id)}
         >
-          {t("screen.admin.directory.usersAndEntitiesDirectory.open2")}
-        </TeButton>
+          {t("screen.admin.directory.usersAndEntitiesDirectory.openAccount")}
+        </AdminLink>
       ),
     },
   ];
 
   return (
-    <AdminPage>
-      <TePageHeader
-        title={t("screen.admin.directory.usersAndEntitiesDirectory.usersAndEntitiesDirectory")}
-        description={t(
-          "screen.admin.directory.usersAndEntitiesDirectory.findAnyUserOrganizationDriver",
-        )}
-        actions={
-          <AdminActions>
-            <AdminScreenLink slug="deletion-and-data-requests" variant="secondary">
-              {t("screen.admin.directory.usersAndEntitiesDirectory.deletionRequests")}
-            </AdminScreenLink>
-            <AdminScreenLink slug="admin-staff-accounts" variant="secondary">
-              {t("screen.admin.directory.usersAndEntitiesDirectory.adminStaffAccounts")}
-            </AdminScreenLink>
-          </AdminActions>
-        }
-      />
-      <StatePreview
-        emptyTitle={t("screen.admin.directory.usersAndEntitiesDirectory.noResults")}
-        emptyDescription={t(
-          "screen.admin.directory.usersAndEntitiesDirectory.changeTheSearchOrThe",
-        )}
-        loadingLabel={t("screen.admin.directory.usersAndEntitiesDirectory.loadingTheDirectory")}
+    <AdminPage
+      title={t("screen.admin.directory.usersAndEntitiesDirectory.title")}
+      description={t("screen.admin.directory.usersAndEntitiesDirectory.description")}
+    >
+      <AdminFilterBar label={t("screen.admin.directory.usersAndEntitiesDirectory.filters")}>
+        <AdminInput
+          className="lg:flex-[3]!"
+          type="search"
+          label={t("screen.admin.directory.usersAndEntitiesDirectory.search")}
+          placeholder={t("screen.admin.directory.usersAndEntitiesDirectory.searchPlaceholder")}
+          value={search}
+          onChange={(event) => setSearch(event.target.value)}
+        />
+        <AdminSelect
+          label={t("screen.admin.directory.usersAndEntitiesDirectory.role")}
+          options={roleOptions()}
+          value={roleFilter}
+          onValueChange={setRoleFilter}
+        />
+        <AdminSelect
+          label={t("screen.admin.directory.usersAndEntitiesDirectory.status")}
+          options={statusOptions()}
+          value={statusFilter}
+          onValueChange={setStatusFilter}
+          disabled
+          title={t("screen.admin.directory.usersAndEntitiesDirectory.statusFilterUnavailable")}
+        />
+      </AdminFilterBar>
+      <AdminQueryState
+        query={queueQuery}
+        loadingLabel={t("screen.admin.directory.usersAndEntitiesDirectory.loading")}
       >
-        <AdminFilters>
-          <TeSearchField
-            label={t("screen.admin.directory.usersAndEntitiesDirectory.search")}
-            placeholder={t(
-              "screen.admin.directory.usersAndEntitiesDirectory.nameEmailPhoneOrganizationOr",
-            )}
-            clearLabel={t("screen.admin.directory.usersAndEntitiesDirectory.clearSearch")}
-            value={query}
-            onValueChange={setQuery}
-          />
-          <TeSelect
-            label={t("screen.admin.directory.usersAndEntitiesDirectory.roleLabel")}
-            options={ROLE_OPTIONS()}
-            value={roleFilter}
-            onValueChange={setRoleFilter}
-          />
-          <TeSelect
-            label={t("screen.admin.directory.usersAndEntitiesDirectory.statusLabel")}
-            options={STATUS_OPTIONS()}
-            value={statusFilter}
-            onValueChange={setStatusFilter}
-          />
-        </AdminFilters>
-        <AdminPanel title={t("screen.admin.directory.usersAndEntitiesDirectory.results")}>
-          <TeDataTable
-            columns={columns}
-            rows={visibleRows}
-            getRowKey={(row) => row.id}
-            caption={t("screen.admin.directory.usersAndEntitiesDirectory.usersAndEntities")}
-            emptyTitle={t("screen.admin.directory.usersAndEntitiesDirectory.noResultsEmptyTitle")}
-            emptyDescription={t(
-              "screen.admin.directory.usersAndEntitiesDirectory.changeTheSearchOrTheEmptyDescription",
-            )}
-          />
-          <AdminPagination pageCount={1} />
-        </AdminPanel>
-      </StatePreview>
+        <AdminTable
+          caption={t("screen.admin.directory.usersAndEntitiesDirectory.tableCaption")}
+          columns={columns}
+          rows={rows}
+          getRowKey={(row) => row.id}
+          empty={
+            <AdminEmpty
+              title={t("screen.admin.directory.usersAndEntitiesDirectory.emptyTitle")}
+              description={t("screen.admin.directory.usersAndEntitiesDirectory.emptyBody")}
+            />
+          }
+        />
+      </AdminQueryState>
     </AdminPage>
   );
 }

@@ -1,120 +1,116 @@
+// SCR-ADM-15 Plans catalog (docs/design/web/admin/SCR-ADM-15.dc.html): every plan tier by role, with
+// its status and a link to the plan editor.
 import { useQuery } from "@tanstack/react-query";
-import { TeDataTable, type TeDataTableColumn } from "@trips-app/ui/components/te-data-table";
-import { TePageHeader } from "@trips-app/ui/components/te-page-header";
 import { t } from "@trips-app/i18n";
+
+import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
-import { StatePreview } from "../common/admin-state-preview";
-import { AdminScreenLink } from "../common/admin-links";
-import {
-  AdminActions,
-  AdminPage,
-  AdminPanel,
-  AdminStatus,
-  AdminTabs,
-  setSelectedAdminPlanId,
-  type AdminStatusPresentation,
-} from "../common/admin-shared";
+
+import { AdminButton, AdminLink } from "../common/admin-actions";
+import { setSelectedAdminPlanId } from "../common/admin-selection";
+import { AdminEmpty, AdminQueryState } from "../common/admin-states";
+import { AdminBadge, AdminPage, AdminTable, type AdminColumn } from "../common/admin-ui";
+import { planName, planRoleLabel } from "./plan-labels";
 
 interface PlanRow {
   id: string;
+  role: string;
   tier: string;
-  state: "active" | "draft";
-  subscriptions: string;
+  isActive: boolean;
 }
 
-const DEFAULT_PLAN_ROWS: readonly PlanRow[] = [];
-
-const STATE_PRESENTATION = (): Record<PlanRow["state"], AdminStatusPresentation> => ({
-  active: { tone: "success", icon: "check", label: t("screen.admin.plans.plansCatalog.active") },
-  draft: { tone: "neutral", icon: "file", label: t("screen.admin.plans.plansCatalog.draft") },
-});
-
-const ROLE_TABS = () => [
-  { id: "organization", label: t("screen.admin.plans.plansCatalog.organization") },
-  { id: "driver", label: t("screen.admin.plans.plansCatalog.platformDriver") },
-  { id: "photographer", label: t("screen.admin.plans.plansCatalog.platformPhotographer") },
-  { id: "traveler", label: t("screen.admin.plans.plansCatalog.traveler") },
-];
-
-const COLUMNS = (): readonly TeDataTableColumn<PlanRow>[] => [
-  { key: "tier", header: t("screen.admin.plans.plansCatalog.tier") },
-  {
-    key: "state",
-    header: t("screen.admin.plans.plansCatalog.status"),
-    render: (row) => <AdminStatus status={STATE_PRESENTATION()[row.state]} />,
-  },
-  {
-    key: "subscriptions",
-    header: t("screen.admin.plans.plansCatalog.activeSubscriptions"),
-    align: "end",
-  },
-  {
-    key: "edit",
-    header: t("screen.admin.plans.plansCatalog.action"),
-    render: (row) => (
-      <span onClick={() => setSelectedAdminPlanId(row.id)}>
-        <AdminScreenLink
-          slug="plan-editor"
-          variant="secondary"
-          ariaLabel={t("screen.admin.plans.plansCatalog.editPlan", { tier: row.tier })}
-        >
-          {t("screen.admin.plans.plansCatalog.editPlan2")}
-        </AdminScreenLink>
-      </span>
-    ),
-  },
-];
-
 export function PlansCatalog() {
+  const { status: authStatus, locale } = useAuth();
   const catalogQuery = useQuery({
     ...orpc.plans.getCatalog.queryOptions({ input: {} }),
+    enabled: authStatus === "authenticated",
   });
 
-  const rows: readonly PlanRow[] =
-    catalogQuery.data && catalogQuery.data.length > 0
-      ? catalogQuery.data.map((plan) => ({
-          id: plan.id,
-          tier: plan.nameEn,
-          state: "active",
-          subscriptions: plan.monthlyPriceMinor === 0 ? "1" : "0",
-        }))
-      : DEFAULT_PLAN_ROWS;
+  const rows: readonly PlanRow[] = (catalogQuery.data ?? []).map((plan) => ({
+    id: plan.id,
+    role: planRoleLabel(plan.role),
+    tier: planName(plan, locale),
+    isActive: plan.status === "active",
+  }));
+
+  const columns: readonly AdminColumn<PlanRow>[] = [
+    { key: "role", header: t("screen.admin.plans.plansCatalog.role"), render: (row) => row.role },
+    {
+      key: "tier",
+      header: t("screen.admin.plans.plansCatalog.tier"),
+      render: (row) => row.tier,
+      wrap: true,
+    },
+    {
+      key: "status",
+      header: t("screen.admin.plans.plansCatalog.status"),
+      render: (row) =>
+        row.isActive ? (
+          <AdminBadge tone="ok" icon={false}>
+            {t("screen.admin.plans.plansCatalog.active")}
+          </AdminBadge>
+        ) : (
+          <AdminBadge tone="info" icon={false}>
+            {t("screen.admin.plans.plansCatalog.inactive")}
+          </AdminBadge>
+        ),
+    },
+    {
+      key: "subscriptions",
+      header: t("screen.admin.plans.plansCatalog.activeSubscriptions"),
+      // The catalog does not report subscription counts yet.
+      render: () => "—",
+      align: "end",
+      headerWrap: true,
+    },
+    {
+      key: "action",
+      header: <span className="te-caption">{t("screen.admin.plans.plansCatalog.action")}</span>,
+      render: (row) => (
+        <AdminLink
+          screen="SCR-ADM-16"
+          params={{ planId: row.id }}
+          ariaLabel={t("screen.admin.plans.plansCatalog.openPlanFor", { tier: row.tier })}
+          onClick={() => setSelectedAdminPlanId(row.id)}
+        >
+          {t("screen.admin.plans.plansCatalog.openPlan")}
+        </AdminLink>
+      ),
+    },
+  ];
 
   return (
-    <AdminPage>
-      <TePageHeader
-        title={t("screen.admin.plans.plansCatalog.plansCatalog")}
-        description={t("screen.admin.plans.plansCatalog.plansForEachRoleBy")}
-        actions={
-          <AdminActions>
-            <AdminScreenLink slug="subscriptions-and-overrides" variant="secondary">
-              {t("screen.admin.plans.plansCatalog.subscriptionsAndOverrides")}
-            </AdminScreenLink>
-            <AdminScreenLink slug="plan-editor" variant="primary">
-              {t("screen.admin.plans.plansCatalog.createTier")}
-            </AdminScreenLink>
-          </AdminActions>
-        }
-      />
-      <StatePreview
-        emptyTitle={t("screen.admin.plans.plansCatalog.noPlansForThisRole")}
-        emptyDescription={t("screen.admin.plans.plansCatalog.createTheFirstTierFor")}
-        loadingLabel={t("screen.admin.plans.plansCatalog.loadingThePlans")}
+    <AdminPage
+      title={t("screen.admin.plans.plansCatalog.title")}
+      description={t("screen.admin.plans.plansCatalog.description")}
+      actions={
+        // No endpoint creates a plan tier yet, so the action stays unavailable.
+        <AdminButton
+          variant="primary"
+          disabled
+          title={t("screen.admin.plans.plansCatalog.createTierUnavailable")}
+        >
+          {t("screen.admin.plans.plansCatalog.createTier")}
+        </AdminButton>
+      }
+    >
+      <AdminQueryState
+        query={catalogQuery}
+        loadingLabel={t("screen.admin.plans.plansCatalog.loading")}
       >
-        <AdminTabs tabs={ROLE_TABS()} ariaLabel={t("screen.admin.plans.plansCatalog.role")} />
-        <AdminPanel title={t("screen.admin.plans.plansCatalog.tiers")}>
-          <TeDataTable
-            columns={COLUMNS()}
-            rows={rows}
-            getRowKey={(row) => row.id}
-            caption={t("screen.admin.plans.plansCatalog.plansForThisRole")}
-            emptyTitle={t("screen.admin.plans.plansCatalog.noPlansForThisRoleEmptyTitle")}
-            emptyDescription={t(
-              "screen.admin.plans.plansCatalog.createTheFirstTierForEmptyDescription",
-            )}
-          />
-        </AdminPanel>
-      </StatePreview>
+        <AdminTable
+          caption={t("screen.admin.plans.plansCatalog.tableCaption")}
+          columns={columns}
+          rows={rows}
+          getRowKey={(row) => row.id}
+          empty={
+            <AdminEmpty
+              title={t("screen.admin.plans.plansCatalog.emptyTitle")}
+              description={t("screen.admin.plans.plansCatalog.emptyBody")}
+            />
+          }
+        />
+      </AdminQueryState>
     </AdminPage>
   );
 }

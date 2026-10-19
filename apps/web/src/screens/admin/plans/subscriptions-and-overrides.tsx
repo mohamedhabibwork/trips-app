@@ -1,135 +1,72 @@
+// SCR-ADM-17 Subscriptions and overrides (docs/design/web/admin/SCR-ADM-17.dc.html): find accounts
+// by role, plan, billing status and renewal date, and override the plan of one account.
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { TeButton } from "@trips-app/ui/components/te-button";
-import { TeDataTable, type TeDataTableColumn } from "@trips-app/ui/components/te-data-table";
-import { TeInlineAlert } from "@trips-app/ui/components/te-inline-alert";
-import { TeInput } from "@trips-app/ui/components/te-input";
-import { TePageHeader } from "@trips-app/ui/components/te-page-header";
-import { TeSelect, type TeSelectOption } from "@trips-app/ui/components/te-select";
 import { t } from "@trips-app/i18n";
-import { orpc } from "@/utils/orpc";
-import { StatePreview } from "../common/admin-state-preview";
-import { AdminScreenLink } from "../common/admin-links";
-import {
-  AdminActions,
-  AdminFilterSelect,
-  AdminFilters,
-  AdminPage,
-  AdminPagination,
-  AdminPanel,
-  AdminStatus,
-  setSelectedAdminEntityId,
-  type AdminStatusPresentation,
-} from "../common/admin-shared";
 
-interface SubscriptionRow {
+import { useAuth } from "@/auth/auth-context";
+import { orpc } from "@/utils/orpc";
+
+import { AdminLink } from "../common/admin-actions";
+import { AdminInput, AdminSelect, type AdminOption } from "../common/admin-form";
+import { setSelectedAdminEntityId } from "../common/admin-selection";
+import { AdminEmpty, AdminQueryState } from "../common/admin-states";
+import {
+  AdminFilterBar,
+  AdminPage,
+  AdminSplit,
+  AdminTable,
+  type AdminColumn,
+} from "../common/admin-ui";
+import { planName, planRoleLabel } from "./plan-labels";
+import { OverridePlanCard, type OverrideAccount } from "./override-plan-card";
+
+interface SubscriptionRow extends OverrideAccount {
+  /** Application id, which the directory uses as the entity id. */
   id: string;
-  accountId: string;
-  account: string;
   role: string;
-  plan: string;
-  billing: "active" | "past-due" | "cancelled";
-  renewal: string;
+  roleLabel: string;
+  // The admin console has no subscription list endpoint yet, so these stay unknown.
+  planId: string | null;
+  billingStatus: string | null;
+  renewalDate: string | null;
 }
 
-const DEFAULT_SUBSCRIPTION_ROWS: readonly SubscriptionRow[] = [];
+const ALL = "all";
+const ROLES = ["organization", "platform_driver", "platform_photographer", "traveler"] as const;
 
-const BILLING_PRESENTATION = (): Record<SubscriptionRow["billing"], AdminStatusPresentation> => ({
-  active: {
-    tone: "success",
-    icon: "check",
-    label: t("screen.admin.plans.subscriptionsAndOverrides.active"),
-  },
-  "past-due": {
-    tone: "warning",
-    icon: "alert",
-    label: t("screen.admin.plans.subscriptionsAndOverrides.pastDueGraceShown"),
-  },
-  cancelled: {
-    tone: "neutral",
-    icon: "close",
-    label: t("screen.admin.plans.subscriptionsAndOverrides.cancelled"),
-  },
-});
+function roleOptions(): readonly AdminOption[] {
+  return [
+    { value: ALL, label: t("screen.admin.plans.subscriptionsAndOverrides.allRoles") },
+    ...ROLES.map((role) => ({ value: role, label: planRoleLabel(role) })),
+  ];
+}
 
-const ROLE_OPTIONS = (): readonly TeSelectOption[] => [
-  { value: "all", label: t("screen.admin.plans.subscriptionsAndOverrides.allRoles") },
-];
-const PLAN_OPTIONS = (): readonly TeSelectOption[] => [
-  { value: "all", label: t("screen.admin.plans.subscriptionsAndOverrides.allPlans") },
-];
-const BILLING_OPTIONS = (): readonly TeSelectOption[] => [
-  { value: "all", label: t("screen.admin.plans.subscriptionsAndOverrides.anyBillingStatus") },
-  { value: "active", label: t("screen.admin.plans.subscriptionsAndOverrides.activeLabel") },
-  { value: "past-due", label: t("screen.admin.plans.subscriptionsAndOverrides.pastDue") },
-  { value: "cancelled", label: t("screen.admin.plans.subscriptionsAndOverrides.cancelledLabel") },
-];
-const DEFAULT_OVERRIDE_PLAN_OPTIONS = (): readonly TeSelectOption[] => [
-  { value: "", label: t("screen.admin.plans.subscriptionsAndOverrides.selectAPlan") },
-  { value: "org_pro", label: t("screen.admin.plans.subscriptionsAndOverrides.planName") },
-];
-
-const COLUMNS = (): readonly TeDataTableColumn<SubscriptionRow>[] => [
-  { key: "account", header: t("screen.admin.plans.subscriptionsAndOverrides.account") },
-  { key: "role", header: t("screen.admin.plans.subscriptionsAndOverrides.role") },
-  { key: "plan", header: t("screen.admin.plans.subscriptionsAndOverrides.plan") },
-  {
-    key: "billing",
-    header: t("screen.admin.plans.subscriptionsAndOverrides.billingStatus"),
-    render: (row) => <AdminStatus status={BILLING_PRESENTATION()[row.billing]} />,
-  },
-  { key: "renewal", header: t("screen.admin.plans.subscriptionsAndOverrides.renewalDate") },
-  {
-    key: "open",
-    header: t("screen.admin.plans.subscriptionsAndOverrides.action"),
-    render: (row) => (
-      <span onClick={() => setSelectedAdminEntityId(row.id)}>
-        <AdminScreenLink
-          slug="entity-detail"
-          variant="secondary"
-          ariaLabel={t("screen.admin.plans.subscriptionsAndOverrides.open", {
-            account: row.account,
-          })}
-        >
-          {t("screen.admin.plans.subscriptionsAndOverrides.openAccount")}
-        </AdminScreenLink>
-      </span>
-    ),
-  },
-];
+function billingOptions(): readonly AdminOption[] {
+  return [
+    { value: ALL, label: t("screen.admin.plans.subscriptionsAndOverrides.allStatuses") },
+    { value: "active", label: t("screen.admin.plans.subscriptionsAndOverrides.active") },
+    { value: "grace", label: t("screen.admin.plans.subscriptionsAndOverrides.gracePeriod") },
+    { value: "cancelled", label: t("screen.admin.plans.subscriptionsAndOverrides.cancelled") },
+  ];
+}
 
 export function SubscriptionsAndOverrides() {
+  const { status: authStatus, locale } = useAuth();
   const queryClient = useQueryClient();
-  const [accountRef, setAccountRef] = useState("");
-  const [overridePlan, setOverridePlan] = useState("");
-  const [reason, setReason] = useState("");
-  const canSave = overridePlan !== "" && reason.trim() !== "";
+  const [roleFilter, setRoleFilter] = useState(ALL);
+  const [planFilter, setPlanFilter] = useState(ALL);
+  const [billingFilter, setBillingFilter] = useState(ALL);
+  const [renewalFilter, setRenewalFilter] = useState("");
 
-  const queueQuery = useQuery(orpc.onboarding.listReviewQueue.queryOptions({ input: {} }));
-  const catalogQuery = useQuery(orpc.plans.getCatalog.queryOptions({ input: {} }));
-
-  const planOptions: readonly TeSelectOption[] =
-    catalogQuery.data && catalogQuery.data.length > 0
-      ? [
-          { value: "", label: t("screen.admin.plans.subscriptionsAndOverrides.selectAPlan") },
-          ...catalogQuery.data.map((p) => ({ value: p.id, label: p.nameEn })),
-        ]
-      : DEFAULT_OVERRIDE_PLAN_OPTIONS();
-
-  const rows: readonly SubscriptionRow[] =
-    queueQuery.data && queueQuery.data.length > 0
-      ? queueQuery.data.map((item) => ({
-          id: item.id,
-          accountId: item.applicantAccountId,
-          account: item.applicant?.fullName || item.applicant?.email || item.applicantAccountId,
-          role: item.applicationType,
-          plan: catalogQuery.data?.[0]?.nameEn ?? "Organization Starter",
-          billing: (item.state === "Rejected"
-            ? "past-due"
-            : "active") as SubscriptionRow["billing"],
-          renewal: new Date(item.createdAt).toISOString().slice(0, 10),
-        }))
-      : DEFAULT_SUBSCRIPTION_ROWS;
+  const queueQuery = useQuery({
+    ...orpc.onboarding.listReviewQueue.queryOptions({ input: {} }),
+    enabled: authStatus === "authenticated",
+  });
+  const catalogQuery = useQuery({
+    ...orpc.plans.getCatalog.queryOptions({ input: {} }),
+    enabled: authStatus === "authenticated",
+  });
 
   const overrideMutation = useMutation(
     orpc.plans.adminOverrideSubscription.mutationOptions({
@@ -139,122 +76,157 @@ export function SubscriptionsAndOverrides() {
     }),
   );
 
-  const handleSaveOverride = async () => {
-    if (!canSave) return;
-    const matched =
-      rows.find(
-        (r) =>
-          r.account.toLowerCase().includes(accountRef.trim().toLowerCase()) ||
-          r.accountId === accountRef.trim(),
-      ) ?? rows[0];
-    try {
-      await overrideMutation.mutateAsync({
-        scope: "account",
-        accountId: matched?.accountId ?? "00000000-0000-0000-0000-000000000001",
-        planId: overridePlan,
-        billingCycle: "monthly",
-        overrideNote: reason.trim().length >= 3 ? reason.trim() : `${reason.trim()} override`,
-      });
-    } catch {
-      // Allow optimistic update
-    }
-    setReason("");
-  };
+  const plans: readonly AdminOption[] = (catalogQuery.data ?? []).map((plan) => ({
+    value: plan.id,
+    label: planName(plan, locale),
+  }));
+
+  const allRows: readonly SubscriptionRow[] = (queueQuery.data ?? []).map((item) => ({
+    id: item.id,
+    accountId: item.applicantAccountId,
+    name: item.applicant?.fullName || item.applicant?.email || item.applicantAccountId,
+    role: item.applicationType,
+    roleLabel: planRoleLabel(item.applicationType),
+    planId: null,
+    billingStatus: null,
+    renewalDate: null,
+  }));
+
+  const rows = allRows.filter(
+    (row) =>
+      (roleFilter === ALL || row.role === roleFilter) &&
+      (planFilter === ALL || row.planId === planFilter) &&
+      (billingFilter === ALL || row.billingStatus === billingFilter) &&
+      (renewalFilter === "" || (row.renewalDate !== null && row.renewalDate <= renewalFilter)),
+  );
+
+  const columns: readonly AdminColumn<SubscriptionRow>[] = [
+    {
+      key: "account",
+      header: t("screen.admin.plans.subscriptionsAndOverrides.account"),
+      render: (row) => row.name,
+      wrap: true,
+    },
+    {
+      key: "role",
+      header: t("screen.admin.plans.subscriptionsAndOverrides.role"),
+      render: (row) => row.roleLabel,
+    },
+    {
+      key: "plan",
+      header: t("screen.admin.plans.subscriptionsAndOverrides.plan"),
+      render: () => "—",
+    },
+    {
+      key: "billing",
+      header: t("screen.admin.plans.subscriptionsAndOverrides.billingStatus"),
+      render: () => "—",
+    },
+    {
+      key: "renewal",
+      header: t("screen.admin.plans.subscriptionsAndOverrides.renewalDate"),
+      render: () => "—",
+    },
+    {
+      key: "action",
+      header: (
+        <span className="te-caption">
+          {t("screen.admin.plans.subscriptionsAndOverrides.action")}
+        </span>
+      ),
+      render: (row) => (
+        <AdminLink
+          screen="SCR-ADM-08"
+          params={{ entityId: row.id }}
+          ariaLabel={t("screen.admin.plans.subscriptionsAndOverrides.openFor", {
+            account: row.name,
+          })}
+          onClick={() => setSelectedAdminEntityId(row.id)}
+        >
+          {t("screen.admin.plans.subscriptionsAndOverrides.open")}
+        </AdminLink>
+      ),
+    },
+  ];
 
   return (
-    <AdminPage>
-      <TePageHeader
-        title={t("screen.admin.plans.subscriptionsAndOverrides.subscriptionsAndOverrides")}
-        description={t(
-          "screen.admin.plans.subscriptionsAndOverrides.findSubscriptionsAndGrantRevoke",
-        )}
+    <AdminPage
+      title={t("screen.admin.plans.subscriptionsAndOverrides.title")}
+      description={t("screen.admin.plans.subscriptionsAndOverrides.description")}
+    >
+      <AdminSplit
+        main={
+          <>
+            <AdminFilterBar label={t("screen.admin.plans.subscriptionsAndOverrides.filters")}>
+              <AdminSelect
+                label={t("screen.admin.plans.subscriptionsAndOverrides.role")}
+                options={roleOptions()}
+                value={roleFilter}
+                onValueChange={setRoleFilter}
+              />
+              <AdminSelect
+                label={t("screen.admin.plans.subscriptionsAndOverrides.plan")}
+                options={[
+                  { value: ALL, label: t("screen.admin.plans.subscriptionsAndOverrides.allPlans") },
+                  ...plans,
+                ]}
+                value={planFilter}
+                onValueChange={setPlanFilter}
+              />
+              <AdminSelect
+                label={t("screen.admin.plans.subscriptionsAndOverrides.billingStatus")}
+                options={billingOptions()}
+                value={billingFilter}
+                onValueChange={setBillingFilter}
+              />
+              <AdminInput
+                label={t("screen.admin.plans.subscriptionsAndOverrides.renewalDate")}
+                type="date"
+                value={renewalFilter}
+                onChange={(event) => setRenewalFilter(event.target.value)}
+              />
+            </AdminFilterBar>
+            <AdminQueryState
+              query={queueQuery}
+              loadingLabel={t("screen.admin.plans.subscriptionsAndOverrides.loading")}
+            >
+              <AdminTable
+                caption={t("screen.admin.plans.subscriptionsAndOverrides.tableCaption")}
+                columns={columns}
+                rows={rows}
+                getRowKey={(row) => row.id}
+                empty={
+                  <AdminEmpty
+                    title={t("screen.admin.plans.subscriptionsAndOverrides.emptyTitle")}
+                    description={t("screen.admin.plans.subscriptionsAndOverrides.emptyBody")}
+                  />
+                }
+              />
+            </AdminQueryState>
+          </>
+        }
+        side={
+          <OverridePlanCard
+            accounts={allRows}
+            plans={plans}
+            isSaving={overrideMutation.isPending}
+            isSaved={overrideMutation.isSuccess}
+            isFailed={overrideMutation.isError}
+            onSave={(input, onDone) =>
+              overrideMutation.mutate(
+                {
+                  scope: "account",
+                  accountId: input.accountId,
+                  planId: input.planId,
+                  billingCycle: "monthly",
+                  overrideNote: input.reason,
+                },
+                { onSuccess: onDone },
+              )
+            }
+          />
+        }
       />
-      <StatePreview
-        emptyTitle={t("screen.admin.plans.subscriptionsAndOverrides.noSubscriptions")}
-        emptyDescription={t(
-          "screen.admin.plans.subscriptionsAndOverrides.noSubscriptionsMatchTheseFilters",
-        )}
-        loadingLabel={t("screen.admin.plans.subscriptionsAndOverrides.loadingTheSubscriptions")}
-      >
-        <AdminFilters>
-          <AdminFilterSelect
-            label={t("screen.admin.plans.subscriptionsAndOverrides.roleLabel")}
-            options={ROLE_OPTIONS()}
-          />
-          <AdminFilterSelect
-            label={t("screen.admin.plans.subscriptionsAndOverrides.planLabel")}
-            options={PLAN_OPTIONS()}
-          />
-          <AdminFilterSelect
-            label={t("screen.admin.plans.subscriptionsAndOverrides.billingStatusLabel")}
-            options={BILLING_OPTIONS()}
-          />
-          <TeInput
-            label={t("screen.admin.plans.subscriptionsAndOverrides.renewalBefore")}
-            placeholder={t("screen.admin.plans.subscriptionsAndOverrides.yyyyMmDd")}
-          />
-        </AdminFilters>
-        <AdminPanel title={t("screen.admin.plans.subscriptionsAndOverrides.subscriptions")}>
-          <TeDataTable
-            columns={COLUMNS()}
-            rows={rows}
-            getRowKey={(row) => row.id}
-            caption={t("screen.admin.plans.subscriptionsAndOverrides.subscriptionsCaption")}
-            emptyTitle={t("screen.admin.plans.subscriptionsAndOverrides.noSubscriptionsEmptyTitle")}
-            emptyDescription={t(
-              "screen.admin.plans.subscriptionsAndOverrides.noSubscriptionsMatchTheseFiltersEmptyDescription",
-            )}
-          />
-          <AdminPagination pageCount={1} />
-        </AdminPanel>
-        <AdminPanel
-          title={t("screen.admin.plans.subscriptionsAndOverrides.overridePlanForOneAccount")}
-        >
-          <TeInput
-            label={t("screen.admin.plans.subscriptionsAndOverrides.accountLabel")}
-            placeholder={t("screen.admin.plans.subscriptionsAndOverrides.accountNameOrReference")}
-            value={accountRef}
-            onChange={(event) => setAccountRef(event.target.value)}
-            required
-          />
-          <TeSelect
-            label={t("screen.admin.plans.subscriptionsAndOverrides.plan2")}
-            options={planOptions}
-            value={overridePlan}
-            onValueChange={setOverridePlan}
-          />
-          <TeInput
-            label={t("screen.admin.plans.subscriptionsAndOverrides.reasonRequired")}
-            value={reason}
-            onChange={(event) => setReason(event.target.value)}
-            placeholder={t("screen.admin.plans.subscriptionsAndOverrides.reasonForTheOverride")}
-          />
-          <TeInput
-            label={t("screen.admin.plans.subscriptionsAndOverrides.endDate")}
-            placeholder={t("screen.admin.plans.subscriptionsAndOverrides.yyyyMmDdPlaceholder")}
-          />
-        </AdminPanel>
-        <TeInlineAlert
-          tone="warning"
-          title={t("screen.admin.plans.subscriptionsAndOverrides.beforeYouSave")}
-        >
-          {t("screen.admin.plans.subscriptionsAndOverrides.anOverrideAppliesAtOnce")}
-        </TeInlineAlert>
-        <AdminActions>
-          <TeButton
-            variant="secondary"
-            onClick={() => {
-              setOverridePlan("");
-              setReason("");
-            }}
-          >
-            {t("screen.admin.plans.subscriptionsAndOverrides.cancel")}
-          </TeButton>
-          <TeButton disabled={!canSave} onClick={() => void handleSaveOverride()}>
-            {t("screen.admin.plans.subscriptionsAndOverrides.saveOverride")}
-          </TeButton>
-        </AdminActions>
-      </StatePreview>
     </AdminPage>
   );
 }

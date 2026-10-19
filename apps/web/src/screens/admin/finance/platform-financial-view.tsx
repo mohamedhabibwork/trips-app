@@ -1,135 +1,155 @@
+// SCR-ADM-25 Platform financial view (docs/design/web/admin/SCR-ADM-25.dc.html): six period totals
+// (subscription revenue, commission, deal audit summary, coupon redemptions, disputes, payouts),
+// each with its currency, and links to the finance detail pages.
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { TeInlineAlert } from "@trips-app/ui/components/te-inline-alert";
-import { TeKpiTile } from "@trips-app/ui/components/te-kpi-tile";
-import { TePageHeader } from "@trips-app/ui/components/te-page-header";
-import type { TeSelectOption } from "@trips-app/ui/components/te-select";
 import { t } from "@trips-app/i18n";
-import { orpc } from "@/utils/orpc";
-import { StatePreview } from "../common/admin-state-preview";
-import { AdminScreenLink } from "../common/admin-links";
-import {
-  AdminActions,
-  AdminFilterSelect,
-  AdminFilters,
-  AdminKpiGrid,
-  AdminPage,
-  AdminPanel,
-} from "../common/admin-shared";
 
-const PERIOD_OPTIONS = (): readonly TeSelectOption[] => [
+import { useAuth } from "@/auth/auth-context";
+import { orpc } from "@/utils/orpc";
+
+import { AdminLink } from "../common/admin-actions";
+import { AdminSelect, type AdminOption } from "../common/admin-form";
+import { AdminQueryState } from "../common/admin-states";
+import { AdminCard, AdminGrid, AdminKpi, AdminPage } from "../common/admin-ui";
+import { combineQueries, formatTotals, totalsByCurrency } from "./finance-format";
+
+type Period = "month" | "quarter" | "year";
+
+const MONTHS_PER_QUARTER = 3;
+const NOT_RECORDED = "—";
+
+const periodOptions = (): readonly AdminOption[] => [
   { value: "month", label: t("screen.admin.finance.platformFinancialView.thisMonth") },
   { value: "quarter", label: t("screen.admin.finance.platformFinancialView.thisQuarter") },
   { value: "year", label: t("screen.admin.finance.platformFinancialView.thisYear") },
 ];
 
+function isPeriod(value: string): value is Period {
+  return value === "month" || value === "quarter" || value === "year";
+}
+
+/** First moment of the current month, quarter or year (local time). */
+function periodStart(period: Period, now: Date = new Date()): Date {
+  if (period === "year") return new Date(now.getFullYear(), 0, 1);
+  if (period === "quarter") {
+    const firstMonth = Math.floor(now.getMonth() / MONTHS_PER_QUARTER) * MONTHS_PER_QUARTER;
+    return new Date(now.getFullYear(), firstMonth, 1);
+  }
+  return new Date(now.getFullYear(), now.getMonth(), 1);
+}
+
+/** "EGP, finalized deals" for one currency; the bare caption when there are none or several. */
+function currencyCaption(currencies: readonly string[], withCurrency: string, plain: string) {
+  return currencies.length === 1 ? withCurrency : plain;
+}
+
 export function PlatformFinancialView() {
-  const catalogQuery = useQuery(orpc.plans.getCatalog.queryOptions({ input: {} }));
-  const couponsQuery = useQuery(orpc.coupons.listPlatformCoupons.queryOptions({ input: {} }));
-  const exceptionsQuery = useQuery(
-    orpc.accounting.listAdminReconciliationExceptions.queryOptions(),
+  const { status: authStatus, locale } = useAuth();
+  const [period, setPeriod] = useState<Period>("month");
+  const enabled = authStatus === "authenticated";
+
+  const couponsQuery = useQuery({
+    ...orpc.coupons.listPlatformCoupons.queryOptions({ input: {} }),
+    enabled,
+  });
+  const dealsQuery = useQuery({
+    ...orpc.negotiation.listOrganizationNegotiations.queryOptions({ input: {} }),
+    enabled,
+  });
+
+  const since = periodStart(period);
+  const finalizedDeals = (dealsQuery.data?.items ?? []).filter(
+    (deal) =>
+      deal.status === "accepted" &&
+      deal.agreedPriceMinor !== null &&
+      new Date(deal.respondedAt ?? deal.updatedAt) >= since,
   );
-  const dealsQuery = useQuery(
-    orpc.negotiation.listOrganizationNegotiations.queryOptions({ input: {} }),
+  const dealTotals = totalsByCurrency(
+    finalizedDeals.map((deal) => ({
+      amountMinor: deal.agreedPriceMinor ?? 0,
+      currency: deal.currencyCode,
+    })),
   );
-
-  const catalog = catalogQuery.data;
-  const coupons = couponsQuery.data;
-  const exceptions = exceptionsQuery.data;
-  const deals = dealsQuery.data;
-
-  const totalMonthly = catalog?.reduce((sum, p) => sum + p.monthlyPriceMinor, 0) ?? 0;
-  const subscriptionRev =
-    catalog && catalog.length > 0
-      ? `${(totalMonthly / 100).toFixed(2)} ${catalog[0]?.currencyCode ?? "EGP"}`
-      : "15,000.00 EGP";
-
-  const totalRedeemed = coupons?.items.reduce((sum, c) => sum + (c.redemptionsCount ?? 0), 0) ?? 0;
-  const couponRedemptions = String(totalRedeemed);
-
-  const disputesCount = String(exceptions?.length ?? 0);
-
-  const totalDealMinor =
-    deals?.items.reduce((sum, d) => sum + (d.agreedPriceMinor ?? d.currentOfferMinor), 0) ?? 0;
-  const currency = deals?.items[0]?.currencyCode ?? "EGP";
-  const dealAuditTotal =
-    deals && deals.items.length > 0
-      ? `${(totalDealMinor / 100).toFixed(2)} ${currency}`
-      : "10,700.00 EGP";
-  const commission =
-    deals && deals.items.length > 0
-      ? `${(Math.round(totalDealMinor * 0.1) / 100).toFixed(2)} ${currency}`
-      : "4,250.00 EGP";
-  const payoutsTotal =
-    deals && deals.items.length > 0
-      ? `${(Math.round(totalDealMinor * 0.9) / 100).toFixed(2)} ${currency}`
-      : "38,250.00 EGP";
+  const dealCurrencies = dealTotals.map((total) => total.currency);
+  const redemptions = (couponsQuery.data?.items ?? []).reduce(
+    (sum, coupon) => sum + (coupon.redemptionsCount ?? 0),
+    0,
+  );
 
   return (
-    <AdminPage>
-      <TePageHeader
-        title={t("screen.admin.finance.platformFinancialView.platformFinancialView")}
-        description={t("screen.admin.finance.platformFinancialView.theSystemWideFinancialPicture")}
-      />
-      <StatePreview
-        emptyTitle={t("screen.admin.finance.platformFinancialView.noActivityInThisPeriod")}
-        emptyDescription={t("screen.admin.finance.platformFinancialView.chooseAnotherPeriodToSee")}
-        loadingLabel={t("screen.admin.finance.platformFinancialView.loadingTheFinancialTotals")}
+    <AdminPage
+      title={t("screen.admin.finance.platformFinancialView.title")}
+      description={t("screen.admin.finance.platformFinancialView.description")}
+      actions={
+        <AdminSelect
+          label={t("screen.admin.finance.platformFinancialView.period")}
+          options={periodOptions()}
+          value={period}
+          onValueChange={(value) => isPeriod(value) && setPeriod(value)}
+        />
+      }
+    >
+      <AdminQueryState
+        query={combineQueries([couponsQuery, dealsQuery])}
+        loadingLabel={t("screen.admin.finance.platformFinancialView.loading")}
       >
-        <AdminFilters>
-          <AdminFilterSelect
-            label={t("screen.admin.finance.platformFinancialView.period")}
-            options={PERIOD_OPTIONS()}
-          />
-        </AdminFilters>
-        <AdminKpiGrid>
-          <TeKpiTile
+        <AdminGrid columns={3}>
+          <AdminKpi
             label={t("screen.admin.finance.platformFinancialView.subscriptionRevenue")}
-            value={subscriptionRev}
-            hint={t("screen.admin.finance.platformFinancialView.periodTotal")}
+            value={NOT_RECORDED}
+            caption={t("screen.admin.finance.platformFinancialView.periodTotal")}
           />
-          <TeKpiTile
+          <AdminKpi
             label={t("screen.admin.finance.platformFinancialView.commission")}
-            value={commission}
-            hint={t("screen.admin.finance.platformFinancialView.periodTotalHint")}
+            value={NOT_RECORDED}
+            caption={t("screen.admin.finance.platformFinancialView.periodTotal")}
           />
-          <TeKpiTile
+          <AdminKpi
             label={t("screen.admin.finance.platformFinancialView.dealAuditSummary")}
-            value={dealAuditTotal}
-            hint={t("screen.admin.finance.platformFinancialView.periodTotal2")}
+            value={formatTotals(dealTotals, locale)}
+            caption={currencyCaption(
+              dealCurrencies,
+              t("screen.admin.finance.platformFinancialView.currencyFinalizedDeals", {
+                currency: dealCurrencies[0] ?? "",
+              }),
+              t("screen.admin.finance.platformFinancialView.finalizedDeals"),
+            )}
           />
-          <TeKpiTile
+          <AdminKpi
             label={t("screen.admin.finance.platformFinancialView.couponRedemptions")}
-            value={couponRedemptions}
-            hint={t("screen.admin.finance.platformFinancialView.periodTotal3")}
+            value={redemptions.toLocaleString(locale)}
+            caption={t("screen.admin.finance.platformFinancialView.amountDiscounted", {
+              amount: NOT_RECORDED,
+            })}
           />
-          <TeKpiTile
+          <AdminKpi
             label={t("screen.admin.finance.platformFinancialView.disputes")}
-            value={disputesCount}
-            hint={t("screen.admin.finance.platformFinancialView.openedInThePeriod")}
+            value={NOT_RECORDED}
+            caption={t("screen.admin.finance.platformFinancialView.amountInRefunds", {
+              amount: NOT_RECORDED,
+            })}
           />
-          <TeKpiTile
+          <AdminKpi
             label={t("screen.admin.finance.platformFinancialView.payouts")}
-            value={payoutsTotal}
-            hint={t("screen.admin.finance.platformFinancialView.periodTotal4")}
+            value={NOT_RECORDED}
+            caption={t("screen.admin.finance.platformFinancialView.paidToSuppliers")}
           />
-        </AdminKpiGrid>
-        <AdminPanel title={t("screen.admin.finance.platformFinancialView.detailViews")}>
-          <AdminActions>
-            <AdminScreenLink slug="payout-runs" variant="secondary">
-              {t("screen.admin.finance.platformFinancialView.payoutRuns")}
-            </AdminScreenLink>
-            <AdminScreenLink slug="reconciliation-exceptions" variant="secondary">
-              {t("screen.admin.finance.platformFinancialView.reconciliationExceptions")}
-            </AdminScreenLink>
-            <AdminScreenLink slug="settlements-tracker" variant="secondary">
-              {t("screen.admin.finance.platformFinancialView.settlementsTracker")}
-            </AdminScreenLink>
-          </AdminActions>
-        </AdminPanel>
-        <TeInlineAlert tone="info" title={t("screen.admin.finance.platformFinancialView.amounts")}>
-          {t("screen.admin.finance.platformFinancialView.everyAmountShowsItsIso")}
-        </TeInlineAlert>
-      </StatePreview>
+        </AdminGrid>
+      </AdminQueryState>
+      <AdminCard title={t("screen.admin.finance.platformFinancialView.goToDetail")}>
+        <div className="flex flex-wrap gap-3">
+          <AdminLink screen="SCR-ADM-26" variant="secondary">
+            {t("screen.admin.finance.platformFinancialView.payoutRuns")}
+          </AdminLink>
+          <AdminLink screen="SCR-ADM-27" variant="secondary">
+            {t("screen.admin.finance.platformFinancialView.reconciliationExceptions")}
+          </AdminLink>
+          <AdminLink screen="SCR-ADM-28" variant="secondary">
+            {t("screen.admin.finance.platformFinancialView.settlementsTracker")}
+          </AdminLink>
+        </div>
+      </AdminCard>
     </AdminPage>
   );
 }

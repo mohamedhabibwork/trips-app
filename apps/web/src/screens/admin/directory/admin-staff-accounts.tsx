@@ -1,213 +1,241 @@
-import { useEffect, useState } from "react";
+// SCR-ADM-11 Admin staff accounts (docs/design/web/admin/SCR-ADM-11.dc.html): create admin
+// accounts by invitation and see their set-up state. The API has no staff list procedure, so the
+// table holds the invitations sent from this page; a reset needs the admin's account ID, which only
+// a staff list would provide.
+import { useState, type FormEvent } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { TeButton } from "@trips-app/ui/components/te-button";
-import { TeDataTable, type TeDataTableColumn } from "@trips-app/ui/components/te-data-table";
-import { TeInlineAlert } from "@trips-app/ui/components/te-inline-alert";
-import { TeInput } from "@trips-app/ui/components/te-input";
-import { TePageHeader } from "@trips-app/ui/components/te-page-header";
 import { t } from "@trips-app/i18n";
-import { useAuth } from "@/auth/auth-context";
-import { orpc } from "@/utils/orpc";
-import { StatePreview } from "../common/admin-state-preview";
-import {
-  AdminActions,
-  AdminPage,
-  AdminPanel,
-  AdminStatus,
-  type AdminStatusPresentation,
-} from "../common/admin-shared";
 
-interface AdminRow {
+import { orpc } from "@/utils/orpc";
+
+import { AdminButton } from "../common/admin-actions";
+import { AdminInput, AdminSelect, type AdminOption } from "../common/admin-form";
+import { AdminEmpty } from "../common/admin-states";
+import {
+  AdminAlert,
+  AdminBadge,
+  AdminCard,
+  AdminPage,
+  AdminTable,
+  type AdminColumn,
+} from "../common/admin-ui";
+
+type SubRole = "super_admin" | "operations" | "finance";
+
+interface StaffRow {
   id: string;
+  /** Present once the invitation is accepted; the authenticator reset needs it. */
+  accountId: string | null;
   name: string;
   email: string;
-  state: "active" | "setup-required";
-  authenticator: string;
+  subRole: SubRole;
 }
 
-const STATE_PRESENTATION = (): Record<AdminRow["state"], AdminStatusPresentation> => ({
-  active: {
-    tone: "success",
-    icon: "check",
-    label: t("screen.admin.directory.adminStaffAccounts.active"),
-  },
-  "setup-required": {
-    tone: "warning",
-    icon: "clock",
-    label: t("screen.admin.directory.adminStaffAccounts.setUpRequired"),
-  },
-});
+const RESET_REASON = "Authenticator reset from the admin staff accounts page";
 
-const COLUMNS = (onResetTotp: (row: AdminRow) => void): readonly TeDataTableColumn<AdminRow>[] => [
-  { key: "name", header: t("screen.admin.directory.adminStaffAccounts.name") },
-  { key: "email", header: t("screen.admin.directory.adminStaffAccounts.email") },
-  {
-    key: "state",
-    header: t("screen.admin.directory.adminStaffAccounts.status"),
-    render: (row) => <AdminStatus status={STATE_PRESENTATION()[row.state]} />,
-  },
-  { key: "authenticator", header: t("screen.admin.directory.adminStaffAccounts.authenticator") },
-  {
-    key: "reset",
-    header: t("screen.admin.directory.adminStaffAccounts.action"),
-    render: (row) => (
-      <TeButton
-        variant="ghost"
-        onClick={() => onResetTotp(row)}
-        aria-label={t("screen.admin.directory.adminStaffAccounts.resetAuthenticatorFor", {
-          name: row.name,
-        })}
-      >
-        {t("screen.admin.directory.adminStaffAccounts.resetAuthenticator")}
-      </TeButton>
-    ),
-  },
+const subRoleOptions = (): readonly AdminOption[] => [
+  { value: "operations", label: t("screen.admin.directory.adminStaffAccounts.operations") },
+  { value: "finance", label: t("screen.admin.directory.adminStaffAccounts.finance") },
+  { value: "super_admin", label: t("screen.admin.directory.adminStaffAccounts.superAdmin") },
 ];
 
+function subRoleLabel(subRole: SubRole): string {
+  return subRoleOptions().find((option) => option.value === subRole)?.label ?? subRole;
+}
+
+function isSubRole(value: string): value is SubRole {
+  return value === "super_admin" || value === "operations" || value === "finance";
+}
+
 export function AdminStaffAccounts() {
-  const { actor } = useAuth();
   const queryClient = useQueryClient();
-  const [rows, setRows] = useState<readonly AdminRow[]>([]);
+  const [isFormOpen, setFormOpen] = useState(false);
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
-  const [country, setCountry] = useState("EG");
+  const [subRole, setSubRole] = useState<SubRole>("operations");
+  const [rows, setRows] = useState<readonly StaffRow[]>([]);
 
-  const resetTotpMutation = useMutation(
+  const inviteMutation = useMutation(
+    orpc.auth.adminInviteStaff.mutationOptions({
+      onSuccess: (result, input) => {
+        void queryClient.invalidateQueries({ queryKey: orpc.auth.key() });
+        setRows((current) => [
+          ...current,
+          {
+            id: result.inviteId,
+            accountId: null,
+            name: input.fullName,
+            email: result.email,
+            subRole: input.subRole,
+          },
+        ]);
+        setFullName("");
+        setEmail("");
+        setFormOpen(false);
+      },
+    }),
+  );
+  const resetMutation = useMutation(
     orpc.auth.adminResetTotp.mutationOptions({
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: orpc.auth.key() });
-      },
-    }),
-  );
-  const inviteStaffMutation = useMutation(
-    orpc.auth.adminInviteStaff.mutationOptions({
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: orpc.auth.key() });
+        void queryClient.invalidateQueries({ queryKey: orpc.auth.key() });
       },
     }),
   );
 
-  useEffect(() => {
-    if (!actor) return;
-    setRows([
-      {
-        id: actor.accountId,
-        name: actor.adminSubRole ?? actor.activeRole,
-        email: `${actor.accountId.slice(0, 8)}@trips.app`,
-        state: "active",
-        authenticator: "Set up",
-      },
-    ]);
-  }, [actor]);
+  const submitInvite = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!event.currentTarget.checkValidity()) {
+      event.currentTarget.reportValidity();
+      return;
+    }
+    inviteMutation.mutate({ fullName: fullName.trim(), email: email.trim(), subRole });
+  };
 
-  const handleResetTotp = (row: AdminRow) => {
-    void resetTotpMutation
-      .mutateAsync({
-        targetAdminAccountId: row.id,
-        reason: "Admin requested TOTP reset from staff directory",
-      })
-      .catch(() => {});
-    setRows((prev) =>
-      prev.map((item) =>
-        item.id === row.id
-          ? { ...item, state: "setup-required", authenticator: "Not set up" }
-          : item,
+  const columns: readonly AdminColumn<StaffRow>[] = [
+    {
+      key: "name",
+      header: t("screen.admin.directory.adminStaffAccounts.name"),
+      render: (row) => row.name,
+      wrap: true,
+    },
+    {
+      key: "email",
+      header: t("screen.admin.directory.adminStaffAccounts.email"),
+      render: (row) => row.email,
+    },
+    {
+      key: "country",
+      header: t("screen.admin.directory.adminStaffAccounts.country"),
+      render: () => "—",
+    },
+    {
+      key: "subRole",
+      header: t("screen.admin.directory.adminStaffAccounts.subRole"),
+      render: (row) => subRoleLabel(row.subRole),
+    },
+    {
+      key: "authenticator",
+      header: t("screen.admin.directory.adminStaffAccounts.authenticator"),
+      render: () => (
+        <AdminBadge tone="warn">
+          {t("screen.admin.directory.adminStaffAccounts.notSetUp")}
+        </AdminBadge>
       ),
-    );
-  };
-
-  const handleCreate = () => {
-    const trimmedName = fullName.trim();
-    const trimmedEmail = email.trim();
-    if (!trimmedName || !trimmedEmail) return;
-    const optimisticId = `admin-${Date.now()}`;
-    setRows((prev) => [
-      ...prev,
-      {
-        id: optimisticId,
-        name: trimmedName,
-        email: trimmedEmail,
-        state: "setup-required",
-        authenticator: "Not set up",
-      },
-    ]);
-    setFullName("");
-    setEmail("");
-    void inviteStaffMutation
-      .mutateAsync({
-        email: trimmedEmail,
-        fullName: trimmedName,
-        subRole: "operations",
-      })
-      .then((res) => {
-        const createdId = (res as { accountId?: string } | undefined)?.accountId;
-        if (!createdId) return;
-        setRows((prev) =>
-          prev.map((item) => (item.id === optimisticId ? { ...item, id: createdId } : item)),
-        );
-      })
-      .catch(() => {});
-  };
+    },
+    {
+      key: "status",
+      header: t("screen.admin.directory.adminStaffAccounts.status"),
+      render: () => (
+        <AdminBadge icon={false}>
+          {t("screen.admin.directory.adminStaffAccounts.setUpRequired")}
+        </AdminBadge>
+      ),
+    },
+    {
+      key: "action",
+      header: (
+        <span className="te-caption">{t("screen.admin.directory.adminStaffAccounts.action")}</span>
+      ),
+      render: (row) => (
+        <AdminButton
+          variant="link"
+          disabled={!row.accountId || resetMutation.isPending}
+          aria-label={t("screen.admin.directory.adminStaffAccounts.resetAuthenticatorFor", {
+            name: row.name,
+          })}
+          onClick={() =>
+            row.accountId &&
+            resetMutation.mutate({ targetAdminAccountId: row.accountId, reason: RESET_REASON })
+          }
+        >
+          {t("screen.admin.directory.adminStaffAccounts.resetAuthenticator")}
+        </AdminButton>
+      ),
+    },
+  ];
 
   return (
-    <AdminPage>
-      <TePageHeader
-        title={t("screen.admin.directory.adminStaffAccounts.adminStaffAccounts")}
-        description={t("screen.admin.directory.adminStaffAccounts.createAdminAccountsAndSee")}
+    <AdminPage
+      title={t("screen.admin.directory.adminStaffAccounts.title")}
+      description={t("screen.admin.directory.adminStaffAccounts.description")}
+      actions={
+        <AdminButton variant="primary" onClick={() => setFormOpen(true)} disabled={isFormOpen}>
+          {t("screen.admin.directory.adminStaffAccounts.createAdmin")}
+        </AdminButton>
+      }
+    >
+      <AdminAlert tone="info">
+        {t("screen.admin.directory.adminStaffAccounts.setupNotice")}
+      </AdminAlert>
+      {inviteMutation.isSuccess ? (
+        <AdminAlert tone="success">
+          {t("screen.admin.directory.adminStaffAccounts.invitationSent", {
+            email: inviteMutation.data.email,
+          })}
+        </AdminAlert>
+      ) : null}
+      {inviteMutation.isError || resetMutation.isError ? (
+        <AdminAlert tone="danger" title={t("screen.admin.directory.adminStaffAccounts.notSaved")}>
+          {t("screen.admin.directory.adminStaffAccounts.notSavedBody")}
+        </AdminAlert>
+      ) : null}
+      {resetMutation.isSuccess ? (
+        <AdminAlert tone="success">
+          {t("screen.admin.directory.adminStaffAccounts.resetDone")}
+        </AdminAlert>
+      ) : null}
+      {isFormOpen ? (
+        <AdminCard title={t("screen.admin.directory.adminStaffAccounts.createAdmin")}>
+          <form className="flex flex-col gap-4" onSubmit={submitInvite} noValidate>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+              <AdminInput
+                label={t("screen.admin.directory.adminStaffAccounts.fullName")}
+                value={fullName}
+                minLength={2}
+                maxLength={120}
+                required
+                autoComplete="off"
+                onChange={(event) => setFullName(event.target.value)}
+              />
+              <AdminInput
+                label={t("screen.admin.directory.adminStaffAccounts.email")}
+                type="email"
+                value={email}
+                required
+                autoComplete="off"
+                onChange={(event) => setEmail(event.target.value)}
+              />
+              <AdminSelect
+                label={t("screen.admin.directory.adminStaffAccounts.subRole")}
+                options={subRoleOptions()}
+                value={subRole}
+                onValueChange={(value) => isSubRole(value) && setSubRole(value)}
+              />
+            </div>
+            <div className="flex flex-wrap justify-end gap-3">
+              <AdminButton onClick={() => setFormOpen(false)}>
+                {t("screen.admin.directory.adminStaffAccounts.cancel")}
+              </AdminButton>
+              <AdminButton type="submit" variant="primary" disabled={inviteMutation.isPending}>
+                {t("screen.admin.directory.adminStaffAccounts.sendInvitation")}
+              </AdminButton>
+            </div>
+          </form>
+        </AdminCard>
+      ) : null}
+      <AdminTable
+        caption={t("screen.admin.directory.adminStaffAccounts.tableCaption")}
+        columns={columns}
+        rows={rows}
+        getRowKey={(row) => row.id}
+        empty={
+          <AdminEmpty
+            title={t("screen.admin.directory.adminStaffAccounts.emptyTitle")}
+            description={t("screen.admin.directory.adminStaffAccounts.emptyBody")}
+          />
+        }
       />
-      <StatePreview
-        emptyTitle={t("screen.admin.directory.adminStaffAccounts.noAdminAccounts")}
-        emptyDescription={t("screen.admin.directory.adminStaffAccounts.createTheFirstAdminAccount")}
-        loadingLabel={t("screen.admin.directory.adminStaffAccounts.loadingTheAdminAccounts")}
-      >
-        <AdminPanel title={t("screen.admin.directory.adminStaffAccounts.createAdminAccount")}>
-          <TeInput
-            label={t("screen.admin.directory.adminStaffAccounts.fullName")}
-            placeholder={t("screen.admin.directory.adminStaffAccounts.fullNamePlaceholder")}
-            value={fullName}
-            onChange={(e) => setFullName(e.target.value)}
-            required
-          />
-          <TeInput
-            label={t("screen.admin.directory.adminStaffAccounts.emailLabel")}
-            type="email"
-            placeholder={t("screen.admin.directory.adminStaffAccounts.emailPlaceholder")}
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <TeInput
-            label={t("screen.admin.directory.adminStaffAccounts.country")}
-            placeholder={t("screen.admin.directory.adminStaffAccounts.countryPlaceholder")}
-            value={country}
-            onChange={(e) => setCountry(e.target.value)}
-            supportingText={t("screen.admin.directory.adminStaffAccounts.countryIsProposedInD")}
-          />
-          <AdminActions>
-            <TeButton onClick={handleCreate}>
-              {t("screen.admin.directory.adminStaffAccounts.createAdminAccount2")}
-            </TeButton>
-          </AdminActions>
-        </AdminPanel>
-        <TeInlineAlert
-          tone="info"
-          title={t("screen.admin.directory.adminStaffAccounts.howAdminAccountsStart")}
-        >
-          {t("screen.admin.directory.adminStaffAccounts.aNewAdminMustSet")}
-        </TeInlineAlert>
-        <AdminPanel title={t("screen.admin.directory.adminStaffAccounts.adminAccounts")}>
-          <TeDataTable
-            columns={COLUMNS(handleResetTotp)}
-            rows={rows}
-            getRowKey={(row) => row.id}
-            caption={t("screen.admin.directory.adminStaffAccounts.adminStaffAccountsCaption")}
-            emptyTitle={t("screen.admin.directory.adminStaffAccounts.noAdminAccountsEmptyTitle")}
-            emptyDescription={t(
-              "screen.admin.directory.adminStaffAccounts.createTheFirstAdminAccountEmptyDescription",
-            )}
-          />
-        </AdminPanel>
-      </StatePreview>
     </AdminPage>
   );
 }

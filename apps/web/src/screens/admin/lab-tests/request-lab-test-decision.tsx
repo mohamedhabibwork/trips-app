@@ -1,60 +1,92 @@
+// SCR-ADM-14 Request lab test (docs/design/web/admin/SCR-ADM-14.dc.html): pick the driver, the test
+// type and a 1-7 day deadline. Requesting a test pauses the driver at once.
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { TeInlineAlert } from "@trips-app/ui/components/te-inline-alert";
-import { TePageHeader } from "@trips-app/ui/components/te-page-header";
-import { TeSelect, type TeSelectOption } from "@trips-app/ui/components/te-select";
 import { t } from "@trips-app/i18n";
+
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
-import { AdminDecisionForm } from "../common/admin-decision-form";
-import { StatePreview } from "../common/admin-state-preview";
-import { useAdminNavigate } from "../common/admin-links";
-import {
-  AdminFacts,
-  AdminPage,
-  AdminPanel,
-  AdminStatus,
-  getSelectedAdminEntityId,
-  getSelectedAdminLabTestId,
-} from "../common/admin-shared";
+
+import { AdminButton, AdminLink, useAdminNavigate } from "../common/admin-actions";
+import { AdminRadioGroup, AdminSelect, type AdminOption } from "../common/admin-form";
+import { getSelectedAdminEntityId, getSelectedAdminLabTestId } from "../common/admin-selection";
+import { AdminEmpty, AdminQueryState } from "../common/admin-states";
+import { AdminAlert, AdminCard, AdminPage, AdminSplit } from "../common/admin-ui";
 
 const MIN_DEADLINE_DAYS = 1;
 const MAX_DEADLINE_DAYS = 7;
 const DEFAULT_DEADLINE_DAYS = 3;
+const DAY_MS = 86_400_000;
 
-const TEST_OPTIONS = (): readonly TeSelectOption[] => [
-  {
-    value: "drug-screening",
-    label: t("screen.admin.labTests.requestLabTestDecision.drugScreening"),
-  },
-  {
-    value: "medical-fitness",
-    label: t("screen.admin.labTests.requestLabTestDecision.medicalFitness"),
-  },
-  { value: "both", label: t("screen.admin.labTests.requestLabTestDecision.both") },
-];
+function testTypeOptions() {
+  return [
+    {
+      value: "drug-screening",
+      label: t("screen.admin.labTests.requestLabTestDecision.drugScreening"),
+    },
+    {
+      value: "medical-fitness",
+      label: t("screen.admin.labTests.requestLabTestDecision.medicalFitness"),
+    },
+    { value: "both", label: t("screen.admin.labTests.requestLabTestDecision.both") },
+  ];
+}
 
-const DEADLINE_OPTIONS: readonly TeSelectOption[] = Array.from(
-  { length: MAX_DEADLINE_DAYS - MIN_DEADLINE_DAYS + 1 },
-  (_, index) => {
-    const days = MIN_DEADLINE_DAYS + index;
-    return { value: String(days), label: days === 1 ? "1 day" : `${days} days` };
-  },
-);
+function daysLabel(days: number): string {
+  return days === 1
+    ? t("screen.admin.labTests.requestLabTestDecision.oneDay")
+    : t("screen.admin.labTests.requestLabTestDecision.days", { days });
+}
 
-const ACTIVE = () =>
-  ({
-    tone: "success",
-    icon: "check",
-    label: t("screen.admin.labTests.requestLabTestDecision.active"),
-  }) as const;
+function DeadlineStepper({ days, onChange }: { days: number; onChange: (days: number) => void }) {
+  return (
+    <div className="flex items-center gap-4">
+      <AdminButton
+        aria-label={t("screen.admin.labTests.requestLabTestDecision.decreaseDeadline")}
+        disabled={days <= MIN_DEADLINE_DAYS}
+        onClick={() => onChange(days - 1)}
+      >
+        −
+      </AdminButton>
+      <span className="te-h3 min-w-[5rem] text-center" aria-live="polite">
+        {daysLabel(days)}
+      </span>
+      <AdminButton
+        aria-label={t("screen.admin.labTests.requestLabTestDecision.increaseDeadline")}
+        disabled={days >= MAX_DEADLINE_DAYS}
+        onClick={() => onChange(days + 1)}
+      >
+        +
+      </AdminButton>
+    </div>
+  );
+}
+
+function RequestEffect() {
+  return (
+    <>
+      <AdminAlert
+        tone="warning"
+        title={t("screen.admin.labTests.requestLabTestDecision.effectTitle")}
+      >
+        <p>{t("screen.admin.labTests.requestLabTestDecision.effectPaused")}</p>
+        <p>{t("screen.admin.labTests.requestLabTestDecision.effectAllowedActions")}</p>
+        <p>{t("screen.admin.labTests.requestLabTestDecision.effectTrips")}</p>
+      </AdminAlert>
+      <AdminCard>
+        <p className="te-caption">{t("screen.admin.labTests.requestLabTestDecision.auditNote")}</p>
+      </AdminCard>
+    </>
+  );
+}
 
 export function RequestLabTestDecision() {
-  const { status: authStatus } = useAuth();
+  const { status: authStatus, locale } = useAuth();
   const queryClient = useQueryClient();
-  const [testType, setTestType] = useState("drug-screening");
-  const [deadline, setDeadline] = useState(String(DEFAULT_DEADLINE_DAYS));
   const goTo = useAdminNavigate();
+  const [pickedDriver, setPickedDriver] = useState<string | null>(null);
+  const [testType, setTestType] = useState("drug-screening");
+  const [days, setDays] = useState(DEFAULT_DEADLINE_DAYS);
 
   const queueQuery = useQuery({
     ...orpc.onboarding.listReviewQueue.queryOptions({
@@ -72,95 +104,102 @@ export function RequestLabTestDecision() {
     }),
   );
 
-  const apps = queueQuery.data ?? [];
-  const selectedId = getSelectedAdminLabTestId() ?? getSelectedAdminEntityId();
-  const found = apps.find((a) => a.id === selectedId) ?? apps[0];
-  const driverName = found?.applicant?.fullName ?? found?.applicantAccountId ?? "-";
-  const driverAccountId = found?.applicantAccountId ?? null;
+  const applications = queueQuery.data ?? [];
+  const driverOptions: readonly AdminOption[] = [
+    ...new Map(
+      applications.map((item) => [
+        item.applicantAccountId,
+        item.applicant?.fullName ?? item.applicantAccountId,
+      ]),
+    ),
+  ].map(([value, label]) => ({ value, label }));
+  // The driver opened on the previous page is preselected; otherwise the first in the list.
+  const remembered = getSelectedAdminLabTestId() ?? getSelectedAdminEntityId();
+  const rememberedDriver = applications.find((item) => item.id === remembered)?.applicantAccountId;
+  const driverAccountId = pickedDriver ?? rememberedDriver ?? driverOptions[0]?.value ?? null;
 
-  const handleConfirm = async () => {
-    if (authStatus === "authenticated" && driverAccountId) {
-      const days = Number.parseInt(deadline, 10) || DEFAULT_DEADLINE_DAYS;
-      const deadlineAt = new Date(Date.now() + days * 86400000).toISOString();
-      try {
-        await requestMutation.mutateAsync({
-          driverAccountId,
-          deadlineAt,
-        });
-      } catch {
-        // Proceed back to queue
-      }
-    }
-    void goTo("lab-tests-queue");
+  const deadline = new Date(Date.now() + days * DAY_MS);
+
+  const submit = () => {
+    if (!driverAccountId) return;
+    requestMutation.mutate(
+      { driverAccountId, deadlineAt: new Date(Date.now() + days * DAY_MS).toISOString() },
+      { onSuccess: () => void goTo("SCR-ADM-12") },
+    );
   };
 
   return (
-    <AdminPage>
-      <TePageHeader
-        title={t("screen.admin.labTests.requestLabTestDecision.requestLabTestDecision")}
-        description={t("screen.admin.labTests.requestLabTestDecision.requestALabTestFor")}
-      />
-      <StatePreview
-        emptyTitle={t("screen.admin.labTests.requestLabTestDecision.noDriverSelected")}
-        emptyDescription={t("screen.admin.labTests.requestLabTestDecision.openADriverFromThe")}
-        loadingLabel={t("screen.admin.labTests.requestLabTestDecision.loadingTheDriver")}
-      >
-        <AdminPanel title={t("screen.admin.labTests.requestLabTestDecision.driver")}>
-          <AdminStatus status={ACTIVE()} />
-          <AdminFacts
-            items={[
-              {
-                label: t("screen.admin.labTests.requestLabTestDecision.driverLabel"),
-                value: driverName,
-              },
-            ]}
-          />
-        </AdminPanel>
-        <AdminPanel title={t("screen.admin.labTests.requestLabTestDecision.testRequest")}>
-          <TeSelect
-            label={t("screen.admin.labTests.requestLabTestDecision.testType")}
-            options={TEST_OPTIONS()}
-            value={testType}
-            onValueChange={setTestType}
-          />
-          <TeSelect
-            label={t("screen.admin.labTests.requestLabTestDecision.deadline")}
-            options={DEADLINE_OPTIONS}
-            value={deadline}
-            onValueChange={setDeadline}
-            supportingText={t("screen.admin.labTests.requestLabTestDecision.between1And7Days")}
-          />
-          <AdminDecisionForm
-            reasonLabel={t("screen.admin.labTests.requestLabTestDecision.reasonForTheLabTest")}
-            reasonHelp={t("screen.admin.labTests.requestLabTestDecision.recordedWithTheRequestIn")}
-            submitLabel={t(
-              "screen.admin.labTests.requestLabTestDecision.requestTestAndPauseDriver",
-            )}
-            dialogTitle={t("screen.admin.labTests.requestLabTestDecision.pauseThisDriverNow")}
-            dialogDescription={t(
-              "screen.admin.labTests.requestLabTestDecision.theDriverIsPausedAt",
-            )}
-            confirmLabel={t("screen.admin.labTests.requestLabTestDecision.requestTestAndPause")}
-            tone="danger"
-            dialogEffect={
-              <p className="te-caption">
-                {t("screen.admin.labTests.requestLabTestDecision.upcomingTripsReturnToOrganizers")}
-              </p>
-            }
-            cancel={{
-              slug: "lab-tests-queue",
-              label: t("screen.admin.labTests.requestLabTestDecision.cancel"),
-            }}
-            onConfirm={() => void handleConfirm()}
-          />
-        </AdminPanel>
-        <TeInlineAlert
-          tone="warning"
-          title={t("screen.admin.labTests.requestLabTestDecision.effectOnTheDriver")}
+    <AdminPage
+      title={t("screen.admin.labTests.requestLabTestDecision.title")}
+      description={t("screen.admin.labTests.requestLabTestDecision.description")}
+      actions={
+        <>
+          <AdminLink screen="SCR-ADM-12" variant="secondary">
+            {t("screen.admin.labTests.requestLabTestDecision.cancel")}
+          </AdminLink>
+          <AdminButton
+            variant="primary"
+            disabled={!driverAccountId || requestMutation.isPending}
+            onClick={submit}
+          >
+            {t("screen.admin.labTests.requestLabTestDecision.requestTest")}
+          </AdminButton>
+        </>
+      }
+    >
+      {requestMutation.isError ? (
+        <AdminAlert
+          tone="danger"
+          title={t("screen.admin.labTests.requestLabTestDecision.requestFailedTitle")}
         >
-          {t("screen.admin.labTests.requestLabTestDecision.theDriverIsPausedAt2")}
-        </TeInlineAlert>
-      </StatePreview>
+          {t("screen.admin.labTests.requestLabTestDecision.requestFailedBody")}
+        </AdminAlert>
+      ) : null}
+      <AdminQueryState
+        query={queueQuery}
+        loadingLabel={t("screen.admin.labTests.requestLabTestDecision.loading")}
+      >
+        <AdminSplit
+          main={
+            <>
+              <AdminCard title={t("screen.admin.labTests.requestLabTestDecision.driverAndTest")}>
+                {driverOptions.length > 0 && driverAccountId ? (
+                  <AdminSelect
+                    label={t("screen.admin.labTests.requestLabTestDecision.driver")}
+                    options={driverOptions}
+                    value={driverAccountId}
+                    onValueChange={setPickedDriver}
+                  />
+                ) : (
+                  <AdminEmpty
+                    title={t("screen.admin.labTests.requestLabTestDecision.noDriversTitle")}
+                    description={t("screen.admin.labTests.requestLabTestDecision.noDriversBody")}
+                  />
+                )}
+                <AdminRadioGroup
+                  legend={t("screen.admin.labTests.requestLabTestDecision.testType")}
+                  name="lab-test-type"
+                  value={testType}
+                  options={testTypeOptions()}
+                  onValueChange={setTestType}
+                />
+              </AdminCard>
+              <AdminCard
+                title={t("screen.admin.labTests.requestLabTestDecision.deadline")}
+                caption={t("screen.admin.labTests.requestLabTestDecision.deadlineHelp")}
+              >
+                <DeadlineStepper days={days} onChange={setDays} />
+                <span className="te-caption">
+                  {t("screen.admin.labTests.requestLabTestDecision.deadlineDate", {
+                    date: deadline.toLocaleDateString(locale),
+                  })}
+                </span>
+              </AdminCard>
+            </>
+          }
+          side={<RequestEffect />}
+        />
+      </AdminQueryState>
     </AdminPage>
   );
 }

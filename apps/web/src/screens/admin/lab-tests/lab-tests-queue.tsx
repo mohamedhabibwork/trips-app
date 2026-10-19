@@ -1,80 +1,46 @@
+// SCR-ADM-12 Lab tests queue (docs/design/web/admin/SCR-ADM-12.dc.html): lab tests by state, with
+// an overdue-only filter and a link to each test's detail and decision page.
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { TeButton } from "@trips-app/ui/components/te-button";
-import { TeDataTable, type TeDataTableColumn } from "@trips-app/ui/components/te-data-table";
-import { TePageHeader } from "@trips-app/ui/components/te-page-header";
-import { TeSelect, type TeSelectOption } from "@trips-app/ui/components/te-select";
-import { TeSwitch } from "@trips-app/ui/components/te-switch";
 import { t } from "@trips-app/i18n";
+
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
-import { StatePreview } from "../common/admin-state-preview";
-import { AdminScreenLink, useAdminNavigate } from "../common/admin-links";
-import {
-  AdminActions,
-  AdminFilters,
-  AdminPage,
-  AdminPagination,
-  AdminPanel,
-  AdminStatus,
-  setSelectedAdminLabTestId,
-  type AdminStatusPresentation,
-} from "../common/admin-shared";
 
-type LabState = "requested" | "pending" | "result-uploaded" | "passed" | "failed" | "missed";
+import { AdminLink } from "../common/admin-actions";
+import { AdminCheckbox, AdminTabs, type AdminTab } from "../common/admin-form";
+import { setSelectedAdminLabTestId } from "../common/admin-selection";
+import { AdminEmpty, AdminQueryState } from "../common/admin-states";
+import { AdminCard, AdminPage, AdminTable, type AdminColumn } from "../common/admin-ui";
+import {
+  LAB_STATES,
+  LabStateBadge,
+  labStateLabel,
+  labStateOf,
+  type LabState,
+} from "./lab-test-state";
 
 interface LabTestRow {
   id: string;
   driver: string;
-  track: string;
   requested: string;
-  deadline: string;
   state: LabState;
   overdue: boolean;
 }
 
-const STATE_PRESENTATION = (): Record<LabState, AdminStatusPresentation> => ({
-  requested: {
-    tone: "info",
-    icon: "clock",
-    label: t("screen.admin.labTests.labTestsQueue.requested"),
-  },
-  pending: { tone: "info", icon: "clock", label: t("screen.admin.labTests.labTestsQueue.pending") },
-  "result-uploaded": {
-    tone: "highlight",
-    icon: "file",
-    label: t("screen.admin.labTests.labTestsQueue.resultUploaded"),
-  },
-  passed: {
-    tone: "success",
-    icon: "check",
-    label: t("screen.admin.labTests.labTestsQueue.passed"),
-  },
-  failed: { tone: "danger", icon: "close", label: t("screen.admin.labTests.labTestsQueue.failed") },
-  missed: { tone: "danger", icon: "alert", label: t("screen.admin.labTests.labTestsQueue.missed") },
-});
+const ALL_TAB = "all";
 
-const OVERDUE = (): AdminStatusPresentation => ({
-  tone: "danger",
-  icon: "alert",
-  label: t("screen.admin.labTests.labTestsQueue.overdue"),
-});
-
-const STATE_OPTIONS = (): readonly TeSelectOption[] => [
-  { value: "all", label: t("screen.admin.labTests.labTestsQueue.anyState") },
-  { value: "requested", label: t("screen.admin.labTests.labTestsQueue.requestedLabel") },
-  { value: "pending", label: t("screen.admin.labTests.labTestsQueue.pendingLabel") },
-  { value: "result-uploaded", label: t("screen.admin.labTests.labTestsQueue.resultUploadedLabel") },
-  { value: "passed", label: t("screen.admin.labTests.labTestsQueue.passedLabel") },
-  { value: "failed", label: t("screen.admin.labTests.labTestsQueue.failedLabel") },
-  { value: "missed", label: t("screen.admin.labTests.labTestsQueue.missedLabel") },
-];
+function stateTabs(): readonly AdminTab[] {
+  return [
+    { id: ALL_TAB, label: t("screen.admin.labTests.labTestsQueue.all") },
+    ...LAB_STATES.map((state) => ({ id: state, label: labStateLabel(state) })),
+  ];
+}
 
 export function LabTestsQueue() {
-  const { status: authStatus } = useAuth();
-  const goTo = useAdminNavigate();
+  const { status: authStatus, locale } = useAuth();
+  const [stateTab, setStateTab] = useState(ALL_TAB);
   const [overdueOnly, setOverdueOnly] = useState(false);
-  const [stateFilter, setStateFilter] = useState("all");
 
   const queueQuery = useQuery({
     ...orpc.onboarding.listReviewQueue.queryOptions({
@@ -83,116 +49,102 @@ export function LabTestsQueue() {
     enabled: authStatus === "authenticated",
   });
 
-  const rows: readonly LabTestRow[] = (queueQuery.data ?? []).map((app) => {
-    const createdMs = new Date(app.createdAt).getTime();
-    const deadlineIso = new Date(createdMs + 3 * 86400000).toISOString().slice(0, 10);
-    const state: LabState =
-      app.state === "Approved" ? "passed" : app.state === "Rejected" ? "failed" : "result-uploaded";
-    return {
-      id: app.id,
-      driver: app.applicant?.fullName ?? app.applicantAccountId,
-      track: "Drug screening",
-      requested: new Date(app.createdAt).toISOString().slice(0, 10),
-      deadline: deadlineIso,
-      state,
-      overdue: Boolean(app.isSlaOverdue),
-    };
-  });
+  const allRows: readonly LabTestRow[] = (queueQuery.data ?? []).map((item) => ({
+    id: item.id,
+    driver: item.applicant?.fullName ?? item.applicantAccountId,
+    requested: new Date(item.createdAt).toLocaleDateString(locale),
+    state: labStateOf(item.state),
+    overdue: Boolean(item.isSlaOverdue),
+  }));
 
-  const visibleRows = rows.filter((row) => {
-    if (overdueOnly && !row.overdue) return false;
-    if (stateFilter !== "all" && row.state !== stateFilter) return false;
-    return true;
-  });
+  const rows = allRows.filter(
+    (row) => (stateTab === ALL_TAB || row.state === stateTab) && (!overdueOnly || row.overdue),
+  );
 
-  const columns: readonly TeDataTableColumn<LabTestRow>[] = [
-    { key: "driver", header: t("screen.admin.labTests.labTestsQueue.driver") },
-    { key: "track", header: t("screen.admin.labTests.labTestsQueue.track") },
-    { key: "requested", header: t("screen.admin.labTests.labTestsQueue.requestedHeader") },
-    { key: "deadline", header: t("screen.admin.labTests.labTestsQueue.deadline") },
+  const columns: readonly AdminColumn<LabTestRow>[] = [
+    {
+      key: "driver",
+      header: t("screen.admin.labTests.labTestsQueue.driver"),
+      render: (row) => row.driver,
+      wrap: true,
+    },
+    {
+      key: "track",
+      header: t("screen.admin.labTests.labTestsQueue.track"),
+      // The review queue does not carry the test track yet.
+      render: () => "—",
+    },
+    {
+      key: "requested",
+      header: t("screen.admin.labTests.labTestsQueue.requested"),
+      render: (row) => row.requested,
+    },
+    {
+      key: "deadline",
+      header: t("screen.admin.labTests.labTestsQueue.deadline"),
+      render: () => "—",
+    },
     {
       key: "state",
       header: t("screen.admin.labTests.labTestsQueue.state"),
-      render: (row) => <AdminStatus status={STATE_PRESENTATION()[row.state]} />,
+      render: (row) => <LabStateBadge state={row.state} overdue={row.overdue} />,
     },
     {
-      key: "overdue",
-      header: t("screen.admin.labTests.labTestsQueue.overdueHeader"),
-      render: (row) =>
-        row.overdue ? (
-          <AdminStatus status={OVERDUE()} />
-        ) : (
-          <span>{t("screen.admin.labTests.labTestsQueue.notOverdue")}</span>
-        ),
-    },
-    {
-      key: "open",
-      header: t("screen.admin.labTests.labTestsQueue.action"),
+      key: "action",
+      header: <span className="te-caption">{t("screen.admin.labTests.labTestsQueue.action")}</span>,
       render: (row) => (
-        <TeButton
-          variant="secondary"
-          aria-label={t("screen.admin.labTests.labTestsQueue.openLabTestFor", {
-            driver: row.driver,
-          })}
-          onClick={() => {
-            setSelectedAdminLabTestId(row.id);
-            void goTo("lab-test-detail-and-decision");
-          }}
+        <AdminLink
+          screen="SCR-ADM-13"
+          params={{ labTestId: row.id }}
+          ariaLabel={t("screen.admin.labTests.labTestsQueue.openTestFor", { driver: row.driver })}
+          onClick={() => setSelectedAdminLabTestId(row.id)}
         >
           {t("screen.admin.labTests.labTestsQueue.openTest")}
-        </TeButton>
+        </AdminLink>
       ),
     },
   ];
 
   return (
-    <AdminPage>
-      <TePageHeader
-        title={t("screen.admin.labTests.labTestsQueue.labTestsQueue")}
-        description={t("screen.admin.labTests.labTestsQueue.trackLabTestsByState")}
-        actions={
-          <AdminActions>
-            <AdminScreenLink slug="request-lab-test-decision" variant="secondary">
-              {t("screen.admin.labTests.labTestsQueue.requestLabTest")}
-            </AdminScreenLink>
-            <AdminScreenLink slug="lab-test-detail-and-decision" variant="primary">
-              {t("screen.admin.labTests.labTestsQueue.openNextDueTest")}
-            </AdminScreenLink>
-          </AdminActions>
-        }
-      />
-      <StatePreview
-        emptyTitle={t("screen.admin.labTests.labTestsQueue.noLabTests")}
-        emptyDescription={t("screen.admin.labTests.labTestsQueue.noLabTestsMatchThese")}
-        loadingLabel={t("screen.admin.labTests.labTestsQueue.loadingTheLabTests")}
-      >
-        <AdminFilters>
-          <TeSwitch
+    <AdminPage
+      title={t("screen.admin.labTests.labTestsQueue.title")}
+      description={t("screen.admin.labTests.labTestsQueue.description")}
+    >
+      <AdminCard label={t("screen.admin.labTests.labTestsQueue.filters")}>
+        <AdminTabs
+          tabs={stateTabs()}
+          activeId={stateTab}
+          onSelect={setStateTab}
+          label={t("screen.admin.labTests.labTestsQueue.state")}
+        />
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <AdminCheckbox
             label={t("screen.admin.labTests.labTestsQueue.overdueOnly")}
             checked={overdueOnly}
             onCheckedChange={setOverdueOnly}
           />
-          <TeSelect
-            label={t("screen.admin.labTests.labTestsQueue.stateLabel")}
-            options={STATE_OPTIONS()}
-            value={stateFilter}
-            onValueChange={setStateFilter}
-          />
-        </AdminFilters>
-        <AdminPanel title={t("screen.admin.labTests.labTestsQueue.labTests")}>
-          <TeDataTable
-            columns={columns}
-            rows={visibleRows}
-            getRowKey={(row) => row.id}
-            caption={t("screen.admin.labTests.labTestsQueue.labTestsCaption")}
-            emptyTitle={t("screen.admin.labTests.labTestsQueue.noLabTestsEmptyTitle")}
-            emptyDescription={t(
-              "screen.admin.labTests.labTestsQueue.noLabTestsMatchTheseEmptyDescription",
-            )}
-          />
-          <AdminPagination pageCount={1} />
-        </AdminPanel>
-      </StatePreview>
+          <span className="te-caption" aria-live="polite">
+            {t("screen.admin.labTests.labTestsQueue.showingCount", { count: rows.length })}
+          </span>
+        </div>
+      </AdminCard>
+      <AdminQueryState
+        query={queueQuery}
+        loadingLabel={t("screen.admin.labTests.labTestsQueue.loading")}
+      >
+        <AdminTable
+          caption={t("screen.admin.labTests.labTestsQueue.tableCaption")}
+          columns={columns}
+          rows={rows}
+          getRowKey={(row) => row.id}
+          empty={
+            <AdminEmpty
+              title={t("screen.admin.labTests.labTestsQueue.emptyTitle")}
+              description={t("screen.admin.labTests.labTestsQueue.emptyBody")}
+            />
+          }
+        />
+      </AdminQueryState>
     </AdminPage>
   );
 }
