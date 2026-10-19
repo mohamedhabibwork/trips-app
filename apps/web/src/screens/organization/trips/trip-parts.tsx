@@ -105,6 +105,7 @@ export function WizardSaveAlert({
 
 export interface OrgPlanLimits {
   activeTripsPerMonth: number | null;
+  activeCouponsMax: number | null;
   vehiclesPerTrip: number | null;
   programsPerTrip: number | null;
 }
@@ -146,6 +147,7 @@ export function useOrgPlan() {
   return {
     limits: {
       activeTripsPerMonth: readLimit(limits, "activeTripsPerMonth"),
+      activeCouponsMax: readLimit(limits, "activeCouponsMax"),
       vehiclesPerTrip: readLimit(limits, "vehiclesPerTrip"),
       programsPerTrip: readLimit(limits, "programsPerTrip"),
     } satisfies OrgPlanLimits,

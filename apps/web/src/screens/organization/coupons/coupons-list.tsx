@@ -8,6 +8,8 @@ import { t } from "@trips-app/i18n";
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
 
+import { useOrgPlan } from "../trips/trip-parts";
+
 import { OrgChips } from "../common/org-form";
 import { OrgButtonLink, OrgLink } from "../common/org-link";
 import { setSelectedCouponId } from "../common/org-shared";
@@ -16,6 +18,7 @@ import {
   NO_VALUE,
   OrgButton,
   OrgEmpty,
+  OrgAlert,
   OrgError,
   OrgKpi,
   OrgKpiRow,
@@ -26,7 +29,6 @@ import {
   CouponStatusBadge,
   NEW_COUPON_ID,
   countedText,
-  couponPlanLimit,
   couponTypeText,
   couponValueText,
   remainingText,
@@ -134,10 +136,6 @@ export function CouponsList() {
     ...orpc.coupons.listOrganizationCoupons.queryOptions({ input: {} }),
     enabled,
   });
-  const subscriptionQuery = useQuery({
-    ...orpc.plans.getOrganizationSubscription.queryOptions({ input: undefined }),
-    enabled,
-  });
   const bookingsQuery = useQuery({
     ...orpc.booking.listOrganizationBookings.queryOptions({ input: {} }),
     enabled,
@@ -163,7 +161,9 @@ export function CouponsList() {
     })) ?? [];
   const loaded = couponsQuery.isSuccess;
   const counted = loaded ? rows.filter((row) => row.status !== "expired").length : null;
-  const limit = couponPlanLimit(subscriptionQuery.data);
+  // The plan's coupon limit comes from the plans catalog (`activeCouponsMax`).
+  const { limits } = useOrgPlan();
+  const limit = limits ? limits.activeCouponsMax : undefined;
   const visible = rows.filter((row) => filter === "all" || row.status === filter);
 
   const filterOptions = [
@@ -212,6 +212,11 @@ export function CouponsList() {
         onValueChange={setFilter}
       />
       {couponsQuery.isError ? <OrgError onRetry={() => void couponsQuery.refetch()} /> : null}
+      {updateStatusMutation.isError ? (
+        <OrgAlert tone="err" title={t("screen.organization.coupons.couponsList.statusFailedTitle")}>
+          {t("screen.organization.coupons.couponsList.statusFailedBody")}
+        </OrgAlert>
+      ) : null}
       <OrgTable
         columns={buildColumns({
           onToggle: (row) =>

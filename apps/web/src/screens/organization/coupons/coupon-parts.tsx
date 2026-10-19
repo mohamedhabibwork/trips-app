@@ -16,9 +16,6 @@ interface CouponLike {
   redemptionsCount: number;
 }
 
-const STARTER_COUPON_LIMIT = 5;
-const GROWTH_COUPON_LIMIT = 25;
-
 /** Plan tier from the subscription's plan id ("plan:growth"); null while unknown. */
 export function planTier(subscription: unknown): string | null {
   if (!subscription || typeof subscription !== "object") return null;
@@ -26,19 +23,19 @@ export function planTier(subscription: unknown): string | null {
   return typeof planId === "string" ? (planId.split(":")[1] ?? planId) : null;
 }
 
-/** How many coupons the plan counts, or null for no limit. Growth applies while the plan is unknown. */
-export function couponPlanLimit(subscription: unknown): number | null {
-  const tier = planTier(subscription);
-  if (tier === "enterprise") return null;
-  if (tier === "starter") return STARTER_COUPON_LIMIT;
-  return GROWTH_COUPON_LIMIT;
-}
-
-/** "3 of 25", or "3 of Unlimited". */
-export function countedText(count: number | null, limit: number | null): string {
+/**
+ * "3 of 20", or "3 of Unlimited". `limit` is the plan's `activeCouponsMax` from the catalog:
+ * null means no limit, undefined means the plan is not known yet.
+ */
+export function countedText(count: number | null, limit: number | null | undefined): string {
   return t("screen.organization.coupons.couponParts.nOfLimit", {
     n: count === null ? NO_VALUE : count,
-    limit: limit === null ? t("screen.organization.coupons.couponParts.unlimited") : limit,
+    limit:
+      limit === undefined
+        ? NO_VALUE
+        : limit === null
+          ? t("screen.organization.coupons.couponParts.unlimited")
+          : limit,
   });
 }
 

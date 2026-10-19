@@ -89,15 +89,6 @@ export function InvoicesList() {
         <OrgBadge tone="ok">{t("screen.organization.billing.invoicesList.issued")}</OrgBadge>
       ),
     },
-    {
-      key: "action",
-      header: t("screen.organization.billing.invoicesList.action"),
-      render: () => (
-        <OrgButtonLink slug="issue-invoice-b2b-or-b2c" variant="text">
-          {t("screen.organization.billing.invoicesList.openInvoice")}
-        </OrgButtonLink>
-      ),
-    },
   ];
 
   return (

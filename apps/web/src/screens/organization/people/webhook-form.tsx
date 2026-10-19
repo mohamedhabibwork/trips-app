@@ -7,7 +7,6 @@ import { OrgChoice, OrgInput } from "../common/org-form";
 import { OrgButton, OrgCard, OrgRow } from "../common/org-ui";
 
 export const WEBHOOK_FORM_ID = "webhook-endpoint-form";
-const SEND_TEST_HINT_ID = "webhook-send-test-hint";
 const EVENTS_ERROR_ID = "webhook-events-error";
 
 /** Event ids stored on the endpoint, in the artboard's order. */
@@ -120,14 +119,8 @@ export function WebhookForm({ endpoint, disabled, onSave, crmCard }: WebhookForm
               <OrgButton variant="text" disabled={disabled || !endpoint} onClick={() => save(true)}>
                 {t("screen.organization.people.webhookForm.rotateSecret")}
               </OrgButton>
-              <OrgButton variant="secondary" disabled aria-describedby={SEND_TEST_HINT_ID}>
-                {t("screen.organization.people.webhookForm.sendTest")}
-              </OrgButton>
             </div>
           </div>
-          <p id={SEND_TEST_HINT_ID} className="te-caption m-0 text-[var(--te-ink-muted)]">
-            {t("screen.organization.people.webhookForm.sendTestUnavailable")}
-          </p>
         </OrgCard>
       </OrgRow>
       <OrgCard title={t("screen.organization.people.webhookForm.events")}>

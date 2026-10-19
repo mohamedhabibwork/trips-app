@@ -7,9 +7,10 @@ import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
+import { zonedToUtcIso } from "@/utils/zoned-time";
 
 import { OrgButtonLink, useOrgNavigate, useOrgParams } from "../common/org-link";
-import { getSelectedTripId, getSelectedCouponId, isoDay, tripTitle } from "../common/org-shared";
+import { isoDay, tripTitle } from "../common/org-shared";
 import {
   NO_VALUE,
   OrgAlert,
@@ -23,9 +24,11 @@ import {
   CouponFormCards,
   EMPTY_COUPON_FORM,
   discountTypeOf,
+  type CouponFieldErrors,
   type CouponForm,
 } from "./coupon-editor-form";
-import { CouponStatusBadge, NEW_COUPON_ID, countedText, couponPlanLimit } from "./coupon-parts";
+import { CouponStatusBadge, NEW_COUPON_ID, countedText } from "./coupon-parts";
+import { useOrgPlan } from "../trips/trip-parts";
 
 const MIN_CODE_LENGTH = 3;
 
@@ -35,6 +38,8 @@ interface SavedCoupon {
   discountValue: number;
   maxRedemptions: number | null;
   minOrderMinor: number;
+  currencyCode: string;
+  tripId: string | null;
   startsAt: string | Date | null;
   expiresAt: string | Date | null;
 }
@@ -46,6 +51,9 @@ function formFromCoupon(coupon: SavedCoupon): CouponForm {
     code: coupon.code,
     kind: percentage ? "percentage" : "fixed-amount",
     value: percentage ? String(coupon.discountValue) : (coupon.discountValue / 100).toFixed(2),
+    currency:
+      coupon.currencyCode === "SAR" || coupon.currencyCode === "AED" ? coupon.currencyCode : "EGP",
+    tripId: coupon.tripId ?? "all",
     totalLimit: coupon.maxRedemptions === null ? "" : String(coupon.maxRedemptions),
     validFrom: isoDay(coupon.startsAt) ?? "",
     validUntil: isoDay(coupon.expiresAt) ?? "",
@@ -53,9 +61,78 @@ function formFromCoupon(coupon: SavedCoupon): CouponForm {
   };
 }
 
-function positiveInt(value: string): number | null {
-  const parsed = Number.parseInt(value, 10);
-  return Number.isFinite(parsed) && parsed > 0 ? parsed : null;
+const AMOUNT_PATTERN = /^\d{1,7}(\.\d{1,2})?$/;
+const WHOLE_PATTERN = /^\d{1,7}$/;
+const MAX_PERCENT = 100;
+
+interface CouponInput {
+  code: string;
+  discountType: "percentage" | "fixed_amount";
+  discountValue: number;
+  currencyCode?: "EGP" | "SAR" | "AED";
+  maxRedemptions: number | null;
+  minOrderMinor?: number;
+  tripId: string | null;
+  startsAt: string | null;
+  expiresAt: string | null;
+}
+
+/**
+ * Checks the form and builds the create input. Dates are whole days in the organization's time
+ * zone. Returns the field errors when something is not valid; nothing is coerced.
+ */
+function readCoupon(
+  form: CouponForm,
+  timeZone: string,
+): { input: CouponInput | null; errors: CouponFieldErrors } {
+  const errors: CouponFieldErrors = {};
+  const code = form.code.trim();
+  if (code.length < MIN_CODE_LENGTH)
+    errors.code = t("screen.organization.coupons.couponEditor.codeTooShort");
+  const percentage = discountTypeOf(form.kind) === "percentage";
+  const valueText = form.value.trim();
+  const discountValue = percentage
+    ? WHOLE_PATTERN.test(valueText)
+      ? Number(valueText)
+      : 0
+    : AMOUNT_PATTERN.test(valueText)
+      ? Math.round(Number(valueText) * 100)
+      : 0;
+  if (discountValue < 1 || (percentage && discountValue > MAX_PERCENT)) {
+    errors.value = percentage
+      ? t("screen.organization.coupons.couponEditor.percentInvalid")
+      : t("screen.organization.coupons.couponEditor.amountInvalid");
+  }
+  const limitText = form.totalLimit.trim();
+  if (limitText && (!WHOLE_PATTERN.test(limitText) || Number(limitText) < 1)) {
+    errors.totalLimit = t("screen.organization.coupons.couponEditor.limitInvalid");
+  }
+  const minText = form.minBookingValue.trim();
+  if (minText && !AMOUNT_PATTERN.test(minText))
+    errors.minBookingValue = t("screen.organization.coupons.couponEditor.amountInvalid");
+  const startsAt = form.validFrom
+    ? zonedToUtcIso({ date: form.validFrom, time: "00:00" }, timeZone)
+    : null;
+  const expiresAt = form.validUntil
+    ? zonedToUtcIso({ date: form.validUntil, time: "23:59" }, timeZone)
+    : null;
+  if (startsAt && expiresAt && expiresAt <= startsAt)
+    errors.dates = t("screen.organization.coupons.couponEditor.datesInvalid");
+  if (Object.keys(errors).length > 0) return { input: null, errors };
+  return {
+    errors,
+    input: {
+      code,
+      discountType: percentage ? "percentage" : "fixed_amount",
+      discountValue,
+      currencyCode: percentage ? undefined : form.currency,
+      maxRedemptions: limitText ? Number(limitText) : null,
+      minOrderMinor: minText ? Math.round(Number(minText) * 100) : undefined,
+      tripId: form.tripId === "all" ? null : form.tripId,
+      startsAt,
+      expiresAt,
+    },
+  };
 }
 
 export function CouponEditor() {
@@ -64,24 +141,23 @@ export function CouponEditor() {
   const { status: authStatus, locale } = useAuth();
   const enabled = authStatus === "authenticated";
   const { couponId: routeCouponId } = useOrgParams();
-  const couponId =
-    routeCouponId === NEW_COUPON_ID ? null : (routeCouponId ?? getSelectedCouponId());
+  const couponId = routeCouponId === NEW_COUPON_ID ? null : (routeCouponId ?? null);
   const [edits, setEdits] = useState<CouponForm>(EMPTY_COUPON_FORM);
-  const [showErrors, setShowErrors] = useState(false);
+  const [errors, setErrors] = useState<CouponFieldErrors>({});
+  const { limits } = useOrgPlan();
   const [saveFailed, setSaveFailed] = useState(false);
 
   const couponsQuery = useQuery({
     ...orpc.coupons.listOrganizationCoupons.queryOptions({ input: {} }),
     enabled,
   });
-  const subscriptionQuery = useQuery({
-    ...orpc.plans.getOrganizationSubscription.queryOptions({ input: undefined }),
+  const tripsQuery = useQuery({
+    ...orpc.trips.listOrganizationTrips.queryOptions({ input: {} }),
     enabled,
   });
-  const tripId = getSelectedTripId();
-  const programsQuery = useQuery({
-    ...orpc.programs.listTripPrograms.queryOptions({ input: { tripId: tripId ?? "" } }),
-    enabled: enabled && Boolean(tripId),
+  const settingsQuery = useQuery({
+    ...orpc.organization.getOrganizationSettings.queryOptions({ input: {} }),
+    enabled,
   });
 
   const createCouponMutation = useMutation(
@@ -105,43 +181,33 @@ export function CouponEditor() {
   const counted = couponsQuery.isSuccess
     ? coupons.filter((coupon) => coupon.status !== "expired").length
     : null;
-  const programOptions = [
-    { value: "all", label: t("screen.organization.coupons.couponEditor.allPrograms") },
-    ...(programsQuery.data?.items ?? []).map((program) => ({
-      value: program.id,
-      label: tripTitle(program, locale) || NO_VALUE,
+  const tripOptions = [
+    { value: "all", label: t("screen.organization.coupons.couponEditor.allTrips") },
+    ...(tripsQuery.data?.items ?? []).map((trip) => ({
+      value: trip.id,
+      label: tripTitle(trip, locale) || NO_VALUE,
     })),
   ];
   const busy = createCouponMutation.isPending || updateStatusMutation.isPending;
-  const codeError =
-    showErrors && form.code.trim().length < MIN_CODE_LENGTH
-      ? t("screen.organization.coupons.couponEditor.codeTooShort")
-      : undefined;
 
   async function handleSave(asDraft: boolean) {
-    const code = form.code.trim();
-    if (code.length < MIN_CODE_LENGTH) {
-      setShowErrors(true);
+    const timeZone = settingsQuery.data?.settings?.timeZone;
+    if (!timeZone) {
+      setSaveFailed(true);
       return;
     }
+    const { input, errors: found } = readCoupon(form, timeZone);
+    setErrors(found);
+    if (!input) return;
     setSaveFailed(false);
-    const percentage = discountTypeOf(form.kind) === "percentage";
-    const rawValue = Number.parseFloat(form.value) || 0;
-    const minOrder = Number.parseFloat(form.minBookingValue);
     try {
       const created = await createCouponMutation.mutateAsync({
-        code,
-        titleAr: code,
-        titleEn: code,
-        discountType: percentage ? "percentage" : "fixed_amount",
-        discountValue: Math.max(1, Math.round(percentage ? rawValue : rawValue * 100)),
-        maxRedemptions: positiveInt(form.totalLimit),
-        minOrderMinor:
-          Number.isFinite(minOrder) && minOrder >= 0 ? Math.round(minOrder * 100) : undefined,
-        startsAt: form.validFrom ? `${form.validFrom}T00:00:00.000Z` : null,
-        expiresAt: form.validUntil ? `${form.validUntil}T23:59:59.000Z` : null,
+        ...input,
+        titleAr: input.code,
+        titleEn: input.code,
       });
-      if (asDraft && created?.id) {
+      // The service creates coupons active; a draft is paused right after.
+      if (asDraft) {
         await updateStatusMutation.mutateAsync({ couponId: created.id, status: "paused" });
       }
       void goTo("coupons-list");
@@ -162,7 +228,7 @@ export function CouponEditor() {
         }
         badge={saved ? <CouponStatusBadge status={saved.status} /> : null}
         caption={t("screen.organization.coupons.couponEditor.caption", {
-          counted: countedText(counted, couponPlanLimit(subscriptionQuery.data)),
+          counted: countedText(counted, limits ? limits.activeCouponsMax : undefined),
         })}
         actions={
           saved ? (
@@ -210,9 +276,9 @@ export function CouponEditor() {
       <CouponFormCards
         form={form}
         onChange={(patch) => setEdits((previous) => ({ ...previous, ...patch }))}
-        programs={programOptions}
+        trips={tripOptions}
         readOnly={Boolean(saved)}
-        codeError={codeError}
+        errors={errors}
       />
       <OrgAlert tone="info">{t("screen.organization.coupons.couponEditor.draftNote")}</OrgAlert>
     </OrgPage>

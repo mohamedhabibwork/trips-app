@@ -1,20 +1,19 @@
-// SCR-ORG-42 Child-safety reports: concerns about the organization's trips, and a new report form.
+// SCR-ORG-42 Child-safety reports: child-safety events on the organization's trips.
 import { useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
 
-import { OrgSelect, OrgTextarea } from "../common/org-form";
+import { OrgSelect } from "../common/org-form";
 import { getSelectedTripId, tripTitle } from "../common/org-shared";
 import { OrgTable, type OrgColumn } from "../common/org-table";
 import {
   NO_VALUE,
   OrgAlert,
   OrgBadge,
-  OrgButton,
   OrgCard,
   OrgError,
   OrgPage,
@@ -25,7 +24,6 @@ import { formatDateTime, shortRef } from "../accounting/finance-format";
 import { eventsOf, plateOf, type FleetVehicleView, type TripVehicleView } from "./operations-parts";
 
 const CASE_EVENT_TYPES: readonly string[] = ["child_boarded", "child_disembarked", "safety_alert"];
-const MAX_DESCRIPTION = 400;
 
 type CaseStatus = "open" | "routed";
 
@@ -39,12 +37,9 @@ interface CaseRow {
 }
 
 export function ChildSafetyReports() {
-  const queryClient = useQueryClient();
   const { status: authStatus, locale } = useAuth();
   const enabled = authStatus === "authenticated";
   const [chosenTripId, setChosenTripId] = useState<string | null>(() => getSelectedTripId());
-  const [vehicleId, setVehicleId] = useState("");
-  const [description, setDescription] = useState("");
 
   const tripsQuery = useQuery(
     orpc.trips.listOrganizationTrips.queryOptions({ input: {}, enabled }),
@@ -57,15 +52,6 @@ export function ChildSafetyReports() {
     orpc.tracking.getTripLiveTracking.queryOptions({
       input: { tripId },
       enabled: enabled && Boolean(tripId),
-    }),
-  );
-
-  const recordChildSafetyEventMutation = useMutation(
-    orpc.tracking.recordChildSafetyEvent.mutationOptions({
-      onSuccess: () => {
-        void queryClient.invalidateQueries({ queryKey: orpc.tracking.key() });
-        setDescription("");
-      },
     }),
   );
 
@@ -82,28 +68,6 @@ export function ChildSafetyReports() {
       trip: name,
       vehicle: plateOf(event.vehicleId, tripVehicles, noFleet),
     }));
-
-  const selectedVehicle = tripVehicles.some((vehicle) => vehicle.vehicleId === vehicleId)
-    ? vehicleId
-    : "";
-  const canSubmit =
-    enabled &&
-    Boolean(tripId) &&
-    description.trim().length > 0 &&
-    !recordChildSafetyEventMutation.isPending;
-
-  const handleSubmit = () => {
-    if (!canSubmit) return;
-    const message = description.trim().slice(0, MAX_DESCRIPTION);
-    recordChildSafetyEventMutation.mutate({
-      tripId,
-      vehicleId: selectedVehicle || null,
-      childPassengerId: `case-${Date.now()}`,
-      eventType: "child_boarded",
-      messageEn: message,
-      messageAr: message,
-    });
-  };
 
   const columns: readonly OrgColumn<CaseRow>[] = [
     {
@@ -139,13 +103,6 @@ export function ChildSafetyReports() {
     trips.length > 0
       ? trips.map((item) => ({ value: item.id, label: tripTitle(item, locale) || item.id }))
       : [{ value: "", label: t("screen.organization.operations.childSafetyReports.noTrips") }];
-  const vehicleOptions = [
-    { value: "", label: t("screen.organization.operations.childSafetyReports.noVehicle") },
-    ...tripVehicles.map((vehicle) => ({
-      value: vehicle.vehicleId,
-      label: plateOf(vehicle.vehicleId, tripVehicles, noFleet),
-    })),
-  ];
 
   return (
     <OrgPage>
@@ -157,9 +114,7 @@ export function ChildSafetyReports() {
         tone="info"
         title={t("screen.organization.operations.childSafetyReports.everyCaseIsRouted")}
       >
-        {t("screen.organization.operations.childSafetyReports.escalationContactBody", {
-          contact: t("screen.organization.operations.childSafetyReports.contactToBeConfirmed"),
-        })}
+        {t("screen.organization.operations.childSafetyReports.escalationContactPending")}
       </OrgAlert>
       <OrgRow align="start">
         <OrgCard
@@ -188,47 +143,21 @@ export function ChildSafetyReports() {
           className="flex-1"
           title={t("screen.organization.operations.childSafetyReports.newReport")}
         >
+          {/* No procedure stores a child-safety report yet; recording one as a tracking event
+              would invent a child passenger, so the form waits for that procedure. */}
           <OrgSelect
             label={t("screen.organization.operations.childSafetyReports.trip")}
             options={tripOptions}
             value={tripId}
             disabled={trips.length === 0}
-            onValueChange={(value) => {
-              setChosenTripId(value);
-              setVehicleId("");
-            }}
+            onValueChange={setChosenTripId}
           />
-          <OrgSelect
-            label={t("screen.organization.operations.childSafetyReports.vehicle")}
-            options={vehicleOptions}
-            value={selectedVehicle}
-            onValueChange={setVehicleId}
-          />
-          <OrgTextarea
-            label={t("screen.organization.operations.childSafetyReports.description")}
-            rows={4}
-            dir="auto"
-            maxLength={MAX_DESCRIPTION}
-            value={description}
-            onChange={(event) => setDescription(event.target.value)}
-          />
-          {recordChildSafetyEventMutation.isError ? (
-            <OrgAlert
-              tone="err"
-              title={t("screen.organization.operations.childSafetyReports.submitFailed")}
-            />
-          ) : null}
-          {recordChildSafetyEventMutation.isSuccess ? (
-            <OrgAlert
-              tone="ok"
-              title={t("screen.organization.operations.childSafetyReports.reportSubmitted")}
-            />
-          ) : null}
-          <div className="flex justify-end">
-            <OrgButton disabled={!canSubmit} onClick={handleSubmit}>
-              {t("screen.organization.operations.childSafetyReports.submitReport")}
-            </OrgButton>
-          </div>
+          <OrgAlert
+            tone="info"
+            title={t("screen.organization.operations.childSafetyReports.reportUnavailableTitle")}
+          >
+            {t("screen.organization.operations.childSafetyReports.reportUnavailableBody")}
+          </OrgAlert>
         </OrgCard>
       </OrgRow>
     </OrgPage>

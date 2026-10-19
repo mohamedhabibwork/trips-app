@@ -1,6 +1,6 @@
 // SCR-ORG-38 Issue invoice: a business (B2B) or consumer (B2C) invoice for a trip's bookings.
 import { useId, useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 import { t } from "@trips-app/i18n";
 
@@ -8,7 +8,6 @@ import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
 
 import { OrgChoice, OrgInput, OrgTextarea } from "../common/org-form";
-import { useOrgNavigate } from "../common/org-link";
 import { getSelectedTripId, tripTitle } from "../common/org-shared";
 import { OrgTable, type OrgColumn } from "../common/org-table";
 import {
@@ -33,7 +32,6 @@ const INVOICE_CURRENCIES = ["EGP", "SAR", "AED"] as const;
 type InvoiceCurrency = (typeof INVOICE_CURRENCIES)[number];
 /** The smallest amount a settlement accepts (accounting.createPayoutSettlement). */
 const MIN_INVOICE_MINOR = 100;
-const INVOICE_NUMBER_DIGITS = 6;
 
 type InvoiceType = "b2b" | "b2c";
 
@@ -73,8 +71,6 @@ function invoiceLines(bookings: readonly BookingView[]): readonly InvoiceLine[] 
 }
 
 export function IssueInvoiceB2bOrB2c() {
-  const goTo = useOrgNavigate();
-  const queryClient = useQueryClient();
   const { status: authStatus, locale } = useAuth();
   const enabled = authStatus === "authenticated";
   const blockedId = useId();
@@ -89,14 +85,6 @@ export function IssueInvoiceB2bOrB2c() {
   );
   const bookingsQuery = useQuery(
     orpc.booking.listOrganizationBookings.queryOptions({ input: {}, enabled }),
-  );
-
-  const createPayoutSettlementMutation = useMutation(
-    orpc.accounting.createPayoutSettlement.mutationOptions({
-      onSuccess: () => {
-        void queryClient.invalidateQueries({ queryKey: orpc.accounting.key() });
-      },
-    }),
   );
 
   const trips = tripsQuery.data?.items ?? [];
@@ -123,23 +111,11 @@ export function IssueInvoiceB2bOrB2c() {
       : tooSmall
         ? t("screen.organization.billing.issueInvoiceB2bOrB2c.addLinesFromABooking")
         : null;
-  const canIssue = enabled && !blockedReason && !createPayoutSettlementMutation.isPending;
-
-  const handleIssue = async () => {
-    if (!canIssue || !invoiceCurrency) return;
-    const tax = invoiceType === "b2b" ? ` (${taxNumber.trim()})` : "";
-    try {
-      await createPayoutSettlementMutation.mutateAsync({
-        amountMinor: subtotalMinor,
-        currencyCode: invoiceCurrency,
-        invoiceNumber: `INV-${Date.now().toString().slice(-INVOICE_NUMBER_DIGITS)}`,
-        description: `${invoiceType.toUpperCase()}: ${buyerName.trim()}${tax}`,
-      });
-      void goTo("invoices-list");
-    } catch {
-      // The mutation's error state shows the failure below; the form keeps what was typed.
-    }
-  };
+  // No procedure issues an invoice yet (it needs a server-assigned number, tax and the buyer's
+  // details). Writing it as a payout settlement would put a wrong entry in the ledger, so the
+  // action stays off and says why.
+  const issueUnavailable = true;
+  const canIssue = enabled && !blockedReason && !issueUnavailable;
 
   const columns: readonly OrgColumn<InvoiceLine>[] = [
     { key: "label", header: t("screen.organization.billing.issueInvoiceB2bOrB2c.line") },
@@ -170,28 +146,20 @@ export function IssueInvoiceB2bOrB2c() {
           trip: trip ? tripTitle(trip, locale) || NO_VALUE : NO_VALUE,
         })}
         actions={
-          <OrgButton
-            disabled={!canIssue}
-            aria-describedby={blockedReason ? blockedId : undefined}
-            onClick={() => void handleIssue()}
-          >
+          <OrgButton disabled={!canIssue} aria-describedby={blockedId}>
             {t("screen.organization.billing.issueInvoiceB2bOrB2c.issueInvoice")}
           </OrgButton>
         }
       />
-      {blockedReason ? (
-        <p id={blockedId} className="te-caption m-0 text-[var(--te-ink-muted)]">
-          {blockedReason}
-        </p>
-      ) : null}
-      {createPayoutSettlementMutation.isError ? (
-        <OrgAlert
-          tone="err"
-          title={t("screen.organization.billing.issueInvoiceB2bOrB2c.issueFailed")}
-        >
-          {t("screen.organization.billing.issueInvoiceB2bOrB2c.issueFailedBody")}
-        </OrgAlert>
-      ) : null}
+      <OrgAlert
+        tone="info"
+        title={t("screen.organization.billing.issueInvoiceB2bOrB2c.issueUnavailableTitle")}
+      >
+        <span id={blockedId}>
+          {blockedReason ??
+            t("screen.organization.billing.issueInvoiceB2bOrB2c.issueUnavailableBody")}
+        </span>
+      </OrgAlert>
       <OrgRow align="start">
         <OrgCard
           className="flex-1"

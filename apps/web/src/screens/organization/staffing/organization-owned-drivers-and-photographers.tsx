@@ -6,9 +6,10 @@ import { TeDialog } from "@trips-app/ui/components/te-dialog";
 import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
+import { lookupTypeByCodeQueryOptions, toLookupSelectOptions } from "@/utils/lookups";
 import { orpc } from "@/utils/orpc";
 
-import { OrgInput, OrgSelect } from "../common/org-form";
+import { OrgChoice, OrgInput, OrgSelect } from "../common/org-form";
 import { OrgTable, type OrgColumn } from "../common/org-table";
 import {
   NO_VALUE,
@@ -32,8 +33,6 @@ interface StaffMemberRow {
   name: string;
   active: boolean;
 }
-
-const DAY_MS = 24 * 60 * 60 * 1000;
 
 function roleLabel(role: OrgSupplierRole): string {
   return role === "org_driver"
@@ -90,6 +89,7 @@ function buildColumns(
 
 interface AddStaffFormProps {
   busy: boolean;
+  locale: "ar" | "en";
   onSubmit: (values: AddStaffValues) => void;
   onCancel: () => void;
 }
@@ -99,19 +99,55 @@ interface AddStaffValues {
   fullName: string;
   phone: string;
   email: string;
-  licenseOrCamera: string;
+  nationalId: string;
+  licenseNumber: string;
+  licenseCategory: string;
+  licenseExpiry: string;
+  labTestConsentSigned: boolean;
+  cameraBody: string;
 }
 
-function AddStaffForm({ busy, onSubmit, onCancel }: AddStaffFormProps) {
-  const [values, setValues] = useState<AddStaffValues>({
-    supplierRole: "org_driver",
-    fullName: "",
-    phone: "",
-    email: "",
-    licenseOrCamera: "",
-  });
+const EMPTY_STAFF: AddStaffValues = {
+  supplierRole: "org_driver",
+  fullName: "",
+  phone: "",
+  email: "",
+  nationalId: "",
+  licenseNumber: "",
+  licenseCategory: "",
+  licenseExpiry: "",
+  labTestConsentSigned: false,
+  cameraBody: "",
+};
+
+const K = "screen.organization.staffing.organizationOwnedDriversAndPhotographers";
+
+/** Lookup items as select options, with a first "choose" option. */
+function lookupOptions(
+  items: Parameters<typeof toLookupSelectOptions>[0],
+  locale: "ar" | "en",
+): { value: string; label: string }[] {
+  return [
+    { value: "", label: t(`${K}.chooseOption`) },
+    ...toLookupSelectOptions(items, locale).map((option) => ({
+      value: option.code,
+      label: option.label,
+    })),
+  ];
+}
+
+function AddStaffForm({ busy, locale, onSubmit, onCancel }: AddStaffFormProps) {
+  const [values, setValues] = useState<AddStaffValues>(EMPTY_STAFF);
   const update = (patch: Partial<AddStaffValues>) => setValues((prev) => ({ ...prev, ...patch }));
-  const canSubmit = !busy && values.fullName.trim() !== "" && values.phone.trim() !== "";
+  const isDriver = values.supplierRole === "org_driver";
+  const licenseCategories = useQuery(lookupTypeByCodeQueryOptions("DRIVER_LICENSE_CATEGORY"));
+  const cameraBodies = useQuery(lookupTypeByCodeQueryOptions("CAMERA_BODY"));
+  // The API requires a name, a phone and a national id; the rest is sent only when entered.
+  const canSubmit =
+    !busy &&
+    values.fullName.trim().length >= 2 &&
+    values.phone.trim().length >= 8 &&
+    values.nationalId.trim().length >= 6;
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -119,15 +155,11 @@ function AddStaffForm({ busy, onSubmit, onCancel }: AddStaffFormProps) {
   };
 
   return (
-    <OrgCard
-      title={t(
-        "screen.organization.staffing.organizationOwnedDriversAndPhotographers.addDriverOrPhotographer",
-      )}
-    >
+    <OrgCard title={t(`${K}.addDriverOrPhotographer`)}>
       <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
         <div className="grid gap-4 md:grid-cols-2">
           <OrgSelect
-            label={t("screen.organization.staffing.organizationOwnedDriversAndPhotographers.type")}
+            label={t(`${K}.type`)}
             options={[
               { value: "org_driver", label: roleLabel("org_driver") },
               { value: "org_photographer", label: roleLabel("org_photographer") },
@@ -140,52 +172,74 @@ function AddStaffForm({ busy, onSubmit, onCancel }: AddStaffFormProps) {
             }
           />
           <OrgInput
-            label={t(
-              "screen.organization.staffing.organizationOwnedDriversAndPhotographers.fullName",
-            )}
+            label={t(`${K}.fullName`)}
             value={values.fullName}
             onChange={(event) => update({ fullName: event.target.value })}
             required
           />
           <OrgInput
-            label={t("screen.organization.staffing.organizationOwnedDriversAndPhotographers.phone")}
+            label={t(`${K}.phone`)}
             type="tel"
             value={values.phone}
             onChange={(event) => update({ phone: event.target.value })}
             required
           />
           <OrgInput
-            label={t(
-              "screen.organization.staffing.organizationOwnedDriversAndPhotographers.emailOptional",
-            )}
+            label={t(`${K}.emailOptional`)}
             type="email"
             value={values.email}
             onChange={(event) => update({ email: event.target.value })}
           />
           <OrgInput
-            label={
-              values.supplierRole === "org_driver"
-                ? t(
-                    "screen.organization.staffing.organizationOwnedDriversAndPhotographers.licenseNumber",
-                  )
-                : t(
-                    "screen.organization.staffing.organizationOwnedDriversAndPhotographers.cameraBody",
-                  )
-            }
-            value={values.licenseOrCamera}
-            onChange={(event) => update({ licenseOrCamera: event.target.value })}
+            label={t(`${K}.nationalId`)}
+            inputMode="numeric"
+            autoComplete="off"
+            value={values.nationalId}
+            onChange={(event) => update({ nationalId: event.target.value })}
+            required
           />
+          {isDriver ? (
+            <>
+              <OrgInput
+                label={t(`${K}.licenseNumber`)}
+                value={values.licenseNumber}
+                onChange={(event) => update({ licenseNumber: event.target.value })}
+              />
+              <OrgSelect
+                label={t(`${K}.licenseCategory`)}
+                options={lookupOptions(licenseCategories.data?.lookupType?.items, locale)}
+                value={values.licenseCategory}
+                onValueChange={(value) => update({ licenseCategory: value })}
+              />
+              <OrgInput
+                label={t(`${K}.licenseExpiry`)}
+                type="date"
+                value={values.licenseExpiry}
+                onChange={(event) => update({ licenseExpiry: event.target.value })}
+              />
+              <OrgChoice
+                type="checkbox"
+                checked={values.labTestConsentSigned}
+                onChange={(event) => update({ labTestConsentSigned: event.target.checked })}
+              >
+                {t(`${K}.labTestConsent`)}
+              </OrgChoice>
+            </>
+          ) : (
+            <OrgSelect
+              label={t(`${K}.cameraBody`)}
+              options={lookupOptions(cameraBodies.data?.lookupType?.items, locale)}
+              value={values.cameraBody}
+              onValueChange={(value) => update({ cameraBody: value })}
+            />
+          )}
         </div>
         <div className="flex flex-wrap gap-3">
           <OrgButton type="submit" disabled={!canSubmit}>
-            {busy
-              ? t("screen.organization.staffing.organizationOwnedDriversAndPhotographers.saving")
-              : t(
-                  "screen.organization.staffing.organizationOwnedDriversAndPhotographers.saveStaffMember",
-                )}
+            {busy ? t(`${K}.saving`) : t(`${K}.saveStaffMember`)}
           </OrgButton>
           <OrgButton variant="secondary" onClick={onCancel}>
-            {t("screen.organization.staffing.organizationOwnedDriversAndPhotographers.cancel")}
+            {t(`${K}.cancel`)}
           </OrgButton>
         </div>
       </form>
@@ -194,7 +248,7 @@ function AddStaffForm({ busy, onSubmit, onCancel }: AddStaffFormProps) {
 }
 
 export function OrganizationOwnedDriversAndPhotographers() {
-  const { status: authStatus, actor } = useAuth();
+  const { status: authStatus, actor, locale } = useAuth();
   const queryClient = useQueryClient();
   const [removeTarget, setRemoveTarget] = useState<StaffMemberRow | null>(null);
   const [addFormOpen, setAddFormOpen] = useState(false);
@@ -240,25 +294,25 @@ export function OrganizationOwnedDriversAndPhotographers() {
       fullName: values.fullName.trim(),
       phone: values.phone.trim(),
       email: values.email.trim() || null,
+      nationalId: values.nationalId.trim(),
     };
     try {
       if (values.supplierRole === "org_driver") {
         await onboardMutation.mutateAsync({
           ...common,
           supplierRole: "org_driver",
-          nationalId: "28801011234567",
-          licenseNumber: values.licenseOrCamera.trim() || "ORG-DRV-001",
-          licenseCategory: "First Degree Bus",
-          licenseExpiry: new Date(Date.now() + 365 * DAY_MS).toISOString(),
-          labTestConsentSigned: true,
+          licenseNumber: values.licenseNumber.trim() || undefined,
+          licenseCategory: values.licenseCategory || undefined,
+          licenseExpiry: values.licenseExpiry
+            ? new Date(`${values.licenseExpiry}T00:00:00.000Z`).toISOString()
+            : undefined,
+          labTestConsentSigned: values.labTestConsentSigned,
         });
       } else {
         await onboardMutation.mutateAsync({
           ...common,
           supplierRole: "org_photographer",
-          nationalId: "29001011234567",
-          cameraBodies: [values.licenseOrCamera.trim() || "Canon EOS R6"],
-          portfolioPhotoCount: 8,
+          cameraBodies: values.cameraBody ? [values.cameraBody] : undefined,
         });
       }
       setAddFormOpen(false);
@@ -310,6 +364,7 @@ export function OrganizationOwnedDriversAndPhotographers() {
       {addFormOpen ? (
         <AddStaffForm
           busy={onboardMutation.isPending}
+          locale={locale === "en" ? "en" : "ar"}
           onSubmit={(values) => void handleAdd(values)}
           onCancel={() => setAddFormOpen(false)}
         />

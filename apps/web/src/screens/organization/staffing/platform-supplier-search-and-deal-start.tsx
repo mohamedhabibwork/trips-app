@@ -15,6 +15,7 @@ import {
   isoDay,
   setSelectedTripId,
   setSelectedNegotiationId,
+  setSelectedVehicleId,
   tripTitle,
 } from "../common/org-shared";
 import {
@@ -34,8 +35,8 @@ import { InlineDetail, platformRoleLabel, routeText, type PlatformRole } from ".
 
 type Currency = "EGP" | "SAR" | "AED";
 const CURRENCIES: readonly Currency[] = ["EGP", "SAR", "AED"];
-const DAY_MS = 24 * 60 * 60 * 1000;
 const MIN_OFFER_MINOR = 100;
+const AMOUNT_PATTERN = /^\d{1,7}(\.\d{1,2})?$/;
 
 interface SupplierCandidate {
   accountId: string;
@@ -45,24 +46,24 @@ interface SupplierCandidate {
 
 interface SupplierCardProps {
   supplier: SupplierCandidate;
+  /** The trip's start and end; availability is checked for that window. */
+  window: { startsAt: string; endsAt: string } | null;
   date: string;
   enabled: boolean;
   selected: boolean;
   onSelect: () => void;
 }
 
-function SupplierCard({ supplier, date, enabled, selected, onSelect }: SupplierCardProps) {
-  const start = date ? new Date(`${date}T00:00:00.000Z`) : null;
-  const validDate = start !== null && !Number.isNaN(start.getTime());
+function SupplierCard({ supplier, window, date, enabled, selected, onSelect }: SupplierCardProps) {
   const availabilityQuery = useQuery({
     ...orpc.availability.checkSupplierAvailability.queryOptions({
       input: {
         supplierAccountId: supplier.accountId,
-        startsAt: validDate ? start.toISOString() : "",
-        endsAt: validDate ? new Date(start.getTime() + DAY_MS).toISOString() : "",
+        startsAt: window?.startsAt ?? "",
+        endsAt: window?.endsAt ?? "",
       },
     }),
-    enabled: enabled && validDate,
+    enabled: enabled && Boolean(window),
   });
   const available = availabilityQuery.data?.isAvailable;
   const shownDate = date || NO_VALUE;
@@ -81,9 +82,6 @@ function SupplierCard({ supplier, date, enabled, selected, onSelect }: SupplierC
             {platformRoleLabel(supplier.role)}
           </span>
         </div>
-        <OrgBadge tone="ok">
-          {t("screen.organization.staffing.platformSupplierSearchAndDealStart.verified")}
-        </OrgBadge>
       </div>
       <div className="flex flex-wrap items-center justify-between gap-3">
         {available === false ? (
@@ -124,17 +122,17 @@ export function PlatformSupplierSearchAndDealStart() {
   const enabled = authStatus === "authenticated" && Boolean(actor?.activeTenantId);
   const [query, setQuery] = useState("");
   const [roleFilter, setRoleFilter] = useState<PlatformRole>("platform_driver");
-  const [dateInput, setDateInput] = useState<string | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [price, setPrice] = useState("150.00");
-  const [currency, setCurrency] = useState<Currency>("SAR");
+  const [chosenTripId, setChosenTripId] = useState<string | null>(() => getSelectedTripId());
+  const [chosenVehicleId, setChosenVehicleId] = useState<string | null>(() =>
+    getSelectedVehicleId(),
+  );
+  const [price, setPrice] = useState("");
+  const [priceError, setPriceError] = useState<string | undefined>(undefined);
+  const [currency, setCurrency] = useState<Currency>("EGP");
   const [sendFailed, setSendFailed] = useState(false);
   const sendHintId = useId();
 
-  const suppliersQuery = useQuery({
-    ...orpc.onboarding.listOrganizationSuppliers.queryOptions({ input: {} }),
-    enabled,
-  });
   const negotiationsQuery = useQuery({
     ...orpc.negotiation.listOrganizationNegotiations.queryOptions({ input: {} }),
     enabled,
@@ -145,27 +143,35 @@ export function PlatformSupplierSearchAndDealStart() {
   });
 
   const trips = tripsQuery.data?.items ?? [];
-  const tripId = getSelectedTripId() ?? trips[0]?.id ?? null;
-  const trip = trips.find((item) => item.id === tripId);
-  const vehicleId = getSelectedVehicleId();
-  const plate = trip?.vehicles.find((vehicle) => vehicle.vehicleId === vehicleId)?.plateNumber;
-  const date = dateInput ?? isoDay(trip?.startsAt) ?? "";
+  // The trip and vehicle are chosen here; nothing is picked for the user.
+  const trip = trips.find((item) => item.id === chosenTripId);
+  const tripId = trip?.id ?? null;
+  const vehicle = trip?.vehicles.find((item) => item.vehicleId === chosenVehicleId);
+  const vehicleId = vehicle?.vehicleId ?? null;
+  const date = isoDay(trip?.startsAt) ?? "";
   const tripName = trip ? tripTitle(trip, locale) || NO_VALUE : NO_VALUE;
+  const window =
+    trip?.startsAt && trip.endsAt
+      ? {
+          startsAt: new Date(trip.startsAt).toISOString(),
+          endsAt: new Date(trip.endsAt).toISOString(),
+        }
+      : null;
 
+  // No procedure searches the platform's suppliers yet, so the only candidates are the platform
+  // suppliers this organization has already dealt with. Their names are not shared with it.
   const candidates: SupplierCandidate[] = [];
-  for (const supplier of suppliersQuery.data?.suppliers ?? []) {
-    candidates.push({
-      accountId: supplier.supplierAccountId,
-      fullName: supplier.fullName,
-      role:
-        supplier.supplierRole === "org_photographer" ? "platform_photographer" : "platform_driver",
-    });
-  }
   for (const deal of negotiationsQuery.data?.items ?? []) {
     if (candidates.some((candidate) => candidate.accountId === deal.supplierAccountId)) continue;
     candidates.push({
       accountId: deal.supplierAccountId,
-      fullName: `${platformRoleLabel(deal.supplierRole)} ${deal.supplierAccountId.slice(0, 8)}`,
+      fullName: t(
+        "screen.organization.staffing.platformSupplierSearchAndDealStart.previousSupplier",
+        {
+          role: platformRoleLabel(deal.supplierRole),
+          reference: deal.supplierAccountId.slice(0, 8),
+        },
+      ),
       role: deal.supplierRole,
     });
   }
@@ -186,6 +192,15 @@ export function PlatformSupplierSearchAndDealStart() {
 
   async function handleSendProposal() {
     if (!selected || !tripId) return;
+    const text = price.trim();
+    const offerAmountMinor = AMOUNT_PATTERN.test(text) ? Math.round(Number(text) * 100) : 0;
+    if (offerAmountMinor < MIN_OFFER_MINOR) {
+      setPriceError(
+        t("screen.organization.staffing.platformSupplierSearchAndDealStart.payInvalid"),
+      );
+      return;
+    }
+    setPriceError(undefined);
     setSendFailed(false);
     try {
       setSelectedTripId(tripId);
@@ -194,10 +209,7 @@ export function PlatformSupplierSearchAndDealStart() {
         vehicleId,
         supplierAccountId: selected.accountId,
         supplierRole: selected.role,
-        offerAmountMinor: Math.max(
-          MIN_OFFER_MINOR,
-          Math.round((Number.parseFloat(price) || 0) * 100),
-        ),
+        offerAmountMinor,
         currencyCode: currency,
       });
       setSelectedNegotiationId(created.id);
@@ -207,8 +219,8 @@ export function PlatformSupplierSearchAndDealStart() {
     }
   }
 
-  const loading = suppliersQuery.isLoading || negotiationsQuery.isLoading;
-  const failed = suppliersQuery.isError || negotiationsQuery.isError;
+  const loading = negotiationsQuery.isLoading || tripsQuery.isLoading;
+  const failed = negotiationsQuery.isError || tripsQuery.isError;
   const canSend = enabled && Boolean(selected && tripId) && !createOfferMutation.isPending;
 
   return (
@@ -217,9 +229,60 @@ export function PlatformSupplierSearchAndDealStart() {
         title={t("screen.organization.staffing.platformSupplierSearchAndDealStart.title")}
         caption={t("screen.organization.staffing.platformSupplierSearchAndDealStart.caption", {
           trip: tripName,
-          plate: plate ?? NO_VALUE,
+          plate: vehicle?.plateNumber ?? NO_VALUE,
         })}
       />
+      <OrgAlert
+        tone="info"
+        title={t(
+          "screen.organization.staffing.platformSupplierSearchAndDealStart.searchUnavailableTitle",
+        )}
+      >
+        {t("screen.organization.staffing.platformSupplierSearchAndDealStart.searchUnavailableBody")}
+      </OrgAlert>
+      <div className="grid gap-4 md:grid-cols-2">
+        <OrgSelect
+          label={t("screen.organization.staffing.platformSupplierSearchAndDealStart.trip")}
+          options={[
+            {
+              value: "",
+              label: t(
+                "screen.organization.staffing.platformSupplierSearchAndDealStart.chooseTrip",
+              ),
+            },
+            ...trips.map((item) => ({
+              value: item.id,
+              label: tripTitle(item, locale) || NO_VALUE,
+            })),
+          ]}
+          value={tripId ?? ""}
+          onValueChange={(value) => {
+            setChosenTripId(value || null);
+            setChosenVehicleId(null);
+          }}
+        />
+        <OrgSelect
+          label={t("screen.organization.staffing.platformSupplierSearchAndDealStart.vehicle")}
+          disabled={!trip}
+          options={[
+            {
+              value: "",
+              label: t(
+                "screen.organization.staffing.platformSupplierSearchAndDealStart.anyVehicle",
+              ),
+            },
+            ...(trip?.vehicles ?? []).map((item) => ({
+              value: item.vehicleId,
+              label: item.plateNumber ?? item.vehicleId,
+            })),
+          ]}
+          value={vehicleId ?? ""}
+          onValueChange={(value) => {
+            setChosenVehicleId(value || null);
+            setSelectedVehicleId(value || null);
+          }}
+        />
+      </div>
       <OrgRow align="start">
         <div className="flex min-w-0 flex-col gap-4 lg:flex-[3]">
           <div className="grid gap-4 md:grid-cols-4 md:items-end">
@@ -254,13 +317,13 @@ export function PlatformSupplierSearchAndDealStart() {
               label={t("screen.organization.staffing.platformSupplierSearchAndDealStart.date")}
               type="date"
               value={date}
-              onChange={(event) => setDateInput(event.target.value)}
+              readOnly
             />
           </div>
           {failed ? (
             <OrgError
               onRetry={() => {
-                void suppliersQuery.refetch();
+                void tripsQuery.refetch();
                 void negotiationsQuery.refetch();
               }}
             />
@@ -279,6 +342,7 @@ export function PlatformSupplierSearchAndDealStart() {
             <SupplierCard
               key={supplier.accountId}
               supplier={supplier}
+              window={window}
               date={date}
               enabled={enabled}
               selected={supplier.accountId === selectedId}
@@ -318,6 +382,8 @@ export function PlatformSupplierSearchAndDealStart() {
                 "screen.organization.staffing.platformSupplierSearchAndDealStart.proposedPay",
               )}
               inputMode="decimal"
+              required
+              error={priceError}
               value={price}
               onChange={(event) => setPrice(event.target.value)}
             />
@@ -326,7 +392,7 @@ export function PlatformSupplierSearchAndDealStart() {
               options={CURRENCIES.map((code) => ({ value: code, label: code }))}
               value={currency}
               onValueChange={(value) =>
-                setCurrency(CURRENCIES.find((code) => code === value) ?? "SAR")
+                setCurrency(CURRENCIES.find((code) => code === value) ?? "EGP")
               }
             />
           </div>

@@ -1550,11 +1550,9 @@ export const en = {
   "screen.organization.billing.invoicesList.buyer": "Buyer",
   "screen.organization.billing.invoicesList.amount": "Amount",
   "screen.organization.billing.invoicesList.status": "Status",
-  "screen.organization.billing.invoicesList.action": "Action",
   "screen.organization.billing.invoicesList.b2b": "B2B",
   "screen.organization.billing.invoicesList.b2c": "B2C",
   "screen.organization.billing.invoicesList.issued": "Issued",
-  "screen.organization.billing.invoicesList.openInvoice": "Open invoice",
   "screen.organization.billing.invoicesList.noInvoicesYet": "No invoices yet",
   "screen.organization.billing.invoicesList.noMatchingInvoices": "No invoices of this type",
   "screen.organization.billing.invoicesList.issueAnInvoiceForA":
@@ -1562,6 +1560,10 @@ export const en = {
   // apps/web/src/screens/organization/billing/issue-invoice-b2b-or-b2c.tsx
   "screen.organization.billing.issueInvoiceB2bOrB2c.title": "Issue invoice",
   "screen.organization.billing.issueInvoiceB2bOrB2c.caption": "For a trip or booking · {trip}",
+  "screen.organization.billing.issueInvoiceB2bOrB2c.issueUnavailableTitle":
+    "Issuing invoices is not available yet",
+  "screen.organization.billing.issueInvoiceB2bOrB2c.issueUnavailableBody":
+    "You can prepare the invoice here. Issuing it needs an invoice number and tax from the server, which are not in place yet.",
   "screen.organization.billing.issueInvoiceB2bOrB2c.issueInvoice": "Issue invoice",
   "screen.organization.billing.issueInvoiceB2bOrB2c.addTheBuyerName":
     "Add the buyer name to issue the invoice.",
@@ -1569,9 +1571,6 @@ export const en = {
     "Add the buyer tax number. It is required for business buyers.",
   "screen.organization.billing.issueInvoiceB2bOrB2c.addLinesFromABooking":
     "The invoice needs lines from a paid booking before it can be issued.",
-  "screen.organization.billing.issueInvoiceB2bOrB2c.issueFailed": "The invoice was not issued",
-  "screen.organization.billing.issueInvoiceB2bOrB2c.issueFailedBody":
-    "Check the details and try again. Nothing was saved.",
   "screen.organization.billing.issueInvoiceB2bOrB2c.buyer": "Buyer",
   "screen.organization.billing.issueInvoiceB2bOrB2c.invoiceType": "Invoice type",
   "screen.organization.billing.issueInvoiceB2bOrB2c.businessB2b": "Business (B2B)",
@@ -1615,6 +1614,8 @@ export const en = {
   "screen.organization.billing.subscriptionAndBilling.pastDue": "Past due",
   "screen.organization.billing.subscriptionAndBilling.cancelled": "Cancelled",
   "screen.organization.billing.subscriptionAndBilling.renewsOn": "Renews on {date}",
+  "screen.organization.billing.subscriptionAndBilling.cycleNotSaved":
+    "Not saved yet: confirm the plan change above to switch the billing cycle.",
   "screen.organization.billing.subscriptionAndBilling.billingCycle": "Billing cycle",
   "screen.organization.billing.subscriptionAndBilling.monthly": "Monthly",
   "screen.organization.billing.subscriptionAndBilling.annual": "Annual",
@@ -1842,10 +1843,6 @@ export const en = {
   // apps/web/src/screens/organization/coupons/coupon-editor-form.tsx
   "screen.organization.coupons.couponEditorForm.fixedAmount": "Fixed amount",
   "screen.organization.coupons.couponEditorForm.percentage": "Percentage",
-  "screen.organization.coupons.couponEditorForm.programSpecific": "Program-specific",
-  "screen.organization.coupons.couponEditorForm.freeProgram": "Free program",
-  "screen.organization.coupons.couponEditorForm.firstBooking": "First booking",
-  "screen.organization.coupons.couponEditorForm.minimumSpend": "Minimum spend",
   "screen.organization.coupons.couponEditorForm.codeAndValue": "Code and value",
   "screen.organization.coupons.couponEditorForm.code": "Code",
   "screen.organization.coupons.couponEditorForm.generate": "Generate",
@@ -1864,15 +1861,25 @@ export const en = {
   "screen.organization.coupons.couponEditorForm.validFrom": "Valid from",
   "screen.organization.coupons.couponEditorForm.validUntil": "Valid until",
   "screen.organization.coupons.couponEditorForm.minimumBookingValue": "Minimum booking value",
-  "screen.organization.coupons.couponEditorForm.programs": "Programs",
   "screen.organization.coupons.couponEditorForm.audienceAndStacking": "Audience and stacking",
   "screen.organization.coupons.couponEditorForm.audience": "Audience",
   "screen.organization.coupons.couponEditorForm.public": "Public",
   "screen.organization.coupons.couponEditorForm.targetedAudienceList": "Targeted audience list",
+  "screen.organization.coupons.couponEditorForm.currency": "Currency",
+  "screen.organization.coupons.couponEditorForm.trip": "Trip",
+  "screen.organization.coupons.couponEditorForm.unstoredFieldsNote":
+    "Per-traveler limits, targeted audiences and combining coupons are not available yet.",
   "screen.organization.coupons.couponEditorForm.canBeCombined":
     "Can be combined with other coupons",
   // apps/web/src/screens/organization/coupons/coupon-editor.tsx
-  "screen.organization.coupons.couponEditor.allPrograms": "All programs",
+  "screen.organization.coupons.couponEditor.percentInvalid":
+    "Enter a whole percentage from 1 to 100.",
+  "screen.organization.coupons.couponEditor.amountInvalid": "Enter an amount such as 50 or 50.25.",
+  "screen.organization.coupons.couponEditor.limitInvalid":
+    "Enter a whole number of at least 1, or leave it empty for no limit.",
+  "screen.organization.coupons.couponEditor.datesInvalid":
+    "The end date must be after the start date.",
+  "screen.organization.coupons.couponEditor.allTrips": "All trips",
   "screen.organization.coupons.couponEditor.codeTooShort": "Enter a code of at least 3 characters.",
   "screen.organization.coupons.couponEditor.couponTitle": "Coupon {code}",
   "screen.organization.coupons.couponEditor.createCoupon": "Create coupon",
@@ -1913,6 +1920,9 @@ export const en = {
   "screen.organization.coupons.couponsList.pause": "Pause",
   "screen.organization.coupons.couponsList.resume": "Resume",
   "screen.organization.coupons.couponsList.revoke": "Revoke",
+  "screen.organization.coupons.couponsList.statusFailedTitle": "The coupon was not changed",
+  "screen.organization.coupons.couponsList.statusFailedBody":
+    "The server did not save the new status. Try again.",
   "screen.organization.coupons.couponsList.all": "All",
   "screen.organization.coupons.couponsList.active": "Active",
   "screen.organization.coupons.couponsList.paused": "Paused",
@@ -2019,9 +2029,6 @@ export const en = {
   "screen.organization.operations.childSafetyReports.caption":
     "Concerns about trips your organization runs, with their status",
   "screen.organization.operations.childSafetyReports.everyCaseIsRouted": "Every case is routed",
-  "screen.organization.operations.childSafetyReports.escalationContactBody":
-    "Escalation contact: {contact}. A case with no contact configured is blocked until one is set.",
-  "screen.organization.operations.childSafetyReports.contactToBeConfirmed": "to be confirmed",
   "screen.organization.operations.childSafetyReports.yourCases": "Your cases",
   "screen.organization.operations.childSafetyReports.case": "Case",
   "screen.organization.operations.childSafetyReports.status": "Status",
@@ -2032,14 +2039,14 @@ export const en = {
     "Routed to escalation contact",
   "screen.organization.operations.childSafetyReports.caseOpen": "Case open",
   "screen.organization.operations.childSafetyReports.noCases": "No cases for this trip",
+  "screen.organization.operations.childSafetyReports.reportUnavailableTitle":
+    "Filing a report is not available yet",
+  "screen.organization.operations.childSafetyReports.reportUnavailableBody":
+    "Until it is, report a child-safety concern to platform support. Events recorded by moderators on this trip appear in the list.",
+  "screen.organization.operations.childSafetyReports.escalationContactPending":
+    "Each case goes to the platform's child-safety escalation contact.",
   "screen.organization.operations.childSafetyReports.newReport": "New report",
   "screen.organization.operations.childSafetyReports.noTrips": "No trips yet",
-  "screen.organization.operations.childSafetyReports.noVehicle": "No specific vehicle",
-  "screen.organization.operations.childSafetyReports.description": "Description",
-  "screen.organization.operations.childSafetyReports.submitFailed":
-    "The report was not submitted. Try again.",
-  "screen.organization.operations.childSafetyReports.reportSubmitted": "Report submitted",
-  "screen.organization.operations.childSafetyReports.submitReport": "Submit report",
   // apps/web/src/screens/organization/operations/live-operations.tsx
   "screen.organization.operations.liveOperations.title": "Live operations",
   "screen.organization.operations.liveOperations.tripInState": "{trip} · {state}",
@@ -2115,16 +2122,14 @@ export const en = {
   "screen.organization.people.crmAndWebhooks.notConnected": "Not connected",
   "screen.organization.people.crmAndWebhooks.crmBody":
     "Send bookings and travelers to your CRM. Sync runs when you connect.",
+  "screen.organization.people.crmAndWebhooks.connectUnavailable":
+    "Connecting a CRM is not available yet.",
+  "screen.organization.people.crmAndWebhooks.deliveryLogUnavailableTitle":
+    "The delivery log is not available yet",
+  "screen.organization.people.crmAndWebhooks.deliveryLogUnavailableBody":
+    "Deliveries to your endpoint will be listed here once the platform records them.",
   "screen.organization.people.crmAndWebhooks.disconnectCrm": "Disconnect CRM",
-  "screen.organization.people.crmAndWebhooks.connectCrm": "Connect CRM",
   "screen.organization.people.crmAndWebhooks.deliveryLog": "Delivery log",
-  "screen.organization.people.crmAndWebhooks.time": "Time",
-  "screen.organization.people.crmAndWebhooks.event": "Event",
-  "screen.organization.people.crmAndWebhooks.outcome": "Outcome",
-  "screen.organization.people.crmAndWebhooks.attempts": "Attempts",
-  "screen.organization.people.crmAndWebhooks.noDeliveriesTitle": "No deliveries yet",
-  "screen.organization.people.crmAndWebhooks.noDeliveriesBody":
-    "Each event sent to your endpoint will be listed here with its outcome.",
   // apps/web/src/screens/organization/people/employee-invitation-acceptance.tsx
   "screen.organization.people.employeeInvitationAcceptance.title": "Join the organization",
   "screen.organization.people.employeeInvitationAcceptance.invitationSentTo":
@@ -2193,6 +2198,14 @@ export const en = {
   "screen.organization.people.employeesList.none": "None",
   "screen.organization.people.employeesList.action": "Action",
   "screen.organization.people.employeesList.removeName": "Remove {name}",
+  "screen.organization.people.employeesList.resendInvite": "Resend invite",
+  "screen.organization.people.employeesList.resendInviteTo": "Resend the invitation to {name}",
+  "screen.organization.people.employeesList.inviteResentTitle": "Invitation sent again",
+  "screen.organization.people.employeesList.inviteResentBody":
+    "The new link is valid for 7 days; the previous link no longer works.",
+  "screen.organization.people.employeesList.inviteNotResentTitle": "The invitation was not sent",
+  "screen.organization.people.employeesList.inviteNotResentBody":
+    "The server did not send it. Try again.",
   "screen.organization.people.employeesList.remove": "Remove",
   "screen.organization.people.employeesList.nOfLimit": "{n} of {limit}",
   "screen.organization.people.employeesList.inviteEmployee": "Invite employee",
@@ -2260,9 +2273,6 @@ export const en = {
   "screen.organization.people.webhookForm.signingSecretAfterSave":
     "A signing secret is created when you save the endpoint.",
   "screen.organization.people.webhookForm.rotateSecret": "Rotate secret",
-  "screen.organization.people.webhookForm.sendTest": "Send test",
-  "screen.organization.people.webhookForm.sendTestUnavailable":
-    "Test deliveries are not available yet.",
   "screen.organization.people.webhookForm.events": "Events",
   "screen.organization.people.webhookForm.eventsRequired": "Choose at least one event.",
   // apps/web/src/screens/organization/staffing/deal-detail-and-negotiation.tsx
@@ -2299,6 +2309,11 @@ export const en = {
   "screen.organization.staffing.dealDetailAndNegotiation.counterAmount": "Counter amount",
   "screen.organization.staffing.dealDetailAndNegotiation.counterVoidsAcceptance":
     "Countering voids any acceptance on this deal until both sides agree again.",
+  "screen.organization.staffing.dealDetailAndNegotiation.counterInvalid":
+    "Enter an amount of at least {min}.",
+  "screen.organization.staffing.dealDetailAndNegotiation.waitingForSupplier":
+    "Your offer is with the supplier. You can respond again after they answer, or withdraw it.",
+  "screen.organization.staffing.dealDetailAndNegotiation.withdrawOffer": "Withdraw offer",
   "screen.organization.staffing.dealDetailAndNegotiation.rejectDeal": "Reject deal",
   "screen.organization.staffing.dealDetailAndNegotiation.acceptOffer": "Accept offer",
   "screen.organization.staffing.dealDetailAndNegotiation.sendCounter": "Send counter",
@@ -2321,6 +2336,14 @@ export const en = {
   "screen.organization.staffing.organizationOwnedDriversAndPhotographers.phone": "Phone",
   "screen.organization.staffing.organizationOwnedDriversAndPhotographers.emailOptional":
     "Email (optional)",
+  "screen.organization.staffing.organizationOwnedDriversAndPhotographers.nationalId": "National ID",
+  "screen.organization.staffing.organizationOwnedDriversAndPhotographers.licenseCategory":
+    "License category",
+  "screen.organization.staffing.organizationOwnedDriversAndPhotographers.licenseExpiry":
+    "License expiry",
+  "screen.organization.staffing.organizationOwnedDriversAndPhotographers.labTestConsent":
+    "The driver has signed the lab test consent",
+  "screen.organization.staffing.organizationOwnedDriversAndPhotographers.chooseOption": "Choose",
   "screen.organization.staffing.organizationOwnedDriversAndPhotographers.licenseNumber":
     "License number",
   "screen.organization.staffing.organizationOwnedDriversAndPhotographers.cameraBody": "Camera body",
@@ -2354,7 +2377,6 @@ export const en = {
     "Remove this staff member?",
   "screen.organization.staffing.organizationOwnedDriversAndPhotographers.keep": "Keep",
   // apps/web/src/screens/organization/staffing/platform-supplier-search-and-deal-start.tsx
-  "screen.organization.staffing.platformSupplierSearchAndDealStart.verified": "Verified",
   "screen.organization.staffing.platformSupplierSearchAndDealStart.unavailableOnDate":
     "Unavailable on {date}",
   "screen.organization.staffing.platformSupplierSearchAndDealStart.availableOnDate":
@@ -2377,6 +2399,18 @@ export const en = {
   "screen.organization.staffing.platformSupplierSearchAndDealStart.emptyBody":
     "Try another name or supplier type.",
   "screen.organization.staffing.platformSupplierSearchAndDealStart.startADeal": "Start a deal",
+  "screen.organization.staffing.platformSupplierSearchAndDealStart.previousSupplier":
+    "{role} · account {reference}",
+  "screen.organization.staffing.platformSupplierSearchAndDealStart.payInvalid":
+    "Enter the pay, at least 1.00, for example 150 or 150.50.",
+  "screen.organization.staffing.platformSupplierSearchAndDealStart.searchUnavailableTitle":
+    "Searching all platform suppliers is not available yet",
+  "screen.organization.staffing.platformSupplierSearchAndDealStart.searchUnavailableBody":
+    "The list shows platform suppliers you have already made deals with. To use your own drivers and photographers, open Own staff.",
+  "screen.organization.staffing.platformSupplierSearchAndDealStart.chooseTrip": "Choose a trip",
+  "screen.organization.staffing.platformSupplierSearchAndDealStart.vehicle": "Vehicle",
+  "screen.organization.staffing.platformSupplierSearchAndDealStart.anyVehicle":
+    "Any vehicle on the trip",
   "screen.organization.staffing.platformSupplierSearchAndDealStart.trip": "Trip",
   "screen.organization.staffing.platformSupplierSearchAndDealStart.route": "Route",
   "screen.organization.staffing.platformSupplierSearchAndDealStart.supplier": "Supplier",
@@ -2873,6 +2907,10 @@ export const en = {
   "screen.organization.vehicles.vehicleTypesAndSeatLayout.seatCount": "Seat count",
   "screen.organization.vehicles.vehicleTypesAndSeatLayout.seatCountInvalid":
     "Enter a seat count from 1 to {max}.",
+  "screen.organization.vehicles.vehicleTypesAndSeatLayout.category": "Category",
+  "screen.organization.vehicles.vehicleTypesAndSeatLayout.chooseCategory": "Choose a category",
+  "screen.organization.vehicles.vehicleTypesAndSeatLayout.categoryRequired":
+    "Choose the vehicle category.",
   "screen.organization.vehicles.vehicleTypesAndSeatLayout.status": "Status",
   "screen.organization.vehicles.vehicleTypesAndSeatLayout.active": "Active",
   "screen.organization.vehicles.vehicleTypesAndSeatLayout.archived": "Archived",

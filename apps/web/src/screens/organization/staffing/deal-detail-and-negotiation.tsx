@@ -9,7 +9,7 @@ import { orpc } from "@/utils/orpc";
 
 import { OrgInput } from "../common/org-form";
 import { useOrgNavigate, useOrgParams } from "../common/org-link";
-import { getSelectedNegotiationId, isoDay, tripTitle } from "../common/org-shared";
+import { isoDay, tripTitle } from "../common/org-shared";
 import {
   NO_VALUE,
   OrgAlert,
@@ -34,6 +34,9 @@ import {
 const HOUR_MS = 60 * 60 * 1000;
 const MIN_OFFER_MINOR = 100;
 const OPEN_STATUSES = ["pending_supplier", "countered_by_supplier", "countered_by_org"];
+/** The organization may accept or counter only after the supplier's latest move. */
+const ORG_TURN_STATUSES = ["countered_by_supplier"];
+const AMOUNT_PATTERN = /^\d{1,7}(\.\d{1,2})?$/;
 
 function timeText(value: string | Date | null | undefined): string {
   if (!value) return NO_VALUE;
@@ -48,9 +51,10 @@ export function DealDetailAndNegotiation() {
   const queryClient = useQueryClient();
   const { status: authStatus, actor, locale } = useAuth();
   const enabled = authStatus === "authenticated" && Boolean(actor?.activeTenantId);
-  const { dealId: routeDealId } = useOrgParams();
-  const dealId = routeDealId ?? getSelectedNegotiationId();
+  // The deal comes only from the URL: an unknown id shows "not found", never another deal.
+  const { dealId } = useOrgParams();
   const [counterInput, setCounterInput] = useState<string | null>(null);
+  const [counterError, setCounterError] = useState<string | undefined>(undefined);
   const [respondFailed, setRespondFailed] = useState(false);
 
   const negotiationsQuery = useQuery({
@@ -58,7 +62,7 @@ export function DealDetailAndNegotiation() {
     enabled,
   });
   const items = negotiationsQuery.data?.items ?? [];
-  const deal = (dealId ? items.find((item) => item.id === dealId) : undefined) ?? items[0];
+  const deal = dealId ? items.find((item) => item.id === dealId) : undefined;
 
   const tripQuery = useQuery({
     ...orpc.trips.getOrganizationTrip.queryOptions({ input: { tripId: deal?.tripId ?? "" } }),
@@ -90,20 +94,29 @@ export function DealDetailAndNegotiation() {
     ? null
     : Math.max(0, Math.ceil((expiresAt - Date.now()) / HOUR_MS));
   const isOpen = deal ? OPEN_STATUSES.includes(deal.status) : false;
+  const orgTurn = deal ? ORG_TURN_STATUSES.includes(deal.status) : false;
   const busy = respondMutation.isPending;
 
-  async function handleRespond(action: "accept" | "counter" | "decline") {
+  async function handleRespond(action: "accept" | "counter" | "decline" | "cancel") {
     if (!deal) return;
+    let counterOfferMinor: number | undefined;
+    if (action === "counter") {
+      const text = counterAmount.trim();
+      const minor = AMOUNT_PATTERN.test(text) ? Math.round(Number(text) * 100) : 0;
+      if (minor < MIN_OFFER_MINOR) {
+        setCounterError(
+          t("screen.organization.staffing.dealDetailAndNegotiation.counterInvalid", {
+            min: formatMinor(MIN_OFFER_MINOR, deal.currencyCode),
+          }),
+        );
+        return;
+      }
+      setCounterError(undefined);
+      counterOfferMinor = minor;
+    }
     setRespondFailed(false);
     try {
-      await respondMutation.mutateAsync({
-        negotiationId: deal.id,
-        action,
-        counterOfferMinor:
-          action === "counter"
-            ? Math.max(MIN_OFFER_MINOR, Math.round((Number.parseFloat(counterAmount) || 0) * 100))
-            : undefined,
-      });
+      await respondMutation.mutateAsync({ negotiationId: deal.id, action, counterOfferMinor });
       if (action === "counter") setCounterInput(null);
       else void goTo("staffing-board");
     } catch {
@@ -238,29 +251,45 @@ export function DealDetailAndNegotiation() {
             label={t("screen.organization.staffing.dealDetailAndNegotiation.counterAmount")}
             inputMode="decimal"
             value={counterAmount}
+            error={counterError}
             onChange={(event) => setCounterInput(event.target.value)}
-            disabled={!isOpen}
+            disabled={!orgTurn}
           />
+          {isOpen && !orgTurn ? (
+            <p className="te-caption m-0 text-[var(--te-ink-muted)]">
+              {t("screen.organization.staffing.dealDetailAndNegotiation.waitingForSupplier")}
+            </p>
+          ) : null}
           <p className="te-caption m-0 text-[var(--te-ink-muted)]">
             {t("screen.organization.staffing.dealDetailAndNegotiation.counterVoidsAcceptance")}
           </p>
           <div className="mt-2 flex flex-wrap justify-between gap-3">
-            <OrgButton
-              variant="danger"
-              disabled={!isOpen || busy}
-              onClick={() => void handleRespond("decline")}
-            >
-              {t("screen.organization.staffing.dealDetailAndNegotiation.rejectDeal")}
-            </OrgButton>
+            {orgTurn || !isOpen ? (
+              <OrgButton
+                variant="danger"
+                disabled={!orgTurn || busy}
+                onClick={() => void handleRespond("decline")}
+              >
+                {t("screen.organization.staffing.dealDetailAndNegotiation.rejectDeal")}
+              </OrgButton>
+            ) : (
+              <OrgButton
+                variant="danger"
+                disabled={busy}
+                onClick={() => void handleRespond("cancel")}
+              >
+                {t("screen.organization.staffing.dealDetailAndNegotiation.withdrawOffer")}
+              </OrgButton>
+            )}
             <div className="flex flex-wrap gap-3">
               <OrgButton
                 variant="secondary"
-                disabled={!isOpen || busy}
+                disabled={!orgTurn || busy}
                 onClick={() => void handleRespond("accept")}
               >
                 {t("screen.organization.staffing.dealDetailAndNegotiation.acceptOffer")}
               </OrgButton>
-              <OrgButton disabled={!isOpen || busy} onClick={() => void handleRespond("counter")}>
+              <OrgButton disabled={!orgTurn || busy} onClick={() => void handleRespond("counter")}>
                 {t("screen.organization.staffing.dealDetailAndNegotiation.sendCounter")}
               </OrgButton>
             </div>

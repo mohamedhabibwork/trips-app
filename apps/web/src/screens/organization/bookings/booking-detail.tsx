@@ -10,7 +10,7 @@ import { orpc } from "@/utils/orpc";
 
 import { OrgInput } from "../common/org-form";
 import { useOrgNavigate, useOrgParams } from "../common/org-link";
-import { getSelectedBookingId, tripTitle } from "../common/org-shared";
+import { tripTitle } from "../common/org-shared";
 import { OrgTable, type OrgColumn } from "../common/org-table";
 import {
   NO_VALUE,
@@ -30,7 +30,6 @@ import {
   PaymentBadge,
   money,
   toBookingDetail,
-  toBookingRecords,
   toPaymentRecords,
 } from "./booking-parts";
 
@@ -68,12 +67,8 @@ export function BookingDetail() {
   const [actionFailed, setActionFailed] = useState(false);
   const saveHintId = useId();
 
-  const selectedBookingId = routeBookingId ?? getSelectedBookingId();
-  const listQuery = useQuery({
-    ...orpc.booking.listOrganizationBookings.queryOptions({ input: {} }),
-    enabled: enabled && !selectedBookingId,
-  });
-  const bookingId = selectedBookingId ?? toBookingRecords(listQuery.data)[0]?.id ?? "";
+  // The booking comes only from the URL (`/business/bookings/$bookingId`).
+  const bookingId = routeBookingId ?? "";
 
   const detailQuery = useQuery({
     ...orpc.booking.getBooking.queryOptions({ input: { bookingId } }),
@@ -116,13 +111,6 @@ export function BookingDetail() {
       },
     }),
   );
-  const cancelBookingMutation = useMutation(
-    orpc.booking.cancelBooking.mutationOptions({
-      onSuccess: () => {
-        void queryClient.invalidateQueries({ queryKey: orpc.booking.key() });
-      },
-    }),
-  );
 
   const seats = seatMapQuery.data?.seats ?? [];
   const travelers: readonly TravelerRow[] = (booking?.passengers ?? []).map((passenger, index) => {
@@ -154,14 +142,13 @@ export function BookingDetail() {
   const paymentId =
     toPaymentRecords(paymentsQuery.data).find((payment) => payment.bookingId === booking?.id)?.id ??
     null;
-  const busy =
-    assignSeatMutation.isPending ||
-    refundPaymentMutation.isPending ||
-    cancelBookingMutation.isPending;
+  const busy = assignSeatMutation.isPending || refundPaymentMutation.isPending;
   const editingRow = travelers.find((row) => row.id === editing?.rowId);
   const canSave = Boolean(editingRow && editing?.seat.trim() && booking?.vehicleId) && !busy;
   const canRefund =
-    Boolean(booking) && booking?.status !== "cancelled" && booking?.status !== "refunded";
+    Boolean(booking && paymentId) &&
+    booking?.status !== "cancelled" &&
+    booking?.status !== "refunded";
 
   async function handleSaveSeat() {
     if (!booking?.vehicleId || !editingRow || !editing) return;
@@ -197,17 +184,12 @@ export function BookingDetail() {
     if (!booking) return;
     setActionFailed(false);
     try {
-      if (paymentId) {
-        await refundPaymentMutation.mutateAsync({
-          paymentId,
-          reason: "Refund issued by organization from booking detail",
-        });
-      } else {
-        await cancelBookingMutation.mutateAsync({
-          bookingId: booking.id,
-          reason: "Cancelled and refunded by organization",
-        });
-      }
+      // A refund needs the booking's payment; without one the button stays disabled.
+      if (!paymentId) throw new Error("No payment to refund");
+      await refundPaymentMutation.mutateAsync({
+        paymentId,
+        reason: "Refund issued by organization from booking detail",
+      });
       void goTo("bookings-and-travelers");
     } catch {
       setActionFailed(true);
@@ -276,7 +258,7 @@ export function BookingDetail() {
     { key: "amount", header: t("screen.organization.bookings.bookingDetail.amount") },
   ];
 
-  if (detailQuery.isLoading || listQuery.isLoading) return <OrgLoading rows={6} />;
+  if (detailQuery.isLoading) return <OrgLoading rows={6} />;
 
   return (
     <OrgPage className="gap-5">

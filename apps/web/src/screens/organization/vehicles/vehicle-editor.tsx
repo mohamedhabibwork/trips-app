@@ -9,7 +9,6 @@ import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
 
 import { OrgButtonLink, useOrgNavigate, useOrgParams } from "../common/org-link";
-import { getSelectedVehicleId } from "../common/org-shared";
 import { NO_VALUE, OrgEmpty, OrgError, OrgLoading, OrgPage, OrgPageHeader } from "../common/org-ui";
 
 import { VehicleForm, type VehicleValues } from "./vehicle-editor-form";
@@ -21,7 +20,8 @@ export function VehicleEditor() {
   const queryClient = useQueryClient();
   const vehicleIdParam = useOrgParams().vehicleId;
   const isNew = vehicleIdParam === NEW_VEHICLE_ID;
-  const requestedId = isNew ? null : (vehicleIdParam ?? getSelectedVehicleId());
+  // The vehicle comes only from the URL; an unknown id shows "not found", never another vehicle.
+  const requestedId = isNew ? null : (vehicleIdParam ?? null);
   const [removeOpen, setRemoveOpen] = useState(false);
   const enabled = authStatus === "authenticated" && Boolean(actor?.activeTenantId);
 
@@ -37,9 +37,9 @@ export function VehicleEditor() {
   const vehicles = vehiclesQuery.data?.items ?? [];
   const vehicle = isNew
     ? null
-    : ((requestedId ? vehicles.find((item) => item.id === requestedId) : vehicles[0]) ?? null);
+    : ((requestedId ? vehicles.find((item) => item.id === requestedId) : undefined) ?? null);
 
-  const creating = isNew || (vehiclesQuery.isSuccess && !vehicle && !requestedId);
+  const creating = isNew;
 
   const invalidate = () => {
     void queryClient.invalidateQueries({ queryKey: orpc.fleet.key() });

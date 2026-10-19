@@ -6,13 +6,13 @@ import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
+import { utcToZoned } from "@/utils/zoned-time";
 
 import { OrgNavTabs } from "../common/org-form";
 import { OrgButtonLink, useOrgParams } from "../common/org-link";
 import { orgHref, type OrgSlug } from "../common/org-routes";
 import {
   TripStateBadge,
-  getSelectedTripId,
   isoDay,
   setSelectedTripId,
   toTripState,
@@ -91,6 +91,7 @@ const SECTIONS: readonly Section[] = [
 const GO_TO_IDS = ["staffing", "bookings", "programs", "live", "accounting"];
 
 const CANCEL_BLOCKED_ID = "trip-cancel-blocked";
+const OPEN_DEAL_STATUSES = ["pending_supplier", "countered_by_supplier", "countered_by_org"];
 
 function gapColumns(): readonly OrgColumn<VehicleGapRow>[] {
   return [
@@ -121,13 +122,8 @@ export function TripCommandView() {
   const { status: authStatus, locale } = useAuth();
   const params = useOrgParams();
   const signedIn = authStatus === "authenticated";
-  const knownTripId = params.tripId ?? getSelectedTripId();
-
-  const tripsQuery = useQuery({
-    ...orpc.trips.listOrganizationTrips.queryOptions({ input: {} }),
-    enabled: signedIn && !knownTripId,
-  });
-  const tripId = knownTripId || tripsQuery.data?.items[0]?.id || null;
+  // The trip comes only from the URL (`/business/trips/$tripId`).
+  const tripId = params.tripId ?? null;
 
   // Sections without a trip id in their URL read the trip from here.
   useEffect(() => {
@@ -139,11 +135,26 @@ export function TripCommandView() {
     enabled: signedIn && Boolean(tripId),
   });
 
+  const dealsQuery = useQuery({
+    ...orpc.negotiation.listOrganizationNegotiations.queryOptions({
+      input: { tripId: tripId ?? "" },
+    }),
+    enabled: signedIn && Boolean(tripId),
+  });
+  const openDealVehicles = new Set(
+    (dealsQuery.data?.items ?? [])
+      .filter((deal) => OPEN_DEAL_STATUSES.includes(deal.status))
+      .map((deal) => deal.vehicleId),
+  );
+
   const detail = tripQuery.data;
   const state = detail ? toTripState(detail.state) : null;
   const start = isoDay(detail?.startsAt);
   const end = isoDay(detail?.endsAt);
-  const departs = detail?.startsAt ? new Date(detail.startsAt).toISOString().slice(11, 16) : null;
+  // Departure is shown on the trip's own clock, not UTC or the browser's zone.
+  const departs = detail?.startsAt
+    ? (utcToZoned(detail.startsAt, detail.timezone)?.time ?? null)
+    : null;
   const origin = detail?.origin
     ? locale === "ar"
       ? detail.origin.nameAr
@@ -168,12 +179,9 @@ export function TripCommandView() {
     detail?.vehicles.map((vehicle) => ({
       id: vehicle.id,
       plate: vehicle.plateNumber ?? vehicle.vehicleId,
-      driverAssigned: Boolean(vehicle.driverAccountId) || vehicle.driverSource === "org_staff",
-      moderatorAssigned:
-        Boolean(vehicle.moderatorAccountId) || vehicle.moderatorSource === "org_staff",
-      openDeal:
-        vehicle.driverSource === "platform_supplier" ||
-        vehicle.photographerSource === "platform_supplier",
+      driverAssigned: Boolean(vehicle.driverAccountId),
+      moderatorAssigned: Boolean(vehicle.moderatorAccountId),
+      openDeal: openDealVehicles.has(vehicle.vehicleId),
     })) ?? [];
 
   const tabs = SECTIONS.map((section) => ({

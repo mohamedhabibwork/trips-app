@@ -6,7 +6,6 @@ import { t } from "@trips-app/i18n";
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
 
-import { OrgTable } from "../common/org-table";
 import {
   OrgAlert,
   OrgBadge,
@@ -20,9 +19,6 @@ import {
 } from "../common/org-ui";
 
 import { WEBHOOK_FORM_ID, WebhookForm, type WebhookValues } from "./webhook-form";
-
-/** The CRM the one-click connection sets up. */
-const DEFAULT_CRM_PROVIDER = "hubspot";
 
 export function CrmAndWebhooks() {
   const queryClient = useQueryClient();
@@ -46,10 +42,21 @@ export function CrmAndWebhooks() {
   const endpoint = settings?.webhookEndpoints[0] ?? null;
   const crmConnected = Boolean(settings?.crmProvider);
   const busy = configureWebhooksMutation.isPending || updateSettingsMutation.isPending;
-  const newSecret = configureWebhooksMutation.data?.newlyGeneratedSecrets[0]?.signingSecret;
+  const newSecret = configureWebhooksMutation.data?.newlyGeneratedSecrets.find(
+    (secret) => !endpoint || secret.endpointId === endpoint.id,
+  )?.signingSecret;
 
+  // The service replaces the whole list, so every other endpoint is sent back unchanged.
   function saveEndpoint(values: WebhookValues, rotateSecret: boolean) {
     if (!enabled) return;
+    const others = (settings?.webhookEndpoints ?? [])
+      .filter((item) => item.id !== endpoint?.id)
+      .map((item) => ({
+        id: item.id,
+        url: item.url,
+        events: [...item.events],
+        enabled: item.enabled,
+      }));
     configureWebhooksMutation.mutate({
       endpoints: [
         {
@@ -59,13 +66,16 @@ export function CrmAndWebhooks() {
           enabled: true,
           rotateSecret,
         },
+        ...others,
       ],
     });
   }
 
-  function toggleCrm() {
+  // Connecting a CRM needs the provider's sign-in, which no procedure offers yet; a connection
+  // saved earlier can still be removed.
+  function disconnectCrm() {
     if (!enabled) return;
-    updateSettingsMutation.mutate({ crmProvider: crmConnected ? null : DEFAULT_CRM_PROVIDER });
+    updateSettingsMutation.mutate({ crmProvider: null });
   }
 
   const failed = configureWebhooksMutation.isError || updateSettingsMutation.isError;
@@ -123,36 +133,30 @@ export function CrmAndWebhooks() {
                 className="flex-1"
               >
                 <p className="m-0">{t("screen.organization.people.crmAndWebhooks.crmBody")}</p>
-                <div>
-                  <OrgButton variant="secondary" disabled={!enabled || busy} onClick={toggleCrm}>
-                    {crmConnected
-                      ? t("screen.organization.people.crmAndWebhooks.disconnectCrm")
-                      : t("screen.organization.people.crmAndWebhooks.connectCrm")}
-                  </OrgButton>
-                </div>
+                {crmConnected ? (
+                  <div>
+                    <OrgButton
+                      variant="secondary"
+                      disabled={!enabled || busy}
+                      onClick={disconnectCrm}
+                    >
+                      {t("screen.organization.people.crmAndWebhooks.disconnectCrm")}
+                    </OrgButton>
+                  </div>
+                ) : (
+                  <p className="te-caption m-0 text-[var(--te-ink-muted)]">
+                    {t("screen.organization.people.crmAndWebhooks.connectUnavailable")}
+                  </p>
+                )}
               </OrgCard>
             }
           />
           <OrgCard title={t("screen.organization.people.crmAndWebhooks.deliveryLog")}>
-            <OrgTable
-              columns={[
-                { key: "time", header: t("screen.organization.people.crmAndWebhooks.time") },
-                { key: "event", header: t("screen.organization.people.crmAndWebhooks.event") },
-                { key: "outcome", header: t("screen.organization.people.crmAndWebhooks.outcome") },
-                {
-                  key: "attempts",
-                  header: t("screen.organization.people.crmAndWebhooks.attempts"),
-                },
-              ]}
-              rows={[]}
-              rowKey={() => ""}
-              caption={t("screen.organization.people.crmAndWebhooks.deliveryLog")}
-              empty={
-                <OrgEmpty title={t("screen.organization.people.crmAndWebhooks.noDeliveriesTitle")}>
-                  {t("screen.organization.people.crmAndWebhooks.noDeliveriesBody")}
-                </OrgEmpty>
-              }
-            />
+            <OrgEmpty
+              title={t("screen.organization.people.crmAndWebhooks.deliveryLogUnavailableTitle")}
+            >
+              {t("screen.organization.people.crmAndWebhooks.deliveryLogUnavailableBody")}
+            </OrgEmpty>
           </OrgCard>
         </>
       )}

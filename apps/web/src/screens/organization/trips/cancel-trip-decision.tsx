@@ -9,7 +9,7 @@ import { orpc } from "@/utils/orpc";
 
 import { OrgTextarea } from "../common/org-form";
 import { OrgButtonLink, useOrgNavigate, useOrgParams } from "../common/org-link";
-import { getSelectedTripId, isoDay, toTripState, tripTitle } from "../common/org-shared";
+import { isoDay, toTripState, tripTitle } from "../common/org-shared";
 import {
   NO_VALUE,
   OrgAlert,
@@ -36,12 +36,8 @@ export function CancelTripDecision() {
   const [cancelFailed, setCancelFailed] = useState(false);
   const signedIn = authStatus === "authenticated";
 
-  const knownTripId = params.tripId ?? getSelectedTripId();
-  const tripsQuery = useQuery({
-    ...orpc.trips.listOrganizationTrips.queryOptions({ input: {} }),
-    enabled: signedIn && !knownTripId,
-  });
-  const tripId = knownTripId || tripsQuery.data?.items[0]?.id || null;
+  // Only the trip in the URL is ever cancelled; there is no fallback to another trip.
+  const tripId = params.tripId ?? null;
 
   const tripQuery = useQuery({
     ...orpc.trips.getOrganizationTrip.queryOptions({ input: { tripId: tripId ?? "" } }),
@@ -77,7 +73,10 @@ export function CancelTripDecision() {
       return;
     }
     setReasonError(undefined);
-    if (!signedIn || !tripId) return;
+    if (!signedIn || !tripId || !detail) {
+      setCancelFailed(true);
+      return;
+    }
     setCancelFailed(false);
     try {
       await cancelTripMutation.mutateAsync({ tripId, reason: trimmed });
@@ -164,7 +163,7 @@ export function CancelTripDecision() {
             {t("screen.organization.trips.cancelTripDecision.keepTrip")}
           </OrgButtonLink>
           <OrgButton
-            disabled={inProgress || cancelTripMutation.isPending || (signedIn && !tripId)}
+            disabled={inProgress || cancelTripMutation.isPending || !detail}
             aria-describedby={BLOCKED_NOTE_ID}
             onClick={() => void handleCancel()}
           >

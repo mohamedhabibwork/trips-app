@@ -25,12 +25,15 @@ export interface CouponForm {
   code: string;
   kind: CouponKind;
   value: string;
+  /** Currency of a fixed-amount coupon. */
+  currency: "EGP" | "SAR" | "AED";
   totalLimit: string;
   perUserLimit: string;
   validFrom: string;
   validUntil: string;
   minBookingValue: string;
-  programId: string;
+  /** Trip the coupon applies to, or "all" for every trip of the organization. */
+  tripId: string;
   audience: "public" | "targeted";
   stackable: boolean;
 }
@@ -38,18 +41,19 @@ export interface CouponForm {
 export const EMPTY_COUPON_FORM: CouponForm = {
   code: "",
   kind: "percentage",
-  value: "10",
+  value: "",
+  currency: "EGP",
   totalLimit: "",
   perUserLimit: "",
   validFrom: "",
   validUntil: "",
   minBookingValue: "",
-  programId: "all",
+  tripId: "all",
   audience: "public",
   stackable: false,
 };
 
-/** The two discount types the coupon service stores; the other kinds are saved as one of them. */
+/** The two discount types the coupon service stores. */
 export function discountTypeOf(kind: CouponKind): "percentage" | "fixed_amount" {
   return kind === "percentage" || kind === "free-program" ? "percentage" : "fixed_amount";
 }
@@ -62,41 +66,33 @@ export function generateCouponCode(): string {
   return Array.from(values, (value) => CODE_ALPHABET[value % CODE_ALPHABET.length]).join("");
 }
 
+/**
+ * The kinds the coupon service can store: a percentage or a fixed amount. Program-specific, free
+ * program, first booking and minimum spend coupons need fields the service does not have yet.
+ */
 function kindOptions(): readonly OrgOption[] {
   return [
     { value: "fixed-amount", label: t("screen.organization.coupons.couponEditorForm.fixedAmount") },
     { value: "percentage", label: t("screen.organization.coupons.couponEditorForm.percentage") },
-    {
-      value: "program-specific",
-      label: t("screen.organization.coupons.couponEditorForm.programSpecific"),
-    },
-    { value: "free-program", label: t("screen.organization.coupons.couponEditorForm.freeProgram") },
-    {
-      value: "first-booking",
-      label: t("screen.organization.coupons.couponEditorForm.firstBooking"),
-    },
-    {
-      value: "minimum-spend",
-      label: t("screen.organization.coupons.couponEditorForm.minimumSpend"),
-    },
   ];
 }
+
+export type CouponFieldErrors = Partial<
+  Record<"code" | "value" | "totalLimit" | "minBookingValue" | "dates", string>
+>;
 
 interface CouponFormCardsProps {
   form: CouponForm;
   onChange: (patch: Partial<CouponForm>) => void;
-  programs: readonly OrgOption[];
+  trips: readonly OrgOption[];
   readOnly: boolean;
-  codeError?: string;
+  errors: CouponFieldErrors;
 }
 
-export function CouponFormCards({
-  form,
-  onChange,
-  programs,
-  readOnly,
-  codeError,
-}: CouponFormCardsProps) {
+const UNSTORED_NOTE_ID = "coupon-unstored-note";
+
+export function CouponFormCards({ form, onChange, trips, readOnly, errors }: CouponFormCardsProps) {
+  const codeError = errors.code;
   const options = kindOptions();
   return (
     <>
@@ -137,10 +133,23 @@ export function CouponFormCards({
                 : t("screen.organization.coupons.couponEditorForm.valueAmountHint")
             }
             inputMode="decimal"
+            required
+            error={errors.value}
             value={form.value}
             onChange={(event) => onChange({ value: event.target.value })}
             disabled={readOnly}
           />
+          {discountTypeOf(form.kind) === "fixed_amount" ? (
+            <OrgSelect
+              label={t("screen.organization.coupons.couponEditorForm.currency")}
+              options={["EGP", "SAR", "AED"].map((code) => ({ value: code, label: code }))}
+              value={form.currency}
+              onValueChange={(value) =>
+                onChange({ currency: value === "SAR" || value === "AED" ? value : "EGP" })
+              }
+              disabled={readOnly}
+            />
+          ) : null}
           <OrgInput
             label={t("screen.organization.coupons.couponEditorForm.scope")}
             value={t("screen.organization.coupons.couponEditorForm.thisOrganizationsTrips")}
@@ -155,6 +164,7 @@ export function CouponFormCards({
             label={t("screen.organization.coupons.couponEditorForm.totalLimit")}
             hint={t("screen.organization.coupons.couponEditorForm.usesHint")}
             inputMode="numeric"
+            error={errors.totalLimit}
             value={form.totalLimit}
             onChange={(event) => onChange({ totalLimit: event.target.value })}
             disabled={readOnly}
@@ -165,7 +175,8 @@ export function CouponFormCards({
             inputMode="numeric"
             value={form.perUserLimit}
             onChange={(event) => onChange({ perUserLimit: event.target.value })}
-            disabled={readOnly}
+            disabled
+            aria-describedby={UNSTORED_NOTE_ID}
           />
           <OrgInput
             label={t("screen.organization.coupons.couponEditorForm.validFrom")}
@@ -177,6 +188,7 @@ export function CouponFormCards({
           <OrgInput
             label={t("screen.organization.coupons.couponEditorForm.validUntil")}
             type="date"
+            error={errors.dates}
             value={form.validUntil}
             onChange={(event) => onChange({ validUntil: event.target.value })}
             disabled={readOnly}
@@ -184,22 +196,27 @@ export function CouponFormCards({
           <OrgInput
             label={t("screen.organization.coupons.couponEditorForm.minimumBookingValue")}
             inputMode="decimal"
+            error={errors.minBookingValue}
             value={form.minBookingValue}
             onChange={(event) => onChange({ minBookingValue: event.target.value })}
             disabled={readOnly}
           />
           <OrgSelect
-            label={t("screen.organization.coupons.couponEditorForm.programs")}
-            options={programs}
-            value={form.programId}
-            onValueChange={(value) => onChange({ programId: value })}
+            label={t("screen.organization.coupons.couponEditorForm.trip")}
+            options={trips}
+            value={form.tripId}
+            onValueChange={(value) => onChange({ tripId: value })}
             disabled={readOnly}
           />
         </div>
       </OrgCard>
       <OrgCard title={t("screen.organization.coupons.couponEditorForm.audienceAndStacking")}>
         <div className="flex flex-wrap gap-8">
-          <fieldset className="m-0 flex flex-col gap-2 border-0 p-0" disabled={readOnly}>
+          <fieldset
+            className="m-0 flex flex-col gap-2 border-0 p-0"
+            disabled
+            aria-describedby={UNSTORED_NOTE_ID}
+          >
             <legend className="mb-2 p-0 text-sm leading-5 font-semibold">
               {t("screen.organization.coupons.couponEditorForm.audience")}
             </legend>
@@ -225,11 +242,15 @@ export function CouponFormCards({
             className="self-start"
             checked={form.stackable}
             onChange={(event) => onChange({ stackable: event.target.checked })}
-            disabled={readOnly}
+            disabled
+            aria-describedby={UNSTORED_NOTE_ID}
           >
             {t("screen.organization.coupons.couponEditorForm.canBeCombined")}
           </OrgChoice>
         </div>
+        <p id={UNSTORED_NOTE_ID} className="te-caption m-0 text-[var(--te-ink-muted)]">
+          {t("screen.organization.coupons.couponEditorForm.unstoredFieldsNote")}
+        </p>
       </OrgCard>
     </>
   );

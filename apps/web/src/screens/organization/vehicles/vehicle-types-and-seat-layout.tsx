@@ -5,6 +5,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
+import { lookupTypeByCodeQueryOptions, toLookupSelectOptions } from "@/utils/lookups";
 import { orpc } from "@/utils/orpc";
 
 import { OrgInput, OrgSelect } from "../common/org-form";
@@ -30,8 +31,6 @@ import { vehicleTypeName } from "./vehicle-parts";
 
 const FORM_ID = "vehicle-type-form";
 const MAX_SEATS = 120;
-/** Category a new organization type is filed under. */
-const DEFAULT_CATEGORY = "COASTER_MINIBUS_28";
 
 type TypeStatus = "active" | "archived";
 
@@ -73,6 +72,8 @@ interface TypeUpdatePayload extends Partial<
 }
 
 export interface TypeValues {
+  /** VEHICLE_TYPE lookup code; chosen when the type is created and fixed afterwards. */
+  categoryLookupCode: string;
   name: string;
   seatCount: number;
   seatLayout: SeatLayoutConfig;
@@ -90,7 +91,23 @@ function TypeForm({ type, locale, disabled, onSave }: TypeFormProps) {
   const [name, setName] = useState(type ? vehicleTypeName(type, locale) : "");
   const [seats, setSeats] = useState(String(type?.seatCount ?? ""));
   const [status, setStatus] = useState<TypeStatus>(type?.status ?? "active");
+  const [category, setCategory] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const categoriesQuery = useQuery({
+    ...lookupTypeByCodeQueryOptions("VEHICLE_TYPE"),
+    enabled: !type,
+  });
+  const categoryOptions = [
+    {
+      value: "",
+      label: t("screen.organization.vehicles.vehicleTypesAndSeatLayout.chooseCategory"),
+    },
+    ...toLookupSelectOptions(
+      categoriesQuery.data?.lookupType?.items,
+      locale === "en" ? "en" : "ar",
+    ).map((option) => ({ value: option.code, label: option.label })),
+  ];
+  const categoryMissing = !type && !category;
 
   const seatValue = Number.parseInt(seats, 10);
   const seatsValid = seatValue >= 1 && seatValue <= MAX_SEATS;
@@ -101,8 +118,14 @@ function TypeForm({ type, locale, disabled, onSave }: TypeFormProps) {
 
   function submit(nextStatus: TypeStatus) {
     setSubmitted(true);
-    if (!name.trim() || !seatsValid) return;
-    onSave({ name: name.trim(), seatCount: seatValue, seatLayout: layout, status: nextStatus });
+    if (!name.trim() || !seatsValid || categoryMissing) return;
+    onSave({
+      categoryLookupCode: category,
+      name: name.trim(),
+      seatCount: seatValue,
+      seatLayout: layout,
+      status: nextStatus,
+    });
   }
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -142,6 +165,20 @@ function TypeForm({ type, locale, disabled, onSave }: TypeFormProps) {
                 : undefined
             }
           />
+          {type ? null : (
+            <OrgSelect
+              label={t("screen.organization.vehicles.vehicleTypesAndSeatLayout.category")}
+              options={categoryOptions}
+              value={category}
+              required
+              error={
+                submitted && categoryMissing
+                  ? t("screen.organization.vehicles.vehicleTypesAndSeatLayout.categoryRequired")
+                  : undefined
+              }
+              onValueChange={setCategory}
+            />
+          )}
           <OrgSelect
             label={t("screen.organization.vehicles.vehicleTypesAndSeatLayout.status")}
             options={[
@@ -220,7 +257,7 @@ export function VehicleTypesAndSeatLayout() {
       return;
     }
     const create: TypeCreatePayload = {
-      categoryLookupCode: DEFAULT_CATEGORY,
+      categoryLookupCode: values.categoryLookupCode,
       nameEn: values.name,
       nameAr: values.name,
       seatCount: values.seatCount,

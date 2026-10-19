@@ -257,8 +257,17 @@ export function SubscriptionAndBilling() {
               },
             ]}
             value={activeCycle}
-            onValueChange={(value) => setCycle(value === "annual" ? "annual" : "monthly")}
+            onValueChange={(value) => {
+              // A new cycle is a plan change: it opens the change panel to confirm and save.
+              setCycle(value === "annual" ? "annual" : "monthly");
+              setChangeOpen(true);
+            }}
           />
+          {sub && activeCycle !== sub.billingCycle ? (
+            <p className="m-0 text-sm leading-5 font-semibold">
+              {t("screen.organization.billing.subscriptionAndBilling.cycleNotSaved")}
+            </p>
+          ) : null}
           <p className="te-caption m-0 text-[var(--te-ink-muted)]">
             {t("screen.organization.billing.subscriptionAndBilling.annualBillingSaves", {
               discount,

@@ -1513,17 +1513,19 @@ export const ar: AppMessages = {
   "screen.organization.billing.invoicesList.buyer": "المشتري",
   "screen.organization.billing.invoicesList.amount": "المبلغ",
   "screen.organization.billing.invoicesList.status": "الحالة",
-  "screen.organization.billing.invoicesList.action": "الإجراء",
   "screen.organization.billing.invoicesList.b2b": "B2B",
   "screen.organization.billing.invoicesList.b2c": "B2C",
   "screen.organization.billing.invoicesList.issued": "صادرة",
-  "screen.organization.billing.invoicesList.openInvoice": "فتح الفاتورة",
   "screen.organization.billing.invoicesList.noInvoicesYet": "لا توجد فواتير بعد",
   "screen.organization.billing.invoicesList.noMatchingInvoices": "لا توجد فواتير من هذا النوع",
   "screen.organization.billing.invoicesList.issueAnInvoiceForA": "أصدر فاتورة لرحلة أو حجز.",
   // apps/web/src/screens/organization/billing/issue-invoice-b2b-or-b2c.tsx
   "screen.organization.billing.issueInvoiceB2bOrB2c.title": "إصدار فاتورة",
   "screen.organization.billing.issueInvoiceB2bOrB2c.caption": "لرحلة أو حجز · {trip}",
+  "screen.organization.billing.issueInvoiceB2bOrB2c.issueUnavailableTitle":
+    "إصدار الفواتير غير متاح بعد",
+  "screen.organization.billing.issueInvoiceB2bOrB2c.issueUnavailableBody":
+    "يمكنك تجهيز الفاتورة هنا. يتطلب إصدارها رقم فاتورة وضريبة من الخادم، وهذا غير متاح بعد.",
   "screen.organization.billing.issueInvoiceB2bOrB2c.issueInvoice": "إصدار الفاتورة",
   "screen.organization.billing.issueInvoiceB2bOrB2c.addTheBuyerName":
     "أضف اسم المشتري لإصدار الفاتورة.",
@@ -1531,9 +1533,6 @@ export const ar: AppMessages = {
     "أضف الرقم الضريبي للمشتري، فهو مطلوب للمشترين من الشركات.",
   "screen.organization.billing.issueInvoiceB2bOrB2c.addLinesFromABooking":
     "تحتاج الفاتورة إلى بنود من حجز مدفوع قبل إصدارها.",
-  "screen.organization.billing.issueInvoiceB2bOrB2c.issueFailed": "لم تصدر الفاتورة",
-  "screen.organization.billing.issueInvoiceB2bOrB2c.issueFailedBody":
-    "راجع البيانات وحاول مرة أخرى. لم يُحفظ أي شيء.",
   "screen.organization.billing.issueInvoiceB2bOrB2c.buyer": "المشتري",
   "screen.organization.billing.issueInvoiceB2bOrB2c.invoiceType": "نوع الفاتورة",
   "screen.organization.billing.issueInvoiceB2bOrB2c.businessB2b": "شركات (B2B)",
@@ -1576,6 +1575,8 @@ export const ar: AppMessages = {
   "screen.organization.billing.subscriptionAndBilling.pastDue": "متأخرة السداد",
   "screen.organization.billing.subscriptionAndBilling.cancelled": "ملغاة",
   "screen.organization.billing.subscriptionAndBilling.renewsOn": "تتجدد في {date}",
+  "screen.organization.billing.subscriptionAndBilling.cycleNotSaved":
+    "لم يُحفظ بعد: أكّد تغيير الخطة في الأعلى لتغيير دورة الفوترة.",
   "screen.organization.billing.subscriptionAndBilling.billingCycle": "دورة الفوترة",
   "screen.organization.billing.subscriptionAndBilling.monthly": "شهرية",
   "screen.organization.billing.subscriptionAndBilling.annual": "سنوية",
@@ -1798,10 +1799,6 @@ export const ar: AppMessages = {
   // apps/web/src/screens/organization/coupons/coupon-editor-form.tsx
   "screen.organization.coupons.couponEditorForm.fixedAmount": "مبلغ ثابت",
   "screen.organization.coupons.couponEditorForm.percentage": "نسبة مئوية",
-  "screen.organization.coupons.couponEditorForm.programSpecific": "خاصة ببرنامج",
-  "screen.organization.coupons.couponEditorForm.freeProgram": "برنامج مجاني",
-  "screen.organization.coupons.couponEditorForm.firstBooking": "الحجز الأول",
-  "screen.organization.coupons.couponEditorForm.minimumSpend": "حد أدنى للإنفاق",
   "screen.organization.coupons.couponEditorForm.codeAndValue": "الرمز والقيمة",
   "screen.organization.coupons.couponEditorForm.code": "الرمز",
   "screen.organization.coupons.couponEditorForm.generate": "توليد",
@@ -1819,14 +1816,23 @@ export const ar: AppMessages = {
   "screen.organization.coupons.couponEditorForm.validFrom": "صالحة من",
   "screen.organization.coupons.couponEditorForm.validUntil": "صالحة حتى",
   "screen.organization.coupons.couponEditorForm.minimumBookingValue": "الحد الأدنى لقيمة الحجز",
-  "screen.organization.coupons.couponEditorForm.programs": "البرامج",
   "screen.organization.coupons.couponEditorForm.audienceAndStacking": "الجمهور والجمع",
   "screen.organization.coupons.couponEditorForm.audience": "الجمهور",
   "screen.organization.coupons.couponEditorForm.public": "عام",
   "screen.organization.coupons.couponEditorForm.targetedAudienceList": "قائمة جمهور مستهدف",
+  "screen.organization.coupons.couponEditorForm.currency": "العملة",
+  "screen.organization.coupons.couponEditorForm.trip": "الرحلة",
+  "screen.organization.coupons.couponEditorForm.unstoredFieldsNote":
+    "الحد لكل مسافر والجمهور المستهدف والجمع بين القسائم غير متاحة بعد.",
   "screen.organization.coupons.couponEditorForm.canBeCombined": "يمكن جمعها مع قسائم أخرى",
   // apps/web/src/screens/organization/coupons/coupon-editor.tsx
-  "screen.organization.coupons.couponEditor.allPrograms": "كل البرامج",
+  "screen.organization.coupons.couponEditor.percentInvalid": "أدخل نسبة مئوية صحيحة من 1 إلى 100.",
+  "screen.organization.coupons.couponEditor.amountInvalid": "أدخل مبلغًا مثل 50 أو 50.25.",
+  "screen.organization.coupons.couponEditor.limitInvalid":
+    "أدخل عددًا صحيحًا لا يقل عن 1، أو اتركه فارغًا بلا حد.",
+  "screen.organization.coupons.couponEditor.datesInvalid":
+    "يجب أن يكون تاريخ الانتهاء بعد تاريخ البدء.",
+  "screen.organization.coupons.couponEditor.allTrips": "كل الرحلات",
   "screen.organization.coupons.couponEditor.codeTooShort": "أدخل رمزًا من 3 أحرف على الأقل.",
   "screen.organization.coupons.couponEditor.couponTitle": "القسيمة {code}",
   "screen.organization.coupons.couponEditor.createCoupon": "إنشاء قسيمة",
@@ -1866,6 +1872,9 @@ export const ar: AppMessages = {
   "screen.organization.coupons.couponsList.pause": "إيقاف مؤقت",
   "screen.organization.coupons.couponsList.resume": "استئناف",
   "screen.organization.coupons.couponsList.revoke": "إلغاء القسيمة",
+  "screen.organization.coupons.couponsList.statusFailedTitle": "لم تتغير القسيمة",
+  "screen.organization.coupons.couponsList.statusFailedBody":
+    "لم يحفظ الخادم الحالة الجديدة. حاول مرة أخرى.",
   "screen.organization.coupons.couponsList.all": "الكل",
   "screen.organization.coupons.couponsList.active": "نشطة",
   "screen.organization.coupons.couponsList.paused": "متوقفة مؤقتًا",
@@ -1968,9 +1977,6 @@ export const ar: AppMessages = {
   "screen.organization.operations.childSafetyReports.caption":
     "المخاوف المتعلقة بالرحلات التي تديرها مؤسستك، مع حالتها",
   "screen.organization.operations.childSafetyReports.everyCaseIsRouted": "تُحال كل حالة",
-  "screen.organization.operations.childSafetyReports.escalationContactBody":
-    "جهة التصعيد: {contact}. تبقى الحالة موقوفة إلى أن تُحدَّد جهة تصعيد.",
-  "screen.organization.operations.childSafetyReports.contactToBeConfirmed": "لم تُؤكَّد بعد",
   "screen.organization.operations.childSafetyReports.yourCases": "حالاتك",
   "screen.organization.operations.childSafetyReports.case": "الحالة",
   "screen.organization.operations.childSafetyReports.status": "الوضع",
@@ -1981,13 +1987,14 @@ export const ar: AppMessages = {
     "أُحيلت إلى جهة التصعيد",
   "screen.organization.operations.childSafetyReports.caseOpen": "الحالة مفتوحة",
   "screen.organization.operations.childSafetyReports.noCases": "لا توجد حالات لهذه الرحلة",
+  "screen.organization.operations.childSafetyReports.reportUnavailableTitle":
+    "تقديم بلاغ غير متاح بعد",
+  "screen.organization.operations.childSafetyReports.reportUnavailableBody":
+    "إلى أن يتاح ذلك، أبلغ دعم المنصة بأي مخاوف تتعلق بسلامة الأطفال. تظهر في القائمة الأحداث التي سجّلها المشرفون في هذه الرحلة.",
+  "screen.organization.operations.childSafetyReports.escalationContactPending":
+    "تُحال كل حالة إلى جهة التصعيد المختصة بسلامة الأطفال في المنصة.",
   "screen.organization.operations.childSafetyReports.newReport": "بلاغ جديد",
   "screen.organization.operations.childSafetyReports.noTrips": "لا توجد رحلات بعد",
-  "screen.organization.operations.childSafetyReports.noVehicle": "بدون مركبة محددة",
-  "screen.organization.operations.childSafetyReports.description": "الوصف",
-  "screen.organization.operations.childSafetyReports.submitFailed": "لم يُرسل البلاغ. حاول مرة أخرى.",
-  "screen.organization.operations.childSafetyReports.reportSubmitted": "أُرسل البلاغ",
-  "screen.organization.operations.childSafetyReports.submitReport": "إرسال البلاغ",
   // apps/web/src/screens/organization/operations/live-operations.tsx
   "screen.organization.operations.liveOperations.title": "العمليات المباشرة",
   "screen.organization.operations.liveOperations.tripInState": "{trip} · {state}",
@@ -2062,16 +2069,14 @@ export const ar: AppMessages = {
   "screen.organization.people.crmAndWebhooks.notConnected": "غير متصل",
   "screen.organization.people.crmAndWebhooks.crmBody":
     "أرسل الحجوزات والمسافرين إلى نظام إدارة العملاء، وتبدأ المزامنة عند الربط.",
+  "screen.organization.people.crmAndWebhooks.connectUnavailable":
+    "ربط نظام إدارة علاقات العملاء غير متاح بعد.",
+  "screen.organization.people.crmAndWebhooks.deliveryLogUnavailableTitle":
+    "سجل التسليم غير متاح بعد",
+  "screen.organization.people.crmAndWebhooks.deliveryLogUnavailableBody":
+    "ستظهر هنا عمليات التسليم إلى نقطة الاستقبال لديك عندما تسجّلها المنصة.",
   "screen.organization.people.crmAndWebhooks.disconnectCrm": "إلغاء ربط نظام إدارة العملاء",
-  "screen.organization.people.crmAndWebhooks.connectCrm": "ربط نظام إدارة العملاء",
   "screen.organization.people.crmAndWebhooks.deliveryLog": "سجل الإرسال",
-  "screen.organization.people.crmAndWebhooks.time": "الوقت",
-  "screen.organization.people.crmAndWebhooks.event": "الحدث",
-  "screen.organization.people.crmAndWebhooks.outcome": "النتيجة",
-  "screen.organization.people.crmAndWebhooks.attempts": "المحاولات",
-  "screen.organization.people.crmAndWebhooks.noDeliveriesTitle": "لا توجد عمليات إرسال بعد",
-  "screen.organization.people.crmAndWebhooks.noDeliveriesBody":
-    "سيظهر هنا كل حدث يُرسل إلى نقطة الاستقبال مع نتيجته.",
   // apps/web/src/screens/organization/people/employee-invitation-acceptance.tsx
   "screen.organization.people.employeeInvitationAcceptance.title": "الانضمام إلى المؤسسة",
   "screen.organization.people.employeeInvitationAcceptance.invitationSentTo":
@@ -2141,6 +2146,14 @@ export const ar: AppMessages = {
   "screen.organization.people.employeesList.none": "لا شيء",
   "screen.organization.people.employeesList.action": "الإجراء",
   "screen.organization.people.employeesList.removeName": "إزالة {name}",
+  "screen.organization.people.employeesList.resendInvite": "إعادة إرسال الدعوة",
+  "screen.organization.people.employeesList.resendInviteTo": "إعادة إرسال الدعوة إلى {name}",
+  "screen.organization.people.employeesList.inviteResentTitle": "أُعيد إرسال الدعوة",
+  "screen.organization.people.employeesList.inviteResentBody":
+    "الرابط الجديد صالح لمدة 7 أيام، والرابط السابق لم يعد يعمل.",
+  "screen.organization.people.employeesList.inviteNotResentTitle": "لم تُرسل الدعوة",
+  "screen.organization.people.employeesList.inviteNotResentBody":
+    "لم يرسلها الخادم. حاول مرة أخرى.",
   "screen.organization.people.employeesList.remove": "إزالة",
   "screen.organization.people.employeesList.nOfLimit": "{n} من {limit}",
   "screen.organization.people.employeesList.inviteEmployee": "دعوة موظف",
@@ -2206,8 +2219,6 @@ export const ar: AppMessages = {
   "screen.organization.people.webhookForm.signingSecretAfterSave":
     "يُنشأ سرّ التوقيع عند حفظ نقطة الاستقبال.",
   "screen.organization.people.webhookForm.rotateSecret": "تغيير السرّ",
-  "screen.organization.people.webhookForm.sendTest": "إرسال تجربة",
-  "screen.organization.people.webhookForm.sendTestUnavailable": "إرسال التجارب غير متاح بعد.",
   "screen.organization.people.webhookForm.events": "الأحداث",
   "screen.organization.people.webhookForm.eventsRequired": "اختر حدثًا واحدًا على الأقل.",
   // apps/web/src/screens/organization/staffing/deal-detail-and-negotiation.tsx
@@ -2242,6 +2253,11 @@ export const ar: AppMessages = {
   "screen.organization.staffing.dealDetailAndNegotiation.counterAmount": "قيمة العرض المضاد",
   "screen.organization.staffing.dealDetailAndNegotiation.counterVoidsAcceptance":
     "يُلغي العرض المضاد أي قبول لهذه الصفقة حتى يتفق الطرفان من جديد.",
+  "screen.organization.staffing.dealDetailAndNegotiation.counterInvalid":
+    "أدخل مبلغًا لا يقل عن {min}.",
+  "screen.organization.staffing.dealDetailAndNegotiation.waitingForSupplier":
+    "عرضك لدى المورّد. يمكنك الرد مرة أخرى بعد إجابته، أو سحب العرض.",
+  "screen.organization.staffing.dealDetailAndNegotiation.withdrawOffer": "سحب العرض",
   "screen.organization.staffing.dealDetailAndNegotiation.rejectDeal": "رفض الصفقة",
   "screen.organization.staffing.dealDetailAndNegotiation.acceptOffer": "قبول العرض",
   "screen.organization.staffing.dealDetailAndNegotiation.sendCounter": "إرسال عرض مضاد",
@@ -2263,6 +2279,15 @@ export const ar: AppMessages = {
   "screen.organization.staffing.organizationOwnedDriversAndPhotographers.phone": "الهاتف",
   "screen.organization.staffing.organizationOwnedDriversAndPhotographers.emailOptional":
     "البريد الإلكتروني (اختياري)",
+  "screen.organization.staffing.organizationOwnedDriversAndPhotographers.nationalId":
+    "الرقم القومي",
+  "screen.organization.staffing.organizationOwnedDriversAndPhotographers.licenseCategory":
+    "فئة الرخصة",
+  "screen.organization.staffing.organizationOwnedDriversAndPhotographers.licenseExpiry":
+    "تاريخ انتهاء الرخصة",
+  "screen.organization.staffing.organizationOwnedDriversAndPhotographers.labTestConsent":
+    "وقّع السائق على الموافقة على التحليل المعملي",
+  "screen.organization.staffing.organizationOwnedDriversAndPhotographers.chooseOption": "اختر",
   "screen.organization.staffing.organizationOwnedDriversAndPhotographers.licenseNumber":
     "رقم الرخصة",
   "screen.organization.staffing.organizationOwnedDriversAndPhotographers.cameraBody":
@@ -2296,7 +2321,6 @@ export const ar: AppMessages = {
     "إزالة عضو الطاقم هذا؟",
   "screen.organization.staffing.organizationOwnedDriversAndPhotographers.keep": "إبقاء",
   // apps/web/src/screens/organization/staffing/platform-supplier-search-and-deal-start.tsx
-  "screen.organization.staffing.platformSupplierSearchAndDealStart.verified": "موثَّق",
   "screen.organization.staffing.platformSupplierSearchAndDealStart.unavailableOnDate":
     "غير متاح في {date}",
   "screen.organization.staffing.platformSupplierSearchAndDealStart.availableOnDate":
@@ -2318,6 +2342,18 @@ export const ar: AppMessages = {
   "screen.organization.staffing.platformSupplierSearchAndDealStart.emptyBody":
     "جرّب اسمًا آخر أو نوع مورد آخر.",
   "screen.organization.staffing.platformSupplierSearchAndDealStart.startADeal": "بدء صفقة",
+  "screen.organization.staffing.platformSupplierSearchAndDealStart.previousSupplier":
+    "{role} · حساب {reference}",
+  "screen.organization.staffing.platformSupplierSearchAndDealStart.payInvalid":
+    "أدخل الأجر بحد أدنى 1.00، مثل 150 أو 150.50.",
+  "screen.organization.staffing.platformSupplierSearchAndDealStart.searchUnavailableTitle":
+    "البحث في جميع موردي المنصة غير متاح بعد",
+  "screen.organization.staffing.platformSupplierSearchAndDealStart.searchUnavailableBody":
+    "تعرض القائمة موردي المنصة الذين سبق أن أبرمت معهم صفقات. لاستخدام سائقيك ومصوريك، افتح طاقمك الخاص.",
+  "screen.organization.staffing.platformSupplierSearchAndDealStart.chooseTrip": "اختر رحلة",
+  "screen.organization.staffing.platformSupplierSearchAndDealStart.vehicle": "المركبة",
+  "screen.organization.staffing.platformSupplierSearchAndDealStart.anyVehicle":
+    "أي مركبة في الرحلة",
   "screen.organization.staffing.platformSupplierSearchAndDealStart.trip": "الرحلة",
   "screen.organization.staffing.platformSupplierSearchAndDealStart.route": "المسار",
   "screen.organization.staffing.platformSupplierSearchAndDealStart.supplier": "المورد",
@@ -2804,6 +2840,9 @@ export const ar: AppMessages = {
   "screen.organization.vehicles.vehicleTypesAndSeatLayout.seatCount": "عدد المقاعد",
   "screen.organization.vehicles.vehicleTypesAndSeatLayout.seatCountInvalid":
     "أدخل عدد مقاعد من 1 إلى {max}.",
+  "screen.organization.vehicles.vehicleTypesAndSeatLayout.category": "الفئة",
+  "screen.organization.vehicles.vehicleTypesAndSeatLayout.chooseCategory": "اختر الفئة",
+  "screen.organization.vehicles.vehicleTypesAndSeatLayout.categoryRequired": "اختر فئة المركبة.",
   "screen.organization.vehicles.vehicleTypesAndSeatLayout.status": "الحالة",
   "screen.organization.vehicles.vehicleTypesAndSeatLayout.active": "نشط",
   "screen.organization.vehicles.vehicleTypesAndSeatLayout.archived": "مؤرشف",

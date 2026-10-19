@@ -66,12 +66,12 @@ async function toBase64(file: File): Promise<string> {
 
 export function VehicleForm(props: VehicleFormProps) {
   const { vehicle, types, locale, disabled } = props;
-  const firstType = types[0];
-  const [typeId, setTypeId] = useState(vehicle?.vehicleTypeId ?? firstType?.id ?? "");
+  // A new vehicle starts empty: the type and year are chosen, never pre-filled.
+  const [typeId, setTypeId] = useState(vehicle?.vehicleTypeId ?? "");
   const [plate, setPlate] = useState(vehicle?.plateNumber ?? "");
   const [model, setModel] = useState(vehicle?.model ?? "");
-  const [year, setYear] = useState(String(vehicle?.manufacturingYear ?? new Date().getFullYear()));
-  const [seats, setSeats] = useState(String(vehicle?.seatCount ?? firstType?.seatCount ?? ""));
+  const [year, setYear] = useState(vehicle ? String(vehicle.manufacturingYear) : "");
+  const [seats, setSeats] = useState(vehicle ? String(vehicle.seatCount) : "");
   const [registration, setRegistration] = useState<RegistrationStatus>(
     vehicle?.registrationStatus ?? "pending_renewal",
   );

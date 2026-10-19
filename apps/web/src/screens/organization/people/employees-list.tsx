@@ -59,7 +59,10 @@ function StatusBadge({ status }: { status: EmployeeStatus }) {
   }
 }
 
-function columns(onRemove: (row: EmployeeRow) => void): readonly OrgColumn<EmployeeRow>[] {
+function columns(
+  onRemove: (row: EmployeeRow) => void,
+  onResend: (row: EmployeeRow) => void,
+): readonly OrgColumn<EmployeeRow>[] {
   return [
     {
       key: "name",
@@ -97,15 +100,28 @@ function columns(onRemove: (row: EmployeeRow) => void): readonly OrgColumn<Emplo
         row.status === "revoked" ? (
           NO_VALUE
         ) : (
-          <OrgButton
-            variant="text"
-            aria-label={t("screen.organization.people.employeesList.removeName", {
-              name: row.name,
-            })}
-            onClick={() => onRemove(row)}
-          >
-            {t("screen.organization.people.employeesList.remove")}
-          </OrgButton>
+          <span className="flex flex-wrap gap-1">
+            {row.status === "invited" ? (
+              <OrgButton
+                variant="text"
+                aria-label={t("screen.organization.people.employeesList.resendInviteTo", {
+                  name: row.name,
+                })}
+                onClick={() => onResend(row)}
+              >
+                {t("screen.organization.people.employeesList.resendInvite")}
+              </OrgButton>
+            ) : null}
+            <OrgButton
+              variant="text"
+              aria-label={t("screen.organization.people.employeesList.removeName", {
+                name: row.name,
+              })}
+              onClick={() => onRemove(row)}
+            >
+              {t("screen.organization.people.employeesList.remove")}
+            </OrgButton>
+          </span>
         ),
     },
   ];
@@ -125,6 +141,14 @@ export function EmployeesList() {
 
   const updateStatusMutation = useMutation(
     orpc.employees.updateStatus.mutationOptions({
+      onSuccess: () => {
+        void queryClient.invalidateQueries({ queryKey: orpc.employees.key() });
+      },
+    }),
+  );
+
+  const resendMutation = useMutation(
+    orpc.employees.resendInvite.mutationOptions({
       onSuccess: () => {
         void queryClient.invalidateQueries({ queryKey: orpc.employees.key() });
       },
@@ -190,6 +214,19 @@ export function EmployeesList() {
           value={waiting}
         />
       </OrgKpiRow>
+      {resendMutation.isSuccess ? (
+        <OrgAlert tone="ok" title={t("screen.organization.people.employeesList.inviteResentTitle")}>
+          {t("screen.organization.people.employeesList.inviteResentBody")}
+        </OrgAlert>
+      ) : null}
+      {resendMutation.isError ? (
+        <OrgAlert
+          tone="err"
+          title={t("screen.organization.people.employeesList.inviteNotResentTitle")}
+        >
+          {t("screen.organization.people.employeesList.inviteNotResentBody")}
+        </OrgAlert>
+      ) : null}
       {updateStatusMutation.isError ? (
         <OrgAlert tone="err" title={t("screen.organization.people.employeesList.notRemovedTitle")}>
           {t("screen.organization.people.employeesList.notRemovedBody")}
@@ -199,7 +236,9 @@ export function EmployeesList() {
         <OrgError onRetry={() => void employeesQuery.refetch()} />
       ) : (
         <OrgTable
-          columns={columns(setRemoveTarget)}
+          columns={columns(setRemoveTarget, (row) =>
+            resendMutation.mutate({ membershipId: row.id }),
+          )}
           rows={rows}
           rowKey={(row) => row.id}
           caption={t("screen.organization.people.employeesList.title")}
