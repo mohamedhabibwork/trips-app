@@ -155,8 +155,26 @@ export function PlatformDriverSignUp() {
                 disabled={submitting}
               />
               <PanelTitle className="mt-2">
-                {t("screen.public.signUp.driver.yourLicense")}
+                {t("screen.public.signUp.driver.yourVehicle")}
               </PanelTitle>
+              <div className="grid grid-cols-2 gap-3.5">
+                <TextField
+                  name="plate"
+                  label={t("screen.public.signUp.driver.plate")}
+                  required
+                  disabled={submitting}
+                />
+                <TextField
+                  name="model"
+                  label={t("screen.public.signUp.driver.model")}
+                  required
+                  disabled={submitting}
+                />
+              </div>
+            </Panel>
+
+            <Panel>
+              <PanelTitle>{t("screen.public.signUp.driver.yourLicense")}</PanelTitle>
               <div className="grid gap-3.5 sm:grid-cols-2">
                 <TextField
                   name="licenseNumber"
@@ -198,26 +216,8 @@ export function PlatformDriverSignUp() {
                 />
               </div>
               <PanelTitle className="mt-2">
-                {t("screen.public.signUp.driver.yourVehicle")}
+                {t("screen.public.signUp.driver.documentsAndConsent")}
               </PanelTitle>
-              <div className="grid grid-cols-2 gap-3.5">
-                <TextField
-                  name="plate"
-                  label={t("screen.public.signUp.driver.plate")}
-                  required
-                  disabled={submitting}
-                />
-                <TextField
-                  name="model"
-                  label={t("screen.public.signUp.driver.model")}
-                  required
-                  disabled={submitting}
-                />
-              </div>
-            </Panel>
-
-            <Panel>
-              <PanelTitle>{t("screen.public.signUp.driver.documentsAndConsent")}</PanelTitle>
               <DocumentDrop
                 title={t("screen.public.signUp.driver.registrationDocument")}
                 hint={t("screen.public.signUp.driver.registrationHint")}
