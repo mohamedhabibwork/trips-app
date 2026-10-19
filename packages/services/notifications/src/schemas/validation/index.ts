@@ -7,12 +7,12 @@ export const listInboxSchema = z
   .optional();
 
 export const markNotificationReadSchema = z.object({
-  notificationId: z.string().uuid(),
+  notificationId: z.uuid(),
 });
 
 export const sendNotificationSchema = z.object({
-  recipientAccountId: z.string().uuid(),
-  tenantId: z.string().uuid().nullable().optional(),
+  recipientAccountId: z.uuid(),
+  tenantId: z.uuid().nullable().optional(),
   category: z
     .enum(["bookings", "trip_updates", "promotions", "security", "safety", "operations"])
     .default("operations"),

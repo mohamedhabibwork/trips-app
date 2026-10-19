@@ -4,7 +4,7 @@ import { z } from "zod/v4";
 export const trackingEventDtoSchema = selectTripTrackingEventsSchema;
 
 export const tripLiveTrackingDtoSchema = z.object({
-  tripId: z.string().uuid(),
+  tripId: z.uuid(),
   latestCoordinates: trackingCoordinatesSchema.nullable(),
   events: z.array(trackingEventDtoSchema),
 });

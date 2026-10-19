@@ -10,7 +10,7 @@ export const updatePhotographerProfileSchema = z.object({
 });
 
 export const createTripAlbumSchema = z.object({
-  tripId: z.string().uuid(),
+  tripId: z.uuid(),
   titleAr: z.string().trim().min(2).max(200),
   titleEn: z.string().trim().min(2).max(200),
   coverPhotoUrl: z.string().trim().min(1).max(500).nullable().optional(),
@@ -18,16 +18,16 @@ export const createTripAlbumSchema = z.object({
 });
 
 export const uploadPhotosToAlbumSchema = z.object({
-  albumId: z.string().uuid(),
+  albumId: z.uuid(),
   photoUrls: z.array(z.string().trim().min(1).max(500)).min(1).max(100),
 });
 
 export const publishTripAlbumSchema = z.object({
-  albumId: z.string().uuid(),
+  albumId: z.uuid(),
 });
 
 export const listTripAlbumsSchema = z
   .object({
-    tripId: z.string().uuid().optional(),
+    tripId: z.uuid().optional(),
   })
   .optional();

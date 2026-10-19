@@ -11,24 +11,24 @@ export const updateDriverProfileSchema = z.object({
 });
 
 export const bookLabTestSchema = z.object({
-  labTestId: z.string().uuid(),
+  labTestId: z.uuid(),
   labCenterName: z.string().trim().min(2).max(200),
   appointmentAt: z.string().datetime(),
 });
 
 export const uploadLabTestResultSchema = z.object({
-  labTestId: z.string().uuid(),
+  labTestId: z.uuid(),
   resultDocumentUrl: z.string().trim().min(1).max(500),
 });
 
 export const adminRequestLabTestSchema = z.object({
-  driverAccountId: z.string().uuid(),
+  driverAccountId: z.uuid(),
   deadlineAt: z.string().datetime(),
   testType: z.enum(["drug_screening", "medical_fitness", "both"]).default("both"),
 });
 
 export const adminReviewLabTestSchema = z.object({
-  labTestId: z.string().uuid(),
+  labTestId: z.uuid(),
   decision: z.enum(["verified_pass", "verified_fail"]),
   reviewNotes: z.string().trim().max(500).optional(),
 });
