@@ -2756,6 +2756,7 @@ export const ar: AppMessages = {
   "screen.organization.trips.tripsList.title": "الرحلات",
   "screen.organization.trips.tripsList.caption": "كل رحلة مع حالتها والإجراء التالي",
   "screen.organization.trips.tripsList.createTrip": "إنشاء رحلة",
+  "screen.organization.trips.tripsList.nOfLimit": "{n} من {limit}",
   "screen.organization.trips.tripsList.activeTripsThisMonth": "الرحلات النشطة هذا الشهر",
   "screen.organization.trips.tripsList.tripsNeedingStaffing": "رحلات تحتاج إلى طاقم",
   "screen.organization.trips.tripsList.filterByState": "تصفية الرحلات حسب الحالة",

@@ -6,6 +6,8 @@ import { t } from "@trips-app/i18n";
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
 
+import { useOrgUsage } from "../trips/trip-parts";
+
 import { OrgButtonLink } from "../common/org-link";
 import {
   NO_VALUE,
@@ -78,6 +80,7 @@ function graceEndDay(data: ReturnType<typeof useWorkspaceData>): string | null {
 export function WorkspaceHome() {
   const { locale } = useAuth();
   const data = useWorkspaceData();
+  const usageQuery = useOrgUsage();
   const { actor, tripsQuery, settingsQuery, dealsQuery } = data;
 
   const settings = settingsQuery.data;
@@ -94,15 +97,15 @@ export function WorkspaceHome() {
     PENDING_DEAL_STATES.has(deal.status),
   ).length;
 
+  // "This month" is counted on the server the way the plan limit is enforced.
+  const usedThisMonth = usageQuery.data?.activeTripsThisMonth;
   const limit = settings?.planEntitlements.limits?.activeTripsPerMonth;
-  const activeValue = !tripsQuery.isSuccess
-    ? NO_VALUE
-    : limit === null || limit === undefined
-      ? String(activeTrips.length)
-      : t("screen.organization.workspace.workspaceHome.nOfLimit", {
-          n: activeTrips.length,
-          limit,
-        });
+  const activeValue =
+    usedThisMonth === undefined
+      ? NO_VALUE
+      : limit === null || limit === undefined
+        ? String(usedThisMonth)
+        : t("screen.organization.workspace.workspaceHome.nOfLimit", { n: usedThisMonth, limit });
 
   const orgName = settings
     ? (locale === "ar"

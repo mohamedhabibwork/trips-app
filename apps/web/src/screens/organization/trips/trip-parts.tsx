@@ -125,6 +125,18 @@ function asRecord(value: unknown): Record<string, unknown> {
   return value && typeof value === "object" ? (value as Record<string, unknown>) : {};
 }
 
+/**
+ * The organization's usage against its plan limits, counted on the server the way each limit is
+ * enforced (plans.getOrganizationUsage). Undefined while loading or after an error.
+ */
+export function useOrgUsage() {
+  const { status: authStatus } = useAuth();
+  return useQuery({
+    ...orpc.plans.getOrganizationUsage.queryOptions({ input: undefined }),
+    enabled: authStatus === "authenticated",
+  });
+}
+
 /** Limits and features of the organization's current plan; null until both reads succeed. */
 export function useOrgPlan() {
   const { status: authStatus } = useAuth();

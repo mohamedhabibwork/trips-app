@@ -20,6 +20,7 @@ import {
   type TripState,
 } from "../common/org-shared";
 import { OrgTable, type OrgColumn } from "../common/org-table";
+import { limitText, useOrgPlan, useOrgUsage } from "./trip-parts";
 import { OrgChips } from "../common/org-form";
 import {
   NO_VALUE,
@@ -41,8 +42,6 @@ const FILTER_STATES: readonly TripState[] = [
   "Filling Up",
   "In Progress",
 ];
-
-const INACTIVE_STATES: readonly TripState[] = ["Draft", "Cancelled", "Archived", "Completed"];
 
 interface TripRow {
   id: string;
@@ -145,7 +144,8 @@ export function TripsList() {
 
   const visibleRows = rows.filter((row) => stateFilter === "all" || row.state === stateFilter);
   const loaded = tripsQuery.isSuccess;
-  const activeCount = rows.filter((row) => !INACTIVE_STATES.includes(row.state)).length;
+  const usageQuery = useOrgUsage();
+  const { limits } = useOrgPlan();
   const staffingGapCount = rows.filter((row) => row.staffingGap).length;
 
   const filterOptions = [
@@ -170,7 +170,14 @@ export function TripsList() {
       <OrgKpiRow>
         <OrgKpi
           label={t("screen.organization.trips.tripsList.activeTripsThisMonth")}
-          value={loaded ? String(activeCount) : NO_VALUE}
+          value={
+            usageQuery.data
+              ? t("screen.organization.trips.tripsList.nOfLimit", {
+                  n: usageQuery.data.activeTripsThisMonth,
+                  limit: limitText(limits, "activeTripsPerMonth"),
+                })
+              : NO_VALUE
+          }
         />
         <OrgKpi
           label={t("screen.organization.trips.tripsList.tripsNeedingStaffing")}

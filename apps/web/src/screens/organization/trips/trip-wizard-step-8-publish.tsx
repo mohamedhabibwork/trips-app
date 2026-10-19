@@ -1,6 +1,6 @@
 // SCR-ORG-12 Trip wizard step 8: readiness checklist, publish mode and the monthly trip limit.
 import { useEffect, useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 
 import { t } from "@trips-app/i18n";
@@ -25,6 +25,7 @@ import {
   WizardSaveAlert,
   limitText,
   useOrgPlan,
+  useOrgUsage,
   useWizardStepSave,
   useWizardTrip,
 } from "./trip-parts";
@@ -64,15 +65,8 @@ interface ChecklistRow {
 
 const BLOCKED_NOTE_ID = "trip-publish-blocked-note";
 
-function isThisMonth(value: string | Date | null | undefined): boolean {
-  if (!value) return false;
-  const date = new Date(value);
-  const now = new Date();
-  return date.getFullYear() === now.getFullYear() && date.getMonth() === now.getMonth();
-}
-
 export function TripWizardStep8Publish() {
-  const { authStatus, tripId, tripQuery, tripName } = useWizardTrip();
+  const { tripId, tripQuery, tripName } = useWizardTrip();
   const queryClient = useQueryClient();
   const goTo = useOrgNavigate();
   const { limits } = useOrgPlan();
@@ -80,11 +74,6 @@ export function TripWizardStep8Publish() {
   const [audienceList, setAudienceList] = useState("");
   const [audienceError, setAudienceError] = useState<string | undefined>(undefined);
   const { error: saveError, run } = useWizardStepSave(tripId);
-
-  const tripsQuery = useQuery({
-    ...orpc.trips.listOrganizationTrips.queryOptions({ input: {} }),
-    enabled: authStatus === "authenticated",
-  });
 
   useEffect(() => {
     if (tripQuery.data) {
@@ -238,9 +227,8 @@ export function TripWizardStep8Publish() {
     },
   ];
 
-  const publishedThisMonth = tripsQuery.isSuccess
-    ? tripsQuery.data.items.filter((trip) => isThisMonth(trip.publishedAt)).length
-    : null;
+  const usageQuery = useOrgUsage();
+  const publishedThisMonth = usageQuery.data?.activeTripsThisMonth ?? null;
   const modes: readonly { value: PublishMode; key: string }[] = [
     { value: "public", key: "screen.organization.trips.tripWizardStep8Publish.public" },
     { value: "draft", key: "screen.organization.trips.tripWizardStep8Publish.draft" },

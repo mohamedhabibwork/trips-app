@@ -2821,6 +2821,7 @@ export const en = {
   "screen.organization.trips.tripsList.title": "Trips",
   "screen.organization.trips.tripsList.caption": "Every trip with its state and next action",
   "screen.organization.trips.tripsList.createTrip": "Create trip",
+  "screen.organization.trips.tripsList.nOfLimit": "{n} of {limit}",
   "screen.organization.trips.tripsList.activeTripsThisMonth": "Active trips this month",
   "screen.organization.trips.tripsList.tripsNeedingStaffing": "Trips needing staffing",
   "screen.organization.trips.tripsList.filterByState": "Filter trips by state",

@@ -7,8 +7,9 @@ import { t } from "@trips-app/i18n";
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
 
+import { useOrgUsage } from "../trips/trip-parts";
+
 import { OrgChips, OrgChoice } from "../common/org-form";
-import { toTripState, type TripState } from "../common/org-shared";
 import {
   NO_VALUE,
   OrgAlert,
@@ -24,7 +25,6 @@ import {
 import { formatDate, formatMinor, intlLocale } from "../accounting/finance-format";
 import { UsageRow } from "./billing-parts";
 
-const INACTIVE_STATES: readonly TripState[] = ["Draft", "Cancelled", "Archived", "Completed"];
 /** Basis points in a whole (1500 bps = 15%). */
 const BPS_PER_WHOLE = 10_000;
 
@@ -101,13 +101,7 @@ export function SubscriptionAndBilling() {
   const catalogQuery = useQuery(
     orpc.plans.getCatalog.queryOptions({ input: { role: "organization" }, enabled }),
   );
-  const tripsQuery = useQuery(
-    orpc.trips.listOrganizationTrips.queryOptions({ input: {}, enabled }),
-  );
-  const employeesQuery = useQuery(orpc.employees.list.queryOptions({ input: {}, enabled }));
-  const couponsQuery = useQuery(
-    orpc.coupons.listOrganizationCoupons.queryOptions({ input: {}, enabled }),
-  );
+  const usageQuery = useOrgUsage();
 
   const changePlanMutation = useMutation(
     orpc.plans.changeOrganizationPlan.mutationOptions({
@@ -137,18 +131,14 @@ export function SubscriptionAndBilling() {
           discountBps / BPS_PER_WHOLE,
         );
 
-  const trips = tripsQuery.data?.items ?? [];
   const limits = currentPlan?.limits;
-  const activeTrips = tripsQuery.isSuccess
-    ? trips.filter((trip) => !INACTIVE_STATES.includes(toTripState(trip.state))).length
-    : null;
-  const vehiclesPerTrip = tripsQuery.isSuccess
-    ? trips.reduce((max, trip) => Math.max(max, trip.vehicles.length), 0)
-    : null;
-  const employees = employeesQuery.data?.employees.length ?? null;
-  const activeCoupons = couponsQuery.isSuccess
-    ? (couponsQuery.data?.items ?? []).filter((coupon) => coupon.status === "active").length
-    : null;
+  // Usage is counted on the server the way each limit is enforced.
+  const usage = usageQuery.data;
+  const activeTrips = usage?.activeTripsThisMonth ?? null;
+  const vehiclesPerTrip = usage?.maxVehiclesPerTrip ?? null;
+  const programsPerTrip = usage?.maxProgramsPerTrip ?? null;
+  const employees = usage?.employees ?? null;
+  const activeCoupons = usage?.activeCoupons ?? null;
 
   const selectedPlanId = chosenPlanId ?? sub?.planId ?? "";
   const canConfirm =
@@ -295,7 +285,7 @@ export function SubscriptionAndBilling() {
           />
           <UsageRow
             label={t("screen.organization.billing.subscriptionAndBilling.programsPerTrip")}
-            used={null}
+            used={programsPerTrip}
             limit={limits?.programsPerTrip}
           />
           <UsageRow

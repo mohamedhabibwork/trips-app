@@ -21,6 +21,13 @@ export function createPlansService(deps: { db: ServiceDatabase }) {
       return repo.findLatestOrganizationSubscription(tenantId);
     },
 
+    /** Usage against the plan limits; "this month" is the calendar month in UTC. */
+    async getOrganizationUsage(tenantId: string, now: Date = new Date()) {
+      const monthStart = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1));
+      const usage = await repo.getOrganizationUsage(tenantId, monthStart);
+      return { ...usage, monthStart: monthStart.toISOString() };
+    },
+
     async changeOrganizationPlan(tenantId: string, actorAccountId: string, input: ChangePlanInput) {
       const plan = await repo.findPlanById(input.planId);
       if (!plan) {

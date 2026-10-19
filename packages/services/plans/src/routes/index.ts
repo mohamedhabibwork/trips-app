@@ -2,6 +2,7 @@ import {
   adminOverrideSubscriptionSchema,
   changePlanSchema,
   getPlanCatalogSchema,
+  organizationUsageDtoSchema,
   planCatalogDtoSchema,
   subscriptionRecordDtoSchema,
 } from "../schemas";
@@ -45,6 +46,19 @@ const getOrganizationSubscription = plansOrgViewProcedure
     return await svc.getOrganizationSubscription(context.auth.activeTenantId);
   });
 
+const getOrganizationUsage = plansOrgViewProcedure
+  .route({
+    method: "GET",
+    path: "/plans/getOrganizationUsage",
+    summary: "Organization usage against its plan limits for the current month",
+    tags: ["plans"],
+  })
+  .output(organizationUsageDtoSchema)
+  .handler(async ({ context }) => {
+    const svc = createPlansService({ db: context.db });
+    return await svc.getOrganizationUsage(context.auth.activeTenantId);
+  });
+
 const changeOrganizationPlan = plansOrgManageProcedure
   .input(changePlanSchema)
   .output(subscriptionRecordDtoSchema)
@@ -78,6 +92,7 @@ export const routes = {
   getCatalog,
   getMySubscription,
   getOrganizationSubscription,
+  getOrganizationUsage,
   changeOrganizationPlan,
   changeAccountPlan,
   adminOverrideSubscription,

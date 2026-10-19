@@ -6,6 +6,7 @@ import {
   adminOverrideSubscriptionSchema,
   changePlanSchema,
   getPlanCatalogSchema,
+  organizationUsageDtoSchema,
 } from "../src/schemas";
 
 describe("Unit: plans validation schemas & error mapping (@trips-app/service-plans)", () => {
@@ -30,5 +31,26 @@ describe("Unit: plans validation schemas & error mapping (@trips-app/service-pla
 
     const err = new PlansServiceError("INVALID_PLAN_SCOPE", "Mismatched plan scope");
     expect(mapPlansError(err).code).toBe("VALIDATION_ERROR");
+  });
+});
+
+describe("Unit: organization usage DTO (plans.getOrganizationUsage)", () => {
+  test("accepts whole non-negative counts and rejects a negative or fractional one", () => {
+    // Arrange
+    const valid = {
+      monthStart: "2026-10-01T00:00:00.000Z",
+      activeTripsThisMonth: 3,
+      employees: 2,
+      activeCoupons: 0,
+      maxVehiclesPerTrip: 2,
+      maxProgramsPerTrip: 4,
+    };
+
+    // Assert
+    expect(organizationUsageDtoSchema.safeParse(valid).success).toBe(true);
+    expect(organizationUsageDtoSchema.safeParse({ ...valid, employees: -1 }).success).toBe(false);
+    expect(organizationUsageDtoSchema.safeParse({ ...valid, activeCoupons: 1.5 }).success).toBe(
+      false,
+    );
   });
 });
