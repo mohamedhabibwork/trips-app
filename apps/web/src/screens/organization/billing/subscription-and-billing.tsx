@@ -50,6 +50,22 @@ interface CatalogPlan {
   limits: PlanLimits;
 }
 
+/** Plan limits arrive as untyped JSON; a missing or non-numeric limit reads as unlimited. */
+function toPlanLimits(json: unknown): PlanLimits {
+  const source = typeof json === "object" && json !== null ? (json as Record<string, unknown>) : {};
+  const limit = (key: keyof PlanLimits): number | null => {
+    const value = source[key];
+    return typeof value === "number" ? value : null;
+  };
+  return {
+    activeTripsPerMonth: limit("activeTripsPerMonth"),
+    vehiclesPerTrip: limit("vehiclesPerTrip"),
+    programsPerTrip: limit("programsPerTrip"),
+    employeesMax: limit("employeesMax"),
+    activeCouponsMax: limit("activeCouponsMax"),
+  };
+}
+
 function statusBadge(status: string | undefined) {
   const tones: Record<string, { tone: OrgTone; label: string }> = {
     active: { tone: "ok", label: t("screen.organization.billing.subscriptionAndBilling.active") },
@@ -104,7 +120,10 @@ export function SubscriptionAndBilling() {
   );
 
   const sub = subscriptionQuery.data;
-  const plans = (catalogQuery.data ?? []) as readonly CatalogPlan[];
+  const plans: readonly CatalogPlan[] = (catalogQuery.data ?? []).map((plan) => ({
+    ...plan,
+    limits: toPlanLimits(plan.limits),
+  }));
   const currentPlan = plans.find((plan) => plan.id === sub?.planId);
   const activeCycle: BillingCycle =
     cycle ?? (sub?.billingCycle === "annual" ? "annual" : "monthly");

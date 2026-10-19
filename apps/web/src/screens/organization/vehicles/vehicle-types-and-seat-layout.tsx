@@ -45,12 +45,23 @@ interface EditedType {
   status: TypeStatus;
 }
 
+/** The API takes a mutable cell list; the page keeps layouts readonly. */
+interface ApiSeatLayout {
+  rows: number;
+  cols: number;
+  cells: SeatLayoutConfig["cells"][number][];
+}
+
+function toApiSeatLayout(layout: SeatLayoutConfig): ApiSeatLayout {
+  return { rows: layout.rows, cols: layout.cols, cells: [...layout.cells] };
+}
+
 interface TypeCreatePayload {
   categoryLookupCode: string;
   nameEn: string;
   nameAr: string;
   seatCount: number;
-  seatLayout: SeatLayoutConfig;
+  seatLayout: ApiSeatLayout;
   descriptionEn: string | null;
 }
 
@@ -202,7 +213,7 @@ export function VehicleTypesAndSeatLayout() {
         vehicleTypeId: orgType.id,
         ...(locale === "ar" ? { nameAr: values.name } : { nameEn: values.name }),
         seatCount: values.seatCount,
-        seatLayout: values.seatLayout,
+        seatLayout: toApiSeatLayout(values.seatLayout),
         status: values.status,
       };
       updateMutation.mutate(update);
@@ -213,7 +224,7 @@ export function VehicleTypesAndSeatLayout() {
       nameEn: values.name,
       nameAr: values.name,
       seatCount: values.seatCount,
-      seatLayout: values.seatLayout,
+      seatLayout: toApiSeatLayout(values.seatLayout),
       descriptionEn: null,
     };
     createMutation.mutate(create);
