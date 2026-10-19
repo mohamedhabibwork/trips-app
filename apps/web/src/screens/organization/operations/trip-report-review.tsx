@@ -1,5 +1,4 @@
 // SCR-ORG-41 Trip report review: each moderator's end-of-trip report, per vehicle.
-import { useId, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 import { t } from "@trips-app/i18n";
@@ -7,7 +6,6 @@ import { t } from "@trips-app/i18n";
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
 
-import { OrgTextarea } from "../common/org-form";
 import { useOrgParams } from "../common/org-link";
 import { getSelectedTripId, tripTitle } from "../common/org-shared";
 import { OrgTable, type OrgColumn } from "../common/org-table";
@@ -15,7 +13,6 @@ import {
   NO_VALUE,
   OrgAlert,
   OrgBadge,
-  OrgButton,
   OrgCard,
   OrgEmpty,
   OrgError,
@@ -73,8 +70,6 @@ function StatusBadge({ status }: { status: ReportStatus }) {
 export function TripReportReview() {
   const { status: authStatus, locale } = useAuth();
   const enabled = authStatus === "authenticated";
-  const noteHintId = useId();
-  const [note, setNote] = useState("");
   const { tripId: routeTripId } = useOrgParams();
 
   const tripsQuery = useQuery(
@@ -218,26 +213,6 @@ export function TripReportReview() {
               {t("screen.organization.operations.tripReportReview.noMismatch")}
             </p>
           )}
-        </OrgCard>
-        <OrgCard
-          className="flex-1"
-          title={t("screen.organization.operations.tripReportReview.organizationNote")}
-        >
-          <OrgTextarea
-            label={t("screen.organization.operations.tripReportReview.addANote")}
-            rows={3}
-            dir="auto"
-            value={note}
-            onChange={(event) => setNote(event.target.value)}
-          />
-          <p id={noteHintId} className="te-caption m-0 text-[var(--te-ink-muted)]">
-            {t("screen.organization.operations.tripReportReview.savingNotesIsNotAvailable")}
-          </p>
-          <div className="flex justify-end">
-            <OrgButton aria-disabled="true" aria-describedby={noteHintId}>
-              {t("screen.organization.operations.tripReportReview.addNote")}
-            </OrgButton>
-          </div>
         </OrgCard>
       </OrgRow>
     </OrgPage>

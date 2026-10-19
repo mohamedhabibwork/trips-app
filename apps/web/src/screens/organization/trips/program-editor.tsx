@@ -10,9 +10,9 @@ import { orpc } from "@/utils/orpc";
 import { OrgChoice, OrgInput, OrgSelect } from "../common/org-form";
 import { useOrgNavigate, useOrgParams } from "../common/org-link";
 import {
-  getActiveWizardTripId,
+  getSelectedTripId,
   getSelectedProgramId,
-  setActiveWizardTripId,
+  setSelectedTripId,
   setSelectedProgramId,
   tripTitle,
 } from "../common/org-shared";
@@ -38,6 +38,9 @@ import {
 const PRICING_MODELS = ["per-person", "free", "by-quantity", "per-group", "tiered"] as const;
 type PricingModel = (typeof PRICING_MODELS)[number];
 
+/** Pricing models a program row can store today (a price per person, or free). */
+const SAVED_PRICING_MODELS: ReadonlySet<PricingModel> = new Set(["per-person", "free"]);
+
 const PRICING_KEY: Record<PricingModel, string> = {
   "per-person": "screen.organization.trips.programEditor.perPerson",
   free: "screen.organization.trips.programEditor.free",
@@ -56,14 +59,18 @@ const FLAG_KEY: Record<FlagId, string> = {
   vipOnly: "screen.organization.trips.programEditor.vipOnly",
 };
 
+/** Flags a program row can store: optional or pre-required (`isIncludedInBase`) and a cap. */
+const SAVED_FLAGS: ReadonlySet<FlagId> = new Set(["optional", "preRequired", "capacityLimited"]);
+
 const INITIAL_FLAGS: Record<FlagId, boolean> = {
-  optional: false,
+  optional: true,
   preRequired: false,
   capacityLimited: false,
   vipOnly: false,
 };
 
-const DEFAULT_CAP = 30;
+const PRICE_PATTERN = /^\d{1,7}(\.\d{1,2})?$/;
+const CAP_PATTERN = /^\d{1,5}$/;
 
 export function ProgramEditor() {
   const goTo = useOrgNavigate();
@@ -76,15 +83,17 @@ export function ProgramEditor() {
   const [programName, setProgramName] = useState("");
   const [pricingModel, setPricingModel] = useState<PricingModel>("per-person");
   const [flags, setFlags] = useState(INITIAL_FLAGS);
-  const [cap, setCap] = useState(String(DEFAULT_CAP));
-  const [price, setPrice] = useState("0");
+  const [cap, setCap] = useState("");
+  const [capError, setCapError] = useState<string | undefined>(undefined);
+  const [price, setPrice] = useState("");
+  const [priceError, setPriceError] = useState<string | undefined>(undefined);
   const [currency, setCurrency] = useState<TripCurrency>("EGP");
   const [busy, setBusy] = useState(false);
   const [saveFailed, setSaveFailed] = useState(false);
   const [nameError, setNameError] = useState<string | undefined>(undefined);
 
   const signedIn = authStatus === "authenticated";
-  const knownTripId = params.tripId ?? getActiveWizardTripId();
+  const knownTripId = params.tripId ?? getSelectedTripId();
   const tripsQuery = useQuery({
     ...orpc.trips.listOrganizationTrips.queryOptions({ input: {} }),
     enabled: signedIn && !knownTripId,
@@ -92,7 +101,7 @@ export function ProgramEditor() {
   const effectiveTripId = knownTripId || tripsQuery.data?.items[0]?.id || null;
 
   useEffect(() => {
-    if (!getActiveWizardTripId() && effectiveTripId) setActiveWizardTripId(effectiveTripId);
+    if (!getSelectedTripId() && effectiveTripId) setSelectedTripId(effectiveTripId);
   }, [effectiveTripId]);
 
   const tripQuery = useQuery({
@@ -140,48 +149,68 @@ export function ProgramEditor() {
   );
 
   const setFlag = (flag: FlagId, checked: boolean) => {
-    setFlags((current) => ({ ...current, [flag]: checked }));
+    setFlags((current) => {
+      // Optional and pre-required are the two values of one stored field.
+      if (flag === "optional") return { ...current, optional: checked, preRequired: !checked };
+      if (flag === "preRequired") return { ...current, preRequired: checked, optional: !checked };
+      return { ...current, [flag]: checked };
+    });
   };
 
-  async function handleSave() {
+  /** Checks the form; returns the fields to save, or null with the field errors shown. */
+  function readFields() {
     const name = programName.trim();
-    if (!name) {
-      setNameError(t("screen.organization.trips.programEditor.nameRequired"));
+    const priceText = price.trim();
+    const capText = cap.trim();
+    const nameMessage = name
+      ? undefined
+      : t("screen.organization.trips.programEditor.nameRequired");
+    const priceMessage =
+      pricingModel === "free" || PRICE_PATTERN.test(priceText)
+        ? undefined
+        : t("screen.organization.trips.programEditor.priceInvalid");
+    const capMessage =
+      !flags.capacityLimited || (CAP_PATTERN.test(capText) && Number(capText) >= 1)
+        ? undefined
+        : t("screen.organization.trips.programEditor.capInvalid");
+    setNameError(nameMessage);
+    setPriceError(priceMessage);
+    setCapError(capMessage);
+    if (nameMessage || priceMessage || capMessage) return null;
+    return {
+      titleEn: name,
+      titleAr: name,
+      priceMinor: pricingModel === "free" ? 0 : toMinorUnits(priceText),
+      currencyCode: currency,
+      isIncludedInBase: !flags.optional,
+      capacity: flags.capacityLimited ? Number(capText) : null,
+    };
+  }
+
+  async function handleSave() {
+    const fields = readFields();
+    if (!fields) return;
+    const tripId = effectiveTripId;
+    if (!signedIn || !tripId) {
+      setSaveFailed(true);
       return;
     }
-    setNameError(undefined);
-    const tripId = effectiveTripId || getActiveWizardTripId();
-    if (signedIn && tripId) {
-      setBusy(true);
-      setSaveFailed(false);
-      const priceMinor = pricingModel === "free" ? 0 : toMinorUnits(price);
-      const isIncludedInBase = pricingModel === "free" || !flags.optional;
-      const capacity = flags.capacityLimited
-        ? Math.max(1, Number.parseInt(cap, 10) || DEFAULT_CAP)
-        : null;
-      const fields = {
-        titleEn: name,
-        titleAr: name,
-        priceMinor,
-        currencyCode: currency,
-        isIncludedInBase,
-        capacity,
-      };
-      try {
-        if (programId) {
-          await updateProgramMutation.mutateAsync({ programId, ...fields });
-        } else {
-          await createProgramMutation.mutateAsync({ tripId, ...fields });
-        }
-        setSelectedProgramId(null);
-      } catch {
-        setSaveFailed(true);
-        setBusy(false);
-        return;
+    setBusy(true);
+    setSaveFailed(false);
+    try {
+      if (programId) {
+        await updateProgramMutation.mutateAsync({ programId, ...fields });
+      } else {
+        await createProgramMutation.mutateAsync({ tripId, ...fields });
       }
+      setSelectedProgramId(null);
+    } catch {
+      setSaveFailed(true);
+      return;
+    } finally {
       setBusy(false);
     }
-    void goTo("trip-wizard-step-5-programs");
+    void goTo("trip-wizard-step-5-programs", { tripId });
   }
 
   const tripName = tripQuery.data ? tripTitle(tripQuery.data, locale) : "";
@@ -252,6 +281,10 @@ export function ProgramEditor() {
                     key={model}
                     name="pricing-model"
                     checked={pricingModel === model}
+                    disabled={!SAVED_PRICING_MODELS.has(model)}
+                    aria-describedby={
+                      SAVED_PRICING_MODELS.has(model) ? undefined : "program-unsaved-options"
+                    }
                     onChange={() => setPricingModel(model)}
                     className="items-center"
                   >
@@ -259,6 +292,9 @@ export function ProgramEditor() {
                   </OrgOptionCard>
                 ))}
               </fieldset>
+              <p id="program-unsaved-options" className="te-caption m-0 text-[var(--te-ink-muted)]">
+                {t("screen.organization.trips.programEditor.unsavedOptionsNote")}
+              </p>
             </OrgCard>
             <OrgCard
               title={t("screen.organization.trips.programEditor.typeFlags")}
@@ -270,6 +306,10 @@ export function ProgramEditor() {
                     <OrgChoice
                       type="checkbox"
                       checked={flags[flag]}
+                      disabled={!SAVED_FLAGS.has(flag)}
+                      aria-describedby={
+                        SAVED_FLAGS.has(flag) ? undefined : "program-unsaved-options"
+                      }
                       onChange={(event) => setFlag(flag, event.target.checked)}
                     >
                       {t(FLAG_KEY[flag])}
@@ -279,6 +319,8 @@ export function ProgramEditor() {
                         label={t("screen.organization.trips.programEditor.cap")}
                         hint={t("screen.organization.trips.programEditor.capHint")}
                         inputMode="numeric"
+                        required
+                        error={capError}
                         fieldClassName="ms-8 max-w-[240px] pb-2"
                         value={cap}
                         onChange={(event) => setCap(event.target.value)}
@@ -294,6 +336,8 @@ export function ProgramEditor() {
               <OrgInput
                 label={t("screen.organization.trips.programEditor.pricePerPerson")}
                 inputMode="decimal"
+                required={pricingModel !== "free"}
+                error={priceError}
                 disabled={pricingModel === "free"}
                 value={pricingModel === "free" ? "0.00" : price}
                 onChange={(event) => setPrice(event.target.value)}

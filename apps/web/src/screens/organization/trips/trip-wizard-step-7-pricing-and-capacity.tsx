@@ -7,26 +7,32 @@ import { t } from "@trips-app/i18n";
 import { orpc } from "@/utils/orpc";
 
 import { OrgInput, OrgSelect } from "../common/org-form";
-import { TripWizardFrame, getActiveWizardTripId } from "../common/org-shared";
-import { NO_VALUE, OrgAlert, OrgBadge, OrgCard } from "../common/org-ui";
+import { TripWizardFrame } from "../common/org-shared";
+import { NO_VALUE, OrgAlert, OrgBadge, OrgCard, OrgError } from "../common/org-ui";
 import {
   CURRENCY_OPTIONS,
   OrgOptionCard,
+  WizardSaveAlert,
   toMinorUnits,
   toTripCurrency,
   useOrgPlan,
+  useWizardStepSave,
   useWizardTrip,
   type TripCurrency,
 } from "./trip-parts";
 
+/** A price in major units with at most two decimals, e.g. `250` or `250.50`. */
+const PRICE_PATTERN = /^\d{1,7}(\.\d{1,2})?$/;
+
 export function TripWizardStep7PricingAndCapacity() {
-  const { authStatus, tripQuery, tripName } = useWizardTrip();
+  const { tripId, tripQuery, tripName } = useWizardTrip();
   const queryClient = useQueryClient();
   const { features } = useOrgPlan();
-  const [basePrice, setBasePrice] = useState("250.00");
+  const [basePrice, setBasePrice] = useState("");
+  const [priceError, setPriceError] = useState<string | undefined>(undefined);
   const [currency, setCurrency] = useState<TripCurrency>("EGP");
   const [childTracking, setChildTracking] = useState(false);
-  const [saveFailed, setSaveFailed] = useState(false);
+  const { error: saveError, run } = useWizardStepSave(tripId);
 
   useEffect(() => {
     if (tripQuery.data) {
@@ -46,22 +52,20 @@ export function TripWizardStep7PricingAndCapacity() {
   );
 
   const saveStep = async (): Promise<boolean> => {
-    if (authStatus !== "authenticated") return true;
-    const currentTripId = getActiveWizardTripId();
-    if (!currentTripId) return true;
-    setSaveFailed(false);
-    try {
-      await saveWizardStepMutation.mutateAsync({
-        tripId: currentTripId,
-        step: "pricing",
-        basePrice: { amountMinor: toMinorUnits(basePrice), currency },
-        childTrackingEnabled: childTracking,
-      });
-      return true;
-    } catch {
-      setSaveFailed(true);
+    const price = basePrice.trim();
+    if (!PRICE_PATTERN.test(price)) {
+      setPriceError(t("screen.organization.trips.tripWizardStep7PricingAndCapacity.priceInvalid"));
       return false;
     }
+    setPriceError(undefined);
+    return run((id) =>
+      saveWizardStepMutation.mutateAsync({
+        tripId: id,
+        step: "pricing",
+        basePrice: { amountMinor: toMinorUnits(price), currency },
+        childTrackingEnabled: childTracking,
+      }),
+    );
   };
 
   const vehicles = tripQuery.data?.vehicles ?? [];
@@ -83,21 +87,16 @@ export function TripWizardStep7PricingAndCapacity() {
   return (
     <TripWizardFrame
       stepId="pricing"
+      tripId={tripId}
       tripName={tripName}
+      busy={saveWizardStepMutation.isPending}
       beforeNext={saveStep}
       onSaveDraft={async () => {
         await saveStep();
       }}
     >
-      {saveFailed ? (
-        <OrgAlert
-          tone="err"
-          title={t("screen.organization.trips.tripWizardStep7PricingAndCapacity.saveFailedTitle")}
-          className="max-w-[860px]"
-        >
-          {t("screen.organization.trips.tripWizardStep7PricingAndCapacity.saveFailedBody")}
-        </OrgAlert>
-      ) : null}
+      <WizardSaveAlert error={saveError} className="max-w-[860px]" />
+      {tripQuery.isError ? <OrgError onRetry={() => void tripQuery.refetch()} /> : null}
       <OrgCard
         title={t(
           "screen.organization.trips.tripWizardStep7PricingAndCapacity.basePriceAndCapacity",
@@ -110,6 +109,8 @@ export function TripWizardStep7PricingAndCapacity() {
               "screen.organization.trips.tripWizardStep7PricingAndCapacity.basePricePerPerson",
             )}
             inputMode="decimal"
+            required
+            error={priceError}
             value={basePrice}
             onChange={(event) => setBasePrice(event.target.value)}
           />

@@ -1,4 +1,4 @@
-import type { ScreenEntry } from "@/screens/types";
+import type { ScreenEntry, ScreenLoaderFn } from "@/screens/types";
 
 import { WorkspaceHome } from "./workspace/workspace-home";
 import { EmployeeInvitationAcceptance } from "./people/employee-invitation-acceptance";
@@ -21,6 +21,27 @@ import { VehicleTypesAndSeatLayout } from "./vehicles/vehicle-types-and-seat-lay
 import { StaffingBoard } from "./staffing/staffing-board";
 import { OrganizationOwnedDriversAndPhotographers } from "./staffing/organization-owned-drivers-and-photographers";
 import { PlatformSupplierSearchAndDealStart } from "./staffing/platform-supplier-search-and-deal-start";
+
+/**
+ * Prefetch of a trip wizard step: the trip in the URL (none on step 1 of a new trip), and the
+ * fleet on the vehicles step.
+ */
+function wizardTripLoader(options: { fleet?: boolean } = {}): ScreenLoaderFn {
+  return async ({ queryClient, orpc, auth, params }) => {
+    if (typeof window === "undefined" && !auth.accessToken()) return;
+    const tripId = params.tripId;
+    await Promise.allSettled([
+      tripId
+        ? queryClient.prefetchQuery(
+            orpc.trips.getOrganizationTrip.queryOptions({ input: { tripId } }),
+          )
+        : Promise.resolve(),
+      options.fleet
+        ? queryClient.prefetchQuery(orpc.fleet.listVehicles.queryOptions({ input: {} }))
+        : Promise.resolve(),
+    ]);
+  };
+}
 
 /** SCR-ORG-01 to SCR-ORG-21, in spec order. */
 export const ORGANIZATION_SCREENS_PART_A: readonly ScreenEntry[] = [
@@ -51,18 +72,8 @@ export const ORGANIZATION_SCREENS_PART_A: readonly ScreenEntry[] = [
     titleKey: "screen.registry.organization.employeeInvitationAcceptance.title",
     surface: "organization",
     component: EmployeeInvitationAcceptance,
-    loader: async ({ queryClient, orpc, auth }) => {
-      if (typeof window === "undefined" && !auth.accessToken()) return;
-      try {
-        await Promise.allSettled([
-          queryClient.prefetchQuery(
-            orpc.organization.getOrganizationSettings.queryOptions({ input: {} }),
-          ),
-        ]);
-      } catch {
-        // Gracefully ignore SSR errors
-      }
-    },
+    // Opened before the invited person belongs to the organization: nothing of it to prefetch.
+    loader: async () => {},
   },
   {
     id: "SCR-ORG-03",
@@ -104,16 +115,7 @@ export const ORGANIZATION_SCREENS_PART_A: readonly ScreenEntry[] = [
     titleKey: "screen.registry.organization.tripWizardStep1Basics.title",
     surface: "organization",
     component: TripWizardStep1Basics,
-    loader: async ({ queryClient, orpc, auth }) => {
-      if (typeof window === "undefined" && !auth.accessToken()) return;
-      try {
-        await Promise.allSettled([
-          queryClient.prefetchQuery(orpc.trips.listOrganizationTrips.queryOptions({ input: {} })),
-        ]);
-      } catch {
-        // Gracefully ignore SSR errors
-      }
-    },
+    loader: wizardTripLoader(),
   },
   {
     id: "SCR-ORG-06",
@@ -121,16 +123,7 @@ export const ORGANIZATION_SCREENS_PART_A: readonly ScreenEntry[] = [
     titleKey: "screen.registry.organization.tripWizardStep2ScheduleAndRoute.title",
     surface: "organization",
     component: TripWizardStep2ScheduleAndRoute,
-    loader: async ({ queryClient, orpc, auth }) => {
-      if (typeof window === "undefined" && !auth.accessToken()) return;
-      try {
-        await Promise.allSettled([
-          queryClient.prefetchQuery(orpc.trips.listOrganizationTrips.queryOptions({ input: {} })),
-        ]);
-      } catch {
-        // Gracefully ignore SSR errors
-      }
-    },
+    loader: wizardTripLoader(),
   },
   {
     id: "SCR-ORG-07",
@@ -138,17 +131,7 @@ export const ORGANIZATION_SCREENS_PART_A: readonly ScreenEntry[] = [
     titleKey: "screen.registry.organization.tripWizardStep3Vehicles.title",
     surface: "organization",
     component: TripWizardStep3Vehicles,
-    loader: async ({ queryClient, orpc, auth }) => {
-      if (typeof window === "undefined" && !auth.accessToken()) return;
-      try {
-        await Promise.allSettled([
-          queryClient.prefetchQuery(orpc.fleet.listVehicles.queryOptions({ input: {} })),
-          queryClient.prefetchQuery(orpc.trips.listOrganizationTrips.queryOptions({ input: {} })),
-        ]);
-      } catch {
-        // Gracefully ignore SSR errors
-      }
-    },
+    loader: wizardTripLoader({ fleet: true }),
   },
   {
     id: "SCR-ORG-08",
@@ -156,16 +139,7 @@ export const ORGANIZATION_SCREENS_PART_A: readonly ScreenEntry[] = [
     titleKey: "screen.registry.organization.tripWizardStep4Staffing.title",
     surface: "organization",
     component: TripWizardStep4Staffing,
-    loader: async ({ queryClient, orpc, auth }) => {
-      if (typeof window === "undefined" && !auth.accessToken()) return;
-      try {
-        await Promise.allSettled([
-          queryClient.prefetchQuery(orpc.trips.listOrganizationTrips.queryOptions({ input: {} })),
-        ]);
-      } catch {
-        // Gracefully ignore SSR errors
-      }
-    },
+    loader: wizardTripLoader(),
   },
   {
     id: "SCR-ORG-09",
@@ -173,16 +147,7 @@ export const ORGANIZATION_SCREENS_PART_A: readonly ScreenEntry[] = [
     titleKey: "screen.registry.organization.tripWizardStep5Programs.title",
     surface: "organization",
     component: TripWizardStep5Programs,
-    loader: async ({ queryClient, orpc, auth }) => {
-      if (typeof window === "undefined" && !auth.accessToken()) return;
-      try {
-        await Promise.allSettled([
-          queryClient.prefetchQuery(orpc.trips.listOrganizationTrips.queryOptions({ input: {} })),
-        ]);
-      } catch {
-        // Gracefully ignore SSR errors
-      }
-    },
+    loader: wizardTripLoader(),
   },
   {
     id: "SCR-ORG-10",
@@ -190,16 +155,7 @@ export const ORGANIZATION_SCREENS_PART_A: readonly ScreenEntry[] = [
     titleKey: "screen.registry.organization.tripWizardStep6Seating.title",
     surface: "organization",
     component: TripWizardStep6Seating,
-    loader: async ({ queryClient, orpc, auth }) => {
-      if (typeof window === "undefined" && !auth.accessToken()) return;
-      try {
-        await Promise.allSettled([
-          queryClient.prefetchQuery(orpc.trips.listOrganizationTrips.queryOptions({ input: {} })),
-        ]);
-      } catch {
-        // Gracefully ignore SSR errors
-      }
-    },
+    loader: wizardTripLoader(),
   },
   {
     id: "SCR-ORG-11",
@@ -207,16 +163,7 @@ export const ORGANIZATION_SCREENS_PART_A: readonly ScreenEntry[] = [
     titleKey: "screen.registry.organization.tripWizardStep7PricingAndCapacity.title",
     surface: "organization",
     component: TripWizardStep7PricingAndCapacity,
-    loader: async ({ queryClient, orpc, auth }) => {
-      if (typeof window === "undefined" && !auth.accessToken()) return;
-      try {
-        await Promise.allSettled([
-          queryClient.prefetchQuery(orpc.trips.listOrganizationTrips.queryOptions({ input: {} })),
-        ]);
-      } catch {
-        // Gracefully ignore SSR errors
-      }
-    },
+    loader: wizardTripLoader(),
   },
   {
     id: "SCR-ORG-12",
@@ -224,16 +171,7 @@ export const ORGANIZATION_SCREENS_PART_A: readonly ScreenEntry[] = [
     titleKey: "screen.registry.organization.tripWizardStep8Publish.title",
     surface: "organization",
     component: TripWizardStep8Publish,
-    loader: async ({ queryClient, orpc, auth }) => {
-      if (typeof window === "undefined" && !auth.accessToken()) return;
-      try {
-        await Promise.allSettled([
-          queryClient.prefetchQuery(orpc.trips.listOrganizationTrips.queryOptions({ input: {} })),
-        ]);
-      } catch {
-        // Gracefully ignore SSR errors
-      }
-    },
+    loader: wizardTripLoader(),
   },
   {
     id: "SCR-ORG-13",

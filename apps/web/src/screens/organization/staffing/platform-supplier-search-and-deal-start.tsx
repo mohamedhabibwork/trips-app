@@ -10,10 +10,10 @@ import { orpc } from "@/utils/orpc";
 import { OrgInput, OrgSelect } from "../common/org-form";
 import { useOrgNavigate } from "../common/org-link";
 import {
-  getActiveWizardTripId,
+  getSelectedTripId,
   getSelectedVehicleId,
   isoDay,
-  setActiveWizardTripId,
+  setSelectedTripId,
   setSelectedNegotiationId,
   tripTitle,
 } from "../common/org-shared";
@@ -145,7 +145,7 @@ export function PlatformSupplierSearchAndDealStart() {
   });
 
   const trips = tripsQuery.data?.items ?? [];
-  const tripId = getActiveWizardTripId() ?? trips[0]?.id ?? null;
+  const tripId = getSelectedTripId() ?? trips[0]?.id ?? null;
   const trip = trips.find((item) => item.id === tripId);
   const vehicleId = getSelectedVehicleId();
   const plate = trip?.vehicles.find((vehicle) => vehicle.vehicleId === vehicleId)?.plateNumber;
@@ -188,7 +188,7 @@ export function PlatformSupplierSearchAndDealStart() {
     if (!selected || !tripId) return;
     setSendFailed(false);
     try {
-      setActiveWizardTripId(tripId);
+      setSelectedTripId(tripId);
       const created = await createOfferMutation.mutateAsync({
         tripId,
         vehicleId,

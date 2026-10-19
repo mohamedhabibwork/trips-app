@@ -9,7 +9,7 @@ import { orpc } from "@/utils/orpc";
 
 import { OrgInput, OrgTabs } from "../common/org-form";
 import { OrgLink } from "../common/org-link";
-import { getActiveWizardTripId, setSelectedBookingId, tripTitle } from "../common/org-shared";
+import { getSelectedTripId, setSelectedBookingId, tripTitle } from "../common/org-shared";
 import { OrgTable, type OrgColumn } from "../common/org-table";
 import { NO_VALUE, OrgEmpty, OrgError, OrgPage, OrgPageHeader } from "../common/org-ui";
 import {
@@ -126,7 +126,7 @@ export function BookingsAndTravelers() {
   const [activeTab, setActiveTab] = useState<TabId>("bookings");
   const [query, setQuery] = useState("");
 
-  const tripId = getActiveWizardTripId() ?? undefined;
+  const tripId = getSelectedTripId() ?? undefined;
   const bookingsQuery = useQuery({
     ...orpc.booking.listOrganizationBookings.queryOptions({ input: { tripId } }),
     enabled,

@@ -1465,9 +1465,6 @@ export const en = {
   "screen.organization.accounting.ledgerAndExports.caption":
     "Every financial event, with its booking or deal and gateway reference",
   "screen.organization.accounting.ledgerAndExports.exportCsv": "Export CSV",
-  "screen.organization.accounting.ledgerAndExports.exportPdf": "Export PDF",
-  "screen.organization.accounting.ledgerAndExports.pdfExportIsOnEnterprise":
-    "PDF export is on Enterprise. Your plan can export CSV.",
   "screen.organization.accounting.ledgerAndExports.period": "Period",
   "screen.organization.accounting.ledgerAndExports.allTime": "All time",
   "screen.organization.accounting.ledgerAndExports.thisMonth": "This month",
@@ -1623,10 +1620,6 @@ export const en = {
   "screen.organization.billing.subscriptionAndBilling.annual": "Annual",
   "screen.organization.billing.subscriptionAndBilling.annualBillingSaves":
     "Annual billing saves {discount} off the monthly total.",
-  "screen.organization.billing.subscriptionAndBilling.paymentMethod": "Payment method",
-  "screen.organization.billing.subscriptionAndBilling.noPaymentMethodOnFile":
-    "No payment method on file",
-  "screen.organization.billing.subscriptionAndBilling.update": "Update",
   "screen.organization.billing.subscriptionAndBilling.usageAgainstLimits": "Usage against limits",
   "screen.organization.billing.subscriptionAndBilling.activeTripsThisMonth":
     "Active trips this month",
@@ -2106,12 +2099,6 @@ export const en = {
     "Submitted at {time} for {plate}. Read only for the moderator.",
   "screen.organization.operations.tripReportReview.noMismatch":
     "Every submitted headcount matches check-in.",
-  "screen.organization.operations.tripReportReview.organizationNote": "Organization note",
-  "screen.organization.operations.tripReportReview.addANote":
-    "Add a note (notes can be added, not edited)",
-  "screen.organization.operations.tripReportReview.savingNotesIsNotAvailable":
-    "Saving notes is not available yet.",
-  "screen.organization.operations.tripReportReview.addNote": "Add note",
   // apps/web/src/screens/organization/people/crm-and-webhooks.tsx
   "screen.organization.people.crmAndWebhooks.title": "CRM and webhooks",
   "screen.organization.people.crmAndWebhooks.caption":
@@ -2166,6 +2153,8 @@ export const en = {
   "screen.organization.people.employeeInvitationAcceptance.invitationCode": "Invitation code",
   "screen.organization.people.employeeInvitationAcceptance.invitationCodeHint":
     "Paste the code from your invitation email.",
+  "screen.organization.people.employeeInvitationAcceptance.signIn": "Sign in",
+  "screen.organization.people.employeeInvitationAcceptance.createAccount": "Create an account",
   "screen.organization.people.employeeInvitationAcceptance.signInToAccept":
     "Sign in with the invited account to accept.",
   "screen.organization.people.employeeInvitationAcceptance.openWorkspace": "Open workspace",
@@ -2483,6 +2472,12 @@ export const en = {
   "screen.organization.trips.programEditor.preRequired": "Pre-required",
   "screen.organization.trips.programEditor.capacityLimited": "Capacity-limited",
   "screen.organization.trips.programEditor.vipOnly": "VIP-only",
+  "screen.organization.trips.programEditor.priceInvalid":
+    "Enter the price per person, for example 150 or 150.50.",
+  "screen.organization.trips.programEditor.capInvalid":
+    "Enter the cap as a whole number of at least 1.",
+  "screen.organization.trips.programEditor.unsavedOptionsNote":
+    "Programs are saved with a price per person or as free. Quantity, group and tiered pricing and VIP-only programs are not available yet.",
   "screen.organization.trips.programEditor.nameRequired": "Enter a program name to save.",
   "screen.organization.trips.programEditor.programCaption": "Program {name}",
   "screen.organization.trips.programEditor.newProgram": "New program",
@@ -2542,11 +2537,24 @@ export const en = {
   "screen.organization.trips.tripCommandView.noVehicles": "No vehicles on this trip yet.",
   "screen.organization.trips.tripCommandView.goTo": "Go to",
   // apps/web/src/screens/organization/trips/trip-parts.tsx
+  "screen.organization.trips.tripParts.saveError.signedOut.title": "Not saved: you are signed out",
+  "screen.organization.trips.tripParts.saveError.signedOut.body":
+    "Sign in again, then save this step.",
+  "screen.organization.trips.tripParts.saveError.noTrip.title": "Not saved: no trip",
+  "screen.organization.trips.tripParts.saveError.noTrip.body":
+    "This page has no trip draft. Start from step 1 or open the trip from the trips list.",
+  "screen.organization.trips.tripParts.saveError.failed.title": "Not saved",
+  "screen.organization.trips.tripParts.saveError.failed.body":
+    "The server did not save this step. Check your connection and try again.",
   "screen.organization.trips.tripParts.money": "{amount} {currency}",
   "screen.organization.trips.tripParts.unlimited": "Unlimited",
   "screen.organization.trips.tripParts.seatLayoutPreviewLabel":
     "Seat layout preview with {n} seats",
   // apps/web/src/screens/organization/trips/trip-wizard-step-1-basics.tsx
+  "screen.organization.trips.tripWizardStep1Basics.tripTypeRequired": "Choose a trip type.",
+  "screen.organization.trips.tripWizardStep1Basics.savingDraft": "Saving your draft…",
+  "screen.organization.trips.tripWizardStep1Basics.draftSaved":
+    "Draft saved. You can leave and come back to it.",
   "screen.organization.trips.tripWizardStep1Basics.nameRequired": "Enter a trip name to continue.",
   "screen.organization.trips.tripWizardStep1Basics.chooseTripType": "Choose a trip type",
   "screen.organization.trips.tripWizardStep1Basics.arabic": "Arabic",
@@ -2564,17 +2572,26 @@ export const en = {
   "screen.organization.trips.tripWizardStep1Basics.draftSavedNote":
     "Your draft is saved as you type. You can leave and come back to it.",
   // apps/web/src/screens/organization/trips/trip-wizard-step-2-schedule-and-route.tsx
-  "screen.organization.trips.tripWizardStep2ScheduleAndRoute.mapPickerNote":
-    "Map picker from the maps service",
+  "screen.organization.trips.tripWizardStep2ScheduleAndRoute.choosePlace": "Choose a place",
+  "screen.organization.trips.tripWizardStep2ScheduleAndRoute.chooseTimeZone": "Choose a time zone",
+  "screen.organization.trips.tripWizardStep2ScheduleAndRoute.timeZoneRequired":
+    "Choose the trip time zone.",
+  "screen.organization.trips.tripWizardStep2ScheduleAndRoute.startRequired":
+    "Enter the start date and time.",
+  "screen.organization.trips.tripWizardStep2ScheduleAndRoute.endRequired":
+    "Enter the end date and time.",
+  "screen.organization.trips.tripWizardStep2ScheduleAndRoute.endAfterStart":
+    "The end must be after the start.",
+  "screen.organization.trips.tripWizardStep2ScheduleAndRoute.originRequired":
+    "Choose where the trip starts.",
+  "screen.organization.trips.tripWizardStep2ScheduleAndRoute.routeEmpty":
+    "Choose the origin and stops to see the route.",
+  "screen.organization.trips.tripWizardStep2ScheduleAndRoute.routeSeparator": " → ",
   "screen.organization.trips.tripWizardStep2ScheduleAndRoute.stop": "Stop",
   "screen.organization.trips.tripWizardStep2ScheduleAndRoute.order": "Order",
   "screen.organization.trips.tripWizardStep2ScheduleAndRoute.action": "Action",
   "screen.organization.trips.tripWizardStep2ScheduleAndRoute.removeStop": "Remove {name}",
   "screen.organization.trips.tripWizardStep2ScheduleAndRoute.remove": "Remove",
-  "screen.organization.trips.tripWizardStep2ScheduleAndRoute.saveFailedTitle":
-    "The schedule was not saved",
-  "screen.organization.trips.tripWizardStep2ScheduleAndRoute.saveFailedBody":
-    "Check the dates, times and stops, then try again.",
   "screen.organization.trips.tripWizardStep2ScheduleAndRoute.datesAndTimes": "Dates and times",
   "screen.organization.trips.tripWizardStep2ScheduleAndRoute.startDate": "Start date",
   "screen.organization.trips.tripWizardStep2ScheduleAndRoute.startTime": "Start time",
@@ -2598,13 +2615,14 @@ export const en = {
   "screen.organization.trips.tripWizardStep3Vehicles.vehicleLimitNote":
     "Vehicles on this trip: {n} of {limit}. Need more vehicles?",
   "screen.organization.trips.tripWizardStep3Vehicles.upgradeYourPlan": "Upgrade your plan.",
-  "screen.organization.trips.tripWizardStep3Vehicles.saveFailedTitle":
-    "The vehicles were not saved",
-  "screen.organization.trips.tripWizardStep3Vehicles.saveFailedBody":
-    "Try again. If it keeps failing, check the vehicles are active.",
   "screen.organization.trips.tripWizardStep3Vehicles.vehiclesOnThisTrip": "Vehicles on this trip",
   "screen.organization.trips.tripWizardStep3Vehicles.noVehiclesYet":
     "No vehicles on this trip yet.",
+  "screen.organization.trips.tripWizardStep3Vehicles.vehicleRequired":
+    "Add at least one vehicle to the trip.",
+  "screen.organization.trips.tripWizardStep3Vehicles.chooseVehicle": "Vehicle from your fleet",
+  "screen.organization.trips.tripWizardStep3Vehicles.chooseVehicleOption": "Choose a vehicle",
+  "screen.organization.trips.tripWizardStep3Vehicles.vehicleOption": "{plate} · {type} · {n} seats",
   "screen.organization.trips.tripWizardStep3Vehicles.addVehicle": "Add vehicle",
   "screen.organization.trips.tripWizardStep3Vehicles.atLimitNote":
     "This trip has the most vehicles your plan allows.",
@@ -2629,12 +2647,13 @@ export const en = {
     "Platform staff are on Growth and Enterprise",
   "screen.organization.trips.tripWizardStep4Staffing.platformStaffBody":
     "Your plan uses your own drivers and photographers. Platform options open when you upgrade.",
-  "screen.organization.trips.tripWizardStep4Staffing.saveFailedTitle": "The staffing was not saved",
-  "screen.organization.trips.tripWizardStep4Staffing.saveFailedBody": "Try again in a moment.",
   "screen.organization.trips.tripWizardStep4Staffing.staffForEachVehicle": "Staff for each vehicle",
   "screen.organization.trips.tripWizardStep4Staffing.noVehicles": "Add vehicles in step 3 first.",
   "screen.organization.trips.tripWizardStep4Staffing.readyNeedsNote":
     "Ready needs a driver and a moderator on every vehicle. Each gap is listed above.",
+  "screen.organization.trips.tripWizardStep4Staffing.noVehiclesTitle": "No vehicles to staff",
+  "screen.organization.trips.tripWizardStep4Staffing.noVehiclesBody":
+    "Add vehicles in step 3, then assign a driver and a moderator to each.",
   "screen.organization.trips.tripWizardStep4Staffing.assignOwnStaff": "Assign own staff",
   // apps/web/src/screens/organization/trips/trip-wizard-step-5-programs.tsx
   "screen.organization.trips.tripWizardStep5Programs.program": "Program",
@@ -2651,9 +2670,6 @@ export const en = {
   "screen.organization.trips.tripWizardStep5Programs.none": "None",
   "screen.organization.trips.tripWizardStep5Programs.nOfLimitPrograms": "{n} of {limit} programs",
   "screen.organization.trips.tripWizardStep5Programs.addProgram": "Add program",
-  "screen.organization.trips.tripWizardStep5Programs.saveFailedTitle":
-    "The programs step was not saved",
-  "screen.organization.trips.tripWizardStep5Programs.saveFailedBody": "Try again in a moment.",
   "screen.organization.trips.tripWizardStep5Programs.programsOnThisTrip": "Programs on this trip",
   "screen.organization.trips.tripWizardStep5Programs.noProgramsYet": "No programs yet",
   "screen.organization.trips.tripWizardStep5Programs.noProgramsBody":
@@ -2663,8 +2679,6 @@ export const en = {
   "screen.organization.trips.tripWizardStep5Programs.onePricingModelNote":
     "Each program has exactly one pricing model. Edit a program to change its price or flags before the trip starts.",
   // apps/web/src/screens/organization/trips/trip-wizard-step-6-seating.tsx
-  "screen.organization.trips.tripWizardStep6Seating.saveFailedTitle": "The seating was not saved",
-  "screen.organization.trips.tripWizardStep6Seating.saveFailedBody": "Try again in a moment.",
   "screen.organization.trips.tripWizardStep6Seating.seatMode": "Seat mode",
   "screen.organization.trips.tripWizardStep6Seating.chooseHowTravelersGetSeats":
     "Choose how travelers get seats",
@@ -2677,6 +2691,8 @@ export const en = {
     "Travelers pick their own seat. Locked on your plan.",
   "screen.organization.trips.tripWizardStep6Seating.travelerSelfSelectBody":
     "Travelers pick their own seat.",
+  "screen.organization.trips.tripWizardStep6Seating.windowInvalid":
+    "Enter a whole number of hours from 0 to {max}.",
   "screen.organization.trips.tripWizardStep6Seating.priorityWindow": "Priority window",
   "screen.organization.trips.tripWizardStep6Seating.priorityWindowLabel":
     "Priority window for Explorer and VIP travelers",
@@ -2689,14 +2705,12 @@ export const en = {
   "screen.organization.trips.tripWizardStep7PricingAndCapacity.perVehicleValue":
     "{n} seats, from the vehicle type",
   "screen.organization.trips.tripWizardStep7PricingAndCapacity.nSeats": "{n} seats",
-  "screen.organization.trips.tripWizardStep7PricingAndCapacity.saveFailedTitle":
-    "The pricing was not saved",
-  "screen.organization.trips.tripWizardStep7PricingAndCapacity.saveFailedBody":
-    "Check the price and try again.",
   "screen.organization.trips.tripWizardStep7PricingAndCapacity.basePriceAndCapacity":
     "Base price and capacity",
   "screen.organization.trips.tripWizardStep7PricingAndCapacity.basePricePerPerson":
     "Base price per person",
+  "screen.organization.trips.tripWizardStep7PricingAndCapacity.priceInvalid":
+    "Enter the price per person, for example 250 or 250.50.",
   "screen.organization.trips.tripWizardStep7PricingAndCapacity.currency": "Currency",
   "screen.organization.trips.tripWizardStep7PricingAndCapacity.capacityPerVehicle":
     "Capacity per vehicle",
@@ -2745,11 +2759,11 @@ export const en = {
   "screen.organization.trips.tripWizardStep8Publish.publishUnlocksNote":
     "Publish unlocks when every required step is complete.",
   "screen.organization.trips.tripWizardStep8Publish.publishBlocked": "Publish is blocked",
-  "screen.organization.trips.tripWizardStep8Publish.actionFailedTitle": "That did not go through",
-  "screen.organization.trips.tripWizardStep8Publish.actionFailedBody": "Try again in a moment.",
   "screen.organization.trips.tripWizardStep8Publish.readinessChecklist": "Readiness checklist",
   "screen.organization.trips.tripWizardStep8Publish.publishMode": "Publish mode",
   "screen.organization.trips.tripWizardStep8Publish.audienceList": "Audience list",
+  "screen.organization.trips.tripWizardStep8Publish.audienceInvalid":
+    "Enter one or more audience ids, separated by commas.",
   "screen.organization.trips.tripWizardStep8Publish.audienceListHint":
     "Audience ids, separated by commas.",
   "screen.organization.trips.tripWizardStep8Publish.tripsPublishedThisMonth":

@@ -1,15 +1,24 @@
 // SCR-ORG-02 Employee invitation acceptance: an invited person joins the organization.
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Link } from "@tanstack/react-router";
 
 import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
+import { usePathname } from "@/components/shells/shell-content";
 import { orpc } from "@/utils/orpc";
 
 import { OrgInput } from "../common/org-form";
 import { OrgButtonLink, useOrgNavigate, useOrgParams } from "../common/org-link";
-import { OrgAlert, OrgButton, OrgCard, OrgPage, OrgPageHeader } from "../common/org-ui";
+import {
+  OrgAlert,
+  OrgButton,
+  OrgCard,
+  OrgPage,
+  OrgPageHeader,
+  orgButtonClass,
+} from "../common/org-ui";
 
 import { AreaBadges, grantedAreas } from "./people-parts";
 
@@ -24,6 +33,8 @@ export function EmployeeInvitationAcceptance() {
   const [typedToken, setTypedToken] = useState("");
   const inviteToken = (tokenParam ?? typedToken).trim();
   const signedIn = authStatus === "authenticated";
+  // Sign-in and sign-up come back to this invitation, so the person can accept it right away.
+  const returnTo = usePathname();
 
   const acceptMutation = useMutation(
     orpc.employees.acceptInvite.mutationOptions({
@@ -96,9 +107,19 @@ export function EmployeeInvitationAcceptance() {
           />
         ) : null}
         {!signedIn && !accepted ? (
-          <p id={SIGNED_OUT_HINT_ID} className="te-caption m-0 text-[var(--te-ink-muted)]">
-            {t("screen.organization.people.employeeInvitationAcceptance.signInToAccept")}
-          </p>
+          <div className="flex flex-col gap-3">
+            <p id={SIGNED_OUT_HINT_ID} className="te-caption m-0 text-[var(--te-ink-muted)]">
+              {t("screen.organization.people.employeeInvitationAcceptance.signInToAccept")}
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <Link to="/sign-in" search={{ returnTo }} className={orgButtonClass("secondary")}>
+                {t("screen.organization.people.employeeInvitationAcceptance.signIn")}
+              </Link>
+              <Link to="/sign-up" search={{ returnTo }} className={orgButtonClass("text")}>
+                {t("screen.organization.people.employeeInvitationAcceptance.createAccount")}
+              </Link>
+            </div>
+          </div>
         ) : null}
         <div className="flex flex-wrap justify-end gap-3">
           {accepted ? (

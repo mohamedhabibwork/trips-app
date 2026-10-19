@@ -1,6 +1,7 @@
 // SCR-ORG-04 Trips list: every trip with its state and next action.
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { Link } from "@tanstack/react-router";
 
 import { t } from "@trips-app/i18n";
 
@@ -14,6 +15,7 @@ import {
   isoDay,
   toTripState,
   tripStateLabel,
+  wizardStepHref,
   tripTitle,
   type TripState,
 } from "../common/org-shared";
@@ -66,15 +68,24 @@ function columns(): readonly OrgColumn<TripRow>[] {
     {
       key: "name",
       header: t("screen.organization.trips.tripsList.trip"),
-      render: (row) => (
-        <OrgLink
-          slug="trip-command-view"
-          params={{ tripId: row.id }}
-          className="text-[var(--te-ink)]"
-        >
-          {row.name}
-        </OrgLink>
-      ),
+      // A draft opens the wizard where it was left; any other trip opens its command view.
+      render: (row) =>
+        row.state === "Draft" ? (
+          <Link
+            to={wizardStepHref("basics", row.id)}
+            className="font-semibold text-[var(--te-ink)] underline-offset-4 hover:underline"
+          >
+            {row.name}
+          </Link>
+        ) : (
+          <OrgLink
+            slug="trip-command-view"
+            params={{ tripId: row.id }}
+            className="text-[var(--te-ink)]"
+          >
+            {row.name}
+          </OrgLink>
+        ),
     },
     {
       key: "state",

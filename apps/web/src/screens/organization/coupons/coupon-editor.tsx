@@ -9,12 +9,7 @@ import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
 
 import { OrgButtonLink, useOrgNavigate, useOrgParams } from "../common/org-link";
-import {
-  getActiveWizardTripId,
-  getSelectedCouponId,
-  isoDay,
-  tripTitle,
-} from "../common/org-shared";
+import { getSelectedTripId, getSelectedCouponId, isoDay, tripTitle } from "../common/org-shared";
 import {
   NO_VALUE,
   OrgAlert,
@@ -83,7 +78,7 @@ export function CouponEditor() {
     ...orpc.plans.getOrganizationSubscription.queryOptions({ input: undefined }),
     enabled,
   });
-  const tripId = getActiveWizardTripId();
+  const tripId = getSelectedTripId();
   const programsQuery = useQuery({
     ...orpc.programs.listTripPrograms.queryOptions({ input: { tripId: tripId ?? "" } }),
     enabled: enabled && Boolean(tripId),

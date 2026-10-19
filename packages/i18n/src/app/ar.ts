@@ -1429,9 +1429,6 @@ export const ar: AppMessages = {
   "screen.organization.accounting.ledgerAndExports.caption":
     "كل حدث مالي مع الحجز أو الصفقة المرتبطة ومرجع بوابة الدفع",
   "screen.organization.accounting.ledgerAndExports.exportCsv": "تصدير CSV",
-  "screen.organization.accounting.ledgerAndExports.exportPdf": "تصدير PDF",
-  "screen.organization.accounting.ledgerAndExports.pdfExportIsOnEnterprise":
-    "تصدير PDF متاح في باقة المؤسسات. يمكن لباقتك التصدير بصيغة CSV.",
   "screen.organization.accounting.ledgerAndExports.period": "الفترة",
   "screen.organization.accounting.ledgerAndExports.allTime": "كل الفترات",
   "screen.organization.accounting.ledgerAndExports.thisMonth": "هذا الشهر",
@@ -1584,10 +1581,6 @@ export const ar: AppMessages = {
   "screen.organization.billing.subscriptionAndBilling.annual": "سنوية",
   "screen.organization.billing.subscriptionAndBilling.annualBillingSaves":
     "توفّر الفوترة السنوية {discount} من الإجمالي الشهري.",
-  "screen.organization.billing.subscriptionAndBilling.paymentMethod": "طريقة الدفع",
-  "screen.organization.billing.subscriptionAndBilling.noPaymentMethodOnFile":
-    "لا توجد طريقة دفع محفوظة",
-  "screen.organization.billing.subscriptionAndBilling.update": "تحديث",
   "screen.organization.billing.subscriptionAndBilling.usageAgainstLimits":
     "الاستخدام مقارنة بالحدود",
   "screen.organization.billing.subscriptionAndBilling.activeTripsThisMonth":
@@ -2053,12 +2046,6 @@ export const ar: AppMessages = {
     "أُرسل في {time} للمركبة {plate}. للقراءة فقط بالنسبة للمشرف.",
   "screen.organization.operations.tripReportReview.noMismatch":
     "كل الأعداد المُرسلة تطابق تسجيل الصعود.",
-  "screen.organization.operations.tripReportReview.organizationNote": "ملاحظة المؤسسة",
-  "screen.organization.operations.tripReportReview.addANote":
-    "أضف ملاحظة (يمكن إضافة الملاحظات دون تعديلها)",
-  "screen.organization.operations.tripReportReview.savingNotesIsNotAvailable":
-    "حفظ الملاحظات غير متاح بعد.",
-  "screen.organization.operations.tripReportReview.addNote": "إضافة ملاحظة",
   // apps/web/src/screens/organization/people/crm-and-webhooks.tsx
   "screen.organization.people.crmAndWebhooks.title": "نظام إدارة العملاء والـ Webhooks",
   "screen.organization.people.crmAndWebhooks.caption":
@@ -2112,6 +2099,8 @@ export const ar: AppMessages = {
   "screen.organization.people.employeeInvitationAcceptance.invitationCode": "رمز الدعوة",
   "screen.organization.people.employeeInvitationAcceptance.invitationCodeHint":
     "الصق الرمز الموجود في رسالة الدعوة.",
+  "screen.organization.people.employeeInvitationAcceptance.signIn": "تسجيل الدخول",
+  "screen.organization.people.employeeInvitationAcceptance.createAccount": "إنشاء حساب",
   "screen.organization.people.employeeInvitationAcceptance.signInToAccept":
     "سجّل الدخول بالحساب المدعو لقبول الدعوة.",
   "screen.organization.people.employeeInvitationAcceptance.openWorkspace": "فتح مساحة العمل",
@@ -2422,6 +2411,10 @@ export const ar: AppMessages = {
   "screen.organization.trips.programEditor.preRequired": "مطلوب مسبقًا",
   "screen.organization.trips.programEditor.capacityLimited": "محدود السعة",
   "screen.organization.trips.programEditor.vipOnly": "لكبار الشخصيات فقط",
+  "screen.organization.trips.programEditor.priceInvalid": "أدخل السعر للفرد، مثل 150 أو 150.50.",
+  "screen.organization.trips.programEditor.capInvalid": "أدخل الحد الأقصى عددًا صحيحًا لا يقل عن 1.",
+  "screen.organization.trips.programEditor.unsavedOptionsNote":
+    "تُحفظ البرامج بسعر للفرد أو مجانًا. التسعير بالكمية أو للمجموعة أو بالشرائح وبرامج كبار الشخصيات فقط غير متاحة بعد.",
   "screen.organization.trips.programEditor.nameRequired": "أدخل اسم البرنامج للحفظ.",
   "screen.organization.trips.programEditor.programCaption": "برنامج {name}",
   "screen.organization.trips.programEditor.newProgram": "برنامج جديد",
@@ -2480,11 +2473,24 @@ export const ar: AppMessages = {
   "screen.organization.trips.tripCommandView.noVehicles": "لا توجد مركبات في هذه الرحلة بعد.",
   "screen.organization.trips.tripCommandView.goTo": "الانتقال إلى",
   // apps/web/src/screens/organization/trips/trip-parts.tsx
+  "screen.organization.trips.tripParts.saveError.signedOut.title": "لم يُحفظ: أنت غير مسجّل الدخول",
+  "screen.organization.trips.tripParts.saveError.signedOut.body":
+    "سجّل الدخول مرة أخرى، ثم احفظ هذه الخطوة.",
+  "screen.organization.trips.tripParts.saveError.noTrip.title": "لم يُحفظ: لا توجد رحلة",
+  "screen.organization.trips.tripParts.saveError.noTrip.body":
+    "لا توجد مسودة رحلة في هذه الصفحة. ابدأ من الخطوة 1 أو افتح الرحلة من قائمة الرحلات.",
+  "screen.organization.trips.tripParts.saveError.failed.title": "لم يُحفظ",
+  "screen.organization.trips.tripParts.saveError.failed.body":
+    "لم يحفظ الخادم هذه الخطوة. تحقّق من اتصالك وحاول مرة أخرى.",
   "screen.organization.trips.tripParts.money": "{amount} {currency}",
   "screen.organization.trips.tripParts.unlimited": "غير محدود",
   "screen.organization.trips.tripParts.seatLayoutPreviewLabel":
     "معاينة مخطط المقاعد بعدد {n} مقعدًا",
   // apps/web/src/screens/organization/trips/trip-wizard-step-1-basics.tsx
+  "screen.organization.trips.tripWizardStep1Basics.tripTypeRequired": "اختر نوع الرحلة.",
+  "screen.organization.trips.tripWizardStep1Basics.savingDraft": "جارٍ حفظ المسودة…",
+  "screen.organization.trips.tripWizardStep1Basics.draftSaved":
+    "حُفظت المسودة. يمكنك المغادرة والعودة إليها لاحقًا.",
   "screen.organization.trips.tripWizardStep1Basics.nameRequired": "أدخل اسم الرحلة للمتابعة.",
   "screen.organization.trips.tripWizardStep1Basics.chooseTripType": "اختر نوع الرحلة",
   "screen.organization.trips.tripWizardStep1Basics.arabic": "العربية",
@@ -2501,16 +2507,27 @@ export const ar: AppMessages = {
   "screen.organization.trips.tripWizardStep1Basics.draftSavedNote":
     "تُحفظ مسودتك أثناء الكتابة. يمكنك المغادرة والعودة إليها لاحقًا.",
   // apps/web/src/screens/organization/trips/trip-wizard-step-2-schedule-and-route.tsx
-  "screen.organization.trips.tripWizardStep2ScheduleAndRoute.mapPickerNote":
-    "منتقي الخريطة من خدمة الخرائط",
+  "screen.organization.trips.tripWizardStep2ScheduleAndRoute.choosePlace": "اختر مكانًا",
+  "screen.organization.trips.tripWizardStep2ScheduleAndRoute.chooseTimeZone":
+    "اختر المنطقة الزمنية",
+  "screen.organization.trips.tripWizardStep2ScheduleAndRoute.timeZoneRequired":
+    "اختر المنطقة الزمنية للرحلة.",
+  "screen.organization.trips.tripWizardStep2ScheduleAndRoute.startRequired":
+    "أدخل تاريخ البدء ووقته.",
+  "screen.organization.trips.tripWizardStep2ScheduleAndRoute.endRequired":
+    "أدخل تاريخ الانتهاء ووقته.",
+  "screen.organization.trips.tripWizardStep2ScheduleAndRoute.endAfterStart":
+    "يجب أن يكون الانتهاء بعد البدء.",
+  "screen.organization.trips.tripWizardStep2ScheduleAndRoute.originRequired":
+    "اختر مكان انطلاق الرحلة.",
+  "screen.organization.trips.tripWizardStep2ScheduleAndRoute.routeEmpty":
+    "اختر نقطة الانطلاق والمحطات لعرض المسار.",
+  "screen.organization.trips.tripWizardStep2ScheduleAndRoute.routeSeparator": " ← ",
   "screen.organization.trips.tripWizardStep2ScheduleAndRoute.stop": "المحطة",
   "screen.organization.trips.tripWizardStep2ScheduleAndRoute.order": "الترتيب",
   "screen.organization.trips.tripWizardStep2ScheduleAndRoute.action": "الإجراء",
   "screen.organization.trips.tripWizardStep2ScheduleAndRoute.removeStop": "إزالة {name}",
   "screen.organization.trips.tripWizardStep2ScheduleAndRoute.remove": "إزالة",
-  "screen.organization.trips.tripWizardStep2ScheduleAndRoute.saveFailedTitle": "لم يُحفظ الجدول",
-  "screen.organization.trips.tripWizardStep2ScheduleAndRoute.saveFailedBody":
-    "راجع التواريخ والأوقات والمحطات، ثم حاول مرة أخرى.",
   "screen.organization.trips.tripWizardStep2ScheduleAndRoute.datesAndTimes": "التواريخ والأوقات",
   "screen.organization.trips.tripWizardStep2ScheduleAndRoute.startDate": "تاريخ البدء",
   "screen.organization.trips.tripWizardStep2ScheduleAndRoute.startTime": "وقت البدء",
@@ -2535,12 +2552,14 @@ export const ar: AppMessages = {
   "screen.organization.trips.tripWizardStep3Vehicles.vehicleLimitNote":
     "المركبات في هذه الرحلة: {n} من {limit}. هل تحتاج إلى مركبات أكثر؟",
   "screen.organization.trips.tripWizardStep3Vehicles.upgradeYourPlan": "رقِّ باقتك.",
-  "screen.organization.trips.tripWizardStep3Vehicles.saveFailedTitle": "لم تُحفظ المركبات",
-  "screen.organization.trips.tripWizardStep3Vehicles.saveFailedBody":
-    "حاول مرة أخرى. إذا تكرر الخطأ، فتأكد من أن المركبات نشطة.",
   "screen.organization.trips.tripWizardStep3Vehicles.vehiclesOnThisTrip": "المركبات في هذه الرحلة",
   "screen.organization.trips.tripWizardStep3Vehicles.noVehiclesYet":
     "لا توجد مركبات في هذه الرحلة بعد.",
+  "screen.organization.trips.tripWizardStep3Vehicles.vehicleRequired":
+    "أضف مركبة واحدة على الأقل إلى الرحلة.",
+  "screen.organization.trips.tripWizardStep3Vehicles.chooseVehicle": "مركبة من أسطولك",
+  "screen.organization.trips.tripWizardStep3Vehicles.chooseVehicleOption": "اختر مركبة",
+  "screen.organization.trips.tripWizardStep3Vehicles.vehicleOption": "{plate} · {type} · {n} مقعدًا",
   "screen.organization.trips.tripWizardStep3Vehicles.addVehicle": "إضافة مركبة",
   "screen.organization.trips.tripWizardStep3Vehicles.atLimitNote":
     "بلغت هذه الرحلة الحد الأقصى للمركبات في باقتك.",
@@ -2564,12 +2583,14 @@ export const ar: AppMessages = {
     "طاقم المنصة متاح في باقتي النمو والمؤسسات",
   "screen.organization.trips.tripWizardStep4Staffing.platformStaffBody":
     "تعتمد باقتك على سائقيك ومصوريك. تُتاح خيارات المنصة عند ترقية الباقة.",
-  "screen.organization.trips.tripWizardStep4Staffing.saveFailedTitle": "لم يُحفظ الطاقم",
-  "screen.organization.trips.tripWizardStep4Staffing.saveFailedBody": "حاول مرة أخرى بعد قليل.",
   "screen.organization.trips.tripWizardStep4Staffing.staffForEachVehicle": "الطاقم لكل مركبة",
   "screen.organization.trips.tripWizardStep4Staffing.noVehicles": "أضف المركبات في الخطوة 3 أولًا.",
   "screen.organization.trips.tripWizardStep4Staffing.readyNeedsNote":
     "تتطلب حالة «جاهزة» سائقًا ومشرفًا في كل مركبة. كل نقص مذكور أعلاه.",
+  "screen.organization.trips.tripWizardStep4Staffing.noVehiclesTitle":
+    "لا توجد مركبات لتعيين طاقمها",
+  "screen.organization.trips.tripWizardStep4Staffing.noVehiclesBody":
+    "أضف المركبات في الخطوة 3، ثم عيّن سائقًا ومشرفًا لكل مركبة.",
   "screen.organization.trips.tripWizardStep4Staffing.assignOwnStaff": "تعيين طاقمك",
   // apps/web/src/screens/organization/trips/trip-wizard-step-5-programs.tsx
   "screen.organization.trips.tripWizardStep5Programs.program": "البرنامج",
@@ -2586,8 +2607,6 @@ export const ar: AppMessages = {
   "screen.organization.trips.tripWizardStep5Programs.none": "لا يوجد",
   "screen.organization.trips.tripWizardStep5Programs.nOfLimitPrograms": "{n} من {limit} برامج",
   "screen.organization.trips.tripWizardStep5Programs.addProgram": "إضافة برنامج",
-  "screen.organization.trips.tripWizardStep5Programs.saveFailedTitle": "لم تُحفظ خطوة البرامج",
-  "screen.organization.trips.tripWizardStep5Programs.saveFailedBody": "حاول مرة أخرى بعد قليل.",
   "screen.organization.trips.tripWizardStep5Programs.programsOnThisTrip": "البرامج في هذه الرحلة",
   "screen.organization.trips.tripWizardStep5Programs.noProgramsYet": "لا توجد برامج بعد",
   "screen.organization.trips.tripWizardStep5Programs.noProgramsBody": "أضف برنامجًا، أو تابع بدونه.",
@@ -2596,8 +2615,6 @@ export const ar: AppMessages = {
   "screen.organization.trips.tripWizardStep5Programs.onePricingModelNote":
     "لكل برنامج نموذج تسعير واحد فقط. عدّل البرنامج لتغيير سعره أو خصائصه قبل بدء الرحلة.",
   // apps/web/src/screens/organization/trips/trip-wizard-step-6-seating.tsx
-  "screen.organization.trips.tripWizardStep6Seating.saveFailedTitle": "لم تُحفظ إعدادات المقاعد",
-  "screen.organization.trips.tripWizardStep6Seating.saveFailedBody": "حاول مرة أخرى بعد قليل.",
   "screen.organization.trips.tripWizardStep6Seating.seatMode": "طريقة تخصيص المقاعد",
   "screen.organization.trips.tripWizardStep6Seating.chooseHowTravelersGetSeats":
     "اختر طريقة حصول المسافرين على المقاعد",
@@ -2610,6 +2627,8 @@ export const ar: AppMessages = {
     "يختار المسافرون مقاعدهم بأنفسهم. غير متاح في باقتك.",
   "screen.organization.trips.tripWizardStep6Seating.travelerSelfSelectBody":
     "يختار المسافرون مقاعدهم بأنفسهم.",
+  "screen.organization.trips.tripWizardStep6Seating.windowInvalid":
+    "أدخل عددًا صحيحًا من الساعات بين 0 و{max}.",
   "screen.organization.trips.tripWizardStep6Seating.priorityWindow": "فترة الأولوية",
   "screen.organization.trips.tripWizardStep6Seating.priorityWindowLabel":
     "فترة الأولوية لمسافري باقتي المستكشف وكبار الشخصيات",
@@ -2621,13 +2640,12 @@ export const ar: AppMessages = {
   "screen.organization.trips.tripWizardStep7PricingAndCapacity.perVehicleValue":
     "{n} مقعدًا، حسب نوع المركبة",
   "screen.organization.trips.tripWizardStep7PricingAndCapacity.nSeats": "{n} مقعدًا",
-  "screen.organization.trips.tripWizardStep7PricingAndCapacity.saveFailedTitle": "لم يُحفظ التسعير",
-  "screen.organization.trips.tripWizardStep7PricingAndCapacity.saveFailedBody":
-    "راجع السعر وحاول مرة أخرى.",
   "screen.organization.trips.tripWizardStep7PricingAndCapacity.basePriceAndCapacity":
     "السعر الأساسي والسعة",
   "screen.organization.trips.tripWizardStep7PricingAndCapacity.basePricePerPerson":
     "السعر الأساسي للفرد",
+  "screen.organization.trips.tripWizardStep7PricingAndCapacity.priceInvalid":
+    "أدخل السعر للفرد، مثل 250 أو 250.50.",
   "screen.organization.trips.tripWizardStep7PricingAndCapacity.currency": "العملة",
   "screen.organization.trips.tripWizardStep7PricingAndCapacity.capacityPerVehicle":
     "السعة لكل مركبة",
@@ -2676,11 +2694,11 @@ export const ar: AppMessages = {
   "screen.organization.trips.tripWizardStep8Publish.publishUnlocksNote":
     "يُتاح النشر عند اكتمال كل الخطوات المطلوبة.",
   "screen.organization.trips.tripWizardStep8Publish.publishBlocked": "النشر متوقف",
-  "screen.organization.trips.tripWizardStep8Publish.actionFailedTitle": "لم تكتمل العملية",
-  "screen.organization.trips.tripWizardStep8Publish.actionFailedBody": "حاول مرة أخرى بعد قليل.",
   "screen.organization.trips.tripWizardStep8Publish.readinessChecklist": "قائمة الجاهزية",
   "screen.organization.trips.tripWizardStep8Publish.publishMode": "طريقة النشر",
   "screen.organization.trips.tripWizardStep8Publish.audienceList": "قائمة الجمهور",
+  "screen.organization.trips.tripWizardStep8Publish.audienceInvalid":
+    "أدخل معرّف جمهور واحدًا أو أكثر، مفصولة بفواصل.",
   "screen.organization.trips.tripWizardStep8Publish.audienceListHint":
     "معرّفات الجمهور، مفصولة بفواصل.",
   "screen.organization.trips.tripWizardStep8Publish.tripsPublishedThisMonth":

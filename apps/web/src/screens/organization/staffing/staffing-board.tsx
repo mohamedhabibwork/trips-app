@@ -9,8 +9,8 @@ import { orpc } from "@/utils/orpc";
 
 import { OrgButtonLink } from "../common/org-link";
 import {
-  getActiveWizardTripId,
-  setActiveWizardTripId,
+  getSelectedTripId,
+  setSelectedTripId as rememberSelectedTripId,
   setSelectedNegotiationId,
   setSelectedVehicleId,
   tripTitle,
@@ -174,7 +174,7 @@ function gapSentences(rows: readonly StaffingRow[]): string {
 
 export function StaffingBoard() {
   const { status: authStatus, actor, locale } = useAuth();
-  const [selectedTripId, setSelectedTripId] = useState<string | null>(getActiveWizardTripId());
+  const [selectedTripId, setSelectedTripId] = useState<string | null>(getSelectedTripId());
   const enabled = authStatus === "authenticated" && Boolean(actor?.activeTenantId);
 
   const tripsQuery = useQuery({
@@ -222,7 +222,7 @@ export function StaffingBoard() {
 
   const selectTrip = (id: string) => {
     if (!id) return;
-    setActiveWizardTripId(id);
+    rememberSelectedTripId(id);
     setSelectedTripId(id);
   };
 

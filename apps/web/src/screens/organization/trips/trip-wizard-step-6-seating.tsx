@@ -7,19 +7,28 @@ import { t } from "@trips-app/i18n";
 import { orpc } from "@/utils/orpc";
 
 import { OrgInput } from "../common/org-form";
-import { TripWizardFrame, getActiveWizardTripId } from "../common/org-shared";
-import { OrgAlert, OrgBadge, OrgCard } from "../common/org-ui";
-import { OrgOptionCard, useOrgPlan, useWizardTrip } from "./trip-parts";
+import { TripWizardFrame } from "../common/org-shared";
+import { OrgAlert, OrgBadge, OrgCard, OrgError } from "../common/org-ui";
+import {
+  OrgOptionCard,
+  WizardSaveAlert,
+  useOrgPlan,
+  useWizardStepSave,
+  useWizardTrip,
+} from "./trip-parts";
 
-const DEFAULT_WINDOW_HOURS = 24;
+/** Longest priority window the trips API accepts (30 days). */
+const MAX_WINDOW_HOURS = 720;
 
 export function TripWizardStep6Seating() {
-  const { authStatus, tripQuery, tripName } = useWizardTrip();
+  const { tripId, tripQuery, tripName } = useWizardTrip();
   const queryClient = useQueryClient();
   const { features } = useOrgPlan();
   const [selfSelect, setSelfSelect] = useState(false);
-  const [priorityWindowHours, setPriorityWindowHours] = useState(String(DEFAULT_WINDOW_HOURS));
-  const [saveFailed, setSaveFailed] = useState(false);
+  // Filled from the saved trip; the trips API holds the default window for a new draft.
+  const [priorityWindowHours, setPriorityWindowHours] = useState("");
+  const [windowError, setWindowError] = useState<string | undefined>(undefined);
+  const { error: saveError, run } = useWizardStepSave(tripId);
 
   useEffect(() => {
     if (tripQuery.data) {
@@ -39,23 +48,25 @@ export function TripWizardStep6Seating() {
   );
 
   const saveStep = async (): Promise<boolean> => {
-    if (authStatus !== "authenticated") return true;
-    const currentTripId = getActiveWizardTripId();
-    if (!currentTripId) return true;
-    const parsedWindow = Number.parseInt(priorityWindowHours, 10);
-    setSaveFailed(false);
-    try {
-      await saveWizardStepMutation.mutateAsync({
-        tripId: currentTripId,
-        step: "seating",
-        seatAssignmentMode: selfSelect ? "traveler_choice" : "organization_assigned",
-        seatPriorityWindowHours: Number.isNaN(parsedWindow) ? DEFAULT_WINDOW_HOURS : parsedWindow,
-      });
-      return true;
-    } catch {
-      setSaveFailed(true);
+    const text = priorityWindowHours.trim();
+    const hours = Number(text);
+    if (!/^\d+$/.test(text) || hours > MAX_WINDOW_HOURS) {
+      setWindowError(
+        t("screen.organization.trips.tripWizardStep6Seating.windowInvalid", {
+          max: MAX_WINDOW_HOURS,
+        }),
+      );
       return false;
     }
+    setWindowError(undefined);
+    return run((id) =>
+      saveWizardStepMutation.mutateAsync({
+        tripId: id,
+        step: "seating",
+        seatAssignmentMode: selfSelect ? "traveler_choice" : "organization_assigned",
+        seatPriorityWindowHours: hours,
+      }),
+    );
   };
 
   // Self-select stays locked until the plan is known to include it.
@@ -64,21 +75,16 @@ export function TripWizardStep6Seating() {
   return (
     <TripWizardFrame
       stepId="seating"
+      tripId={tripId}
       tripName={tripName}
+      busy={saveWizardStepMutation.isPending}
       beforeNext={saveStep}
       onSaveDraft={async () => {
         await saveStep();
       }}
     >
-      {saveFailed ? (
-        <OrgAlert
-          tone="err"
-          title={t("screen.organization.trips.tripWizardStep6Seating.saveFailedTitle")}
-          className="max-w-[860px]"
-        >
-          {t("screen.organization.trips.tripWizardStep6Seating.saveFailedBody")}
-        </OrgAlert>
-      ) : null}
+      <WizardSaveAlert error={saveError} className="max-w-[860px]" />
+      {tripQuery.isError ? <OrgError onRetry={() => void tripQuery.refetch()} /> : null}
       <OrgCard
         title={t("screen.organization.trips.tripWizardStep6Seating.seatMode")}
         className="max-w-[860px]"
@@ -130,7 +136,9 @@ export function TripWizardStep6Seating() {
           hint={t("screen.organization.trips.tripWizardStep6Seating.windowHoursHint")}
           inputMode="numeric"
           fieldClassName="max-w-[360px]"
+          required
           value={priorityWindowHours}
+          error={windowError}
           onChange={(event) => setPriorityWindowHours(event.target.value)}
         />
         <p className="te-caption m-0 text-[var(--te-ink-muted)]">

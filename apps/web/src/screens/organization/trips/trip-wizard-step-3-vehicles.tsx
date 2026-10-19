@@ -6,11 +6,21 @@ import { t } from "@trips-app/i18n";
 
 import { orpc } from "@/utils/orpc";
 
+import { OrgSelect } from "../common/org-form";
 import { OrgLink } from "../common/org-link";
-import { TripWizardFrame, getActiveWizardTripId } from "../common/org-shared";
+import { TripWizardFrame } from "../common/org-shared";
 import { OrgTable, type OrgColumn } from "../common/org-table";
 import { NO_VALUE, OrgAlert, OrgButton, OrgCard, OrgError, OrgRow } from "../common/org-ui";
-import { SeatLayoutPreview, limitText, useOrgPlan, useWizardTrip } from "./trip-parts";
+import {
+  SeatLayoutPreview,
+  WizardSaveAlert,
+  limitText,
+  useOrgPlan,
+  useWizardStepSave,
+  useWizardTrip,
+} from "./trip-parts";
+
+const CHOOSE = "";
 
 interface TripVehicleRow {
   id: string;
@@ -35,11 +45,13 @@ function vehicleTypeName(vehicle: FleetVehicle, locale: string): string | undefi
 }
 
 export function TripWizardStep3Vehicles() {
-  const { authStatus, locale, tripQuery, tripName } = useWizardTrip();
+  const { authStatus, locale, tripId, tripQuery, tripName } = useWizardTrip();
   const queryClient = useQueryClient();
   const { limits } = useOrgPlan();
   const [rows, setRows] = useState<readonly TripVehicleRow[]>([]);
-  const [saveFailed, setSaveFailed] = useState(false);
+  const [chosenId, setChosenId] = useState(CHOOSE);
+  const [rowsError, setRowsError] = useState<string | undefined>(undefined);
+  const { error: saveError, run } = useWizardStepSave(tripId);
 
   const fleetQuery = useQuery({
     ...orpc.fleet.listVehicles.queryOptions({ input: {} }),
@@ -56,38 +68,34 @@ export function TripWizardStep3Vehicles() {
   const availableVehicles: readonly TripVehicleRow[] = fleetQuery.data?.items.map(toRow) ?? [];
 
   useEffect(() => {
-    if (!fleetQuery.data) return;
+    if (!fleetQuery.data || !tripQuery.data) return;
     const fleet = fleetQuery.data.items;
-    if (tripQuery.data && tripQuery.data.vehicles.length > 0) {
-      setRows(
-        tripQuery.data.vehicles.map((assigned) => {
-          const vehicle = fleet.find((item) => item.id === assigned.vehicleId);
-          return {
-            id: assigned.vehicleId,
-            plate: assigned.plateNumber ?? assigned.vehicleId,
-            vehicleType: (vehicle && vehicleTypeName(vehicle, locale)) ?? assigned.model ?? "",
-            seats: assigned.seatCountSnapshot,
-            layout: assigned.seatLayoutSnapshot ?? null,
-          };
-        }),
-      );
-      return;
-    }
-    // A new draft starts with the first fleet vehicle, as before.
-    const first = fleet[0];
-    if (first) {
-      setRows((current) => (current.length > 0 ? current : [toRow(first)]));
-    }
+    setRows(
+      tripQuery.data.vehicles.map((assigned) => {
+        const vehicle = fleet.find((item) => item.id === assigned.vehicleId);
+        return {
+          id: assigned.vehicleId,
+          plate: assigned.plateNumber ?? assigned.vehicleId,
+          vehicleType: (vehicle && vehicleTypeName(vehicle, locale)) ?? assigned.model ?? "",
+          seats: assigned.seatCountSnapshot,
+          layout: assigned.seatLayoutSnapshot ?? null,
+        };
+      }),
+    );
   }, [fleetQuery.data, tripQuery.data, locale]);
 
   const vehicleLimit = limits?.vehiclesPerTrip ?? null;
   const atLimit = vehicleLimit !== null && rows.length >= vehicleLimit;
-  const nextCandidate = availableVehicles.find(
+  const candidates = availableVehicles.filter(
     (candidate) => !rows.some((row) => row.id === candidate.id),
   );
+  const nextCandidate = candidates.find((candidate) => candidate.id === chosenId);
 
   const handleAddVehicle = () => {
-    if (nextCandidate && !atLimit) setRows((current) => [...current, nextCandidate]);
+    if (!nextCandidate || atLimit) return;
+    setRows((current) => [...current, nextCandidate]);
+    setChosenId(CHOOSE);
+    setRowsError(undefined);
   };
 
   const handleRemoveVehicle = (vehicleId: string) => {
@@ -136,23 +144,15 @@ export function TripWizardStep3Vehicles() {
   );
 
   const saveStep = async (): Promise<boolean> => {
-    if (authStatus !== "authenticated") return true;
-    const currentTripId = getActiveWizardTripId();
-    if (!currentTripId) return true;
-    const validIds = rows.map((row) => row.id);
-    if (validIds.length === 0) return true;
-    setSaveFailed(false);
-    try {
-      await saveWizardStepMutation.mutateAsync({
-        tripId: currentTripId,
-        step: "vehicles",
-        vehicleIds: validIds,
-      });
-      return true;
-    } catch {
-      setSaveFailed(true);
+    const vehicleIds = rows.map((row) => row.id);
+    if (vehicleIds.length === 0) {
+      setRowsError(t("screen.organization.trips.tripWizardStep3Vehicles.vehicleRequired"));
       return false;
     }
+    setRowsError(undefined);
+    return run((id) =>
+      saveWizardStepMutation.mutateAsync({ tripId: id, step: "vehicles", vehicleIds }),
+    );
   };
 
   const preview = rows[0];
@@ -161,7 +161,9 @@ export function TripWizardStep3Vehicles() {
   return (
     <TripWizardFrame
       stepId="vehicles"
+      tripId={tripId}
       tripName={tripName}
+      busy={saveWizardStepMutation.isPending}
       beforeNext={saveStep}
       onSaveDraft={async () => {
         await saveStep();
@@ -176,15 +178,9 @@ export function TripWizardStep3Vehicles() {
           {t("screen.organization.trips.tripWizardStep3Vehicles.upgradeYourPlan")}
         </OrgLink>
       </OrgAlert>
-      {saveFailed ? (
-        <OrgAlert
-          tone="err"
-          title={t("screen.organization.trips.tripWizardStep3Vehicles.saveFailedTitle")}
-        >
-          {t("screen.organization.trips.tripWizardStep3Vehicles.saveFailedBody")}
-        </OrgAlert>
-      ) : null}
+      <WizardSaveAlert error={saveError} />
       {fleetQuery.isError ? <OrgError onRetry={() => void fleetQuery.refetch()} /> : null}
+      {tripQuery.isError ? <OrgError onRetry={() => void tripQuery.refetch()} /> : null}
       <OrgRow align="start">
         <OrgCard
           title={t("screen.organization.trips.tripWizardStep3Vehicles.vehiclesOnThisTrip")}
@@ -195,19 +191,49 @@ export function TripWizardStep3Vehicles() {
             rows={rows}
             rowKey={(row) => row.id}
             caption={t("screen.organization.trips.tripWizardStep3Vehicles.vehiclesOnThisTrip")}
-            loading={fleetQuery.isLoading}
+            loading={fleetQuery.isLoading || tripQuery.isLoading}
             empty={t("screen.organization.trips.tripWizardStep3Vehicles.noVehiclesYet")}
           />
-          <div className="flex flex-col items-start gap-2">
+          {rowsError ? (
+            <p role="alert" className="m-0 text-sm leading-5 text-[var(--te-danger)]">
+              {rowsError}
+            </p>
+          ) : null}
+          <div className="flex flex-wrap items-end gap-3">
+            <OrgSelect
+              label={t("screen.organization.trips.tripWizardStep3Vehicles.chooseVehicle")}
+              fieldClassName="min-w-[200px] flex-1"
+              disabled={atLimit || candidates.length === 0}
+              options={[
+                {
+                  value: CHOOSE,
+                  label: t("screen.organization.trips.tripWizardStep3Vehicles.chooseVehicleOption"),
+                },
+                ...candidates.map((candidate) => ({
+                  value: candidate.id,
+                  label: t("screen.organization.trips.tripWizardStep3Vehicles.vehicleOption", {
+                    plate: candidate.plate,
+                    type: candidate.vehicleType,
+                    n: candidate.seats,
+                  }),
+                })),
+              ]}
+              value={chosenId}
+              onValueChange={setChosenId}
+            />
             <OrgButton
               variant="secondary"
               disabled={!nextCandidate || atLimit}
-              aria-describedby={atLimit || !nextCandidate ? "trip-vehicles-add-note" : undefined}
+              aria-describedby={
+                atLimit || candidates.length === 0 ? "trip-vehicles-add-note" : undefined
+              }
               onClick={handleAddVehicle}
             >
               {t("screen.organization.trips.tripWizardStep3Vehicles.addVehicle")}
             </OrgButton>
-            {signedIn && fleetQuery.isSuccess && (atLimit || !nextCandidate) ? (
+          </div>
+          <div className="flex flex-col items-start gap-2">
+            {signedIn && fleetQuery.isSuccess && (atLimit || candidates.length === 0) ? (
               <p id="trip-vehicles-add-note" className="te-caption m-0 text-[var(--te-ink-muted)]">
                 {atLimit
                   ? t("screen.organization.trips.tripWizardStep3Vehicles.atLimitNote")
@@ -227,11 +253,7 @@ export function TripWizardStep3Vehicles() {
                 })
               : t("screen.organization.trips.tripWizardStep3Vehicles.layoutCaption")}
           </p>
-          {preview ? (
-            <SeatLayoutPreview layout={preview.layout} seatCount={preview.seats} />
-          ) : (
-            <SeatLayoutPreview layout={null} seatCount={16} />
-          )}
+          {preview ? <SeatLayoutPreview layout={preview.layout} seatCount={preview.seats} /> : null}
         </OrgCard>
       </OrgRow>
     </TripWizardFrame>

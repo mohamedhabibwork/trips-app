@@ -1,13 +1,14 @@
 // Shared organization vocabulary: status badges, trip states, the trip wizard frame and the ids a
-// page remembers between steps (the wizard URLs carry no trip id, so the draft id lives here).
-import { Link } from "@tanstack/react-router";
+// list page remembers for its detail page. The wizard keeps its trip in the URL, never here.
+import { Link, useNavigate } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 
 import { TeIcon } from "@trips-app/ui/components/te-icon";
 import { cn } from "@trips-app/ui/lib/utils";
 import { t } from "@trips-app/i18n";
 
-import { useOrgNavigate } from "./org-link";
+import { pathFor } from "@/navigation/web-routes";
+
 import { orgHref, type OrgSlug } from "./org-routes";
 import { OrgBadge, OrgButton, OrgPage, OrgPageHeader, type OrgTone } from "./org-ui";
 
@@ -125,12 +126,29 @@ export function wizardStepSlug(step: TripWizardStepId): OrgSlug {
   return STEP_SLUG[step];
 }
 
+/**
+ * URL of a wizard step for a saved draft. Step 1 without a trip is `/business/trips/new`; every
+ * other step needs the trip, so without one the link goes to the trips list.
+ */
+export function wizardStepHref(step: TripWizardStepId, tripId: string | null | undefined): string {
+  if (step === "basics") {
+    return tripId ? `${pathFor("SCR-ORG-14", { tripId })}/edit` : orgHref(STEP_SLUG.basics);
+  }
+  return orgHref(STEP_SLUG[step], { tripId });
+}
+
 export function wizardStepLabel(step: TripWizardStepId): string {
   return t(`screen.organization.common.orgShared.step.${step}`);
 }
 
 /** The eight wizard steps as numbered dots; done steps show a check and link back. */
-export function TripWizardSteps({ current }: { current: TripWizardStepId }) {
+export function TripWizardSteps({
+  current,
+  tripId,
+}: {
+  current: TripWizardStepId;
+  tripId: string | null;
+}) {
   const currentIndex = TRIP_WIZARD_STEP_IDS.indexOf(current);
   return (
     <ol
@@ -169,7 +187,7 @@ export function TripWizardSteps({ current }: { current: TripWizardStepId }) {
           <li key={step} aria-current={state === "now" ? "step" : undefined}>
             {state === "done" ? (
               <Link
-                to={orgHref(STEP_SLUG[step])}
+                to={wizardStepHref(step, tripId)}
                 className={cn(itemClass, "no-underline hover:text-[var(--te-ink)]")}
               >
                 {content}
@@ -184,7 +202,7 @@ export function TripWizardSteps({ current }: { current: TripWizardStepId }) {
   );
 }
 
-const ACTIVE_WIZARD_TRIP_KEY = "trips.activeWizardTripId";
+const SELECTED_TRIP_KEY = "trips.selectedTripId";
 const SELECTED_EMPLOYEE_KEY = "trips.selectedEmployeeId";
 const SELECTED_VEHICLE_KEY = "trips.selectedVehicleId";
 const SELECTED_BOOKING_KEY = "trips.selectedBookingId";
@@ -214,20 +232,13 @@ function writeStorageKey(key: string, value: string | null): void {
   }
 }
 
-export function getActiveWizardTripId(): string | null {
-  return readStorageKey(ACTIVE_WIZARD_TRIP_KEY);
-}
-
-export function setActiveWizardTripId(tripId: string): void {
-  writeStorageKey(ACTIVE_WIZARD_TRIP_KEY, tripId);
-}
-
+/** The trip last picked on a page that has a trip filter, so the next such page starts on it. */
 export function getSelectedTripId(): string | null {
-  return getActiveWizardTripId();
+  return readStorageKey(SELECTED_TRIP_KEY);
 }
 
 export function setSelectedTripId(tripId: string | null): void {
-  writeStorageKey(ACTIVE_WIZARD_TRIP_KEY, tripId);
+  writeStorageKey(SELECTED_TRIP_KEY, tripId);
 }
 
 export function getSelectedEmployeeId(): string | null {
@@ -280,6 +291,8 @@ export function setSelectedProgramId(id: string | null): void {
 
 interface TripWizardFrameProps {
   stepId: TripWizardStepId;
+  /** The draft being edited; null only on step 1 before the draft exists. */
+  tripId: string | null;
   /** h1; "Create trip" unless the step names its own action (step 8: "Publish trip"). */
   title?: string;
   /** Trip name added to the caption once the draft has one. */
@@ -290,8 +303,11 @@ interface TripWizardFrameProps {
   primaryDisabled?: boolean;
   /** Id of the note that explains a disabled primary action. */
   primaryDescribedBy?: string;
-  /** Return false to keep the user on this step, for example when a required field is empty. */
-  beforeNext?: () => boolean | Promise<boolean>;
+  /**
+   * Saves the step. Return false to stay on it (a required field is empty or the save failed);
+   * return a trip id to continue with that trip (step 1 returns the draft it created).
+   */
+  beforeNext?: () => boolean | string | Promise<boolean | string>;
   /** Runs instead of opening the next step (step 8 publishes). */
   onPrimary?: () => void | Promise<void>;
   onSaveDraft?: () => void | Promise<void>;
@@ -304,6 +320,7 @@ interface TripWizardFrameProps {
 /** Frame of trip wizard steps 1 to 8: title, step caption, the eight dots, content and actions. */
 export function TripWizardFrame({
   stepId,
+  tripId,
   title,
   tripName,
   primaryLabel,
@@ -317,7 +334,9 @@ export function TripWizardFrame({
   footerNote,
   children,
 }: TripWizardFrameProps) {
-  const goTo = useOrgNavigate();
+  const navigate = useNavigate();
+  const goTo = (step: TripWizardStepId, id: string | null) =>
+    navigate({ to: wizardStepHref(step, id) });
   const index = TRIP_WIZARD_STEP_IDS.indexOf(stepId);
   const previous = TRIP_WIZARD_STEP_IDS[index - 1];
   const next = TRIP_WIZARD_STEP_IDS[index + 1];
@@ -332,12 +351,14 @@ export function TripWizardFrame({
     .join(" · ");
 
   const handlePrimary = async () => {
-    if (beforeNext && !(await beforeNext())) return;
+    const saved = beforeNext ? await beforeNext() : true;
+    if (saved === false) return;
     if (onPrimary) {
       await onPrimary();
       return;
     }
-    if (next) void goTo(STEP_SLUG[next]);
+    const nextTripId = typeof saved === "string" ? saved : tripId;
+    if (next) void goTo(next, nextTripId);
   };
 
   const draftButton = (
@@ -367,7 +388,7 @@ export function TripWizardFrame({
         title={title ?? t("screen.organization.common.orgShared.createTrip")}
         caption={caption}
       />
-      <TripWizardSteps current={stepId} />
+      <TripWizardSteps current={stepId} tripId={tripId} />
       {children}
       <div className="flex flex-col gap-2">
         <div
@@ -377,7 +398,7 @@ export function TripWizardFrame({
           )}
         >
           {previous && next ? (
-            <OrgButton variant="secondary" onClick={() => void goTo(STEP_SLUG[previous])}>
+            <OrgButton variant="secondary" onClick={() => void goTo(previous, tripId)}>
               {t("screen.organization.common.orgShared.back")}
             </OrgButton>
           ) : null}

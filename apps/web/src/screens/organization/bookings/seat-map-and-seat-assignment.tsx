@@ -10,7 +10,7 @@ import { orpc } from "@/utils/orpc";
 
 import { OrgTabs } from "../common/org-form";
 import { useOrgParams } from "../common/org-link";
-import { getActiveWizardTripId, getSelectedVehicleId, tripTitle } from "../common/org-shared";
+import { getSelectedTripId, getSelectedVehicleId, tripTitle } from "../common/org-shared";
 import { OrgTable, type OrgColumn } from "../common/org-table";
 import {
   NO_VALUE,
@@ -73,7 +73,7 @@ export function SeatMapAndSeatAssignment() {
     enabled,
   });
   const trips = tripsQuery.data?.items ?? [];
-  const tripId = routeTripId ?? getActiveWizardTripId() ?? trips[0]?.id ?? null;
+  const tripId = routeTripId ?? getSelectedTripId() ?? trips[0]?.id ?? null;
   const trip = trips.find((item) => item.id === tripId);
   const selectedVehicleId = getSelectedVehicleId();
 

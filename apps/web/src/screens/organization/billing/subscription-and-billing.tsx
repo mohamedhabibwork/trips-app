@@ -91,7 +91,6 @@ export function SubscriptionAndBilling() {
   const { status: authStatus, locale } = useAuth();
   const enabled = authStatus === "authenticated";
   const panelId = useId();
-  const paymentNoteId = useId();
   const [cycle, setCycle] = useState<BillingCycle | null>(null);
   const [changeOpen, setChangeOpen] = useState(false);
   const [chosenPlanId, setChosenPlanId] = useState<string | null>(null);
@@ -265,19 +264,6 @@ export function SubscriptionAndBilling() {
               discount,
             })}
           </p>
-          <div className="flex items-center justify-between gap-3 border-t border-[var(--te-hairline)] pt-4">
-            <div className="flex flex-col">
-              <span className="text-sm leading-5 font-semibold">
-                {t("screen.organization.billing.subscriptionAndBilling.paymentMethod")}
-              </span>
-              <span id={paymentNoteId} className="te-caption text-[var(--te-ink-muted)]">
-                {t("screen.organization.billing.subscriptionAndBilling.noPaymentMethodOnFile")}
-              </span>
-            </div>
-            <OrgButton variant="text" aria-disabled="true" aria-describedby={paymentNoteId}>
-              {t("screen.organization.billing.subscriptionAndBilling.update")}
-            </OrgButton>
-          </div>
         </OrgCard>
         <OrgCard
           className="flex-1"

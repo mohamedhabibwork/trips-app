@@ -1,6 +1,6 @@
 // Pieces shared by the trip wizard, program editor and trip pages: the wizard draft, the
 // organization plan limits, money text, a bordered option card and the seat layout preview.
-import type { ComponentProps, ReactNode } from "react";
+import { useState, type ComponentProps, type ReactNode } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 import { cn } from "@trips-app/ui/lib/utils";
@@ -9,8 +9,9 @@ import { t } from "@trips-app/i18n";
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
 
-import { getActiveWizardTripId, tripTitle } from "../common/org-shared";
-import { NO_VALUE } from "../common/org-ui";
+import { useOrgParams } from "../common/org-link";
+import { tripTitle } from "../common/org-shared";
+import { NO_VALUE, OrgAlert } from "../common/org-ui";
 
 /** Program id in the editor URL that means "create a new program". */
 export const NEW_PROGRAM_ID = "new";
@@ -39,16 +40,67 @@ export function toMinorUnits(value: string): number {
   return Math.max(0, Math.round((Number.parseFloat(value) || 0) * 100));
 }
 
-/** The trip the wizard is editing (its id lives in sessionStorage) and its display name. */
+/** The trip the wizard is editing (the `tripId` in the URL; none on step 1 of a new trip). */
 export function useWizardTrip() {
   const { status: authStatus, locale } = useAuth();
-  const tripId = getActiveWizardTripId();
+  const tripId = useOrgParams().tripId ?? null;
   const tripQuery = useQuery({
     ...orpc.trips.getOrganizationTrip.queryOptions({ input: { tripId: tripId ?? "" } }),
     enabled: authStatus === "authenticated" && Boolean(tripId),
   });
   const tripName = tripQuery.data ? tripTitle(tripQuery.data, locale) : "";
   return { authStatus, locale, tripId, tripQuery, tripName };
+}
+
+/** Why a wizard step was not saved; every case keeps the user on the step with an alert. */
+export type WizardSaveError = "signedOut" | "noTrip" | "failed";
+
+/**
+ * Saves a wizard step through the API. It never reports success without a saved response: no
+ * session, no trip in the URL or a failed call each return false and set `error`.
+ */
+export function useWizardStepSave(tripId: string | null) {
+  const { status } = useAuth();
+  const [error, setError] = useState<WizardSaveError | null>(null);
+  const run = async (save: (tripId: string) => Promise<unknown>): Promise<boolean> => {
+    if (status !== "authenticated") {
+      setError("signedOut");
+      return false;
+    }
+    if (!tripId) {
+      setError("noTrip");
+      return false;
+    }
+    setError(null);
+    try {
+      await save(tripId);
+      return true;
+    } catch {
+      setError("failed");
+      return false;
+    }
+  };
+  return { error, run, clearError: () => setError(null) };
+}
+
+/** The alert for a step that was not saved. */
+export function WizardSaveAlert({
+  error,
+  className,
+}: {
+  error: WizardSaveError | null;
+  className?: string;
+}) {
+  if (!error) return null;
+  return (
+    <OrgAlert
+      tone="err"
+      title={t(`screen.organization.trips.tripParts.saveError.${error}.title`)}
+      className={className}
+    >
+      {t(`screen.organization.trips.tripParts.saveError.${error}.body`)}
+    </OrgAlert>
+  );
 }
 
 export interface OrgPlanLimits {

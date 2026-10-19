@@ -1,5 +1,4 @@
 // SCR-ORG-09 Trip wizard step 5: the programs offered on the trip, within the plan's limit.
-import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { t } from "@trips-app/i18n";
@@ -7,10 +6,18 @@ import { t } from "@trips-app/i18n";
 import { orpc } from "@/utils/orpc";
 
 import { OrgButtonLink, OrgLink } from "../common/org-link";
-import { TripWizardFrame, getActiveWizardTripId, setSelectedProgramId } from "../common/org-shared";
+import { TripWizardFrame, setSelectedProgramId } from "../common/org-shared";
 import { OrgTable, type OrgColumn } from "../common/org-table";
 import { NO_VALUE, OrgAlert, OrgBadge, OrgCard, OrgEmpty, OrgError } from "../common/org-ui";
-import { NEW_PROGRAM_ID, formatMoney, limitText, useOrgPlan, useWizardTrip } from "./trip-parts";
+import {
+  NEW_PROGRAM_ID,
+  WizardSaveAlert,
+  formatMoney,
+  limitText,
+  useOrgPlan,
+  useWizardStepSave,
+  useWizardTrip,
+} from "./trip-parts";
 
 interface TripProgramRow {
   id: string;
@@ -52,7 +59,7 @@ export function TripWizardStep5Programs() {
   const { authStatus, locale, tripId, tripName } = useWizardTrip();
   const queryClient = useQueryClient();
   const { limits } = useOrgPlan();
-  const [saveFailed, setSaveFailed] = useState(false);
+  const { error: saveError, run } = useWizardStepSave(tripId);
 
   const programsQuery = useQuery({
     ...orpc.programs.listTripPrograms.queryOptions({ input: { tripId: tripId ?? "" } }),
@@ -98,23 +105,9 @@ export function TripWizardStep5Programs() {
     }),
   );
 
-  const saveStep = async (): Promise<boolean> => {
-    if (authStatus !== "authenticated") return true;
-    const currentTripId = getActiveWizardTripId();
-    if (!currentTripId) return true;
-    setSaveFailed(false);
-    try {
-      await saveWizardStepMutation.mutateAsync({
-        tripId: currentTripId,
-        step: "programs",
-        notes: "Programs reviewed",
-      });
-      return true;
-    } catch {
-      setSaveFailed(true);
-      return false;
-    }
-  };
+  // Programs save in the program editor; this marks the step done on the trip.
+  const saveStep = (): Promise<boolean> =>
+    run((id) => saveWizardStepMutation.mutateAsync({ tripId: id, step: "programs" }));
 
   const programLimit = limits?.programsPerTrip ?? null;
   const atLimit = programLimit !== null && rows.length >= programLimit;
@@ -137,20 +130,15 @@ export function TripWizardStep5Programs() {
   return (
     <TripWizardFrame
       stepId="programs"
+      tripId={tripId}
       tripName={tripName}
+      busy={saveWizardStepMutation.isPending}
       beforeNext={saveStep}
       onSaveDraft={async () => {
         await saveStep();
       }}
     >
-      {saveFailed ? (
-        <OrgAlert
-          tone="err"
-          title={t("screen.organization.trips.tripWizardStep5Programs.saveFailedTitle")}
-        >
-          {t("screen.organization.trips.tripWizardStep5Programs.saveFailedBody")}
-        </OrgAlert>
-      ) : null}
+      <WizardSaveAlert error={saveError} />
       <OrgCard
         title={t("screen.organization.trips.tripWizardStep5Programs.programsOnThisTrip")}
         actions={

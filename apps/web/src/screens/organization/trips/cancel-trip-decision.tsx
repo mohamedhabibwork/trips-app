@@ -9,7 +9,7 @@ import { orpc } from "@/utils/orpc";
 
 import { OrgTextarea } from "../common/org-form";
 import { OrgButtonLink, useOrgNavigate, useOrgParams } from "../common/org-link";
-import { getActiveWizardTripId, isoDay, toTripState, tripTitle } from "../common/org-shared";
+import { getSelectedTripId, isoDay, toTripState, tripTitle } from "../common/org-shared";
 import {
   NO_VALUE,
   OrgAlert,
@@ -36,7 +36,7 @@ export function CancelTripDecision() {
   const [cancelFailed, setCancelFailed] = useState(false);
   const signedIn = authStatus === "authenticated";
 
-  const knownTripId = params.tripId ?? getActiveWizardTripId();
+  const knownTripId = params.tripId ?? getSelectedTripId();
   const tripsQuery = useQuery({
     ...orpc.trips.listOrganizationTrips.queryOptions({ input: {} }),
     enabled: signedIn && !knownTripId,

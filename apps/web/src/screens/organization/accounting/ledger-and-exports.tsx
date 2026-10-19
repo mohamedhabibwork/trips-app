@@ -3,7 +3,6 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 import { t } from "@trips-app/i18n";
-import { TeIcon } from "@trips-app/ui/components/te-icon";
 
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
@@ -170,16 +169,9 @@ export function LedgerAndExports() {
             >
               {t("screen.organization.accounting.ledgerAndExports.exportCsv")}
             </OrgButton>
-            <OrgButton variant="secondary" aria-disabled="true" aria-describedby="ledger-pdf-note">
-              <TeIcon name="lock" className="size-4" />
-              {t("screen.organization.accounting.ledgerAndExports.exportPdf")}
-            </OrgButton>
           </>
         }
       />
-      <p id="ledger-pdf-note" className="te-caption m-0 text-[var(--te-ink-muted)]">
-        {t("screen.organization.accounting.ledgerAndExports.pdfExportIsOnEnterprise")}
-      </p>
       <div className="flex flex-col gap-6 lg:flex-row lg:flex-wrap lg:items-end">
         <OrgSelect
           label={t("screen.organization.accounting.ledgerAndExports.period")}

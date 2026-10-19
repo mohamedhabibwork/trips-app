@@ -19,6 +19,11 @@ export interface WebRoute {
   section?: string;
   /** A public-area page that still needs a session (any role), e.g. the notification centre. */
   signedIn?: boolean;
+  /**
+   * A second URL of a screen that already has one, e.g. trip wizard step 1 for a saved draft.
+   * It matches like any route, but `pathFor()` builds the screen's main URL.
+   */
+  alias?: boolean;
 }
 
 export const ORGANIZATION_BASE = "/business";
@@ -77,14 +82,16 @@ export const WEB_ROUTES: readonly WebRoute[] = [
   org("SCR-ORG-02", "/invitation/$token", "employees"),
   org("SCR-ORG-03", "/settings", "settings"),
   org("SCR-ORG-04", "/trips", "trips"),
+  // The wizard creates the draft on step 1, then every step carries the trip in its URL.
   org("SCR-ORG-05", "/trips/new", "trips"),
-  org("SCR-ORG-06", "/trips/new/schedule", "trips"),
-  org("SCR-ORG-07", "/trips/new/vehicles", "trips"),
-  org("SCR-ORG-08", "/trips/new/staffing", "trips"),
-  org("SCR-ORG-09", "/trips/new/programs", "trips"),
-  org("SCR-ORG-10", "/trips/new/seating", "trips"),
-  org("SCR-ORG-11", "/trips/new/pricing", "trips"),
-  org("SCR-ORG-12", "/trips/new/publish", "trips"),
+  { ...org("SCR-ORG-05", "/trips/$tripId/edit", "trips"), alias: true },
+  org("SCR-ORG-06", "/trips/$tripId/edit/schedule", "trips"),
+  org("SCR-ORG-07", "/trips/$tripId/edit/vehicles", "trips"),
+  org("SCR-ORG-08", "/trips/$tripId/edit/staffing", "trips"),
+  org("SCR-ORG-09", "/trips/$tripId/edit/programs", "trips"),
+  org("SCR-ORG-10", "/trips/$tripId/edit/seating", "trips"),
+  org("SCR-ORG-11", "/trips/$tripId/edit/pricing", "trips"),
+  org("SCR-ORG-12", "/trips/$tripId/edit/publish", "trips"),
   org("SCR-ORG-13", "/trips/$tripId/programs/$programId", "trips"),
   org("SCR-ORG-14", "/trips/$tripId", "trips"),
   org("SCR-ORG-15", "/trips/$tripId/cancel", "trips"),
@@ -152,10 +159,17 @@ export const WEB_ROUTES: readonly WebRoute[] = [
   admin("SCR-ADM-33", "/platform/health", "platform"),
 ];
 
-const BY_ID = new Map(WEB_ROUTES.map((route) => [route.id, route]));
+const BY_ID = new Map(WEB_ROUTES.filter((route) => !route.alias).map((route) => [route.id, route]));
 
 export function webRouteById(id: string): WebRoute | undefined {
   return BY_ID.get(id);
+}
+
+/** Every URL of a screen: its main one first, then its aliases. */
+export function webRoutesById(id: string): WebRoute[] {
+  return WEB_ROUTES.filter((route) => route.id === id).sort(
+    (a, b) => Number(a.alias ?? false) - Number(b.alias ?? false),
+  );
 }
 
 /** Builds the URL of a screen. Throws for an unknown ID or a missing param, so a bad link fails loudly. */

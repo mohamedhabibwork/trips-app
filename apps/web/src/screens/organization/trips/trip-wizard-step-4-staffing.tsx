@@ -6,11 +6,13 @@ import { t } from "@trips-app/i18n";
 
 import { orpc } from "@/utils/orpc";
 
-import { OrgButtonLink } from "../common/org-link";
-import { TripWizardFrame, getActiveWizardTripId } from "../common/org-shared";
+import { Link } from "@tanstack/react-router";
+
+import { orgHref } from "../common/org-routes";
+import { TripWizardFrame, setSelectedTripId } from "../common/org-shared";
 import { OrgTable, type OrgColumn } from "../common/org-table";
-import { OrgAlert, OrgBadge, OrgCard } from "../common/org-ui";
-import { useOrgPlan, useWizardTrip } from "./trip-parts";
+import { OrgAlert, OrgBadge, OrgCard, OrgError, orgButtonClass } from "../common/org-ui";
+import { WizardSaveAlert, useOrgPlan, useWizardStepSave, useWizardTrip } from "./trip-parts";
 
 type StaffChoice = "organization" | "platform" | "none";
 type StaffSource = "org_staff" | "platform_supplier" | "unassigned";
@@ -97,22 +99,23 @@ function StaffCell({
 }
 
 export function TripWizardStep4Staffing() {
-  const { authStatus, tripQuery, tripName } = useWizardTrip();
+  const { authStatus, tripId, tripQuery, tripName } = useWizardTrip();
   const queryClient = useQueryClient();
   const { features } = useOrgPlan();
   const names = useStaffNames(authStatus === "authenticated");
   const [vehicles, setVehicles] = useState<readonly VehicleStaffState[]>([]);
-  const [saveFailed, setSaveFailed] = useState(false);
+  const [noVehicles, setNoVehicles] = useState(false);
+  const { error: saveError, run } = useWizardStepSave(tripId);
 
   useEffect(() => {
-    if (tripQuery.data && tripQuery.data.vehicles.length > 0) {
+    if (tripQuery.data) {
       setVehicles(
         tripQuery.data.vehicles.map((vehicle) => ({
           vehicleId: vehicle.vehicleId,
           plate: vehicle.plateNumber ?? vehicle.vehicleId,
           driver: toChoice(vehicle.driverSource),
           driverAccountId: vehicle.driverAccountId,
-          moderator: vehicle.moderatorSource === "org_staff" ? "organization" : "none",
+          moderator: toChoice(vehicle.moderatorSource),
           moderatorAccountId: vehicle.moderatorAccountId,
           photographer: toChoice(vehicle.photographerSource),
           photographerAccountId: vehicle.photographerAccountId,
@@ -130,9 +133,6 @@ export function TripWizardStep4Staffing() {
   );
 
   const saveStep = async (): Promise<boolean> => {
-    if (authStatus !== "authenticated") return true;
-    const currentTripId = getActiveWizardTripId();
-    if (!currentTripId) return true;
     const assignments = vehicles.map((vehicle) => ({
       vehicleId: vehicle.vehicleId,
       driverSource: toStaffSource(vehicle.driver),
@@ -144,19 +144,12 @@ export function TripWizardStep4Staffing() {
       photographerAccountId:
         vehicle.photographer === "none" ? null : (vehicle.photographerAccountId ?? null),
     }));
-    if (assignments.length === 0) return true;
-    setSaveFailed(false);
-    try {
-      await saveWizardStepMutation.mutateAsync({
-        tripId: currentTripId,
-        step: "staffing",
-        assignments,
-      });
-      return true;
-    } catch {
-      setSaveFailed(true);
-      return false;
-    }
+    // Staff are saved per vehicle, so a trip without vehicles has nothing to save yet.
+    setNoVehicles(assignments.length === 0);
+    if (assignments.length === 0) return false;
+    return run((id) =>
+      saveWizardStepMutation.mutateAsync({ tripId: id, step: "staffing", assignments }),
+    );
   };
 
   const columns: readonly OrgColumn<VehicleStaffState>[] = [
@@ -206,7 +199,9 @@ export function TripWizardStep4Staffing() {
   return (
     <TripWizardFrame
       stepId="staffing"
+      tripId={tripId}
       tripName={tripName}
+      busy={saveWizardStepMutation.isPending}
       beforeNext={saveStep}
       onSaveDraft={async () => {
         await saveStep();
@@ -220,14 +215,16 @@ export function TripWizardStep4Staffing() {
           {t("screen.organization.trips.tripWizardStep4Staffing.platformStaffBody")}
         </OrgAlert>
       )}
-      {saveFailed ? (
+      <WizardSaveAlert error={saveError} />
+      {noVehicles ? (
         <OrgAlert
           tone="err"
-          title={t("screen.organization.trips.tripWizardStep4Staffing.saveFailedTitle")}
+          title={t("screen.organization.trips.tripWizardStep4Staffing.noVehiclesTitle")}
         >
-          {t("screen.organization.trips.tripWizardStep4Staffing.saveFailedBody")}
+          {t("screen.organization.trips.tripWizardStep4Staffing.noVehiclesBody")}
         </OrgAlert>
       ) : null}
+      {tripQuery.isError ? <OrgError onRetry={() => void tripQuery.refetch()} /> : null}
       <OrgCard title={t("screen.organization.trips.tripWizardStep4Staffing.staffForEachVehicle")}>
         <OrgTable
           columns={columns}
@@ -241,9 +238,13 @@ export function TripWizardStep4Staffing() {
           {t("screen.organization.trips.tripWizardStep4Staffing.readyNeedsNote")}
         </p>
         <div>
-          <OrgButtonLink slug="staffing-board" variant="text">
+          <Link
+            to={orgHref("staffing-board")}
+            className={orgButtonClass("text")}
+            onClick={() => setSelectedTripId(tripId)}
+          >
             {t("screen.organization.trips.tripWizardStep4Staffing.assignOwnStaff")}
-          </OrgButtonLink>
+          </Link>
         </div>
       </OrgCard>
     </TripWizardFrame>

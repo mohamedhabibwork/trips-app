@@ -50,9 +50,13 @@ describe("web route table", () => {
       const params = Object.fromEntries(
         [...route.path.matchAll(/\$([A-Za-z]+)/g)].map(([, name]) => [name, `sample-${name}`]),
       );
+      // `pathFor` builds a screen's main URL, so an alias is filled in from its own pattern.
+      const path = route.alias
+        ? route.path.replace(/\$([A-Za-z]+)/g, (_, name: string) => params[name] as string)
+        : pathFor(route.id, params);
 
       // Act
-      const match = matchWebRoute(route.area, pathFor(route.id, params));
+      const match = matchWebRoute(route.area, path);
 
       // Assert
       expect(match?.route.id).toBe(route.id);
@@ -80,6 +84,34 @@ describe("matchWebRoute", () => {
 
   test("matches pages that have a hand-written route file", () => {
     expect(matchWebRoute("public", "/sign-in")?.route.id).toBe("SCR-PUB-08");
+  });
+});
+
+describe("trip wizard URLs", () => {
+  test("step 1 creates at /trips/new and edits a saved draft at /trips/$tripId/edit", () => {
+    expect(pathFor("SCR-ORG-05")).toBe("/business/trips/new");
+    const edit = matchWebRoute("organization", "/business/trips/t-1/edit");
+    expect(edit?.route.id).toBe("SCR-ORG-05");
+    expect(edit?.params).toEqual({ tripId: "t-1" });
+  });
+
+  test("steps 2 to 8 carry the trip in the URL", () => {
+    // Arrange
+    const steps = ["06", "07", "08", "09", "10", "11", "12"].map((n) => `SCR-ORG-${n}`);
+
+    // Act
+    const paths = steps.map((id) => pathFor(id, { tripId: "t-1" }));
+
+    // Assert
+    for (const path of paths) expect(path.startsWith("/business/trips/t-1/edit/")).toBe(true);
+    expect(() => pathFor("SCR-ORG-06")).toThrow(/tripId/);
+  });
+
+  test("the edit URLs do not fall through to the trip command view", () => {
+    expect(matchWebRoute("organization", "/business/trips/t-1/edit/schedule")?.route.id).toBe(
+      "SCR-ORG-06",
+    );
+    expect(matchWebRoute("organization", "/business/trips/t-1")?.route.id).toBe("SCR-ORG-14");
   });
 });
 
@@ -149,6 +181,18 @@ describe("file routes", () => {
     for (const route of WEB_ROUTES.filter((candidate) => candidate.signedIn)) {
       expect(routes.get(route.path)).toContain("beforeLoad: requireSignedIn(");
     }
+  });
+
+  test("the employee invitation opens without a session, outside the /business guard", () => {
+    // Arrange
+    const source = readFileSync(join(ROUTES_DIR, "business_.invitation.$token.tsx"), "utf8");
+
+    // Assert
+    expect(source).toContain('createFileRoute("/business_/invitation/$token")');
+    expect(source).not.toContain("beforeLoad");
+    expect(routes.get(pathFor("SCR-ORG-02", { token: "abc" }).replace("abc", "$token"))).toBe(
+      source,
+    );
   });
 
   test("organization and admin pages sit under their guarded layout", () => {

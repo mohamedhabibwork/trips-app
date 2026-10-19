@@ -1,22 +1,35 @@
 // SCR-ORG-12 Trip wizard step 8: readiness checklist, publish mode and the monthly trip limit.
 import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Link } from "@tanstack/react-router";
 
 import { t } from "@trips-app/i18n";
 
 import { orpc } from "@/utils/orpc";
 
-import { OrgButtonLink, useOrgNavigate } from "../common/org-link";
+import { useOrgNavigate } from "../common/org-link";
 import { OrgChoice, OrgInput } from "../common/org-form";
-import {
-  TripWizardFrame,
-  getActiveWizardTripId,
-  wizardStepSlug,
-  type TripWizardStepId,
-} from "../common/org-shared";
+import { TripWizardFrame, wizardStepHref, type TripWizardStepId } from "../common/org-shared";
 import { OrgTable, type OrgColumn } from "../common/org-table";
-import { NO_VALUE, OrgAlert, OrgBadge, OrgCard, OrgKpi, OrgRow } from "../common/org-ui";
-import { limitText, useOrgPlan, useWizardTrip } from "./trip-parts";
+import {
+  NO_VALUE,
+  OrgAlert,
+  OrgBadge,
+  OrgCard,
+  OrgError,
+  OrgKpi,
+  OrgRow,
+  orgButtonClass,
+} from "../common/org-ui";
+import {
+  WizardSaveAlert,
+  limitText,
+  useOrgPlan,
+  useWizardStepSave,
+  useWizardTrip,
+} from "./trip-parts";
+
+const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 type RequiredStep = Exclude<TripWizardStepId, "publish">;
 type PublishMode = "public" | "draft" | "targeted";
@@ -65,7 +78,8 @@ export function TripWizardStep8Publish() {
   const { limits } = useOrgPlan();
   const [publishMode, setPublishMode] = useState<PublishMode>("public");
   const [audienceList, setAudienceList] = useState("");
-  const [actionFailed, setActionFailed] = useState(false);
+  const [audienceError, setAudienceError] = useState<string | undefined>(undefined);
+  const { error: saveError, run } = useWizardStepSave(tripId);
 
   const tripsQuery = useQuery({
     ...orpc.trips.listOrganizationTrips.queryOptions({ input: {} }),
@@ -140,52 +154,50 @@ export function TripWizardStep8Publish() {
     });
   })();
 
-  const parseAudienceIds = (): string[] =>
-    audienceList
+  /** The audience ids, or null (with a field error) when one is not a valid id. */
+  const readAudienceIds = (): string[] | null => {
+    if (publishMode !== "targeted") return [];
+    const ids = audienceList
       .split(",")
       .map((id) => id.trim())
       .filter((id) => id.length > 0);
+    const valid = ids.length > 0 && ids.every((id) => UUID_PATTERN.test(id));
+    setAudienceError(
+      valid ? undefined : t("screen.organization.trips.tripWizardStep8Publish.audienceInvalid"),
+    );
+    return valid ? ids : null;
+  };
 
   const handleSaveDraft = async (): Promise<boolean> => {
-    if (authStatus !== "authenticated") return true;
-    const currentTripId = getActiveWizardTripId();
-    if (!currentTripId) return true;
-    setActionFailed(false);
-    try {
-      await saveWizardStepMutation.mutateAsync({
-        tripId: currentTripId,
+    const targetedAudienceIds = readAudienceIds();
+    if (!targetedAudienceIds) return false;
+    return run((id) =>
+      saveWizardStepMutation.mutateAsync({
+        tripId: id,
         step: "publish",
         publishMode,
-        targetedAudienceIds: parseAudienceIds(),
+        targetedAudienceIds,
         vipEarlyAccessUntil: null,
-      });
-      return true;
-    } catch {
-      setActionFailed(true);
-      return false;
-    }
+      }),
+    );
   };
 
   const handlePublish = async () => {
-    if (authStatus !== "authenticated") return;
-    const currentTripId = getActiveWizardTripId();
-    if (!currentTripId) return;
     if (publishMode === "draft") {
       await handleSaveDraft();
       return;
     }
-    setActionFailed(false);
-    try {
-      await publishMutation.mutateAsync({
-        tripId: currentTripId,
+    const targetedAudienceIds = readAudienceIds();
+    if (!targetedAudienceIds) return;
+    const published = await run((id) =>
+      publishMutation.mutateAsync({
+        tripId: id,
         publishMode,
-        targetedAudienceIds: parseAudienceIds(),
+        targetedAudienceIds,
         vipEarlyAccessUntil: null,
-      });
-      void goTo("trip-command-view", { tripId: currentTripId });
-    } catch {
-      setActionFailed(true);
-    }
+      }),
+    );
+    if (published && tripId) void goTo("trip-command-view", { tripId });
   };
 
   const columns: readonly OrgColumn<ChecklistRow>[] = [
@@ -217,11 +229,11 @@ export function TripWizardStep8Publish() {
       key: "action",
       header: t("screen.organization.trips.tripWizardStep8Publish.action"),
       render: (row) => (
-        <OrgButtonLink slug={wizardStepSlug(row.step)} variant="text">
+        <Link to={wizardStepHref(row.step, tripId)} className={orgButtonClass("text")}>
           {row.complete
             ? t("screen.organization.trips.tripWizardStep8Publish.open")
             : t("screen.organization.trips.tripWizardStep8Publish.openStepN", { n: row.number })}
-        </OrgButtonLink>
+        </Link>
       ),
     },
   ];
@@ -241,11 +253,12 @@ export function TripWizardStep8Publish() {
   return (
     <TripWizardFrame
       stepId="publish"
+      tripId={tripId}
       title={t("screen.organization.trips.tripWizardStep8Publish.publishTrip")}
       tripName={tripName}
       primaryLabel={t("screen.organization.trips.tripWizardStep8Publish.publish")}
       secondaryLabel={t("screen.organization.trips.tripWizardStep8Publish.saveDraft")}
-      primaryDisabled={blocked || (authStatus === "authenticated" && !tripId)}
+      primaryDisabled={blocked || !detail}
       primaryDescribedBy={BLOCKED_NOTE_ID}
       busy={publishMutation.isPending || saveWizardStepMutation.isPending}
       onPrimary={handlePublish}
@@ -266,14 +279,8 @@ export function TripWizardStep8Publish() {
           {blockedReason}
         </OrgAlert>
       ) : null}
-      {actionFailed ? (
-        <OrgAlert
-          tone="err"
-          title={t("screen.organization.trips.tripWizardStep8Publish.actionFailedTitle")}
-        >
-          {t("screen.organization.trips.tripWizardStep8Publish.actionFailedBody")}
-        </OrgAlert>
-      ) : null}
+      <WizardSaveAlert error={saveError} />
+      {tripQuery.isError ? <OrgError onRetry={() => void tripQuery.refetch()} /> : null}
       <OrgRow align="start">
         <OrgCard
           title={t("screen.organization.trips.tripWizardStep8Publish.readinessChecklist")}
@@ -309,6 +316,8 @@ export function TripWizardStep8Publish() {
               <OrgInput
                 label={t("screen.organization.trips.tripWizardStep8Publish.audienceList")}
                 hint={t("screen.organization.trips.tripWizardStep8Publish.audienceListHint")}
+                required
+                error={audienceError}
                 value={audienceList}
                 onChange={(event) => setAudienceList(event.target.value)}
               />

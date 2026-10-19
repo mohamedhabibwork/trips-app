@@ -12,7 +12,7 @@ import { OrgButtonLink, useOrgParams } from "../common/org-link";
 import { orgHref, type OrgSlug } from "../common/org-routes";
 import {
   TripStateBadge,
-  getActiveWizardTripId,
+  getSelectedTripId,
   isoDay,
   setSelectedTripId,
   toTripState,
@@ -121,7 +121,7 @@ export function TripCommandView() {
   const { status: authStatus, locale } = useAuth();
   const params = useOrgParams();
   const signedIn = authStatus === "authenticated";
-  const knownTripId = params.tripId ?? getActiveWizardTripId();
+  const knownTripId = params.tripId ?? getSelectedTripId();
 
   const tripsQuery = useQuery({
     ...orpc.trips.listOrganizationTrips.queryOptions({ input: {} }),
