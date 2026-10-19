@@ -1,14 +1,15 @@
 // /crew/sign-in — vehicle moderator with a staff code (SCR-PUB-19).
 //
 // The staff code *is* the second factor; the server enforces a single active device (D-107).
-import { Link, useNavigate } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import type { AuthErrorView, SessionTokenPayload } from "@trips-app/auth";
-import { Button } from "@trips-app/ui/components/button";
 import { useState } from "react";
+
+import { Button } from "@/components/kit/controls";
 
 import { client } from "../../utils/orpc";
 import { useAuth } from "../auth-context";
-import { AuthField, AuthLinkRow, AuthShell } from "../components/auth-shell";
+import { AuthField, AuthShell } from "../components/auth-shell";
 import { SubmitBanner } from "../components/submit-banner";
 import { toAuthErrorView } from "../errors";
 
@@ -56,18 +57,17 @@ export function CrewSignInScreen() {
 
   return (
     <AuthShell
-      title={t("auth.crew.title")}
-      subtitle={t("auth.crew.subtitle")}
+      layout="phone"
+      title={t("screen.auth.crew.title")}
+      subtitle={t("screen.auth.crew.lead")}
       footer={
-        <AuthLinkRow>
-          <Link to="/sign-in" className="underline underline-offset-4">
-            {t("auth.signIn.title")}
-          </Link>
-        </AuthLinkRow>
+        <p className="m-0 text-center text-[13px] leading-[18px] font-normal text-[var(--te-ink-muted)]">
+          {t("screen.auth.crew.noCode")}
+        </p>
       }
     >
       <form
-        className="grid gap-4"
+        className="flex flex-col gap-4"
         onSubmit={(event) => {
           event.preventDefault();
           void submit();
@@ -76,6 +76,7 @@ export function CrewSignInScreen() {
         <AuthField
           id="crewIdentifier"
           label={t("auth.crew.identifier")}
+          placeholder={t("screen.auth.signUp.emailPlaceholder")}
           value={identifier}
           onChange={setIdentifier}
           autoComplete="username"
@@ -86,19 +87,23 @@ export function CrewSignInScreen() {
         <AuthField
           id="staffCode"
           label={t("auth.crew.staffCode")}
+          placeholder={t("screen.auth.code.placeholder")}
           value={staffCode}
           onChange={setStaffCode}
           inputMode="numeric"
           autoComplete="one-time-code"
+          maxLength={12}
+          code
           required
           disabled={submitting}
         />
         <SubmitBanner view={error} locale={locale} />
         <Button
           type="submit"
+          className="mt-2"
           disabled={submitting || identifier.trim().length === 0 || staffCode.trim().length === 0}
         >
-          {submitting ? t("auth.common.submitting") : t("auth.crew.submit")}
+          {submitting ? t("auth.common.submitting") : t("screen.auth.signIn.submit")}
         </Button>
       </form>
     </AuthShell>

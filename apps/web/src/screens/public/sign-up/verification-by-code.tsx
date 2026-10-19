@@ -1,117 +1,132 @@
-import { useEffect, useState, type FormEvent } from "react";
-import { Link } from "@tanstack/react-router";
-import { TeButton } from "@trips-app/ui/components/te-button";
-import { TeInlineAlert } from "@trips-app/ui/components/te-inline-alert";
-import { t } from "@trips-app/i18n";
+// SCR-PUB-07 Verification by code (`/verify`): six boxes, the resend countdown, and links to resend
+// or change the destination. The destination comes from the sign-up or sign-in step.
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "@tanstack/react-router";
+import type { AuthErrorView, SessionTokenPayload } from "@trips-app/auth";
+import { useEffect, useState, type FormEvent } from "react";
+
+import { useAuth } from "@/auth/auth-context";
+import { OtpInput } from "@/auth/components/otp-input";
+import { SubmitBanner } from "@/auth/components/submit-banner";
+import { toAuthErrorView } from "@/auth/errors";
+import { homeRouteForRole } from "@/auth/home-route";
+import { Button, Notice, StepLabel, TextButton } from "@/components/kit/controls";
+import { CenteredPanel, Lead, PanelHeading } from "@/components/kit/layout";
+import { useCountdown } from "@/components/kit/use-countdown";
+import { pathFor } from "@/navigation/web-routes";
 import { orpc } from "@/utils/orpc";
-import { isCodeComplete, OtpEntryPanel } from "../../shared/otp-entry-panel";
-import { ScreenLink } from "../../shared/screen-link";
-import { StateLoading, StatePreview } from "../../shared/state-preview";
-import { AuthFrame } from "../common/auth-frame";
-import { AUTH_ROUTES } from "../common/auth-routes";
 
-function maskTarget(raw: string): string {
-  const trimmed = raw.trim();
-  if (!trimmed) return "***";
-  if (trimmed.includes("@")) {
-    const [local = "", domain = ""] = trimmed.split("@");
-    return `${local.slice(0, 1)}***@${domain}`;
-  }
-  return `${trimmed.slice(0, 3)}***${trimmed.slice(-2)}`;
-}
+import { maskDestination } from "../../shared/otp-entry-panel";
 
-function VerificationForm() {
+const CODE_LENGTH = 6;
+const TARGET_KEY = "te:lastOtpTarget";
+
+/** Confirms the email or phone before the account can act. The destination is partly masked. */
+export function VerificationByCode() {
+  const { t, locale, signInWithSession } = useAuth();
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const verifyMutation = useMutation(
-    orpc.auth.verifyOtp.mutationOptions({
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: orpc.auth.key() });
-      },
-    }),
-  );
+  const onSuccess = () => queryClient.invalidateQueries({ queryKey: orpc.auth.key() });
+  const verifyMutation = useMutation(orpc.auth.verifyOtp.mutationOptions({ onSuccess }));
+  const resendMutation = useMutation(orpc.auth.resendOtp.mutationOptions({ onSuccess }));
   const [code, setCode] = useState("");
   const [target, setTarget] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [verified, setVerified] = useState(false);
+  const [error, setError] = useState<AuthErrorView | null>(null);
+  const [seconds, restartCountdown] = useCountdown();
+  const isEmail = target.includes("@");
 
   useEffect(() => {
-    if (typeof sessionStorage !== "undefined") {
-      const saved = sessionStorage.getItem("te:lastOtpTarget");
-      if (saved) setTarget(saved);
-    }
+    if (typeof sessionStorage === "undefined") return;
+    const saved = sessionStorage.getItem(TARGET_KEY);
+    if (saved) setTarget(saved);
   }, []);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (submitting || !isCodeComplete(code)) return;
+    if (submitting || code.length !== CODE_LENGTH) return;
     setSubmitting(true);
+    setError(null);
     try {
-      await verifyMutation.mutateAsync({
+      const result = (await verifyMutation.mutateAsync({
         targetIdentifier: target || "pending-verification",
         purpose: "registration",
         code,
         surface: "web",
-      });
-    } catch {
-      // Handled via StatePreview or caller
+      })) as { session?: SessionTokenPayload | null };
+      if (result.session) {
+        signInWithSession(result.session);
+        await navigate({ to: homeRouteForRole(result.session.activeRole) });
+        return;
+      }
+      setVerified(true);
+    } catch (caught) {
+      setError(toAuthErrorView(caught, { locale, procedure: "auth/verifyOtp" }));
+      setCode("");
     } finally {
       setSubmitting(false);
     }
   }
 
-  return (
-    <form className="flex flex-col gap-6" onSubmit={(e) => void handleSubmit(e)}>
-      <OtpEntryPanel destination={maskTarget(target)} code={code} onCodeChange={setCode} />
-      <div>
-        <TeButton
-          type="submit"
-          variant="primary"
-          size="lg"
-          disabled={!isCodeComplete(code) || submitting}
-        >
-          {t("screen.public.signUp.verificationByCode.verify")}
-        </TeButton>
-      </div>
-      <section className="flex flex-col gap-2" aria-labelledby="after-verify-heading">
-        <h2 id="after-verify-heading" className="te-h3">
-          {t("screen.public.signUp.verificationByCode.afterVerification")}
-        </h2>
-        <ul className="flex flex-wrap gap-4">
-          <li>
-            <Link to={AUTH_ROUTES.signIn} className="te-link">
-              {t("screen.public.signUp.verificationByCode.signIn")}
-            </Link>
-          </li>
-          <li>
-            <ScreenLink surface="public" slug="application-status-and-changes-response">
-              {t("screen.public.signUp.verificationByCode.applicationStatus")}
-            </ScreenLink>
-          </li>
-        </ul>
-      </section>
-    </form>
-  );
-}
+  async function handleResend() {
+    if (!target) return;
+    setError(null);
+    try {
+      const next = (await resendMutation.mutateAsync({
+        targetIdentifier: target,
+        channel: isEmail ? "email" : "sms",
+        purpose: "registration",
+      })) as { resendAvailableInSeconds?: number };
+      restartCountdown(next.resendAvailableInSeconds ?? 0);
+    } catch (caught) {
+      setError(toAuthErrorView(caught, { locale, procedure: "auth/resendOtp" }));
+    }
+  }
 
-/** Confirms the email or phone before the account can act. The destination is partly masked. */
-export function VerificationByCode() {
   return (
-    <AuthFrame
-      title={t("screen.public.signUp.verificationByCode.verificationByCode")}
-      description={t("screen.public.signUp.verificationByCode.confirmYourEmailOrPhone")}
-    >
-      <StatePreview
-        main={<VerificationForm />}
-        loading={<StateLoading lines={2} />}
-        error={
-          <TeInlineAlert
-            tone="error"
-            title={t("screen.public.signUp.verificationByCode.wrongCode")}
+    <CenteredPanel width={520}>
+      <StepLabel>
+        {isEmail
+          ? t("screen.public.signUp.verification.stepEmail")
+          : t("screen.public.signUp.verification.stepPhone")}
+      </StepLabel>
+      <PanelHeading>{t("screen.auth.otp.title")}</PanelHeading>
+      <Lead>
+        {t("screen.auth.otp.sentTo")}{" "}
+        <span dir="ltr" className="font-semibold text-[var(--te-ink)]">
+          {maskDestination(target)}
+        </span>
+        {t("screen.auth.otp.expires")}
+      </Lead>
+      <form className="flex flex-col gap-5" onSubmit={(event) => void handleSubmit(event)}>
+        <OtpInput value={code} onChange={setCode} disabled={submitting || verified} />
+        <p role="status" className="m-0 text-sm leading-5 text-[var(--te-ink-muted)]">
+          {seconds > 0
+            ? t("screen.auth.otp.resendIn", { seconds })
+            : t("screen.auth.otp.resendReady")}
+        </p>
+        <SubmitBanner view={error} locale={locale} />
+        {verified ? (
+          <Notice tone="success">{t("screen.public.signUp.verification.verified")}</Notice>
+        ) : null}
+        <Button type="submit" disabled={code.length !== CODE_LENGTH || submitting || verified}>
+          {submitting ? t("auth.common.submitting") : t("auth.otp.submit")}
+        </Button>
+        <div className="flex flex-wrap justify-between gap-3">
+          <TextButton
+            onClick={() => void handleResend()}
+            disabled={seconds > 0 || !target || resendMutation.isPending}
           >
-            {t("screen.public.signUp.verificationByCode.thatCodeDoesNotMatch")}
-          </TeInlineAlert>
-        }
-      />
-    </AuthFrame>
+            {t("auth.otp.resend")}
+          </TextButton>
+          <TextButton onClick={() => void navigate({ to: pathFor("SCR-PUB-02") })}>
+            {isEmail
+              ? t("screen.auth.signUp.changeEmail")
+              : t("screen.public.signUp.verification.changeNumber")}
+          </TextButton>
+        </div>
+      </form>
+    </CenteredPanel>
   );
 }

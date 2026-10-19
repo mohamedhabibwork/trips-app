@@ -14,12 +14,21 @@ interface BrandLinkProps {
 
 export function BrandLink({ to, onDark = false, className = "h-9" }: BrandLinkProps) {
   const { t } = useAuth();
+  // The surfaces swap in dark mode (inverse turns cream), so each theme gets the logo that reads
+  // on it: full colour on a light surface, reversed on a dark one.
+  const lightThemeLogo = onDark ? LOGO_ON_DARK : LOGO_ON_LIGHT;
+  const darkThemeLogo = onDark ? LOGO_ON_LIGHT : LOGO_ON_DARK;
   return (
     <Link to={to} className="inline-flex shrink-0 items-center">
       <img
-        src={onDark ? LOGO_ON_DARK : LOGO_ON_LIGHT}
+        src={lightThemeLogo}
         alt={t("component.shell.brand.name")}
-        className={`${className} w-auto`}
+        className={`${className} w-auto dark:hidden`}
+      />
+      <img
+        src={darkThemeLogo}
+        alt={t("component.shell.brand.name")}
+        className={`${className} hidden w-auto dark:inline`}
       />
     </Link>
   );

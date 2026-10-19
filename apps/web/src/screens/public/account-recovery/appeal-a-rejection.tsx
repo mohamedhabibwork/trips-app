@@ -1,24 +1,36 @@
-import { useEffect, useState, type FormEvent } from "react";
-import { TeButton } from "@trips-app/ui/components/te-button";
-import { TeFileUpload, type TeFileUploadItem } from "@trips-app/ui/components/te-file-upload";
-import { TeInlineAlert } from "@trips-app/ui/components/te-inline-alert";
-import { TeTextarea } from "@trips-app/ui/components/te-textarea";
-import { t } from "@trips-app/i18n";
+// SCR-PUB-18 Appeal a rejection (`/application-status/appeal`): the recorded reason, the appeal
+// statement and optional supporting files.
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import type { TeFileUploadItem } from "@trips-app/ui/components/te-file-upload";
+import { TeIcon } from "@trips-app/ui/components/te-icon";
+import { useEffect, useState, type FormEvent } from "react";
+
 import { useAuth } from "@/auth/auth-context";
+import { Button, Notice, TextAreaField, TextLink } from "@/components/kit/controls";
+import { ActionRow, PageIntro, PageMain, Panel } from "@/components/kit/layout";
+import { pathFor } from "@/navigation/web-routes";
 import { orpc } from "@/utils/orpc";
+
 import {
   getApplicantApplicationId,
   setApplicantApplicationId,
   uploadItemsToDocuments,
 } from "../../onboarding-state";
-import { buttonLinkClass } from "../../shared/button-link";
-import { ScreenLink } from "../../shared/screen-link";
-import { toPendingItems, withoutItem } from "../../shared/upload-items";
-import { AuthFrame } from "../common/auth-frame";
+import { DocumentDrop } from "../common/document-drop";
 
-function AppealForm({ applicationId }: { applicationId: string | null }) {
+const MIN_STATEMENT_LENGTH = 10;
+
+/** A rejected applicant asks for a review of the decision. */
+export function AppealARejection() {
+  const { t, status: authStatus } = useAuth();
   const queryClient = useQueryClient();
+  const storedId = getApplicantApplicationId() ?? undefined;
+  const statusQuery = useQuery({
+    ...orpc.onboarding.getApplicationStatus.queryOptions({
+      input: storedId ? { applicationId: storedId } : {},
+    }),
+    enabled: authStatus === "authenticated",
+  });
   const appealMutation = useMutation(
     orpc.onboarding.submitAppeal.mutationOptions({
       onSuccess: () => {
@@ -28,19 +40,28 @@ function AppealForm({ applicationId }: { applicationId: string | null }) {
   );
   const [statement, setStatement] = useState("");
   const [files, setFiles] = useState<readonly TeFileUploadItem[]>([]);
-  const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const loaded = statusQuery.data?.application as unknown as
+    | { id: string; decisionNotes?: string | null }
+    | undefined;
+  const applicationId = loaded?.id ?? storedId ?? null;
+  const reason = loaded?.decisionNotes ?? null;
+  const submitting = appealMutation.isPending;
+
+  useEffect(() => {
+    if (loaded?.id) setApplicantApplicationId(loaded.id);
+  }, [loaded?.id]);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (statement.trim().length < 10 || submitting) return;
+    if (statement.trim().length < MIN_STATEMENT_LENGTH || submitting) return;
     if (!applicationId) {
-      setErrorMsg("No rejected application found for this session.");
+      setErrorMessage(t("screen.public.appeal.noApplication"));
       return;
     }
-    setSubmitting(true);
-    setErrorMsg(null);
+    setErrorMessage(null);
     try {
       await appealMutation.mutateAsync({
         applicationId,
@@ -49,115 +70,65 @@ function AppealForm({ applicationId }: { applicationId: string | null }) {
       });
       setSubmitted(true);
     } catch (caught) {
-      setErrorMsg(caught instanceof Error ? caught.message : "Could not submit appeal.");
-    } finally {
-      setSubmitting(false);
+      setErrorMessage(
+        caught instanceof Error ? caught.message : t("screen.public.appeal.submitFailed"),
+      );
     }
   }
 
   return (
-    <form className="flex flex-col gap-6" onSubmit={(e) => void handleSubmit(e)}>
-      <TeTextarea
-        label={t("screen.public.accountRecovery.appealARejection.appealStatement")}
-        name="appealStatement"
-        rows={6}
-        value={statement}
-        onChange={(event) => setStatement(event.target.value)}
-        supportingText={t(
-          "screen.public.accountRecovery.appealARejection.explainWhyTheDecisionShould",
-        )}
-        required
+    <PageMain width="narrow">
+      <PageIntro
+        title={t("screen.public.appeal.title")}
+        description={t("screen.public.appeal.lead")}
       />
-      <TeFileUpload
-        label={t("screen.public.accountRecovery.appealARejection.supportingFiles")}
-        accept="image/*,application/pdf"
-        multiple
-        files={files}
-        onFilesSelected={(selected) => setFiles([...files, ...toPendingItems(selected)])}
-        onRemove={(name) => setFiles(withoutItem(files, name))}
-        hint={t("screen.public.accountRecovery.appealARejection.addAnyDocumentThatSupports")}
-      />
-      {submitted ? (
-        <TeInlineAlert
-          tone="info"
-          title={t("screen.public.accountRecovery.appealARejection.appealSubmitted")}
-        >
-          {t("screen.public.accountRecovery.appealARejection.yourAppealHasBeenSent")}
-        </TeInlineAlert>
-      ) : null}
-      {errorMsg ? (
-        <TeInlineAlert
-          tone="error"
-          title={t("screen.public.accountRecovery.appealARejection.appealCouldNotBeSubmitted")}
-        >
-          {errorMsg}
-        </TeInlineAlert>
-      ) : null}
-      <div className="flex flex-wrap gap-3">
-        <TeButton
-          type="submit"
-          variant="primary"
-          size="lg"
-          disabled={statement.trim().length < 10 || submitting || submitted}
-        >
-          {submitting
-            ? t("screen.public.accountRecovery.appealARejection.submitting")
-            : t("screen.public.accountRecovery.appealARejection.submitAppeal")}
-        </TeButton>
-        <ScreenLink
-          surface="public"
-          slug="application-status-and-changes-response"
-          className={buttonLinkClass("ghost")}
-        >
-          {t("screen.public.accountRecovery.appealARejection.backToStatus")}
-        </ScreenLink>
-      </div>
-    </form>
-  );
-}
-
-/** A rejected applicant asks for a review while the appeal window is open. */
-export function AppealARejection() {
-  const { status: authStatus } = useAuth();
-  const storedId = getApplicantApplicationId() ?? undefined;
-  const statusQuery = useQuery({
-    ...orpc.onboarding.getApplicationStatus.queryOptions({
-      input: storedId ? { applicationId: storedId } : {},
-    }),
-    enabled: authStatus === "authenticated",
-  });
-
-  const loaded = statusQuery.data?.application as unknown as
-    | {
-        id: string;
-        decisionNotes?: string | null;
-        rejectionReason?: string | null;
-      }
-    | undefined;
-
-  const applicationId = loaded?.id ?? storedId ?? null;
-  const rejectionReason = loaded?.decisionNotes ?? loaded?.rejectionReason ?? null;
-
-  useEffect(() => {
-    if (loaded?.id) {
-      setApplicantApplicationId(loaded.id);
-    }
-  }, [loaded?.id]);
-
-  return (
-    <AuthFrame
-      title={t("screen.public.accountRecovery.appealARejection.appealARejection")}
-      description={t("screen.public.accountRecovery.appealARejection.askForAReviewOf")}
-    >
-      <TeInlineAlert
-        tone="error"
-        title={t("screen.public.accountRecovery.appealARejection.rejected")}
-      >
-        {t("screen.public.accountRecovery.appealARejection.reasonOnRecord")}{" "}
-        {rejectionReason ??
-          t("screen.public.accountRecovery.appealARejection.theReasonFromTheReview")}
-      </TeInlineAlert>
-      <AppealForm applicationId={applicationId} />
-    </AuthFrame>
+      <Panel as="section">
+        <div className="flex flex-col gap-1.5 rounded-[var(--te-radius-md)] bg-[var(--te-danger-soft)] px-4 py-3.5 text-sm leading-5 text-[var(--te-danger)]">
+          <span className="flex items-center gap-2 font-semibold">
+            <TeIcon name="alert" className="size-4" />
+            {t("screen.public.appeal.rejected")}
+          </span>
+          <span className="text-[var(--te-ink)]">
+            {t("screen.public.appeal.reason", {
+              reason: reason ?? t("screen.public.appeal.reasonMissing"),
+            })}
+          </span>
+        </div>
+        <form className="flex flex-col gap-[18px]" onSubmit={(event) => void handleSubmit(event)}>
+          <TextAreaField
+            name="appealStatement"
+            label={t("screen.public.appeal.statement")}
+            placeholder={t("screen.public.appeal.statementPlaceholder")}
+            rows={6}
+            value={statement}
+            onChange={(event) => setStatement(event.target.value)}
+            minLength={MIN_STATEMENT_LENGTH}
+            required
+            disabled={submitting || submitted}
+          />
+          <DocumentDrop
+            title={t("screen.public.appeal.files")}
+            hint={t("screen.public.appeal.filesHint")}
+            items={files}
+            onChange={setFiles}
+            multiple
+            disabled={submitting || submitted}
+          />
+          {submitted ? <Notice tone="success">{t("screen.public.appeal.submitted")}</Notice> : null}
+          {errorMessage ? <Notice tone="danger">{errorMessage}</Notice> : null}
+          <ActionRow>
+            <Button
+              type="submit"
+              disabled={statement.trim().length < MIN_STATEMENT_LENGTH || submitting || submitted}
+            >
+              {submitting ? t("screen.public.appeal.submitting") : t("screen.public.appeal.submit")}
+            </Button>
+            <TextLink to={pathFor("SCR-PUB-17")} tone="ink">
+              {t("screen.public.appeal.cancel")}
+            </TextLink>
+          </ActionRow>
+        </form>
+      </Panel>
+    </PageMain>
   );
 }

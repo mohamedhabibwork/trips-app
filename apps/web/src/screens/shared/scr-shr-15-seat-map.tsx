@@ -1,171 +1,137 @@
-import { useMemo, useState } from "react";
-import { TeButton } from "@trips-app/ui/components/te-button";
-import { TeInlineAlert } from "@trips-app/ui/components/te-inline-alert";
-import { TePageHeader } from "@trips-app/ui/components/te-page-header";
-import {
-  TE_SEAT_STATE_LABELS,
-  TeSeatMap,
-  type TeSeat,
-  type TeSeatRow,
-} from "@trips-app/ui/components/te-seat-map";
-import { t } from "@trips-app/i18n";
+// SCR-SHR-15 Seat map for the first public trip's vehicle: pick a seat, then hold it. The hold time
+// comes back from the server.
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+
+import { useAuth } from "@/auth/auth-context";
+import { Button, Notice } from "@/components/kit/controls";
+import { formatDateTime } from "@/components/kit/format";
+import { PhoneColumn } from "@/components/kit/layout";
 import { orpc } from "@/utils/orpc";
-import { goBack } from "./screen-actions";
-import { StateLoading, StatePreview } from "./state-preview";
 
-const DEFAULT_SEAT_ROWS: readonly TeSeatRow[] = [
-  {
-    id: "row-1",
-    seats: [
-      { id: "1A", label: "1A", state: "available" },
-      { id: "1B", label: "1B", state: "taken" },
-      { id: "1C", label: "1C", state: "available" },
-      { id: "1D", label: "1D", state: "blocked" },
-    ],
-  },
-  {
-    id: "row-2",
-    seats: [
-      { id: "2A", label: "2A", state: "available" },
-      { id: "2B", label: "2B", state: "available" },
-      { id: "2C", label: "2C", state: "taken" },
-      { id: "2D", label: "2D", state: "available" },
-    ],
-  },
-];
+import { SeatMap, SeatMapLegend, type SeatView } from "./seat-map";
+import { SignInRequired } from "./sign-in-required";
 
-function markSelected(seat: TeSeat, selectedId: string | undefined): TeSeat {
-  if (seat.state === "available" && seat.id === selectedId) {
-    return { ...seat, state: "selected" };
-  }
-  return seat;
+const MINUTE_MS = 60 * 1000;
+
+function toSeatState(status: string): SeatView["state"] {
+  if (status === "held") return "held";
+  if (status === "reserved" || status === "blocked") return "taken";
+  return "available";
 }
 
-function SeatMapView() {
+export function ScrShr15SeatMap() {
+  const { t, locale, status } = useAuth();
+  const signedIn = status === "authenticated";
   const queryClient = useQueryClient();
   const tripsQuery = useQuery(orpc.trips.browsePublicTrips.queryOptions({ input: {} }));
-  const firstTrip = tripsQuery.data?.items?.[0];
-  const tripId = firstTrip?.id ?? null;
-
+  const trip = tripsQuery.data?.items?.[0];
   const seatMapQuery = useQuery({
-    ...orpc.seats.getSeatMap.queryOptions({ input: { tripId: tripId! } }),
-    enabled: Boolean(tripId),
+    ...orpc.seats.getSeatMap.queryOptions({ input: { tripId: trip?.id ?? "" } }),
+    enabled: signedIn && Boolean(trip?.id),
   });
-  const seatMap = seatMapQuery.data;
-  const vehicleId = seatMap?.vehicleId ?? null;
-
-  const holdSeatsMutation = useMutation(
+  const holdMutation = useMutation(
     orpc.seats.holdSeats.mutationOptions({
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: orpc.seats.key() });
       },
     }),
   );
+  const [selected, setSelected] = useState<string | null>(null);
+  const [heldUntil, setHeldUntil] = useState<Date | null>(null);
 
-  const [selectedId, setSelectedId] = useState<string | undefined>(undefined);
-
-  const baseRows: readonly TeSeatRow[] = useMemo(() => {
-    if (!seatMap?.seats?.length) return DEFAULT_SEAT_ROWS;
-    const grouped = new Map<number, TeSeat[]>();
-    for (const s of seatMap.seats) {
-      const list = grouped.get(s.rowIndex) ?? [];
-      list.push({
-        id: s.seatLabel,
-        label: s.seatLabel,
-        state:
-          s.status === "reserved"
-            ? "taken"
-            : s.status === "held" || s.status === "blocked"
-              ? "blocked"
-              : "available",
-      });
-      grouped.set(s.rowIndex, list);
-    }
-    return Array.from(grouped.entries()).map(([rowNum, rowSeats]) => ({
-      id: `row-${rowNum}`,
-      seats: rowSeats,
-    }));
-  }, [seatMap]);
-
-  const handleConfirmSeat = async () => {
-    if (!selectedId || !tripId || !vehicleId) return;
-    try {
-      await holdSeatsMutation.mutateAsync({
-        tripId,
-        vehicleId,
-        seatLabels: [selectedId],
-      });
-    } catch {
-      // Ignore error when unauthenticated in preview
-    }
-  };
-
-  const rows: readonly TeSeatRow[] = baseRows.map((row) => ({
-    ...row,
-    seats: row.seats.map((seat) => markSelected(seat, selectedId)),
+  const seatMap = seatMapQuery.data;
+  const now = Date.now();
+  const seats: SeatView[] = (seatMap?.seats ?? []).map((seat) => ({
+    label: seat.seatLabel,
+    rowIndex: seat.rowIndex,
+    colIndex: seat.colIndex,
+    state: toSeatState(seat.status),
+    holdMinutes: seat.holdExpiresAt
+      ? Math.max(0, Math.ceil((new Date(seat.holdExpiresAt).getTime() - now) / MINUTE_MS))
+      : undefined,
   }));
-  const seats = baseRows.flatMap((row) => row.seats);
+  const tripTitle = trip
+    ? locale === "ar"
+      ? trip.titleAr || trip.titleEn
+      : trip.titleEn || trip.titleAr
+    : "";
+
+  async function confirmSeat() {
+    if (!selected || !trip || !seatMap) return;
+    try {
+      const result = await holdMutation.mutateAsync({
+        tripId: trip.id,
+        vehicleId: seatMap.vehicleId,
+        seatLabels: [selected],
+      });
+      setHeldUntil(new Date(result.holdExpiresAt));
+    } catch {
+      setHeldUntil(null);
+    }
+  }
+
+  if (!signedIn) {
+    return (
+      <PhoneColumn>
+        <SignInRequired message={t("screen.shared.seatMap.signIn")} />
+      </PhoneColumn>
+    );
+  }
+  if (tripsQuery.isPending || (trip && seatMapQuery.isPending)) {
+    return (
+      <PhoneColumn>
+        <p role="status" className="m-0 text-sm text-[var(--te-ink-muted)]">
+          {t("screen.shared.seatMap.loading")}
+        </p>
+      </PhoneColumn>
+    );
+  }
+  if (!trip || !seatMap || seats.length === 0) {
+    return (
+      <PhoneColumn>
+        <Notice tone="info">{t("screen.shared.seatMap.noSeats")}</Notice>
+      </PhoneColumn>
+    );
+  }
 
   return (
-    <div className="flex flex-col gap-6">
-      <TeSeatMap
-        rows={rows}
-        onSelect={setSelectedId}
-        ariaLabel={t("screen.shared.scrShr15SeatMap.vehicleSeatMap")}
-      />
-      <section aria-labelledby="seat-list-heading" className="flex flex-col gap-2">
-        <h2 id="seat-list-heading" className="te-h3">
-          {t("screen.shared.scrShr15SeatMap.seatsAsAList")}
-        </h2>
-        <ul className="flex flex-col gap-1">
-          {seats.map((seat) => (
-            <li key={seat.id} className="te-body">
-              {t("screen.shared.scrShr15SeatMap.seat")} {seat.label}:{" "}
-              {TE_SEAT_STATE_LABELS[seat.state]}
-            </li>
-          ))}
-        </ul>
-      </section>
-      <p className="te-body" aria-live="polite">
-        {t("screen.shared.scrShr15SeatMap.selectedSeat")} {selectedId ?? "none"}
+    <PhoneColumn className="gap-3.5">
+      <h1 className="sr-only">{t("screen.shared.seatMap.title")}</h1>
+      <p className="m-0 text-sm leading-5 text-[var(--te-ink-muted)]">
+        {t("screen.shared.seatMap.lead", { trip: tripTitle })}
       </p>
-      <div>
-        <TeButton
-          variant="primary"
-          size="lg"
-          disabled={selectedId === undefined}
-          onClick={() => void handleConfirmSeat()}
-        >
-          {t("screen.shared.scrShr15SeatMap.confirmSeat")}
-        </TeButton>
-      </div>
-    </div>
-  );
-}
-
-/** Seats of one vehicle. A traveler selects a seat; screen readers get the same information as a list. */
-export function ScrShr15SeatMap() {
-  return (
-    <div className="mx-auto flex w-full max-w-2xl flex-col gap-6 px-4 py-6">
-      <TePageHeader
-        title={t("screen.shared.scrShr15SeatMap.seatMap")}
-        description={t("screen.shared.scrShr15SeatMap.selectAnAvailableSeatSeat")}
-        actions={
-          <TeButton variant="ghost" onClick={goBack}>
-            {t("screen.shared.scrShr15SeatMap.back")}
-          </TeButton>
-        }
+      <SeatMapLegend />
+      <SeatMap
+        seats={seats}
+        columns={seatMap.cols}
+        selected={selected}
+        onSelect={(label) => {
+          setSelected(label === selected ? null : label);
+          setHeldUntil(null);
+        }}
+        disabled={holdMutation.isPending}
       />
-      <StatePreview
-        main={<SeatMapView />}
-        loading={<StateLoading />}
-        error={
-          <TeInlineAlert tone="error" title={t("screen.shared.scrShr15SeatMap.seatTaken")}>
-            {t("screen.shared.scrShr15SeatMap.thisSeatWasTakenWhile")}
-          </TeInlineAlert>
-        }
-      />
-    </div>
+      {heldUntil && selected ? (
+        <p className="m-0 text-[13px] leading-[18px] text-[var(--te-ink-muted)]">
+          {t("screen.shared.seatMap.heldNote", {
+            seat: selected,
+            time: formatDateTime(heldUntil, locale),
+          })}
+        </p>
+      ) : null}
+      {holdMutation.isError ? (
+        <Notice tone="danger">{t("screen.shared.seatMap.holdFailed")}</Notice>
+      ) : null}
+      <Button
+        className="mt-auto"
+        disabled={!selected || holdMutation.isPending || heldUntil !== null}
+        onClick={() => void confirmSeat()}
+      >
+        {selected
+          ? t("screen.shared.seatMap.confirm", { seat: selected })
+          : t("screen.shared.seatMap.choose")}
+      </Button>
+    </PhoneColumn>
   );
 }

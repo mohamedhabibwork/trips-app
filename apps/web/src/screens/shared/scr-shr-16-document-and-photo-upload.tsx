@@ -1,21 +1,54 @@
-import { useState } from "react";
-import { TeButton } from "@trips-app/ui/components/te-button";
-import { TeFileUpload, type TeFileUploadItem } from "@trips-app/ui/components/te-file-upload";
-import { TeInlineAlert } from "@trips-app/ui/components/te-inline-alert";
-import { TePageHeader } from "@trips-app/ui/components/te-page-header";
-import { t } from "@trips-app/i18n";
+// SCR-SHR-16 Document and photo upload: pick photos, each uploads with its own status, and the
+// step continues once at least eight are complete and none is still uploading.
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Link } from "@tanstack/react-router";
+import { TeIcon } from "@trips-app/ui/components/te-icon";
+import { cn } from "@trips-app/ui/lib/utils";
+import { useState } from "react";
+
+import { useAuth } from "@/auth/auth-context";
+import { DropZone, buttonClass } from "@/components/kit/controls";
+import { PhoneColumn } from "@/components/kit/layout";
 import { orpc } from "@/utils/orpc";
-import { goBack } from "./screen-actions";
-import { StateLoading, StatePreview } from "./state-preview";
-import { toPendingItems, withoutItem } from "./upload-items";
+
+import { SignInRequired } from "./sign-in-required";
 
 const MIN_PHOTOS = 8;
-const PLACEHOLDER_BASE64 = "dHJpcHMtYXBwLWZpbGU=";
+const MB = 1024 * 1024;
+const MAX_PHOTO_BYTES = 15 * MB;
+const ACCEPTED_TYPES = ["image/jpeg", "image/png"] as const;
 
-function UploadViews() {
+type UploadStatus = "uploading" | "done" | "tooLarge" | "wrongType" | "failed";
+
+interface UploadRow {
+  name: string;
+  status: UploadStatus;
+}
+
+function readBase64(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = String(reader.result ?? "");
+      resolve(result.slice(result.indexOf(",") + 1));
+    };
+    reader.onerror = () => reject(reader.error ?? new Error("Could not read the file."));
+    reader.readAsDataURL(file);
+  });
+}
+
+function acceptedType(type: string): type is (typeof ACCEPTED_TYPES)[number] {
+  return (ACCEPTED_TYPES as readonly string[]).includes(type);
+}
+
+export function ScrShr16DocumentAndPhotoUpload() {
+  const { t, status } = useAuth();
   const queryClient = useQueryClient();
-  const filesQuery = useQuery(orpc.media.listFiles.queryOptions({ input: {} }));
+  const signedIn = status === "authenticated";
+  const filesQuery = useQuery({
+    ...orpc.media.listFiles.queryOptions({ input: {} }),
+    enabled: signedIn,
+  });
   const uploadMutation = useMutation(
     orpc.media.uploadFile.mutationOptions({
       onSuccess: () => {
@@ -23,135 +56,150 @@ function UploadViews() {
       },
     }),
   );
+  const [rows, setRows] = useState<readonly UploadRow[]>([]);
 
-  const [localDocs, setLocalDocs] = useState<readonly TeFileUploadItem[]>([]);
-  const [localPhotos, setLocalPhotos] = useState<readonly TeFileUploadItem[]>([]);
-  const [removedDocNames, setRemovedDocNames] = useState<ReadonlySet<string>>(new Set());
-  const [removedPhotoNames, setRemovedPhotoNames] = useState<ReadonlySet<string>>(new Set());
+  const setStatus = (name: string, status: UploadStatus) =>
+    setRows((current) => current.map((row) => (row.name === name ? { ...row, status } : row)));
 
-  const remoteFiles = filesQuery.data?.files ?? [];
-  const remoteDocs: TeFileUploadItem[] = [];
-  const remotePhotos: TeFileUploadItem[] = [];
-  for (const item of remoteFiles) {
-    const uploadItem: TeFileUploadItem = {
-      name: item.originalFilename,
-      status:
-        item.status === "linked"
-          ? "done"
-          : item.status === "expired" || item.status === "deleted"
-            ? "failed"
-            : "uploading",
-    };
-    if (item.mimeType.startsWith("image/")) {
-      remotePhotos.push(uploadItem);
-    } else {
-      remoteDocs.push(uploadItem);
+  async function upload(file: File) {
+    if (!acceptedType(file.type)) return setStatus(file.name, "wrongType");
+    if (file.size > MAX_PHOTO_BYTES) return setStatus(file.name, "tooLarge");
+    try {
+      await uploadMutation.mutateAsync({
+        originalFilename: file.name,
+        mimeType: file.type,
+        contentBase64: await readBase64(file),
+        purpose: "portfolio_photo",
+      });
+      setStatus(file.name, "done");
+    } catch {
+      setStatus(file.name, "failed");
     }
   }
 
-  const documents = [...remoteDocs, ...localDocs].filter((d) => !removedDocNames.has(d.name));
-  const photos = [...remotePhotos, ...localPhotos].filter((p) => !removedPhotoNames.has(p.name));
-  const uploadedPhotos = photos.filter((file) => file.status === "done").length;
+  function handleFiles(files: readonly File[]) {
+    const known = new Set(rows.map((row) => row.name));
+    const fresh = files.filter((file) => !known.has(file.name));
+    setRows((current) => [
+      ...current,
+      ...fresh.map((file): UploadRow => ({ name: file.name, status: "uploading" })),
+    ]);
+    for (const file of fresh) void upload(file);
+  }
 
-  const handleDocumentsSelected = (files: readonly File[]) => {
-    const pending = toPendingItems(files);
-    setLocalDocs((prev) => [...prev, ...pending]);
-    for (const file of files) {
-      void uploadMutation
-        .mutateAsync({
-          originalFilename: file.name,
-          mimeType: file.type === "application/pdf" ? "application/pdf" : "image/jpeg",
-          contentBase64: PLACEHOLDER_BASE64,
-          purpose: "document",
-        })
-        .catch(() => {});
-    }
-  };
-
-  const handlePhotosSelected = (files: readonly File[]) => {
-    const pending = toPendingItems(files);
-    setLocalPhotos((prev) => [...prev, ...pending]);
-    for (const file of files) {
-      void uploadMutation
-        .mutateAsync({
-          originalFilename: file.name,
-          mimeType: file.type === "image/png" ? "image/png" : "image/jpeg",
-          contentBase64: PLACEHOLDER_BASE64,
-          purpose: "general",
-        })
-        .catch(() => {});
-    }
-  };
+  const savedImages = (filesQuery.data?.files ?? []).filter(
+    (file) => file.mimeType.startsWith("image/") && file.status === "linked",
+  ).length;
+  const complete = savedImages + rows.filter((row) => row.status === "done").length;
+  const uploading = rows.some((row) => row.status === "uploading");
+  const ready = complete >= MIN_PHOTOS && !uploading;
 
   return (
-    <div className="flex flex-col gap-8">
-      <TeFileUpload
-        label={t("screen.shared.scrShr16DocumentAndPhotoUpload.documents")}
-        accept="image/*,application/pdf"
+    <PhoneColumn className="gap-3.5">
+      <div className="flex items-center justify-between gap-3">
+        <h1 className="m-0 text-[22px] leading-[30px] font-bold">
+          {t("screen.shared.upload.title")}
+        </h1>
+        <span className="text-sm font-semibold">
+          {t("screen.shared.upload.count", { count: complete, required: MIN_PHOTOS })}
+        </span>
+      </div>
+      {signedIn ? null : <SignInRequired message={t("screen.shared.upload.signIn")} />}
+      <DropZone
+        centered
+        disabled={!signedIn}
         multiple
-        files={documents}
-        onFilesSelected={handleDocumentsSelected}
-        onRemove={(name) => {
-          setRemovedDocNames((prev) => new Set([...prev, name]));
-          setLocalDocs((prev) => withoutItem(prev, name));
-        }}
-        hint={t("screen.shared.scrShr16DocumentAndPhotoUpload.chooseAFileOrTake")}
+        accept={ACCEPTED_TYPES.join(",")}
+        title={t("screen.shared.upload.choose")}
+        hint={t("screen.shared.upload.hint")}
+        onFiles={handleFiles}
       />
-      <section className="flex flex-col gap-4" aria-labelledby="photos-heading">
-        <h2 id="photos-heading" className="te-h3">
-          {t("screen.shared.scrShr16DocumentAndPhotoUpload.portfolioPhotos")}
-        </h2>
-        <TeInlineAlert
-          tone="info"
-          title={t("screen.shared.scrShr16DocumentAndPhotoUpload.minimumCount")}
-        >
-          {t("screen.shared.scrShr16DocumentAndPhotoUpload.uploadProgress", {
-            min: MIN_PHOTOS,
-            uploaded: uploadedPhotos,
-          })}
-        </TeInlineAlert>
-        <TeFileUpload
-          label={t("screen.shared.scrShr16DocumentAndPhotoUpload.portfolioPhotosLabel")}
-          accept="image/*"
-          multiple
-          files={photos}
-          onFilesSelected={handlePhotosSelected}
-          onRemove={(name) => {
-            setRemovedPhotoNames((prev) => new Set([...prev, name]));
-            setLocalPhotos((prev) => withoutItem(prev, name));
-          }}
-          hint={t("screen.shared.scrShr16DocumentAndPhotoUpload.photosAreStrippedOfLocation")}
-        />
-      </section>
-    </div>
+      {rows.length > 0 ? (
+        <ul className="m-0 flex list-none flex-col gap-2.5 p-0">
+          {rows.map((row) => (
+            <UploadItem
+              key={row.name}
+              row={row}
+              onRemove={() =>
+                setRows((current) => current.filter((item) => item.name !== row.name))
+              }
+            />
+          ))}
+        </ul>
+      ) : null}
+      <p className="m-0 text-[13px] leading-[18px] text-[var(--te-ink-muted)]">
+        {t("screen.shared.upload.privacy")}
+      </p>
+      {ready ? (
+        <Link to="/" className={cn(buttonClass("primary"), "mt-auto")}>
+          {t("screen.shared.upload.continue")}
+        </Link>
+      ) : (
+        <button type="button" disabled className={cn(buttonClass("primary"), "mt-auto")}>
+          {t("screen.shared.upload.waiting")}
+        </button>
+      )}
+    </PhoneColumn>
   );
 }
 
-/** Document and photo upload with per-file status, validation, and the required minimum count. */
-export function ScrShr16DocumentAndPhotoUpload() {
+function UploadItem({ row, onRemove }: { row: UploadRow; onRemove: () => void }) {
+  const { t } = useAuth();
+  const failed = row.status === "tooLarge" || row.status === "wrongType" || row.status === "failed";
   return (
-    <div className="mx-auto flex w-full max-w-2xl flex-col gap-8 px-4 py-6">
-      <TePageHeader
-        title={t("screen.shared.scrShr16DocumentAndPhotoUpload.documentAndPhotoUpload")}
-        description={t("screen.shared.scrShr16DocumentAndPhotoUpload.filesAreCheckedForType")}
-        actions={
-          <TeButton variant="ghost" onClick={goBack}>
-            {t("screen.shared.scrShr16DocumentAndPhotoUpload.back")}
-          </TeButton>
-        }
+    <li
+      className={cn(
+        "flex items-center gap-3 rounded-[var(--te-radius-md)] p-3",
+        failed
+          ? "bg-[var(--te-danger-soft)] text-[var(--te-danger)]"
+          : "bg-[var(--te-surface-raised)] shadow-[var(--te-card-shadow)]",
+      )}
+    >
+      <span
+        className={cn(
+          "size-12 flex-none rounded-[var(--te-radius-sm)]",
+          failed ? "bg-[var(--te-surface-raised)]" : "bg-[var(--te-hairline)]",
+        )}
       />
-      <StatePreview
-        main={<UploadViews />}
-        loading={<StateLoading />}
-        error={
-          <TeInlineAlert
-            tone="error"
-            title={t("screen.shared.scrShr16DocumentAndPhotoUpload.fileRefused")}
+      <span className="flex min-w-0 flex-1 flex-col gap-1 text-sm">
+        <span dir="auto" className="truncate font-semibold text-[var(--te-ink)]">
+          {row.name}
+        </span>
+        {row.status === "uploading" ? (
+          <>
+            <span
+              role="progressbar"
+              aria-label={t("screen.shared.upload.uploadingFile", { name: row.name })}
+              className="block h-1.5 overflow-hidden rounded-[var(--te-radius-pill)] bg-[var(--te-hairline)]"
+            >
+              <span className="block h-full w-2/5 animate-pulse bg-[var(--te-primary)]" />
+            </span>
+            <span className="text-[13px] text-[var(--te-ink-muted)]">
+              {t("screen.shared.upload.uploading")}
+            </span>
+          </>
+        ) : (
+          <span
+            className={cn(
+              "inline-flex items-center gap-1 text-[13px] font-semibold",
+              failed ? "" : "text-[var(--te-success)]",
+            )}
           >
-            {t("screen.shared.scrShr16DocumentAndPhotoUpload.thisFileTypeIsNot")}
-          </TeInlineAlert>
-        }
-      />
-    </div>
+            <TeIcon name={failed ? "alert" : "check"} className="size-4" />
+            {t(`screen.shared.upload.status.${row.status}`)}
+          </span>
+        )}
+      </span>
+      <button
+        type="button"
+        aria-label={t("screen.public.common.documentDrop.removeFile", { name: row.name })}
+        onClick={onRemove}
+        className="min-h-11 min-w-11 cursor-pointer border-0 bg-transparent text-[13px] font-semibold text-[var(--te-ink)]"
+      >
+        {row.status === "uploading"
+          ? t("screen.shared.upload.cancel")
+          : t("screen.public.common.documentDrop.remove")}
+      </button>
+    </li>
   );
 }

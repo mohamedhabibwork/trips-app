@@ -1,46 +1,94 @@
-import { TeButton } from "@trips-app/ui/components/te-button";
-import { TeOtpInput, TE_OTP_DEFAULT_LENGTH } from "@trips-app/ui/components/te-otp-input";
-import { t } from "@trips-app/i18n";
+// The phone code-entry step from SCR-SHR-14: six boxes, a live resend countdown, and links to change
+// the destination or resend. The caller owns the code, the submit and the resend.
+import type { AuthErrorView } from "@trips-app/auth";
+import type { FormEvent } from "react";
 
-// The resend action unlocks after a 45 to 60 second countdown (A1). The upper bound is shown.
-export const RESEND_COUNTDOWN_SECONDS = 60;
-export const CODE_EXPIRY_MINUTES = 5;
+import { useAuth } from "@/auth/auth-context";
+import { OtpInput } from "@/auth/components/otp-input";
+import { SubmitBanner } from "@/auth/components/submit-banner";
+import { Button, TextButton } from "@/components/kit/controls";
 
-/** A code is complete when every cell holds a digit. */
+export const OTP_CODE_LENGTH = 6;
+
+/** A code is complete when every box holds a digit. */
 export function isCodeComplete(code: string): boolean {
-  return code.length === TE_OTP_DEFAULT_LENGTH;
+  return code.length === OTP_CODE_LENGTH;
+}
+
+/** "a***@example.com" or "+20***00": enough to recognise, not enough to read. */
+export function maskDestination(raw: string): string {
+  const trimmed = raw.trim();
+  if (!trimmed) return "***";
+  if (trimmed.includes("@")) {
+    const [local = "", domain = ""] = trimmed.split("@");
+    return `${local.slice(0, 1)}***@${domain}`;
+  }
+  return `${trimmed.slice(0, 3)}***${trimmed.slice(-2)}`;
 }
 
 interface OtpEntryPanelProps {
-  /** Destination with partial masking, for example a***@example.com. */
+  /** Destination, already masked. */
   destination: string;
   code: string;
   onCodeChange: (code: string) => void;
-  error?: string;
+  onSubmit: () => void;
+  onResend: () => void;
+  onChangeDestination: () => void;
+  /** Seconds until a new code can be requested; 0 means now. */
+  resendInSeconds: number;
+  submitting?: boolean;
+  error?: AuthErrorView | null;
 }
 
-/** Code entry shared by verification, password reset and the OTP entry screen. The caller owns the code and the submit. */
-export function OtpEntryPanel({ destination, code, onCodeChange, error }: OtpEntryPanelProps) {
+export function OtpEntryPanel({
+  destination,
+  code,
+  onCodeChange,
+  onSubmit,
+  onResend,
+  onChangeDestination,
+  resendInSeconds,
+  submitting = false,
+  error = null,
+}: OtpEntryPanelProps) {
+  const { t, locale } = useAuth();
+  const isEmail = destination.includes("@");
+
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (isCodeComplete(code) && !submitting) onSubmit();
+  }
+
   return (
-    <div className="flex flex-col gap-4">
-      <p className="te-body">
-        {t("screen.shared.otpEntryPanel.enterDigitCode", { length: TE_OTP_DEFAULT_LENGTH })}{" "}
-        <strong>{destination}</strong>
-        {t("screen.shared.otpEntryPanel.codeExpiry", { minutes: CODE_EXPIRY_MINUTES })}
+    <form className="flex flex-1 flex-col gap-4" onSubmit={handleSubmit}>
+      <h1 className="m-0 text-2xl leading-8 font-bold">{t("screen.auth.otp.title")}</h1>
+      <p className="m-0 text-[15px] leading-[22px] text-[var(--te-ink-muted)]">
+        {t("screen.auth.otp.sentTo")}{" "}
+        <span dir="ltr" className="font-semibold text-[var(--te-ink)]">
+          {destination}
+        </span>
+        {t("screen.shared.otpEntry.expires")}
       </p>
-      <TeOtpInput
-        label={t("screen.shared.otpEntryPanel.verificationCode")}
-        cellLabel={t("screen.shared.otpEntryPanel.digitOf")}
-        value={code}
-        onValueChange={onCodeChange}
-        error={error}
-      />
-      <div className="flex flex-wrap gap-2">
-        <TeButton variant="ghost">{t("screen.shared.otpEntryPanel.changeEmailOrPhone")}</TeButton>
-        <TeButton variant="ghost" disabled>
-          {t("screen.shared.otpEntryPanel.resendIn", { seconds: RESEND_COUNTDOWN_SECONDS })}
-        </TeButton>
+      <OtpInput value={code} onChange={onCodeChange} disabled={submitting} />
+      <p role="status" className="m-0 text-sm leading-5 text-[var(--te-ink-muted)]">
+        {resendInSeconds > 0
+          ? t("screen.shared.otpEntry.waiting", { seconds: resendInSeconds })
+          : t("screen.auth.otp.resendReady")}
+      </p>
+      <SubmitBanner view={error} locale={locale} />
+      <Button type="submit" className="mt-2" disabled={!isCodeComplete(code) || submitting}>
+        {submitting ? t("auth.common.submitting") : t("auth.otp.submit")}
+      </Button>
+      <div className="mt-auto flex flex-wrap justify-between gap-3 pt-6">
+        <TextButton onClick={onChangeDestination} disabled={submitting}>
+          {isEmail
+            ? t("screen.auth.signUp.changeEmail")
+            : t("screen.public.signUp.verification.changeNumber")}
+        </TextButton>
+        <TextButton onClick={onResend} disabled={resendInSeconds > 0 || submitting}>
+          {t("auth.otp.resend")}
+        </TextButton>
       </div>
-    </div>
+    </form>
   );
 }

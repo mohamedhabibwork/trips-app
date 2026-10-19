@@ -1,132 +1,118 @@
-import { TeBadge } from "@trips-app/ui/components/te-badge";
-import { TeButton } from "@trips-app/ui/components/te-button";
-import { TeCard } from "@trips-app/ui/components/te-card";
-import { TeDataTable, type TeDataTableColumn } from "@trips-app/ui/components/te-data-table";
-import { TeIcon } from "@trips-app/ui/components/te-icon";
-import { TeInlineAlert } from "@trips-app/ui/components/te-inline-alert";
-import { TeMoney } from "@trips-app/ui/components/te-money";
-import { TePageHeader } from "@trips-app/ui/components/te-page-header";
-import { t } from "@trips-app/i18n";
+// SCR-SHR-12 Receipt and invoice view (`/receipts/$receiptId`): one ledger entry as a receipt —
+// number, status, date, the line, commission and total. The browser's print dialog saves a PDF.
 import { useQuery } from "@tanstack/react-query";
+import { useRouterState } from "@tanstack/react-router";
+import { TeIcon } from "@trips-app/ui/components/te-icon";
+import type { ReactNode } from "react";
+
+import { useAuth } from "@/auth/auth-context";
+import { Button, Notice } from "@/components/kit/controls";
+import { formatDate, formatMinorAmount } from "@/components/kit/format";
+import { PhoneColumn } from "@/components/kit/layout";
+import { matchWebRoute } from "@/navigation/web-routes";
 import { orpc } from "@/utils/orpc";
-import { buttonLinkClass } from "./button-link";
-import { ScreenLink } from "./screen-link";
-import { goBack } from "./screen-actions";
-import { StateLoading, StatePreview } from "./state-preview";
 
-interface ReceiptLine {
-  id: string;
-  description: string;
-  amount: number;
-}
+import { SignInRequired } from "./sign-in-required";
 
-const DEFAULT_CURRENCY = "SAR";
-const DEFAULT_RECEIPT_LINES = (): readonly ReceiptLine[] => [
-  {
-    id: "line-1",
-    description: t("screen.shared.scrShr12ReceiptAndInvoiceView.lineDescription"),
-    amount: 0,
-  },
-];
-
-function ReceiptBody() {
-  const ledgerQuery = useQuery(orpc.accounting.listLedgerEntries.queryOptions({ input: {} }));
-  const items = ledgerQuery.data ?? [];
-  const currency = items[0]?.currencyCode ?? DEFAULT_CURRENCY;
-  const lines: readonly ReceiptLine[] =
-    items.length > 0
-      ? items.slice(0, 5).map((entry) => ({
-          id: entry.id,
-          description: entry.description || entry.entryType,
-          amount: Math.abs(entry.netAmountMinor) / 100,
-        }))
-      : DEFAULT_RECEIPT_LINES();
-
-  const totalAmount = lines.reduce((sum, l) => sum + l.amount, 0);
-
-  const columns: readonly TeDataTableColumn<ReceiptLine>[] = [
-    { key: "description", header: t("screen.shared.scrShr12ReceiptAndInvoiceView.description") },
-    {
-      key: "amount",
-      header: t("screen.shared.scrShr12ReceiptAndInvoiceView.amount"),
-      align: "end",
-      render: (line) => <TeMoney amount={line.amount} currency={currency} />,
-    },
-  ];
-
+function Card({ children, className = "" }: { children: ReactNode; className?: string }) {
   return (
-    <TeCard padding="6">
-      <div className="flex flex-col gap-6">
-        <div className="flex flex-wrap items-center gap-3">
-          <TeBadge tone="success">
-            <TeIcon name="check" />
-            {t("screen.shared.scrShr12ReceiptAndInvoiceView.issued")}
-          </TeBadge>
-          <p className="te-body">
-            {t("screen.shared.scrShr12ReceiptAndInvoiceView.receiptNumberIssueDateAnd")}
-          </p>
-        </div>
-        <TeDataTable
-          columns={columns}
-          rows={lines}
-          getRowKey={(line) => line.id}
-          caption={t("screen.shared.scrShr12ReceiptAndInvoiceView.receiptLines")}
-          emptyTitle={t("screen.shared.scrShr12ReceiptAndInvoiceView.noLines")}
-        />
-        <dl className="ms-auto grid grid-cols-[auto_auto] gap-x-6 gap-y-2">
-          <dt className="te-label">{t("screen.shared.scrShr12ReceiptAndInvoiceView.tax")}</dt>
-          <dd>
-            <TeMoney amount={0} currency={currency} />
-          </dd>
-          <dt className="te-label">{t("screen.shared.scrShr12ReceiptAndInvoiceView.total")}</dt>
-          <dd>
-            <TeMoney amount={totalAmount} currency={currency} />
-          </dd>
-        </dl>
-        <div className="flex flex-col gap-3">
-          <p className="te-body">
-            {t("screen.shared.scrShr12ReceiptAndInvoiceView.exportIsLockedOnThe")}
-          </p>
-          <div>
-            <ScreenLink
-              surface="shared"
-              slug="plan-limit-upgrade-prompt"
-              className={buttonLinkClass("secondary")}
-            >
-              {t("screen.shared.scrShr12ReceiptAndInvoiceView.upgradeToExport")}
-            </ScreenLink>
-          </div>
-        </div>
-      </div>
-    </TeCard>
+    <section
+      className={`flex flex-col rounded-[var(--te-radius-lg)] bg-[var(--te-surface-raised)] p-[18px] shadow-[var(--te-card-shadow)] ${className}`}
+    >
+      {children}
+    </section>
   );
 }
 
-/** One receipt or invoice with its number, lines, tax and totals. */
-export function ScrShr12ReceiptAndInvoiceView() {
+function Row({ label, value, strong = false }: { label: string; value: string; strong?: boolean }) {
   return (
-    <div className="mx-auto flex w-full max-w-3xl flex-col gap-6 px-4 py-6">
-      <TePageHeader
-        title={t("screen.shared.scrShr12ReceiptAndInvoiceView.receiptAndInvoiceView")}
-        description={t("screen.shared.scrShr12ReceiptAndInvoiceView.numberDateBuyerLinesTax")}
-        actions={
-          <TeButton variant="ghost" onClick={goBack}>
-            {t("screen.shared.scrShr12ReceiptAndInvoiceView.back")}
-          </TeButton>
-        }
-      />
-      <StatePreview
-        main={<ReceiptBody />}
-        loading={<StateLoading />}
-        error={
-          <TeInlineAlert
-            tone="error"
-            title={t("screen.shared.scrShr12ReceiptAndInvoiceView.receiptCouldNotLoad")}
-          >
-            {t("screen.shared.scrShr12ReceiptAndInvoiceView.tryAgainLaterTheReceipt")}
-          </TeInlineAlert>
-        }
-      />
+    <div className={`flex justify-between gap-2 ${strong ? "mt-1 text-[17px] font-bold" : ""}`}>
+      <span>{label}</span>
+      <span dir="ltr" className={strong ? "" : "font-semibold"}>
+        {value}
+      </span>
     </div>
+  );
+}
+
+export function ScrShr12ReceiptAndInvoiceView() {
+  const { t, locale, status } = useAuth();
+  const receiptId = useRouterState({
+    select: (state) => matchWebRoute("public", state.location.pathname)?.params.receiptId,
+  });
+  const signedIn = status === "authenticated";
+  const ledgerQuery = useQuery({
+    ...orpc.accounting.listLedgerEntries.queryOptions({ input: {} }),
+    enabled: signedIn,
+  });
+  const entries = ledgerQuery.data ?? [];
+  const entry = receiptId ? entries.find((item) => item.id === receiptId) : entries[0];
+
+  if (!signedIn) {
+    return (
+      <PhoneColumn>
+        <SignInRequired message={t("screen.shared.receipt.signIn")} />
+      </PhoneColumn>
+    );
+  }
+  if (ledgerQuery.isPending) {
+    return (
+      <PhoneColumn>
+        <p role="status" className="m-0 text-sm text-[var(--te-ink-muted)]">
+          {t("screen.shared.receipt.loading")}
+        </p>
+      </PhoneColumn>
+    );
+  }
+  if (!entry) {
+    return (
+      <PhoneColumn>
+        <Notice tone={ledgerQuery.isError ? "danger" : "info"}>
+          {ledgerQuery.isError
+            ? t("screen.shared.receipt.failed")
+            : t("screen.shared.receipt.notFound")}
+        </Notice>
+      </PhoneColumn>
+    );
+  }
+
+  const money = (minor: number) => formatMinorAmount(minor, entry.currencyCode, locale);
+
+  return (
+    <PhoneColumn className="gap-3.5">
+      <h1 className="sr-only">{t("screen.shared.receipt.title")}</h1>
+      <Card className="gap-3">
+        <div className="flex items-center justify-between gap-2">
+          <span dir="ltr" className="text-[13px] font-semibold text-[var(--te-ink-muted)]">
+            {entry.invoiceNumber ?? entry.id}
+          </span>
+          <span className="inline-flex items-center gap-1 rounded-[var(--te-radius-pill)] bg-[var(--te-success-soft)] px-2.5 py-1 text-[13px] font-semibold text-[var(--te-success)]">
+            <TeIcon name="check" className="size-4" />
+            {t("screen.shared.receipt.issued")}
+          </span>
+        </div>
+        <div className="flex flex-col gap-0.5 text-sm">
+          <span className="text-[var(--te-ink-muted)]">{t("screen.shared.receipt.date")}</span>
+          <span className="font-semibold">{formatDate(entry.occurredAt, locale)}</span>
+        </div>
+      </Card>
+      <Card className="gap-2.5 text-sm">
+        <div className="flex justify-between gap-2 text-[13px] font-semibold text-[var(--te-ink-muted)]">
+          <span>{t("screen.shared.receipt.item")}</span>
+          <span>{t("screen.shared.receipt.amount")}</span>
+        </div>
+        <Row label={entry.description || entry.entryType} value={money(entry.grossAmountMinor)} />
+        <div className="my-1 h-px bg-[var(--te-hairline)]" />
+        <Row label={t("screen.shared.receipt.subtotal")} value={money(entry.grossAmountMinor)} />
+        <Row
+          label={t("screen.shared.receipt.commission")}
+          value={money(-Math.abs(entry.commissionAmountMinor))}
+        />
+        <Row label={t("screen.shared.receipt.total")} value={money(entry.netAmountMinor)} strong />
+      </Card>
+      <Button className="mt-auto print:hidden" onClick={() => window.print()}>
+        {t("screen.shared.receipt.download")}
+      </Button>
+    </PhoneColumn>
   );
 }

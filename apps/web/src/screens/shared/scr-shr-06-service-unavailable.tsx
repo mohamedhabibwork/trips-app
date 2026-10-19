@@ -1,21 +1,23 @@
-import { TeErrorState } from "@trips-app/ui/components/te-error-state";
-import { t } from "@trips-app/i18n";
-import { retryPage } from "./screen-actions";
+// SCR-SHR-06 Service unavailable (503): payments are queued, not lost.
+import { useAuth } from "@/auth/auth-context";
+import { Button } from "@/components/kit/controls";
 
-/** 503. Temporary outage. Payment callbacks queue during the outage (NFR-AVL-03). */
+import { ErrorPage } from "./error-page";
+
 export function ScrShr06ServiceUnavailable() {
+  const { t } = useAuth();
   return (
-    <div className="mx-auto flex min-h-[60vh] w-full max-w-xl flex-col items-center gap-4 px-4 py-12">
-      <TeErrorState
-        kind="unavailable"
-        title={t("screen.shared.scrShr06ServiceUnavailable.serviceIsTemporarilyUnavailable")}
-        description={t("screen.shared.scrShr06ServiceUnavailable.weAreRestoringTheService")}
-        actionLabel={t("screen.shared.scrShr06ServiceUnavailable.retry")}
-        onAction={retryPage}
-      />
-      <p className="te-caption">
-        {t("screen.shared.scrShr06ServiceUnavailable.updatesArePostedOnThe")}
-      </p>
-    </div>
+    <ErrorPage
+      status={503}
+      icon="clock"
+      tone="warning"
+      title={t("screen.shared.serviceUnavailable.title")}
+      body={t("screen.shared.serviceUnavailable.body")}
+      action={
+        <Button block onClick={() => window.location.reload()}>
+          {t("screen.shared.errorPage.tryAgain")}
+        </Button>
+      }
+    />
   );
 }

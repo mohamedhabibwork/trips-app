@@ -1,11 +1,12 @@
-// The shared OTP step (sign-in and registration). Six boxes, a live resend countdown, and the
+// The shared OTP step (sign-in and registration), laid out as SCR-PUB-07. Six boxes, a live resend countdown, and the
 // development code the backend returns outside production so QA can finish the flow.
-import { Button } from "@trips-app/ui/components/button";
 import type { AuthErrorView } from "@trips-app/auth";
 import { useEffect, useState } from "react";
 
+import { Button, StepLabel, TextButton } from "@/components/kit/controls";
+
 import { useAuth } from "../auth-context";
-import { AuthLinkRow, AuthShell } from "../components/auth-shell";
+import { AuthShell } from "../components/auth-shell";
 import { OtpInput } from "../components/otp-input";
 import { SubmitBanner } from "../components/submit-banner";
 
@@ -19,6 +20,10 @@ export interface OtpScreenProps {
   onResend: () => void;
   onChangeTarget: () => void;
   title?: string;
+  /** "Step 1 of 2: email" when the code is one step of a longer flow (SCR-PUB-07). */
+  stepLabel?: string;
+  /** Overrides "Use a different email or phone" (e.g. "Change email"). */
+  changeLabel?: string;
 }
 
 export function OtpScreen({
@@ -31,6 +36,8 @@ export function OtpScreen({
   onResend,
   onChangeTarget,
   title,
+  stepLabel,
+  changeLabel,
 }: OtpScreenProps) {
   const { t, locale } = useAuth();
   const [code, setCode] = useState("");
@@ -56,9 +63,22 @@ export function OtpScreen({
   const canSubmit = code.length === 6 && !submitting;
 
   return (
-    <AuthShell title={title ?? t("auth.otp.title")} subtitle={t("auth.otp.subtitle", { target })}>
+    <AuthShell
+      width={520}
+      badge={stepLabel ? <StepLabel>{stepLabel}</StepLabel> : undefined}
+      title={title ?? t("screen.auth.otp.title")}
+      subtitle={
+        <>
+          {t("screen.auth.otp.sentTo")}{" "}
+          <span dir="ltr" className="font-semibold text-[var(--te-ink)]">
+            {target}
+          </span>
+          {t("screen.auth.otp.expires")}
+        </>
+      }
+    >
       <form
-        className="grid gap-4"
+        className="flex flex-col gap-5"
         onSubmit={(event) => {
           event.preventDefault();
           if (canSubmit) onSubmit(code);
@@ -66,8 +86,14 @@ export function OtpScreen({
       >
         <OtpInput value={code} onChange={setCode} disabled={submitting} />
 
+        <p role="status" className="m-0 text-sm leading-5 text-[var(--te-ink-muted)]">
+          {seconds > 0
+            ? t("screen.auth.otp.resendIn", { seconds })
+            : t("screen.auth.otp.resendReady")}
+        </p>
+
         {devCodePreview ? (
-          <p className="text-muted-foreground text-[11px]">
+          <p className="m-0 text-[13px] text-[var(--te-ink-muted)]">
             {t("auth.otp.devCode", { code: devCodePreview })}
           </p>
         ) : null}
@@ -78,27 +104,14 @@ export function OtpScreen({
           {submitting ? t("auth.common.submitting") : t("auth.otp.submit")}
         </Button>
 
-        <AuthLinkRow>
-          <Button
-            type="button"
-            size="sm"
-            variant="link"
-            disabled={seconds > 0 || submitting}
-            onClick={onResend}
-          >
-            {seconds > 0 ? t("auth.otp.resendIn", { seconds }) : t("auth.otp.resend")}
-          </Button>
-          <span>·</span>
-          <Button
-            type="button"
-            size="sm"
-            variant="link"
-            onClick={onChangeTarget}
-            disabled={submitting}
-          >
-            {t("auth.otp.changeIdentifier")}
-          </Button>
-        </AuthLinkRow>
+        <div className="flex flex-wrap justify-between gap-3">
+          <TextButton disabled={seconds > 0 || submitting} onClick={onResend}>
+            {t("auth.otp.resend")}
+          </TextButton>
+          <TextButton onClick={onChangeTarget} disabled={submitting}>
+            {changeLabel ?? t("auth.otp.changeIdentifier")}
+          </TextButton>
+        </div>
       </form>
     </AuthShell>
   );

@@ -71,8 +71,9 @@ describe("Milestone 6: Global AST Barrier & Source Purity Audit", () => {
 
     test("Discovers all screen component source files (excluding test suites)", () => {
       const sourceFiles = getSourceFiles(screensDir);
-      // At least 145 pure source files across screens directory
-      expect(sourceFiles.length).toBeGreaterThanOrEqual(145);
+      // At least 140 pure source files across screens directory (the public and shared rebuild
+      // removed the unused design-review helpers).
+      expect(sourceFiles.length).toBeGreaterThanOrEqual(140);
     });
   });
 

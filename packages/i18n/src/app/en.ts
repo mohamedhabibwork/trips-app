@@ -11,11 +11,82 @@ export const en = {
   "screen.pendingApprovalScreen.submitYourDocumentsAndDetails":
     "Submit your documents and details so our review team can approve your account.",
   "screen.pendingApprovalScreen.openApplicationForm": "Open application form",
-  "screen.pendingApprovalScreen.applicationStatus": "Application status:",
+  "screen.pendingApprovalScreen.applicationStatus": "Application status",
   "screen.pendingApprovalScreen.notes": "Notes:",
-  "screen.pendingApprovalScreen.viewStatusRespondToChanges": "View status & respond to changes",
-  "screen.pendingApprovalScreen.appealRejection": "Appeal rejection",
+  "screen.pendingApprovalScreen.viewStatusRespondToChanges": "View status and respond to changes",
+  "screen.pendingApprovalScreen.appealRejection": "Appeal the rejection",
   "screen.pendingApprovalScreen.trackApplicationStatus": "Track application status",
+  "screen.auth.pending.badge": "Submitted",
+  // apps/web/src/auth/screens/sign-in-screen.tsx
+  "screen.auth.signIn.lead": "For travelers and approved suppliers.",
+  "screen.auth.signIn.identifierPlaceholder": "name@example.com or +20 100 000 0000",
+  "screen.auth.signIn.methodOtp": "Code by message",
+  "screen.auth.signIn.submit": "Sign in",
+  "screen.auth.code.placeholder": "6-digit code",
+  // apps/web/src/auth/screens/otp-screen.tsx
+  "screen.auth.otp.title": "Enter the code",
+  "screen.auth.otp.sentTo": "We sent a 6-digit code to",
+  "screen.auth.otp.expires": ". The code expires in 5 minutes.",
+  "screen.auth.otp.resendIn": "You can resend a code in {seconds} seconds.",
+  "screen.auth.otp.resendReady": "You can resend a code now.",
+  // apps/web/src/auth/screens/sign-up-screen.tsx
+  "screen.auth.signUp.chooserTitle": "Create your account",
+  "screen.auth.signUp.chooserLead":
+    "Choose the role that fits you. Each role has its own sign-up form.",
+  "screen.auth.signUp.rolesLabel": "Account type",
+  "screen.auth.signUp.selected": "Selected",
+  "screen.auth.signUp.webOnly": "Web only",
+  "screen.auth.signUp.traveler": "Traveler",
+  "screen.auth.signUp.travelerBody": "Join group trips and book seats for your group. Free plan.",
+  "screen.auth.signUp.driver": "Platform driver",
+  "screen.auth.signUp.driverBody": "Apply to join the driver pool. Access after approval.",
+  "screen.auth.signUp.photographer": "Photographer",
+  "screen.auth.signUp.photographerBody":
+    "Apply to join the photographer pool. Access after approval.",
+  "screen.auth.signUp.organization": "Organization",
+  "screen.auth.signUp.organizationBody":
+    "Register a company to run group trips. Access after approval.",
+  "screen.auth.signUp.continue.traveler": "Continue as traveler",
+  "screen.auth.signUp.continue.driver": "Continue as platform driver",
+  "screen.auth.signUp.continue.photographer": "Continue as photographer",
+  "screen.auth.signUp.continue.organization": "Continue as organization",
+  "screen.auth.signUp.travelerTitle": "Create your traveler account",
+  "screen.auth.signUp.travelerLead":
+    "Add an email, a phone number, or both. You verify at least one.",
+  "screen.auth.signUp.emailPlaceholder": "name@example.com",
+  "screen.auth.signUp.phonePlaceholder": "+20 100 000 0000",
+  "screen.auth.signUp.selectCountry": "Select country",
+  "screen.auth.signUp.language": "Language",
+  "screen.auth.signUp.countryRequired": "Select your country to continue.",
+  "screen.auth.signUp.contactRequired": "Add an email or a phone number to continue.",
+  "screen.auth.signUp.changeEmail": "Change email",
+  // apps/web/src/auth/screens/admin-sign-in-screen.tsx
+  "screen.auth.admin.lead": "Staff only. There is no public sign-up for admin accounts.",
+  "screen.auth.admin.email": "Email",
+  "screen.auth.admin.passwordPlaceholder": "At least 12 characters",
+  // apps/web/src/auth/screens/staff-sign-in-screen.tsx
+  "screen.auth.staff.codeLead":
+    "Enter the code from your app or text message. A code is needed at every sign-in.",
+  "screen.auth.staff.passwordDone": "Signed in with password",
+  "screen.auth.staff.code": "Code",
+  "screen.auth.staff.orgChoice":
+    "If your email is linked to more than one organization, you choose one after this step.",
+  "screen.auth.staff.differentMethod": "Use a different method",
+  // apps/web/src/auth/screens/crew-sign-in-screen.tsx
+  "screen.auth.crew.title": "Moderator sign-in",
+  "screen.auth.crew.lead": "You see only the vehicle assigned to you for the trip.",
+  "screen.auth.crew.noCode":
+    "Without a staff code you cannot sign in. Ask the trip organizer for help.",
+  // apps/web/src/components/shells/public-shell.tsx
+  "component.shell.admin.signInLabel": "Admin",
+  // apps/web/src/auth/components/session-expired-dialog.tsx
+  "screen.auth.sessionExpired.badge": "Session ended",
+  "screen.auth.sessionExpired.title": "Sign in again to continue",
+  "screen.auth.sessionExpired.bodyMax":
+    "For your security, your session ended after 12 hours. You will return to the same page after you sign in.",
+  "screen.auth.sessionExpired.body":
+    "For your security, your session ended. You will return to the same page after you sign in.",
+  "screen.auth.sessionExpired.drafts": "Your unsaved drafts are kept.",
   // apps/web/src/components/api-status.tsx
   "component.apiStatus.apiStatus": "API Status",
   "component.apiStatus.connected": "Connected",
@@ -2626,147 +2697,98 @@ export const en = {
   "screen.organization.workspace.workspaceHome.setupChecklist": "Setup checklist",
   "screen.organization.workspace.workspaceHome.setupChecklistAriaLabel": "Setup checklist",
   // apps/web/src/screens/public/account-recovery/account-suspended.tsx
-  "screen.public.accountRecovery.accountSuspended.accountSuspended": "Account suspended",
-  "screen.public.accountRecovery.accountSuspended.accessToThisAccountIs":
-    "Access to this account is stopped. No data has been deleted.",
-  "screen.public.accountRecovery.accountSuspended.reason": "Reason",
-  "screen.public.accountRecovery.accountSuspended.theReasonFromTheSuspension":
-    "The reason from the suspension notice is shown here.",
-  "screen.public.accountRecovery.accountSuspended.toAskForAReview":
-    "To ask for a review, contact support. Sign-in stays refused while the suspension is active.",
+  "screen.public.accountSuspended.badge": "Account suspended",
+  "screen.public.accountSuspended.title": "Your access is stopped",
+  "screen.public.accountSuspended.reason": "Reason: {reason}",
+  "screen.public.accountSuspended.body":
+    "No data has been deleted. Contact support to ask about this decision.",
+  "screen.public.accountSuspended.signOut": "Sign out",
   // apps/web/src/screens/public/account-recovery/appeal-a-rejection.tsx
-  "screen.public.accountRecovery.appealARejection.appealStatement": "Appeal statement",
-  "screen.public.accountRecovery.appealARejection.explainWhyTheDecisionShould":
-    "Explain why the decision should be reviewed (at least 10 characters).",
-  "screen.public.accountRecovery.appealARejection.supportingFiles": "Supporting files",
-  "screen.public.accountRecovery.appealARejection.addAnyDocumentThatSupports":
-    "Add any document that supports your appeal.",
-  "screen.public.accountRecovery.appealARejection.appealSubmitted": "Appeal submitted",
-  "screen.public.accountRecovery.appealARejection.yourAppealHasBeenSent":
-    "Your appeal has been sent to the review team.",
-  "screen.public.accountRecovery.appealARejection.appealCouldNotBeSubmitted":
-    "Appeal could not be submitted",
-  "screen.public.accountRecovery.appealARejection.submitting": "Submitting...",
-  "screen.public.accountRecovery.appealARejection.submitAppeal": "Submit appeal",
-  "screen.public.accountRecovery.appealARejection.backToStatus": "Back to status",
-  "screen.public.accountRecovery.appealARejection.appealARejection": "Appeal a rejection",
-  "screen.public.accountRecovery.appealARejection.askForAReviewOf":
-    "Ask for a review of the decision while the appeal window is open.",
-  "screen.public.accountRecovery.appealARejection.rejected": "Rejected",
-  "screen.public.accountRecovery.appealARejection.reasonOnRecord": "Reason on record:",
-  "screen.public.accountRecovery.appealARejection.theReasonFromTheReview":
-    "the reason from the review team is shown here.",
+  "screen.public.appeal.title": "Appeal the rejection",
+  "screen.public.appeal.lead": "Tell us why the decision should be reviewed.",
+  "screen.public.appeal.rejected": "Rejected",
+  "screen.public.appeal.reason": "Reason as recorded: {reason}",
+  "screen.public.appeal.reasonMissing": "not available",
+  "screen.public.appeal.statement": "Your appeal statement",
+  "screen.public.appeal.statementPlaceholder": "Explain why the decision should be reviewed",
+  "screen.public.appeal.files": "Supporting files (optional)",
+  "screen.public.appeal.filesHint": "PDF or photo, up to 15 MB each",
+  "screen.public.appeal.submit": "Submit appeal",
+  "screen.public.appeal.submitting": "Submitting…",
+  "screen.public.appeal.cancel": "Cancel",
+  "screen.public.appeal.submitted": "Your appeal was sent. We review it within 2 working days.",
+  "screen.public.appeal.noApplication": "No rejected application was found for this account.",
+  "screen.public.appeal.submitFailed": "The appeal could not be submitted. Try again.",
   // apps/web/src/screens/public/account-recovery/application-status-and-changes-response.tsx
-  "screen.public.accountRecovery.applicationStatusAndChangesResponse.submitted": "Submitted",
-  "screen.public.accountRecovery.applicationStatusAndChangesResponse.pendingReview":
-    "Pending review",
-  "screen.public.accountRecovery.applicationStatusAndChangesResponse.decision": "Decision",
-  "screen.public.accountRecovery.applicationStatusAndChangesResponse.uploadAClearerInsuranceDocument":
-    "Upload a clearer insurance document",
-  "screen.public.accountRecovery.applicationStatusAndChangesResponse.confirmTheVehicleSeatCount":
-    "Confirm the vehicle seat count",
-  "screen.public.accountRecovery.applicationStatusAndChangesResponse.approved": "Approved",
-  "screen.public.accountRecovery.applicationStatusAndChangesResponse.changesRequested":
-    "Changes requested",
-  "screen.public.accountRecovery.applicationStatusAndChangesResponse.appealed": "Appealed",
-  "screen.public.accountRecovery.applicationStatusAndChangesResponse.pendingReviewLabel":
-    "Pending review",
-  "screen.public.accountRecovery.applicationStatusAndChangesResponse.targetReviewWithin2Working":
-    "Target: review within 2 working days.",
-  "screen.public.accountRecovery.applicationStatusAndChangesResponse.applicationProgress":
-    "Application progress",
-  "screen.public.accountRecovery.applicationStatusAndChangesResponse.respondWithin14Days":
-    "Respond within 14 days",
-  "screen.public.accountRecovery.applicationStatusAndChangesResponse.requestedChangesMustBeAnswered":
-    "Requested changes must be answered before the deadline",
-  "screen.public.accountRecovery.applicationStatusAndChangesResponse.orTheApplicationCloses":
-    ", or the application closes.",
-  "screen.public.accountRecovery.applicationStatusAndChangesResponse.reviewerNotes":
-    "Reviewer notes",
-  "screen.public.accountRecovery.applicationStatusAndChangesResponse.updateSaved": "Update saved",
-  "screen.public.accountRecovery.applicationStatusAndChangesResponse.actionFailed": "Action failed",
-  "screen.public.accountRecovery.applicationStatusAndChangesResponse.requestedChanges":
-    "Requested changes",
-  "screen.public.accountRecovery.applicationStatusAndChangesResponse.requestedChangesAriaLabel":
-    "Requested changes",
-  "screen.public.accountRecovery.applicationStatusAndChangesResponse.updatedDocumentsOptional":
-    "Updated documents (optional)",
-  "screen.public.accountRecovery.applicationStatusAndChangesResponse.attachReplacementOrSupportingDocuments":
-    "Attach replacement or supporting documents before resubmitting.",
-  "screen.public.accountRecovery.applicationStatusAndChangesResponse.submitting": "Submitting...",
-  "screen.public.accountRecovery.applicationStatusAndChangesResponse.resubmit": "Resubmit",
-  "screen.public.accountRecovery.applicationStatusAndChangesResponse.request7DayExtension":
-    "Request 7-day extension",
-  "screen.public.accountRecovery.applicationStatusAndChangesResponse.appealARejection":
-    "Appeal a rejection",
-  "screen.public.accountRecovery.applicationStatusAndChangesResponse.applicationStatusAndChangesResponse":
-    "Application status and changes response",
-  "screen.public.accountRecovery.applicationStatusAndChangesResponse.trackYourApplicationAndRespond":
-    "Track your application and respond to any requested changes.",
-  "screen.public.accountRecovery.applicationStatusAndChangesResponse.statusCouldNotLoad":
-    "Status could not load",
-  "screen.public.accountRecovery.applicationStatusAndChangesResponse.tryAgainInAFew":
-    "Try again in a few minutes.",
+  "screen.public.applicationStatus.title": "Your application",
+  "screen.public.applicationStatus.summary": "{type} application. Submitted {date}.",
+  "screen.public.applicationStatus.type.platform_driver": "Driver",
+  "screen.public.applicationStatus.type.platform_photographer": "Photographer",
+  "screen.public.applicationStatus.type.organization": "Organization",
+  "screen.public.applicationStatus.signInFirst": "Sign in to see your application.",
+  "screen.public.applicationStatus.loading": "Loading your application",
+  "screen.public.applicationStatus.notFound": "No application was found for this account.",
+  "screen.public.applicationStatus.status": "Status",
+  "screen.public.applicationStatus.submitted": "Submitted",
+  "screen.public.applicationStatus.pendingReview": "Pending review (2 working days)",
+  "screen.public.applicationStatus.outcome.changes": "Changes requested",
+  "screen.public.applicationStatus.outcome.approved": "Approved",
+  "screen.public.applicationStatus.outcome.rejected": "Rejected",
+  "screen.public.applicationStatus.outcome.closed": "Closed",
+  "screen.public.applicationStatus.outcome.appealed": "Appeal under review",
+  "screen.public.applicationStatus.respondBy":
+    "Respond by {date} (14 days from the request). After that the application closes.",
+  "screen.public.applicationStatus.notes": "Reviewer notes: {notes}",
+  "screen.public.applicationStatus.requestedChanges": "Requested changes",
+  "screen.public.applicationStatus.noChanges": "No changes are requested.",
+  "screen.public.applicationStatus.updatedDocuments": "Updated documents (optional)",
+  "screen.public.applicationStatus.updatedDocumentsHint": "PDF or photo, up to 15 MB each",
+  "screen.public.applicationStatus.resubmit": "Resubmit application",
+  "screen.public.applicationStatus.submitting": "Submitting…",
+  "screen.public.applicationStatus.extend": "Ask for 7 more days",
+  "screen.public.applicationStatus.appeal": "Appeal a rejection",
+  "screen.public.applicationStatus.resubmitted": "Your updated application was sent for review.",
+  "screen.public.applicationStatus.resubmitFailed":
+    "The application could not be resubmitted. Try again.",
+  "screen.public.applicationStatus.extended": "Your deadline was extended by 7 days.",
+  "screen.public.applicationStatus.extendFailed":
+    "The extension could not be requested. Try again.",
   // apps/web/src/screens/public/account-recovery/deletion-grace-period.tsx
-  "screen.public.accountRecovery.deletionGracePeriod.deletionGracePeriod": "Deletion grace period",
-  "screen.public.accountRecovery.deletionGracePeriod.yourAccountIsInThe":
-    "Your account is in the 30-day grace period after a deletion request.",
-  "screen.public.accountRecovery.deletionGracePeriod.gracePeriodEnds": "Grace period ends",
-  "screen.public.accountRecovery.deletionGracePeriod.30DaysAfterTheDeletion":
-    "30 days after the deletion request",
-  "screen.public.accountRecovery.deletionGracePeriod.signInToRestore": "Sign in to restore",
-  "screen.public.accountRecovery.deletionGracePeriod.signingInRestoresYourAccount":
-    "Signing in restores your account and cancels the deletion request.",
-  "screen.public.accountRecovery.deletionGracePeriod.ifTheDeletionBecomesPermanent":
-    "If the deletion becomes permanent, future bookings are cancelled and refunded.",
-  "screen.public.accountRecovery.deletionGracePeriod.continueToAppHome": "Continue to app home",
+  "screen.public.deletionGrace.badge": "Deletion requested",
+  "screen.public.deletionGrace.title": "Your account is scheduled for deletion",
+  "screen.public.deletionGrace.endsLabel": "Grace period ends",
+  "screen.public.deletionGrace.endsValue": "{date}, {days} days after your request",
+  "screen.public.deletionGrace.body":
+    "Signing in restores your account and cancels the deletion request. Future bookings are cancelled and refunded only when deletion becomes permanent.",
+  "screen.public.deletionGrace.continue": "Continue to app home",
+  "screen.public.deletionGrace.restoreFailed":
+    "Your account could not be restored. Sign in to restore it.",
   // apps/web/src/screens/public/account-recovery/password-reset.tsx
-  "screen.public.accountRecovery.passwordReset.emailOrPhone": "Email or phone",
-  "screen.public.accountRecovery.passwordReset.newPassword": "New password",
-  "screen.public.accountRecovery.passwordReset.atLeastCharactersPasswordsFound":
-    "At least {min} characters. Passwords found in breached lists are refused.",
-  "screen.public.accountRecovery.passwordReset.setPassword": "Set password",
-  "screen.public.accountRecovery.passwordReset.rememberedIt": "Remembered it?",
-  "screen.public.accountRecovery.passwordReset.backToSignIn": "Back to sign in",
-  "screen.public.accountRecovery.passwordReset.passwordReset": "Password reset",
-  "screen.public.accountRecovery.passwordReset.weSendACodeTo":
-    "We send a code to your verified email or phone. Then set a new password.",
-  "screen.public.accountRecovery.passwordReset.passwordRefused": "Password refused",
-  "screen.public.accountRecovery.passwordReset.theNewPasswordIsShorter":
-    "The new password is shorter than",
-  "screen.public.accountRecovery.passwordReset.charactersOrWasFoundIn":
-    "characters or was found in a breached list.",
-  // apps/web/src/screens/public/account-recovery/session-expired.tsx
-  "screen.public.accountRecovery.sessionExpired.sessionExpired": "Session expired",
-  "screen.public.accountRecovery.sessionExpired.forYourSecurityYouWere":
-    "For your security you were signed out. Your unsaved drafts are kept.",
-  "screen.public.accountRecovery.sessionExpired.draftsKept": "Drafts kept",
-  "screen.public.accountRecovery.sessionExpired.signInToContinueWhere":
-    "Sign in to continue where you left off, in the same app.",
-  "screen.public.accountRecovery.sessionExpired.signIn": "Sign in",
-  // apps/web/src/screens/public/common/auth-frame.tsx
-  "screen.public.common.authFrame.backToTheStart": "Back to the start",
-  // apps/web/src/screens/public/common/country-options.ts
-  "screen.public.common.countryOptions.selectACountry": "Select a country",
-  "screen.public.common.countryOptions.saudiArabia": "Saudi Arabia",
-  // apps/web/src/screens/public/common/language-select.tsx
-  "screen.public.common.languageSelect.language": "Language",
-  // apps/web/src/screens/public/common/public-nav.tsx
-  "screen.public.common.publicNav.start": "Start",
-  "screen.public.common.publicNav.signUp": "Sign up",
-  "screen.public.common.publicNav.signIn": "Sign in",
-  "screen.public.common.publicNav.applicationStatus": "Application status",
-  "screen.public.common.publicNav.public": "Public",
-  // apps/web/src/screens/public/common/sign-up-footer.tsx
-  "screen.public.common.signUpFooter.nextConfirmYourDetailsWith":
-    "Next, confirm your details with a code:",
-  "screen.public.common.signUpFooter.verificationByCode": "Verification by code",
-  "screen.public.common.signUpFooter.alreadyHaveAnAccount": "Already have an account?",
-  "screen.public.common.signUpFooter.signIn": "Sign in",
-  // apps/web/src/screens/public/common/staff-code-panel.tsx
-  "screen.public.common.staffCodePanel.authenticatorApp": "Authenticator app",
-  "screen.public.common.staffCodePanel.secondFactorMethod": "Second factor method",
-  "screen.public.common.staffCodePanel.staffCode": "Staff code",
+  "screen.public.passwordReset.step1": "Step 1 of 2: code",
+  "screen.public.passwordReset.step2": "Step 2 of 2: new password",
+  "screen.public.passwordReset.title": "Reset your password",
+  "screen.public.passwordReset.lead": "We send a code to the email or phone on your account.",
+  "screen.public.passwordReset.sendCode": "Send code",
+  "screen.public.passwordReset.remembered": "Remembered it?",
+  "screen.public.passwordReset.backToSignIn": "Back to sign in",
+  "screen.public.passwordReset.passwordTitle": "Set a new password",
+  "screen.public.passwordReset.passwordLead":
+    "Your code is ready. Choose a new password for your account.",
+  "screen.public.passwordReset.newPassword": "New password",
+  "screen.public.passwordReset.confirmPassword": "Confirm new password",
+  "screen.public.passwordReset.ruleLength": "At least {min} characters",
+  "screen.public.passwordReset.ruleBreached": "Not found in breached password lists",
+  "screen.public.passwordReset.mismatch": "The passwords do not match.",
+  "screen.public.passwordReset.setPassword": "Set password",
+  "screen.public.passwordReset.doneTitle": "Password updated",
+  "screen.public.passwordReset.doneLead": "Sign in with your new password.",
+  // apps/web/src/screens/public/common/country-select.tsx
+  "screen.public.common.countrySelect.country": "Country",
+  "screen.public.common.countrySelect.selectCountry": "Select country",
+  // apps/web/src/screens/public/common/document-drop.tsx
+  "screen.public.common.documentDrop.added": "{count} file(s) added",
+  "screen.public.common.documentDrop.remove": "Remove",
+  "screen.public.common.documentDrop.removeFile": "Remove {name}",
   // apps/web/src/screens/public/index.ts
   "screen.registry.public.landing.title": "Landing",
   "screen.registry.public.signUpChooser.title": "Sign-up chooser (/register)",
@@ -2791,280 +2813,142 @@ export const en = {
   "screen.registry.public.appealARejection.title": "Appeal a rejection",
   "screen.registry.public.moderatorSignInWithStaffCode.title": "Moderator sign-in with staff code",
   // apps/web/src/screens/public/landing/landing.tsx
-  "screen.public.landing.landing.traveler": "Traveler",
-  "screen.public.landing.landing.createATravelerAccountAnd":
-    "Create a traveler account and book trips.",
-  "screen.public.landing.landing.platformDriver": "Platform driver",
-  "screen.public.landing.landing.applyToJoinThePlatform": "Apply to join the platform driver pool.",
-  "screen.public.landing.landing.photographer": "Photographer",
-  "screen.public.landing.landing.applyToJoinThePlatformDescription":
-    "Apply to join the platform photographer pool.",
-  "screen.public.landing.landing.organization": "Organization",
-  "screen.public.landing.landing.registerYourOrganizationWebOnly":
-    "Register your organization. Web only.",
-  "screen.public.landing.landing.permissionDenied": "Permission denied",
-  "screen.public.landing.landing.notFound": "Not found",
-  "screen.public.landing.landing.unauthorized": "Unauthorized",
-  "screen.public.landing.landing.serverError": "Server error",
-  "screen.public.landing.landing.serviceUnavailable": "Service unavailable",
-  "screen.public.landing.landing.maintenancePage": "Maintenance page",
-  "screen.public.landing.landing.sharedStates": "Shared states",
-  "screen.public.landing.landing.tripsEnjoyHome": "Trips Enjoy home",
-  "screen.public.landing.landing.tripsEnjoy": "Trips Enjoy",
-  "screen.public.landing.landing.publicTrips": "Public trips",
-  "screen.public.landing.landing.browseTheTripsThatAre":
-    "Browse the trips that are published to the public.",
-  "screen.public.landing.landing.browseTrips": "Browse trips",
-  "screen.public.landing.landing.noPublicTripsRightNow": "No public trips right now",
-  "screen.public.landing.landing.tripsAppearHereOnceThey":
-    "Trips appear here once they are published. You can still sign up for a role below.",
-  "screen.public.landing.landing.tripsCouldNotLoad": "Trips could not load",
-  "screen.public.landing.landing.tryAgainInAFew": "Try again in a few minutes.",
-  "screen.public.landing.landing.signUpAs": "Sign up as",
-  "screen.public.landing.landing.signUpAs2": "Sign up as",
+  "screen.public.landing.title": "Your next group trip",
+  "screen.public.landing.lead": "Browse public trips, or sign up for your role.",
+  "screen.public.landing.browseTrips": "Browse trips",
+  "screen.public.landing.publicTrips": "Public trips",
+  "screen.public.landing.loading": "Loading trips",
+  "screen.public.landing.tripsFailed": "Trips could not load. Try again in a few minutes.",
+  "screen.public.landing.noTrips": "No public trips right now",
+  "screen.public.landing.noTripsBody": "Trips appear here once organizers publish them.",
+  "screen.public.landing.groupPhoto": "Group photo",
+  "screen.public.landing.fromPrice": "From {price}",
+  "screen.public.landing.seatsLeft": "{count} seats left",
+  "screen.public.landing.signUpForRole": "Sign up for your role",
+  "screen.public.landing.signUp": "Sign up",
+  "screen.public.landing.role.traveler": "Traveler",
+  "screen.public.landing.role.travelerBody": "Book seats and activities for your group.",
+  "screen.public.landing.role.driver": "Platform driver",
+  "screen.public.landing.role.driverBody": "Apply to join the driver pool.",
+  "screen.public.landing.role.photographer": "Photographer",
+  "screen.public.landing.role.photographerBody": "Apply to join the photographer pool.",
+  "screen.public.landing.role.organization": "Organization",
+  "screen.public.landing.role.organizationBody": "Run group trips for your company. Web only.",
+  "screen.public.landing.fullyBooked": "Fully booked",
   // apps/web/src/screens/public/sign-in/admin-authenticator-set-up-and-code.tsx
-  "screen.public.signIn.adminAuthenticatorSetUpAndCode.setUpAuthenticator": "Set up authenticator",
-  "screen.public.signIn.adminAuthenticatorSetUpAndCode.enterCode": "Enter code",
-  "screen.public.signIn.adminAuthenticatorSetUpAndCode.setUpSteps": "Set-up steps",
-  "screen.public.signIn.adminAuthenticatorSetUpAndCode.setUpRequired": "Set-up required",
-  "screen.public.signIn.adminAuthenticatorSetUpAndCode.theAdminConsoleDoesNot":
-    "The admin console does not open until the authenticator is set up.",
-  "screen.public.signIn.adminAuthenticatorSetUpAndCode.scanTheQrCodeShown":
-    "Scan the QR code shown on screen with your authenticator app, then enter the six-digit code it displays.",
-  "screen.public.signIn.adminAuthenticatorSetUpAndCode.authenticatorCode": "Authenticator code",
-  "screen.public.signIn.adminAuthenticatorSetUpAndCode.verify": "Verify",
-  "screen.public.signIn.adminAuthenticatorSetUpAndCode.afterVerificationTheAdminConsole":
-    "After verification, the admin console opens.",
-  "screen.public.signIn.adminAuthenticatorSetUpAndCode.adminHome": "Admin home",
-  "screen.public.signIn.adminAuthenticatorSetUpAndCode.adminAuthenticatorSetUpAnd":
-    "Admin authenticator set-up and code",
-  "screen.public.signIn.adminAuthenticatorSetUpAndCode.adminSignInNeedsAn":
-    "Admin sign-in needs an authenticator code. The admin console opens after this step.",
-  "screen.public.signIn.adminAuthenticatorSetUpAndCode.wrongCode": "Wrong code",
-  "screen.public.signIn.adminAuthenticatorSetUpAndCode.tryAgainFiveFailuresLock":
-    "Try again. Five failures lock admin sign-in for 15 minutes.",
-  // apps/web/src/screens/public/sign-in/admin-sign-in.tsx
-  "screen.public.signIn.adminSignIn.email": "Email",
-  "screen.public.signIn.adminSignIn.password": "Password",
-  "screen.public.signIn.adminSignIn.atLeast12CharactersPasswords":
-    "At least 12 characters. Passwords found in breached lists are refused.",
-  "screen.public.signIn.adminSignIn.continue": "Continue",
-  "screen.public.signIn.adminSignIn.authenticatorNotSetUpYet": "Authenticator not set up yet?",
-  "screen.public.signIn.adminSignIn.setItUp": "Set it up",
-  "screen.public.signIn.adminSignIn.adminSignIn": "Admin sign-in",
-  "screen.public.signIn.adminSignIn.staffOnlyThereIsNo":
-    "Staff only. There is no public sign-up for administrators.",
-  "screen.public.signIn.adminSignIn.signInRefused": "Sign-in refused",
-  "screen.public.signIn.adminSignIn.theEmailOrPasswordIs":
-    "The email or password is wrong. Five failed attempts lock sign-in for 15 minutes.",
-  // apps/web/src/screens/public/sign-in/moderator-sign-in-with-staff-code.tsx
-  "screen.public.signIn.moderatorSignInWithStaffCode.emailOrPhone": "Email or phone",
-  "screen.public.signIn.moderatorSignInWithStaffCode.signIn": "Sign in",
-  "screen.public.signIn.moderatorSignInWithStaffCode.moderatorSignInWithStaff":
-    "Moderator sign-in with staff code",
-  "screen.public.signIn.moderatorSignInWithStaffCode.afterSignInYouSee":
-    "After sign-in you see only your assigned vehicle.",
-  // apps/web/src/screens/public/sign-in/organization-staff-sign-in-with-code.tsx
-  "screen.public.signIn.organizationStaffSignInWithCode.email": "Email",
-  "screen.public.signIn.organizationStaffSignInWithCode.password": "Password",
-  "screen.public.signIn.organizationStaffSignInWithCode.secondFactor": "Second factor",
-  "screen.public.signIn.organizationStaffSignInWithCode.signIn": "Sign in",
-  "screen.public.signIn.organizationStaffSignInWithCode.firstSignIn": "First sign-in?",
-  "screen.public.signIn.organizationStaffSignInWithCode.setUpYourStaffCode":
-    "Set up your staff code",
-  "screen.public.signIn.organizationStaffSignInWithCode.organizationStaffSignInWith":
-    "Organization staff sign-in with code",
-  "screen.public.signIn.organizationStaffSignInWithCode.enterYourEmailYourPassword":
-    "Enter your email, your password, and the code from your second factor. If your email is linked to several organizations, you choose one after the code.",
-  "screen.public.signIn.organizationStaffSignInWithCode.signInRefused": "Sign-in refused",
-  "screen.public.signIn.organizationStaffSignInWithCode.theCodeIsWrongOr":
-    "The code is wrong, or this email is not linked to any organization.",
-  // apps/web/src/screens/public/sign-in/sign-in.tsx
-  "screen.public.signIn.signIn.oneTimeCode": "One-time code",
-  "screen.public.signIn.signIn.password": "Password",
-  "screen.public.signIn.signIn.sessionExpired": "Session expired",
-  "screen.public.signIn.signIn.accountSuspended": "Account suspended",
-  "screen.public.signIn.signIn.deletionRequested": "Deletion requested",
-  "screen.public.signIn.signIn.applicationPending": "Application pending",
-  "screen.public.signIn.signIn.emailOrPhone": "Email or phone",
-  "screen.public.signIn.signIn.signInMethod": "Sign-in method",
-  "screen.public.signIn.signIn.passwordLabel": "Password",
-  "screen.public.signIn.signIn.weSendAOneTime":
-    "We send a one-time code to the email or phone you enter.",
-  "screen.public.signIn.signIn.signIn": "Sign in",
-  "screen.public.signIn.signIn.createAnAccount": "Create an account",
-  "screen.public.signIn.signIn.forgotPassword": "Forgot password?",
-  "screen.public.signIn.signIn.otherSignInOutcomes": "Other sign-in outcomes",
-  "screen.public.signIn.signIn.otherOutcomes": "Other outcomes",
-  "screen.public.signIn.signIn.signInTravelerAndSupplier": "Sign-in (traveler and supplier)",
-  "screen.public.signIn.signIn.travelersAndApprovedSuppliersSign":
-    "Travelers and approved suppliers sign in here.",
-  "screen.public.signIn.signIn.detailsDoNotMatch": "Details do not match",
-  "screen.public.signIn.signIn.checkYourDetailsAndTry":
-    "Check your details and try again. Repeated failures pause sign-in for a short time.",
+  "screen.public.signIn.adminAuthenticator.setUpRequired": "Set-up required",
+  "screen.public.signIn.adminAuthenticator.title": "Set up your authenticator",
+  "screen.public.signIn.adminAuthenticator.lead":
+    "Scan the code in your authenticator app, then enter the 6-digit code it shows. The admin console opens after this step.",
+  "screen.public.signIn.adminAuthenticator.qrLabel": "Set-up QR code",
+  "screen.public.signIn.adminAuthenticator.qrCode": "QR code",
+  "screen.public.signIn.adminAuthenticator.cannotScan": "Cannot scan?",
+  "screen.public.signIn.adminAuthenticator.enterKey": "Enter this key in your app:",
+  "screen.public.signIn.adminAuthenticator.keyMissing": "Ask a platform admin for your set-up key.",
+  "screen.public.signIn.adminAuthenticator.codeLabel": "Authenticator code",
   // apps/web/src/screens/public/sign-in/staff-code-set-up.tsx
+  "screen.public.signIn.staffCodeSetUp.required": "Required before the workspace opens",
+  "screen.public.signIn.staffCodeSetUp.title": "Set your sign-in code",
+  "screen.public.signIn.staffCodeSetUp.lead":
+    "Each staff sign-in needs a second code. Choose how you receive it.",
+  "screen.public.signIn.staffCodeSetUp.method": "Code method",
+  "screen.public.signIn.staffCodeSetUp.app": "Authenticator app",
+  "screen.public.signIn.staffCodeSetUp.sms": "Text message (SMS)",
+  "screen.public.signIn.staffCodeSetUp.codeFromApp": "Code from your app",
+  "screen.public.signIn.staffCodeSetUp.codeFromSms": "Code from the text message",
   "screen.public.signIn.staffCodeSetUp.confirm": "Confirm",
-  "screen.public.signIn.staffCodeSetUp.afterConfirmationTheWorkspaceOpens":
-    "After confirmation, the workspace opens.",
-  "screen.public.signIn.staffCodeSetUp.openTheWorkspace": "Open the workspace",
-  "screen.public.signIn.staffCodeSetUp.staffCodeSetUpFirst": "Staff code set-up (first sign-in)",
-  "screen.public.signIn.staffCodeSetUp.chooseSmsOrAnAuthenticator":
-    "Choose SMS or an authenticator app, then confirm a code. The workspace opens after this step.",
-  "screen.public.signIn.staffCodeSetUp.codeExpired": "Code expired",
-  "screen.public.signIn.staffCodeSetUp.theCodeIsWrongOr":
-    "The code is wrong or expired. Request a new code and try again.",
   // apps/web/src/screens/public/sign-up/organization-sign-up.tsx
-  "screen.public.signUp.organizationSignUp.owner": "Owner",
-  "screen.public.signUp.organizationSignUp.ownerName": "Owner name",
-  "screen.public.signUp.organizationSignUp.ownerEmail": "Owner email",
-  "screen.public.signUp.organizationSignUp.ownerPhone": "Owner phone",
-  "screen.public.signUp.organizationSignUp.organization": "Organization",
-  "screen.public.signUp.organizationSignUp.legalName": "Legal name",
-  "screen.public.signUp.organizationSignUp.country": "Country",
-  "screen.public.signUp.organizationSignUp.required": "Required.",
-  "screen.public.signUp.organizationSignUp.commercialRegistrationNumber":
-    "Commercial registration number",
-  "screen.public.signUp.organizationSignUp.taxNumber": "Tax number",
-  "screen.public.signUp.organizationSignUp.commercialRegistrationDocument":
-    "Commercial registration document",
-  "screen.public.signUp.organizationSignUp.aClearPhotoOrScan": "A clear photo or scan.",
-  "screen.public.signUp.organizationSignUp.billingContact": "Billing contact",
-  "screen.public.signUp.organizationSignUp.billingContactName": "Billing contact name",
-  "screen.public.signUp.organizationSignUp.billingContactEmail": "Billing contact email",
-  "screen.public.signUp.organizationSignUp.submissionFailed": "Submission failed",
-  "screen.public.signUp.organizationSignUp.planAndReview": "Plan and review",
-  "screen.public.signUp.organizationSignUp.theStarterPlanIsAssigned":
-    "The Starter plan is assigned when your organization is approved. The registry check is manual. No staff access is granted before approval.",
-  "screen.public.signUp.organizationSignUp.submitting": "Submitting...",
-  "screen.public.signUp.organizationSignUp.submitForReview": "Submit for review",
-  "screen.public.signUp.organizationSignUp.organizationSignUpWebOnly":
-    "Organization sign-up (web only)",
-  "screen.public.signUp.organizationSignUp.registerYourOrganizationForAdmin":
-    "Register your organization for admin review. Owners verify both email and phone.",
-  "screen.public.signUp.organizationSignUp.countryIsMissing": "Country is missing",
-  "screen.public.signUp.organizationSignUp.selectACountrySubmitIs":
-    "Select a country. Submit is refused until it is set.",
+  "screen.public.signUp.organization.title": "Register your organization",
+  "screen.public.signUp.organization.lead":
+    "Admin reviews the registration. Staff access opens after approval.",
+  "screen.public.signUp.organization.organization": "Organization",
+  "screen.public.signUp.organization.legalName": "Legal name",
+  "screen.public.signUp.organization.registrationNumber": "Commercial registration number",
+  "screen.public.signUp.organization.taxNumber": "Tax number",
+  "screen.public.signUp.organization.certificate": "Commercial registration certificate",
+  "screen.public.signUp.organization.certificateHint": "PDF or photo, up to 15 MB",
+  "screen.public.signUp.organization.ownerAndBilling": "Owner and billing",
+  "screen.public.signUp.organization.ownerName": "Owner name",
+  "screen.public.signUp.organization.ownerEmail": "Owner email",
+  "screen.public.signUp.organization.ownerPhone": "Owner phone",
+  "screen.public.signUp.organization.billingEmail": "Billing contact email",
+  "screen.public.signUp.organization.billingEmailPlaceholder": "billing@example.com",
+  "screen.public.signUp.organization.planNote":
+    "No plan choice here. The Starter plan is assigned when your registration is approved.",
+  "screen.public.signUp.organization.submit": "Submit registration",
+  "screen.public.signUp.organization.submitting": "Submitting…",
+  "screen.public.signUp.organization.submitFailed":
+    "The registration could not be submitted. Try again.",
   // apps/web/src/screens/public/sign-up/photographer-sign-up.tsx
-  "screen.public.signUp.photographerSignUp.uploadProgress":
-    "Upload at least {min} photos. Uploaded: {uploaded} of {min}.",
-  "screen.public.signUp.photographerSignUp.nameOrStudioName": "Name or studio name",
-  "screen.public.signUp.photographerSignUp.email": "Email",
-  "screen.public.signUp.photographerSignUp.phone": "Phone",
-  "screen.public.signUp.photographerSignUp.country": "Country",
-  "screen.public.signUp.photographerSignUp.required": "Required.",
-  "screen.public.signUp.photographerSignUp.portfolioPhotosNeeded": "Portfolio photos needed",
-  "screen.public.signUp.photographerSignUp.portfolioPhotos": "Portfolio photos",
-  "screen.public.signUp.photographerSignUp.minimumPhotosSubmitStaysBlocked":
-    "Minimum {min} photos. Submit stays blocked until the minimum is met.",
-  "screen.public.signUp.photographerSignUp.submissionFailed": "Submission failed",
-  "screen.public.signUp.photographerSignUp.submitting": "Submitting...",
-  "screen.public.signUp.photographerSignUp.submitApplication": "Submit application",
-  "screen.public.signUp.photographerSignUp.photographerSignUp": "Photographer sign-up",
-  "screen.public.signUp.photographerSignUp.applyToJoinThePlatform":
-    "Apply to join the platform photographer pool. Photographers verify both email and phone.",
-  "screen.public.signUp.photographerSignUp.addMorePhotos": "Add more photos",
-  "screen.public.signUp.photographerSignUp.yourPortfolioHasFewerThan":
-    "Your portfolio has fewer than",
-  "screen.public.signUp.photographerSignUp.photosAddMoreToSubmit": "photos. Add more to submit.",
+  "screen.public.signUp.photographer.title": "Apply as a photographer",
+  "screen.public.signUp.photographer.lead":
+    "Show your work with a portfolio of at least 8 photos. Access starts after approval.",
+  "screen.public.signUp.photographer.yourDetails": "Your details",
+  "screen.public.signUp.photographer.name": "Name or studio name",
+  "screen.public.signUp.photographer.email": "Email",
+  "screen.public.signUp.photographer.phone": "Phone",
+  "screen.public.signUp.photographer.portfolio": "Portfolio",
+  "screen.public.signUp.photographer.count": "{count} of {required} photos",
+  "screen.public.signUp.photographer.addPhotos": "Add photos",
+  "screen.public.signUp.photographer.needMore":
+    "Add at least {required} photos to submit. You have {count} of {required}.",
+  "screen.public.signUp.photographer.submit": "Submit application",
+  "screen.public.signUp.photographer.submitting": "Submitting…",
+  "screen.public.signUp.photographer.submitFailed":
+    "The application could not be submitted. Try again.",
   // apps/web/src/screens/public/sign-up/platform-driver-sign-up.tsx
-  "screen.public.signUp.platformDriverSignUp.registrationDocument": "Registration document",
-  "screen.public.signUp.platformDriverSignUp.insuranceDocument": "Insurance document",
-  "screen.public.signUp.platformDriverSignUp.labResult": "Lab result",
-  "screen.public.signUp.platformDriverSignUp.aClearPhotoOrScan": "A clear photo or scan.",
-  "screen.public.signUp.platformDriverSignUp.identity": "Identity",
-  "screen.public.signUp.platformDriverSignUp.fullName": "Full name",
-  "screen.public.signUp.platformDriverSignUp.email": "Email",
-  "screen.public.signUp.platformDriverSignUp.phone": "Phone",
-  "screen.public.signUp.platformDriverSignUp.country": "Country",
-  "screen.public.signUp.platformDriverSignUp.required": "Required.",
-  "screen.public.signUp.platformDriverSignUp.vehicle": "Vehicle",
-  "screen.public.signUp.platformDriverSignUp.iDriveMyOwnVehicle": "I drive my own vehicle",
-  "screen.public.signUp.platformDriverSignUp.plateNumber": "Plate number",
-  "screen.public.signUp.platformDriverSignUp.model": "Model",
-  "screen.public.signUp.platformDriverSignUp.year": "Year",
-  "screen.public.signUp.platformDriverSignUp.seats": "Seats",
-  "screen.public.signUp.platformDriverSignUp.documents": "Documents",
-  "screen.public.signUp.platformDriverSignUp.insuranceValidUntil": "Insurance valid until",
-  "screen.public.signUp.platformDriverSignUp.yyyyMmDd": "YYYY-MM-DD",
-  "screen.public.signUp.platformDriverSignUp.insuranceMustBeValidFor":
-    "Insurance must be valid for at least 3 more months.",
-  "screen.public.signUp.platformDriverSignUp.labTestDate": "Lab test date",
-  "screen.public.signUp.platformDriverSignUp.yyyyMmDdPlaceholder": "YYYY-MM-DD",
-  "screen.public.signUp.platformDriverSignUp.theLabResultMustBe":
-    "The lab result must be less than 30 days old.",
-  "screen.public.signUp.platformDriverSignUp.consent": "Consent",
-  "screen.public.signUp.platformDriverSignUp.iConsentToABackground":
-    "I consent to a background check",
-  "screen.public.signUp.platformDriverSignUp.requiredToJoinTheDriver":
-    "Required to join the driver pool.",
-  "screen.public.signUp.platformDriverSignUp.iConsentToALab": "I consent to a lab test",
-  "screen.public.signUp.platformDriverSignUp.requiredToJoinTheDriverDescription":
-    "Required to join the driver pool.",
-  "screen.public.signUp.platformDriverSignUp.applicationBlocked": "Application blocked",
-  "screen.public.signUp.platformDriverSignUp.submitting": "Submitting...",
-  "screen.public.signUp.platformDriverSignUp.submitApplication": "Submit application",
-  "screen.public.signUp.platformDriverSignUp.platformDriverSignUp": "Platform driver sign-up",
-  "screen.public.signUp.platformDriverSignUp.applyToJoinThePlatform":
-    "Apply to join the platform driver pool. Drivers verify both email and phone.",
-  "screen.public.signUp.platformDriverSignUp.applicationBlockedTitle": "Application blocked",
-  "screen.public.signUp.platformDriverSignUp.insuranceMustBeValidFor2":
-    "Insurance must be valid for at least 3 more months, and the lab result must be less than 30 days old.",
-  // apps/web/src/screens/public/sign-up/sign-up-chooser.tsx
-  "screen.public.signUp.signUpChooser.traveler": "Traveler",
-  "screen.public.signUp.signUpChooser.createATravelerAccountOn":
-    "Create a traveler account on the Free plan.",
-  "screen.public.signUp.signUpChooser.platformDriver": "Platform driver",
-  "screen.public.signUp.signUpChooser.applyToJoinThePlatform":
-    "Apply to join the platform driver pool.",
-  "screen.public.signUp.signUpChooser.photographer": "Photographer",
-  "screen.public.signUp.signUpChooser.applyToJoinThePlatformDescription":
-    "Apply to join the platform photographer pool.",
-  "screen.public.signUp.signUpChooser.organization": "Organization",
-  "screen.public.signUp.signUpChooser.registerAnOrganizationForAdmin":
-    "Register an organization for admin review.",
-  "screen.public.signUp.signUpChooser.webOnly": "Web only",
-  "screen.public.signUp.signUpChooser.continueAs": "Continue as",
-  "screen.public.signUp.signUpChooser.signUpChooserRegister": "Sign-up chooser (/register)",
-  "screen.public.signUp.signUpChooser.pickTheRoleThatFits": "Pick the role that fits you.",
-  "screen.public.signUp.signUpChooser.rolesCouldNotLoad": "Roles could not load",
-  "screen.public.signUp.signUpChooser.refreshThePageToTry": "Refresh the page to try again.",
-  "screen.public.signUp.signUpChooser.alreadyHaveAnAccount": "Already have an account?",
-  "screen.public.signUp.signUpChooser.signIn": "Sign in",
-  // apps/web/src/screens/public/sign-up/traveler-sign-up.tsx
-  "screen.public.signUp.travelerSignUp.fullName": "Full name",
-  "screen.public.signUp.travelerSignUp.email": "Email",
-  "screen.public.signUp.travelerSignUp.enterAnEmailAPhone":
-    "Enter an email, a phone number, or both. At least one is required.",
-  "screen.public.signUp.travelerSignUp.phone": "Phone",
-  "screen.public.signUp.travelerSignUp.country": "Country",
-  "screen.public.signUp.travelerSignUp.required": "Required.",
-  "screen.public.signUp.travelerSignUp.language": "Language",
-  "screen.public.signUp.travelerSignUp.passwordOptional": "Password (optional)",
-  "screen.public.signUp.travelerSignUp.leaveEmptyToSignIn":
-    "Leave empty to sign in with a one-time code.",
-  "screen.public.signUp.travelerSignUp.createAccount": "Create account",
-  "screen.public.signUp.travelerSignUp.travelerSignUp": "Traveler sign-up",
-  "screen.public.signUp.travelerSignUp.createATravelerAccountOn":
-    "Create a traveler account on the Free plan.",
-  "screen.public.signUp.travelerSignUp.accountAlreadyExists": "Account already exists",
-  "screen.public.signUp.travelerSignUp.anAccountAlreadyUsesThis":
-    "An account already uses this email or phone. Sign in instead.",
+  "screen.public.signUp.driver.title": "Apply to drive",
+  "screen.public.signUp.driver.lead": "Platform driver application. You can sign in after review.",
+  "screen.public.signUp.driver.yourDetails": "Your details",
+  "screen.public.signUp.driver.fullName": "Full name",
+  "screen.public.signUp.driver.fullNamePlaceholder": "As on your ID",
+  "screen.public.signUp.driver.email": "Email",
+  "screen.public.signUp.driver.phone": "Phone",
+  "screen.public.signUp.driver.yourVehicle": "Your vehicle",
+  "screen.public.signUp.driver.plate": "Plate",
+  "screen.public.signUp.driver.model": "Model",
+  "screen.public.signUp.driver.documentsAndConsent": "Documents and consent",
+  "screen.public.signUp.driver.registrationDocument": "Registration document",
+  "screen.public.signUp.driver.registrationHint": "PDF or photo, up to 15 MB",
+  "screen.public.signUp.driver.insuranceDocument": "Insurance document",
+  "screen.public.signUp.driver.insuranceHint": "Must be valid for at least 3 months",
+  "screen.public.signUp.driver.backgroundConsent": "I consent to a background check.",
+  "screen.public.signUp.driver.labConsent":
+    "I consent to a lab test and to storing this consent record.",
+  "screen.public.signUp.driver.labDate": "Initial lab result date",
+  "screen.public.signUp.driver.labDateHint":
+    "The lab result must be dated within the last 30 days.",
+  "screen.public.signUp.driver.labDateTooOld": "Choose a date within the last 30 days.",
+  "screen.public.signUp.driver.submit": "Submit application",
+  "screen.public.signUp.driver.submitting": "Submitting…",
+  "screen.public.signUp.driver.submitFailed": "The application could not be submitted. Try again.",
   // apps/web/src/screens/public/sign-up/verification-by-code.tsx
-  "screen.public.signUp.verificationByCode.verify": "Verify",
-  "screen.public.signUp.verificationByCode.afterVerification": "After verification",
-  "screen.public.signUp.verificationByCode.signIn": "Sign in",
-  "screen.public.signUp.verificationByCode.applicationStatus": "Application status",
-  "screen.public.signUp.verificationByCode.verificationByCode": "Verification by code",
-  "screen.public.signUp.verificationByCode.confirmYourEmailOrPhone":
-    "Confirm your email or phone before your account can act.",
-  "screen.public.signUp.verificationByCode.wrongCode": "Wrong code",
-  "screen.public.signUp.verificationByCode.thatCodeDoesNotMatch":
-    "That code does not match. Five wrong codes pause verification for 15 minutes.",
+  "screen.public.signUp.verification.stepEmail": "Step 1 of 2: email",
+  "screen.public.signUp.verification.stepPhone": "Step 1 of 2: phone",
+  "screen.public.signUp.verification.changeNumber": "Change number",
+  "screen.public.signUp.verification.verified": "Verified. You can sign in now.",
   // apps/web/src/screens/registry.ts
   "screen.registry.surface.publicAndSignIn": "Public and sign-in",
   "screen.registry.surface.sharedStates": "Shared states",
   "screen.registry.surface.organizationDashboard": "Organization dashboard",
   "screen.registry.surface.adminConsole": "Admin console",
+  // apps/web/src/screens/shared/confirmation-dialog.tsx
+  "screen.shared.confirmation.reason": "Reason (required)",
+  "screen.shared.confirmation.reasonPlaceholder": "Write the reason",
+  "screen.shared.confirmation.cancel": "Cancel",
+  // apps/web/src/screens/shared/error-page.tsx
+  "screen.shared.errorPage.status": "Error {status}",
+  "screen.shared.errorPage.backHome": "Back to home",
+  "screen.shared.errorPage.goHome": "Go to home",
+  "screen.shared.errorPage.tryAgain": "Try again",
+  // apps/web/src/screens/shared/language-switch.tsx
+  "screen.shared.languageSwitch.label": "Language",
+  "screen.shared.languageSwitch.keepsData":
+    "Your typed data and current step stay when you switch language.",
+  // apps/web/src/screens/shared/offline-banner.tsx
+  "screen.shared.offline.title": "No connection",
+  "screen.shared.offline.body":
+    "You can still view what is on screen. Actions that need a connection wait until you are back online.",
   // apps/web/src/screens/shared/index.ts
   "screen.registry.shared.planLimitUpgradePrompt.title": "Plan-limit upgrade prompt",
   "screen.registry.shared.permissionDenied.title": "Permission denied (403)",
@@ -3083,207 +2967,168 @@ export const en = {
   "screen.registry.shared.seatMap.title": "Seat map",
   "screen.registry.shared.documentAndPhotoUpload.title": "Document and photo upload",
   // apps/web/src/screens/shared/otp-entry-panel.tsx
-  "screen.shared.otpEntryPanel.enterDigitCode": "Enter the {length}-digit code sent to",
-  "screen.shared.otpEntryPanel.codeExpiry": ". The code expires in {minutes} minutes.",
-  "screen.shared.otpEntryPanel.resendIn": "Resend code in {seconds}s",
-  "screen.shared.otpEntryPanel.verificationCode": "Verification code",
-  "screen.shared.otpEntryPanel.digitOf": "Digit {position} of {length}",
-  "screen.shared.otpEntryPanel.changeEmailOrPhone": "Change email or phone",
+  "screen.shared.otpEntry.expires": ". It expires in 5 minutes.",
+  "screen.shared.otpEntry.waiting": "Waiting for the code. You can resend in {seconds} seconds.",
+  // apps/web/src/screens/shared/plan-limit-prompt.tsx
+  "screen.shared.planLimit.badge": "Limit reached",
+  "screen.shared.planLimit.title": "Upgrade to add more",
+  "screen.shared.planLimit.usage": "{limit}: {current} of {allowance} used on your current plan.",
+  "screen.shared.planLimit.limit.activeTripsPerMonth": "Active trips this month",
+  "screen.shared.planLimit.limit.vehiclesPerTrip": "Vehicles per trip",
+  "screen.shared.planLimit.limit.programsPerTrip": "Programs per trip",
+  "screen.shared.planLimit.limit.employeesMax": "Employees",
+  "screen.shared.planLimit.limit.activeCouponsMax": "Active coupons",
+  "screen.shared.planLimit.limit.portfolioPhotosMax": "Portfolio photos",
+  "screen.shared.planLimit.limit.webhookEndpointsMax": "Webhook endpoints",
+  "screen.shared.planLimit.tierLifts": "{tier} plan lifts this limit",
+  "screen.shared.planLimit.perMonth": "{price} per month",
+  "screen.shared.planLimit.prorated": "Upgrades start now and are prorated.",
+  "screen.shared.planLimit.upgrade": "Upgrade to {tier}",
+  "screen.shared.planLimit.cancel": "Cancel",
+  // apps/web/src/screens/shared/role-switcher.tsx
+  "screen.shared.roleSwitcher.title": "Switch role or organization",
+  "screen.shared.roleSwitcher.loading": "Loading your roles",
+  "screen.shared.roleSwitcher.roles": "Your roles",
+  "screen.shared.roleSwitcher.organizations": "Organizations linked to this email",
+  "screen.shared.roleSwitcher.note":
+    "Each role and organization keeps its own data. Switching does not create a second account.",
+  "screen.shared.roleSwitcher.failed": "The switch did not go through. Try again.",
+  "screen.shared.roleSwitcher.switch": "Switch",
+  "screen.shared.roleSwitcher.role.traveler": "Traveler",
+  "screen.shared.roleSwitcher.role.parent": "Parent",
+  "screen.shared.roleSwitcher.role.platformDriver": "Platform driver",
+  "screen.shared.roleSwitcher.role.orgDriver": "Organization driver",
+  "screen.shared.roleSwitcher.role.platformPhotographer": "Platform photographer",
+  "screen.shared.roleSwitcher.role.orgPhotographer": "Organization photographer",
+  "screen.shared.roleSwitcher.role.organizationOwner": "Organization owner",
+  "screen.shared.roleSwitcher.role.organizationEmployee": "Organization employee",
+  "screen.shared.roleSwitcher.role.moderator": "Moderator",
+  "screen.shared.roleSwitcher.role.admin": "Admin",
+  "screen.shared.roleSwitcher.signIn": "Sign in to switch roles.",
+  // apps/web/src/screens/shared/seat-map.tsx
+  "screen.shared.seatMap.legend": "Seat states",
+  "screen.shared.seatMap.state.available": "Available",
+  "screen.shared.seatMap.state.selected": "Selected",
+  "screen.shared.seatMap.state.held": "Held, timed",
+  "screen.shared.seatMap.state.taken": "Taken",
+  "screen.shared.seatMap.front": "Front",
+  "screen.shared.seatMap.seat.available": "Seat {seat}, available",
+  "screen.shared.seatMap.seat.selected": "Seat {seat}, selected",
+  "screen.shared.seatMap.seat.taken": "Seat {seat}, taken",
+  "screen.shared.seatMap.seatHeld": "Seat {seat}, held for {minutes} minutes",
   // apps/web/src/screens/shared/scr-shr-01-plan-limit-upgrade-prompt.tsx
-  "screen.shared.scrShr01PlanLimitUpgradePrompt.planLimitUpgradePrompt":
-    "Plan-limit upgrade prompt",
-  "screen.shared.scrShr01PlanLimitUpgradePrompt.aPlanLimitBlocksThis":
-    "A plan limit blocks this action. Upgrading lifts the limit.",
-  "screen.shared.scrShr01PlanLimitUpgradePrompt.thisActionIsLockedOn":
-    "This action is locked on your current plan.",
-  "screen.shared.scrShr01PlanLimitUpgradePrompt.paymentFailed": "Payment failed",
-  "screen.shared.scrShr01PlanLimitUpgradePrompt.theUpgradeDidNotGo":
-    "The upgrade did not go through, so the action stays blocked. Try another payment method.",
-  "screen.shared.scrShr01PlanLimitUpgradePrompt.planLimitReached": "Plan limit reached",
-  "screen.shared.scrShr01PlanLimitUpgradePrompt.yourCurrentPlanDoesNot":
-    "Your current plan does not allow this action. Upgrading takes effect immediately and is prorated.",
-  "screen.shared.scrShr01PlanLimitUpgradePrompt.upgradeTo": "Upgrade to {plan}",
-  "screen.shared.scrShr01PlanLimitUpgradePrompt.cancel": "Cancel",
-  "screen.shared.scrShr01PlanLimitUpgradePrompt.limit": "Limit",
-  "screen.shared.scrShr01PlanLimitUpgradePrompt.limitNameFromTheBlocked":
-    "Limit name from the blocked action",
-  "screen.shared.scrShr01PlanLimitUpgradePrompt.liftedBy": "Lifted by",
+  "screen.shared.planLimit.loading": "Loading plans",
+  "screen.shared.planLimit.noTier": "No higher plan is available.",
+  "screen.shared.planLimit.failed": "The upgrade did not go through. Your plan is unchanged.",
+  "screen.shared.planLimit.signIn": "Sign in to your organization to see plans.",
   // apps/web/src/screens/shared/scr-shr-02-permission-denied.tsx
-  "screen.shared.scrShr02PermissionDenied.youDonTHavePermission":
-    "You don't have permission for this",
-  "screen.shared.scrShr02PermissionDenied.yourRoleDoesNotInclude":
-    "Your role does not include this action. Go back to the screen you came from.",
-  "screen.shared.scrShr02PermissionDenied.goBack": "Go back",
+  "screen.shared.permissionDenied.title": "You do not have access to this page",
+  "screen.shared.permissionDenied.body":
+    "Your role does not include this area. Ask your organization owner if you need access.",
   // apps/web/src/screens/shared/scr-shr-03-not-found.tsx
-  "screen.shared.scrShr03NotFound.theLinkMayBeOut":
-    "The link may be out of date or the item was removed. Check the address, or go to home.",
-  "screen.shared.scrShr03NotFound.goToHome": "Go to home",
+  "screen.shared.notFound.title": "We could not find that",
+  "screen.shared.notFound.body": "The item may have been removed, or the link is no longer shared.",
   // apps/web/src/screens/shared/scr-shr-04-unauthorized.tsx
-  "screen.shared.scrShr04Unauthorized.signInToContinue": "Sign in to continue",
-  "screen.shared.scrShr04Unauthorized.yourSessionIsNoLonger":
-    "Your session is no longer valid. Sign in again and you return to this page.",
-  "screen.shared.scrShr04Unauthorized.signIn": "Sign in",
+  "screen.shared.unauthorized.title": "Sign in to continue",
+  "screen.shared.unauthorized.body":
+    "Your session has ended. You will return to this page after you sign in. Your drafts are kept.",
   // apps/web/src/screens/shared/scr-shr-05-server-error.tsx
-  "screen.shared.scrShr05ServerError.requestId": "Request ID",
-  "screen.shared.scrShr05ServerError.tryAgain": "Try again",
-  "screen.shared.scrShr05ServerError.goToHome": "Go to home",
+  "screen.shared.serverError.title": "Something went wrong on our side",
+  "screen.shared.serverError.body": "Your drafts are saved. Try again in a moment.",
+  "screen.shared.serverError.reference": "Reference for support:",
   // apps/web/src/screens/shared/scr-shr-06-service-unavailable.tsx
-  "screen.shared.scrShr06ServiceUnavailable.serviceIsTemporarilyUnavailable":
-    "Service is temporarily unavailable",
-  "screen.shared.scrShr06ServiceUnavailable.weAreRestoringTheService":
-    "We are restoring the service. Booking payments are not lost: callbacks are queued and processed when the service returns.",
-  "screen.shared.scrShr06ServiceUnavailable.retry": "Retry",
-  "screen.shared.scrShr06ServiceUnavailable.updatesArePostedOnThe":
-    "Updates are posted on the status page.",
+  "screen.shared.serviceUnavailable.title": "Service is temporarily unavailable",
+  "screen.shared.serviceUnavailable.body":
+    "We are working on it. Your booking payments are not lost: they are queued and processed when the service returns.",
   // apps/web/src/screens/shared/scr-shr-07-maintenance-page.tsx
-  "screen.shared.scrShr07MaintenancePage.plannedMaintenance": "Planned maintenance",
-  "screen.shared.scrShr07MaintenancePage.tripsEnjoyIsUnavailableDuring":
-    "Trips Enjoy is unavailable during a planned maintenance window. Payment callbacks keep queueing and are processed after the window.",
-  "screen.shared.scrShr07MaintenancePage.startAndEndTimesIn":
-    "Start and end times, in your time zone",
-  "screen.shared.scrShr07MaintenancePage.plannedWindow": "Planned window",
-  "screen.shared.scrShr07MaintenancePage.tryAgainAfterTheWindow": "Try again after the window ends",
+  "screen.shared.maintenance.badge": "Planned maintenance",
+  "screen.shared.maintenance.title": "We are updating Trips Enjoy",
+  "screen.shared.maintenance.window": "Maintenance window",
+  "screen.shared.maintenance.windowValue": "{from} to {until} ({zone})",
+  "screen.shared.maintenance.otherLanguage":
+    "The site is in planned maintenance during the window above.",
+  "screen.shared.maintenance.payments":
+    "Booking payments are not lost. Payment confirmations are queued and are processed when the service returns.",
+  "screen.shared.maintenance.retryAfter": "Try again after {time}",
   // apps/web/src/screens/shared/scr-shr-08-offline-banner.tsx
-  "screen.shared.scrShr08OfflineBanner.youAreOfflineViewingSaved":
-    "You are offline. Viewing saved trips still works. Booking and payment actions are paused until the connection returns.",
-  "screen.shared.scrShr08OfflineBanner.retry": "Retry",
-  "screen.shared.scrShr08OfflineBanner.offlineBanner": "Offline banner",
-  "screen.shared.scrShr08OfflineBanner.theBannerSitsAboveThe":
-    "The banner sits above the current screen and clears when the connection returns.",
-  "screen.shared.scrShr08OfflineBanner.contentAlreadyOnScreenStays":
-    "Content already on screen stays visible. Actions that need a connection are disabled until the app is back online.",
+  "screen.shared.offline.example": "Your trips",
+  "screen.shared.offline.exampleBody":
+    "Trips saved on this device stay available while you are offline.",
   // apps/web/src/screens/shared/scr-shr-09-confirmation-dialog.tsx
-  "screen.shared.scrShr09ConfirmationDialog.confirmationDialog": "Confirmation dialog",
-  "screen.shared.scrShr09ConfirmationDialog.aDecisionScreenAsksFor":
-    "A decision screen asks for confirmation before the change is saved.",
-  "screen.shared.scrShr09ConfirmationDialog.reviewChange": "Review change",
-  "screen.shared.scrShr09ConfirmationDialog.back": "Back",
-  "screen.shared.scrShr09ConfirmationDialog.confirmThisChange": "Confirm this change",
-  "screen.shared.scrShr09ConfirmationDialog.theChangeTakesEffectWhen":
-    "The change takes effect when you confirm. Affected travelers are notified before it applies. This action is recorded.",
-  "screen.shared.scrShr09ConfirmationDialog.confirmChange": "Confirm change",
-  "screen.shared.scrShr09ConfirmationDialog.cancel": "Cancel",
-  "screen.shared.scrShr09ConfirmationDialog.reason": "Reason",
-  "screen.shared.scrShr09ConfirmationDialog.requiredForThisChangeConfirm":
-    "Required for this change. Confirm stays disabled until it is filled.",
+  "screen.shared.confirmation.exampleTitle": "Remove this passenger from the trip?",
+  "screen.shared.confirmation.exampleBody":
+    "They will be notified before this takes effect. The seat is released and this action is recorded.",
+  "screen.shared.confirmation.exampleConfirm": "Remove passenger",
   // apps/web/src/screens/shared/scr-shr-10-language-switch-and-rtl.tsx
-  "screen.shared.scrShr10LanguageSwitchAndRtl.languageSwitchAndRtl": "Language switch and RTL",
-  "screen.shared.scrShr10LanguageSwitchAndRtl.layoutRightToLeft": "Layout: right to left",
-  "screen.shared.scrShr10LanguageSwitchAndRtl.layoutLeftToRight": "Layout: left to right",
-  "screen.shared.scrShr10LanguageSwitchAndRtl.back": "Back",
-  "screen.shared.scrShr10LanguageSwitchAndRtl.fullName": "Full name",
-  "screen.shared.scrShr10LanguageSwitchAndRtl.country": "Country",
-  "screen.shared.scrShr10LanguageSwitchAndRtl.continue": "Continue",
+  "screen.shared.languageSwitch.title": "Language and direction",
+  "screen.shared.languageSwitch.fullName": "Full name",
+  "screen.shared.languageSwitch.today": "Today",
+  "screen.shared.languageSwitch.formats":
+    "Dates and numbers follow the format of the selected language.",
+  "screen.shared.languageSwitch.continue": "Continue",
   // apps/web/src/screens/shared/scr-shr-11-notification-centre.tsx
-  "screen.shared.scrShr11NotificationCentre.applicationStatusChanged": "Application status changed",
-  "screen.shared.scrShr11NotificationCentre.yourApplicationIsNowPending":
-    "Your application is now pending review.",
-  "screen.shared.scrShr11NotificationCentre.verificationCodeSent": "Verification code sent",
-  "screen.shared.scrShr11NotificationCentre.checkYourEmailForThe":
-    "Check your email for the code. Codes expire after 5 minutes.",
-  "screen.shared.scrShr11NotificationCentre.tripTimeChanged": "Trip time changed",
-  "screen.shared.scrShr11NotificationCentre.emailDeliveryFailedDeliveryStatus":
-    "Email delivery failed. Delivery status: retry scheduled.",
-  "screen.shared.scrShr11NotificationCentre.all": "All",
-  "screen.shared.scrShr11NotificationCentre.unread": "Unread",
-  "screen.shared.scrShr11NotificationCentre.filterNotifications": "Filter notifications",
-  "screen.shared.scrShr11NotificationCentre.markAllAsRead": "Mark all as read",
-  "screen.shared.scrShr11NotificationCentre.noUnreadNotifications": "No unread notifications",
-  "screen.shared.scrShr11NotificationCentre.youAreAllCaughtUp": "You are all caught up.",
-  "screen.shared.scrShr11NotificationCentre.notificationCentre": "Notification centre",
-  "screen.shared.scrShr11NotificationCentre.yourNotificationsWithDeliveryStatus":
-    "Your notifications, with delivery status for each one.",
-  "screen.shared.scrShr11NotificationCentre.back": "Back",
-  "screen.shared.scrShr11NotificationCentre.noNotificationsYet": "No notifications yet",
-  "screen.shared.scrShr11NotificationCentre.notificationsAboutYourBookingsAnd":
-    "Notifications about your bookings and applications appear here.",
-  "screen.shared.scrShr11NotificationCentre.notificationsCouldNotLoad":
-    "Notifications could not load",
-  "screen.shared.scrShr11NotificationCentre.tryAgainInAFew": "Try again in a few minutes.",
+  "screen.shared.notifications.title": "Notifications",
+  "screen.shared.notifications.loading": "Loading notifications",
+  "screen.shared.notifications.failed": "Notifications could not load. Try again in a few minutes.",
+  "screen.shared.notifications.empty": "No notifications yet",
+  "screen.shared.notifications.emptyBody":
+    "Updates about your trips, bookings and account appear here.",
+  "screen.shared.notifications.category.bookings": "Booking",
+  "screen.shared.notifications.category.trip_updates": "Trip update",
+  "screen.shared.notifications.category.promotions": "Offer",
+  "screen.shared.notifications.category.security": "Account",
+  "screen.shared.notifications.category.safety": "Safety",
+  "screen.shared.notifications.category.operations": "Operations",
+  "screen.shared.notifications.channel.in_app": "Sent by app",
+  "screen.shared.notifications.channel.email": "Sent by email",
+  "screen.shared.notifications.channel.sms": "Sent by SMS",
+  "screen.shared.notifications.channel.push": "Sent by push notification",
+  "screen.shared.notifications.open": "Open",
+  "screen.shared.notifications.markRead": "Mark read",
+  "screen.shared.notifications.markAll": "Mark all as read",
+  "screen.shared.notifications.signIn": "Sign in to see your notifications.",
   // apps/web/src/screens/shared/scr-shr-12-receipt-and-invoice-view.tsx
-  "screen.shared.scrShr12ReceiptAndInvoiceView.lineDescription": "Line description",
-  "screen.shared.scrShr12ReceiptAndInvoiceView.description": "Description",
-  "screen.shared.scrShr12ReceiptAndInvoiceView.amount": "Amount",
-  "screen.shared.scrShr12ReceiptAndInvoiceView.issued": "Issued",
-  "screen.shared.scrShr12ReceiptAndInvoiceView.receiptNumberIssueDateAnd":
-    "Receipt number, issue date and buyer details appear here.",
-  "screen.shared.scrShr12ReceiptAndInvoiceView.receiptLines": "Receipt lines",
-  "screen.shared.scrShr12ReceiptAndInvoiceView.noLines": "No lines",
-  "screen.shared.scrShr12ReceiptAndInvoiceView.tax": "Tax",
-  "screen.shared.scrShr12ReceiptAndInvoiceView.total": "Total",
-  "screen.shared.scrShr12ReceiptAndInvoiceView.exportIsLockedOnThe":
-    "Export is locked on the Free plan.",
-  "screen.shared.scrShr12ReceiptAndInvoiceView.upgradeToExport": "Upgrade to export",
-  "screen.shared.scrShr12ReceiptAndInvoiceView.receiptAndInvoiceView": "Receipt and invoice view",
-  "screen.shared.scrShr12ReceiptAndInvoiceView.numberDateBuyerLinesTax":
-    "Number, date, buyer, lines, tax and totals.",
-  "screen.shared.scrShr12ReceiptAndInvoiceView.back": "Back",
-  "screen.shared.scrShr12ReceiptAndInvoiceView.receiptCouldNotLoad": "Receipt could not load",
-  "screen.shared.scrShr12ReceiptAndInvoiceView.tryAgainLaterTheReceipt":
-    "Try again later. The receipt stays available from your bookings.",
-  // apps/web/src/screens/shared/scr-shr-13-role-and-organization-switcher.tsx
-  "screen.shared.scrShr13RoleAndOrganizationSwitcher.showingRole":
-    "Showing: {role}. Data from other roles is not shown.",
-  "screen.shared.scrShr13RoleAndOrganizationSwitcher.traveler": "Traveler",
-  "screen.shared.scrShr13RoleAndOrganizationSwitcher.driver": "Driver",
-  "screen.shared.scrShr13RoleAndOrganizationSwitcher.organization1": "Organization 1",
-  "screen.shared.scrShr13RoleAndOrganizationSwitcher.organization2": "Organization 2",
-  "screen.shared.scrShr13RoleAndOrganizationSwitcher.roleAndOrganizationSwitcher":
-    "Role and organization switcher",
-  "screen.shared.scrShr13RoleAndOrganizationSwitcher.onlyRolesYouHoldAnd":
-    "Only roles you hold and organizations linked to your email are listed. Switching never shows another role's data.",
-  "screen.shared.scrShr13RoleAndOrganizationSwitcher.back": "Back",
-  "screen.shared.scrShr13RoleAndOrganizationSwitcher.roles": "Roles",
-  "screen.shared.scrShr13RoleAndOrganizationSwitcher.organizations": "Organizations",
-  // apps/web/src/screens/shared/scr-shr-14-otp-entry.tsx
-  "screen.shared.scrShr14OtpEntry.verify": "Verify",
-  "screen.shared.scrShr14OtpEntry.otpEntry": "OTP entry",
-  "screen.shared.scrShr14OtpEntry.enterTheOneTimeCode":
-    "Enter the one-time code. Codes are not shown or logged.",
-  "screen.shared.scrShr14OtpEntry.back": "Back",
-  "screen.shared.scrShr14OtpEntry.wrongCode": "Wrong code",
-  "screen.shared.scrShr14OtpEntry.thatCodeDoesNotMatch":
-    "That code does not match. After five wrong codes, verification pauses for 15 minutes.",
+  "screen.shared.receipt.title": "Receipt",
+  "screen.shared.receipt.loading": "Loading the receipt",
+  "screen.shared.receipt.failed": "The receipt could not load. Try again later.",
+  "screen.shared.receipt.notFound": "This receipt was not found.",
+  "screen.shared.receipt.issued": "Issued",
+  "screen.shared.receipt.date": "Date",
+  "screen.shared.receipt.item": "Item",
+  "screen.shared.receipt.amount": "Amount",
+  "screen.shared.receipt.subtotal": "Subtotal",
+  "screen.shared.receipt.commission": "Platform commission",
+  "screen.shared.receipt.total": "Total",
+  "screen.shared.receipt.download": "Print or save as PDF",
+  "screen.shared.receipt.signIn": "Sign in to see this receipt.",
   // apps/web/src/screens/shared/scr-shr-15-seat-map.tsx
-  "screen.shared.scrShr15SeatMap.vehicleSeatMap": "Vehicle seat map",
-  "screen.shared.scrShr15SeatMap.seatsAsAList": "Seats as a list",
-  "screen.shared.scrShr15SeatMap.seat": "Seat",
-  "screen.shared.scrShr15SeatMap.selectedSeat": "Selected seat:",
-  "screen.shared.scrShr15SeatMap.confirmSeat": "Confirm seat",
-  "screen.shared.scrShr15SeatMap.seatMap": "Seat map",
-  "screen.shared.scrShr15SeatMap.selectAnAvailableSeatSeat":
-    "Select an available seat. Seat states are shown as words and icons.",
-  "screen.shared.scrShr15SeatMap.back": "Back",
-  "screen.shared.scrShr15SeatMap.seatTaken": "Seat taken",
-  "screen.shared.scrShr15SeatMap.thisSeatWasTakenWhile":
-    "This seat was taken while you were choosing. Choose another seat.",
+  "screen.shared.seatMap.title": "Seat map",
+  "screen.shared.seatMap.loading": "Loading seats",
+  "screen.shared.seatMap.noSeats": "No seat map is available for a public trip right now.",
+  "screen.shared.seatMap.lead": "{trip}. Pick a seat, then confirm to hold it.",
+  "screen.shared.seatMap.heldNote":
+    "Seat {seat} is held until {time}. Choose another seat if the hold expires.",
+  "screen.shared.seatMap.holdFailed": "That seat could not be held. Choose another seat.",
+  "screen.shared.seatMap.confirm": "Confirm seat {seat}",
+  "screen.shared.seatMap.choose": "Choose a seat",
+  "screen.shared.seatMap.signIn": "Sign in to choose a seat.",
   // apps/web/src/screens/shared/scr-shr-16-document-and-photo-upload.tsx
-  "screen.shared.scrShr16DocumentAndPhotoUpload.uploadProgress":
-    "Upload at least {min} photos. Uploaded: {uploaded} of {min}.",
-  "screen.shared.scrShr16DocumentAndPhotoUpload.fileTypeNotAllowed": "File type not allowed",
-  "screen.shared.scrShr16DocumentAndPhotoUpload.documents": "Documents",
-  "screen.shared.scrShr16DocumentAndPhotoUpload.chooseAFileOrTake":
-    "Choose a file or take a photo.",
-  "screen.shared.scrShr16DocumentAndPhotoUpload.portfolioPhotos": "Portfolio photos",
-  "screen.shared.scrShr16DocumentAndPhotoUpload.minimumCount": "Minimum count",
-  "screen.shared.scrShr16DocumentAndPhotoUpload.portfolioPhotosLabel": "Portfolio photos",
-  "screen.shared.scrShr16DocumentAndPhotoUpload.photosAreStrippedOfLocation":
-    "Photos are stripped of location data before they are stored.",
-  "screen.shared.scrShr16DocumentAndPhotoUpload.documentAndPhotoUpload":
-    "Document and photo upload",
-  "screen.shared.scrShr16DocumentAndPhotoUpload.filesAreCheckedForType":
-    "Files are checked for type, size and count. An interrupted upload resumes without starting again.",
-  "screen.shared.scrShr16DocumentAndPhotoUpload.back": "Back",
-  "screen.shared.scrShr16DocumentAndPhotoUpload.fileRefused": "File refused",
-  "screen.shared.scrShr16DocumentAndPhotoUpload.thisFileTypeIsNot":
-    "This file type is not allowed. Choose a PDF or an image.",
-  // apps/web/src/screens/shared/state-preview.tsx
-  "screen.shared.statePreview.labels.main": "Main",
-  "screen.shared.statePreview.labels.loading": "Loading",
-  "screen.shared.statePreview.labels.empty": "Empty",
-  "screen.shared.statePreview.labels.error": "Error",
-  "screen.shared.statePreview.previewState": "Preview state",
-  "screen.shared.statePreview.loading": "Loading",
+  "screen.shared.upload.title": "Add your photos",
+  "screen.shared.upload.count": "{count} of {required} required",
+  "screen.shared.upload.choose": "Choose files or take a photo",
+  "screen.shared.upload.hint": "JPG or PNG, up to 15 MB each",
+  "screen.shared.upload.privacy":
+    "Photos are checked before they are shared. Location details are removed from each photo.",
+  "screen.shared.upload.continue": "Continue",
+  "screen.shared.upload.waiting": "Continue after uploads finish",
+  "screen.shared.upload.uploading": "Uploading…",
+  "screen.shared.upload.uploadingFile": "Uploading {name}",
+  "screen.shared.upload.cancel": "Cancel",
+  "screen.shared.upload.status.done": "Complete",
+  "screen.shared.upload.status.tooLarge": "Not accepted: file too large",
+  "screen.shared.upload.status.wrongType": "Not accepted: use JPG or PNG",
+  "screen.shared.upload.status.failed": "Upload failed. Remove it and try again.",
+  "screen.shared.upload.signIn": "Sign in to upload your photos.",
   // packages/ui/src/components/message-scroller.tsx
   "ui.messageScroller.scrollToEnd": "Scroll to end",
   "ui.messageScroller.scrollToStart": "Scroll to start",

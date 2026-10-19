@@ -56,16 +56,22 @@ export const Route = createRootRouteWithContext<RouterAppContext>()({
   notFoundComponent: () => <ScreenById screenId="SCR-SHR-03" />,
 });
 
-// Dashboard layouts draw their own chrome; every other page sits in the public shell.
+// Dashboard layouts draw their own chrome; every other page sits in the public shell. The admin
+// sign-in pages use its navy variant (SCR-PUB-09, SCR-PUB-10).
 const DASHBOARD_LAYOUTS = new Set(["/business", "/admin"]);
+const INVERSE_PAGES = new Set(["/admin_/sign-in", "/admin_/sign-in_/authenticator"]);
 
 function PageFrame() {
-  const inDashboard = useMatches({
-    select: (matches) => matches.some((match) => DASHBOARD_LAYOUTS.has(match.routeId)),
+  const frame = useMatches({
+    select: (matches) => {
+      if (matches.some((match) => DASHBOARD_LAYOUTS.has(match.routeId))) return "dashboard";
+      if (matches.some((match) => INVERSE_PAGES.has(match.routeId))) return "inverse";
+      return "default";
+    },
   });
-  if (inDashboard) return <Outlet />;
+  if (frame === "dashboard") return <Outlet />;
   return (
-    <PublicShell>
+    <PublicShell tone={frame === "inverse" ? "inverse" : "default"}>
       <Outlet />
     </PublicShell>
   );

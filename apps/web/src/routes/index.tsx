@@ -4,6 +4,7 @@ import { findScreen } from "@/screens/registry";
 import { Landing } from "@/screens/public/landing/landing";
 import { loadApiStatus } from "@/utils/api-status";
 
+/** `/` — the landing page (SCR-PUB-01): prefetches the API status and the public trips. */
 export const Route = createFileRoute("/")({
   loader: async ({ context, location }) => {
     await Promise.all([
@@ -23,9 +24,5 @@ export const Route = createFileRoute("/")({
       });
     }
   },
-  component: HomeComponent,
+  component: Landing,
 });
-
-function HomeComponent() {
-  return <Landing />;
-}

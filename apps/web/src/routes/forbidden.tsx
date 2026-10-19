@@ -1,16 +1,15 @@
-import { Link, createFileRoute } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { isSurfaceId } from "@trips-app/auth";
 import type { SurfaceId } from "@trips-app/auth";
 
-import { useAuth } from "@/auth/auth-context";
-import { AuthShell } from "@/auth/components/auth-shell";
+import { ScrShr02PermissionDenied } from "@/screens/shared/scr-shr-02-permission-denied";
 
 interface ForbiddenSearch {
   from?: SurfaceId;
 }
 
 /**
- * `/forbidden` — A3: a signed-in user who lacks the role for a surface.
+ * `/forbidden` — A3: a signed-in user who lacks the role for a surface (SCR-SHR-02).
  *
  * Static by design: no API call, no store write, and the session is never cleared. Reloading or
  * following the link home must still work.
@@ -23,15 +22,5 @@ export const Route = createFileRoute("/forbidden")({
 });
 
 function ForbiddenRoute() {
-  const { t } = useAuth();
-  const { from } = Route.useSearch();
-  const surface = from ?? "traveler";
-
-  return (
-    <AuthShell title={t("auth.forbidden.title")} subtitle={t("auth.forbidden.body", { surface })}>
-      <Link to="/" className="text-xs underline underline-offset-4">
-        {t("auth.forbidden.backHome")}
-      </Link>
-    </AuthShell>
-  );
+  return <ScrShr02PermissionDenied />;
 }
