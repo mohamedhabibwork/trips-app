@@ -81,6 +81,12 @@ export const acceptEmployeeInviteSchema = z.object({
   inviteToken: z.string().trim().min(8).max(256),
 });
 
+/** Reads an invitation by the token from its email link, before the person signs in. */
+export const previewEmployeeInviteSchema = acceptEmployeeInviteSchema;
+
+/** Declines an invitation by the token from its email link; no session needed. */
+export const declineEmployeeInviteSchema = acceptEmployeeInviteSchema;
+
 export const updateEmployeePermissionsSchema = employeeMembershipUpdateSchema
   .pick({
     roleTitle: true,

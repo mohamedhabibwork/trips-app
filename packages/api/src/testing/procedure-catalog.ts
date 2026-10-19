@@ -32,6 +32,10 @@ export const INTENTIONALLY_PUBLIC: Readonly<Record<string, string>> = {
     "Read-only public trip discovery endpoint for web and mobile travelers (SCR-TRV-01, FR-TRIP-02); filters out draft, cancelled, targeted, and active VIP early-access trips.",
   "trips.getPublicTripDetail":
     "Read-only public trip detail endpoint for web and mobile travelers (SCR-TRV-02, FR-TRIP-02); enforces visibility and VIP early-access rules.",
+  "employees.previewInvite":
+    "An invited person opens the email link before having a session (SCR-ORG-02). The invite token is the credential: an unknown token is not-found. Needs owner review.",
+  "employees.declineInvite":
+    "An invited person may decline from the email link without signing in (SCR-ORG-02). The invite token is the credential and only a pending invite changes. Needs owner review.",
   "programs.listPublicTripPrograms":
     "Read-only public trip program itinerary endpoint for web and mobile travelers viewing published trips (SCR-TRV-02).",
 };

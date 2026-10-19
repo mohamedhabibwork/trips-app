@@ -4,9 +4,11 @@ import type { z } from "zod/v4";
 
 import type {
   acceptEmployeeInviteSchema,
+  declineEmployeeInviteSchema,
   getEmployeeByIdSchema,
   inviteEmployeeSchema,
   listEmployeesSchema,
+  previewEmployeeInviteSchema,
   resendEmployeeInviteSchema,
   updateEmployeePermissionsSchema,
   updateEmployeeStatusSchema,
@@ -32,6 +34,22 @@ export type GetEmployeeByIdInput = z.infer<typeof getEmployeeByIdSchema>;
 export type InviteEmployeeInput = z.infer<typeof inviteEmployeeSchema>;
 export type ResendEmployeeInviteInput = z.infer<typeof resendEmployeeInviteSchema>;
 export type AcceptEmployeeInviteInput = z.infer<typeof acceptEmployeeInviteSchema>;
+export type PreviewEmployeeInviteInput = z.infer<typeof previewEmployeeInviteSchema>;
+export type DeclineEmployeeInviteInput = z.infer<typeof declineEmployeeInviteSchema>;
+
+/** Where an invitation stands, as its email link shows it. */
+export type EmployeeInviteState = "pending" | "expired" | "accepted" | "withdrawn";
+
+/** What the invited person sees before accepting: who invited them and to which areas. */
+export interface EmployeeInvitePreviewDto {
+  organizationNameEn: string;
+  organizationNameAr: string;
+  invitedEmail: string;
+  roleTitle: string;
+  permissions: OrgPermissionMatrix;
+  inviteExpiresAt: string;
+  state: EmployeeInviteState;
+}
 export type UpdateEmployeePermissionsInput = z.infer<typeof updateEmployeePermissionsSchema>;
 export type UpdateEmployeeStatusInput = z.infer<typeof updateEmployeeStatusSchema>;
 

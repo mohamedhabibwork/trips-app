@@ -2,9 +2,11 @@
 // Every service exposes at least one procedure. Build them on the local procedure in ./procedure.
 import {
   acceptEmployeeInviteSchema,
+  declineEmployeeInviteSchema,
   getEmployeeByIdSchema,
   inviteEmployeeSchema,
   listEmployeesSchema,
+  previewEmployeeInviteSchema,
   resendEmployeeInviteSchema,
   updateEmployeePermissionsSchema,
   updateEmployeeStatusSchema,
@@ -79,6 +81,30 @@ export const routes = {
     .input(resendEmployeeInviteSchema)
     .handler(({ context, input }) =>
       createEmployeesService(context.db).resendInvite(context.auth, input, context),
+    ),
+
+  previewInvite: procedure
+    .route({
+      method: "POST",
+      path: "/employees/previewInvite",
+      operationId: "employeesPreviewInvite",
+      summary: "Read an employee invitation by its email-link token, before sign-in (SCR-ORG-02)",
+      tags: ["employees"],
+    })
+    .input(previewEmployeeInviteSchema)
+    .handler(({ context, input }) => createEmployeesService(context.db).previewInvite(input)),
+
+  declineInvite: procedure
+    .route({
+      method: "POST",
+      path: "/employees/declineInvite",
+      operationId: "employeesDeclineInvite",
+      summary: "Decline an employee invitation by its email-link token (SCR-ORG-02)",
+      tags: ["employees"],
+    })
+    .input(declineEmployeeInviteSchema)
+    .handler(({ context, input }) =>
+      createEmployeesService(context.db).declineInvite(context.auth ?? null, input, context),
     ),
 
   acceptInvite: authedProcedure

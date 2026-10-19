@@ -2086,6 +2086,18 @@ export const ar: AppMessages = {
   "screen.organization.people.employeeInvitationAcceptance.joinedTitle": "انضممت إلى المؤسسة",
   "screen.organization.people.employeeInvitationAcceptance.joinedBody":
     "يمكنك الآن فتح الأقسام المذكورة أدناه.",
+  "screen.organization.people.employeeInvitationAcceptance.joinOrganization": "انضم إلى {name}",
+  "screen.organization.people.employeeInvitationAcceptance.validUntil":
+    "هذه الدعوة صالحة حتى {date}.",
+  "screen.organization.people.employeeInvitationAcceptance.notFoundTitle": "رابط الدعوة هذا لا يعمل",
+  "screen.organization.people.employeeInvitationAcceptance.notFoundBody":
+    "تأكد من فتح الرابط كاملًا من البريد، أو اطلب من المنظمة إرسال دعوة جديدة.",
+  "screen.organization.people.employeeInvitationAcceptance.declinedTitle": "تم رفض الدعوة",
+  "screen.organization.people.employeeInvitationAcceptance.declinedBody":
+    "لم يعد بالإمكان قبول هذه الدعوة. يمكن للمنظمة إرسال دعوة جديدة.",
+  "screen.organization.people.employeeInvitationAcceptance.expiredTitle": "انتهت صلاحية هذه الدعوة",
+  "screen.organization.people.employeeInvitationAcceptance.expiredBody":
+    "اطلب من المنظمة إعادة إرسالها؛ الرابط الجديد صالح لمدة 7 أيام.",
   "screen.organization.people.employeeInvitationAcceptance.checkYourEmail":
     "تحقّق من بريدك الإلكتروني",
   "screen.organization.people.employeeInvitationAcceptance.checkYourEmailBody":

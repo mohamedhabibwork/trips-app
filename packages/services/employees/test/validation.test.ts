@@ -8,11 +8,14 @@ import {
   DEFAULT_EMPLOYEE_PERMISSIONS,
   resolvePermissionMatrix,
 } from "../src/model";
+import { inviteState } from "../src/services";
 import {
   acceptEmployeeInviteSchema,
+  declineEmployeeInviteSchema,
   getEmployeeByIdSchema,
   inviteEmployeeSchema,
   listEmployeesSchema,
+  previewEmployeeInviteSchema,
   resendEmployeeInviteSchema,
   updateEmployeePermissionsSchema,
   updateEmployeeStatusSchema,
@@ -86,5 +89,32 @@ describe("Unit: employees validation schemas, model invariants & error mapping (
     const mapped = mapEmployeesError(err);
     expect(mapped.code).toBe("PLAN_LIMIT_EXCEEDED");
     expect(mapped.serviceId).toBe("employees");
+  });
+});
+
+describe("Unit: employee invitation link (previewInvite / declineInvite)", () => {
+  test("previewEmployeeInviteSchema and declineEmployeeInviteSchema reject a missing or short token", () => {
+    // Act
+    const missing = previewEmployeeInviteSchema.safeParse({});
+    const short = declineEmployeeInviteSchema.safeParse({ inviteToken: "abc" });
+    const valid = declineEmployeeInviteSchema.safeParse({ inviteToken: "a-valid-invite-token" });
+
+    // Assert
+    expect(missing.success).toBe(false);
+    expect(short.success).toBe(false);
+    expect(valid.success).toBe(true);
+  });
+
+  test("inviteState reads pending, expired, accepted and withdrawn from the membership", () => {
+    // Arrange
+    const now = new Date("2026-10-19T12:00:00Z");
+    const later = new Date("2026-10-20T12:00:00Z");
+    const earlier = new Date("2026-10-18T12:00:00Z");
+
+    // Assert
+    expect(inviteState("invited", later, now)).toBe("pending");
+    expect(inviteState("invited", earlier, now)).toBe("expired");
+    expect(inviteState("active", earlier, now)).toBe("accepted");
+    expect(inviteState("revoked", later, now)).toBe("withdrawn");
   });
 });

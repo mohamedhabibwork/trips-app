@@ -2140,6 +2140,20 @@ export const en = {
     "You joined the organization",
   "screen.organization.people.employeeInvitationAcceptance.joinedBody":
     "You can now open the areas listed below.",
+  "screen.organization.people.employeeInvitationAcceptance.joinOrganization": "Join {name}",
+  "screen.organization.people.employeeInvitationAcceptance.validUntil":
+    "This invitation is valid until {date}.",
+  "screen.organization.people.employeeInvitationAcceptance.notFoundTitle":
+    "This invitation link does not work",
+  "screen.organization.people.employeeInvitationAcceptance.notFoundBody":
+    "Check that you opened the full link from the email, or ask the organization to send a new invitation.",
+  "screen.organization.people.employeeInvitationAcceptance.declinedTitle": "Invitation declined",
+  "screen.organization.people.employeeInvitationAcceptance.declinedBody":
+    "This invitation can no longer be accepted. The organization can send a new one.",
+  "screen.organization.people.employeeInvitationAcceptance.expiredTitle":
+    "This invitation has expired",
+  "screen.organization.people.employeeInvitationAcceptance.expiredBody":
+    "Ask the organization to resend it; a new link is valid for 7 days.",
   "screen.organization.people.employeeInvitationAcceptance.checkYourEmail": "Check your email",
   "screen.organization.people.employeeInvitationAcceptance.checkYourEmailBody":
     "Accept with the account that uses the invited email address.",

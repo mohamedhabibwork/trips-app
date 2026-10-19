@@ -269,9 +269,22 @@ export function createEmployeesRepository(db: Database) {
         .limit(limit);
     },
 
+    /** Declines a pending invitation; only an `invited` row changes. */
+    async declineMembershipInvite(membershipId: string, now: Date) {
+      const [updated] = await db
+        .update(employeeMemberships)
+        .set({ status: "revoked", updatedAt: now })
+        .where(
+          and(eq(employeeMemberships.id, membershipId), eq(employeeMemberships.status, "invited")),
+        )
+        .returning();
+      return updated ?? null;
+    },
+
     async writeAuditLog(entry: {
-      actorAccountId: string;
-      actorRole: UserRole;
+      /** Null when the invited person acts from the email link without a session. */
+      actorAccountId: string | null;
+      actorRole: UserRole | "system";
       tenantId: string;
       action: string;
       targetEntityType: string;

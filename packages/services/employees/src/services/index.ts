@@ -14,17 +14,32 @@ import {
 import { createEmployeesRepository, type ServiceDatabase } from "../repository";
 import type {
   AcceptEmployeeInviteInput,
+  DeclineEmployeeInviteInput,
   EmployeeAuditLogDto,
+  EmployeeInvitePreviewDto,
+  EmployeeInviteState,
   EmployeeMemberDto,
   EmployeeQuotaSummaryDto,
   EmployeesRequestMeta,
   GetEmployeeByIdInput,
   InviteEmployeeInput,
   ListEmployeesInput,
+  PreviewEmployeeInviteInput,
   ResendEmployeeInviteInput,
   UpdateEmployeePermissionsInput,
   UpdateEmployeeStatusInput,
 } from "../schemas/dtos";
+
+/** How an invitation reads from its link: pending until accepted, expired or withdrawn. */
+export function inviteState(
+  status: EmployeeMemberDto["status"],
+  inviteExpiresAt: Date,
+  now: Date,
+): EmployeeInviteState {
+  if (status === "active" || status === "suspended") return "accepted";
+  if (status === "revoked") return "withdrawn";
+  return inviteExpiresAt.getTime() <= now.getTime() ? "expired" : "pending";
+}
 
 function toEmployeeDto(
   row: {
@@ -278,6 +293,69 @@ export function createEmployeesService(db: ServiceDatabase) {
         inviteToken,
         inviteExpiresAt: updated.inviteExpiresAt.toISOString(),
       };
+    },
+
+    /**
+     * The invitation behind an email link, for a person who may not have an account yet. The
+     * token is the secret: an unknown token is "not found" and reveals nothing.
+     */
+    async previewInvite(input: PreviewEmployeeInviteInput): Promise<EmployeeInvitePreviewDto> {
+      const membership = await repo.findByInviteTokenHash(hashSha256(input.inviteToken));
+      if (!membership) {
+        throw new EmployeesServiceError("RESOURCE_NOT_FOUND", "Employee invitation not found.");
+      }
+      const org = await repo.findOrganizationByTenantId(membership.tenantId);
+      if (!org || org.status === "deleted") {
+        throw new EmployeesServiceError("RESOURCE_NOT_FOUND", "Employee invitation not found.");
+      }
+      return {
+        organizationNameEn: org.displayNameEn,
+        organizationNameAr: org.displayNameAr,
+        invitedEmail: membership.invitedEmail,
+        roleTitle: membership.roleTitle,
+        permissions: membership.permissions,
+        inviteExpiresAt: membership.inviteExpiresAt.toISOString(),
+        state: inviteState(membership.status, membership.inviteExpiresAt, new Date()),
+      };
+    },
+
+    /** Declines a pending invitation from its email link; the person may be signed out. */
+    async declineInvite(
+      actor: { accountId: string; activeRole: UserRole } | null,
+      input: DeclineEmployeeInviteInput,
+      meta?: EmployeesRequestMeta,
+    ): Promise<{ state: EmployeeInviteState }> {
+      const membership = await repo.findByInviteTokenHash(hashSha256(input.inviteToken));
+      if (!membership) {
+        throw new EmployeesServiceError("RESOURCE_NOT_FOUND", "Employee invitation not found.");
+      }
+      const now = new Date();
+      const state = inviteState(membership.status, membership.inviteExpiresAt, now);
+      if (state !== "pending") {
+        throw new EmployeesServiceError(
+          "INVALID_STATE_TRANSITION",
+          `Invitation cannot be declined from state "${state}".`,
+          { state },
+        );
+      }
+      const updated = await repo.declineMembershipInvite(membership.id, now);
+      if (!updated) {
+        throw new EmployeesServiceError("RESOURCE_NOT_FOUND", "Employee invitation not found.");
+      }
+      await repo.writeAuditLog({
+        actorAccountId: actor?.accountId ?? null,
+        actorRole: actor?.activeRole ?? "system",
+        tenantId: membership.tenantId,
+        action: "employee.invite_declined",
+        targetEntityType: "employee_membership",
+        targetEntityId: membership.id,
+        reason: "Declined from the invitation link",
+        beforeState: { status: membership.status },
+        afterState: { status: updated.status },
+        ipAddress: meta?.ipAddress,
+        requestId: meta?.requestId,
+      });
+      return { state: "withdrawn" };
     },
 
     async acceptInvite(
