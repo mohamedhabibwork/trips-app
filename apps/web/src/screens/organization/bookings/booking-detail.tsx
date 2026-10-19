@@ -1,108 +1,104 @@
-import { useEffect, useMemo, useState } from "react";
-
+// SCR-ORG-24 Booking detail: travelers and seats, programs, payment and coupon of one booking.
+import { useId, useState, type ReactNode } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { TeButton } from "@trips-app/ui/components/te-button";
-import { TeCard } from "@trips-app/ui/components/te-card";
-import { TeDataTable, type TeDataTableColumn } from "@trips-app/ui/components/te-data-table";
-import { TeInlineAlert } from "@trips-app/ui/components/te-inline-alert";
-import { TeInput } from "@trips-app/ui/components/te-input";
-import { TePageHeader } from "@trips-app/ui/components/te-page-header";
+
+import { TeDialog } from "@trips-app/ui/components/te-dialog";
 import { t } from "@trips-app/i18n";
+
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
 
-import { OrgButtonLink, WorkspaceBackLink, useOrgNavigate } from "../common/org-link";
-import { getSelectedBookingId, OrgSection, StateBadge } from "../common/org-shared";
-import { StatePreview } from "../common/organization-state-preview";
+import { OrgInput } from "../common/org-form";
+import { useOrgNavigate, useOrgParams } from "../common/org-link";
+import { getSelectedBookingId, tripTitle } from "../common/org-shared";
+import { OrgTable, type OrgColumn } from "../common/org-table";
+import {
+  NO_VALUE,
+  OrgAlert,
+  OrgBadge,
+  OrgButton,
+  OrgCard,
+  OrgEmpty,
+  OrgError,
+  OrgLoading,
+  OrgPage,
+  OrgPageHeader,
+  OrgRow,
+} from "../common/org-ui";
+import {
+  BookingStateBadge,
+  PaymentBadge,
+  money,
+  toBookingDetail,
+  toBookingRecords,
+  toPaymentRecords,
+} from "./booking-parts";
 
-interface BookingLineRow {
+interface TravelerRow {
   id: string;
-  traveler: string;
-  program: string;
-  quantity: string;
-  seat: string;
+  name: string;
+  seat: string | null;
+  checkedIn: boolean;
 }
 
-const LINE_COLUMNS = (): readonly TeDataTableColumn<BookingLineRow>[] => [
-  { key: "traveler", header: t("screen.organization.bookings.bookingDetail.traveler") },
-  { key: "program", header: t("screen.organization.bookings.bookingDetail.program") },
-  {
-    key: "quantity",
-    header: t("screen.organization.bookings.bookingDetail.quantity"),
-    align: "end",
-  },
-  { key: "seat", header: t("screen.organization.bookings.bookingDetail.seat") },
-];
+interface ProgramRow {
+  id: string;
+  name: string;
+  quantity: number;
+  amount: string;
+}
+
+function SummaryLine({ label, children }: { label: string; children: ReactNode }) {
+  return (
+    <div className="flex flex-wrap items-center justify-between gap-3 text-sm leading-5">
+      <span className="font-semibold">{label}</span>
+      <span>{children}</span>
+    </div>
+  );
+}
 
 export function BookingDetail() {
   const goTo = useOrgNavigate();
   const queryClient = useQueryClient();
-  const { status: authStatus } = useAuth();
-  const [seatLabel, setSeatLabel] = useState("");
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const { status: authStatus, locale } = useAuth();
+  const enabled = authStatus === "authenticated";
+  const { bookingId: routeBookingId } = useOrgParams();
+  const [editing, setEditing] = useState<{ rowId: string; seat: string } | null>(null);
+  const [confirmRefund, setConfirmRefund] = useState(false);
+  const [actionFailed, setActionFailed] = useState(false);
+  const saveHintId = useId();
 
-  const selectedBookingId = getSelectedBookingId();
-  const bookingsListQuery = useQuery(
-    orpc.booking.listOrganizationBookings.queryOptions({
-      input: {},
-      enabled: authStatus === "authenticated",
+  const selectedBookingId = routeBookingId ?? getSelectedBookingId();
+  const listQuery = useQuery({
+    ...orpc.booking.listOrganizationBookings.queryOptions({ input: {} }),
+    enabled: enabled && !selectedBookingId,
+  });
+  const bookingId = selectedBookingId ?? toBookingRecords(listQuery.data)[0]?.id ?? "";
+
+  const detailQuery = useQuery({
+    ...orpc.booking.getBooking.queryOptions({ input: { bookingId } }),
+    enabled: enabled && Boolean(bookingId),
+  });
+  const { booking, checkIns } = toBookingDetail(detailQuery.data);
+
+  const paymentsQuery = useQuery({
+    ...orpc.payments.listPayments.queryOptions({ input: undefined }),
+    enabled,
+  });
+  const tripQuery = useQuery({
+    ...orpc.trips.getOrganizationTrip.queryOptions({ input: { tripId: booking?.tripId ?? "" } }),
+    enabled: enabled && Boolean(booking?.tripId),
+  });
+  const programsQuery = useQuery({
+    ...orpc.programs.listTripPrograms.queryOptions({ input: { tripId: booking?.tripId ?? "" } }),
+    enabled: enabled && Boolean(booking?.tripId),
+  });
+  const seatMapQuery = useQuery({
+    ...orpc.seats.getSeatMap.queryOptions({
+      input: { tripId: booking?.tripId ?? "", vehicleId: booking?.vehicleId ?? undefined },
     }),
-  );
-
-  const effectiveBookingId = selectedBookingId ?? bookingsListQuery.data?.[0]?.id ?? "";
-
-  const bookingDetailQuery = useQuery(
-    orpc.booking.getBooking.queryOptions({
-      input: { bookingId: effectiveBookingId },
-      enabled: authStatus === "authenticated" && Boolean(effectiveBookingId),
-    }),
-  );
-
-  const paymentsQuery = useQuery(
-    orpc.payments.listPayments.queryOptions({
-      input: undefined,
-      enabled: authStatus === "authenticated",
-    }),
-  );
-
-  const b = bookingDetailQuery.data?.booking;
-
-  useEffect(() => {
-    if (b && typeof b.seatLabels[0] === "string") {
-      setSeatLabel(b.seatLabels[0]);
-    }
-  }, [b]);
-
-  const matchingPayment = useMemo(() => {
-    if (!b?.id || !paymentsQuery.data) return undefined;
-    return paymentsQuery.data.find((p) => p.bookingId === b.id);
-  }, [b?.id, paymentsQuery.data]);
-  const paymentId = matchingPayment?.id ?? null;
-
-  const lineRows = useMemo<readonly BookingLineRow[]>(() => {
-    if (!b) return [];
-    return b.passengers.map((raw, idx) => {
-      const p = (raw && typeof raw === "object" && !Array.isArray(raw) ? raw : {}) as {
-        id?: string;
-        fullName?: string;
-        seatLabel?: string;
-      };
-      const fallbackSeat = b.seatLabels[idx];
-      return {
-        id: typeof p.id === "string" ? p.id : `${b.id}-${idx}`,
-        traveler: typeof p.fullName === "string" ? p.fullName : `Passenger ${idx + 1}`,
-        program:
-          b.selectedProgramIds.length > 0 ? `${b.selectedProgramIds.length} programs` : "Base trip",
-        quantity: "1",
-        seat:
-          typeof p.seatLabel === "string"
-            ? p.seatLabel
-            : typeof fallbackSeat === "string"
-              ? fallbackSeat
-              : "-",
-      };
-    });
-  }, [b]);
+    enabled: enabled && Boolean(booking?.tripId && booking.vehicleId),
+  });
 
   const assignSeatMutation = useMutation(
     orpc.seats.assignSeatByOrganization.mutationOptions({
@@ -112,7 +108,6 @@ export function BookingDetail() {
       },
     }),
   );
-
   const refundPaymentMutation = useMutation(
     orpc.payments.refundPayment.mutationOptions({
       onSuccess: () => {
@@ -121,7 +116,6 @@ export function BookingDetail() {
       },
     }),
   );
-
   const cancelBookingMutation = useMutation(
     orpc.booking.cancelBooking.mutationOptions({
       onSuccess: () => {
@@ -130,139 +124,261 @@ export function BookingDetail() {
     }),
   );
 
-  async function handleSaveSeat() {
-    if (authStatus === "authenticated" && b?.tripId && b?.vehicleId && seatLabel.trim()) {
-      setErrorMsg(null);
-      try {
-        await assignSeatMutation.mutateAsync({
-          tripId: b.tripId,
-          vehicleId: b.vehicleId,
-          seatLabel: seatLabel.trim(),
-          status: "reserved",
-          bookingId: b.id,
-          passengerName: lineRows[0]?.traveler ?? null,
-        });
-      } catch (caught) {
-        setErrorMsg(caught instanceof Error ? caught.message : "Could not assign seat.");
-        return;
-      }
-    }
-    void goTo("bookings-and-travelers");
-  }
+  const seats = seatMapQuery.data?.seats ?? [];
+  const travelers: readonly TravelerRow[] = (booking?.passengers ?? []).map((passenger, index) => {
+    const inventorySeat = seats.find(
+      (seat) => seat.bookingId === booking?.id && seat.passengerName === passenger.fullName,
+    );
+    const id = passenger.id ?? `${booking?.id}-${index}`;
+    return {
+      id,
+      name: passenger.fullName || NO_VALUE,
+      seat: inventorySeat?.seatLabel ?? passenger.seatLabel ?? booking?.seatLabels[index] ?? null,
+      checkedIn: checkIns.some(
+        (record) => record.passengerId === passenger.id && record.status === "checked_in",
+      ),
+    };
+  });
 
-  async function handleIssueRefund() {
-    if (authStatus === "authenticated") {
-      setErrorMsg(null);
-      try {
-        if (paymentId) {
-          await refundPaymentMutation.mutateAsync({
-            paymentId,
-            reason: "Refund issued by organization from booking detail",
-          });
-        } else if (b?.id) {
-          await cancelBookingMutation.mutateAsync({
-            bookingId: b.id,
-            reason: "Cancelled and refunded by organization",
-          });
-        }
-      } catch (caught) {
-        setErrorMsg(caught instanceof Error ? caught.message : "Could not issue refund.");
-        return;
-      }
-    }
-    void goTo("bookings-and-travelers");
-  }
+  const programRows: readonly ProgramRow[] = (booking?.selectedProgramIds ?? []).map((id) => {
+    const program = programsQuery.data?.items.find((item) => item.id === id);
+    const quantity = booking?.passengersCount ?? 0;
+    return {
+      id,
+      name: program ? tripTitle(program, locale) || NO_VALUE : NO_VALUE,
+      quantity,
+      amount: program ? money(program.priceMinor * quantity, program.currencyCode) : NO_VALUE,
+    };
+  });
 
+  const paymentId =
+    toPaymentRecords(paymentsQuery.data).find((payment) => payment.bookingId === booking?.id)?.id ??
+    null;
   const busy =
     assignSeatMutation.isPending ||
     refundPaymentMutation.isPending ||
     cancelBookingMutation.isPending;
+  const editingRow = travelers.find((row) => row.id === editing?.rowId);
+  const canSave = Boolean(editingRow && editing?.seat.trim() && booking?.vehicleId) && !busy;
+  const canRefund =
+    Boolean(booking) && booking?.status !== "cancelled" && booking?.status !== "refunded";
 
-  const reference = b?.bookingReference ?? "";
-  const statusLabel = b?.status ?? t("screen.organization.bookings.bookingDetail.confirmed");
-  const couponCode = b?.couponCode ?? "";
+  async function handleSaveSeat() {
+    if (!booking?.vehicleId || !editingRow || !editing) return;
+    const seatLabel = editing.seat.trim();
+    setActionFailed(false);
+    try {
+      await assignSeatMutation.mutateAsync({
+        tripId: booking.tripId,
+        vehicleId: booking.vehicleId,
+        seatLabel,
+        status: "reserved",
+        bookingId: booking.id,
+        passengerName: editingRow.name,
+      });
+      if (editingRow.seat && editingRow.seat !== seatLabel) {
+        await assignSeatMutation.mutateAsync({
+          tripId: booking.tripId,
+          vehicleId: booking.vehicleId,
+          seatLabel: editingRow.seat,
+          status: "available",
+          bookingId: null,
+          passengerName: null,
+        });
+      }
+      setEditing(null);
+    } catch {
+      setActionFailed(true);
+    }
+  }
 
-  return (
-    <StatePreview>
-      <div className="flex flex-col gap-8">
-        <WorkspaceBackLink
-          parent={{
-            slug: "bookings-and-travelers",
-            label: t("screen.organization.bookings.bookingDetail.backToBookings"),
-          }}
-        />
-        <TePageHeader
-          title={t("screen.organization.bookings.bookingDetail.bookingDetail")}
-          description={
-            reference || t("screen.organization.bookings.bookingDetail.bookingReference")
-          }
-          actions={<StateBadge tone="success" icon="check" label={statusLabel} />}
-        />
-        {errorMsg ? <TeInlineAlert tone="error">{errorMsg}</TeInlineAlert> : null}
-        <OrgSection title={t("screen.organization.bookings.bookingDetail.travelersAndPrograms")}>
-          <TeDataTable
-            columns={LINE_COLUMNS()}
-            rows={lineRows}
-            getRowKey={(row) => row.id}
-            caption={t("screen.organization.bookings.bookingDetail.travelersAndProgramsOnThis")}
-            emptyTitle={t("screen.organization.bookings.bookingDetail.noTravelers")}
-            emptyDescription={t(
-              "screen.organization.bookings.bookingDetail.travelersAppearHereOnceThey",
-            )}
+  async function handleIssueRefund() {
+    setConfirmRefund(false);
+    if (!booking) return;
+    setActionFailed(false);
+    try {
+      if (paymentId) {
+        await refundPaymentMutation.mutateAsync({
+          paymentId,
+          reason: "Refund issued by organization from booking detail",
+        });
+      } else {
+        await cancelBookingMutation.mutateAsync({
+          bookingId: booking.id,
+          reason: "Cancelled and refunded by organization",
+        });
+      }
+      void goTo("bookings-and-travelers");
+    } catch {
+      setActionFailed(true);
+    }
+  }
+
+  const travelerColumns: readonly OrgColumn<TravelerRow>[] = [
+    {
+      key: "name",
+      header: t("screen.organization.bookings.bookingDetail.traveler"),
+      render: (row) => <b>{row.name}</b>,
+    },
+    {
+      key: "seat",
+      header: t("screen.organization.bookings.bookingDetail.seat"),
+      render: (row) =>
+        editing?.rowId === row.id ? (
+          <OrgInput
+            label={t("screen.organization.bookings.bookingDetail.newSeatFor", { name: row.name })}
+            value={editing.seat}
+            onChange={(event) => setEditing({ rowId: row.id, seat: event.target.value })}
+            fieldClassName="min-w-28"
           />
-        </OrgSection>
-        <OrgSection
-          title={t("screen.organization.bookings.bookingDetail.seatTitle")}
-          actions={
-            <OrgButtonLink slug="seat-map-and-seat-assignment" variant="secondary">
-              {t("screen.organization.bookings.bookingDetail.openSeatMap")}
-            </OrgButtonLink>
+        ) : (
+          (row.seat ?? t("screen.organization.bookings.bookingDetail.notAssigned"))
+        ),
+    },
+    {
+      key: "checkIn",
+      header: t("screen.organization.bookings.bookingDetail.checkIn"),
+      render: (row) =>
+        row.checkedIn ? (
+          <OrgBadge tone="ok">{t("screen.organization.bookings.bookingDetail.checkedIn")}</OrgBadge>
+        ) : (
+          <OrgBadge tone="neu">
+            {t("screen.organization.bookings.bookingDetail.notCheckedIn")}
+          </OrgBadge>
+        ),
+    },
+    {
+      key: "action",
+      header: t("screen.organization.bookings.bookingDetail.action"),
+      render: (row) => (
+        <OrgButton
+          variant="text"
+          disabled={row.checkedIn || !booking?.vehicleId}
+          onClick={() =>
+            setEditing(editing?.rowId === row.id ? null : { rowId: row.id, seat: row.seat ?? "" })
           }
         >
-          <TeCard>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <TeInput
-                label={t("screen.organization.bookings.bookingDetail.seatLabel")}
-                placeholder={t("screen.organization.bookings.bookingDetail.seatPlaceholder")}
-                supportingText={t(
-                  "screen.organization.bookings.bookingDetail.organizationAssignedSeatsOnly",
-                )}
-                value={seatLabel}
-                onChange={(e) => setSeatLabel(e.target.value)}
-              />
-              <TeInput
-                label={t("screen.organization.bookings.bookingDetail.coupon")}
-                placeholder={t("screen.organization.bookings.bookingDetail.couponCode")}
-                value={couponCode}
-                readOnly
-              />
-            </div>
-          </TeCard>
-        </OrgSection>
-        <OrgSection title={t("screen.organization.bookings.bookingDetail.payment")}>
-          <TeCard>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <p className="te-body">
-                {t("screen.organization.bookings.bookingDetail.paymentStatusPaymentStatus")}
-              </p>
-              <p className="te-body">
-                {t("screen.organization.bookings.bookingDetail.reversalStateReversalState")}
-              </p>
-            </div>
-          </TeCard>
-          <TeInlineAlert tone="info">
-            {t("screen.organization.bookings.bookingDetail.aPendingRefundShowsTo")}
-          </TeInlineAlert>
-        </OrgSection>
-        <div className="flex flex-wrap justify-end gap-3">
-          <TeButton variant="secondary" disabled={busy} onClick={() => void handleIssueRefund()}>
-            {t("screen.organization.bookings.bookingDetail.issueRefund")}
-          </TeButton>
-          <TeButton disabled={busy} onClick={() => void handleSaveSeat()}>
-            {t("screen.organization.bookings.bookingDetail.saveChange")}
-          </TeButton>
+          {editing?.rowId === row.id
+            ? t("screen.organization.bookings.bookingDetail.cancel")
+            : t("screen.organization.bookings.bookingDetail.reassignSeat")}
+        </OrgButton>
+      ),
+    },
+  ];
+
+  const programColumns: readonly OrgColumn<ProgramRow>[] = [
+    { key: "name", header: t("screen.organization.bookings.bookingDetail.program") },
+    {
+      key: "quantity",
+      header: t("screen.organization.bookings.bookingDetail.quantity"),
+      render: (row) => String(row.quantity),
+    },
+    { key: "amount", header: t("screen.organization.bookings.bookingDetail.amount") },
+  ];
+
+  if (detailQuery.isLoading || listQuery.isLoading) return <OrgLoading rows={6} />;
+
+  return (
+    <OrgPage className="gap-5">
+      <OrgPageHeader
+        title={t("screen.organization.bookings.bookingDetail.title", {
+          reference: booking?.bookingReference ?? NO_VALUE,
+        })}
+        badge={booking ? <BookingStateBadge booking={booking} /> : null}
+        caption={t("screen.organization.bookings.bookingDetail.caption", {
+          trip: tripQuery.data ? tripTitle(tripQuery.data, locale) || NO_VALUE : NO_VALUE,
+          booker: booking?.passengers[0]?.fullName || NO_VALUE,
+        })}
+        actions={
+          <>
+            <OrgButton
+              variant="secondary"
+              disabled={!canRefund || busy}
+              onClick={() => setConfirmRefund(true)}
+            >
+              {t("screen.organization.bookings.bookingDetail.issueRefund")}
+            </OrgButton>
+            <OrgButton
+              disabled={!canSave}
+              aria-describedby={canSave ? undefined : saveHintId}
+              onClick={() => void handleSaveSeat()}
+            >
+              {t("screen.organization.bookings.bookingDetail.saveChange")}
+            </OrgButton>
+            <span id={saveHintId} className="sr-only">
+              {t("screen.organization.bookings.bookingDetail.saveHint")}
+            </span>
+          </>
+        }
+      />
+      {detailQuery.isError ? <OrgError onRetry={() => void detailQuery.refetch()} /> : null}
+      {!booking && !detailQuery.isError ? (
+        <OrgEmpty title={t("screen.organization.bookings.bookingDetail.emptyTitle")}>
+          {t("screen.organization.bookings.bookingDetail.emptyBody")}
+        </OrgEmpty>
+      ) : null}
+      {actionFailed ? (
+        <OrgAlert tone="err" title={t("screen.organization.bookings.bookingDetail.actionFailed")} />
+      ) : null}
+      <OrgRow align="start">
+        <div className="flex min-w-0 flex-col gap-5 lg:flex-[2]">
+          <OrgCard title={t("screen.organization.bookings.bookingDetail.travelersAndSeats")}>
+            <OrgTable
+              columns={travelerColumns}
+              rows={travelers}
+              rowKey={(row) => row.id}
+              caption={t("screen.organization.bookings.bookingDetail.travelersAndSeats")}
+              empty={t("screen.organization.bookings.bookingDetail.noTravelers")}
+            />
+          </OrgCard>
+          <OrgCard title={t("screen.organization.bookings.bookingDetail.programsAndQuantities")}>
+            <OrgTable
+              columns={programColumns}
+              rows={programRows}
+              rowKey={(row) => row.id}
+              caption={t("screen.organization.bookings.bookingDetail.programsAndQuantities")}
+              empty={t("screen.organization.bookings.bookingDetail.noPrograms")}
+            />
+          </OrgCard>
         </div>
-      </div>
-    </StatePreview>
+        <OrgCard
+          title={t("screen.organization.bookings.bookingDetail.paymentAndCoupon")}
+          className="lg:flex-1"
+        >
+          <SummaryLine label={t("screen.organization.bookings.bookingDetail.paymentStatus")}>
+            {booking ? <PaymentBadge booking={booking} /> : NO_VALUE}
+          </SummaryLine>
+          <SummaryLine label={t("screen.organization.bookings.bookingDetail.totalPaid")}>
+            {money(booking?.totalAmountMinor, booking?.currencyCode)}
+          </SummaryLine>
+          <SummaryLine label={t("screen.organization.bookings.bookingDetail.coupon")}>
+            {booking?.couponCode
+              ? t("screen.organization.bookings.bookingDetail.couponApplied", {
+                  code: booking.couponCode,
+                })
+              : t("screen.organization.bookings.bookingDetail.none")}
+          </SummaryLine>
+          <SummaryLine label={t("screen.organization.bookings.bookingDetail.refundUnderPolicy")}>
+            {booking && booking.refundAmountMinor > 0
+              ? money(booking.refundAmountMinor, booking.currencyCode)
+              : NO_VALUE}
+          </SummaryLine>
+          <p className="te-caption m-0 text-[var(--te-ink-muted)]">
+            {t("screen.organization.bookings.bookingDetail.refundNote")}
+          </p>
+        </OrgCard>
+      </OrgRow>
+      <TeDialog
+        open={confirmRefund}
+        onOpenChange={setConfirmRefund}
+        title={t("screen.organization.bookings.bookingDetail.confirmRefundTitle")}
+        description={t("screen.organization.bookings.bookingDetail.refundNote")}
+        primaryLabel={t("screen.organization.bookings.bookingDetail.issueRefund")}
+        onPrimary={() => void handleIssueRefund()}
+        secondaryLabel={t("screen.organization.bookings.bookingDetail.keepBooking")}
+        onSecondary={() => setConfirmRefund(false)}
+        tone="danger"
+      />
+    </OrgPage>
   );
 }

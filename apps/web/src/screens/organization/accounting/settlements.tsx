@@ -1,62 +1,54 @@
-import { useMemo, useState } from "react";
-
+// SCR-ORG-32 Settlements: amounts owed between the organization, suppliers and the platform.
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { TeDataTable, type TeDataTableColumn } from "@trips-app/ui/components/te-data-table";
-import { TeInlineAlert } from "@trips-app/ui/components/te-inline-alert";
-import { TePageHeader } from "@trips-app/ui/components/te-page-header";
-import { TeSelect, type TeSelectOption } from "@trips-app/ui/components/te-select";
+
 import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
 
-import { WorkspaceBackLink } from "../common/org-link";
-import { StateBadge } from "../common/org-shared";
-import { StatePreview } from "../common/organization-state-preview";
+import { OrgChips } from "../common/org-form";
+import { OrgTable, type OrgColumn } from "../common/org-table";
+import {
+  NO_VALUE,
+  OrgAlert,
+  OrgBadge,
+  OrgError,
+  OrgKpi,
+  OrgKpiRow,
+  OrgPage,
+  OrgPageHeader,
+} from "../common/org-ui";
+import {
+  formatDate,
+  formatMinor,
+  formatTotals,
+  rowsOf,
+  sumByCurrency,
+  type LedgerEntryView,
+} from "./finance-format";
+
+/** Ledger entries that are owed to or by a counterparty until settled. */
+const SETTLEMENT_ENTRY_TYPES: readonly string[] = [
+  "platform_commission",
+  "supplier_payout",
+  "payout_settlement",
+];
 
 type SettlementState = "open" | "settled";
 
 interface SettlementRow {
   id: string;
   counterparty: string;
-  amount: string;
+  minor: number;
+  currency: string;
   state: SettlementState;
-  date: string;
+  occurredAt: string | Date;
 }
 
-const STATE_OPTIONS = (): readonly TeSelectOption[] => [
-  { value: "all", label: t("screen.organization.accounting.settlements.allSettlements") },
-  { value: "open", label: t("screen.organization.accounting.settlements.open") },
-  { value: "settled", label: t("screen.organization.accounting.settlements.settled") },
-];
-
-const COLUMNS = (): readonly TeDataTableColumn<SettlementRow>[] => [
-  { key: "counterparty", header: t("screen.organization.accounting.settlements.counterparty") },
-  { key: "amount", header: t("screen.organization.accounting.settlements.amount"), align: "end" },
-  {
-    key: "state",
-    header: t("screen.organization.accounting.settlements.state"),
-    render: (row) =>
-      row.state === "open" ? (
-        <StateBadge
-          tone="warning"
-          icon="clock"
-          label={t("screen.organization.accounting.settlements.openLabel")}
-        />
-      ) : (
-        <StateBadge
-          tone="success"
-          icon="check"
-          label={t("screen.organization.accounting.settlements.settledLabel")}
-        />
-      ),
-  },
-  { key: "date", header: t("screen.organization.accounting.settlements.date") },
-];
-
 export function Settlements() {
-  const { status: authStatus } = useAuth();
-  const [stateFilter, setStateFilter] = useState("all");
+  const { status: authStatus, locale } = useAuth();
+  const [stateFilter, setStateFilter] = useState<string>("open");
 
   const ledgerQuery = useQuery(
     orpc.accounting.listLedgerEntries.queryOptions({
@@ -65,51 +57,102 @@ export function Settlements() {
     }),
   );
 
-  const rows = useMemo<readonly SettlementRow[]>(() => {
-    if (!ledgerQuery.data) return [];
-    return ledgerQuery.data.map((entry) => ({
+  const platform = t("screen.organization.accounting.settlements.platform");
+  const rows: readonly SettlementRow[] = rowsOf<LedgerEntryView>(ledgerQuery.data)
+    .filter((entry) => SETTLEMENT_ENTRY_TYPES.includes(entry.entryType))
+    .map((entry) => ({
       id: entry.id,
-      counterparty: entry.description || entry.entryType,
-      amount: `${(Math.abs(entry.netAmountMinor) / 100).toFixed(2)} ${entry.currencyCode}`,
+      counterparty:
+        entry.entryType === "platform_commission" ? platform : entry.description || NO_VALUE,
+      minor: Math.abs(entry.netAmountMinor),
+      currency: entry.currencyCode,
       state: entry.status === "settled" ? "settled" : "open",
-      date: new Date(entry.createdAt).toISOString().slice(0, 10),
+      occurredAt: entry.occurredAt,
     }));
-  }, [ledgerQuery.data]);
 
+  const openRows = rows.filter((row) => row.state === "open");
+  const loaded = ledgerQuery.isSuccess;
+  const openTotals = sumByCurrency(
+    openRows.map((row) => ({ minor: row.minor, currency: row.currency })),
+  );
   const visibleRows = rows.filter((row) => stateFilter === "all" || row.state === stateFilter);
 
+  const columns: readonly OrgColumn<SettlementRow>[] = [
+    {
+      key: "counterparty",
+      header: t("screen.organization.accounting.settlements.counterparty"),
+      render: (row) => <b className="font-semibold">{row.counterparty}</b>,
+    },
+    {
+      key: "amount",
+      header: t("screen.organization.accounting.settlements.amount"),
+      className: "whitespace-nowrap",
+      render: (row) => formatMinor(row.minor, row.currency, locale),
+    },
+    {
+      key: "state",
+      header: t("screen.organization.accounting.settlements.state"),
+      render: (row) =>
+        row.state === "open" ? (
+          <OrgBadge tone="warn" icon="clock">
+            {t("screen.organization.accounting.settlements.open")}
+          </OrgBadge>
+        ) : (
+          <OrgBadge tone="ok">{t("screen.organization.accounting.settlements.settled")}</OrgBadge>
+        ),
+    },
+    {
+      key: "date",
+      header: t("screen.organization.accounting.settlements.date"),
+      className: "whitespace-nowrap",
+      render: (row) => formatDate(row.occurredAt, locale),
+    },
+  ];
+
   return (
-    <StatePreview>
-      <div className="flex flex-col gap-6">
-        <WorkspaceBackLink
-          parent={{
-            slug: "trip-accounting",
-            label: t("screen.organization.accounting.settlements.backToTripAccounting"),
-          }}
+    <OrgPage>
+      <OrgPageHeader
+        title={t("screen.organization.accounting.settlements.title")}
+        caption={t("screen.organization.accounting.settlements.caption")}
+      />
+      <OrgAlert
+        tone="info"
+        title={t("screen.organization.accounting.settlements.providerPayoutsRunWeekly")}
+      >
+        {t("screen.organization.accounting.settlements.payoutsAreMadeEveryMonday")}
+      </OrgAlert>
+      <OrgKpiRow>
+        <OrgKpi
+          label={t("screen.organization.accounting.settlements.openAmountsOwed")}
+          value={loaded ? formatTotals(openTotals, locale) : NO_VALUE}
         />
-        <TePageHeader title={t("screen.organization.accounting.settlements.settlements")} />
-        <TeInlineAlert tone="info">
-          {t("screen.organization.accounting.settlements.providerPayoutsAreMadeWeekly")}
-        </TeInlineAlert>
-        <div className="grid gap-4 sm:grid-cols-2">
-          <TeSelect
-            label={t("screen.organization.accounting.settlements.stateLabel")}
-            options={STATE_OPTIONS()}
-            value={stateFilter}
-            onValueChange={setStateFilter}
-          />
-        </div>
-        <TeDataTable
-          columns={COLUMNS()}
+        <OrgKpi
+          label={t("screen.organization.accounting.settlements.openItems")}
+          value={loaded ? String(openRows.length) : NO_VALUE}
+        />
+      </OrgKpiRow>
+      <OrgChips
+        label={t("screen.organization.accounting.settlements.filterByState")}
+        options={[
+          { value: "open", label: t("screen.organization.accounting.settlements.open") },
+          { value: "settled", label: t("screen.organization.accounting.settlements.settled") },
+          { value: "all", label: t("screen.organization.accounting.settlements.all") },
+        ]}
+        value={stateFilter}
+        onValueChange={setStateFilter}
+      />
+      {ledgerQuery.isError ? (
+        <OrgError onRetry={() => void ledgerQuery.refetch()} />
+      ) : (
+        <OrgTable
+          columns={columns}
           rows={visibleRows}
-          getRowKey={(row) => row.id}
-          caption={t("screen.organization.accounting.settlements.settlementsCaption")}
-          emptyTitle={t("screen.organization.accounting.settlements.noSettlements")}
-          emptyDescription={t(
-            "screen.organization.accounting.settlements.amountsOwedBetweenTheOrganization",
-          )}
+          rowKey={(row) => row.id}
+          caption={t("screen.organization.accounting.settlements.title")}
+          loading={ledgerQuery.isLoading}
+          empty={t("screen.organization.accounting.settlements.noSettlements")}
         />
-      </div>
-    </StatePreview>
+      )}
+    </OrgPage>
   );
 }

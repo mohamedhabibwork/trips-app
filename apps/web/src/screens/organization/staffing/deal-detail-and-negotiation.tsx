@@ -1,63 +1,73 @@
-import { useEffect, useMemo, useState } from "react";
-
+// SCR-ORG-22 Deal detail and negotiation: one supplier deal, its offer history and the response.
+import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { TeButton } from "@trips-app/ui/components/te-button";
-import { TeCard } from "@trips-app/ui/components/te-card";
-import { TeInlineAlert } from "@trips-app/ui/components/te-inline-alert";
-import { TeInput } from "@trips-app/ui/components/te-input";
-import { TePageHeader } from "@trips-app/ui/components/te-page-header";
-import { TeTimeline, type TeTimelineItem } from "@trips-app/ui/components/te-timeline";
+
 import { t } from "@trips-app/i18n";
+
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
 
-import { WorkspaceBackLink, useOrgNavigate } from "../common/org-link";
+import { OrgInput } from "../common/org-form";
+import { useOrgNavigate, useOrgParams } from "../common/org-link";
+import { getSelectedNegotiationId, isoDay, tripTitle } from "../common/org-shared";
 import {
-  getActiveWizardTripId,
-  getSelectedNegotiationId,
-  OrgSection,
-  StateBadge,
-} from "../common/org-shared";
-import { StatePreview } from "../common/organization-state-preview";
+  NO_VALUE,
+  OrgAlert,
+  OrgBadge,
+  OrgButton,
+  OrgCard,
+  OrgEmpty,
+  OrgError,
+  OrgLoading,
+  OrgPage,
+  OrgPageHeader,
+  OrgRow,
+} from "../common/org-ui";
+import {
+  DealStatusBadge,
+  DetailItem,
+  formatMinor,
+  platformRoleLabel,
+  routeText,
+} from "./staffing-parts";
+
+const HOUR_MS = 60 * 60 * 1000;
+const MIN_OFFER_MINOR = 100;
+const OPEN_STATUSES = ["pending_supplier", "countered_by_supplier", "countered_by_org"];
+
+function timeText(value: string | Date | null | undefined): string {
+  if (!value) return NO_VALUE;
+  const date = value instanceof Date ? value : new Date(value);
+  return Number.isNaN(date.getTime())
+    ? NO_VALUE
+    : `${isoDay(date)} ${date.toISOString().slice(11, 16)}`;
+}
 
 export function DealDetailAndNegotiation() {
   const goTo = useOrgNavigate();
   const queryClient = useQueryClient();
-  const { status: authStatus, actor } = useAuth();
-  const [counterAmount, setCounterAmount] = useState("");
-  const [currency, setCurrency] = useState("SAR");
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const { status: authStatus, actor, locale } = useAuth();
+  const enabled = authStatus === "authenticated" && Boolean(actor?.activeTenantId);
+  const { dealId: routeDealId } = useOrgParams();
+  const dealId = routeDealId ?? getSelectedNegotiationId();
+  const [counterInput, setCounterInput] = useState<string | null>(null);
+  const [respondFailed, setRespondFailed] = useState(false);
 
-  const wizardTripId = getActiveWizardTripId() ?? undefined;
+  const negotiationsQuery = useQuery({
+    ...orpc.negotiation.listOrganizationNegotiations.queryOptions({ input: {} }),
+    enabled,
+  });
+  const items = negotiationsQuery.data?.items ?? [];
+  const deal = (dealId ? items.find((item) => item.id === dealId) : undefined) ?? items[0];
 
-  const negotiationsQuery = useQuery(
-    orpc.negotiation.listOrganizationNegotiations.queryOptions({
-      input: { tripId: wizardTripId },
-      enabled: authStatus === "authenticated" && Boolean(actor?.activeTenantId),
-    }),
-  );
-
-  const selectedId = getSelectedNegotiationId();
-  const deal = useMemo(() => {
-    return (
-      (selectedId ? negotiationsQuery.data?.items.find((d) => d.id === selectedId) : undefined) ??
-      negotiationsQuery.data?.items[0]
-    );
-  }, [negotiationsQuery.data, selectedId]);
-
-  const tripDetailQuery = useQuery(
-    orpc.trips.getOrganizationTrip.queryOptions({
-      input: { tripId: deal?.tripId ?? "" },
-      enabled: authStatus === "authenticated" && Boolean(deal?.tripId),
-    }),
-  );
-
-  useEffect(() => {
-    if (deal) {
-      setCurrency(deal.currencyCode);
-      setCounterAmount((deal.currentOfferMinor / 100).toFixed(2));
-    }
-  }, [deal]);
+  const tripQuery = useQuery({
+    ...orpc.trips.getOrganizationTrip.queryOptions({ input: { tripId: deal?.tripId ?? "" } }),
+    enabled: enabled && Boolean(deal?.tripId),
+  });
+  const suppliersQuery = useQuery({
+    ...orpc.onboarding.listOrganizationSuppliers.queryOptions({ input: {} }),
+    enabled: enabled && Boolean(deal),
+  });
 
   const respondMutation = useMutation(
     orpc.negotiation.respondToOffer.mutationOptions({
@@ -67,155 +77,196 @@ export function DealDetailAndNegotiation() {
     }),
   );
 
-  const statusLabel =
-    deal?.status ?? t("screen.organization.staffing.dealDetailAndNegotiation.proposed");
-  const payLabel = deal ? `${(deal.currentOfferMinor / 100).toFixed(2)} ${deal.currencyCode}` : "—";
-
-  const tripDetail = tripDetailQuery.data;
-  const tripLabel = tripDetail ? tripDetail.titleEn || tripDetail.titleAr : "—";
-  const originName = tripDetail?.origin?.nameEn ?? "";
-  const destName = tripDetail?.destinations[0]?.nameEn ?? "";
-  const routeLabel = originName && destName ? `${originName} → ${destName}` : originName || "—";
-  const dateLabel = tripDetail?.startsAt
-    ? new Date(tripDetail.startsAt).toISOString().slice(0, 10)
-    : "—";
-
-  const historyItems = useMemo<readonly TeTimelineItem[]>(() => {
-    if (!deal) return [];
-    return [
-      {
-        id: `${deal.id}-init`,
-        time: new Date(deal.createdAt).toLocaleString(),
-        label: `${t("screen.organization.staffing.dealDetailAndNegotiation.proposedByTheOrganization")} (${(deal.initialOfferMinor / 100).toFixed(2)} ${deal.currencyCode})`,
-        state: deal.roundsCount === 1 ? "current" : "done",
-      },
-      ...(deal.roundsCount > 1
-        ? [
-            {
-              id: `${deal.id}-latest`,
-              time: new Date(deal.updatedAt).toLocaleString(),
-              label: `Latest offer by ${deal.lastOfferedBy}: ${(deal.currentOfferMinor / 100).toFixed(2)} ${deal.currencyCode}`,
-              state: "current" as const,
-            },
-          ]
-        : []),
-    ];
-  }, [deal]);
+  const trip = tripQuery.data;
+  const supplierName =
+    suppliersQuery.data?.suppliers.find((s) => s.supplierAccountId === deal?.supplierAccountId)
+      ?.fullName ?? (deal ? platformRoleLabel(deal.supplierRole) : NO_VALUE);
+  const plate =
+    trip?.vehicles.find((vehicle) => vehicle.vehicleId === deal?.vehicleId)?.plateNumber ??
+    NO_VALUE;
+  const counterAmount = counterInput ?? (deal ? (deal.currentOfferMinor / 100).toFixed(2) : "");
+  const expiresAt = deal ? new Date(deal.expiresAt).getTime() : Number.NaN;
+  const hoursLeft = Number.isNaN(expiresAt)
+    ? null
+    : Math.max(0, Math.ceil((expiresAt - Date.now()) / HOUR_MS));
+  const isOpen = deal ? OPEN_STATUSES.includes(deal.status) : false;
+  const busy = respondMutation.isPending;
 
   async function handleRespond(action: "accept" | "counter" | "decline") {
-    if (authStatus === "authenticated" && deal?.id) {
-      setErrorMsg(null);
-      try {
-        const counterOfferMinor =
+    if (!deal) return;
+    setRespondFailed(false);
+    try {
+      await respondMutation.mutateAsync({
+        negotiationId: deal.id,
+        action,
+        counterOfferMinor:
           action === "counter"
-            ? Math.max(100, Math.round((Number.parseFloat(counterAmount) || 0) * 100))
-            : undefined;
-        await respondMutation.mutateAsync({
-          negotiationId: deal.id,
-          action,
-          counterOfferMinor,
-        });
-      } catch (caught) {
-        setErrorMsg(caught instanceof Error ? caught.message : "Could not respond to offer.");
-        return;
-      }
-    }
-    if (action !== "counter") {
-      void goTo("staffing-board");
+            ? Math.max(MIN_OFFER_MINOR, Math.round((Number.parseFloat(counterAmount) || 0) * 100))
+            : undefined,
+      });
+      if (action === "counter") setCounterInput(null);
+      else void goTo("staffing-board");
+    } catch {
+      setRespondFailed(true);
     }
   }
 
-  const busy = respondMutation.isPending;
-
-  const summaryItems = [
-    {
-      label: t("screen.organization.staffing.dealDetailAndNegotiation.trip"),
-      value: tripLabel,
-    },
-    {
-      label: t("screen.organization.staffing.dealDetailAndNegotiation.route"),
-      value: routeLabel,
-    },
-    {
-      label: t("screen.organization.staffing.dealDetailAndNegotiation.date"),
-      value: dateLabel,
-    },
-    {
-      label: t("screen.organization.staffing.dealDetailAndNegotiation.pay"),
-      value: payLabel,
-    },
-  ];
+  if (negotiationsQuery.isLoading) return <OrgLoading rows={6} />;
 
   return (
-    <StatePreview>
-      <div className="flex flex-col gap-8">
-        <WorkspaceBackLink
-          parent={{
-            slug: "staffing-board",
-            label: t("screen.organization.staffing.dealDetailAndNegotiation.backToStaffingBoard"),
-          }}
+    <OrgPage>
+      <OrgPageHeader
+        title={t("screen.organization.staffing.dealDetailAndNegotiation.dealWith", {
+          name: supplierName,
+        })}
+        caption={
+          <span className="flex flex-wrap items-center gap-3">
+            {deal ? <DealStatusBadge status={deal.status} /> : null}
+            <span>
+              {t("screen.organization.staffing.dealDetailAndNegotiation.vehicleLastUpdate", {
+                plate,
+                time: timeText(deal?.updatedAt),
+              })}
+            </span>
+          </span>
+        }
+      />
+      {negotiationsQuery.isError ? (
+        <OrgError onRetry={() => void negotiationsQuery.refetch()} />
+      ) : null}
+      {!deal && !negotiationsQuery.isError ? (
+        <OrgEmpty title={t("screen.organization.staffing.dealDetailAndNegotiation.emptyTitle")}>
+          {t("screen.organization.staffing.dealDetailAndNegotiation.emptyBody")}
+        </OrgEmpty>
+      ) : null}
+      {isOpen ? (
+        <OrgAlert
+          tone="warn"
+          title={t("screen.organization.staffing.dealDetailAndNegotiation.expiresInHours", {
+            hours: hoursLeft ?? NO_VALUE,
+          })}
+        >
+          {t("screen.organization.staffing.dealDetailAndNegotiation.expiryRule")}
+        </OrgAlert>
+      ) : null}
+      {respondFailed ? (
+        <OrgAlert
+          tone="err"
+          title={t("screen.organization.staffing.dealDetailAndNegotiation.respondFailed")}
         />
-        <TePageHeader
-          title={t(
-            "screen.organization.staffing.dealDetailAndNegotiation.dealDetailAndNegotiation",
-          )}
-          actions={<StateBadge tone="info" icon="clock" label={statusLabel} />}
-        />
-        {errorMsg ? <TeInlineAlert tone="error">{errorMsg}</TeInlineAlert> : null}
-        <TeCard>
-          <dl className="grid gap-4 sm:grid-cols-2">
-            {summaryItems.map((item) => (
-              <div key={item.label} className="flex flex-col gap-1">
-                <dt className="te-label">{item.label}</dt>
-                <dd className="te-body">{item.value}</dd>
-              </div>
-            ))}
+      ) : null}
+      <OrgRow align="start">
+        <OrgCard
+          title={t("screen.organization.staffing.dealDetailAndNegotiation.dealDetails")}
+          className="flex-1"
+        >
+          <dl className="m-0 grid grid-cols-1 gap-x-4 gap-y-3 sm:grid-cols-2">
+            <DetailItem label={t("screen.organization.staffing.dealDetailAndNegotiation.trip")}>
+              {trip ? tripTitle(trip, locale) || NO_VALUE : NO_VALUE}
+            </DetailItem>
+            <DetailItem label={t("screen.organization.staffing.dealDetailAndNegotiation.date")}>
+              {isoDay(trip?.startsAt) ?? NO_VALUE}
+            </DetailItem>
+            <DetailItem label={t("screen.organization.staffing.dealDetailAndNegotiation.route")}>
+              {routeText(trip, locale)}
+            </DetailItem>
+            <DetailItem
+              label={t("screen.organization.staffing.dealDetailAndNegotiation.currentPay")}
+            >
+              {deal ? formatMinor(deal.currentOfferMinor, deal.currencyCode) : NO_VALUE}
+            </DetailItem>
           </dl>
-        </TeCard>
-        <TeInlineAlert tone="info">
-          {t("screen.organization.staffing.dealDetailAndNegotiation.theDealExpires72Hours")}
-        </TeInlineAlert>
-        <OrgSection title={t("screen.organization.staffing.dealDetailAndNegotiation.offerHistory")}>
-          <TeTimeline
-            items={historyItems}
-            ariaLabel={t(
-              "screen.organization.staffing.dealDetailAndNegotiation.offerHistoryAriaLabel",
-            )}
+          <h3 className="m-0 mt-2 text-base leading-6 font-semibold">
+            {t("screen.organization.staffing.dealDetailAndNegotiation.offerHistory")}
+          </h3>
+          {deal ? (
+            <ol
+              aria-label={t("screen.organization.staffing.dealDetailAndNegotiation.offerHistory")}
+              className="m-0 flex list-none flex-col gap-3 p-0"
+            >
+              <li className="flex flex-wrap items-center gap-3 text-sm leading-5">
+                <OrgBadge tone="neu" icon={false}>
+                  {t("screen.organization.staffing.dealDetailAndNegotiation.proposed")}
+                </OrgBadge>
+                <span>
+                  {t("screen.organization.staffing.dealDetailAndNegotiation.organizationProposed", {
+                    amount: formatMinor(deal.initialOfferMinor, deal.currencyCode),
+                    date: isoDay(deal.createdAt) ?? NO_VALUE,
+                  })}
+                </span>
+              </li>
+              {deal.roundsCount > 1 ? (
+                <li className="flex flex-wrap items-center gap-3 text-sm leading-5">
+                  <OrgBadge tone="warn">
+                    {deal.lastOfferedBy === "supplier"
+                      ? t(
+                          "screen.organization.staffing.dealDetailAndNegotiation.counteredByProvider",
+                        )
+                      : t(
+                          "screen.organization.staffing.dealDetailAndNegotiation.counteredByOrganization",
+                        )}
+                  </OrgBadge>
+                  <span>
+                    {deal.lastOfferedBy === "supplier"
+                      ? t(
+                          "screen.organization.staffing.dealDetailAndNegotiation.providerCountered",
+                          {
+                            amount: formatMinor(deal.currentOfferMinor, deal.currencyCode),
+                            date: isoDay(deal.updatedAt) ?? NO_VALUE,
+                          },
+                        )
+                      : t(
+                          "screen.organization.staffing.dealDetailAndNegotiation.organizationCountered",
+                          {
+                            amount: formatMinor(deal.currentOfferMinor, deal.currencyCode),
+                            date: isoDay(deal.updatedAt) ?? NO_VALUE,
+                          },
+                        )}
+                  </span>
+                </li>
+              ) : null}
+            </ol>
+          ) : (
+            <p className="te-caption m-0 text-[var(--te-ink-muted)]">{NO_VALUE}</p>
+          )}
+        </OrgCard>
+        <OrgCard
+          title={t("screen.organization.staffing.dealDetailAndNegotiation.yourResponse")}
+          className="flex-1"
+        >
+          <OrgInput
+            label={t("screen.organization.staffing.dealDetailAndNegotiation.counterAmount")}
+            inputMode="decimal"
+            value={counterAmount}
+            onChange={(event) => setCounterInput(event.target.value)}
+            disabled={!isOpen}
           />
-        </OrgSection>
-        <OrgSection title={t("screen.organization.staffing.dealDetailAndNegotiation.counterOffer")}>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <TeInput
-              label={t("screen.organization.staffing.dealDetailAndNegotiation.counterAmount")}
-              placeholder={t("screen.organization.staffing.dealDetailAndNegotiation.amount")}
-              inputMode="decimal"
-              value={counterAmount}
-              onChange={(e) => setCounterAmount(e.target.value)}
-            />
-            <TeInput
-              label={t("screen.organization.staffing.dealDetailAndNegotiation.currency")}
-              placeholder={t("screen.organization.staffing.dealDetailAndNegotiation.currencyCode")}
-              value={currency}
-              onChange={(e) => setCurrency(e.target.value)}
-            />
+          <p className="te-caption m-0 text-[var(--te-ink-muted)]">
+            {t("screen.organization.staffing.dealDetailAndNegotiation.counterVoidsAcceptance")}
+          </p>
+          <div className="mt-2 flex flex-wrap justify-between gap-3">
+            <OrgButton
+              variant="danger"
+              disabled={!isOpen || busy}
+              onClick={() => void handleRespond("decline")}
+            >
+              {t("screen.organization.staffing.dealDetailAndNegotiation.rejectDeal")}
+            </OrgButton>
+            <div className="flex flex-wrap gap-3">
+              <OrgButton
+                variant="secondary"
+                disabled={!isOpen || busy}
+                onClick={() => void handleRespond("accept")}
+              >
+                {t("screen.organization.staffing.dealDetailAndNegotiation.acceptOffer")}
+              </OrgButton>
+              <OrgButton disabled={!isOpen || busy} onClick={() => void handleRespond("counter")}>
+                {t("screen.organization.staffing.dealDetailAndNegotiation.sendCounter")}
+              </OrgButton>
+            </div>
           </div>
-        </OrgSection>
-        <div className="flex flex-wrap justify-end gap-3">
-          <TeButton variant="ghost" disabled={busy} onClick={() => void handleRespond("decline")}>
-            {t("screen.organization.staffing.dealDetailAndNegotiation.reject")}
-          </TeButton>
-          <TeButton
-            variant="secondary"
-            disabled={busy}
-            onClick={() => void handleRespond("counter")}
-          >
-            {t("screen.organization.staffing.dealDetailAndNegotiation.counter")}
-          </TeButton>
-          <TeButton disabled={busy} onClick={() => void handleRespond("accept")}>
-            {t("screen.organization.staffing.dealDetailAndNegotiation.accept")}
-          </TeButton>
-        </div>
-      </div>
-    </StatePreview>
+        </OrgCard>
+      </OrgRow>
+    </OrgPage>
   );
 }

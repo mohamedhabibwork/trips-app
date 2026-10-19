@@ -1,152 +1,202 @@
-import { useMemo, useState } from "react";
-
+// SCR-ORG-39 Analytics and reports: program enrollment, coupon redemption and revenue for a period.
+import { useState, type ReactNode } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { TeButton } from "@trips-app/ui/components/te-button";
-import { TeCard } from "@trips-app/ui/components/te-card";
-import { TeInput } from "@trips-app/ui/components/te-input";
-import { TeKpiTile } from "@trips-app/ui/components/te-kpi-tile";
-import { TePageHeader } from "@trips-app/ui/components/te-page-header";
-import { TePlanGate } from "@trips-app/ui/components/te-plan-gate";
+
 import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
 
-import { OrgButtonLink, WorkspaceBackLink } from "../common/org-link";
+import { OrgSelect } from "../common/org-form";
+import { OrgButtonLink } from "../common/org-link";
 import type { OrgSlug } from "../common/org-routes";
-import { OrgSection } from "../common/org-shared";
-import { StatePreview } from "../common/organization-state-preview";
+import {
+  NO_VALUE,
+  OrgAlert,
+  OrgBadge,
+  OrgButton,
+  OrgCard,
+  OrgError,
+  OrgPage,
+  OrgPageHeader,
+  OrgRow,
+} from "../common/org-ui";
+import {
+  downloadCsv,
+  formatTotals,
+  periodStart,
+  rowsOf,
+  sumByCurrency,
+  type BookingView,
+  type Period,
+} from "../accounting/finance-format";
 
-interface ReportCard {
-  id: string;
-  slug: OrgSlug;
+const PAID_BOOKING_STATES: readonly string[] = ["confirmed", "checked_in", "completed"];
+
+interface ReportCardProps {
   title: string;
-  metric: string;
-  value: string;
+  figure: string;
+  caption: string;
+  slug: OrgSlug;
+}
+
+function ReportCard({ title, figure, caption, slug }: ReportCardProps): ReactNode {
+  return (
+    <OrgCard className="flex-1" title={title}>
+      <b className="text-[28px] leading-9 font-semibold">{figure}</b>
+      <p className="te-caption m-0 text-[var(--te-ink-muted)]">{caption}</p>
+      <div>
+        <OrgButtonLink slug={slug} variant="text" className="-ms-2">
+          {t("screen.organization.operations.analyticsAndReports.openReport")}
+        </OrgButtonLink>
+      </div>
+    </OrgCard>
+  );
+}
+
+function planViewLabel(tier: string | undefined): string | null {
+  switch (tier) {
+    case "starter":
+      return t("screen.organization.operations.analyticsAndReports.starterLockedPreview");
+    case "growth":
+      return t("screen.organization.operations.analyticsAndReports.growthBasicView");
+    case "enterprise":
+      return t("screen.organization.operations.analyticsAndReports.enterpriseFullView");
+    default:
+      return null;
+  }
 }
 
 export function AnalyticsAndReports() {
-  const { status: authStatus } = useAuth();
-  const [fromDate, setFromDate] = useState("");
-  const [toDate, setToDate] = useState("");
+  const { status: authStatus, locale } = useAuth();
+  const enabled = authStatus === "authenticated";
+  const [period, setPeriod] = useState<Period>("all");
 
   const bookingsQuery = useQuery(
-    orpc.booking.listOrganizationBookings.queryOptions({
-      input: {},
-      enabled: authStatus === "authenticated",
-    }),
+    orpc.booking.listOrganizationBookings.queryOptions({ input: {}, enabled }),
   );
-
   const couponsQuery = useQuery(
-    orpc.coupons.listOrganizationCoupons.queryOptions({
-      input: {},
-      enabled: authStatus === "authenticated",
-    }),
+    orpc.coupons.listOrganizationCoupons.queryOptions({ input: {}, enabled }),
   );
-
   const summaryQuery = useQuery(
-    orpc.accounting.getOrganizationSummary.queryOptions({
-      input: undefined,
-      enabled: authStatus === "authenticated",
-    }),
+    orpc.accounting.getOrganizationSummary.queryOptions({ input: undefined, enabled }),
+  );
+  const subscriptionQuery = useQuery(
+    orpc.plans.getOrganizationSubscription.queryOptions({ input: undefined, enabled }),
   );
 
-  const enrolledTravelers = useMemo(() => {
-    if (!bookingsQuery.data) return 0;
-    return bookingsQuery.data.reduce((sum, b) => sum + b.passengersCount, 0);
-  }, [bookingsQuery.data]);
+  const since = periodStart(period, new Date());
+  const bookings = rowsOf<BookingView>(bookingsQuery.data).filter(
+    (booking) =>
+      PAID_BOOKING_STATES.includes(booking.status) &&
+      (!since || new Date(booking.createdAt) >= since),
+  );
+  const loaded = bookingsQuery.isSuccess;
+  const enrolled = bookings.filter((booking) => booking.programsTotalMinor > 0);
+  const enrolledTravelers = enrolled.reduce((sum, booking) => sum + booking.passengersCount, 0);
+  const enrolledTrips = new Set(enrolled.map((booking) => booking.tripId)).size;
+  const redemptions = bookings.filter((booking) => booking.couponId).length;
+  const activeCoupons = couponsQuery.isSuccess
+    ? (couponsQuery.data?.items ?? []).filter((coupon) => coupon.status === "active").length
+    : null;
+  const revenue = formatTotals(
+    sumByCurrency(
+      bookings.map((booking) => ({
+        minor: booking.totalAmountMinor,
+        currency: booking.currencyCode,
+      })),
+    ),
+    locale,
+  );
 
-  const couponRedemptions = useMemo(() => {
-    if (!couponsQuery.data?.items) return 0;
-    return couponsQuery.data.items.reduce((sum, c) => sum + c.redemptionsCount, 0);
-  }, [couponsQuery.data?.items]);
+  const enrollmentFigure = loaded
+    ? t("screen.organization.operations.analyticsAndReports.nTravelers", { n: enrolledTravelers })
+    : NO_VALUE;
+  const redemptionFigure = loaded
+    ? t("screen.organization.operations.analyticsAndReports.nRedemptions", { n: redemptions })
+    : NO_VALUE;
+  const planView = planViewLabel(subscriptionQuery.data?.tier);
 
-  const baseRevenueLabel = useMemo(() => {
-    const s = summaryQuery.data;
-    if (!s) return "0.00 EGP";
-    return `${(s.grossRevenueMinor / 100).toFixed(2)} ${s.currencyCode}`;
-  }, [summaryQuery.data]);
-
-  const reportCards: readonly ReportCard[] = [
-    {
-      id: "enrollment",
-      slug: "program-enrollment-report",
-      title: t("screen.organization.operations.analyticsAndReports.enrollment"),
-      metric: "Enrolled travelers",
-      value: String(enrolledTravelers),
-    },
-    {
-      id: "coupons",
-      slug: "coupon-analytics",
-      title: t("screen.organization.operations.analyticsAndReports.couponRedemption"),
-      metric: "Redemptions",
-      value: String(couponRedemptions),
-    },
-    {
-      id: "revenue",
-      slug: "trip-accounting",
-      title: t("screen.organization.operations.analyticsAndReports.revenue"),
-      metric: "Base revenue",
-      value: baseRevenueLabel,
-    },
+  const periodOptions = [
+    { value: "all", label: t("screen.organization.operations.analyticsAndReports.allTime") },
+    { value: "month", label: t("screen.organization.operations.analyticsAndReports.thisMonth") },
+    { value: "30d", label: t("screen.organization.operations.analyticsAndReports.last30Days") },
+    { value: "year", label: t("screen.organization.operations.analyticsAndReports.thisYear") },
   ];
 
+  const exportCsv = () =>
+    downloadCsv("analytics.csv", [
+      [
+        t("screen.organization.operations.analyticsAndReports.programEnrollment"),
+        t("screen.organization.operations.analyticsAndReports.couponRedemption"),
+        t("screen.organization.operations.analyticsAndReports.revenue"),
+      ],
+      [String(enrolledTravelers), String(redemptions), revenue],
+    ]);
+
   return (
-    <StatePreview>
-      <div className="flex flex-col gap-8">
-        <WorkspaceBackLink />
-        <TePageHeader
-          title={t("screen.organization.operations.analyticsAndReports.analyticsAndReports")}
-          actions={
-            <TeButton variant="secondary">
+    <OrgPage>
+      <OrgPageHeader
+        title={t("screen.organization.operations.analyticsAndReports.title")}
+        caption={
+          <span className="flex flex-wrap items-center gap-3">
+            {planView ? <OrgBadge tone="info">{planView}</OrgBadge> : null}
+            {t("screen.organization.operations.analyticsAndReports.caption")}
+          </span>
+        }
+        actions={
+          <div className="flex w-full flex-wrap items-end gap-3 sm:w-auto">
+            <OrgSelect
+              label={t("screen.organization.operations.analyticsAndReports.dateRange")}
+              fieldClassName="w-full sm:w-auto sm:min-w-[220px]"
+              options={periodOptions}
+              value={period}
+              onValueChange={(value) => setPeriod(value as Period)}
+            />
+            <OrgButton variant="secondary" disabled={!loaded} onClick={exportCsv}>
               {t("screen.organization.operations.analyticsAndReports.export")}
-            </TeButton>
-          }
-        />
-        <div className="grid gap-4 sm:grid-cols-2">
-          <TeInput
-            label={t("screen.organization.operations.analyticsAndReports.from")}
-            placeholder={t("screen.organization.operations.analyticsAndReports.yyyyMmDd")}
-            value={fromDate}
-            onChange={(e) => setFromDate(e.target.value)}
-          />
-          <TeInput
-            label={t("screen.organization.operations.analyticsAndReports.to")}
-            placeholder={t(
-              "screen.organization.operations.analyticsAndReports.yyyyMmDdPlaceholder",
-            )}
-            value={toDate}
-            onChange={(e) => setToDate(e.target.value)}
-          />
-        </div>
-        <OrgSection title={t("screen.organization.operations.analyticsAndReports.reports")}>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {reportCards.map((card) => (
-              <TeCard
-                key={card.id}
-                header={<h3 className="te-h3">{card.title}</h3>}
-                footer={
-                  <div className="flex justify-end">
-                    <OrgButtonLink slug={card.slug} variant="ghost">
-                      {t("screen.organization.operations.analyticsAndReports.openReport")}
-                    </OrgButtonLink>
-                  </div>
-                }
-              >
-                <TeKpiTile label={card.metric} value={card.value} />
-              </TeCard>
-            ))}
+            </OrgButton>
           </div>
-        </OrgSection>
-        <OrgSection title={t("screen.organization.operations.analyticsAndReports.fullAnalytics")}>
-          <TePlanGate
-            plan="Enterprise"
-            lockedLabel={t(
-              "screen.organization.operations.analyticsAndReports.fullTrendAndRevenueAnalytics",
-            )}
-          />
-        </OrgSection>
-      </div>
-    </StatePreview>
+        }
+      />
+      {bookingsQuery.isError || summaryQuery.isError ? (
+        <OrgError
+          onRetry={() => {
+            void bookingsQuery.refetch();
+            void summaryQuery.refetch();
+          }}
+        />
+      ) : null}
+      <OrgRow>
+        <ReportCard
+          title={t("screen.organization.operations.analyticsAndReports.programEnrollment")}
+          figure={enrollmentFigure}
+          caption={t("screen.organization.operations.analyticsAndReports.acrossNTrips", {
+            trips: loaded ? enrolledTrips : NO_VALUE,
+          })}
+          slug="program-enrollment-report"
+        />
+        <ReportCard
+          title={t("screen.organization.operations.analyticsAndReports.couponRedemption")}
+          figure={redemptionFigure}
+          caption={t("screen.organization.operations.analyticsAndReports.nActiveCoupons", {
+            n: activeCoupons ?? NO_VALUE,
+          })}
+          slug="coupons-list"
+        />
+        <ReportCard
+          title={t("screen.organization.operations.analyticsAndReports.revenue")}
+          figure={loaded ? revenue : NO_VALUE}
+          caption={t("screen.organization.operations.analyticsAndReports.netOfCoupons")}
+          slug="trip-accounting"
+        />
+      </OrgRow>
+      <OrgAlert
+        tone="info"
+        title={t("screen.organization.operations.analyticsAndReports.planViewsDiffer")}
+      >
+        {t("screen.organization.operations.analyticsAndReports.starterShowsALockedPreview")}
+      </OrgAlert>
+    </OrgPage>
   );
 }

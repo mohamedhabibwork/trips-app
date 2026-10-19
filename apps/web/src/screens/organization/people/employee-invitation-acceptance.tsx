@@ -1,26 +1,29 @@
+// SCR-ORG-02 Employee invitation acceptance: an invited person joins the organization.
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { TeBadge } from "@trips-app/ui/components/te-badge";
-import { TeButton } from "@trips-app/ui/components/te-button";
-import { TeCard } from "@trips-app/ui/components/te-card";
-import { TeInlineAlert } from "@trips-app/ui/components/te-inline-alert";
-import { TeInput } from "@trips-app/ui/components/te-input";
-import { TePageHeader } from "@trips-app/ui/components/te-page-header";
 import { t } from "@trips-app/i18n";
+
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
 
-import { WorkspaceBackLink, useOrgNavigate } from "../common/org-link";
-import { StatePreview } from "../common/organization-state-preview";
+import { OrgInput } from "../common/org-form";
+import { OrgButtonLink, useOrgNavigate, useOrgParams } from "../common/org-link";
+import { OrgAlert, OrgButton, OrgCard, OrgPage, OrgPageHeader } from "../common/org-ui";
+
+import { AreaBadges, grantedAreas } from "./people-parts";
+
+const MIN_TOKEN_LENGTH = 8;
+const SIGNED_OUT_HINT_ID = "invitation-signed-out-hint";
 
 export function EmployeeInvitationAcceptance() {
   const goTo = useOrgNavigate();
   const { status: authStatus } = useAuth();
   const queryClient = useQueryClient();
-  const [inviteToken, setInviteToken] = useState("");
-  const [busy, setBusy] = useState(false);
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const tokenParam = useOrgParams().token;
+  const [typedToken, setTypedToken] = useState("");
+  const inviteToken = (tokenParam ?? typedToken).trim();
+  const signedIn = authStatus === "authenticated";
 
   const acceptMutation = useMutation(
     orpc.employees.acceptInvite.mutationOptions({
@@ -30,72 +33,94 @@ export function EmployeeInvitationAcceptance() {
     }),
   );
 
-  async function handleAccept() {
-    if (authStatus === "authenticated" && inviteToken.trim()) {
-      setBusy(true);
-      setErrorMsg(null);
-      try {
-        await acceptMutation.mutateAsync({ inviteToken: inviteToken.trim() });
-      } catch (caught) {
-        setErrorMsg(caught instanceof Error ? caught.message : "Could not accept invitation.");
-        setBusy(false);
-        return;
-      }
-      setBusy(false);
-    }
-    void goTo("workspace-home");
-  }
+  const accepted = acceptMutation.data?.employee ?? null;
+  const canAccept = signedIn && inviteToken.length >= MIN_TOKEN_LENGTH && !acceptMutation.isPending;
 
   return (
-    <StatePreview>
-      <div className="flex flex-col gap-6">
-        <WorkspaceBackLink />
-        <TePageHeader
-          title={t(
-            "screen.organization.people.employeeInvitationAcceptance.employeeInvitationAcceptance",
-          )}
-          description={t(
-            "screen.organization.people.employeeInvitationAcceptance.youHaveBeenInvitedTo",
-          )}
+    <OrgPage>
+      <OrgPageHeader
+        title={t("screen.organization.people.employeeInvitationAcceptance.title")}
+        caption={
+          accepted
+            ? t("screen.organization.people.employeeInvitationAcceptance.invitationSentTo", {
+                email: accepted.invitedEmail,
+              })
+            : t("screen.organization.people.employeeInvitationAcceptance.caption")
+        }
+      />
+      {accepted ? (
+        <OrgAlert
+          tone="ok"
+          title={t("screen.organization.people.employeeInvitationAcceptance.joinedTitle")}
+        >
+          {t("screen.organization.people.employeeInvitationAcceptance.joinedBody")}
+        </OrgAlert>
+      ) : (
+        <OrgAlert
+          tone="info"
+          title={t("screen.organization.people.employeeInvitationAcceptance.checkYourEmail")}
+        >
+          {t("screen.organization.people.employeeInvitationAcceptance.checkYourEmailBody")}
+        </OrgAlert>
+      )}
+      {acceptMutation.isError ? (
+        <OrgAlert
+          tone="err"
+          title={t("screen.organization.people.employeeInvitationAcceptance.notAcceptedTitle")}
+        >
+          {t("screen.organization.people.employeeInvitationAcceptance.notAcceptedBody")}
+        </OrgAlert>
+      ) : null}
+      <OrgCard
+        title={t("screen.organization.people.employeeInvitationAcceptance.permissionAreasGranted")}
+        className="max-w-[720px]"
+      >
+        <p className="m-0">
+          {t("screen.organization.people.employeeInvitationAcceptance.permissionAreasIntro")}
+        </p>
+        <AreaBadges
+          areas={grantedAreas(accepted?.permissions)}
+          tone="ok"
+          emptyLabel={t("screen.organization.people.employeeInvitationAcceptance.areasAfterAccept")}
         />
-        {errorMsg ? <TeInlineAlert tone="error">{errorMsg}</TeInlineAlert> : null}
-        <TeInlineAlert tone="info">
-          {t("screen.organization.people.employeeInvitationAcceptance.acceptOnlyIfTheInvitation")}
-        </TeInlineAlert>
-        <TeCard>
-          <div className="flex flex-col gap-4">
-            <h2 className="te-h2">
-              {t("screen.organization.people.employeeInvitationAcceptance.organizationName")}
-            </h2>
-            <p className="te-body">
-              {t("screen.organization.people.employeeInvitationAcceptance.permissionAreasGranted")}
-            </p>
-            <ul className="flex flex-wrap gap-2">
-              <li>
-                <TeBadge tone="neutral">
-                  {t("screen.organization.people.employeeInvitationAcceptance.permissionArea")}
-                </TeBadge>
-              </li>
-            </ul>
-            <TeInput
-              label={t("screen.organization.people.employeeInvitationAcceptance.invitationToken")}
-              placeholder={t(
-                "screen.organization.people.employeeInvitationAcceptance.pasteInvitationToken",
-              )}
-              value={inviteToken}
-              onChange={(event) => setInviteToken(event.target.value)}
-            />
-            <div className="flex flex-wrap justify-end gap-3">
-              <TeButton variant="ghost" onClick={() => void goTo("workspace-home")}>
+        <p className="te-caption m-0 text-[var(--te-ink-muted)]">
+          {t("screen.organization.people.employeeInvitationAcceptance.areasSetByOwner")}
+        </p>
+        {!tokenParam && !accepted ? (
+          <OrgInput
+            label={t("screen.organization.people.employeeInvitationAcceptance.invitationCode")}
+            hint={t("screen.organization.people.employeeInvitationAcceptance.invitationCodeHint")}
+            value={typedToken}
+            onChange={(event) => setTypedToken(event.target.value)}
+            autoComplete="off"
+          />
+        ) : null}
+        {!signedIn && !accepted ? (
+          <p id={SIGNED_OUT_HINT_ID} className="te-caption m-0 text-[var(--te-ink-muted)]">
+            {t("screen.organization.people.employeeInvitationAcceptance.signInToAccept")}
+          </p>
+        ) : null}
+        <div className="flex flex-wrap justify-end gap-3">
+          {accepted ? (
+            <OrgButtonLink slug="workspace-home">
+              {t("screen.organization.people.employeeInvitationAcceptance.openWorkspace")}
+            </OrgButtonLink>
+          ) : (
+            <>
+              <OrgButton variant="secondary" onClick={() => void goTo("workspace-home")}>
                 {t("screen.organization.people.employeeInvitationAcceptance.decline")}
-              </TeButton>
-              <TeButton disabled={busy} onClick={() => void handleAccept()}>
+              </OrgButton>
+              <OrgButton
+                disabled={!canAccept}
+                aria-describedby={signedIn ? undefined : SIGNED_OUT_HINT_ID}
+                onClick={() => acceptMutation.mutate({ inviteToken })}
+              >
                 {t("screen.organization.people.employeeInvitationAcceptance.acceptInvitation")}
-              </TeButton>
-            </div>
-          </div>
-        </TeCard>
-      </div>
-    </StatePreview>
+              </OrgButton>
+            </>
+          )}
+        </div>
+      </OrgCard>
+    </OrgPage>
   );
 }

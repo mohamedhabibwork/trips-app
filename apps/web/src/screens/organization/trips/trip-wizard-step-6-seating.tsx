@@ -1,30 +1,25 @@
+// SCR-ORG-10 Trip wizard step 6: seat mode and the priority window for Explorer and VIP travelers.
 import { useEffect, useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { TeInlineAlert } from "@trips-app/ui/components/te-inline-alert";
-import { TeInput } from "@trips-app/ui/components/te-input";
-import { TeSwitch } from "@trips-app/ui/components/te-switch";
 import { t } from "@trips-app/i18n";
 
-import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
 
+import { OrgInput } from "../common/org-form";
 import { TripWizardFrame, getActiveWizardTripId } from "../common/org-shared";
-import { StatePreview } from "../common/organization-state-preview";
+import { OrgAlert, OrgBadge, OrgCard } from "../common/org-ui";
+import { OrgOptionCard, useOrgPlan, useWizardTrip } from "./trip-parts";
+
+const DEFAULT_WINDOW_HOURS = 24;
 
 export function TripWizardStep6Seating() {
-  const { status: authStatus } = useAuth();
+  const { authStatus, tripQuery, tripName } = useWizardTrip();
   const queryClient = useQueryClient();
+  const { features } = useOrgPlan();
   const [selfSelect, setSelfSelect] = useState(false);
-  const [priorityWindowHours, setPriorityWindowHours] = useState("24");
-
-  const tripId = getActiveWizardTripId();
-  const tripQuery = useQuery({
-    ...orpc.trips.getOrganizationTrip.queryOptions({
-      input: { tripId: tripId ?? "" },
-    }),
-    enabled: authStatus === "authenticated" && Boolean(tripId),
-  });
+  const [priorityWindowHours, setPriorityWindowHours] = useState(String(DEFAULT_WINDOW_HOURS));
+  const [saveFailed, setSaveFailed] = useState(false);
 
   useEffect(() => {
     if (tripQuery.data) {
@@ -48,51 +43,103 @@ export function TripWizardStep6Seating() {
     const currentTripId = getActiveWizardTripId();
     if (!currentTripId) return true;
     const parsedWindow = Number.parseInt(priorityWindowHours, 10);
+    setSaveFailed(false);
     try {
       await saveWizardStepMutation.mutateAsync({
         tripId: currentTripId,
         step: "seating",
         seatAssignmentMode: selfSelect ? "traveler_choice" : "organization_assigned",
-        seatPriorityWindowHours: Number.isNaN(parsedWindow) ? 24 : parsedWindow,
+        seatPriorityWindowHours: Number.isNaN(parsedWindow) ? DEFAULT_WINDOW_HOURS : parsedWindow,
       });
       return true;
     } catch {
+      setSaveFailed(true);
       return false;
     }
   };
 
+  // Self-select stays locked until the plan is known to include it.
+  const selfSelectLocked = !features?.seatSelfSelection;
+
   return (
-    <StatePreview>
-      <TripWizardFrame
-        title={t("screen.organization.trips.tripWizardStep6Seating.tripWizardStep6Seating")}
-        stepId="seating"
-        previousSlug="trip-wizard-step-5-programs"
-        nextSlug="trip-wizard-step-7-pricing-and-capacity"
-        beforeNext={saveStep}
-        onSaveDraft={async () => {
-          await saveStep();
-        }}
+    <TripWizardFrame
+      stepId="seating"
+      tripName={tripName}
+      beforeNext={saveStep}
+      onSaveDraft={async () => {
+        await saveStep();
+      }}
+    >
+      {saveFailed ? (
+        <OrgAlert
+          tone="err"
+          title={t("screen.organization.trips.tripWizardStep6Seating.saveFailedTitle")}
+          className="max-w-[860px]"
+        >
+          {t("screen.organization.trips.tripWizardStep6Seating.saveFailedBody")}
+        </OrgAlert>
+      ) : null}
+      <OrgCard
+        title={t("screen.organization.trips.tripWizardStep6Seating.seatMode")}
+        className="max-w-[860px]"
       >
-        <TeSwitch
-          checked={selfSelect}
-          onCheckedChange={setSelfSelect}
-          label={t("screen.organization.trips.tripWizardStep6Seating.travelersChooseTheirOwnSeats")}
-          onLabel={t("screen.organization.trips.tripWizardStep6Seating.selfSelect")}
-          offLabel={t("screen.organization.trips.tripWizardStep6Seating.organizationAssignsSeats")}
-        />
-        <TeInlineAlert tone="info">
-          {t("screen.organization.trips.tripWizardStep6Seating.organizationAssignedSeatsAreThe")}
-        </TeInlineAlert>
-        <TeInput
-          label={t("screen.organization.trips.tripWizardStep6Seating.priorityWindowForExplorerAnd")}
-          placeholder={t("screen.organization.trips.tripWizardStep6Seating.windowLength")}
+        <fieldset className="m-0 flex flex-col gap-3 border-0 p-0">
+          <legend className="mb-2 p-0 text-sm leading-5 font-semibold">
+            {t("screen.organization.trips.tripWizardStep6Seating.chooseHowTravelersGetSeats")}
+          </legend>
+          <OrgOptionCard
+            name="seat-mode"
+            checked={!selfSelect}
+            onChange={() => setSelfSelect(false)}
+          >
+            <b className="block">
+              {t("screen.organization.trips.tripWizardStep6Seating.organizationAssigned")}
+            </b>
+            <span className="te-caption text-[var(--te-ink-muted)]">
+              {t("screen.organization.trips.tripWizardStep6Seating.organizationAssignedBody")}
+            </span>
+          </OrgOptionCard>
+          <OrgOptionCard
+            name="seat-mode"
+            checked={selfSelect}
+            disabled={selfSelectLocked && !selfSelect}
+            onChange={() => setSelfSelect(true)}
+          >
+            <span className="flex flex-wrap items-center gap-2">
+              <b>{t("screen.organization.trips.tripWizardStep6Seating.travelerSelfSelect")}</b>
+              {selfSelectLocked ? (
+                <OrgBadge tone="neu" icon="lock">
+                  {t("screen.organization.trips.tripWizardStep6Seating.growthOrEnterprise")}
+                </OrgBadge>
+              ) : null}
+            </span>
+            <span className="te-caption block text-[var(--te-ink-muted)]">
+              {selfSelectLocked
+                ? t("screen.organization.trips.tripWizardStep6Seating.travelerSelfSelectLocked")
+                : t("screen.organization.trips.tripWizardStep6Seating.travelerSelfSelectBody")}
+            </span>
+          </OrgOptionCard>
+        </fieldset>
+      </OrgCard>
+      <OrgCard
+        title={t("screen.organization.trips.tripWizardStep6Seating.priorityWindow")}
+        className="max-w-[860px]"
+      >
+        <OrgInput
+          label={t("screen.organization.trips.tripWizardStep6Seating.priorityWindowLabel")}
+          hint={t("screen.organization.trips.tripWizardStep6Seating.windowHoursHint")}
+          inputMode="numeric"
+          fieldClassName="max-w-[360px]"
           value={priorityWindowHours}
           onChange={(event) => setPriorityWindowHours(event.target.value)}
-          supportingText={t(
-            "screen.organization.trips.tripWizardStep6Seating.theLengthOfTheWindow",
-          )}
         />
-      </TripWizardFrame>
-    </StatePreview>
+        <p className="te-caption m-0 text-[var(--te-ink-muted)]">
+          {t("screen.organization.trips.tripWizardStep6Seating.windowTbc")}
+        </p>
+      </OrgCard>
+      <OrgAlert tone="info" className="max-w-[860px]">
+        {t("screen.organization.trips.tripWizardStep6Seating.changeRulesNote")}
+      </OrgAlert>
+    </TripWizardFrame>
   );
 }

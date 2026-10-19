@@ -1,28 +1,33 @@
+// Links between organization pages. Every link is a real `/business/...` URL built by `pathFor()`
+// (navigation/web-routes.ts); a detail link takes the record's id, e.g. `params={{ tripId }}`.
 import { Link, useNavigate } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 
-import type { TeButtonVariant } from "@trips-app/ui/components/te-button";
 import { cn } from "@trips-app/ui/lib/utils";
-import { t } from "@trips-app/i18n";
 
-import type { OrgSlug } from "./org-routes";
+import { usePathname } from "@/components/shells/shell-content";
+import { matchWebRoute } from "@/navigation/web-routes";
+
+import { orgHref, type OrgParams, type OrgSlug } from "./org-routes";
+import { orgButtonClass, type OrgButtonVariant } from "./org-ui";
 
 interface OrgLinkProps {
   slug: OrgSlug;
+  params?: OrgParams;
   children: ReactNode;
-  current?: boolean;
   className?: string;
   onClick?: () => void;
 }
 
-/** Text link to another organization screen. */
-export function OrgLink({ slug, children, current = false, className, onClick }: OrgLinkProps) {
+/** Text link to another organization page. */
+export function OrgLink({ slug, params, children, className, onClick }: OrgLinkProps) {
   return (
     <Link
-      to="/screens/$surface/$slug"
-      params={{ surface: "organization", slug }}
-      aria-current={current ? "page" : undefined}
-      className={cn("te-link", className)}
+      to={orgHref(slug, params)}
+      className={cn(
+        "font-semibold text-[var(--te-primary-text)] underline-offset-4 hover:underline",
+        className,
+      )}
       onClick={onClick}
     >
       {children}
@@ -31,24 +36,22 @@ export function OrgLink({ slug, children, current = false, className, onClick }:
 }
 
 interface OrgButtonLinkProps extends OrgLinkProps {
-  variant?: TeButtonVariant;
+  variant?: OrgButtonVariant;
 }
 
-/** Link that looks like a TeButton, for navigation that reads as an action. */
+/** Link drawn as a button, for navigation that reads as an action ("Create trip"). */
 export function OrgButtonLink({
   slug,
+  params,
   children,
-  current = false,
   variant = "primary",
   className,
   onClick,
 }: OrgButtonLinkProps) {
   return (
     <Link
-      to="/screens/$surface/$slug"
-      params={{ surface: "organization", slug }}
-      aria-current={current ? "page" : undefined}
-      className={cn("te-button", `te-button--${variant}`, className)}
+      to={orgHref(slug, params)}
+      className={orgButtonClass(variant, className)}
       onClick={onClick}
     >
       {children}
@@ -56,28 +59,14 @@ export function OrgButtonLink({
   );
 }
 
-/** Returns a function that navigates to an organization screen after an action. */
+/** Returns a function that opens an organization page after an action. */
 export function useOrgNavigate() {
   const navigate = useNavigate();
-  return (slug: OrgSlug) =>
-    navigate({ to: "/screens/$surface/$slug", params: { surface: "organization", slug } });
+  return (slug: OrgSlug, params?: OrgParams) => navigate({ to: orgHref(slug, params) });
 }
 
-interface WorkspaceBackLinkProps {
-  parent?: { slug: OrgSlug; label: string };
-}
-
-/** Back to workspace home, plus an optional link to the parent screen. */
-export function WorkspaceBackLink({ parent }: WorkspaceBackLinkProps) {
-  return (
-    <nav
-      aria-label={t("screen.organization.common.orgLink.backLinks")}
-      className="flex flex-wrap gap-4"
-    >
-      <OrgLink slug="workspace-home">
-        {t("screen.organization.common.orgLink.backToWorkspace")}
-      </OrgLink>
-      {parent ? <OrgLink slug={parent.slug}>{parent.label}</OrgLink> : null}
-    </nav>
-  );
+/** Params of the page being shown, e.g. `{ tripId }` on `/business/trips/abc`. */
+export function useOrgParams(): Readonly<Record<string, string>> {
+  const pathname = usePathname();
+  return matchWebRoute("organization", pathname)?.params ?? {};
 }

@@ -1,165 +1,142 @@
-import { useMemo, useState } from "react";
-
+// SCR-ORG-25 Seat map: the vehicle's seats, travelers still without a seat, assign and move.
+import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { TeButton } from "@trips-app/ui/components/te-button";
-import { TeDataTable, type TeDataTableColumn } from "@trips-app/ui/components/te-data-table";
-import { TeIcon } from "@trips-app/ui/components/te-icon";
-import { TeInlineAlert } from "@trips-app/ui/components/te-inline-alert";
-import { TePageHeader } from "@trips-app/ui/components/te-page-header";
-import {
-  TE_SEAT_STATE_LABELS,
-  TeSeatMap,
-  type TeSeatRow,
-  type TeSeatState,
-} from "@trips-app/ui/components/te-seat-map";
-import { TeTabs, type TeTab } from "@trips-app/ui/components/te-tabs";
+
 import { t } from "@trips-app/i18n";
+import { cn } from "@trips-app/ui/lib/utils";
+
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
 
-import { WorkspaceBackLink } from "../common/org-link";
-import { getActiveWizardTripId, getSelectedVehicleId, OrgSection } from "../common/org-shared";
-import { StatePreview } from "../common/organization-state-preview";
+import { OrgTabs } from "../common/org-form";
+import { useOrgParams } from "../common/org-link";
+import { getActiveWizardTripId, getSelectedVehicleId, tripTitle } from "../common/org-shared";
+import { OrgTable, type OrgColumn } from "../common/org-table";
+import {
+  NO_VALUE,
+  OrgAlert,
+  OrgBadge,
+  OrgButton,
+  OrgCard,
+  OrgEmpty,
+  OrgError,
+  OrgLoading,
+  OrgPage,
+  OrgPageHeader,
+  OrgRow,
+} from "../common/org-ui";
+import { toBookingRecords } from "./booking-parts";
+import { SeatGrid, SeatLegend, seatStateLabel, toGridSeatState, type GridSeat } from "./seat-grid";
 
-interface SeatListRow {
-  id: string;
-  label: string;
-  state: TeSeatState;
-}
+const LIVE_REFRESH_MS = 15_000;
 
-const DEFAULT_SEAT_ROWS: readonly TeSeatRow[] = [
-  {
-    id: "row-1",
-    seats: [
-      { id: "1A", label: "1A", state: "available" },
-      { id: "1B", label: "1B", state: "available" },
-      { id: "1C", label: "1C", state: "available" },
-      { id: "1D", label: "1D", state: "available" },
-    ],
-  },
-];
-
-const SEAT_LIST_COLUMNS = (): readonly TeDataTableColumn<SeatListRow>[] => [
-  { key: "label", header: t("screen.organization.bookings.seatMapAndSeatAssignment.seat") },
-  {
-    key: "state",
-    header: t("screen.organization.bookings.seatMapAndSeatAssignment.state"),
-    render: (row) => TE_SEAT_STATE_LABELS[row.state],
-  },
-];
-
-const LEGEND_ITEMS: readonly string[] = [
-  "Available",
-  "Held",
-  "Reserved",
-  "Checked in",
-  "Checked out",
-  "Cancelled",
-];
-
-interface UnassignedRow {
+interface WaitingTraveler {
   id: string;
   bookingId: string;
-  traveler: string;
-  program: string;
-  action: string;
+  name: string;
+  programs: string;
 }
 
-const VIEW_TABS = (): readonly TeTab[] => [
-  { id: "map", label: t("screen.organization.bookings.seatMapAndSeatAssignment.map") },
-  { id: "list", label: t("screen.organization.bookings.seatMapAndSeatAssignment.list") },
-];
-
-function toTeSeatState(status: string): TeSeatState {
-  if (status === "reserved" || status === "held") return "taken";
-  if (status === "blocked") return "blocked";
-  return "available";
+function seatColumns(): readonly OrgColumn<GridSeat>[] {
+  return [
+    {
+      key: "label",
+      header: t("screen.organization.bookings.seatMapAndSeatAssignment.seat"),
+      render: (row) => <b>{row.label}</b>,
+    },
+    {
+      key: "state",
+      header: t("screen.organization.bookings.seatMapAndSeatAssignment.state"),
+      render: (row) => seatStateLabel(row.state),
+    },
+    {
+      key: "passengerName",
+      header: t("screen.organization.bookings.seatMapAndSeatAssignment.traveler"),
+      render: (row) => row.passengerName || NO_VALUE,
+    },
+  ];
 }
 
 export function SeatMapAndSeatAssignment() {
   const queryClient = useQueryClient();
-  const { status: authStatus } = useAuth();
+  const { status: authStatus, locale } = useAuth();
+  const enabled = authStatus === "authenticated";
+  const { tripId: routeTripId } = useOrgParams();
   const [view, setView] = useState("map");
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [travelerId, setTravelerId] = useState<string | null>(null);
+  const [targetLabel, setTargetLabel] = useState<string | null>(null);
+  const [moveFromLabel, setMoveFromLabel] = useState<string | null>(null);
+  const [assignFailed, setAssignFailed] = useState(false);
 
-  const wizardTripId = getActiveWizardTripId();
-  const tripsQuery = useQuery(
-    orpc.trips.listOrganizationTrips.queryOptions({
-      input: {},
-      enabled: authStatus === "authenticated",
-    }),
-  );
-
-  const effectiveTripId = wizardTripId ?? tripsQuery.data?.items[0]?.id ?? null;
+  const tripsQuery = useQuery({
+    ...orpc.trips.listOrganizationTrips.queryOptions({ input: {} }),
+    enabled,
+  });
+  const trips = tripsQuery.data?.items ?? [];
+  const tripId = routeTripId ?? getActiveWizardTripId() ?? trips[0]?.id ?? null;
+  const trip = trips.find((item) => item.id === tripId);
   const selectedVehicleId = getSelectedVehicleId();
 
-  const seatMapQuery = useQuery(
-    orpc.seats.getSeatMap.queryOptions({
-      input: {
-        tripId: effectiveTripId ?? "",
-        vehicleId: selectedVehicleId ?? undefined,
-      },
-      enabled: authStatus === "authenticated" && Boolean(effectiveTripId),
+  const seatMapQuery = useQuery({
+    ...orpc.seats.getSeatMap.queryOptions({
+      input: { tripId: tripId ?? "", vehicleId: selectedVehicleId ?? undefined },
     }),
-  );
-
-  const bookingsQuery = useQuery(
-    orpc.booking.listOrganizationBookings.queryOptions({
-      input: { tripId: effectiveTripId ?? undefined },
-      enabled: authStatus === "authenticated" && Boolean(effectiveTripId),
+    enabled: enabled && Boolean(tripId),
+    refetchInterval: LIVE_REFRESH_MS,
+  });
+  const bookingsQuery = useQuery({
+    ...orpc.booking.listOrganizationBookings.queryOptions({
+      input: { tripId: tripId ?? undefined },
     }),
-  );
+    enabled: enabled && Boolean(tripId),
+  });
+  const programsQuery = useQuery({
+    ...orpc.programs.listTripPrograms.queryOptions({ input: { tripId: tripId ?? "" } }),
+    enabled: enabled && Boolean(tripId),
+  });
 
-  const seatRows = useMemo<readonly TeSeatRow[]>(() => {
-    if (!seatMapQuery.data?.seats || seatMapQuery.data.seats.length === 0) {
-      return DEFAULT_SEAT_ROWS;
-    }
-    const grouped = new Map<number, SeatListRow[]>();
-    for (const s of seatMapQuery.data.seats) {
-      const r = grouped.get(s.rowIndex) ?? [];
-      r.push({
-        id: s.seatLabel,
-        label: s.seatLabel,
-        state: toTeSeatState(s.status),
+  const seatMap = seatMapQuery.data;
+  const vehicleId = seatMap?.vehicleId ?? selectedVehicleId;
+  const plate =
+    trip?.vehicles.find((vehicle) => vehicle.vehicleId === vehicleId)?.plateNumber ?? NO_VALUE;
+  const seats: readonly GridSeat[] = (seatMap?.seats ?? []).map((seat) => ({
+    label: seat.seatLabel,
+    rowIndex: seat.rowIndex,
+    colIndex: seat.colIndex,
+    state: toGridSeatState(seat.status),
+    bookingId: seat.bookingId,
+    passengerName: seat.passengerName,
+  }));
+
+  const programs = programsQuery.data?.items ?? [];
+  const waiting: WaitingTraveler[] = [];
+  for (const booking of toBookingRecords(bookingsQuery.data)) {
+    if (booking.status === "cancelled" || booking.status === "refunded") continue;
+    const seated = seats.filter((seat) => seat.bookingId === booking.id);
+    const programNames =
+      booking.selectedProgramIds
+        .map((id) => programs.find((program) => program.id === id))
+        .map((program) => (program ? tripTitle(program, locale) : ""))
+        .filter(Boolean)
+        .join(", ") || t("screen.organization.bookings.seatMapAndSeatAssignment.none");
+    booking.passengers.forEach((passenger, index) => {
+      const name = passenger.fullName || NO_VALUE;
+      const hasSeat =
+        Boolean(passenger.seatLabel || booking.seatLabels[index]) ||
+        seated.some((seat) => seat.passengerName === passenger.fullName);
+      if (hasSeat) return;
+      waiting.push({
+        id: `${booking.id}-${passenger.id ?? index}`,
+        bookingId: booking.id,
+        name,
+        programs: programNames,
       });
-      grouped.set(s.rowIndex, r);
-    }
-    return [...grouped.entries()]
-      .sort(([a], [b]) => a - b)
-      .map(([rowIdx, seats]) => ({
-        id: `row-${rowIdx + 1}`,
-        seats,
-      }));
-  }, [seatMapQuery.data?.seats]);
+    });
+  }
 
-  const unassignedRows = useMemo<readonly UnassignedRow[]>(() => {
-    if (!bookingsQuery.data) return [];
-    const unassigned: UnassignedRow[] = [];
-    for (const b of bookingsQuery.data) {
-      if (b.status === "cancelled" || b.status === "refunded") continue;
-      for (let i = 0; i < b.passengers.length; i += 1) {
-        const raw = b.passengers[i];
-        const p = (raw && typeof raw === "object" && !Array.isArray(raw) ? raw : {}) as {
-          id?: string;
-          fullName?: string;
-          seatLabel?: string;
-        };
-        const assignedSeat =
-          (typeof p.seatLabel === "string" ? p.seatLabel : undefined) ??
-          (typeof b.seatLabels[i] === "string" ? b.seatLabels[i] : undefined);
-        if (!assignedSeat) {
-          unassigned.push({
-            id: `${b.id}-${typeof p.id === "string" ? p.id : i}`,
-            bookingId: b.id,
-            traveler: typeof p.fullName === "string" ? p.fullName : `Passenger ${i + 1}`,
-            program: `${b.selectedProgramIds.length} programs`,
-            action: "Assign seat",
-          });
-        }
-      }
-    }
-    return unassigned;
-  }, [bookingsQuery.data]);
+  const traveler = waiting.find((item) => item.id === travelerId);
+  const target = seats.find((seat) => seat.label === targetLabel && seat.state === "available");
+  const moveFrom = seats.find((seat) => seat.label === moveFromLabel && seat.state === "reserved");
 
   const assignSeatMutation = useMutation(
     orpc.seats.assignSeatByOrganization.mutationOptions({
@@ -169,120 +146,196 @@ export function SeatMapAndSeatAssignment() {
       },
     }),
   );
+  const busy = assignSeatMutation.isPending;
 
-  async function handleAssignFirstAvailable(row: UnassignedRow) {
-    const effectiveVehicleId = seatMapQuery.data?.vehicleId ?? selectedVehicleId;
-    if (authStatus !== "authenticated" || !effectiveTripId || !effectiveVehicleId) return;
-    const availableSeat = seatRows.flatMap((r) => r.seats).find((s) => s.state === "available");
-    if (!availableSeat) {
-      setErrorMsg("No available seats remaining on this vehicle.");
+  function pickSeat(seat: GridSeat) {
+    if (seat.state === "reserved") {
+      setMoveFromLabel((current) => (current === seat.label ? null : seat.label));
       return;
     }
-    setErrorMsg(null);
+    setTargetLabel((current) => (current === seat.label ? null : seat.label));
+  }
+
+  async function handleAssign() {
+    if (!tripId || !vehicleId || !traveler || !target) return;
+    setAssignFailed(false);
     try {
       await assignSeatMutation.mutateAsync({
-        tripId: effectiveTripId,
-        vehicleId: effectiveVehicleId,
-        seatLabel: availableSeat.label,
+        tripId,
+        vehicleId,
+        seatLabel: target.label,
         status: "reserved",
-        bookingId: row.bookingId,
-        passengerName: row.traveler,
+        bookingId: traveler.bookingId,
+        passengerName: traveler.name,
       });
-    } catch (caught) {
-      setErrorMsg(caught instanceof Error ? caught.message : "Could not assign seat.");
+      setTravelerId(null);
+      setTargetLabel(null);
+    } catch {
+      setAssignFailed(true);
     }
   }
 
-  const unassignedColumns: readonly TeDataTableColumn<UnassignedRow>[] = [
-    {
-      key: "traveler",
-      header: t("screen.organization.bookings.seatMapAndSeatAssignment.traveler"),
-    },
-    { key: "program", header: t("screen.organization.bookings.seatMapAndSeatAssignment.program") },
-    {
-      key: "action",
-      header: t("screen.organization.bookings.seatMapAndSeatAssignment.action"),
-      align: "end",
-      render: (row) => (
-        <TeButton
-          variant="secondary"
-          disabled={assignSeatMutation.isPending}
-          onClick={() => void handleAssignFirstAvailable(row)}
-        >
-          {row.action}
-        </TeButton>
-      ),
-    },
+  async function handleMove() {
+    if (!tripId || !vehicleId || !moveFrom || !target) return;
+    setAssignFailed(false);
+    try {
+      await assignSeatMutation.mutateAsync({
+        tripId,
+        vehicleId,
+        seatLabel: target.label,
+        status: "reserved",
+        bookingId: moveFrom.bookingId,
+        passengerName: moveFrom.passengerName,
+      });
+      await assignSeatMutation.mutateAsync({
+        tripId,
+        vehicleId,
+        seatLabel: moveFrom.label,
+        status: "available",
+        bookingId: null,
+        passengerName: null,
+      });
+      setMoveFromLabel(null);
+      setTargetLabel(null);
+    } catch {
+      setAssignFailed(true);
+    }
+  }
+
+  const mode =
+    seatMap?.seatAssignmentMode === "traveler_choice"
+      ? t("screen.organization.bookings.seatMapAndSeatAssignment.travelerChoice")
+      : seatMap
+        ? t("screen.organization.bookings.seatMapAndSeatAssignment.organizationAssigned")
+        : NO_VALUE;
+  const viewTabs = [
+    { id: "map", label: t("screen.organization.bookings.seatMapAndSeatAssignment.map") },
+    { id: "list", label: t("screen.organization.bookings.seatMapAndSeatAssignment.list") },
   ];
 
   return (
-    <StatePreview>
-      <div className="flex flex-col gap-8">
-        <WorkspaceBackLink
-          parent={{
-            slug: "booking-detail",
-            label: t("screen.organization.bookings.seatMapAndSeatAssignment.backToBooking"),
-          }}
+    <OrgPage className="gap-5">
+      <OrgPageHeader
+        title={t("screen.organization.bookings.seatMapAndSeatAssignment.title")}
+        caption={t("screen.organization.bookings.seatMapAndSeatAssignment.caption", {
+          trip: trip ? tripTitle(trip, locale) || NO_VALUE : NO_VALUE,
+          mode,
+        })}
+      />
+      <OrgTabs
+        label={t("screen.organization.bookings.seatMapAndSeatAssignment.seatViews")}
+        tabs={viewTabs}
+        activeId={view}
+        onSelect={setView}
+      />
+      {seatMapQuery.isError ? <OrgError onRetry={() => void seatMapQuery.refetch()} /> : null}
+      {assignFailed ? (
+        <OrgAlert
+          tone="err"
+          title={t("screen.organization.bookings.seatMapAndSeatAssignment.assignFailed")}
         />
-        <TePageHeader
-          title={t(
-            "screen.organization.bookings.seatMapAndSeatAssignment.seatMapAndSeatAssignment",
-          )}
-          description={t("screen.organization.bookings.seatMapAndSeatAssignment.vehiclePlate")}
-        />
-        {errorMsg ? <TeInlineAlert tone="error">{errorMsg}</TeInlineAlert> : null}
-        <TeTabs
-          tabs={VIEW_TABS()}
-          activeId={view}
-          onSelect={setView}
-          ariaLabel={t("screen.organization.bookings.seatMapAndSeatAssignment.seatView")}
-        />
-        {view === "map" ? (
-          <TeSeatMap
-            rows={seatRows}
-            ariaLabel={t("screen.organization.bookings.seatMapAndSeatAssignment.seatMap")}
-            stateLabels={TE_SEAT_STATE_LABELS}
-          />
-        ) : (
-          <TeDataTable
-            columns={SEAT_LIST_COLUMNS()}
-            rows={seatRows.flatMap((row) => row.seats)}
-            getRowKey={(seat) => seat.id}
-            caption={t("screen.organization.bookings.seatMapAndSeatAssignment.seatsOnThisVehicle")}
-            emptyTitle={t("screen.organization.bookings.seatMapAndSeatAssignment.noSeats")}
-            emptyDescription={t(
-              "screen.organization.bookings.seatMapAndSeatAssignment.thisVehicleTypeHasNo",
-            )}
-          />
-        )}
-        <ul
-          className="flex flex-wrap gap-3"
-          aria-label={t("screen.organization.bookings.seatMapAndSeatAssignment.legend")}
+      ) : null}
+      <OrgRow align="start">
+        <OrgCard
+          title={t("screen.organization.bookings.seatMapAndSeatAssignment.vehicleFrontAtTop", {
+            plate,
+          })}
+          className="lg:flex-[3]"
         >
-          {LEGEND_ITEMS.map((item) => (
-            <li key={item} className="flex items-center gap-2 te-caption">
-              <TeIcon name="seat" />
-              <span>{item}</span>
-            </li>
-          ))}
-        </ul>
-        <OrgSection
+          {seatMapQuery.isLoading ? <OrgLoading /> : null}
+          {!seatMapQuery.isLoading && seats.length === 0 ? (
+            <OrgEmpty title={t("screen.organization.bookings.seatMapAndSeatAssignment.noSeats")}>
+              {t("screen.organization.bookings.seatMapAndSeatAssignment.noSeatsBody")}
+            </OrgEmpty>
+          ) : null}
+          {seats.length > 0 && view === "map" ? (
+            <>
+              <SeatGrid
+                seats={seats}
+                cols={seatMap?.cols ?? 0}
+                targetLabel={target?.label ?? null}
+                moveFromLabel={moveFrom?.label ?? null}
+                onPick={pickSeat}
+                label={t("screen.organization.bookings.seatMapAndSeatAssignment.seatMap")}
+              />
+              <SeatLegend />
+            </>
+          ) : null}
+          {seats.length > 0 && view === "list" ? (
+            <OrgTable
+              columns={seatColumns()}
+              rows={seats}
+              rowKey={(row) => row.label}
+              caption={t("screen.organization.bookings.seatMapAndSeatAssignment.seatMap")}
+            />
+          ) : null}
+        </OrgCard>
+        <OrgCard
           title={t("screen.organization.bookings.seatMapAndSeatAssignment.unassignedTravelers")}
+          className="lg:flex-[2]"
         >
-          <TeDataTable
-            columns={unassignedColumns}
-            rows={unassignedRows}
-            getRowKey={(row) => row.id}
-            caption={t(
-              "screen.organization.bookings.seatMapAndSeatAssignment.unassignedTravelersCaption",
-            )}
-            emptyTitle={t("screen.organization.bookings.seatMapAndSeatAssignment.everyoneHasASeat")}
-            emptyDescription={t(
-              "screen.organization.bookings.seatMapAndSeatAssignment.allTravelersOnThisVehicle",
-            )}
-          />
-        </OrgSection>
-      </div>
-    </StatePreview>
+          {bookingsQuery.isLoading ? <OrgLoading /> : null}
+          {!bookingsQuery.isLoading && waiting.length === 0 ? (
+            <OrgEmpty
+              title={t("screen.organization.bookings.seatMapAndSeatAssignment.everyoneHasASeat")}
+            />
+          ) : null}
+          {waiting.map((item) => {
+            const selected = item.id === travelerId;
+            return (
+              <button
+                key={item.id}
+                type="button"
+                aria-pressed={selected}
+                onClick={() => setTravelerId(selected ? null : item.id)}
+                className={cn(
+                  "flex min-h-11 items-center justify-between gap-3 rounded-lg border px-4 py-3 text-start",
+                  "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--te-ink)]",
+                  selected
+                    ? "border-[var(--te-primary)] bg-[var(--te-info-soft)]"
+                    : "border-[var(--te-hairline)] bg-[var(--te-surface-raised)]",
+                )}
+              >
+                <span className="min-w-0">
+                  <b className="block text-sm leading-5">{item.name}</b>
+                  <span className="te-caption text-[var(--te-ink-muted)]">
+                    {t("screen.organization.bookings.seatMapAndSeatAssignment.programLine", {
+                      programs: item.programs,
+                    })}
+                  </span>
+                </span>
+                {selected ? (
+                  <OrgBadge tone="info">
+                    {t("screen.organization.bookings.seatMapAndSeatAssignment.selected")}
+                  </OrgBadge>
+                ) : (
+                  <OrgBadge tone="neu">
+                    {t("screen.organization.bookings.seatMapAndSeatAssignment.waiting")}
+                  </OrgBadge>
+                )}
+              </button>
+            );
+          })}
+          <div className="mt-2 flex flex-wrap gap-3">
+            <OrgButton disabled={!traveler || !target || busy} onClick={() => void handleAssign()}>
+              {t("screen.organization.bookings.seatMapAndSeatAssignment.assignToSeat", {
+                label: target?.label ?? NO_VALUE,
+              })}
+            </OrgButton>
+            <OrgButton
+              variant="secondary"
+              disabled={!moveFrom || !target || busy}
+              onClick={() => void handleMove()}
+            >
+              {t("screen.organization.bookings.seatMapAndSeatAssignment.moveSeat")}
+            </OrgButton>
+          </div>
+          <p className="te-caption m-0 text-[var(--te-ink-muted)]">
+            {t("screen.organization.bookings.seatMapAndSeatAssignment.lockedRule")}{" "}
+            {t("screen.organization.bookings.seatMapAndSeatAssignment.moveHint")}
+          </p>
+        </OrgCard>
+      </OrgRow>
+    </OrgPage>
   );
 }

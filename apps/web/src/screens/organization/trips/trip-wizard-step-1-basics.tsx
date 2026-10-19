@@ -1,37 +1,37 @@
+// SCR-ORG-05 Trip wizard step 1: name, description, trip type and language of a new trip.
 import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { TeInlineAlert } from "@trips-app/ui/components/te-inline-alert";
-import { TeInput } from "@trips-app/ui/components/te-input";
-import { TeKpiTile } from "@trips-app/ui/components/te-kpi-tile";
 import { t } from "@trips-app/i18n";
 
-import { useAuth } from "@/auth/auth-context";
+import { lookupTypeByCodeQueryOptions, toLookupSelectOptions } from "@/utils/lookups";
 import { orpc } from "@/utils/orpc";
 
+import { OrgInput, OrgSelect, OrgTextarea } from "../common/org-form";
 import {
   TripWizardFrame,
   getActiveWizardTripId,
   setActiveWizardTripId,
 } from "../common/org-shared";
+import { OrgAlert, OrgCard } from "../common/org-ui";
+import { useWizardTrip } from "./trip-parts";
 
-const NAME_REQUIRED_MESSAGE = "Enter a trip name to continue.";
+const FALLBACK_CATEGORY = "CULTURAL_HERITAGE";
+const CHOOSE_VALUE = "";
 
 export function TripWizardStep1Basics() {
-  const { status: authStatus } = useAuth();
+  const { authStatus, locale, tripQuery, tripName } = useWizardTrip();
   const queryClient = useQueryClient();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [tripType, setTripType] = useState("day_trip");
+  const [tripType, setTripType] = useState("");
   const [language, setLanguage] = useState("ar");
   const [nameError, setNameError] = useState<string | undefined>(undefined);
+  const [saveFailed, setSaveFailed] = useState(false);
 
-  const existingId = getActiveWizardTripId();
-  const tripQuery = useQuery({
-    ...orpc.trips.getOrganizationTrip.queryOptions({
-      input: { tripId: existingId ?? "" },
-    }),
-    enabled: authStatus === "authenticated" && Boolean(existingId),
+  const categoriesQuery = useQuery({
+    ...lookupTypeByCodeQueryOptions("TRIP_CATEGORY"),
+    enabled: authStatus === "authenticated",
   });
 
   useEffect(() => {
@@ -64,8 +64,9 @@ export function TripWizardStep1Basics() {
     const currentTripId = getActiveWizardTripId();
     const trimmedName = name.trim();
     const trimmedDesc = description.trim();
-    const categoryCode = tripType.trim() || "CULTURAL_HERITAGE";
+    const categoryCode = tripType.trim() || FALLBACK_CATEGORY;
     const resolvedLanguage = language === "en" ? ("en" as const) : ("ar" as const);
+    setSaveFailed(false);
     try {
       if (currentTripId) {
         await saveWizardStepMutation.mutateAsync({
@@ -90,70 +91,101 @@ export function TripWizardStep1Basics() {
         setActiveWizardTripId(created.id);
       }
       return true;
-    } catch (err) {
-      setNameError(err instanceof Error ? err.message : "Failed to save draft");
+    } catch {
+      setSaveFailed(true);
       return false;
     }
   };
 
   const requireName = (): boolean | Promise<boolean> => {
     const isValid = name.trim().length > 0;
-    setNameError(isValid ? undefined : NAME_REQUIRED_MESSAGE);
+    setNameError(
+      isValid ? undefined : t("screen.organization.trips.tripWizardStep1Basics.nameRequired"),
+    );
     if (!isValid) return false;
-    if (authStatus === "authenticated") {
-      return persistStep();
-    }
-    return true;
+    return persistStep();
   };
+
+  const categoryOptions = toLookupSelectOptions(
+    categoriesQuery.data?.lookupType?.items,
+    locale === "en" ? "en" : "ar",
+  ).map((option) => ({ value: option.code, label: option.label }));
+  const knownType = categoryOptions.some((option) => option.value === tripType);
+  // Until the type is one of the lookup items, the first option names it (or asks for one).
+  const typeOptions = knownType
+    ? categoryOptions
+    : [
+        {
+          value: tripType || CHOOSE_VALUE,
+          label: tripType || t("screen.organization.trips.tripWizardStep1Basics.chooseTripType"),
+        },
+        ...categoryOptions,
+      ];
+
+  const languageOptions = [
+    { value: "ar", label: t("screen.organization.trips.tripWizardStep1Basics.arabic") },
+    { value: "en", label: t("screen.organization.trips.tripWizardStep1Basics.english") },
+  ];
 
   return (
     <TripWizardFrame
-      title={t("screen.organization.trips.tripWizardStep1Basics.tripWizardStep1Basics")}
       stepId="basics"
-      previousSlug="trips-list"
-      nextSlug="trip-wizard-step-2-schedule-and-route"
+      tripName={tripName}
       beforeNext={requireName}
       onSaveDraft={async () => {
         if (name.trim().length > 0) {
           await persistStep();
+        } else {
+          requireName();
         }
       }}
     >
-      <TeKpiTile
-        label={t("screen.organization.trips.tripWizardStep1Basics.activeTripsThisMonth")}
-        value="0"
-        hint={t("screen.organization.trips.tripWizardStep1Basics.monthlyLimitPlanLimit")}
-      />
-      <TeInlineAlert tone="info">
-        {t("screen.organization.trips.tripWizardStep1Basics.yourDraftIsSavedAs")}
-      </TeInlineAlert>
-      <TeInput
-        label={t("screen.organization.trips.tripWizardStep1Basics.tripName")}
-        placeholder={t("screen.organization.trips.tripWizardStep1Basics.tripNamePlaceholder")}
-        dir="auto"
-        value={name}
-        onChange={(event) => setName(event.target.value)}
-        error={nameError}
-      />
-      <TeInput
-        label={t("screen.organization.trips.tripWizardStep1Basics.description")}
-        placeholder={t("screen.organization.trips.tripWizardStep1Basics.shortDescription")}
-        dir="auto"
-        value={description}
-        onChange={(event) => setDescription(event.target.value)}
-      />
-      <TeInput
-        label={t("screen.organization.trips.tripWizardStep1Basics.tripType")}
-        placeholder={t("screen.organization.trips.tripWizardStep1Basics.tripTypePlaceholder")}
-        value={tripType}
-        onChange={(event) => setTripType(event.target.value)}
-      />
-      <TeInput
-        label={t("screen.organization.trips.tripWizardStep1Basics.language")}
-        placeholder={t("screen.organization.trips.tripWizardStep1Basics.languagePlaceholder")}
-        value={language}
-        onChange={(event) => setLanguage(event.target.value)}
-      />
+      <OrgCard
+        title={t("screen.organization.trips.tripWizardStep1Basics.tripBasics")}
+        className="max-w-[760px]"
+      >
+        <OrgInput
+          label={t("screen.organization.trips.tripWizardStep1Basics.tripName")}
+          dir="auto"
+          required
+          value={name}
+          onChange={(event) => setName(event.target.value)}
+          error={nameError}
+        />
+        <OrgTextarea
+          label={t("screen.organization.trips.tripWizardStep1Basics.description")}
+          placeholder={t("screen.organization.trips.tripWizardStep1Basics.descriptionPlaceholder")}
+          dir="auto"
+          value={description}
+          onChange={(event) => setDescription(event.target.value)}
+        />
+        <div className="grid gap-4 sm:grid-cols-2">
+          <OrgSelect
+            label={t("screen.organization.trips.tripWizardStep1Basics.tripType")}
+            options={typeOptions}
+            value={tripType}
+            onValueChange={setTripType}
+          />
+          <OrgSelect
+            label={t("screen.organization.trips.tripWizardStep1Basics.language")}
+            options={languageOptions}
+            value={language}
+            onValueChange={setLanguage}
+          />
+        </div>
+      </OrgCard>
+      {saveFailed ? (
+        <OrgAlert
+          tone="err"
+          title={t("screen.organization.trips.tripWizardStep1Basics.saveFailedTitle")}
+          className="max-w-[760px]"
+        >
+          {t("screen.organization.trips.tripWizardStep1Basics.saveFailedBody")}
+        </OrgAlert>
+      ) : null}
+      <OrgAlert tone="info" className="max-w-[760px]">
+        {t("screen.organization.trips.tripWizardStep1Basics.draftSavedNote")}
+      </OrgAlert>
     </TripWizardFrame>
   );
 }

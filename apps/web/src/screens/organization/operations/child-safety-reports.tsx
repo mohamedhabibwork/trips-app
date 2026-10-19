@@ -1,77 +1,62 @@
-import { useMemo } from "react";
-
+// SCR-ORG-42 Child-safety reports: concerns about the organization's trips, and a new report form.
+import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { TeButton } from "@trips-app/ui/components/te-button";
-import { TeDataTable, type TeDataTableColumn } from "@trips-app/ui/components/te-data-table";
-import { TeInlineAlert } from "@trips-app/ui/components/te-inline-alert";
-import { TePageHeader } from "@trips-app/ui/components/te-page-header";
+
 import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
 
-import { WorkspaceBackLink } from "../common/org-link";
-import { OrgSection, StateBadge, getSelectedTripId } from "../common/org-shared";
-import { StatePreview } from "../common/organization-state-preview";
+import { OrgSelect, OrgTextarea } from "../common/org-form";
+import { getSelectedTripId, tripTitle } from "../common/org-shared";
+import { OrgTable, type OrgColumn } from "../common/org-table";
+import {
+  NO_VALUE,
+  OrgAlert,
+  OrgBadge,
+  OrgButton,
+  OrgCard,
+  OrgError,
+  OrgPage,
+  OrgPageHeader,
+  OrgRow,
+} from "../common/org-ui";
+import { formatDateTime, shortRef } from "../accounting/finance-format";
+import { eventsOf, plateOf, type FleetVehicleView, type TripVehicleView } from "./operations-parts";
+
+const CASE_EVENT_TYPES: readonly string[] = ["child_boarded", "child_disembarked", "safety_alert"];
+const MAX_DESCRIPTION = 400;
 
 type CaseStatus = "open" | "routed";
 
 interface CaseRow {
   id: string;
   reference: string;
-  time: string;
+  status: CaseStatus;
+  occurredAt: string | Date;
   trip: string;
   vehicle: string;
-  status: CaseStatus;
 }
-
-const CASE_COLUMNS = (): readonly TeDataTableColumn<CaseRow>[] => [
-  { key: "reference", header: t("screen.organization.operations.childSafetyReports.case") },
-  { key: "time", header: t("screen.organization.operations.childSafetyReports.time") },
-  { key: "trip", header: t("screen.organization.operations.childSafetyReports.trip") },
-  { key: "vehicle", header: t("screen.organization.operations.childSafetyReports.vehicle") },
-  {
-    key: "status",
-    header: t("screen.organization.operations.childSafetyReports.status"),
-    render: (row) =>
-      row.status === "open" ? (
-        <StateBadge
-          tone="warning"
-          icon="alert"
-          label={t("screen.organization.operations.childSafetyReports.caseOpen")}
-        />
-      ) : (
-        <StateBadge
-          tone="info"
-          icon="arrow"
-          label={t("screen.organization.operations.childSafetyReports.routedToEscalationContact")}
-        />
-      ),
-  },
-];
 
 export function ChildSafetyReports() {
   const queryClient = useQueryClient();
-  const { status: authStatus } = useAuth();
+  const { status: authStatus, locale } = useAuth();
+  const enabled = authStatus === "authenticated";
+  const [chosenTripId, setChosenTripId] = useState<string | null>(() => getSelectedTripId());
+  const [vehicleId, setVehicleId] = useState("");
+  const [description, setDescription] = useState("");
 
   const tripsQuery = useQuery(
-    orpc.trips.listOrganizationTrips.queryOptions({
-      input: {},
-      enabled: authStatus === "authenticated",
-    }),
+    orpc.trips.listOrganizationTrips.queryOptions({ input: {}, enabled }),
   );
-
-  const selectedId = getSelectedTripId();
-  const trip = useMemo(() => {
-    return (
-      tripsQuery.data?.items.find((item) => item.id === selectedId) ?? tripsQuery.data?.items[0]
-    );
-  }, [tripsQuery.data?.items, selectedId]);
+  const trips = tripsQuery.data?.items ?? [];
+  const trip = trips.find((item) => item.id === chosenTripId) ?? trips[0];
+  const tripId = trip?.id ?? "";
 
   const trackingQuery = useQuery(
     orpc.tracking.getTripLiveTracking.queryOptions({
-      input: { tripId: trip?.id ?? "" },
-      enabled: authStatus === "authenticated" && Boolean(trip?.id),
+      input: { tripId },
+      enabled: enabled && Boolean(tripId),
     }),
   );
 
@@ -79,79 +64,173 @@ export function ChildSafetyReports() {
     orpc.tracking.recordChildSafetyEvent.mutationOptions({
       onSuccess: () => {
         void queryClient.invalidateQueries({ queryKey: orpc.tracking.key() });
+        setDescription("");
       },
     }),
   );
 
-  const rows = useMemo<readonly CaseRow[]>(() => {
-    if (!trackingQuery.data?.events || !trip) return [];
-    const title = trip.titleEn || trip.titleAr;
-    const safetyEvents = trackingQuery.data.events.filter(
-      (ev) =>
-        ev.eventType === "child_boarded" ||
-        ev.eventType === "child_disembarked" ||
-        ev.eventType === "safety_alert" ||
-        ev.eventType === "emergency_sos",
-    );
-    return safetyEvents.map((ev) => ({
-      id: ev.id,
-      reference: ev.id.slice(0, 8).toUpperCase(),
-      time: new Date(ev.occurredAt).toISOString().slice(0, 16).replace("T", " "),
-      trip: title,
-      vehicle: ev.vehicleId ? ev.vehicleId.slice(0, 8) : "-",
-      status: ev.eventType === "emergency_sos" ? "routed" : "open",
+  const tripVehicles = (trip?.vehicles ?? []) as readonly TripVehicleView[];
+  const noFleet: readonly FleetVehicleView[] = [];
+  const name = trip ? tripTitle(trip, locale) || NO_VALUE : NO_VALUE;
+  const rows: readonly CaseRow[] = eventsOf(trackingQuery.data)
+    .filter((event) => CASE_EVENT_TYPES.includes(event.eventType))
+    .map((event) => ({
+      id: event.id,
+      reference: shortRef(event.id),
+      status: event.severity === "critical" ? "routed" : "open",
+      occurredAt: event.occurredAt,
+      trip: name,
+      vehicle: plateOf(event.vehicleId, tripVehicles, noFleet),
     }));
-  }, [trackingQuery.data?.events, trip]);
 
-  const handleNewReport = () => {
-    if (authStatus !== "authenticated" || !trip?.id) return;
+  const selectedVehicle = tripVehicles.some((vehicle) => vehicle.vehicleId === vehicleId)
+    ? vehicleId
+    : "";
+  const canSubmit =
+    enabled &&
+    Boolean(tripId) &&
+    description.trim().length > 0 &&
+    !recordChildSafetyEventMutation.isPending;
+
+  const handleSubmit = () => {
+    if (!canSubmit) return;
+    const message = description.trim().slice(0, MAX_DESCRIPTION);
     recordChildSafetyEventMutation.mutate({
-      tripId: trip.id,
+      tripId,
+      vehicleId: selectedVehicle || null,
       childPassengerId: `case-${Date.now()}`,
       eventType: "child_boarded",
-      messageEn: "Child safety check recorded by organization",
+      messageEn: message,
+      messageAr: message,
     });
   };
 
+  const columns: readonly OrgColumn<CaseRow>[] = [
+    {
+      key: "reference",
+      header: t("screen.organization.operations.childSafetyReports.case"),
+      render: (row) => <b className="font-semibold">{row.reference}</b>,
+    },
+    {
+      key: "status",
+      header: t("screen.organization.operations.childSafetyReports.status"),
+      render: (row) =>
+        row.status === "routed" ? (
+          <OrgBadge tone="info" icon="arrow">
+            {t("screen.organization.operations.childSafetyReports.routedToEscalationContact")}
+          </OrgBadge>
+        ) : (
+          <OrgBadge tone="warn">
+            {t("screen.organization.operations.childSafetyReports.caseOpen")}
+          </OrgBadge>
+        ),
+    },
+    {
+      key: "time",
+      header: t("screen.organization.operations.childSafetyReports.time"),
+      className: "whitespace-nowrap",
+      render: (row) => formatDateTime(row.occurredAt, locale),
+    },
+    { key: "trip", header: t("screen.organization.operations.childSafetyReports.trip") },
+    { key: "vehicle", header: t("screen.organization.operations.childSafetyReports.vehicle") },
+  ];
+
+  const tripOptions =
+    trips.length > 0
+      ? trips.map((item) => ({ value: item.id, label: tripTitle(item, locale) || item.id }))
+      : [{ value: "", label: t("screen.organization.operations.childSafetyReports.noTrips") }];
+  const vehicleOptions = [
+    { value: "", label: t("screen.organization.operations.childSafetyReports.noVehicle") },
+    ...tripVehicles.map((vehicle) => ({
+      value: vehicle.vehicleId,
+      label: plateOf(vehicle.vehicleId, tripVehicles, noFleet),
+    })),
+  ];
+
   return (
-    <StatePreview>
-      <div className="flex flex-col gap-8">
-        <WorkspaceBackLink
-          parent={{
-            slug: "live-operations",
-            label: t("screen.organization.operations.childSafetyReports.backToLiveOperations"),
-          }}
-        />
-        <TePageHeader
-          title={t("screen.organization.operations.childSafetyReports.childSafetyReports")}
-          actions={
-            <TeButton
-              disabled={!trip?.id || recordChildSafetyEventMutation.isPending}
-              onClick={handleNewReport}
-            >
-              {t("screen.organization.operations.childSafetyReports.newReport")}
-            </TeButton>
-          }
-        />
-        <TeInlineAlert
-          tone="info"
-          title={t("screen.organization.operations.childSafetyReports.escalationContact")}
+    <OrgPage>
+      <OrgPageHeader
+        title={t("screen.organization.operations.childSafetyReports.title")}
+        caption={t("screen.organization.operations.childSafetyReports.caption")}
+      />
+      <OrgAlert
+        tone="info"
+        title={t("screen.organization.operations.childSafetyReports.everyCaseIsRouted")}
+      >
+        {t("screen.organization.operations.childSafetyReports.escalationContactBody", {
+          contact: t("screen.organization.operations.childSafetyReports.contactToBeConfirmed"),
+        })}
+      </OrgAlert>
+      <OrgRow align="start">
+        <OrgCard
+          className="lg:flex-[2]"
+          title={t("screen.organization.operations.childSafetyReports.yourCases")}
         >
-          {t("screen.organization.operations.childSafetyReports.reportsAreRoutedToEscalation")}
-        </TeInlineAlert>
-        <OrgSection title={t("screen.organization.operations.childSafetyReports.cases")}>
-          <TeDataTable
-            columns={CASE_COLUMNS()}
-            rows={rows}
-            getRowKey={(row) => row.id}
-            caption={t("screen.organization.operations.childSafetyReports.childSafetyCases")}
-            emptyTitle={t("screen.organization.operations.childSafetyReports.noCases")}
-            emptyDescription={t(
-              "screen.organization.operations.childSafetyReports.casesYouSubmitForTrips",
-            )}
+          {tripsQuery.isError || trackingQuery.isError ? (
+            <OrgError
+              onRetry={() => {
+                void tripsQuery.refetch();
+                void trackingQuery.refetch();
+              }}
+            />
+          ) : (
+            <OrgTable
+              columns={columns}
+              rows={rows}
+              rowKey={(row) => row.id}
+              caption={t("screen.organization.operations.childSafetyReports.yourCases")}
+              loading={tripsQuery.isLoading || trackingQuery.isLoading}
+              empty={t("screen.organization.operations.childSafetyReports.noCases")}
+            />
+          )}
+        </OrgCard>
+        <OrgCard
+          className="flex-1"
+          title={t("screen.organization.operations.childSafetyReports.newReport")}
+        >
+          <OrgSelect
+            label={t("screen.organization.operations.childSafetyReports.trip")}
+            options={tripOptions}
+            value={tripId}
+            disabled={trips.length === 0}
+            onValueChange={(value) => {
+              setChosenTripId(value);
+              setVehicleId("");
+            }}
           />
-        </OrgSection>
-      </div>
-    </StatePreview>
+          <OrgSelect
+            label={t("screen.organization.operations.childSafetyReports.vehicle")}
+            options={vehicleOptions}
+            value={selectedVehicle}
+            onValueChange={setVehicleId}
+          />
+          <OrgTextarea
+            label={t("screen.organization.operations.childSafetyReports.description")}
+            rows={4}
+            dir="auto"
+            maxLength={MAX_DESCRIPTION}
+            value={description}
+            onChange={(event) => setDescription(event.target.value)}
+          />
+          {recordChildSafetyEventMutation.isError ? (
+            <OrgAlert
+              tone="err"
+              title={t("screen.organization.operations.childSafetyReports.submitFailed")}
+            />
+          ) : null}
+          {recordChildSafetyEventMutation.isSuccess ? (
+            <OrgAlert
+              tone="ok"
+              title={t("screen.organization.operations.childSafetyReports.reportSubmitted")}
+            />
+          ) : null}
+          <div className="flex justify-end">
+            <OrgButton disabled={!canSubmit} onClick={handleSubmit}>
+              {t("screen.organization.operations.childSafetyReports.submitReport")}
+            </OrgButton>
+          </div>
+        </OrgCard>
+      </OrgRow>
+    </OrgPage>
   );
 }

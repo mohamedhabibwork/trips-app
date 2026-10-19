@@ -1,57 +1,52 @@
-import { useEffect, useState } from "react";
+// SCR-ORG-15 Cancel trip decision: the reason, what happens to bookings, and the final confirm.
+import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { TeButton } from "@trips-app/ui/components/te-button";
-import { TeCard } from "@trips-app/ui/components/te-card";
-import { TeDialog } from "@trips-app/ui/components/te-dialog";
-import { TeInlineAlert } from "@trips-app/ui/components/te-inline-alert";
-import { TeInput } from "@trips-app/ui/components/te-input";
-import { TeKpiTile } from "@trips-app/ui/components/te-kpi-tile";
-import { TePageHeader } from "@trips-app/ui/components/te-page-header";
 import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
 
-import { OrgButtonLink, WorkspaceBackLink, useOrgNavigate } from "../common/org-link";
-import { OrgSection, getActiveWizardTripId } from "../common/org-shared";
-import { StatePreview } from "../common/organization-state-preview";
+import { OrgTextarea } from "../common/org-form";
+import { OrgButtonLink, useOrgNavigate, useOrgParams } from "../common/org-link";
+import { getActiveWizardTripId, isoDay, toTripState, tripTitle } from "../common/org-shared";
+import {
+  NO_VALUE,
+  OrgAlert,
+  OrgButton,
+  OrgCard,
+  OrgError,
+  OrgPage,
+  OrgPageHeader,
+  OrgRow,
+} from "../common/org-ui";
+import { OrgFieldLabel } from "./trip-parts";
+
+/** The cancel input needs at least this many characters of reason. */
+const MIN_REASON_LENGTH = 3;
+const BLOCKED_NOTE_ID = "trip-cancel-blocked-note";
 
 export function CancelTripDecision() {
-  const { status: authStatus } = useAuth();
+  const { status: authStatus, locale } = useAuth();
+  const params = useOrgParams();
   const queryClient = useQueryClient();
   const goTo = useOrgNavigate();
-  const [tripId, setTripId] = useState<string | null>(getActiveWizardTripId());
   const [reason, setReason] = useState("");
-  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [reasonError, setReasonError] = useState<string | undefined>(undefined);
+  const [cancelFailed, setCancelFailed] = useState(false);
+  const signedIn = authStatus === "authenticated";
 
-  const activeTripId = getActiveWizardTripId();
+  const knownTripId = params.tripId ?? getActiveWizardTripId();
   const tripsQuery = useQuery({
     ...orpc.trips.listOrganizationTrips.queryOptions({ input: {} }),
-    enabled: authStatus === "authenticated" && !activeTripId,
+    enabled: signedIn && !knownTripId,
   });
-
-  const effectiveTripId = activeTripId || tripsQuery.data?.items[0]?.id || null;
-
-  useEffect(() => {
-    if (!activeTripId && tripsQuery.data?.items[0]?.id) {
-      setTripId(tripsQuery.data.items[0].id);
-    }
-  }, [activeTripId, tripsQuery.data]);
+  const tripId = knownTripId || tripsQuery.data?.items[0]?.id || null;
 
   const tripQuery = useQuery({
-    ...orpc.trips.getOrganizationTrip.queryOptions({
-      input: { tripId: effectiveTripId ?? "" },
-    }),
-    enabled: authStatus === "authenticated" && Boolean(effectiveTripId),
+    ...orpc.trips.getOrganizationTrip.queryOptions({ input: { tripId: tripId ?? "" } }),
+    enabled: signedIn && Boolean(tripId),
   });
-
-  const detail = tripQuery.data;
-  const tripName = detail ? detail.titleEn || detail.titleAr : "";
-  const affectedBookings = detail ? String(detail.confirmedSeatsCount) : "0";
-  const refundPolicy = "100% refund on organizer cancellation";
-
-  const hasReason = reason.trim().length > 0;
 
   const cancelTripMutation = useMutation(
     orpc.trips.cancel.mutationOptions({
@@ -61,95 +56,125 @@ export function CancelTripDecision() {
     }),
   );
 
-  const handleConfirm = async () => {
-    const targetTripId = tripId || effectiveTripId;
-    if (authStatus === "authenticated" && targetTripId && hasReason) {
-      try {
-        await cancelTripMutation.mutateAsync({ tripId: targetTripId, reason: reason.trim() });
-      } catch {
-        // Proceed with navigation fallback
-      }
+  const detail = tripQuery.data;
+  const state = detail ? toTripState(detail.state) : null;
+  const inProgress = state === "In Progress";
+  const start = isoDay(detail?.startsAt);
+  const end = isoDay(detail?.endsAt);
+  const caption = [
+    detail ? tripTitle(detail, locale) : null,
+    start && end
+      ? t("screen.organization.trips.cancelTripDecision.dateRange", { start, end })
+      : start,
+  ]
+    .filter(Boolean)
+    .join(" · ");
+
+  const handleCancel = async () => {
+    const trimmed = reason.trim();
+    if (trimmed.length < MIN_REASON_LENGTH) {
+      setReasonError(t("screen.organization.trips.cancelTripDecision.reasonRequired"));
+      return;
     }
-    setConfirmOpen(false);
-    void goTo("trip-command-view");
+    setReasonError(undefined);
+    if (!signedIn || !tripId) return;
+    setCancelFailed(false);
+    try {
+      await cancelTripMutation.mutateAsync({ tripId, reason: trimmed });
+      void goTo("trip-command-view", { tripId });
+    } catch {
+      setCancelFailed(true);
+    }
   };
 
   return (
-    <StatePreview>
-      <div className="flex flex-col gap-8">
-        <WorkspaceBackLink
-          parent={{
-            slug: "trip-command-view",
-            label: t("screen.organization.trips.cancelTripDecision.backToTrip"),
-          }}
-        />
-        <TePageHeader
-          title={t("screen.organization.trips.cancelTripDecision.cancelTripDecision")}
-          description={tripName}
-        />
-        <TeInlineAlert
-          tone="warning"
-          title={t("screen.organization.trips.cancelTripDecision.thisCancelsTheTripFor")}
+    <OrgPage>
+      <OrgPageHeader
+        title={t("screen.organization.trips.cancelTripDecision.cancelTrip")}
+        caption={caption || undefined}
+      />
+      <OrgAlert
+        tone="err"
+        title={t("screen.organization.trips.cancelTripDecision.cannotBeUndoneTitle")}
+      >
+        {t("screen.organization.trips.cancelTripDecision.cannotBeUndoneBody")}
+      </OrgAlert>
+      {tripQuery.isError ? <OrgError onRetry={() => void tripQuery.refetch()} /> : null}
+      {cancelFailed ? (
+        <OrgAlert
+          tone="err"
+          title={t("screen.organization.trips.cancelTripDecision.cancelFailedTitle")}
         >
-          {t("screen.organization.trips.cancelTripDecision.confirmedBookingsMoveToCancelled")}
-        </TeInlineAlert>
-        <div className="grid gap-4 sm:grid-cols-2">
-          <TeKpiTile
-            label={t("screen.organization.trips.cancelTripDecision.affectedBookings")}
-            value={affectedBookings}
-          />
-          <TeKpiTile
-            label={t("screen.organization.trips.cancelTripDecision.refundPolicy")}
-            value={refundPolicy}
-          />
-        </div>
-        <OrgSection title={t("screen.organization.trips.cancelTripDecision.reason")}>
-          <TeInput
-            label={t("screen.organization.trips.cancelTripDecision.reasonForCancellation")}
-            placeholder={t("screen.organization.trips.cancelTripDecision.reasonPlaceholder")}
-            value={reason}
-            onChange={(event) => setReason(event.target.value)}
-            supportingText={t(
-              "screen.organization.trips.cancelTripDecision.requiredTheReasonIsRecorded",
-            )}
+          {t("screen.organization.trips.cancelTripDecision.cancelFailedBody")}
+        </OrgAlert>
+      ) : null}
+      <OrgRow align="start">
+        <OrgCard
+          title={t("screen.organization.trips.cancelTripDecision.reason")}
+          className="flex-1"
+        >
+          <OrgTextarea
+            label={t("screen.organization.trips.cancelTripDecision.reasonLabel")}
+            rows={4}
             dir="auto"
+            required
+            maxLength={500}
+            value={reason}
+            error={reasonError}
+            onChange={(event) => setReason(event.target.value)}
           />
-        </OrgSection>
-        <TeCard>
-          <ul className="flex flex-col gap-2">
-            <li className="te-body">
-              {t("screen.organization.trips.cancelTripDecision.travelersAreNotifiedOfThe")}
-            </li>
-            <li className="te-body">
-              {t("screen.organization.trips.cancelTripDecision.refundsAreQueuedUnderThe")}
-            </li>
+          <p className="te-caption m-0 text-[var(--te-ink-muted)]">
+            {t("screen.organization.trips.cancelTripDecision.auditNote")}
+          </p>
+        </OrgCard>
+        <OrgCard
+          title={t("screen.organization.trips.cancelTripDecision.whatHappensNext")}
+          className="flex-1"
+        >
+          <div className="flex flex-col">
+            <OrgFieldLabel>
+              {t("screen.organization.trips.cancelTripDecision.affectedBookings")}
+            </OrgFieldLabel>
+            <b className="text-[28px] leading-9 font-semibold">
+              {detail
+                ? t("screen.organization.trips.cancelTripDecision.nConfirmed", {
+                    n: detail.confirmedSeatsCount,
+                  })
+                : NO_VALUE}
+            </b>
+          </div>
+          <div className="flex flex-col gap-1">
+            <OrgFieldLabel>
+              {t("screen.organization.trips.cancelTripDecision.refundPolicy")}
+            </OrgFieldLabel>
+            <p className="m-0 text-base leading-6">
+              {t("screen.organization.trips.cancelTripDecision.refundPolicySummary")}
+            </p>
+          </div>
+          <ul className="m-0 flex flex-col gap-1 ps-5 text-sm leading-5">
+            <li>{t("screen.organization.trips.cancelTripDecision.bookingsMoveToCancelled")}</li>
+            <li>{t("screen.organization.trips.cancelTripDecision.travelersNotified")}</li>
+            <li>{t("screen.organization.trips.cancelTripDecision.refundsQueued")}</li>
           </ul>
-        </TeCard>
+        </OrgCard>
+      </OrgRow>
+      <div className="flex flex-col gap-2">
         <div className="flex flex-wrap justify-end gap-3">
-          <OrgButtonLink slug="trip-command-view" variant="secondary">
+          <OrgButtonLink slug="trip-command-view" params={{ tripId }} variant="secondary">
             {t("screen.organization.trips.cancelTripDecision.keepTrip")}
           </OrgButtonLink>
-          <TeButton disabled={!hasReason} onClick={() => setConfirmOpen(true)}>
+          <OrgButton
+            disabled={inProgress || cancelTripMutation.isPending || (signedIn && !tripId)}
+            aria-describedby={BLOCKED_NOTE_ID}
+            onClick={() => void handleCancel()}
+          >
             {t("screen.organization.trips.cancelTripDecision.cancelTrip")}
-          </TeButton>
+          </OrgButton>
         </div>
-        <TeDialog
-          open={confirmOpen}
-          onOpenChange={setConfirmOpen}
-          title={t("screen.organization.trips.cancelTripDecision.cancelThisTrip")}
-          description={t(
-            "screen.organization.trips.cancelTripDecision.confirmedBookingsMoveToCancelledDescription",
-          )}
-          primaryLabel={t("screen.organization.trips.cancelTripDecision.cancelTripPrimaryLabel")}
-          onPrimary={() => {
-            void handleConfirm();
-          }}
-          secondaryLabel={t("screen.organization.trips.cancelTripDecision.keepTripSecondaryLabel")}
-          onSecondary={() => setConfirmOpen(false)}
-          tone="danger"
-          confirmDisabled={!hasReason}
-        />
+        <p id={BLOCKED_NOTE_ID} className="te-caption m-0 text-end text-[var(--te-ink-muted)]">
+          {t("screen.organization.trips.cancelTripDecision.blockedWhileInProgress")}
+        </p>
       </div>
-    </StatePreview>
+    </OrgPage>
   );
 }

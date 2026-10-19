@@ -1,22 +1,37 @@
-import { useMemo, useState } from "react";
-
+// SCR-ORG-27 Coupons: the organization's coupons, plan usage, and pause, resume or revoke.
+import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { TeButton } from "@trips-app/ui/components/te-button";
-import { TeDataTable, type TeDataTableColumn } from "@trips-app/ui/components/te-data-table";
+
 import { TeDialog } from "@trips-app/ui/components/te-dialog";
-import { TeKpiTile } from "@trips-app/ui/components/te-kpi-tile";
-import { TePageHeader } from "@trips-app/ui/components/te-page-header";
-import { TeSearchField } from "@trips-app/ui/components/te-search-field";
 import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
 
-import { OrgButtonLink, OrgLink, WorkspaceBackLink } from "../common/org-link";
-import { StateBadge, setSelectedCouponId } from "../common/org-shared";
-import { StatePreview } from "../common/organization-state-preview";
-
-type CouponStatus = "Active" | "Paused";
+import { OrgChips } from "../common/org-form";
+import { OrgButtonLink, OrgLink } from "../common/org-link";
+import { setSelectedCouponId } from "../common/org-shared";
+import { OrgTable, type OrgColumn } from "../common/org-table";
+import {
+  NO_VALUE,
+  OrgButton,
+  OrgEmpty,
+  OrgError,
+  OrgKpi,
+  OrgKpiRow,
+  OrgPage,
+  OrgPageHeader,
+} from "../common/org-ui";
+import {
+  CouponStatusBadge,
+  NEW_COUPON_ID,
+  countedText,
+  couponPlanLimit,
+  couponTypeText,
+  couponValueText,
+  remainingText,
+  type CouponStatus,
+} from "./coupon-parts";
 
 interface CouponRow {
   id: string;
@@ -24,70 +39,86 @@ interface CouponRow {
   type: string;
   value: string;
   status: CouponStatus;
-  redemptions: string;
-  remainingUses: string;
+  redemptions: number;
+  remaining: string;
 }
 
-function buildColumns(
-  onToggleStatus: (row: CouponRow) => void,
-  onRevoke: (row: CouponRow) => void,
-): readonly TeDataTableColumn<CouponRow>[] {
+interface BookingCouponUse {
+  couponId: string | null;
+  createdAt: string | Date;
+  status: string;
+}
+
+function redemptionsThisMonth(data: unknown): number {
+  const bookings = Array.isArray(data) ? (data as BookingCouponUse[]) : [];
+  const monthStart = new Date();
+  monthStart.setUTCDate(1);
+  monthStart.setUTCHours(0, 0, 0, 0);
+  return bookings.filter(
+    (booking) =>
+      booking.couponId &&
+      booking.status !== "cancelled" &&
+      new Date(booking.createdAt).getTime() >= monthStart.getTime(),
+  ).length;
+}
+
+interface ColumnActions {
+  onToggle: (row: CouponRow) => void;
+  onRevoke: (row: CouponRow) => void;
+  busy: boolean;
+}
+
+function buildColumns({
+  onToggle,
+  onRevoke,
+  busy,
+}: ColumnActions): readonly OrgColumn<CouponRow>[] {
   return [
     {
       key: "code",
       header: t("screen.organization.coupons.couponsList.code"),
       render: (row) => (
-        <span onClick={() => setSelectedCouponId(row.id)}>
-          <OrgLink slug="coupon-editor">{row.code}</OrgLink>
-        </span>
+        <OrgLink
+          slug="coupon-editor"
+          params={{ couponId: row.id }}
+          className="text-[var(--te-ink)]"
+          onClick={() => setSelectedCouponId(row.id)}
+        >
+          {row.code}
+        </OrgLink>
       ),
     },
     { key: "type", header: t("screen.organization.coupons.couponsList.type") },
-    { key: "value", header: t("screen.organization.coupons.couponsList.value"), align: "end" },
+    { key: "value", header: t("screen.organization.coupons.couponsList.value") },
     {
       key: "status",
       header: t("screen.organization.coupons.couponsList.status"),
-      render: (row) =>
-        row.status === "Active" ? (
-          <StateBadge
-            tone="success"
-            icon="check"
-            label={t("screen.organization.coupons.couponsList.active")}
-          />
-        ) : (
-          <StateBadge
-            tone="warning"
-            icon="clock"
-            label={t("screen.organization.coupons.couponsList.paused")}
-          />
-        ),
+      render: (row) => <CouponStatusBadge status={row.status} />,
     },
     {
       key: "redemptions",
       header: t("screen.organization.coupons.couponsList.redemptions"),
-      align: "end",
+      render: (row) => String(row.redemptions),
     },
+    { key: "remaining", header: t("screen.organization.coupons.couponsList.remainingUses") },
     {
-      key: "remainingUses",
-      header: t("screen.organization.coupons.couponsList.remainingUses"),
-      align: "end",
-    },
-    {
-      key: "actions",
-      header: t("screen.organization.coupons.couponsList.actions"),
-      align: "end",
-      render: (row) => (
-        <div className="flex flex-wrap justify-end gap-2">
-          <TeButton variant="ghost" onClick={() => onToggleStatus(row)}>
-            {row.status === "Active"
-              ? t("screen.organization.coupons.couponsList.pause")
-              : t("screen.organization.coupons.couponsList.resume")}
-          </TeButton>
-          <TeButton variant="ghost" onClick={() => onRevoke(row)}>
-            {t("screen.organization.coupons.couponsList.revoke")}
-          </TeButton>
-        </div>
-      ),
+      key: "action",
+      header: t("screen.organization.coupons.couponsList.action"),
+      render: (row) =>
+        row.status === "expired" ? (
+          t("screen.organization.coupons.couponsList.none")
+        ) : (
+          <div className="flex flex-wrap gap-1">
+            <OrgButton variant="text" disabled={busy} onClick={() => onToggle(row)}>
+              {row.status === "active"
+                ? t("screen.organization.coupons.couponsList.pause")
+                : t("screen.organization.coupons.couponsList.resume")}
+            </OrgButton>
+            <OrgButton variant="text" disabled={busy} onClick={() => onRevoke(row)}>
+              {t("screen.organization.coupons.couponsList.revoke")}
+            </OrgButton>
+          </div>
+        ),
     },
   ];
 }
@@ -95,22 +126,22 @@ function buildColumns(
 export function CouponsList() {
   const queryClient = useQueryClient();
   const { status: authStatus } = useAuth();
-  const [query, setQuery] = useState("");
+  const enabled = authStatus === "authenticated";
+  const [filter, setFilter] = useState<string>("all");
   const [revokeTarget, setRevokeTarget] = useState<CouponRow | null>(null);
 
-  const couponsQuery = useQuery(
-    orpc.coupons.listOrganizationCoupons.queryOptions({
-      input: {},
-      enabled: authStatus === "authenticated",
-    }),
-  );
-
-  const subscriptionQuery = useQuery(
-    orpc.plans.getOrganizationSubscription.queryOptions({
-      input: undefined,
-      enabled: authStatus === "authenticated",
-    }),
-  );
+  const couponsQuery = useQuery({
+    ...orpc.coupons.listOrganizationCoupons.queryOptions({ input: {} }),
+    enabled,
+  });
+  const subscriptionQuery = useQuery({
+    ...orpc.plans.getOrganizationSubscription.queryOptions({ input: undefined }),
+    enabled,
+  });
+  const bookingsQuery = useQuery({
+    ...orpc.booking.listOrganizationBookings.queryOptions({ input: {} }),
+    enabled,
+  });
 
   const updateStatusMutation = useMutation(
     orpc.coupons.updateStatus.mutationOptions({
@@ -120,102 +151,116 @@ export function CouponsList() {
     }),
   );
 
-  const planLimitLabel = useMemo(() => {
-    const sub = subscriptionQuery.data;
-    if (!sub) return "25";
-    const tier = sub.planId.split(":")[1] ?? "growth";
-    return tier === "enterprise" ? "Unlimited" : tier === "starter" ? "5" : "25";
-  }, [subscriptionQuery.data]);
+  const rows: readonly CouponRow[] =
+    couponsQuery.data?.items.map((coupon) => ({
+      id: coupon.id,
+      code: coupon.code,
+      type: couponTypeText(coupon),
+      value: couponValueText(coupon),
+      status: coupon.status,
+      redemptions: coupon.redemptionsCount,
+      remaining: remainingText(coupon, coupon.status),
+    })) ?? [];
+  const loaded = couponsQuery.isSuccess;
+  const counted = loaded ? rows.filter((row) => row.status !== "expired").length : null;
+  const limit = couponPlanLimit(subscriptionQuery.data);
+  const visible = rows.filter((row) => filter === "all" || row.status === filter);
 
-  const rows = useMemo<readonly CouponRow[]>(() => {
-    if (!couponsQuery.data?.items) return [];
-    return couponsQuery.data.items.map((c) => ({
-      id: c.id,
-      code: c.code,
-      type: c.discountType,
-      value:
-        c.discountType === "percentage"
-          ? `${c.discountValue}%`
-          : `${(c.discountValue / 100).toFixed(2)} ${c.currencyCode}`,
-      status: c.status === "active" ? "Active" : "Paused",
-      redemptions: String(c.redemptionsCount),
-      remainingUses:
-        c.maxRedemptions !== null
-          ? String(Math.max(0, c.maxRedemptions - c.redemptionsCount))
-          : "Unlimited",
-    }));
-  }, [couponsQuery.data?.items]);
+  const filterOptions = [
+    { value: "all", label: t("screen.organization.coupons.couponsList.all") },
+    { value: "active", label: t("screen.organization.coupons.couponsList.active") },
+    { value: "paused", label: t("screen.organization.coupons.couponsList.paused") },
+    { value: "expired", label: t("screen.organization.coupons.couponsList.revoked") },
+  ];
 
-  const handleToggleStatus = (row: CouponRow) => {
-    if (authStatus !== "authenticated") return;
-    const nextStatus = row.status === "Active" ? "paused" : "active";
-    updateStatusMutation.mutate({ couponId: row.id, status: nextStatus });
-  };
-
-  const columns = buildColumns(handleToggleStatus, (row) => setRevokeTarget(row));
-
-  const normalizedQuery = query.trim().toLowerCase();
-  const visibleRows = rows.filter((row) => row.code.toLowerCase().includes(normalizedQuery));
+  const createLink = (variant: "primary" | "secondary") => (
+    <OrgButtonLink
+      slug="coupon-editor"
+      params={{ couponId: NEW_COUPON_ID }}
+      variant={variant}
+      onClick={() => setSelectedCouponId(null)}
+    >
+      {t("screen.organization.coupons.couponsList.createCoupon")}
+    </OrgButtonLink>
+  );
 
   return (
-    <StatePreview>
-      <div className="flex flex-col gap-6">
-        <WorkspaceBackLink />
-        <TePageHeader
-          title={t("screen.organization.coupons.couponsList.couponsList")}
-          actions={
-            <div className="flex flex-wrap gap-3">
-              <OrgButtonLink slug="coupon-analytics" variant="secondary">
-                {t("screen.organization.coupons.couponsList.analytics")}
-              </OrgButtonLink>
-              <span onClick={() => setSelectedCouponId(null)}>
-                <OrgButtonLink slug="coupon-editor">
-                  {t("screen.organization.coupons.couponsList.createCoupon")}
-                </OrgButtonLink>
-              </span>
-            </div>
+    <OrgPage className="gap-5">
+      <OrgPageHeader
+        title={t("screen.organization.coupons.couponsList.title")}
+        caption={t("screen.organization.coupons.couponsList.caption", {
+          counted: countedText(counted, limit),
+        })}
+        actions={createLink("primary")}
+      />
+      <OrgKpiRow>
+        <OrgKpi
+          label={t("screen.organization.coupons.couponsList.couponsCountedAgainstPlan")}
+          value={countedText(counted, limit)}
+        />
+        <OrgKpi
+          label={t("screen.organization.coupons.couponsList.redemptionsThisMonth")}
+          value={
+            bookingsQuery.isSuccess ? String(redemptionsThisMonth(bookingsQuery.data)) : NO_VALUE
           }
         />
-        <div className="grid gap-4 sm:grid-cols-2">
-          <TeKpiTile
-            label={t("screen.organization.coupons.couponsList.coupons")}
-            value={`${rows.length} of ${planLimitLabel}`}
-            hint={t("screen.organization.coupons.couponsList.countedTowardYourPlanLimit")}
-          />
-        </div>
-        <TeSearchField
-          label={t("screen.organization.coupons.couponsList.searchCoupons")}
-          value={query}
-          onValueChange={setQuery}
-          clearLabel={t("screen.organization.coupons.couponsList.clearSearch")}
-        />
-        <TeDataTable
-          columns={columns}
-          rows={visibleRows}
-          getRowKey={(row) => row.id}
-          caption={t("screen.organization.coupons.couponsList.couponsCaption")}
-          emptyTitle={t("screen.organization.coupons.couponsList.noCouponsYet")}
-          emptyDescription={t("screen.organization.coupons.couponsList.createACouponToOffer")}
-        />
-        <TeDialog
-          open={revokeTarget !== null}
-          onOpenChange={(open) => {
-            if (!open) setRevokeTarget(null);
-          }}
-          title={t("screen.organization.coupons.couponsList.revokeThisCoupon")}
-          description={t("screen.organization.coupons.couponsList.travelersCanNoLongerUse")}
-          primaryLabel={t("screen.organization.coupons.couponsList.revokePrimaryLabel")}
-          onPrimary={() => {
-            if (authStatus === "authenticated" && revokeTarget) {
-              updateStatusMutation.mutate({ couponId: revokeTarget.id, status: "expired" });
-            }
-            setRevokeTarget(null);
-          }}
-          secondaryLabel={t("screen.organization.coupons.couponsList.keepCoupon")}
-          onSecondary={() => setRevokeTarget(null)}
-          tone="danger"
-        />
-      </div>
-    </StatePreview>
+      </OrgKpiRow>
+      <OrgChips
+        label={t("screen.organization.coupons.couponsList.filterByStatus")}
+        options={filterOptions}
+        value={filter}
+        onValueChange={setFilter}
+      />
+      {couponsQuery.isError ? <OrgError onRetry={() => void couponsQuery.refetch()} /> : null}
+      <OrgTable
+        columns={buildColumns({
+          onToggle: (row) =>
+            updateStatusMutation.mutate({
+              couponId: row.id,
+              status: row.status === "active" ? "paused" : "active",
+            }),
+          onRevoke: setRevokeTarget,
+          busy: updateStatusMutation.isPending,
+        })}
+        rows={visible}
+        rowKey={(row) => row.id}
+        caption={t("screen.organization.coupons.couponsList.title")}
+        loading={couponsQuery.isLoading}
+        empty={
+          couponsQuery.isError ? undefined : (
+            <OrgEmpty
+              title={
+                rows.length === 0
+                  ? t("screen.organization.coupons.couponsList.emptyTitle")
+                  : t("screen.organization.coupons.couponsList.noMatchTitle")
+              }
+              action={rows.length === 0 ? createLink("secondary") : undefined}
+            >
+              {rows.length === 0
+                ? t("screen.organization.coupons.couponsList.emptyBody")
+                : t("screen.organization.coupons.couponsList.noMatchBody")}
+            </OrgEmpty>
+          )
+        }
+      />
+      <TeDialog
+        open={revokeTarget !== null}
+        onOpenChange={(open) => {
+          if (!open) setRevokeTarget(null);
+        }}
+        title={t("screen.organization.coupons.couponsList.revokeThisCoupon")}
+        description={t("screen.organization.coupons.couponsList.revokeBody")}
+        primaryLabel={t("screen.organization.coupons.couponsList.revoke")}
+        onPrimary={() => {
+          if (revokeTarget) {
+            updateStatusMutation.mutate({ couponId: revokeTarget.id, status: "expired" });
+          }
+          setRevokeTarget(null);
+        }}
+        secondaryLabel={t("screen.organization.coupons.couponsList.keepCoupon")}
+        onSecondary={() => setRevokeTarget(null)}
+        tone="danger"
+      />
+    </OrgPage>
   );
 }

@@ -1,243 +1,292 @@
-import { useEffect, useState } from "react";
+// SCR-ORG-19 Staffing board: one row per vehicle of the selected trip, with each role's state.
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
-import { TeDataTable, type TeDataTableColumn } from "@trips-app/ui/components/te-data-table";
-import { TeInlineAlert } from "@trips-app/ui/components/te-inline-alert";
-import { TePageHeader } from "@trips-app/ui/components/te-page-header";
 import { t } from "@trips-app/i18n";
+
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
 
-import { OrgButtonLink, WorkspaceBackLink } from "../common/org-link";
-import type { OrgSlug } from "../common/org-routes";
+import { OrgButtonLink } from "../common/org-link";
 import {
   getActiveWizardTripId,
   setActiveWizardTripId,
   setSelectedNegotiationId,
   setSelectedVehicleId,
-  StateBadge,
-  type StatePresentation,
+  tripTitle,
 } from "../common/org-shared";
-import { StatePreview } from "../common/organization-state-preview";
+import { OrgSelect } from "../common/org-form";
+import { OrgTable, type OrgColumn } from "../common/org-table";
+import {
+  NO_VALUE,
+  OrgAlert,
+  OrgBadge,
+  OrgEmpty,
+  OrgError,
+  OrgPage,
+  OrgPageHeader,
+  type OrgTone,
+} from "../common/org-ui";
 
-type StaffingState = "organization" | "accepted" | "negotiating" | "finalized" | "missing";
+type StaffSource = "unassigned" | "org_staff" | "platform_supplier";
+type StaffRole = "driver" | "moderator" | "photographer";
+
+interface StaffCell {
+  tone: OrgTone;
+  label: string;
+  missing: boolean;
+}
 
 interface StaffingRow {
   id: string;
-  vehicle: string;
-  driver: StaffingState;
-  moderator: StaffingState;
-  photographer: StaffingState;
+  plate: string;
+  driver: StaffCell;
+  moderator: StaffCell;
+  photographer: StaffCell;
   negotiationId?: string;
 }
 
-const STAFFING_PRESENTATION = (): Record<StaffingState, StatePresentation> => ({
-  organization: {
-    tone: "neutral",
-    icon: "user",
-    label: t("screen.organization.staffing.staffingBoard.organizationOwned"),
-  },
-  accepted: {
-    tone: "success",
-    icon: "check",
-    label: t("screen.organization.staffing.staffingBoard.accepted"),
-  },
-  negotiating: {
-    tone: "warning",
-    icon: "refresh",
-    label: t("screen.organization.staffing.staffingBoard.platformNegotiating"),
-  },
-  finalized: {
-    tone: "success",
-    icon: "check",
-    label: t("screen.organization.staffing.staffingBoard.platformFinalized"),
-  },
-  missing: {
-    tone: "danger",
-    icon: "alert",
-    label: t("screen.organization.staffing.staffingBoard.missing"),
-  },
-});
-
-const DEAL_STATES: readonly StaffingState[] = ["negotiating", "finalized"];
-
-function StaffingCell({ state }: { state: StaffingState }) {
-  return <StateBadge {...STAFFING_PRESENTATION()[state]} />;
-}
-
-/** Row action: a platform deal opens the negotiation, org-owned staff opens their list, gaps open supplier search. */
-function manageSlugFor(row: StaffingRow): OrgSlug {
-  if (DEAL_STATES.includes(row.driver) || DEAL_STATES.includes(row.photographer)) {
-    return "deal-detail-and-negotiation";
-  }
-  if (row.driver === "organization") {
-    return "organization-owned-drivers-and-photographers";
-  }
-  return "platform-supplier-search-and-deal-start";
-}
-
-const COLUMNS = (): readonly TeDataTableColumn<StaffingRow>[] => [
-  { key: "vehicle", header: t("screen.organization.staffing.staffingBoard.vehicle") },
-  {
-    key: "driver",
-    header: t("screen.organization.staffing.staffingBoard.driver"),
-    render: (row) => <StaffingCell state={row.driver} />,
-  },
-  {
-    key: "moderator",
-    header: t("screen.organization.staffing.staffingBoard.moderator"),
-    render: (row) => <StaffingCell state={row.moderator} />,
-  },
-  {
-    key: "photographer",
-    header: t("screen.organization.staffing.staffingBoard.photographer"),
-    render: (row) => <StaffingCell state={row.photographer} />,
-  },
-  {
-    key: "actions",
-    header: t("screen.organization.staffing.staffingBoard.actions"),
-    align: "end",
-    render: (row) => (
-      <OrgButtonLink
-        slug={manageSlugFor(row)}
-        variant="ghost"
-        onClick={() => {
-          setSelectedVehicleId(row.id);
-          if (row.negotiationId) {
-            setSelectedNegotiationId(row.negotiationId);
-          }
-        }}
-      >
-        {t("screen.organization.staffing.staffingBoard.manage")}
-      </OrgButtonLink>
-    ),
-  },
-];
-
-function mapSourceToState(
-  source: "unassigned" | "org_staff" | "platform_supplier",
-  accountId: string | null,
-  hasActiveDeal: boolean,
-): StaffingState {
-  if (source === "org_staff") return accountId ? "accepted" : "organization";
+function staffCell(role: StaffRole, source: StaffSource, accountId: string | null): StaffCell {
   if (source === "platform_supplier") {
-    if (accountId) return "finalized";
-    if (hasActiveDeal) return "negotiating";
-    return "negotiating";
+    return accountId
+      ? {
+          tone: "ok",
+          label: t("screen.organization.staffing.staffingBoard.platformFinalized"),
+          missing: false,
+        }
+      : {
+          tone: "warn",
+          label: t("screen.organization.staffing.staffingBoard.platformNegotiating"),
+          missing: false,
+        };
   }
-  return "missing";
+  if (source === "org_staff") {
+    if (role === "moderator") {
+      return {
+        tone: "ok",
+        label: t("screen.organization.staffing.staffingBoard.assigned"),
+        missing: false,
+      };
+    }
+    if (role === "photographer") {
+      return {
+        tone: "neu",
+        label: t("screen.organization.staffing.staffingBoard.ownStaff"),
+        missing: false,
+      };
+    }
+    return {
+      tone: "ok",
+      label: t("screen.organization.staffing.staffingBoard.acceptedOwnStaff"),
+      missing: false,
+    };
+  }
+  if (role === "photographer") {
+    return {
+      tone: "neu",
+      label: t("screen.organization.staffing.staffingBoard.notAssigned"),
+      missing: false,
+    };
+  }
+  return {
+    tone: "err",
+    label: t("screen.organization.staffing.staffingBoard.missing"),
+    missing: true,
+  };
+}
+
+function CellBadge({ cell }: { cell: StaffCell }) {
+  return <OrgBadge tone={cell.tone}>{cell.label}</OrgBadge>;
+}
+
+function hasGap(row: StaffingRow): boolean {
+  return row.driver.missing || row.moderator.missing;
+}
+
+function columns(): readonly OrgColumn<StaffingRow>[] {
+  return [
+    {
+      key: "plate",
+      header: t("screen.organization.staffing.staffingBoard.vehicle"),
+      render: (row) => <b>{row.plate}</b>,
+    },
+    {
+      key: "driver",
+      header: t("screen.organization.staffing.staffingBoard.driver"),
+      render: (row) => <CellBadge cell={row.driver} />,
+    },
+    {
+      key: "moderator",
+      header: t("screen.organization.staffing.staffingBoard.moderator"),
+      render: (row) => <CellBadge cell={row.moderator} />,
+    },
+    {
+      key: "photographer",
+      header: t("screen.organization.staffing.staffingBoard.photographer"),
+      render: (row) => <CellBadge cell={row.photographer} />,
+    },
+    {
+      key: "action",
+      header: t("screen.organization.staffing.staffingBoard.action"),
+      render: (row) =>
+        row.negotiationId ? (
+          <OrgButtonLink
+            slug="deal-detail-and-negotiation"
+            params={{ dealId: row.negotiationId }}
+            variant="text"
+            onClick={() => {
+              setSelectedVehicleId(row.id);
+              setSelectedNegotiationId(row.negotiationId ?? null);
+            }}
+          >
+            {t("screen.organization.staffing.staffingBoard.openDeal")}
+          </OrgButtonLink>
+        ) : (
+          <OrgButtonLink
+            slug="organization-owned-drivers-and-photographers"
+            variant="text"
+            onClick={() => setSelectedVehicleId(row.id)}
+          >
+            {t("screen.organization.staffing.staffingBoard.openStaff")}
+          </OrgButtonLink>
+        ),
+    },
+  ];
+}
+
+/** "Missing driver on X. Missing moderator on Y." for every gap, in table order. */
+function gapSentences(rows: readonly StaffingRow[]): string {
+  const sentences: string[] = [];
+  for (const row of rows) {
+    if (row.driver.missing) {
+      sentences.push(
+        t("screen.organization.staffing.staffingBoard.missingDriverOn", { plate: row.plate }),
+      );
+    }
+    if (row.moderator.missing) {
+      sentences.push(
+        t("screen.organization.staffing.staffingBoard.missingModeratorOn", { plate: row.plate }),
+      );
+    }
+  }
+  return sentences.join(" ");
 }
 
 export function StaffingBoard() {
-  const { status: authStatus, actor } = useAuth();
-  const [tripId, setTripId] = useState<string | null>(getActiveWizardTripId());
+  const { status: authStatus, actor, locale } = useAuth();
+  const [selectedTripId, setSelectedTripId] = useState<string | null>(getActiveWizardTripId());
   const enabled = authStatus === "authenticated" && Boolean(actor?.activeTenantId);
 
   const tripsQuery = useQuery({
     ...orpc.trips.listOrganizationTrips.queryOptions({ input: {} }),
-    enabled: enabled && !tripId,
+    enabled,
   });
-
-  const effectiveTripId = tripId || tripsQuery.data?.items[0]?.id || null;
-
-  useEffect(() => {
-    if (!tripId && tripsQuery.data?.items[0]?.id) {
-      setActiveWizardTripId(tripsQuery.data.items[0].id);
-      setTripId(tripsQuery.data.items[0].id);
-    }
-  }, [tripId, tripsQuery.data]);
-
-  const tripDetailQuery = useQuery({
-    ...orpc.trips.getOrganizationTrip.queryOptions({
-      input: { tripId: effectiveTripId ?? "" },
-    }),
-    enabled: enabled && Boolean(effectiveTripId),
-  });
+  const trips = tripsQuery.data?.items ?? [];
+  const tripId = selectedTripId || trips[0]?.id || null;
 
   const staffingQuery = useQuery({
-    ...orpc.staffing.listTripStaffing.queryOptions({
-      input: { tripId: effectiveTripId ?? "" },
-    }),
-    enabled: enabled && Boolean(effectiveTripId),
+    ...orpc.staffing.listTripStaffing.queryOptions({ input: { tripId: tripId ?? "" } }),
+    enabled: enabled && Boolean(tripId),
   });
-
   const dealsQuery = useQuery({
     ...orpc.negotiation.listOrganizationNegotiations.queryOptions({
-      input: { tripId: effectiveTripId ?? "" },
+      input: { tripId: tripId ?? "" },
     }),
-    enabled: enabled && Boolean(effectiveTripId),
+    enabled: enabled && Boolean(tripId),
   });
 
-  const tripTitle = tripDetailQuery.data
-    ? tripDetailQuery.data.titleEn || tripDetailQuery.data.titleAr
-    : "";
-  const hasGap = staffingQuery.data?.hasStaffingGap ?? false;
+  const deals = dealsQuery.data?.items ?? [];
+  const rows: readonly StaffingRow[] =
+    staffingQuery.data?.vehicles.map((vehicle) => ({
+      id: vehicle.vehicleId,
+      plate: vehicle.plateNumber ?? NO_VALUE,
+      driver: staffCell("driver", vehicle.driverSource, vehicle.driverAccountId),
+      moderator: staffCell("moderator", vehicle.moderatorSource, vehicle.moderatorAccountId),
+      photographer: staffCell(
+        "photographer",
+        vehicle.photographerSource,
+        vehicle.photographerAccountId,
+      ),
+      negotiationId: deals.find((deal) => deal.vehicleId === vehicle.vehicleId)?.id,
+    })) ?? [];
 
-  const dealsRes = dealsQuery.data ?? { items: [] };
-  const staffingRes = staffingQuery.data;
+  const gapCount = rows.reduce(
+    (count, row) => count + Number(row.driver.missing) + Number(row.moderator.missing),
+    0,
+  );
 
-  const rows: readonly StaffingRow[] = staffingRes
-    ? staffingRes.vehicles.map((v) => {
-        const matchingDeal = dealsRes.items.find((d) => d.vehicleId === v.vehicleId);
-        return {
-          id: v.vehicleId,
-          vehicle: v.plateNumber ?? v.vehicleId,
-          driver: mapSourceToState(
-            v.driverSource,
-            v.driverAccountId,
-            Boolean(matchingDeal && matchingDeal.supplierRole === "platform_driver"),
-          ),
-          moderator: mapSourceToState(v.moderatorSource, v.moderatorAccountId, false),
-          photographer: mapSourceToState(
-            v.photographerSource,
-            v.photographerAccountId,
-            Boolean(matchingDeal && matchingDeal.supplierRole === "platform_photographer"),
-          ),
-          negotiationId: matchingDeal?.id,
-        };
-      })
-    : [];
+  const tripOptions =
+    trips.length > 0
+      ? trips.map((trip) => ({ value: trip.id, label: tripTitle(trip, locale) || NO_VALUE }))
+      : [{ value: "", label: t("screen.organization.staffing.staffingBoard.noTrips") }];
+
+  const selectTrip = (id: string) => {
+    if (!id) return;
+    setActiveWizardTripId(id);
+    setSelectedTripId(id);
+  };
+
+  const loading = tripsQuery.isLoading || staffingQuery.isLoading;
+  const failed = tripsQuery.isError || staffingQuery.isError;
 
   return (
-    <StatePreview>
-      <div className="flex flex-col gap-6">
-        <WorkspaceBackLink
-          parent={{
-            slug: "trip-command-view",
-            label: t("screen.organization.staffing.staffingBoard.backToTrip"),
+    <OrgPage>
+      <OrgPageHeader
+        title={t("screen.organization.staffing.staffingBoard.title")}
+        caption={t("screen.organization.staffing.staffingBoard.caption")}
+        actions={
+          <OrgSelect
+            label={t("screen.organization.staffing.staffingBoard.trip")}
+            options={tripOptions}
+            value={tripId ?? ""}
+            onValueChange={selectTrip}
+            disabled={trips.length === 0}
+            fieldClassName="w-full sm:min-w-[320px]"
+          />
+        }
+      />
+      {gapCount > 0 ? (
+        <OrgAlert
+          tone="err"
+          title={t("screen.organization.staffing.staffingBoard.readyBlockedByGaps", {
+            n: gapCount,
+          })}
+        >
+          {gapSentences(rows)} {t("screen.organization.staffing.staffingBoard.eachGapHighlighted")}
+        </OrgAlert>
+      ) : null}
+      {failed ? (
+        <OrgError
+          onRetry={() => {
+            void tripsQuery.refetch();
+            void staffingQuery.refetch();
           }}
         />
-        <TePageHeader
-          title={t("screen.organization.staffing.staffingBoard.staffingBoard")}
-          description={tripTitle || t("screen.organization.staffing.staffingBoard.tripName")}
-          actions={
-            <div className="flex flex-wrap gap-3">
-              <OrgButtonLink slug="organization-owned-drivers-and-photographers" variant="ghost">
-                {t("screen.organization.staffing.staffingBoard.organizationOwnedStaff")}
-              </OrgButtonLink>
-              <OrgButtonLink slug="platform-supplier-search-and-deal-start" variant="secondary">
-                {t("screen.organization.staffing.staffingBoard.findPlatformSupplier")}
-              </OrgButtonLink>
-            </div>
-          }
-        />
-        {hasGap ? (
-          <TeInlineAlert
-            tone="warning"
-            title={t("screen.organization.staffing.staffingBoard.readyIsBlocked")}
-          >
-            {t("screen.organization.staffing.staffingBoard.everyVehicleNeedsADriver")}
-          </TeInlineAlert>
-        ) : null}
-        <TeDataTable
-          columns={COLUMNS()}
-          rows={rows}
-          getRowKey={(row) => row.id}
-          caption={t("screen.organization.staffing.staffingBoard.staffingForEachVehicle")}
-          emptyTitle={t("screen.organization.staffing.staffingBoard.noVehiclesOnThisTrip")}
-          emptyDescription={t("screen.organization.staffing.staffingBoard.addVehiclesToTheTrip")}
-        />
+      ) : null}
+      <OrgTable
+        columns={columns()}
+        rows={rows}
+        rowKey={(row) => row.id}
+        caption={t("screen.organization.staffing.staffingBoard.tableCaption")}
+        loading={loading}
+        rowClassName={(row) => (hasGap(row) ? "bg-[var(--te-danger-soft)]" : undefined)}
+        empty={
+          failed ? undefined : (
+            <OrgEmpty title={t("screen.organization.staffing.staffingBoard.emptyTitle")}>
+              {t("screen.organization.staffing.staffingBoard.emptyBody")}
+            </OrgEmpty>
+          )
+        }
+      />
+      <div className="flex flex-wrap items-center gap-4">
+        <span className="te-caption text-[var(--te-ink-muted)]">
+          {t("screen.organization.staffing.staffingBoard.readyNeedsDriverAndModerator")}
+        </span>
+        <span className="hidden flex-1 sm:block" />
+        <OrgButtonLink slug="organization-owned-drivers-and-photographers" variant="secondary">
+          {t("screen.organization.staffing.staffingBoard.openOrganizationOwnedStaff")}
+        </OrgButtonLink>
       </div>
-    </StatePreview>
+    </OrgPage>
   );
 }

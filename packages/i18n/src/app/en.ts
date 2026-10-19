@@ -1461,249 +1461,325 @@ export const en = {
   "screen.admin.trips.tripOversight.inProgressNote":
     "In Progress trips cannot be cancelled from this screen. Only incident handling can act on them.",
   // apps/web/src/screens/organization/accounting/ledger-and-exports.tsx
-  "screen.organization.accounting.ledgerAndExports.event": "Event",
-  "screen.organization.accounting.ledgerAndExports.amount": "Amount",
-  "screen.organization.accounting.ledgerAndExports.bookingOrDeal": "Booking or deal",
-  "screen.organization.accounting.ledgerAndExports.gatewayReference": "Gateway reference",
+  "screen.organization.accounting.ledgerAndExports.title": "Ledger",
+  "screen.organization.accounting.ledgerAndExports.caption":
+    "Every financial event, with its booking or deal and gateway reference",
+  "screen.organization.accounting.ledgerAndExports.exportCsv": "Export CSV",
+  "screen.organization.accounting.ledgerAndExports.exportPdf": "Export PDF",
+  "screen.organization.accounting.ledgerAndExports.pdfExportIsOnEnterprise":
+    "PDF export is on Enterprise. Your plan can export CSV.",
+  "screen.organization.accounting.ledgerAndExports.period": "Period",
+  "screen.organization.accounting.ledgerAndExports.allTime": "All time",
+  "screen.organization.accounting.ledgerAndExports.thisMonth": "This month",
+  "screen.organization.accounting.ledgerAndExports.last30Days": "Last 30 days",
+  "screen.organization.accounting.ledgerAndExports.thisYear": "This year",
+  "screen.organization.accounting.ledgerAndExports.eventTypeFilter": "Event type",
+  "screen.organization.accounting.ledgerAndExports.allEvents": "All events",
+  "screen.organization.accounting.ledgerAndExports.bookingOrDealReference":
+    "Booking or deal reference",
   "screen.organization.accounting.ledgerAndExports.date": "Date",
-  "screen.organization.accounting.ledgerAndExports.backToTripAccounting": "Back to trip accounting",
-  "screen.organization.accounting.ledgerAndExports.ledgerAndExports": "Ledger and exports",
-  "screen.organization.accounting.ledgerAndExports.from": "From",
-  "screen.organization.accounting.ledgerAndExports.yyyyMmDd": "YYYY-MM-DD",
-  "screen.organization.accounting.ledgerAndExports.to": "To",
-  "screen.organization.accounting.ledgerAndExports.yyyyMmDdPlaceholder": "YYYY-MM-DD",
-  "screen.organization.accounting.ledgerAndExports.filterByEvent": "Filter by event",
-  "screen.organization.accounting.ledgerAndExports.clearFilter": "Clear filter",
-  "screen.organization.accounting.ledgerAndExports.ledgerLines": "Ledger lines",
-  "screen.organization.accounting.ledgerAndExports.ledgerLinesCaption": "Ledger lines",
-  "screen.organization.accounting.ledgerAndExports.noLedgerLines": "No ledger lines",
-  "screen.organization.accounting.ledgerAndExports.linesAppearHereAsPayments":
-    "Lines appear here as payments, refunds and costs are recorded.",
-  "screen.organization.accounting.ledgerAndExports.export": "Export",
-  "screen.organization.accounting.ledgerAndExports.csvAndPdfExportsThat":
-    "CSV and PDF exports that reconcile with the ledger are available on the Enterprise plan.",
+  "screen.organization.accounting.ledgerAndExports.eventType": "Event type",
+  "screen.organization.accounting.ledgerAndExports.amount": "Amount",
+  "screen.organization.accounting.ledgerAndExports.currency": "Currency",
+  "screen.organization.accounting.ledgerAndExports.linkedBookingOrDeal": "Linked booking or deal",
+  "screen.organization.accounting.ledgerAndExports.gatewayReference": "Gateway reference",
+  "screen.organization.accounting.ledgerAndExports.notApplicable": "Not applicable",
+  "screen.organization.accounting.ledgerAndExports.bookingPaid": "Booking paid",
+  "screen.organization.accounting.ledgerAndExports.refundIssued": "Refund issued",
+  "screen.organization.accounting.ledgerAndExports.supplierCost": "Supplier cost",
+  "screen.organization.accounting.ledgerAndExports.platformCommission": "Platform commission",
+  "screen.organization.accounting.ledgerAndExports.payoutSettlement": "Payout settlement",
+  "screen.organization.accounting.ledgerAndExports.noLedgerLines": "No ledger lines yet",
+  "screen.organization.accounting.ledgerAndExports.noMatchingLines": "No lines match these filters",
+  "screen.organization.accounting.ledgerAndExports.eachEventsEntriesBalance":
+    "Each event's entries balance. An export for the same filters totals the same as this list.",
   // apps/web/src/screens/organization/accounting/settlements.tsx
-  "screen.organization.accounting.settlements.allSettlements": "All settlements",
+  "screen.organization.accounting.settlements.title": "Settlements",
+  "screen.organization.accounting.settlements.caption":
+    "Amounts owed between your organization, suppliers and the platform until settled",
+  "screen.organization.accounting.settlements.providerPayoutsRunWeekly":
+    "Provider payouts run weekly",
+  "screen.organization.accounting.settlements.payoutsAreMadeEveryMonday":
+    "Payouts are made every Monday at 06:00.",
+  "screen.organization.accounting.settlements.openAmountsOwed": "Open amounts owed",
+  "screen.organization.accounting.settlements.openItems": "Open items",
+  "screen.organization.accounting.settlements.filterByState": "Filter settlements by state",
   "screen.organization.accounting.settlements.open": "Open",
   "screen.organization.accounting.settlements.settled": "Settled",
+  "screen.organization.accounting.settlements.all": "All",
   "screen.organization.accounting.settlements.counterparty": "Counterparty",
   "screen.organization.accounting.settlements.amount": "Amount",
   "screen.organization.accounting.settlements.state": "State",
-  "screen.organization.accounting.settlements.openLabel": "Open",
-  "screen.organization.accounting.settlements.settledLabel": "Settled",
   "screen.organization.accounting.settlements.date": "Date",
-  "screen.organization.accounting.settlements.backToTripAccounting": "Back to trip accounting",
-  "screen.organization.accounting.settlements.settlements": "Settlements",
-  "screen.organization.accounting.settlements.providerPayoutsAreMadeWeekly":
-    "Provider payouts are made weekly on Monday at 06:00.",
-  "screen.organization.accounting.settlements.stateLabel": "State",
-  "screen.organization.accounting.settlements.settlementsCaption": "Settlements",
-  "screen.organization.accounting.settlements.noSettlements": "No settlements",
-  "screen.organization.accounting.settlements.amountsOwedBetweenTheOrganization":
-    "Amounts owed between the organization, suppliers and the platform appear here.",
+  "screen.organization.accounting.settlements.platform": "Platform",
+  "screen.organization.accounting.settlements.noSettlements": "No settlements in this view",
   // apps/web/src/screens/organization/accounting/trip-accounting.tsx
-  "screen.organization.accounting.tripAccounting.baseRevenue": "Base revenue",
-  "screen.organization.accounting.tripAccounting.ticketRevenueForThisTrip":
-    "Ticket revenue for this trip",
-  "screen.organization.accounting.tripAccounting.programRevenue": "Program revenue",
-  "screen.organization.accounting.tripAccounting.revenueFromPrograms": "Revenue from programs",
-  "screen.organization.accounting.tripAccounting.couponImpact": "Coupon impact",
-  "screen.organization.accounting.tripAccounting.discountsFromCoupons": "Discounts from coupons",
-  "screen.organization.accounting.tripAccounting.supplierCosts": "Supplier costs",
-  "screen.organization.accounting.tripAccounting.costsPaidToSuppliers": "Costs paid to suppliers",
-  "screen.organization.accounting.tripAccounting.gatewayFees": "Gateway fees",
-  "screen.organization.accounting.tripAccounting.paymentGatewayFees": "Payment gateway fees",
-  "screen.organization.accounting.tripAccounting.backToTrip": "Back to trip",
-  "screen.organization.accounting.tripAccounting.tripAccounting": "Trip accounting",
-  "screen.organization.accounting.tripAccounting.tripName": "[Trip name]",
+  "screen.organization.accounting.tripAccounting.title": "Trip accounting",
+  "screen.organization.accounting.tripAccounting.caption":
+    "Five accounting lines for one trip · {trip}",
+  "screen.organization.accounting.tripAccounting.trip": "Trip",
+  "screen.organization.accounting.tripAccounting.noTrips": "No trips yet",
   "screen.organization.accounting.tripAccounting.openLedger": "Open ledger",
-  "screen.organization.accounting.tripAccounting.accountingLines": "Accounting lines",
-  "screen.organization.accounting.tripAccounting.reconciliation": "Reconciliation",
-  "screen.organization.accounting.tripAccounting.reconciliationStatus": "[Reconciliation status]",
-  "screen.organization.accounting.tripAccounting.invoices": "Invoices",
-  "screen.organization.accounting.tripAccounting.settlements": "Settlements",
+  "screen.organization.accounting.tripAccounting.baseRevenue": "Base revenue",
+  "screen.organization.accounting.tripAccounting.programRevenue": "Program revenue",
+  "screen.organization.accounting.tripAccounting.couponImpact": "Coupon impact",
+  "screen.organization.accounting.tripAccounting.supplierCosts": "Supplier costs",
+  "screen.organization.accounting.tripAccounting.gatewayFees": "Gateway fees",
+  "screen.organization.accounting.tripAccounting.reconciliationWithTheLedger":
+    "Reconciliation with the ledger",
+  "screen.organization.accounting.tripAccounting.reconciled": "Reconciled",
+  "screen.organization.accounting.tripAccounting.differencesFound": "Differences found",
+  "screen.organization.accounting.tripAccounting.line": "Line",
+  "screen.organization.accounting.tripAccounting.tripTotal": "Trip total",
+  "screen.organization.accounting.tripAccounting.ledgerTotal": "Ledger total",
+  "screen.organization.accounting.tripAccounting.difference": "Difference",
+  "screen.organization.accounting.tripAccounting.growthShowsAdvancedAccounting":
+    "Growth shows advanced accounting",
+  "screen.organization.accounting.tripAccounting.enterpriseShowsTheFullDetail":
+    "Enterprise shows the full detail for every line.",
+  // apps/web/src/screens/organization/billing/billing-parts.tsx
+  "screen.organization.billing.billingParts.nOfLimit": "{n} of {limit}",
+  "screen.organization.billing.billingParts.unlimited": "Unlimited",
   // apps/web/src/screens/organization/billing/invoices-list.tsx
+  "screen.organization.billing.invoicesList.title": "Invoices",
+  "screen.organization.billing.invoicesList.caption": "Invoices your organization has issued",
+  "screen.organization.billing.invoicesList.issueInvoice": "Issue invoice",
+  "screen.organization.billing.invoicesList.filterByBuyerType": "Filter invoices by buyer type",
+  "screen.organization.billing.invoicesList.all": "All",
+  "screen.organization.billing.invoicesList.businessB2b": "Business (B2B)",
+  "screen.organization.billing.invoicesList.consumerB2c": "Consumer (B2C)",
   "screen.organization.billing.invoicesList.number": "Number",
   "screen.organization.billing.invoicesList.type": "Type",
   "screen.organization.billing.invoicesList.buyer": "Buyer",
   "screen.organization.billing.invoicesList.amount": "Amount",
   "screen.organization.billing.invoicesList.status": "Status",
+  "screen.organization.billing.invoicesList.action": "Action",
+  "screen.organization.billing.invoicesList.b2b": "B2B",
+  "screen.organization.billing.invoicesList.b2c": "B2C",
   "screen.organization.billing.invoicesList.issued": "Issued",
-  "screen.organization.billing.invoicesList.open": "Open",
   "screen.organization.billing.invoicesList.openInvoice": "Open invoice",
-  "screen.organization.billing.invoicesList.invoicesList": "Invoices list",
-  "screen.organization.billing.invoicesList.issueInvoice": "Issue invoice",
-  "screen.organization.billing.invoicesList.searchInvoices": "Search invoices",
-  "screen.organization.billing.invoicesList.clearSearch": "Clear search",
-  "screen.organization.billing.invoicesList.issuedInvoices": "Issued invoices",
   "screen.organization.billing.invoicesList.noInvoicesYet": "No invoices yet",
+  "screen.organization.billing.invoicesList.noMatchingInvoices": "No invoices of this type",
   "screen.organization.billing.invoicesList.issueAnInvoiceForA":
     "Issue an invoice for a trip or booking.",
   // apps/web/src/screens/organization/billing/issue-invoice-b2b-or-b2c.tsx
+  "screen.organization.billing.issueInvoiceB2bOrB2c.title": "Issue invoice",
+  "screen.organization.billing.issueInvoiceB2bOrB2c.caption": "For a trip or booking · {trip}",
+  "screen.organization.billing.issueInvoiceB2bOrB2c.issueInvoice": "Issue invoice",
+  "screen.organization.billing.issueInvoiceB2bOrB2c.addTheBuyerName":
+    "Add the buyer name to issue the invoice.",
+  "screen.organization.billing.issueInvoiceB2bOrB2c.addTheBuyerTaxNumber":
+    "Add the buyer tax number. It is required for business buyers.",
+  "screen.organization.billing.issueInvoiceB2bOrB2c.addLinesFromABooking":
+    "The invoice needs lines from a paid booking before it can be issued.",
+  "screen.organization.billing.issueInvoiceB2bOrB2c.issueFailed": "The invoice was not issued",
+  "screen.organization.billing.issueInvoiceB2bOrB2c.issueFailedBody":
+    "Check the details and try again. Nothing was saved.",
+  "screen.organization.billing.issueInvoiceB2bOrB2c.buyer": "Buyer",
+  "screen.organization.billing.issueInvoiceB2bOrB2c.invoiceType": "Invoice type",
   "screen.organization.billing.issueInvoiceB2bOrB2c.businessB2b": "Business (B2B)",
   "screen.organization.billing.issueInvoiceB2bOrB2c.consumerB2c": "Consumer (B2C)",
-  "screen.organization.billing.issueInvoiceB2bOrB2c.lineDescription": "[Line description]",
-  "screen.organization.billing.issueInvoiceB2bOrB2c.line": "Line",
-  "screen.organization.billing.issueInvoiceB2bOrB2c.quantity": "Quantity",
-  "screen.organization.billing.issueInvoiceB2bOrB2c.amount": "Amount",
-  "screen.organization.billing.issueInvoiceB2bOrB2c.backToInvoices": "Back to invoices",
-  "screen.organization.billing.issueInvoiceB2bOrB2c.issueInvoiceB2bOrB2c":
-    "Issue invoice (B2B or B2C)",
-  "screen.organization.billing.issueInvoiceB2bOrB2c.issueInvoice": "Issue invoice",
-  "screen.organization.billing.issueInvoiceB2bOrB2c.invoice": "Invoice",
-  "screen.organization.billing.issueInvoiceB2bOrB2c.invoiceType": "Invoice type",
-  "screen.organization.billing.issueInvoiceB2bOrB2c.invoiceNumber": "Invoice number",
-  "screen.organization.billing.issueInvoiceB2bOrB2c.generatedNumber": "[Generated number]",
-  "screen.organization.billing.issueInvoiceB2bOrB2c.buyer": "Buyer",
   "screen.organization.billing.issueInvoiceB2bOrB2c.buyerName": "Buyer name",
-  "screen.organization.billing.issueInvoiceB2bOrB2c.buyerNamePlaceholder": "[Buyer name]",
   "screen.organization.billing.issueInvoiceB2bOrB2c.buyerTaxNumber": "Buyer tax number",
-  "screen.organization.billing.issueInvoiceB2bOrB2c.taxNumber": "[Tax number]",
-  "screen.organization.billing.issueInvoiceB2bOrB2c.lines": "Lines",
+  "screen.organization.billing.issueInvoiceB2bOrB2c.requiredForBusinessBuyers":
+    "Required for business buyers.",
+  "screen.organization.billing.issueInvoiceB2bOrB2c.buyerAddress": "Buyer address",
+  "screen.organization.billing.issueInvoiceB2bOrB2c.buyerEmail": "Buyer email",
   "screen.organization.billing.issueInvoiceB2bOrB2c.invoiceLines": "Invoice lines",
-  "screen.organization.billing.issueInvoiceB2bOrB2c.noLines": "No lines",
-  "screen.organization.billing.issueInvoiceB2bOrB2c.addLinesFromABooking":
-    "Add lines from a booking or a trip.",
+  "screen.organization.billing.issueInvoiceB2bOrB2c.line": "Line",
+  "screen.organization.billing.issueInvoiceB2bOrB2c.qty": "Qty",
+  "screen.organization.billing.issueInvoiceB2bOrB2c.unitPrice": "Unit price",
   "screen.organization.billing.issueInvoiceB2bOrB2c.tax": "Tax",
-  "screen.organization.billing.issueInvoiceB2bOrB2c.taxLabel": "Tax",
-  "screen.organization.billing.issueInvoiceB2bOrB2c.taxAmount": "[Tax amount]",
   "screen.organization.billing.issueInvoiceB2bOrB2c.total": "Total",
-  "screen.organization.billing.issueInvoiceB2bOrB2c.totalAndCurrency": "[Total and currency]",
+  "screen.organization.billing.issueInvoiceB2bOrB2c.subtotal": "Subtotal",
+  "screen.organization.billing.issueInvoiceB2bOrB2c.programsOf": "Programs · {reference}",
+  "screen.organization.billing.issueInvoiceB2bOrB2c.noLines": "No booking lines for this trip yet",
+  "screen.organization.billing.issueInvoiceB2bOrB2c.invoiceNumber": "Invoice number",
+  "screen.organization.billing.issueInvoiceB2bOrB2c.assignedWhenIssued":
+    "Assigned when the invoice is issued",
+  "screen.organization.billing.issueInvoiceB2bOrB2c.saudiEInvoicingScope":
+    "Saudi e-invoicing scope is still open",
+  "screen.organization.billing.issueInvoiceB2bOrB2c.issuingInSaudiArabiaWaits":
+    "Issuing in Saudi Arabia waits for the scope decision (D-11). An issued invoice creates a ledger entry.",
   // apps/web/src/screens/organization/billing/subscription-and-billing.tsx
-  "screen.organization.billing.subscriptionAndBilling.subscriptionAndBilling":
-    "Subscription and billing",
+  "screen.organization.billing.subscriptionAndBilling.title": "Subscription and billing",
+  "screen.organization.billing.subscriptionAndBilling.caption":
+    "Your plan, usage against limits and billing",
+  "screen.organization.billing.subscriptionAndBilling.changePlan": "Change plan",
+  "screen.organization.billing.subscriptionAndBilling.choosePlan": "Choose a plan",
+  "screen.organization.billing.subscriptionAndBilling.planWithPrice": "{plan} · {price}",
+  "screen.organization.billing.subscriptionAndBilling.changeFailed":
+    "The plan could not be changed. Try again.",
+  "screen.organization.billing.subscriptionAndBilling.cancel": "Cancel",
+  "screen.organization.billing.subscriptionAndBilling.confirmPlanChange": "Confirm plan change",
   "screen.organization.billing.subscriptionAndBilling.currentPlan": "Current plan",
-  "screen.organization.billing.subscriptionAndBilling.growth": "Growth",
-  "screen.organization.billing.subscriptionAndBilling.currentPlan2": "Current plan",
-  "screen.organization.billing.subscriptionAndBilling.renewsOnRenewalDate":
-    "Renews on [Renewal date]",
-  "screen.organization.billing.subscriptionAndBilling.annualBilling": "Annual billing",
-  "screen.organization.billing.subscriptionAndBilling.annual": "Annual",
+  "screen.organization.billing.subscriptionAndBilling.active": "Active",
+  "screen.organization.billing.subscriptionAndBilling.trial": "Trial",
+  "screen.organization.billing.subscriptionAndBilling.pastDue": "Past due",
+  "screen.organization.billing.subscriptionAndBilling.cancelled": "Cancelled",
+  "screen.organization.billing.subscriptionAndBilling.renewsOn": "Renews on {date}",
+  "screen.organization.billing.subscriptionAndBilling.billingCycle": "Billing cycle",
   "screen.organization.billing.subscriptionAndBilling.monthly": "Monthly",
-  "screen.organization.billing.subscriptionAndBilling.annualBillingAppliesTheAnnual":
-    "Annual billing applies the annual discount to the monthly total. Discount: [OPEN: placeholder].",
-  "screen.organization.billing.subscriptionAndBilling.paymentMethodPaymentMethod":
-    "Payment method: [Payment method]",
-  "screen.organization.billing.subscriptionAndBilling.updatePaymentMethod": "Update payment method",
-  "screen.organization.billing.subscriptionAndBilling.usage": "Usage",
+  "screen.organization.billing.subscriptionAndBilling.annual": "Annual",
+  "screen.organization.billing.subscriptionAndBilling.annualBillingSaves":
+    "Annual billing saves {discount} off the monthly total.",
+  "screen.organization.billing.subscriptionAndBilling.paymentMethod": "Payment method",
+  "screen.organization.billing.subscriptionAndBilling.noPaymentMethodOnFile":
+    "No payment method on file",
+  "screen.organization.billing.subscriptionAndBilling.update": "Update",
+  "screen.organization.billing.subscriptionAndBilling.usageAgainstLimits": "Usage against limits",
   "screen.organization.billing.subscriptionAndBilling.activeTripsThisMonth":
     "Active trips this month",
   "screen.organization.billing.subscriptionAndBilling.employees": "Employees",
   "screen.organization.billing.subscriptionAndBilling.vehiclesPerTrip": "Vehicles per trip",
   "screen.organization.billing.subscriptionAndBilling.programsPerTrip": "Programs per trip",
   "screen.organization.billing.subscriptionAndBilling.coupons": "Coupons",
-  "screen.organization.billing.subscriptionAndBilling.changePlan": "Change plan",
-  "screen.organization.billing.subscriptionAndBilling.currentPlan3": "Current plan",
-  "screen.organization.billing.subscriptionAndBilling.price": "[Price]",
-  "screen.organization.billing.subscriptionAndBilling.upgradesTakeEffectNowAnd":
-    "Upgrades take effect now and are prorated. Downgrades take effect at the end of the billing cycle, on [Date].",
+  "screen.organization.billing.subscriptionAndBilling.upgradesApplyAtOnce":
+    "Upgrades apply at once, prorated",
+  "screen.organization.billing.subscriptionAndBilling.downgradesTakeEffect":
+    "Downgrades take effect at the end of your billing cycle, on {date}.",
   // apps/web/src/screens/organization/bookings/booking-detail.tsx
   "screen.organization.bookings.bookingDetail.traveler": "Traveler",
+  "screen.organization.bookings.bookingDetail.seat": "Seat",
+  "screen.organization.bookings.bookingDetail.newSeatFor": "New seat for {name}",
+  "screen.organization.bookings.bookingDetail.notAssigned": "Not assigned",
+  "screen.organization.bookings.bookingDetail.checkIn": "Check-in",
+  "screen.organization.bookings.bookingDetail.checkedIn": "Checked in",
+  "screen.organization.bookings.bookingDetail.notCheckedIn": "Not checked in",
+  "screen.organization.bookings.bookingDetail.action": "Action",
+  "screen.organization.bookings.bookingDetail.cancel": "Cancel",
+  "screen.organization.bookings.bookingDetail.reassignSeat": "Reassign seat",
   "screen.organization.bookings.bookingDetail.program": "Program",
   "screen.organization.bookings.bookingDetail.quantity": "Quantity",
-  "screen.organization.bookings.bookingDetail.seat": "Seat",
-  "screen.organization.bookings.bookingDetail.backToBookings": "Back to bookings",
-  "screen.organization.bookings.bookingDetail.bookingDetail": "Booking detail",
-  "screen.organization.bookings.bookingDetail.bookingReference": "[Booking reference]",
-  "screen.organization.bookings.bookingDetail.confirmed": "Confirmed",
-  "screen.organization.bookings.bookingDetail.travelersAndPrograms": "Travelers and programs",
-  "screen.organization.bookings.bookingDetail.travelersAndProgramsOnThis":
-    "Travelers and programs on this booking",
-  "screen.organization.bookings.bookingDetail.noTravelers": "No travelers",
-  "screen.organization.bookings.bookingDetail.travelersAppearHereOnceThey":
-    "Travelers appear here once they are added to the booking.",
-  "screen.organization.bookings.bookingDetail.seatTitle": "Seat",
-  "screen.organization.bookings.bookingDetail.openSeatMap": "Open seat map",
-  "screen.organization.bookings.bookingDetail.seatLabel": "Seat",
-  "screen.organization.bookings.bookingDetail.seatPlaceholder": "[Seat]",
-  "screen.organization.bookings.bookingDetail.organizationAssignedSeatsOnly":
-    "Organization-assigned seats only.",
-  "screen.organization.bookings.bookingDetail.coupon": "Coupon",
-  "screen.organization.bookings.bookingDetail.couponCode": "[Coupon code]",
-  "screen.organization.bookings.bookingDetail.payment": "Payment",
-  "screen.organization.bookings.bookingDetail.paymentStatusPaymentStatus":
-    "Payment status: [Payment status]",
-  "screen.organization.bookings.bookingDetail.reversalStateReversalState":
-    "Reversal state: [Reversal state]",
-  "screen.organization.bookings.bookingDetail.aPendingRefundShowsTo":
-    'A pending refund shows to the traveler as "refund in progress". Revenue is reversed only after the payment gateway confirms the refund.',
+  "screen.organization.bookings.bookingDetail.amount": "Amount",
+  "screen.organization.bookings.bookingDetail.title": "Booking {reference}",
+  "screen.organization.bookings.bookingDetail.caption": "{trip} · Booked by {booker}",
   "screen.organization.bookings.bookingDetail.issueRefund": "Issue refund",
   "screen.organization.bookings.bookingDetail.saveChange": "Save change",
+  "screen.organization.bookings.bookingDetail.saveHint":
+    "Choose Reassign seat on a traveler and enter the new seat first.",
+  "screen.organization.bookings.bookingDetail.emptyTitle": "No booking to show",
+  "screen.organization.bookings.bookingDetail.emptyBody":
+    "Open a booking from Bookings and travelers.",
+  "screen.organization.bookings.bookingDetail.actionFailed": "The change was not saved. Try again.",
+  "screen.organization.bookings.bookingDetail.travelersAndSeats": "Travelers and seats",
+  "screen.organization.bookings.bookingDetail.noTravelers": "No travelers on this booking",
+  "screen.organization.bookings.bookingDetail.programsAndQuantities": "Programs and quantities",
+  "screen.organization.bookings.bookingDetail.noPrograms": "No programs selected",
+  "screen.organization.bookings.bookingDetail.paymentAndCoupon": "Payment and coupon",
+  "screen.organization.bookings.bookingDetail.paymentStatus": "Payment status",
+  "screen.organization.bookings.bookingDetail.totalPaid": "Total paid",
+  "screen.organization.bookings.bookingDetail.coupon": "Coupon",
+  "screen.organization.bookings.bookingDetail.couponApplied": "{code} applied",
+  "screen.organization.bookings.bookingDetail.none": "None",
+  "screen.organization.bookings.bookingDetail.refundUnderPolicy": "Refund under policy",
+  "screen.organization.bookings.bookingDetail.refundNote":
+    'No revenue is reversed until the gateway confirms the refund. Travelers see "refund in progress" meanwhile.',
+  "screen.organization.bookings.bookingDetail.confirmRefundTitle":
+    "Issue a refund for this booking?",
+  "screen.organization.bookings.bookingDetail.keepBooking": "Keep booking",
+  // apps/web/src/screens/organization/bookings/booking-parts.tsx
+  "screen.organization.bookings.bookingParts.refundPending": "Refund Pending",
+  "screen.organization.bookings.bookingParts.confirmed": "Confirmed",
+  "screen.organization.bookings.bookingParts.checkedIn": "Checked in",
+  "screen.organization.bookings.bookingParts.completed": "Completed",
+  "screen.organization.bookings.bookingParts.pendingPayment": "Pending payment",
+  "screen.organization.bookings.bookingParts.refunded": "Refunded",
+  "screen.organization.bookings.bookingParts.cancelled": "Cancelled",
+  "screen.organization.bookings.bookingParts.refundInProgress": "Refund in progress",
+  "screen.organization.bookings.bookingParts.unpaid": "Unpaid",
+  "screen.organization.bookings.bookingParts.paid": "Paid",
   // apps/web/src/screens/organization/bookings/bookings-and-travelers.tsx
+  "screen.organization.bookings.bookingsAndTravelers.notAssigned": "Not assigned",
   "screen.organization.bookings.bookingsAndTravelers.booking": "Booking",
-  "screen.organization.bookings.bookingsAndTravelers.state": "State",
-  "screen.organization.bookings.bookingsAndTravelers.confirmed": "Confirmed",
   "screen.organization.bookings.bookingsAndTravelers.travelers": "Travelers",
   "screen.organization.bookings.bookingsAndTravelers.programs": "Programs",
+  "screen.organization.bookings.bookingsAndTravelers.none": "None",
   "screen.organization.bookings.bookingsAndTravelers.seat": "Seat",
   "screen.organization.bookings.bookingsAndTravelers.payment": "Payment",
+  "screen.organization.bookings.bookingsAndTravelers.state": "State",
+  "screen.organization.bookings.bookingsAndTravelers.traveler": "Traveler",
+  "screen.organization.bookings.bookingsAndTravelers.allTrips": "All trips",
   "screen.organization.bookings.bookingsAndTravelers.bookings": "Bookings",
   "screen.organization.bookings.bookingsAndTravelers.cancellationRequests": "Cancellation requests",
-  "screen.organization.bookings.bookingsAndTravelers.backToTrip": "Back to trip",
-  "screen.organization.bookings.bookingsAndTravelers.bookingsAndTravelers":
-    "Bookings and travelers",
-  "screen.organization.bookings.bookingsAndTravelers.tripName": "[Trip name]",
-  "screen.organization.bookings.bookingsAndTravelers.seatMap": "Seat map",
-  "screen.organization.bookings.bookingsAndTravelers.bookingViews": "Booking views",
-  "screen.organization.bookings.bookingsAndTravelers.searchTravelersOrBookings":
-    "Search travelers or bookings",
-  "screen.organization.bookings.bookingsAndTravelers.clearSearch": "Clear search",
-  "screen.organization.bookings.bookingsAndTravelers.bookingsOnThisTrip": "Bookings on this trip",
-  "screen.organization.bookings.bookingsAndTravelers.noBookingsYet": "No bookings yet",
-  "screen.organization.bookings.bookingsAndTravelers.bookingsAppearHereWhenTravelers":
+  "screen.organization.bookings.bookingsAndTravelers.emptyTitle": "No bookings yet",
+  "screen.organization.bookings.bookingsAndTravelers.noMatchTitle": "No bookings match",
+  "screen.organization.bookings.bookingsAndTravelers.emptyBody":
     "Bookings appear here when travelers book this trip.",
+  "screen.organization.bookings.bookingsAndTravelers.noMatchBody":
+    "Try another traveler name or booking reference.",
+  "screen.organization.bookings.bookingsAndTravelers.title": "Bookings and travelers",
+  "screen.organization.bookings.bookingsAndTravelers.caption": "{trip} · {n} bookings",
+  "screen.organization.bookings.bookingsAndTravelers.searchTravelers": "Search travelers",
+  "screen.organization.bookings.bookingsAndTravelers.searchPlaceholder":
+    "Traveler name or booking reference",
+  "screen.organization.bookings.bookingsAndTravelers.bookingViews": "Booking views",
   "screen.organization.bookings.bookingsAndTravelers.noCancellationRequests":
     "No cancellation requests",
-  "screen.organization.bookings.bookingsAndTravelers.requestsFromTravelersAppearHere":
-    "Requests from travelers appear here for approval or decline.",
+  "screen.organization.bookings.bookingsAndTravelers.refundNote":
+    'Refunds show to travelers as "refund in progress" until the gateway confirms them.',
   // apps/web/src/screens/organization/bookings/program-enrollment-report.tsx
-  "screen.organization.bookings.programEnrollmentReport.programName": "[Program name]",
-  "screen.organization.bookings.programEnrollmentReport.booking": "Booking",
+  "screen.organization.bookings.programEnrollmentReport.bookingReference": "Booking reference",
   "screen.organization.bookings.programEnrollmentReport.quantity": "Quantity",
   "screen.organization.bookings.programEnrollmentReport.revenue": "Revenue",
-  "screen.organization.bookings.programEnrollmentReport.backToAnalytics": "Back to analytics",
-  "screen.organization.bookings.programEnrollmentReport.programEnrollmentReport":
-    "Program enrollment report",
-  "screen.organization.bookings.programEnrollmentReport.export": "Export",
+  "screen.organization.bookings.programEnrollmentReport.total": "Total",
+  "screen.organization.bookings.programEnrollmentReport.noPrograms": "No programs on this trip",
+  "screen.organization.bookings.programEnrollmentReport.title": "Program enrollment",
+  "screen.organization.bookings.programEnrollmentReport.caption":
+    "Who selected each program, the quantities and the revenue · {trip}",
   "screen.organization.bookings.programEnrollmentReport.program": "Program",
+  "screen.organization.bookings.programEnrollmentReport.export": "Export",
+  "screen.organization.bookings.programEnrollmentReport.travelersEnrolled": "Travelers enrolled",
   "screen.organization.bookings.programEnrollmentReport.totalQuantity": "Total quantity",
-  "screen.organization.bookings.programEnrollmentReport.totalRevenue": "Total revenue",
-  "screen.organization.bookings.programEnrollmentReport.enrollments": "Enrollments",
-  "screen.organization.bookings.programEnrollmentReport.enrollmentsForTheSelectedProgram":
-    "Enrollments for the selected program",
-  "screen.organization.bookings.programEnrollmentReport.noEnrollmentsYet": "No enrollments yet",
-  "screen.organization.bookings.programEnrollmentReport.travelersWhoSelectThisProgram":
+  "screen.organization.bookings.programEnrollmentReport.programRevenue": "Program revenue",
+  "screen.organization.bookings.programEnrollmentReport.emptyTitle": "No enrollments yet",
+  "screen.organization.bookings.programEnrollmentReport.emptyBody":
     "Travelers who select this program appear here.",
+  "screen.organization.bookings.programEnrollmentReport.planNote":
+    "Depth of this report depends on your plan. Export uses the same totals as this table.",
+  // apps/web/src/screens/organization/bookings/seat-grid.tsx
+  "screen.organization.bookings.seatGrid.held": "Held",
+  "screen.organization.bookings.seatGrid.reserved": "Reserved",
+  "screen.organization.bookings.seatGrid.blocked": "Blocked",
+  "screen.organization.bookings.seatGrid.available": "Available",
+  "screen.organization.bookings.seatGrid.seatAria": "Seat {label}, {state}",
+  "screen.organization.bookings.seatGrid.picked": "Picked",
+  "screen.organization.bookings.seatGrid.legend": "Legend",
   // apps/web/src/screens/organization/bookings/seat-map-and-seat-assignment.tsx
   "screen.organization.bookings.seatMapAndSeatAssignment.seat": "Seat",
   "screen.organization.bookings.seatMapAndSeatAssignment.state": "State",
   "screen.organization.bookings.seatMapAndSeatAssignment.traveler": "Traveler",
-  "screen.organization.bookings.seatMapAndSeatAssignment.program": "Program",
-  "screen.organization.bookings.seatMapAndSeatAssignment.action": "Action",
+  "screen.organization.bookings.seatMapAndSeatAssignment.none": "None",
+  "screen.organization.bookings.seatMapAndSeatAssignment.travelerChoice": "traveler choice",
+  "screen.organization.bookings.seatMapAndSeatAssignment.organizationAssigned":
+    "organization-assigned",
   "screen.organization.bookings.seatMapAndSeatAssignment.map": "Map",
   "screen.organization.bookings.seatMapAndSeatAssignment.list": "List",
-  "screen.organization.bookings.seatMapAndSeatAssignment.backToBooking": "Back to booking",
-  "screen.organization.bookings.seatMapAndSeatAssignment.seatMapAndSeatAssignment":
-    "Seat map and seat assignment",
-  "screen.organization.bookings.seatMapAndSeatAssignment.vehiclePlate": "[Vehicle plate]",
-  "screen.organization.bookings.seatMapAndSeatAssignment.seatView": "Seat view",
+  "screen.organization.bookings.seatMapAndSeatAssignment.title": "Seat map",
+  "screen.organization.bookings.seatMapAndSeatAssignment.caption":
+    "{trip} · Seat mode: {mode} · Updates live",
+  "screen.organization.bookings.seatMapAndSeatAssignment.seatViews": "Seat views",
+  "screen.organization.bookings.seatMapAndSeatAssignment.assignFailed":
+    "The seat was not assigned. It may have been taken; try another seat.",
+  "screen.organization.bookings.seatMapAndSeatAssignment.vehicleFrontAtTop":
+    "Vehicle {plate} · front of bus at top",
+  "screen.organization.bookings.seatMapAndSeatAssignment.noSeats": "No seats to show",
+  "screen.organization.bookings.seatMapAndSeatAssignment.noSeatsBody":
+    "Add a vehicle with a seat layout to this trip.",
   "screen.organization.bookings.seatMapAndSeatAssignment.seatMap": "Seat map",
-  "screen.organization.bookings.seatMapAndSeatAssignment.seatsOnThisVehicle":
-    "Seats on this vehicle",
-  "screen.organization.bookings.seatMapAndSeatAssignment.noSeats": "No seats",
-  "screen.organization.bookings.seatMapAndSeatAssignment.thisVehicleTypeHasNo":
-    "This vehicle type has no seats.",
-  "screen.organization.bookings.seatMapAndSeatAssignment.legend": "Legend",
   "screen.organization.bookings.seatMapAndSeatAssignment.unassignedTravelers":
     "Unassigned travelers",
-  "screen.organization.bookings.seatMapAndSeatAssignment.unassignedTravelersCaption":
-    "Unassigned travelers",
-  "screen.organization.bookings.seatMapAndSeatAssignment.everyoneHasASeat": "Everyone has a seat",
-  "screen.organization.bookings.seatMapAndSeatAssignment.allTravelersOnThisVehicle":
-    "All travelers on this vehicle are assigned.",
-  // apps/web/src/screens/organization/common/org-link.tsx
-  "screen.organization.common.orgLink.backLinks": "Back links",
-  "screen.organization.common.orgLink.backToWorkspace": "Back to workspace",
+  "screen.organization.bookings.seatMapAndSeatAssignment.everyoneHasASeat":
+    "Every traveler has a seat",
+  "screen.organization.bookings.seatMapAndSeatAssignment.programLine": "Program {programs}",
+  "screen.organization.bookings.seatMapAndSeatAssignment.selected": "Selected",
+  "screen.organization.bookings.seatMapAndSeatAssignment.waiting": "Waiting",
+  "screen.organization.bookings.seatMapAndSeatAssignment.assignToSeat": "Assign to seat {label}",
+  "screen.organization.bookings.seatMapAndSeatAssignment.moveSeat": "Move seat",
+  "screen.organization.bookings.seatMapAndSeatAssignment.lockedRule":
+    "Checked-in seats are locked. A seat already reserved cannot be assigned.",
+  "screen.organization.bookings.seatMapAndSeatAssignment.moveHint":
+    "To move a traveler, pick their reserved seat, then a free seat.",
   // apps/web/src/screens/organization/common/org-shared.tsx
   "screen.organization.common.orgShared.step.basics": "Basics",
   "screen.organization.common.orgShared.step.schedule": "Schedule and route",
@@ -1711,125 +1787,159 @@ export const en = {
   "screen.organization.common.orgShared.step.staffing": "Staffing",
   "screen.organization.common.orgShared.step.programs": "Programs",
   "screen.organization.common.orgShared.step.seating": "Seating",
-  "screen.organization.common.orgShared.step.pricing": "Pricing and capacity",
+  "screen.organization.common.orgShared.step.pricing": "Pricing",
   "screen.organization.common.orgShared.step.publish": "Publish",
-  "screen.organization.common.orgShared.tripWizardProgress": "Trip wizard progress",
+  "screen.organization.common.orgShared.stepCaption": "Step {n} of 8: {step}",
+  "screen.organization.common.orgShared.stepCaption.basics": "basics",
+  "screen.organization.common.orgShared.stepCaption.schedule": "schedule and route",
+  "screen.organization.common.orgShared.stepCaption.vehicles": "vehicles",
+  "screen.organization.common.orgShared.stepCaption.staffing": "staffing",
+  "screen.organization.common.orgShared.stepCaption.programs": "programs",
+  "screen.organization.common.orgShared.stepCaption.seating": "seating",
+  "screen.organization.common.orgShared.stepCaption.pricing": "pricing and capacity",
+  "screen.organization.common.orgShared.stepCaption.publish": "publish",
+  "screen.organization.common.orgShared.stepDone": "(done)",
+  "screen.organization.common.orgShared.tripWizardProgress": "Trip wizard steps",
+  "screen.organization.common.orgShared.createTrip": "Create trip",
   "screen.organization.common.orgShared.back": "Back",
-  // apps/web/src/screens/organization/common/organization-nav.tsx
-  "screen.organization.nav.workspaceHome": "Workspace home",
-  "screen.organization.nav.tripsList": "Trips",
-  "screen.organization.nav.bookingsAndTravelers": "Bookings",
-  "screen.organization.nav.couponsList": "Coupons",
-  "screen.organization.nav.tripAccounting": "Accounting",
-  "screen.organization.nav.subscriptionAndBilling": "Subscription",
-  "screen.organization.nav.employeesList": "Employees",
-  "screen.organization.nav.invoicesList": "Invoices",
-  "screen.organization.nav.analyticsAndReports": "Analytics",
-  "screen.organization.nav.liveOperations": "Live operations",
-  "screen.organization.nav.organizationProfileSettingsAndBranding": "Settings",
-  "screen.organization.common.organizationNav.organizationAreas": "Organization areas",
-  // apps/web/src/screens/organization/common/organization-state-preview.tsx
-  "screen.organization.common.organizationStatePreview.main": "Main",
-  "screen.organization.common.organizationStatePreview.loading": "Loading",
-  "screen.organization.common.organizationStatePreview.empty": "Empty",
-  "screen.organization.common.organizationStatePreview.error": "Error",
-  "screen.organization.common.organizationStatePreview.loading2": "Loading",
-  "screen.organization.common.organizationStatePreview.previewState": "Preview state",
-  "screen.organization.common.organizationStatePreview.nothingHereYet": "Nothing here yet",
-  "screen.organization.common.organizationStatePreview.thisAreaHasNoItems":
-    "This area has no items to show.",
+  "screen.organization.common.orgShared.next": "Next",
+  "screen.organization.common.orgShared.saveAsDraft": "Save as draft",
+  "screen.organization.common.orgShared.tripState.draft": "Draft",
+  "screen.organization.common.orgShared.tripState.published": "Published",
+  "screen.organization.common.orgShared.tripState.negotiating": "Negotiating",
+  "screen.organization.common.orgShared.tripState.ready": "Ready",
+  "screen.organization.common.orgShared.tripState.fillingUp": "Filling Up",
+  "screen.organization.common.orgShared.tripState.soldOut": "Sold Out",
+  "screen.organization.common.orgShared.tripState.inProgress": "In Progress",
+  "screen.organization.common.orgShared.tripState.partiallyCompleted": "Partially Completed",
+  "screen.organization.common.orgShared.tripState.completed": "Completed",
+  "screen.organization.common.orgShared.tripState.postProcessing": "Post-Processing",
+  "screen.organization.common.orgShared.tripState.archived": "Archived",
+  "screen.organization.common.orgShared.tripState.cancelled": "Cancelled",
+  "screen.organization.common.orgShared.tripState.refundsIssued": "Refunds Issued",
+  // apps/web/src/screens/organization/common/org-ui.tsx
+  "screen.organization.common.orgUi.loading": "Loading",
+  "screen.organization.common.orgUi.loadFailedTitle": "This page could not load",
+  "screen.organization.common.orgUi.loadFailedBody":
+    "Check your connection and try again. Nothing you entered was lost.",
+  "screen.organization.common.orgUi.tryAgain": "Try again",
   // apps/web/src/screens/organization/coupons/coupon-analytics.tsx
+  "screen.organization.coupons.couponAnalytics.unlimited": "Unlimited",
   "screen.organization.coupons.couponAnalytics.coupon": "Coupon",
   "screen.organization.coupons.couponAnalytics.redemptions": "Redemptions",
   "screen.organization.coupons.couponAnalytics.discountTotal": "Discount total",
   "screen.organization.coupons.couponAnalytics.remainingUses": "Remaining uses",
-  "screen.organization.coupons.couponAnalytics.backToCoupons": "Back to coupons",
-  "screen.organization.coupons.couponAnalytics.couponAnalytics": "Coupon analytics",
+  "screen.organization.coupons.couponAnalytics.status": "Status",
+  "screen.organization.coupons.couponAnalytics.allTime": "All time",
+  "screen.organization.coupons.couponAnalytics.last30Days": "Last 30 days",
+  "screen.organization.coupons.couponAnalytics.last90Days": "Last 90 days",
+  "screen.organization.coupons.couponAnalytics.last12Months": "Last 12 months",
+  "screen.organization.coupons.couponAnalytics.title": "Coupon analytics",
+  "screen.organization.coupons.couponAnalytics.caption":
+    "Redemptions, discount total and remaining uses for each coupon",
+  "screen.organization.coupons.couponAnalytics.dateRange": "Date range",
   "screen.organization.coupons.couponAnalytics.export": "Export",
-  "screen.organization.coupons.couponAnalytics.from": "From",
-  "screen.organization.coupons.couponAnalytics.yyyyMmDd": "YYYY-MM-DD",
-  "screen.organization.coupons.couponAnalytics.to": "To",
-  "screen.organization.coupons.couponAnalytics.yyyyMmDdPlaceholder": "YYYY-MM-DD",
-  "screen.organization.coupons.couponAnalytics.coupons": "Coupons",
-  "screen.organization.coupons.couponAnalytics.redemptionsAndDiscountsPerCoupon":
-    "Redemptions and discounts per coupon",
-  "screen.organization.coupons.couponAnalytics.noRedemptions": "No redemptions",
-  "screen.organization.coupons.couponAnalytics.redemptionsAppearHereOnceTravelers":
-    "Redemptions appear here once travelers use a coupon.",
-  "screen.organization.coupons.couponAnalytics.fullBreakdown": "Full breakdown",
-  "screen.organization.coupons.couponAnalytics.theFullCouponBreakdownIs":
-    "The full coupon breakdown is available on the Enterprise plan.",
-  // apps/web/src/screens/organization/coupons/coupon-editor.tsx
-  "screen.organization.coupons.couponEditor.fixedAmount": "Fixed amount",
-  "screen.organization.coupons.couponEditor.percentage": "Percentage",
-  "screen.organization.coupons.couponEditor.programSpecific": "Program-specific",
-  "screen.organization.coupons.couponEditor.freeProgram": "Free program",
-  "screen.organization.coupons.couponEditor.firstBooking": "First booking",
-  "screen.organization.coupons.couponEditor.minimumSpend": "Minimum spend",
-  "screen.organization.coupons.couponEditor.public": "Public",
-  "screen.organization.coupons.couponEditor.targeted": "Targeted",
-  "screen.organization.coupons.couponEditor.backToCoupons": "Back to coupons",
-  "screen.organization.coupons.couponEditor.couponEditor": "Coupon editor",
-  "screen.organization.coupons.couponEditor.save": "Save",
-  "screen.organization.coupons.couponEditor.codeAndType": "Code and type",
-  "screen.organization.coupons.couponEditor.code": "Code",
-  "screen.organization.coupons.couponEditor.codePlaceholder": "[Code]",
-  "screen.organization.coupons.couponEditor.typeACustomCodeOr":
-    "Type a custom code or generate one.",
-  "screen.organization.coupons.couponEditor.type": "Type",
-  "screen.organization.coupons.couponEditor.value": "Value",
-  "screen.organization.coupons.couponEditor.valuePlaceholder": "[Value]",
-  "screen.organization.coupons.couponEditor.scope": "Scope",
-  "screen.organization.coupons.couponEditor.couponsApplyOnlyToThis":
-    "Coupons apply only to this organization's trips.",
-  "screen.organization.coupons.couponEditor.limitsAndValidity": "Limits and validity",
-  "screen.organization.coupons.couponEditor.totalLimit": "Total limit",
-  "screen.organization.coupons.couponEditor.totalUses": "[Total uses]",
-  "screen.organization.coupons.couponEditor.perUserLimit": "Per-user limit",
-  "screen.organization.coupons.couponEditor.usesPerUser": "[Uses per user]",
-  "screen.organization.coupons.couponEditor.validFrom": "Valid from",
-  "screen.organization.coupons.couponEditor.yyyyMmDd": "YYYY-MM-DD",
-  "screen.organization.coupons.couponEditor.validUntil": "Valid until",
-  "screen.organization.coupons.couponEditor.yyyyMmDdPlaceholder": "YYYY-MM-DD",
-  "screen.organization.coupons.couponEditor.minimumBookingValue": "Minimum booking value",
-  "screen.organization.coupons.couponEditor.amount": "[Amount]",
-  "screen.organization.coupons.couponEditor.programs": "Programs",
-  "screen.organization.coupons.couponEditor.programsPlaceholder": "[Programs]",
-  "screen.organization.coupons.couponEditor.audience": "Audience",
-  "screen.organization.coupons.couponEditor.audienceLabel": "Audience",
-  "screen.organization.coupons.couponEditor.canBeCombinedWithOther":
+  "screen.organization.coupons.couponAnalytics.growthBasicView": "Growth shows the basic view",
+  "screen.organization.coupons.couponAnalytics.enterpriseFullSet":
+    "Enterprise shows the full set of coupon metrics.",
+  "screen.organization.coupons.couponAnalytics.totalRedemptions": "Total redemptions",
+  "screen.organization.coupons.couponAnalytics.emptyTitle": "No coupons yet",
+  "screen.organization.coupons.couponAnalytics.emptyBody":
+    "Redemptions appear here once travelers use your coupons.",
+  // apps/web/src/screens/organization/coupons/coupon-editor-form.tsx
+  "screen.organization.coupons.couponEditorForm.fixedAmount": "Fixed amount",
+  "screen.organization.coupons.couponEditorForm.percentage": "Percentage",
+  "screen.organization.coupons.couponEditorForm.programSpecific": "Program-specific",
+  "screen.organization.coupons.couponEditorForm.freeProgram": "Free program",
+  "screen.organization.coupons.couponEditorForm.firstBooking": "First booking",
+  "screen.organization.coupons.couponEditorForm.minimumSpend": "Minimum spend",
+  "screen.organization.coupons.couponEditorForm.codeAndValue": "Code and value",
+  "screen.organization.coupons.couponEditorForm.code": "Code",
+  "screen.organization.coupons.couponEditorForm.generate": "Generate",
+  "screen.organization.coupons.couponEditorForm.couponType": "Coupon type",
+  "screen.organization.coupons.couponEditorForm.value": "Value",
+  "screen.organization.coupons.couponEditorForm.valuePercentHint": "Percent off the booking",
+  "screen.organization.coupons.couponEditorForm.valueAmountHint": "Amount off the booking",
+  "screen.organization.coupons.couponEditorForm.scope": "Scope",
+  "screen.organization.coupons.couponEditorForm.thisOrganizationsTrips":
+    "This organization's trips",
+  "screen.organization.coupons.couponEditorForm.limitsAndValidity": "Limits and validity",
+  "screen.organization.coupons.couponEditorForm.totalLimit": "Total limit",
+  "screen.organization.coupons.couponEditorForm.usesHint":
+    "Number of uses; leave empty for no limit",
+  "screen.organization.coupons.couponEditorForm.perUserLimit": "Per-user limit",
+  "screen.organization.coupons.couponEditorForm.validFrom": "Valid from",
+  "screen.organization.coupons.couponEditorForm.validUntil": "Valid until",
+  "screen.organization.coupons.couponEditorForm.minimumBookingValue": "Minimum booking value",
+  "screen.organization.coupons.couponEditorForm.programs": "Programs",
+  "screen.organization.coupons.couponEditorForm.audienceAndStacking": "Audience and stacking",
+  "screen.organization.coupons.couponEditorForm.audience": "Audience",
+  "screen.organization.coupons.couponEditorForm.public": "Public",
+  "screen.organization.coupons.couponEditorForm.targetedAudienceList": "Targeted audience list",
+  "screen.organization.coupons.couponEditorForm.canBeCombined":
     "Can be combined with other coupons",
-  "screen.organization.coupons.couponEditor.yes": "Yes",
-  "screen.organization.coupons.couponEditor.no": "No",
+  // apps/web/src/screens/organization/coupons/coupon-editor.tsx
+  "screen.organization.coupons.couponEditor.allPrograms": "All programs",
+  "screen.organization.coupons.couponEditor.codeTooShort": "Enter a code of at least 3 characters.",
+  "screen.organization.coupons.couponEditor.couponTitle": "Coupon {code}",
+  "screen.organization.coupons.couponEditor.createCoupon": "Create coupon",
+  "screen.organization.coupons.couponEditor.caption":
+    "Scope: this organization's trips only · {counted} coupons counted",
+  "screen.organization.coupons.couponEditor.viewAnalytics": "View analytics",
+  "screen.organization.coupons.couponEditor.saveAsDraft": "Save as draft",
+  "screen.organization.coupons.couponEditor.saveCoupon": "Save coupon",
+  "screen.organization.coupons.couponEditor.notFoundTitle": "This coupon was not found",
+  "screen.organization.coupons.couponEditor.notFoundBody":
+    "It may belong to another organization or have been removed.",
+  "screen.organization.coupons.couponEditor.savedTitle": "This coupon is saved",
+  "screen.organization.coupons.couponEditor.savedBody":
+    "Its code and value cannot change. Pause, resume or revoke it from Coupons.",
+  "screen.organization.coupons.couponEditor.saveFailed": "The coupon was not saved",
+  "screen.organization.coupons.couponEditor.saveFailedBody":
+    "The code may already be in use, or your plan limit is reached.",
+  "screen.organization.coupons.couponEditor.draftNote":
+    "A coupon saved as Draft is not shown to travelers. Activate it when you are ready.",
+  // apps/web/src/screens/organization/coupons/coupon-parts.tsx
+  "screen.organization.coupons.couponParts.nOfLimit": "{n} of {limit}",
+  "screen.organization.coupons.couponParts.unlimited": "Unlimited",
+  "screen.organization.coupons.couponParts.percentage": "Percentage",
+  "screen.organization.coupons.couponParts.fixedAmount": "Fixed amount",
+  "screen.organization.coupons.couponParts.active": "Active",
+  "screen.organization.coupons.couponParts.paused": "Paused",
+  "screen.organization.coupons.couponParts.revoked": "Revoked",
+  "screen.organization.coupons.couponParts.expired": "Expired",
   // apps/web/src/screens/organization/coupons/coupons-list.tsx
   "screen.organization.coupons.couponsList.code": "Code",
   "screen.organization.coupons.couponsList.type": "Type",
   "screen.organization.coupons.couponsList.value": "Value",
   "screen.organization.coupons.couponsList.status": "Status",
-  "screen.organization.coupons.couponsList.active": "Active",
-  "screen.organization.coupons.couponsList.paused": "Paused",
   "screen.organization.coupons.couponsList.redemptions": "Redemptions",
   "screen.organization.coupons.couponsList.remainingUses": "Remaining uses",
-  "screen.organization.coupons.couponsList.actions": "Actions",
+  "screen.organization.coupons.couponsList.action": "Action",
+  "screen.organization.coupons.couponsList.none": "None",
   "screen.organization.coupons.couponsList.pause": "Pause",
   "screen.organization.coupons.couponsList.resume": "Resume",
   "screen.organization.coupons.couponsList.revoke": "Revoke",
-  "screen.organization.coupons.couponsList.couponsList": "Coupons list",
-  "screen.organization.coupons.couponsList.analytics": "Analytics",
+  "screen.organization.coupons.couponsList.all": "All",
+  "screen.organization.coupons.couponsList.active": "Active",
+  "screen.organization.coupons.couponsList.paused": "Paused",
+  "screen.organization.coupons.couponsList.revoked": "Revoked",
   "screen.organization.coupons.couponsList.createCoupon": "Create coupon",
-  "screen.organization.coupons.couponsList.coupons": "Coupons",
-  "screen.organization.coupons.couponsList.countedTowardYourPlanLimit":
-    "Counted toward your plan limit",
-  "screen.organization.coupons.couponsList.searchCoupons": "Search coupons",
-  "screen.organization.coupons.couponsList.clearSearch": "Clear search",
-  "screen.organization.coupons.couponsList.couponsCaption": "Coupons",
-  "screen.organization.coupons.couponsList.noCouponsYet": "No coupons yet",
-  "screen.organization.coupons.couponsList.createACouponToOffer":
-    "Create a coupon to offer a discount on your trips.",
+  "screen.organization.coupons.couponsList.title": "Coupons",
+  "screen.organization.coupons.couponsList.caption":
+    "Your organization's coupons · {counted} counted",
+  "screen.organization.coupons.couponsList.couponsCountedAgainstPlan":
+    "Coupons counted against plan",
+  "screen.organization.coupons.couponsList.redemptionsThisMonth": "Redemptions this month",
+  "screen.organization.coupons.couponsList.filterByStatus": "Filter coupons by status",
+  "screen.organization.coupons.couponsList.emptyTitle": "No coupons yet",
+  "screen.organization.coupons.couponsList.noMatchTitle": "No coupons match",
+  "screen.organization.coupons.couponsList.emptyBody":
+    "Create a coupon to offer travelers a discount on your trips.",
+  "screen.organization.coupons.couponsList.noMatchBody": "Choose another status.",
   "screen.organization.coupons.couponsList.revokeThisCoupon": "Revoke this coupon?",
-  "screen.organization.coupons.couponsList.travelersCanNoLongerUse":
-    "Travelers can no longer use it. Past redemptions are kept.",
-  "screen.organization.coupons.couponsList.revokePrimaryLabel": "Revoke",
+  "screen.organization.coupons.couponsList.revokeBody":
+    "Travelers can no longer use it. Bookings that already used it keep their discount.",
   "screen.organization.coupons.couponsList.keepCoupon": "Keep coupon",
   // apps/web/src/screens/organization/entries-part-1.ts
   "screen.registry.organization.workspaceHome.title": "Workspace home",
@@ -1883,220 +1993,326 @@ export const en = {
   "screen.registry.organization.tripReportReview.title": "Trip report review",
   "screen.registry.organization.childSafetyReports.title": "Child-safety reports",
   // apps/web/src/screens/organization/operations/analytics-and-reports.tsx
-  "screen.organization.operations.analyticsAndReports.enrollment": "Enrollment",
-  "screen.organization.operations.analyticsAndReports.couponRedemption": "Coupon redemption",
-  "screen.organization.operations.analyticsAndReports.revenue": "Revenue",
-  "screen.organization.operations.analyticsAndReports.analyticsAndReports": "Analytics and reports",
+  "screen.organization.operations.analyticsAndReports.title": "Analytics and reports",
+  "screen.organization.operations.analyticsAndReports.caption":
+    "Trips, programs, coupons and revenue",
+  "screen.organization.operations.analyticsAndReports.starterLockedPreview":
+    "Starter: locked preview",
+  "screen.organization.operations.analyticsAndReports.growthBasicView": "Growth: basic view",
+  "screen.organization.operations.analyticsAndReports.enterpriseFullView": "Enterprise: full view",
+  "screen.organization.operations.analyticsAndReports.dateRange": "Date range",
+  "screen.organization.operations.analyticsAndReports.allTime": "All time",
+  "screen.organization.operations.analyticsAndReports.thisMonth": "This month",
+  "screen.organization.operations.analyticsAndReports.last30Days": "Last 30 days",
+  "screen.organization.operations.analyticsAndReports.thisYear": "This year",
   "screen.organization.operations.analyticsAndReports.export": "Export",
-  "screen.organization.operations.analyticsAndReports.from": "From",
-  "screen.organization.operations.analyticsAndReports.yyyyMmDd": "YYYY-MM-DD",
-  "screen.organization.operations.analyticsAndReports.to": "To",
-  "screen.organization.operations.analyticsAndReports.yyyyMmDdPlaceholder": "YYYY-MM-DD",
-  "screen.organization.operations.analyticsAndReports.reports": "Reports",
+  "screen.organization.operations.analyticsAndReports.programEnrollment": "Program enrollment",
+  "screen.organization.operations.analyticsAndReports.nTravelers": "{n} travelers",
+  "screen.organization.operations.analyticsAndReports.acrossNTrips":
+    "Enrolled in programs across {trips} trips.",
+  "screen.organization.operations.analyticsAndReports.couponRedemption": "Coupon redemption",
+  "screen.organization.operations.analyticsAndReports.nRedemptions": "{n} redemptions",
+  "screen.organization.operations.analyticsAndReports.nActiveCoupons":
+    "{n} active coupons. Full analytics on Enterprise.",
+  "screen.organization.operations.analyticsAndReports.revenue": "Revenue",
+  "screen.organization.operations.analyticsAndReports.netOfCoupons":
+    "Net of coupons and gateway fees.",
   "screen.organization.operations.analyticsAndReports.openReport": "Open report",
-  "screen.organization.operations.analyticsAndReports.fullAnalytics": "Full analytics",
-  "screen.organization.operations.analyticsAndReports.fullTrendAndRevenueAnalytics":
-    "Full trend and revenue analytics are available on the Enterprise plan.",
+  "screen.organization.operations.analyticsAndReports.planViewsDiffer": "Plan views differ",
+  "screen.organization.operations.analyticsAndReports.starterShowsALockedPreview":
+    "Starter shows a locked preview with an upgrade prompt. Growth shows the basic view and Enterprise shows the full view.",
   // apps/web/src/screens/organization/operations/child-safety-reports.tsx
+  "screen.organization.operations.childSafetyReports.title": "Child-safety reports",
+  "screen.organization.operations.childSafetyReports.caption":
+    "Concerns about trips your organization runs, with their status",
+  "screen.organization.operations.childSafetyReports.everyCaseIsRouted": "Every case is routed",
+  "screen.organization.operations.childSafetyReports.escalationContactBody":
+    "Escalation contact: {contact}. A case with no contact configured is blocked until one is set.",
+  "screen.organization.operations.childSafetyReports.contactToBeConfirmed": "to be confirmed",
+  "screen.organization.operations.childSafetyReports.yourCases": "Your cases",
   "screen.organization.operations.childSafetyReports.case": "Case",
+  "screen.organization.operations.childSafetyReports.status": "Status",
   "screen.organization.operations.childSafetyReports.time": "Time",
   "screen.organization.operations.childSafetyReports.trip": "Trip",
   "screen.organization.operations.childSafetyReports.vehicle": "Vehicle",
-  "screen.organization.operations.childSafetyReports.status": "Status",
-  "screen.organization.operations.childSafetyReports.caseOpen": "Case open",
   "screen.organization.operations.childSafetyReports.routedToEscalationContact":
     "Routed to escalation contact",
-  "screen.organization.operations.childSafetyReports.backToLiveOperations":
-    "Back to live operations",
-  "screen.organization.operations.childSafetyReports.childSafetyReports": "Child-safety reports",
+  "screen.organization.operations.childSafetyReports.caseOpen": "Case open",
+  "screen.organization.operations.childSafetyReports.noCases": "No cases for this trip",
   "screen.organization.operations.childSafetyReports.newReport": "New report",
-  "screen.organization.operations.childSafetyReports.escalationContact": "Escalation contact",
-  "screen.organization.operations.childSafetyReports.reportsAreRoutedToEscalation":
-    "Reports are routed to: [Escalation contact, to be decided].",
-  "screen.organization.operations.childSafetyReports.cases": "Cases",
-  "screen.organization.operations.childSafetyReports.childSafetyCases": "Child-safety cases",
-  "screen.organization.operations.childSafetyReports.noCases": "No cases",
-  "screen.organization.operations.childSafetyReports.casesYouSubmitForTrips":
-    "Cases you submit for trips you run appear here.",
+  "screen.organization.operations.childSafetyReports.noTrips": "No trips yet",
+  "screen.organization.operations.childSafetyReports.noVehicle": "No specific vehicle",
+  "screen.organization.operations.childSafetyReports.description": "Description",
+  "screen.organization.operations.childSafetyReports.submitFailed":
+    "The report was not submitted. Try again.",
+  "screen.organization.operations.childSafetyReports.reportSubmitted": "Report submitted",
+  "screen.organization.operations.childSafetyReports.submitReport": "Submit report",
   // apps/web/src/screens/organization/operations/live-operations.tsx
-  "screen.organization.operations.liveOperations.vehicle": "Vehicle",
-  "screen.organization.operations.liveOperations.checkedIn": "Checked in",
-  "screen.organization.operations.liveOperations.seats": "Seats",
-  "screen.organization.operations.liveOperations.occupancy": "Occupancy",
-  "screen.organization.operations.liveOperations.incidentSummary": "[Incident summary]",
-  "screen.organization.operations.liveOperations.backToTrip": "Back to trip",
-  "screen.organization.operations.liveOperations.liveOperations": "Live operations",
-  "screen.organization.operations.liveOperations.tripName": "[Trip name]",
-  "screen.organization.operations.liveOperations.tripStatus": "Trip status",
-  "screen.organization.operations.liveOperations.travelersCheckedIn": "Travelers checked in",
-  "screen.organization.operations.liveOperations.vehiclesOnTheRoad": "Vehicles on the road",
+  "screen.organization.operations.liveOperations.title": "Live operations",
+  "screen.organization.operations.liveOperations.tripInState": "{trip} · {state}",
+  "screen.organization.operations.liveOperations.lastUpdate":
+    "Last update {time} · Positions update within 500 ms",
+  "screen.organization.operations.liveOperations.childTrackingOn": "Child tracking on",
+  "screen.organization.operations.liveOperations.childTrackingOff": "Child tracking off",
+  "screen.organization.operations.liveOperations.noTripInProgress": "No trip to follow yet",
+  "screen.organization.operations.liveOperations.occupancyAppearsWhenATrip":
+    "Vehicles, occupancy and incidents appear here when a trip is running.",
   "screen.organization.operations.liveOperations.liveMap": "Live map",
   "screen.organization.operations.liveOperations.liveVehiclePositions": "Live vehicle positions",
-  "screen.organization.operations.liveOperations.vehiclePositionAndArrivalTime":
-    "[Vehicle position and arrival time]",
-  "screen.organization.operations.liveOperations.occupancyPerVehicle": "Occupancy per vehicle",
-  "screen.organization.operations.liveOperations.occupancyPerVehicleCaption":
-    "Occupancy per vehicle",
-  "screen.organization.operations.liveOperations.noVehiclesInProgress": "No vehicles in progress",
-  "screen.organization.operations.liveOperations.occupancyAppearsWhenATrip":
-    "Occupancy appears when a trip is in progress.",
-  "screen.organization.operations.liveOperations.travelerLookup": "Traveler lookup",
-  "screen.organization.operations.liveOperations.findATraveler": "Find a traveler",
-  "screen.organization.operations.liveOperations.clearSearch": "Clear search",
-  "screen.organization.operations.liveOperations.theLookupShowsTheTraveler":
-    "The lookup shows the traveler's vehicle only.",
+  "screen.organization.operations.liveOperations.vehiclePositionUpdated":
+    "Latest vehicle position shown, updated {time}.",
+  "screen.organization.operations.liveOperations.noPositionYet":
+    "No vehicle position received yet.",
+  "screen.organization.operations.liveOperations.vehiclesInProgress": "Vehicles in progress",
+  "screen.organization.operations.liveOperations.noVehiclesInProgress": "No vehicles on this trip",
+  "screen.organization.operations.liveOperations.occupancyNOfSeats":
+    "Occupancy {n} of {seats} checked in",
+  "screen.organization.operations.liveOperations.moving": "Moving",
+  "screen.organization.operations.liveOperations.stopped": "Stopped",
+  "screen.organization.operations.liveOperations.noSignal": "No signal",
   "screen.organization.operations.liveOperations.incidentFeed": "Incident feed",
-  "screen.organization.operations.liveOperations.incidentFeedAriaLabel": "Incident feed",
-  "screen.organization.operations.liveOperations.related": "Related",
-  "screen.organization.operations.liveOperations.tripReportReview": "Trip report review",
-  "screen.organization.operations.liveOperations.bookingsAndTravelers": "Bookings and travelers",
-  "screen.organization.operations.liveOperations.childSafetyReports": "Child-safety reports",
+  "screen.organization.operations.liveOperations.noIncidents": "No incidents reported.",
+  "screen.organization.operations.liveOperations.incidentLine": "{time} · {plate} · {description}",
+  "screen.organization.operations.liveOperations.travelerLookup": "Traveler lookup",
+  "screen.organization.operations.liveOperations.showsTheVehicleOnly":
+    "Shows the vehicle only, never a location.",
+  "screen.organization.operations.liveOperations.noTravelerFound":
+    "No traveler with that name on this trip.",
   // apps/web/src/screens/organization/operations/trip-report-review.tsx
+  "screen.organization.operations.tripReportReview.title": "Trip report review",
+  "screen.organization.operations.tripReportReview.caption":
+    "{trip} · End-of-trip reports from each moderator",
+  "screen.organization.operations.tripReportReview.moderatorReportsPerVehicle":
+    "Moderator reports per vehicle",
   "screen.organization.operations.tripReportReview.vehicle": "Vehicle",
   "screen.organization.operations.tripReportReview.finalHeadcount": "Final headcount",
   "screen.organization.operations.tripReportReview.checkedIn": "Checked in",
-  "screen.organization.operations.tripReportReview.headcount": "Headcount",
-  "screen.organization.operations.tripReportReview.matchesCheckIn": "Matches check-in",
-  "screen.organization.operations.tripReportReview.mismatch": "Mismatch",
+  "screen.organization.operations.tripReportReview.submittedAt": "Submitted",
+  "screen.organization.operations.tripReportReview.status": "Status",
   "screen.organization.operations.tripReportReview.incidents": "Incidents",
+  "screen.organization.operations.tripReportReview.notYet": "Not yet",
   "screen.organization.operations.tripReportReview.submitted": "Submitted",
-  "screen.organization.operations.tripReportReview.backToTrip": "Back to trip",
-  "screen.organization.operations.tripReportReview.tripReportReview": "Trip report review",
-  "screen.organization.operations.tripReportReview.tripName": "[Trip name]",
-  "screen.organization.operations.tripReportReview.moderatorReports": "Moderator reports",
-  "screen.organization.operations.tripReportReview.moderatorReportsPerVehicle":
-    "Moderator reports per vehicle",
-  "screen.organization.operations.tripReportReview.noReportsYet": "No reports yet",
+  "screen.organization.operations.tripReportReview.headcountDiffers": "Headcount differs",
+  "screen.organization.operations.tripReportReview.reportPending": "Report pending",
+  "screen.organization.operations.tripReportReview.noReportsYet": "No vehicles on this trip yet",
   "screen.organization.operations.tripReportReview.reportsAppearHereAfterEach":
-    "Reports appear here after each moderator submits one.",
+    "Each moderator's report appears here after the trip ends.",
+  "screen.organization.operations.tripReportReview.headcountMismatch": "Headcount mismatch",
+  "screen.organization.operations.tripReportReview.nCountedNCheckedIn":
+    "{counted} counted, {checkedIn} checked in",
+  "screen.organization.operations.tripReportReview.moderatorsReason":
+    "Moderator's reason: {reason}.",
+  "screen.organization.operations.tripReportReview.submittedAtReadOnly":
+    "Submitted at {time} for {plate}. Read only for the moderator.",
+  "screen.organization.operations.tripReportReview.noMismatch":
+    "Every submitted headcount matches check-in.",
   "screen.organization.operations.tripReportReview.organizationNote": "Organization note",
-  "screen.organization.operations.tripReportReview.note": "Note",
-  "screen.organization.operations.tripReportReview.notePlaceholder": "[Note]",
-  "screen.organization.operations.tripReportReview.youCanAddANote":
-    "You can add a note. Submitted reports cannot be edited.",
+  "screen.organization.operations.tripReportReview.addANote":
+    "Add a note (notes can be added, not edited)",
+  "screen.organization.operations.tripReportReview.savingNotesIsNotAvailable":
+    "Saving notes is not available yet.",
   "screen.organization.operations.tripReportReview.addNote": "Add note",
   // apps/web/src/screens/organization/people/crm-and-webhooks.tsx
-  "screen.organization.people.crmAndWebhooks.labels.bookingConfirmed": "Booking confirmed",
-  "screen.organization.people.crmAndWebhooks.labels.bookingCancelled": "Booking cancelled",
-  "screen.organization.people.crmAndWebhooks.labels.tripPublished": "Trip published",
-  "screen.organization.people.crmAndWebhooks.labels.checkIn": "Check-in",
-  "screen.organization.people.crmAndWebhooks.labels.checkOut": "Check-out",
-  "screen.organization.people.crmAndWebhooks.labels.signingStatus": "Signing status",
-  "screen.organization.people.crmAndWebhooks.event": "Event",
-  "screen.organization.people.crmAndWebhooks.time": "Time",
-  "screen.organization.people.crmAndWebhooks.outcome": "Outcome",
-  "screen.organization.people.crmAndWebhooks.delivered": "Delivered",
-  "screen.organization.people.crmAndWebhooks.backToSettings": "Back to settings",
-  "screen.organization.people.crmAndWebhooks.crmAndWebhooks": "CRM and webhooks",
+  "screen.organization.people.crmAndWebhooks.title": "CRM and webhooks",
+  "screen.organization.people.crmAndWebhooks.caption":
+    "Connect a CRM and send signed events to your own system",
+  "screen.organization.people.crmAndWebhooks.saveEndpoint": "Save endpoint",
   "screen.organization.people.crmAndWebhooks.addEndpoint": "Add endpoint",
+  "screen.organization.people.crmAndWebhooks.notSavedTitle": "Not saved",
+  "screen.organization.people.crmAndWebhooks.notSavedBody":
+    "Check the endpoint address and the events, then try again.",
+  "screen.organization.people.crmAndWebhooks.newSecretTitle": "New signing secret",
+  "screen.organization.people.crmAndWebhooks.newSecretBody": "Copy it now. It is shown only once.",
   "screen.organization.people.crmAndWebhooks.crmConnection": "CRM connection",
+  "screen.organization.people.crmAndWebhooks.connected": "Connected",
   "screen.organization.people.crmAndWebhooks.notConnected": "Not connected",
+  "screen.organization.people.crmAndWebhooks.crmBody":
+    "Send bookings and travelers to your CRM. Sync runs when you connect.",
+  "screen.organization.people.crmAndWebhooks.disconnectCrm": "Disconnect CRM",
   "screen.organization.people.crmAndWebhooks.connectCrm": "Connect CRM",
-  "screen.organization.people.crmAndWebhooks.webhookEndpoint": "Webhook endpoint",
-  "screen.organization.people.crmAndWebhooks.endpointUrl": "Endpoint URL",
-  "screen.organization.people.crmAndWebhooks.httpsYourEndpoint": "https://[your endpoint]",
-  "screen.organization.people.crmAndWebhooks.sendTest": "Send test",
-  "screen.organization.people.crmAndWebhooks.rotateSecret": "Rotate secret",
-  "screen.organization.people.crmAndWebhooks.events": "Events",
   "screen.organization.people.crmAndWebhooks.deliveryLog": "Delivery log",
-  "screen.organization.people.crmAndWebhooks.webhookDeliveryLog": "Webhook delivery log",
-  "screen.organization.people.crmAndWebhooks.noDeliveriesYet": "No deliveries yet",
-  "screen.organization.people.crmAndWebhooks.eachEventSentToYour":
-    "Each event sent to your endpoint is listed here with its outcome.",
+  "screen.organization.people.crmAndWebhooks.time": "Time",
+  "screen.organization.people.crmAndWebhooks.event": "Event",
+  "screen.organization.people.crmAndWebhooks.outcome": "Outcome",
+  "screen.organization.people.crmAndWebhooks.attempts": "Attempts",
+  "screen.organization.people.crmAndWebhooks.noDeliveriesTitle": "No deliveries yet",
+  "screen.organization.people.crmAndWebhooks.noDeliveriesBody":
+    "Each event sent to your endpoint will be listed here with its outcome.",
   // apps/web/src/screens/organization/people/employee-invitation-acceptance.tsx
-  "screen.organization.people.employeeInvitationAcceptance.employeeInvitationAcceptance":
-    "Employee invitation acceptance",
-  "screen.organization.people.employeeInvitationAcceptance.youHaveBeenInvitedTo":
-    "You have been invited to join an organization.",
-  "screen.organization.people.employeeInvitationAcceptance.acceptOnlyIfTheInvitation":
-    "Accept only if the invitation was sent to the email address you are signed in with.",
-  "screen.organization.people.employeeInvitationAcceptance.organizationName": "[Organization name]",
+  "screen.organization.people.employeeInvitationAcceptance.title": "Join the organization",
+  "screen.organization.people.employeeInvitationAcceptance.invitationSentTo":
+    "Invitation sent to {email}",
+  "screen.organization.people.employeeInvitationAcceptance.caption":
+    "You were invited to work in this organization's dashboard",
+  "screen.organization.people.employeeInvitationAcceptance.joinedTitle":
+    "You joined the organization",
+  "screen.organization.people.employeeInvitationAcceptance.joinedBody":
+    "You can now open the areas listed below.",
+  "screen.organization.people.employeeInvitationAcceptance.checkYourEmail": "Check your email",
+  "screen.organization.people.employeeInvitationAcceptance.checkYourEmailBody":
+    "Accept with the account that uses the invited email address.",
+  "screen.organization.people.employeeInvitationAcceptance.notAcceptedTitle":
+    "Invitation not accepted",
+  "screen.organization.people.employeeInvitationAcceptance.notAcceptedBody":
+    "The invitation may have expired or been used. Ask the organization owner for a new one.",
   "screen.organization.people.employeeInvitationAcceptance.permissionAreasGranted":
     "Permission areas granted",
-  "screen.organization.people.employeeInvitationAcceptance.permissionArea": "[Permission area]",
-  "screen.organization.people.employeeInvitationAcceptance.invitationToken": "Invitation token",
-  "screen.organization.people.employeeInvitationAcceptance.pasteInvitationToken":
-    "Paste invitation token",
+  "screen.organization.people.employeeInvitationAcceptance.permissionAreasIntro":
+    "You can open these areas of the dashboard. Other areas stay hidden.",
+  "screen.organization.people.employeeInvitationAcceptance.areasAfterAccept":
+    "Your permission areas appear here after you accept.",
+  "screen.organization.people.employeeInvitationAcceptance.areasSetByOwner":
+    "Permission areas are set by the organization owner and can change later.",
+  "screen.organization.people.employeeInvitationAcceptance.invitationCode": "Invitation code",
+  "screen.organization.people.employeeInvitationAcceptance.invitationCodeHint":
+    "Paste the code from your invitation email.",
+  "screen.organization.people.employeeInvitationAcceptance.signInToAccept":
+    "Sign in with the invited account to accept.",
+  "screen.organization.people.employeeInvitationAcceptance.openWorkspace": "Open workspace",
   "screen.organization.people.employeeInvitationAcceptance.decline": "Decline",
   "screen.organization.people.employeeInvitationAcceptance.acceptInvitation": "Accept invitation",
   // apps/web/src/screens/organization/people/employee-invitation-and-permissions.tsx
-  "screen.organization.people.employeeInvitationAndPermissions.labels.trips": "Trips",
-  "screen.organization.people.employeeInvitationAndPermissions.labels.bookings": "Bookings",
-  "screen.organization.people.employeeInvitationAndPermissions.labels.accounting": "Accounting",
-  "screen.organization.people.employeeInvitationAndPermissions.labels.coupons": "Coupons",
-  "screen.organization.people.employeeInvitationAndPermissions.labels.employees": "Employees",
-  "screen.organization.people.employeeInvitationAndPermissions.labels.fleet": "Fleet",
-  "screen.organization.people.employeeInvitationAndPermissions.labels.subscription": "Subscription",
-  "screen.organization.people.employeeInvitationAndPermissions.changedBy": "Changed by",
-  "screen.organization.people.employeeInvitationAndPermissions.when": "When",
-  "screen.organization.people.employeeInvitationAndPermissions.before": "Before",
-  "screen.organization.people.employeeInvitationAndPermissions.after": "After",
-  "screen.organization.people.employeeInvitationAndPermissions.backToEmployees":
-    "Back to employees",
-  "screen.organization.people.employeeInvitationAndPermissions.employeeInvitationAndPermissions":
-    "Employee invitation and permissions",
-  "screen.organization.people.employeeInvitationAndPermissions.invite": "Invite",
-  "screen.organization.people.employeeInvitationAndPermissions.email": "Email",
-  "screen.organization.people.employeeInvitationAndPermissions.emailPlaceholder": "[Email]",
+  "screen.organization.people.employeeInvitationAndPermissions.emailInvalid":
+    "Enter an email address such as name@example.com.",
+  "screen.organization.people.employeeInvitationAndPermissions.roleTitleTooShort":
+    "Enter a role title of at least 2 characters.",
+  "screen.organization.people.employeeInvitationAndPermissions.employeeEmail": "Employee email",
   "screen.organization.people.employeeInvitationAndPermissions.roleTitle": "Role title",
-  "screen.organization.people.employeeInvitationAndPermissions.operationsCoordinator":
-    "Operations Coordinator",
   "screen.organization.people.employeeInvitationAndPermissions.permissionAreas": "Permission areas",
-  "screen.organization.people.employeeInvitationAndPermissions.changeHistory": "Change history",
-  "screen.organization.people.employeeInvitationAndPermissions.permissionChangeHistory":
-    "Permission change history",
-  "screen.organization.people.employeeInvitationAndPermissions.noChangesYet": "No changes yet",
-  "screen.organization.people.employeeInvitationAndPermissions.changesToPermissionAreasAre":
-    "Changes to permission areas are recorded here.",
+  "screen.organization.people.employeeInvitationAndPermissions.editTitle": "Employee permissions",
+  "screen.organization.people.employeeInvitationAndPermissions.title": "Invite employee",
+  "screen.organization.people.employeeInvitationAndPermissions.caption":
+    "Set the permission areas for this employee. Every change is recorded.",
   "screen.organization.people.employeeInvitationAndPermissions.savePermissions": "Save permissions",
   "screen.organization.people.employeeInvitationAndPermissions.sendInvitation": "Send invitation",
+  "screen.organization.people.employeeInvitationAndPermissions.notSavedTitle": "Not saved",
+  "screen.organization.people.employeeInvitationAndPermissions.notSavedBody":
+    "Check the email address and your plan's employee limit, then try again.",
+  "screen.organization.people.employeeInvitationAndPermissions.invitation": "Invitation",
+  "screen.organization.people.employeeInvitationAndPermissions.changeHistory": "Change history",
+  "screen.organization.people.employeeInvitationAndPermissions.historyCaption":
+    "Read only. Each entry shows who changed what, and when.",
   // apps/web/src/screens/organization/people/employees-list.tsx
+  "screen.organization.people.employeesList.active": "Active",
+  "screen.organization.people.employeesList.invitationSent": "Invitation sent",
+  "screen.organization.people.employeesList.suspended": "Suspended",
+  "screen.organization.people.employeesList.removed": "Removed",
   "screen.organization.people.employeesList.name": "Name",
   "screen.organization.people.employeesList.email": "Email",
   "screen.organization.people.employeesList.status": "Status",
-  "screen.organization.people.employeesList.active": "Active",
-  "screen.organization.people.employeesList.invited": "Invited",
   "screen.organization.people.employeesList.permissionAreas": "Permission areas",
+  "screen.organization.people.employeesList.none": "None",
+  "screen.organization.people.employeesList.action": "Action",
+  "screen.organization.people.employeesList.removeName": "Remove {name}",
   "screen.organization.people.employeesList.remove": "Remove",
-  "screen.organization.people.employeesList.remove2": "Remove",
-  "screen.organization.people.employeesList.employeesList": "Employees list",
+  "screen.organization.people.employeesList.nOfLimit": "{n} of {limit}",
   "screen.organization.people.employeesList.inviteEmployee": "Invite employee",
-  "screen.organization.people.employeesList.employees": "Employees",
-  "screen.organization.people.employeesList.searchEmployees": "Search employees",
-  "screen.organization.people.employeesList.clearSearch": "Clear search",
-  "screen.organization.people.employeesList.employeesCaption": "Employees",
-  "screen.organization.people.employeesList.noEmployeesYet": "No employees yet",
-  "screen.organization.people.employeesList.inviteEmployeesAndGiveThem":
-    "Invite employees and give them the permission areas they need.",
+  "screen.organization.people.employeesList.title": "Employees",
+  "screen.organization.people.employeesList.caption":
+    "Who can open this dashboard, their status and their permission areas",
+  "screen.organization.people.employeesList.employeesOnYourPlan": "Employees on your plan",
+  "screen.organization.people.employeesList.invitationsWaiting": "Invitations waiting",
+  "screen.organization.people.employeesList.notRemovedTitle": "Employee not removed",
+  "screen.organization.people.employeesList.notRemovedBody":
+    "Try again. If it keeps failing, reload the page.",
+  "screen.organization.people.employeesList.emptyTitle": "No employees yet",
+  "screen.organization.people.employeesList.emptyBody":
+    "Invite employees and choose the areas each one can open.",
+  "screen.organization.people.employeesList.removalNote":
+    "Removing an employee ends their access at once. Past audit entries are kept.",
   "screen.organization.people.employeesList.removeThisEmployee": "Remove this employee?",
-  "screen.organization.people.employeesList.accessEndsAtOncePast":
-    "Access ends at once. Past audit entries are kept.",
   "screen.organization.people.employeesList.removeEmployee": "Remove employee",
   "screen.organization.people.employeesList.keepEmployee": "Keep employee",
+  // apps/web/src/screens/organization/people/people-parts.tsx
+  "screen.organization.people.peopleParts.areaTrips": "Trips",
+  "screen.organization.people.peopleParts.areaBookings": "Bookings",
+  "screen.organization.people.peopleParts.areaAccounting": "Accounting",
+  "screen.organization.people.peopleParts.areaCoupons": "Coupons",
+  "screen.organization.people.peopleParts.areaEmployees": "Employees",
+  "screen.organization.people.peopleParts.areaFleet": "Fleet",
+  "screen.organization.people.peopleParts.areaSubscription": "Subscription",
+  "screen.organization.people.peopleParts.areaTracking": "Live tracking",
+  "screen.organization.people.peopleParts.areaSettings": "Settings",
+  // apps/web/src/screens/organization/people/permission-history.tsx
+  "screen.organization.people.permissionHistory.owner": "Owner",
+  "screen.organization.people.permissionHistory.employee": "Employee",
+  "screen.organization.people.permissionHistory.platformAdmin": "Platform admin",
+  "screen.organization.people.permissionHistory.invitationSent": "Invitation sent",
+  "screen.organization.people.permissionHistory.invitationResent": "Invitation sent again",
+  "screen.organization.people.permissionHistory.invitationAccepted": "Invitation accepted",
+  "screen.organization.people.permissionHistory.permissionsChanged": "Permissions changed",
+  "screen.organization.people.permissionHistory.statusChanged": "Status changed",
+  "screen.organization.people.permissionHistory.statusActive": "Active",
+  "screen.organization.people.permissionHistory.statusInvited": "Invited",
+  "screen.organization.people.permissionHistory.statusSuspended": "Suspended",
+  "screen.organization.people.permissionHistory.statusRemoved": "Removed",
+  "screen.organization.people.permissionHistory.none": "None",
+  "screen.organization.people.permissionHistory.when": "When",
+  "screen.organization.people.permissionHistory.who": "Who",
+  "screen.organization.people.permissionHistory.change": "Change",
+  "screen.organization.people.permissionHistory.before": "Before",
+  "screen.organization.people.permissionHistory.after": "After",
+  "screen.organization.people.permissionHistory.caption": "Change history",
+  "screen.organization.people.permissionHistory.emptyTitle": "No changes yet",
+  "screen.organization.people.permissionHistory.emptyBody":
+    "Changes appear here once the invitation is sent.",
+  // apps/web/src/screens/organization/people/webhook-form.tsx
+  "screen.organization.people.webhookForm.bookingConfirmed": "Booking confirmed",
+  "screen.organization.people.webhookForm.bookingCancelled": "Booking cancelled",
+  "screen.organization.people.webhookForm.tripPublished": "Trip published",
+  "screen.organization.people.webhookForm.checkIn": "Check-in",
+  "screen.organization.people.webhookForm.checkOut": "Check-out",
+  "screen.organization.people.webhookForm.signingStatus": "Signing status",
+  "screen.organization.people.webhookForm.urlInvalid":
+    "Enter an address that starts with https://.",
+  "screen.organization.people.webhookForm.webhookEndpoint": "Webhook endpoint",
+  "screen.organization.people.webhookForm.endpointUrl": "Endpoint URL",
+  "screen.organization.people.webhookForm.signingSecretHidden": "Signing secret: ••••••••••••",
+  "screen.organization.people.webhookForm.signingSecretAfterSave":
+    "A signing secret is created when you save the endpoint.",
+  "screen.organization.people.webhookForm.rotateSecret": "Rotate secret",
+  "screen.organization.people.webhookForm.sendTest": "Send test",
+  "screen.organization.people.webhookForm.sendTestUnavailable":
+    "Test deliveries are not available yet.",
+  "screen.organization.people.webhookForm.events": "Events",
+  "screen.organization.people.webhookForm.eventsRequired": "Choose at least one event.",
   // apps/web/src/screens/organization/staffing/deal-detail-and-negotiation.tsx
+  "screen.organization.staffing.dealDetailAndNegotiation.dealWith": "Deal with {name}",
+  "screen.organization.staffing.dealDetailAndNegotiation.vehicleLastUpdate":
+    "Vehicle {plate} · Last update {time}",
+  "screen.organization.staffing.dealDetailAndNegotiation.emptyTitle": "No deal to show",
+  "screen.organization.staffing.dealDetailAndNegotiation.emptyBody":
+    "Start a deal from the platform supplier search.",
+  "screen.organization.staffing.dealDetailAndNegotiation.expiresInHours":
+    "Expires in {hours} hours",
+  "screen.organization.staffing.dealDetailAndNegotiation.expiryRule":
+    "A deal with no answer 72 hours after the last counter-offer is rejected as expired.",
+  "screen.organization.staffing.dealDetailAndNegotiation.respondFailed":
+    "Your response was not sent. Try again.",
+  "screen.organization.staffing.dealDetailAndNegotiation.dealDetails": "Deal details",
   "screen.organization.staffing.dealDetailAndNegotiation.trip": "Trip",
-  "screen.organization.staffing.dealDetailAndNegotiation.route": "Route",
   "screen.organization.staffing.dealDetailAndNegotiation.date": "Date",
-  "screen.organization.staffing.dealDetailAndNegotiation.pay": "Pay",
-  "screen.organization.staffing.dealDetailAndNegotiation.proposedByTheOrganization":
-    "Proposed by the organization",
-  "screen.organization.staffing.dealDetailAndNegotiation.backToStaffingBoard":
-    "Back to staffing board",
-  "screen.organization.staffing.dealDetailAndNegotiation.dealDetailAndNegotiation":
-    "Deal detail and negotiation",
-  "screen.organization.staffing.dealDetailAndNegotiation.proposed": "Proposed",
-  "screen.organization.staffing.dealDetailAndNegotiation.theDealExpires72Hours":
-    "The deal expires 72 hours after the last counter-offer.",
+  "screen.organization.staffing.dealDetailAndNegotiation.route": "Route",
+  "screen.organization.staffing.dealDetailAndNegotiation.currentPay": "Current pay",
   "screen.organization.staffing.dealDetailAndNegotiation.offerHistory": "Offer history",
-  "screen.organization.staffing.dealDetailAndNegotiation.offerHistoryAriaLabel": "Offer history",
-  "screen.organization.staffing.dealDetailAndNegotiation.counterOffer": "Counter-offer",
+  "screen.organization.staffing.dealDetailAndNegotiation.proposed": "Proposed",
+  "screen.organization.staffing.dealDetailAndNegotiation.organizationProposed":
+    "Organization proposed {amount} on {date}",
+  "screen.organization.staffing.dealDetailAndNegotiation.counteredByProvider":
+    "Countered by Provider",
+  "screen.organization.staffing.dealDetailAndNegotiation.counteredByOrganization":
+    "Countered by Organization",
+  "screen.organization.staffing.dealDetailAndNegotiation.providerCountered":
+    "Provider countered at {amount} on {date}",
+  "screen.organization.staffing.dealDetailAndNegotiation.organizationCountered":
+    "Organization countered at {amount} on {date}",
+  "screen.organization.staffing.dealDetailAndNegotiation.yourResponse": "Your response",
   "screen.organization.staffing.dealDetailAndNegotiation.counterAmount": "Counter amount",
-  "screen.organization.staffing.dealDetailAndNegotiation.amount": "[Amount]",
-  "screen.organization.staffing.dealDetailAndNegotiation.currency": "Currency",
-  "screen.organization.staffing.dealDetailAndNegotiation.currencyCode": "[Currency code]",
-  "screen.organization.staffing.dealDetailAndNegotiation.reject": "Reject",
-  "screen.organization.staffing.dealDetailAndNegotiation.counter": "Counter",
-  "screen.organization.staffing.dealDetailAndNegotiation.accept": "Accept",
+  "screen.organization.staffing.dealDetailAndNegotiation.counterVoidsAcceptance":
+    "Countering voids any acceptance on this deal until both sides agree again.",
+  "screen.organization.staffing.dealDetailAndNegotiation.rejectDeal": "Reject deal",
+  "screen.organization.staffing.dealDetailAndNegotiation.acceptOffer": "Accept offer",
+  "screen.organization.staffing.dealDetailAndNegotiation.sendCounter": "Send counter",
   // apps/web/src/screens/organization/staffing/organization-owned-drivers-and-photographers.tsx
   "screen.organization.staffing.organizationOwnedDriversAndPhotographers.driver": "Driver",
   "screen.organization.staffing.organizationOwnedDriversAndPhotographers.photographer":
@@ -2104,23 +2320,14 @@ export const en = {
   "screen.organization.staffing.organizationOwnedDriversAndPhotographers.name": "Name",
   "screen.organization.staffing.organizationOwnedDriversAndPhotographers.type": "Type",
   "screen.organization.staffing.organizationOwnedDriversAndPhotographers.status": "Status",
+  "screen.organization.staffing.organizationOwnedDriversAndPhotographers.active": "Active",
+  "screen.organization.staffing.organizationOwnedDriversAndPhotographers.inactive": "Inactive",
   "screen.organization.staffing.organizationOwnedDriversAndPhotographers.vehicleAssignments":
     "Vehicle assignments",
+  "screen.organization.staffing.organizationOwnedDriversAndPhotographers.action": "Action",
   "screen.organization.staffing.organizationOwnedDriversAndPhotographers.remove": "Remove",
-  "screen.organization.staffing.organizationOwnedDriversAndPhotographers.remove2": "Remove",
-  "screen.organization.staffing.organizationOwnedDriversAndPhotographers.backToStaffingBoard":
-    "Back to staffing board",
-  "screen.organization.staffing.organizationOwnedDriversAndPhotographers.organizationOwnedDriversAndPhotographers":
-    "Organization-owned drivers and photographers",
   "screen.organization.staffing.organizationOwnedDriversAndPhotographers.addDriverOrPhotographer":
     "Add driver or photographer",
-  "screen.organization.staffing.organizationOwnedDriversAndPhotographers.organizationOwnedStaffAreVisible":
-    "Organization-owned staff are visible only to your organization. They are accepted automatically when assigned to a trip.",
-  "screen.organization.staffing.organizationOwnedDriversAndPhotographers.actionFailed":
-    "Action failed",
-  "screen.organization.staffing.organizationOwnedDriversAndPhotographers.addOrganizationOwnedStaff":
-    "Add organization-owned staff",
-  "screen.organization.staffing.organizationOwnedDriversAndPhotographers.role": "Role",
   "screen.organization.staffing.organizationOwnedDriversAndPhotographers.fullName": "Full name",
   "screen.organization.staffing.organizationOwnedDriversAndPhotographers.phone": "Phone",
   "screen.organization.staffing.organizationOwnedDriversAndPhotographers.emailOptional":
@@ -2128,285 +2335,384 @@ export const en = {
   "screen.organization.staffing.organizationOwnedDriversAndPhotographers.licenseNumber":
     "License number",
   "screen.organization.staffing.organizationOwnedDriversAndPhotographers.cameraBody": "Camera body",
-  "screen.organization.staffing.organizationOwnedDriversAndPhotographers.saving": "Saving...",
+  "screen.organization.staffing.organizationOwnedDriversAndPhotographers.saving": "Saving…",
   "screen.organization.staffing.organizationOwnedDriversAndPhotographers.saveStaffMember":
     "Save staff member",
   "screen.organization.staffing.organizationOwnedDriversAndPhotographers.cancel": "Cancel",
-  "screen.organization.staffing.organizationOwnedDriversAndPhotographers.organizationOwnedStaff":
+  "screen.organization.staffing.organizationOwnedDriversAndPhotographers.title":
     "Organization-owned staff",
-  "screen.organization.staffing.organizationOwnedDriversAndPhotographers.capStaffCap":
-    "Cap: [staff cap]",
-  "screen.organization.staffing.organizationOwnedDriversAndPhotographers.staff": "Staff",
-  "screen.organization.staffing.organizationOwnedDriversAndPhotographers.organizationOwnedDriversAndPhotographersCaption":
+  "screen.organization.staffing.organizationOwnedDriversAndPhotographers.caption":
+    "Drivers and photographers your organization employs. Other organizations never see them.",
+  "screen.organization.staffing.organizationOwnedDriversAndPhotographers.actionFailed":
+    "That did not work",
+  "screen.organization.staffing.organizationOwnedDriversAndPhotographers.actionFailedBody":
+    "The change was not saved. Check the details and try again.",
+  "screen.organization.staffing.organizationOwnedDriversAndPhotographers.organizationOwnedDrivers":
+    "Organization-owned drivers",
+  "screen.organization.staffing.organizationOwnedDriversAndPhotographers.organizationOwnedPhotographers":
+    "Organization-owned photographers",
+  "screen.organization.staffing.organizationOwnedDriversAndPhotographers.tableCaption":
     "Organization-owned drivers and photographers",
-  "screen.organization.staffing.organizationOwnedDriversAndPhotographers.noOrganizationOwnedStaffYet":
+  "screen.organization.staffing.organizationOwnedDriversAndPhotographers.emptyTitle":
     "No organization-owned staff yet",
-  "screen.organization.staffing.organizationOwnedDriversAndPhotographers.addADriverOrPhotographer":
-    "Add a driver or photographer to assign them to trips.",
+  "screen.organization.staffing.organizationOwnedDriversAndPhotographers.emptyBody":
+    "Add a driver or photographer your organization employs.",
+  "screen.organization.staffing.organizationOwnedDriversAndPhotographers.assignmentsAcceptedAutomatically":
+    "Assignments are accepted automatically",
+  "screen.organization.staffing.organizationOwnedDriversAndPhotographers.removingChangesFutureOnly":
+    "Removing a person changes future assignments only. Trips already staffed keep their current assignment until you change it.",
   "screen.organization.staffing.organizationOwnedDriversAndPhotographers.removeThisStaffMember":
     "Remove this staff member?",
-  "screen.organization.staffing.organizationOwnedDriversAndPhotographers.futureAssignmentsAreAffectedTrips":
-    "Future assignments are affected. Trips already assigned keep their history.",
-  "screen.organization.staffing.organizationOwnedDriversAndPhotographers.removePrimaryLabel":
-    "Remove",
   "screen.organization.staffing.organizationOwnedDriversAndPhotographers.keep": "Keep",
   // apps/web/src/screens/organization/staffing/platform-supplier-search-and-deal-start.tsx
-  "screen.organization.staffing.platformSupplierSearchAndDealStart.backToStaffingBoard":
-    "Back to staffing board",
-  "screen.organization.staffing.platformSupplierSearchAndDealStart.platformSupplierSearchAndDeal":
-    "Platform supplier search and deal start",
-  "screen.organization.staffing.platformSupplierSearchAndDealStart.theTripRouteDateAnd":
-    "The trip, route, date and pay are shown to the supplier.",
-  "screen.organization.staffing.platformSupplierSearchAndDealStart.findASupplier":
-    "Find a supplier",
+  "screen.organization.staffing.platformSupplierSearchAndDealStart.verified": "Verified",
+  "screen.organization.staffing.platformSupplierSearchAndDealStart.unavailableOnDate":
+    "Unavailable on {date}",
+  "screen.organization.staffing.platformSupplierSearchAndDealStart.availableOnDate":
+    "Available on {date}",
+  "screen.organization.staffing.platformSupplierSearchAndDealStart.availabilityUnknown":
+    "Availability not checked",
+  "screen.organization.staffing.platformSupplierSearchAndDealStart.selected": "Selected",
+  "screen.organization.staffing.platformSupplierSearchAndDealStart.selectSupplier":
+    "Select supplier",
+  "screen.organization.staffing.platformSupplierSearchAndDealStart.title":
+    "Find a platform supplier",
+  "screen.organization.staffing.platformSupplierSearchAndDealStart.caption":
+    "{trip} · Vehicle {plate}",
   "screen.organization.staffing.platformSupplierSearchAndDealStart.searchSuppliers":
     "Search suppliers",
-  "screen.organization.staffing.platformSupplierSearchAndDealStart.clearSearch": "Clear search",
-  "screen.organization.staffing.platformSupplierSearchAndDealStart.nameRoleOrArea":
-    "[Name, role or area]",
-  "screen.organization.staffing.platformSupplierSearchAndDealStart.supplierName": "[Supplier name]",
-  "screen.organization.staffing.platformSupplierSearchAndDealStart.verified": "Verified",
-  "screen.organization.staffing.platformSupplierSearchAndDealStart.availableOnDate":
-    "Available on [date]",
-  "screen.organization.staffing.platformSupplierSearchAndDealStart.price": "Price",
-  "screen.organization.staffing.platformSupplierSearchAndDealStart.amount": "[Amount]",
+  "screen.organization.staffing.platformSupplierSearchAndDealStart.supplierType": "Supplier type",
+  "screen.organization.staffing.platformSupplierSearchAndDealStart.date": "Date",
+  "screen.organization.staffing.platformSupplierSearchAndDealStart.emptyTitle":
+    "No suppliers match",
+  "screen.organization.staffing.platformSupplierSearchAndDealStart.emptyBody":
+    "Try another name or supplier type.",
+  "screen.organization.staffing.platformSupplierSearchAndDealStart.startADeal": "Start a deal",
+  "screen.organization.staffing.platformSupplierSearchAndDealStart.trip": "Trip",
+  "screen.organization.staffing.platformSupplierSearchAndDealStart.route": "Route",
+  "screen.organization.staffing.platformSupplierSearchAndDealStart.supplier": "Supplier",
+  "screen.organization.staffing.platformSupplierSearchAndDealStart.proposedPay": "Proposed pay",
   "screen.organization.staffing.platformSupplierSearchAndDealStart.currency": "Currency",
-  "screen.organization.staffing.platformSupplierSearchAndDealStart.currencyCode": "[Currency code]",
+  "screen.organization.staffing.platformSupplierSearchAndDealStart.supplierSeesDetails":
+    "The supplier sees the trip, route, date and pay before they answer.",
+  "screen.organization.staffing.platformSupplierSearchAndDealStart.sendFailed":
+    "The proposal was not sent. Try again.",
+  "screen.organization.staffing.platformSupplierSearchAndDealStart.selectSupplierFirst":
+    "Select a supplier first.",
   "screen.organization.staffing.platformSupplierSearchAndDealStart.sendProposal": "Send proposal",
   // apps/web/src/screens/organization/staffing/staffing-board.tsx
-  "screen.organization.staffing.staffingBoard.organizationOwned": "Organization-owned",
-  "screen.organization.staffing.staffingBoard.accepted": "Accepted",
-  "screen.organization.staffing.staffingBoard.platformNegotiating": "Platform negotiating",
   "screen.organization.staffing.staffingBoard.platformFinalized": "Platform finalized",
+  "screen.organization.staffing.staffingBoard.platformNegotiating": "Platform negotiating",
+  "screen.organization.staffing.staffingBoard.assigned": "Assigned",
+  "screen.organization.staffing.staffingBoard.ownStaff": "Own staff",
+  "screen.organization.staffing.staffingBoard.acceptedOwnStaff": "Accepted, own staff",
+  "screen.organization.staffing.staffingBoard.notAssigned": "Not assigned",
   "screen.organization.staffing.staffingBoard.missing": "Missing",
   "screen.organization.staffing.staffingBoard.vehicle": "Vehicle",
   "screen.organization.staffing.staffingBoard.driver": "Driver",
   "screen.organization.staffing.staffingBoard.moderator": "Moderator",
   "screen.organization.staffing.staffingBoard.photographer": "Photographer",
-  "screen.organization.staffing.staffingBoard.actions": "Actions",
-  "screen.organization.staffing.staffingBoard.manage": "Manage",
-  "screen.organization.staffing.staffingBoard.backToTrip": "Back to trip",
-  "screen.organization.staffing.staffingBoard.staffingBoard": "Staffing board",
-  "screen.organization.staffing.staffingBoard.tripName": "[Trip name]",
-  "screen.organization.staffing.staffingBoard.organizationOwnedStaff": "Organization-owned staff",
-  "screen.organization.staffing.staffingBoard.findPlatformSupplier": "Find platform supplier",
-  "screen.organization.staffing.staffingBoard.readyIsBlocked": "Ready is blocked",
-  "screen.organization.staffing.staffingBoard.everyVehicleNeedsADriver":
-    "Every vehicle needs a driver and a moderator before the trip can be Ready.",
-  "screen.organization.staffing.staffingBoard.staffingForEachVehicle": "Staffing for each vehicle",
-  "screen.organization.staffing.staffingBoard.noVehiclesOnThisTrip": "No vehicles on this trip",
-  "screen.organization.staffing.staffingBoard.addVehiclesToTheTrip":
-    "Add vehicles to the trip to assign staff.",
+  "screen.organization.staffing.staffingBoard.action": "Action",
+  "screen.organization.staffing.staffingBoard.openDeal": "Open deal",
+  "screen.organization.staffing.staffingBoard.openStaff": "Open staff",
+  "screen.organization.staffing.staffingBoard.missingDriverOn": "Missing driver on {plate}.",
+  "screen.organization.staffing.staffingBoard.missingModeratorOn": "Missing moderator on {plate}.",
+  "screen.organization.staffing.staffingBoard.noTrips": "No trips yet",
+  "screen.organization.staffing.staffingBoard.title": "Staffing board",
+  "screen.organization.staffing.staffingBoard.caption": "One row per vehicle for the selected trip",
+  "screen.organization.staffing.staffingBoard.trip": "Trip",
+  "screen.organization.staffing.staffingBoard.readyBlockedByGaps": "Ready is blocked by {n} gaps",
+  "screen.organization.staffing.staffingBoard.eachGapHighlighted":
+    "Each gap is highlighted in the table.",
+  "screen.organization.staffing.staffingBoard.tableCaption": "Staffing for each vehicle",
+  "screen.organization.staffing.staffingBoard.emptyTitle": "No vehicles on this trip",
+  "screen.organization.staffing.staffingBoard.emptyBody":
+    "Add vehicles to the trip to plan its staff.",
+  "screen.organization.staffing.staffingBoard.readyNeedsDriverAndModerator":
+    "Ready needs a driver and a moderator on every vehicle.",
+  "screen.organization.staffing.staffingBoard.openOrganizationOwnedStaff":
+    "Open organization-owned staff",
+  // apps/web/src/screens/organization/staffing/staffing-parts.tsx
+  "screen.organization.staffing.staffingParts.routeFromTo": "{from} to {to}",
+  "screen.organization.staffing.staffingParts.driver": "Driver",
+  "screen.organization.staffing.staffingParts.photographer": "Photographer",
+  "screen.organization.staffing.staffingParts.proposed": "Proposed",
+  "screen.organization.staffing.staffingParts.counteredByProvider": "Countered by Provider",
+  "screen.organization.staffing.staffingParts.counteredByOrganization": "Countered by Organization",
+  "screen.organization.staffing.staffingParts.accepted": "Accepted",
+  "screen.organization.staffing.staffingParts.rejected": "Rejected",
+  "screen.organization.staffing.staffingParts.expired": "Expired",
+  "screen.organization.staffing.staffingParts.cancelled": "Cancelled",
   // apps/web/src/screens/organization/trips/cancel-trip-decision.tsx
-  "screen.organization.trips.cancelTripDecision.backToTrip": "Back to trip",
-  "screen.organization.trips.cancelTripDecision.cancelTripDecision": "Cancel trip (decision)",
-  "screen.organization.trips.cancelTripDecision.thisCancelsTheTripFor":
-    "This cancels the trip for every traveler",
-  "screen.organization.trips.cancelTripDecision.confirmedBookingsMoveToCancelled":
-    "Confirmed bookings move to Cancelled, then Refunded. Travelers are notified and refunds are queued.",
-  "screen.organization.trips.cancelTripDecision.affectedBookings": "Affected bookings",
-  "screen.organization.trips.cancelTripDecision.refundPolicy": "Refund policy",
-  "screen.organization.trips.cancelTripDecision.reason": "Reason",
-  "screen.organization.trips.cancelTripDecision.reasonForCancellation": "Reason for cancellation",
-  "screen.organization.trips.cancelTripDecision.reasonPlaceholder": "[Reason]",
-  "screen.organization.trips.cancelTripDecision.requiredTheReasonIsRecorded":
-    "Required. The reason is recorded with the cancellation.",
-  "screen.organization.trips.cancelTripDecision.travelersAreNotifiedOfThe":
-    "Travelers are notified of the cancellation.",
-  "screen.organization.trips.cancelTripDecision.refundsAreQueuedUnderThe":
-    "Refunds are queued under the refund policy.",
-  "screen.organization.trips.cancelTripDecision.keepTrip": "Keep trip",
+  "screen.organization.trips.cancelTripDecision.dateRange": "{start} to {end}",
+  "screen.organization.trips.cancelTripDecision.reasonRequired":
+    "Enter a reason of at least 3 characters.",
   "screen.organization.trips.cancelTripDecision.cancelTrip": "Cancel trip",
-  "screen.organization.trips.cancelTripDecision.cancelThisTrip": "Cancel this trip?",
-  "screen.organization.trips.cancelTripDecision.confirmedBookingsMoveToCancelledDescription":
-    "Confirmed bookings move to Cancelled, then Refunded. Travelers are notified.",
-  "screen.organization.trips.cancelTripDecision.cancelTripPrimaryLabel": "Cancel trip",
-  "screen.organization.trips.cancelTripDecision.keepTripSecondaryLabel": "Keep trip",
+  "screen.organization.trips.cancelTripDecision.cannotBeUndoneTitle": "This cannot be undone",
+  "screen.organization.trips.cancelTripDecision.cannotBeUndoneBody":
+    "Cancelling notifies every traveler on this trip and queues their refunds.",
+  "screen.organization.trips.cancelTripDecision.cancelFailedTitle": "The trip was not cancelled",
+  "screen.organization.trips.cancelTripDecision.cancelFailedBody":
+    "Nothing changed. Try again in a moment.",
+  "screen.organization.trips.cancelTripDecision.reason": "Reason",
+  "screen.organization.trips.cancelTripDecision.reasonLabel": "Reason for cancelling (required)",
+  "screen.organization.trips.cancelTripDecision.auditNote":
+    "The reason is kept in the audit log and shared with the organization owner.",
+  "screen.organization.trips.cancelTripDecision.whatHappensNext": "What happens next",
+  "screen.organization.trips.cancelTripDecision.affectedBookings": "Affected bookings",
+  "screen.organization.trips.cancelTripDecision.nConfirmed": "{n} confirmed",
+  "screen.organization.trips.cancelTripDecision.refundPolicy": "Refund policy",
+  "screen.organization.trips.cancelTripDecision.refundPolicySummary":
+    "A trip cancelled by the organization refunds 100% of every confirmed booking.",
+  "screen.organization.trips.cancelTripDecision.bookingsMoveToCancelled":
+    "Every confirmed booking moves to Cancelled, then Refunded",
+  "screen.organization.trips.cancelTripDecision.travelersNotified":
+    "Travelers are notified by email and in the app",
+  "screen.organization.trips.cancelTripDecision.refundsQueued":
+    "Refunds are queued through the payment gateway",
+  "screen.organization.trips.cancelTripDecision.keepTrip": "Keep trip",
+  "screen.organization.trips.cancelTripDecision.blockedWhileInProgress":
+    "Cancel is blocked while the trip is In Progress.",
   // apps/web/src/screens/organization/trips/program-editor.tsx
-  "screen.organization.trips.programEditor.labels.optional": "Optional",
-  "screen.organization.trips.programEditor.labels.preRequired": "Pre-required",
-  "screen.organization.trips.programEditor.labels.capacityLimitedWithCap":
-    "Capacity-limited (with cap)",
-  "screen.organization.trips.programEditor.labels.vipOnly": "VIP-only",
-  "screen.organization.trips.programEditor.free": "Free",
   "screen.organization.trips.programEditor.perPerson": "Per person",
+  "screen.organization.trips.programEditor.free": "Free",
   "screen.organization.trips.programEditor.byQuantity": "By quantity",
   "screen.organization.trips.programEditor.perGroup": "Per group",
   "screen.organization.trips.programEditor.tiered": "Tiered",
-  "screen.organization.trips.programEditor.backToPrograms": "Back to programs",
-  "screen.organization.trips.programEditor.programEditor": "Program editor",
-  "screen.organization.trips.programEditor.save": "Save",
-  "screen.organization.trips.programEditor.details": "Details",
+  "screen.organization.trips.programEditor.optional": "Optional",
+  "screen.organization.trips.programEditor.preRequired": "Pre-required",
+  "screen.organization.trips.programEditor.capacityLimited": "Capacity-limited",
+  "screen.organization.trips.programEditor.vipOnly": "VIP-only",
+  "screen.organization.trips.programEditor.nameRequired": "Enter a program name to save.",
+  "screen.organization.trips.programEditor.programCaption": "Program {name}",
+  "screen.organization.trips.programEditor.newProgram": "New program",
+  "screen.organization.trips.programEditor.editProgram": "Edit program",
+  "screen.organization.trips.programEditor.saveProgram": "Save program",
+  "screen.organization.trips.programEditor.bookingsAffectedTitle":
+    "Confirmed bookings are affected",
+  "screen.organization.trips.programEditor.bookingsAffectedBody":
+    "Travelers are notified and offered a remedy before this change takes effect.",
+  "screen.organization.trips.programEditor.saveFailedTitle": "The program was not saved",
+  "screen.organization.trips.programEditor.saveFailedBody": "Check the fields and try again.",
+  "screen.organization.trips.programEditor.programDetails": "Program details",
   "screen.organization.trips.programEditor.programName": "Program name",
-  "screen.organization.trips.programEditor.programNamePlaceholder": "[Program name]",
-  "screen.organization.trips.programEditor.pricingModel": "Pricing model",
-  "screen.organization.trips.programEditor.chooseExactlyOnePricingModel":
-    "Choose exactly one pricing model.",
+  "screen.organization.trips.programEditor.pricingModelChooseOne": "Pricing model (choose one)",
   "screen.organization.trips.programEditor.typeFlags": "Type flags",
+  "screen.organization.trips.programEditor.cap": "Cap",
+  "screen.organization.trips.programEditor.capHint": "Number of places.",
   "screen.organization.trips.programEditor.prices": "Prices",
-  "screen.organization.trips.programEditor.price": "Price",
-  "screen.organization.trips.programEditor.amount": "[Amount]",
+  "screen.organization.trips.programEditor.pricePerPerson": "Price per person",
   "screen.organization.trips.programEditor.currency": "Currency",
-  "screen.organization.trips.programEditor.currencyCode": "[Currency code]",
+  // apps/web/src/screens/organization/trips/trip-command-parts.tsx
+  "screen.organization.trips.tripCommandParts.tripStateFlow": "Trip state flow",
+  "screen.organization.trips.tripCommandParts.currentState": "{state} (current)",
+  "screen.organization.trips.tripCommandParts.open": "Open",
+  "screen.organization.trips.tripCommandParts.none": "None",
+  "screen.organization.trips.tripCommandParts.assigned": "Assigned",
+  "screen.organization.trips.tripCommandParts.missing": "Missing",
   // apps/web/src/screens/organization/trips/trip-command-view.tsx
-  "screen.organization.trips.tripCommandView.vehicle": "Vehicle",
-  "screen.organization.trips.tripCommandView.driver": "Driver",
-  "screen.organization.trips.tripCommandView.missing": "Missing",
-  "screen.organization.trips.tripCommandView.assigned": "Assigned",
-  "screen.organization.trips.tripCommandView.moderator": "Moderator",
-  "screen.organization.trips.tripCommandView.missingLabel": "Missing",
-  "screen.organization.trips.tripCommandView.assignedLabel": "Assigned",
-  "screen.organization.trips.tripCommandView.openDeal": "Open deal",
+  "screen.organization.trips.tripCommandView.overview": "Overview",
   "screen.organization.trips.tripCommandView.staffing": "Staffing",
-  "screen.organization.trips.tripCommandView.seatMap": "Seat map",
+  "screen.organization.trips.tripCommandView.seats": "Seats",
   "screen.organization.trips.tripCommandView.bookings": "Bookings",
   "screen.organization.trips.tripCommandView.programs": "Programs",
-  "screen.organization.trips.tripCommandView.enrollmentReport": "Enrollment report",
   "screen.organization.trips.tripCommandView.liveOperations": "Live operations",
   "screen.organization.trips.tripCommandView.accounting": "Accounting",
-  "screen.organization.trips.tripCommandView.tripReports": "Trip reports",
-  "screen.organization.trips.tripCommandView.tripCommandView": "Trip command view",
+  "screen.organization.trips.tripCommandView.vehicle": "Vehicle",
+  "screen.organization.trips.tripCommandView.driver": "Driver",
+  "screen.organization.trips.tripCommandView.moderator": "Moderator",
+  "screen.organization.trips.tripCommandView.openDeal": "Open deal",
+  "screen.organization.trips.tripCommandView.dateRange": "{start} to {end}",
+  "screen.organization.trips.tripCommandView.departsFrom": "Departs {time} from {origin}",
+  "screen.organization.trips.tripCommandView.percent": "{n}%",
   "screen.organization.trips.tripCommandView.cancelTrip": "Cancel trip",
-  "screen.organization.trips.tripCommandView.lifecycle": "Lifecycle",
+  "screen.organization.trips.tripCommandView.trip": "Trip",
+  "screen.organization.trips.tripCommandView.tripSections": "Trip sections",
   "screen.organization.trips.tripCommandView.seatsSold": "Seats sold",
+  "screen.organization.trips.tripCommandView.nOfCapacity": "{n} of {capacity}",
   "screen.organization.trips.tripCommandView.seatsHeld": "Seats held",
   "screen.organization.trips.tripCommandView.seatsReserved": "Seats reserved",
   "screen.organization.trips.tripCommandView.occupancy": "Occupancy",
+  "screen.organization.trips.tripCommandView.tripState": "Trip state",
+  "screen.organization.trips.tripCommandView.cancelBlockedTitle":
+    "Cancel is blocked while In Progress",
+  "screen.organization.trips.tripCommandView.cancelBlockedBody":
+    "A trip that has started cannot be cancelled. Its state moves on when the trip ends.",
   "screen.organization.trips.tripCommandView.readyGaps": "Ready gaps",
-  "screen.organization.trips.tripCommandView.readyGapsPerVehicle": "Ready gaps per vehicle",
-  "screen.organization.trips.tripCommandView.noGaps": "No gaps",
-  "screen.organization.trips.tripCommandView.everyVehicleHasADriver":
-    "Every vehicle has a driver and a moderator.",
+  "screen.organization.trips.tripCommandView.noVehicles": "No vehicles on this trip yet.",
   "screen.organization.trips.tripCommandView.goTo": "Go to",
+  // apps/web/src/screens/organization/trips/trip-parts.tsx
+  "screen.organization.trips.tripParts.money": "{amount} {currency}",
+  "screen.organization.trips.tripParts.unlimited": "Unlimited",
+  "screen.organization.trips.tripParts.seatLayoutPreviewLabel":
+    "Seat layout preview with {n} seats",
   // apps/web/src/screens/organization/trips/trip-wizard-step-1-basics.tsx
-  "screen.organization.trips.tripWizardStep1Basics.tripWizardStep1Basics":
-    "Trip wizard step 1: basics",
-  "screen.organization.trips.tripWizardStep1Basics.activeTripsThisMonth": "Active trips this month",
-  "screen.organization.trips.tripWizardStep1Basics.monthlyLimitPlanLimit":
-    "Monthly limit: [plan limit]",
-  "screen.organization.trips.tripWizardStep1Basics.yourDraftIsSavedAs":
-    "Your draft is saved as you go. It stays available if your session ends.",
+  "screen.organization.trips.tripWizardStep1Basics.nameRequired": "Enter a trip name to continue.",
+  "screen.organization.trips.tripWizardStep1Basics.chooseTripType": "Choose a trip type",
+  "screen.organization.trips.tripWizardStep1Basics.arabic": "Arabic",
+  "screen.organization.trips.tripWizardStep1Basics.english": "English",
+  "screen.organization.trips.tripWizardStep1Basics.tripBasics": "Trip basics",
   "screen.organization.trips.tripWizardStep1Basics.tripName": "Trip name",
-  "screen.organization.trips.tripWizardStep1Basics.tripNamePlaceholder": "[Trip name]",
   "screen.organization.trips.tripWizardStep1Basics.description": "Description",
-  "screen.organization.trips.tripWizardStep1Basics.shortDescription": "[Short description]",
+  "screen.organization.trips.tripWizardStep1Basics.descriptionPlaceholder":
+    "Short description of the trip for travelers",
   "screen.organization.trips.tripWizardStep1Basics.tripType": "Trip type",
-  "screen.organization.trips.tripWizardStep1Basics.tripTypePlaceholder": "[Trip type]",
   "screen.organization.trips.tripWizardStep1Basics.language": "Language",
-  "screen.organization.trips.tripWizardStep1Basics.languagePlaceholder": "[Language]",
+  "screen.organization.trips.tripWizardStep1Basics.saveFailedTitle": "The draft was not saved",
+  "screen.organization.trips.tripWizardStep1Basics.saveFailedBody":
+    "Check the fields and try again.",
+  "screen.organization.trips.tripWizardStep1Basics.draftSavedNote":
+    "Your draft is saved as you type. You can leave and come back to it.",
   // apps/web/src/screens/organization/trips/trip-wizard-step-2-schedule-and-route.tsx
-  "screen.organization.trips.tripWizardStep2ScheduleAndRoute.tripWizardStep2Schedule":
-    "Trip wizard step 2: schedule and route",
+  "screen.organization.trips.tripWizardStep2ScheduleAndRoute.mapPickerNote":
+    "Map picker from the maps service",
+  "screen.organization.trips.tripWizardStep2ScheduleAndRoute.stop": "Stop",
+  "screen.organization.trips.tripWizardStep2ScheduleAndRoute.order": "Order",
+  "screen.organization.trips.tripWizardStep2ScheduleAndRoute.action": "Action",
+  "screen.organization.trips.tripWizardStep2ScheduleAndRoute.removeStop": "Remove {name}",
+  "screen.organization.trips.tripWizardStep2ScheduleAndRoute.remove": "Remove",
+  "screen.organization.trips.tripWizardStep2ScheduleAndRoute.saveFailedTitle":
+    "The schedule was not saved",
+  "screen.organization.trips.tripWizardStep2ScheduleAndRoute.saveFailedBody":
+    "Check the dates, times and stops, then try again.",
+  "screen.organization.trips.tripWizardStep2ScheduleAndRoute.datesAndTimes": "Dates and times",
   "screen.organization.trips.tripWizardStep2ScheduleAndRoute.startDate": "Start date",
-  "screen.organization.trips.tripWizardStep2ScheduleAndRoute.yyyyMmDd": "YYYY-MM-DD",
-  "screen.organization.trips.tripWizardStep2ScheduleAndRoute.endDate": "End date",
-  "screen.organization.trips.tripWizardStep2ScheduleAndRoute.yyyyMmDdPlaceholder": "YYYY-MM-DD",
   "screen.organization.trips.tripWizardStep2ScheduleAndRoute.startTime": "Start time",
-  "screen.organization.trips.tripWizardStep2ScheduleAndRoute.hhMm": "HH:MM",
+  "screen.organization.trips.tripWizardStep2ScheduleAndRoute.endDate": "End date",
   "screen.organization.trips.tripWizardStep2ScheduleAndRoute.endTime": "End time",
-  "screen.organization.trips.tripWizardStep2ScheduleAndRoute.hhMmPlaceholder": "HH:MM",
   "screen.organization.trips.tripWizardStep2ScheduleAndRoute.tripTimeZone": "Trip time zone",
-  "screen.organization.trips.tripWizardStep2ScheduleAndRoute.timeZone": "[Time zone]",
   "screen.organization.trips.tripWizardStep2ScheduleAndRoute.origin": "Origin",
-  "screen.organization.trips.tripWizardStep2ScheduleAndRoute.originPlaceholder": "[Origin]",
   "screen.organization.trips.tripWizardStep2ScheduleAndRoute.destinationsAndStops":
     "Destinations and stops",
-  "screen.organization.trips.tripWizardStep2ScheduleAndRoute.destinationOrStop":
-    "[Destination or stop]",
-  "screen.organization.trips.tripWizardStep2ScheduleAndRoute.theMapPickerFromThe":
-    "The map picker from the maps service sets the origin, destinations and stops.",
+  "screen.organization.trips.tripWizardStep2ScheduleAndRoute.noStops": "Add at least one stop.",
+  "screen.organization.trips.tripWizardStep2ScheduleAndRoute.newStop": "New stop",
+  "screen.organization.trips.tripWizardStep2ScheduleAndRoute.addStop": "Add stop",
   // apps/web/src/screens/organization/trips/trip-wizard-step-3-vehicles.tsx
-  "screen.organization.trips.tripWizardStep3Vehicles.vehicle": "Vehicle",
+  "screen.organization.trips.tripWizardStep3Vehicles.plate": "Plate",
   "screen.organization.trips.tripWizardStep3Vehicles.vehicleType": "Vehicle type",
   "screen.organization.trips.tripWizardStep3Vehicles.seats": "Seats",
+  "screen.organization.trips.tripWizardStep3Vehicles.nSeats": "{n} seats",
+  "screen.organization.trips.tripWizardStep3Vehicles.action": "Action",
+  "screen.organization.trips.tripWizardStep3Vehicles.removeVehicle": "Remove {plate}",
   "screen.organization.trips.tripWizardStep3Vehicles.remove": "Remove",
-  "screen.organization.trips.tripWizardStep3Vehicles.removeVehicle": "Remove vehicle",
-  "screen.organization.trips.tripWizardStep3Vehicles.tripWizardStep3Vehicles":
-    "Trip wizard step 3: vehicles",
+  "screen.organization.trips.tripWizardStep3Vehicles.vehicleLimitNote":
+    "Vehicles on this trip: {n} of {limit}. Need more vehicles?",
+  "screen.organization.trips.tripWizardStep3Vehicles.upgradeYourPlan": "Upgrade your plan.",
+  "screen.organization.trips.tripWizardStep3Vehicles.saveFailedTitle":
+    "The vehicles were not saved",
+  "screen.organization.trips.tripWizardStep3Vehicles.saveFailedBody":
+    "Try again. If it keeps failing, check the vehicles are active.",
   "screen.organization.trips.tripWizardStep3Vehicles.vehiclesOnThisTrip": "Vehicles on this trip",
-  "screen.organization.trips.tripWizardStep3Vehicles.0Of10": "0 of 10",
-  "screen.organization.trips.tripWizardStep3Vehicles.growthPlanLimitPerTrip":
-    "Growth plan limit per trip",
-  "screen.organization.trips.tripWizardStep3Vehicles.vehicles": "Vehicles",
+  "screen.organization.trips.tripWizardStep3Vehicles.noVehiclesYet":
+    "No vehicles on this trip yet.",
   "screen.organization.trips.tripWizardStep3Vehicles.addVehicle": "Add vehicle",
-  "screen.organization.trips.tripWizardStep3Vehicles.vehiclesOnThisTripCaption":
-    "Vehicles on this trip",
-  "screen.organization.trips.tripWizardStep3Vehicles.noVehiclesYet": "No vehicles yet",
-  "screen.organization.trips.tripWizardStep3Vehicles.addAtLeastOneVehicle":
-    "Add at least one vehicle to continue.",
-  "screen.organization.trips.tripWizardStep3Vehicles.theSeatLayoutPreviewAppears":
-    "The seat layout preview appears after you choose a vehicle type. Each vehicle has one vehicle type.",
+  "screen.organization.trips.tripWizardStep3Vehicles.atLimitNote":
+    "This trip has the most vehicles your plan allows.",
+  "screen.organization.trips.tripWizardStep3Vehicles.noMoreVehiclesNote":
+    "Every vehicle in your fleet is already on this trip.",
+  "screen.organization.trips.tripWizardStep3Vehicles.seatLayoutPreview": "Seat layout preview",
+  "screen.organization.trips.tripWizardStep3Vehicles.layoutOfVehicle": "Layout of {type}",
+  "screen.organization.trips.tripWizardStep3Vehicles.layoutCaption":
+    "Layout of the selected vehicle type",
   // apps/web/src/screens/organization/trips/trip-wizard-step-4-staffing.tsx
+  "screen.organization.trips.tripWizardStep4Staffing.missingDriver": "Missing driver",
+  "screen.organization.trips.tripWizardStep4Staffing.missingModerator": "Missing moderator",
   "screen.organization.trips.tripWizardStep4Staffing.notAssigned": "Not assigned",
-  "screen.organization.trips.tripWizardStep4Staffing.organizationOwned": "Organization-owned",
-  "screen.organization.trips.tripWizardStep4Staffing.platformThroughADeal":
-    "Platform (through a deal)",
-  "screen.organization.trips.tripWizardStep4Staffing.notAssignedLabel": "Not assigned",
-  "screen.organization.trips.tripWizardStep4Staffing.organizationOwnedLabel": "Organization-owned",
-  "screen.organization.trips.tripWizardStep4Staffing.notAssigned2": "Not assigned",
-  "screen.organization.trips.tripWizardStep4Staffing.organizationOwned2": "Organization-owned",
-  "screen.organization.trips.tripWizardStep4Staffing.platformThroughADealLabel":
-    "Platform (through a deal)",
-  "screen.organization.trips.tripWizardStep4Staffing.ready": "Ready",
+  "screen.organization.trips.tripWizardStep4Staffing.assigned": "Assigned",
+  "screen.organization.trips.tripWizardStep4Staffing.nameOwnStaff": "{name}, own staff",
+  "screen.organization.trips.tripWizardStep4Staffing.namePlatform": "{name}, platform",
+  "screen.organization.trips.tripWizardStep4Staffing.vehicle": "Vehicle",
   "screen.organization.trips.tripWizardStep4Staffing.driver": "Driver",
   "screen.organization.trips.tripWizardStep4Staffing.moderator": "Moderator",
   "screen.organization.trips.tripWizardStep4Staffing.photographer": "Photographer",
-  "screen.organization.trips.tripWizardStep4Staffing.findPlatformSupplier":
-    "Find platform supplier",
-  "screen.organization.trips.tripWizardStep4Staffing.tripWizardStep4Staffing":
-    "Trip wizard step 4: staffing",
-  "screen.organization.trips.tripWizardStep4Staffing.aPlatformDriverOrPhotographer":
-    "A platform driver or photographer is assigned only after the deal is finalized.",
+  "screen.organization.trips.tripWizardStep4Staffing.platformStaffTitle":
+    "Platform staff are on Growth and Enterprise",
+  "screen.organization.trips.tripWizardStep4Staffing.platformStaffBody":
+    "Your plan uses your own drivers and photographers. Platform options open when you upgrade.",
+  "screen.organization.trips.tripWizardStep4Staffing.saveFailedTitle": "The staffing was not saved",
+  "screen.organization.trips.tripWizardStep4Staffing.saveFailedBody": "Try again in a moment.",
+  "screen.organization.trips.tripWizardStep4Staffing.staffForEachVehicle": "Staff for each vehicle",
+  "screen.organization.trips.tripWizardStep4Staffing.noVehicles": "Add vehicles in step 3 first.",
+  "screen.organization.trips.tripWizardStep4Staffing.readyNeedsNote":
+    "Ready needs a driver and a moderator on every vehicle. Each gap is listed above.",
+  "screen.organization.trips.tripWizardStep4Staffing.assignOwnStaff": "Assign own staff",
   // apps/web/src/screens/organization/trips/trip-wizard-step-5-programs.tsx
   "screen.organization.trips.tripWizardStep5Programs.program": "Program",
   "screen.organization.trips.tripWizardStep5Programs.pricingModel": "Pricing model",
   "screen.organization.trips.tripWizardStep5Programs.typeFlags": "Type flags",
   "screen.organization.trips.tripWizardStep5Programs.cap": "Cap",
-  "screen.organization.trips.tripWizardStep5Programs.tripWizardStep5Programs":
-    "Trip wizard step 5: programs",
-  "screen.organization.trips.tripWizardStep5Programs.programsOnThisTrip": "Programs on this trip",
-  "screen.organization.trips.tripWizardStep5Programs.0Of15": "0 of 15",
-  "screen.organization.trips.tripWizardStep5Programs.growthPlanLimitPerTrip":
-    "Growth plan limit per trip",
-  "screen.organization.trips.tripWizardStep5Programs.programs": "Programs",
+  "screen.organization.trips.tripWizardStep5Programs.price": "Price",
+  "screen.organization.trips.tripWizardStep5Programs.preRequired": "Pre-required",
+  "screen.organization.trips.tripWizardStep5Programs.optional": "Optional",
+  "screen.organization.trips.tripWizardStep5Programs.capacityLimited": "Capacity-limited",
+  "screen.organization.trips.tripWizardStep5Programs.free": "Free",
+  "screen.organization.trips.tripWizardStep5Programs.perPerson": "Per person",
+  "screen.organization.trips.tripWizardStep5Programs.listSeparator": ", ",
+  "screen.organization.trips.tripWizardStep5Programs.none": "None",
+  "screen.organization.trips.tripWizardStep5Programs.nOfLimitPrograms": "{n} of {limit} programs",
   "screen.organization.trips.tripWizardStep5Programs.addProgram": "Add program",
-  "screen.organization.trips.tripWizardStep5Programs.programsOnThisTripCaption":
-    "Programs on this trip",
+  "screen.organization.trips.tripWizardStep5Programs.saveFailedTitle":
+    "The programs step was not saved",
+  "screen.organization.trips.tripWizardStep5Programs.saveFailedBody": "Try again in a moment.",
+  "screen.organization.trips.tripWizardStep5Programs.programsOnThisTrip": "Programs on this trip",
   "screen.organization.trips.tripWizardStep5Programs.noProgramsYet": "No programs yet",
-  "screen.organization.trips.tripWizardStep5Programs.addAProgramOrContinue":
+  "screen.organization.trips.tripWizardStep5Programs.noProgramsBody":
     "Add a program, or continue without one.",
+  "screen.organization.trips.tripWizardStep5Programs.atLimitNote":
+    "This trip has the most programs your plan allows.",
+  "screen.organization.trips.tripWizardStep5Programs.onePricingModelNote":
+    "Each program has exactly one pricing model. Edit a program to change its price or flags before the trip starts.",
   // apps/web/src/screens/organization/trips/trip-wizard-step-6-seating.tsx
-  "screen.organization.trips.tripWizardStep6Seating.tripWizardStep6Seating":
-    "Trip wizard step 6: seating",
-  "screen.organization.trips.tripWizardStep6Seating.travelersChooseTheirOwnSeats":
-    "Travelers choose their own seats",
-  "screen.organization.trips.tripWizardStep6Seating.selfSelect": "Self-select",
-  "screen.organization.trips.tripWizardStep6Seating.organizationAssignsSeats":
-    "Organization assigns seats",
-  "screen.organization.trips.tripWizardStep6Seating.organizationAssignedSeatsAreThe":
-    "Organization-assigned seats are the default. Changing the seat mode after bookings follows the trip change rules.",
-  "screen.organization.trips.tripWizardStep6Seating.priorityWindowForExplorerAnd":
+  "screen.organization.trips.tripWizardStep6Seating.saveFailedTitle": "The seating was not saved",
+  "screen.organization.trips.tripWizardStep6Seating.saveFailedBody": "Try again in a moment.",
+  "screen.organization.trips.tripWizardStep6Seating.seatMode": "Seat mode",
+  "screen.organization.trips.tripWizardStep6Seating.chooseHowTravelersGetSeats":
+    "Choose how travelers get seats",
+  "screen.organization.trips.tripWizardStep6Seating.organizationAssigned": "Organization-assigned",
+  "screen.organization.trips.tripWizardStep6Seating.organizationAssignedBody":
+    "Default. Your team assigns each traveler a seat from the seat map.",
+  "screen.organization.trips.tripWizardStep6Seating.travelerSelfSelect": "Traveler self-select",
+  "screen.organization.trips.tripWizardStep6Seating.growthOrEnterprise": "Growth or Enterprise",
+  "screen.organization.trips.tripWizardStep6Seating.travelerSelfSelectLocked":
+    "Travelers pick their own seat. Locked on your plan.",
+  "screen.organization.trips.tripWizardStep6Seating.travelerSelfSelectBody":
+    "Travelers pick their own seat.",
+  "screen.organization.trips.tripWizardStep6Seating.priorityWindow": "Priority window",
+  "screen.organization.trips.tripWizardStep6Seating.priorityWindowLabel":
     "Priority window for Explorer and VIP travelers",
-  "screen.organization.trips.tripWizardStep6Seating.windowLength": "[Window length]",
-  "screen.organization.trips.tripWizardStep6Seating.theLengthOfTheWindow":
-    "The length of the window is still to be decided.",
+  "screen.organization.trips.tripWizardStep6Seating.windowHoursHint": "In hours.",
+  "screen.organization.trips.tripWizardStep6Seating.windowTbc":
+    "The window length is still to be confirmed.",
+  "screen.organization.trips.tripWizardStep6Seating.changeRulesNote":
+    "Changing the seat mode after bookings exist follows the trip change rules and notifies travelers first.",
   // apps/web/src/screens/organization/trips/trip-wizard-step-7-pricing-and-capacity.tsx
-  "screen.organization.trips.tripWizardStep7PricingAndCapacity.tripWizardStep7Pricing":
-    "Trip wizard step 7: pricing and capacity",
-  "screen.organization.trips.tripWizardStep7PricingAndCapacity.basePrice": "Base price",
-  "screen.organization.trips.tripWizardStep7PricingAndCapacity.amount": "[Amount]",
+  "screen.organization.trips.tripWizardStep7PricingAndCapacity.perVehicleValue":
+    "{n} seats, from the vehicle type",
+  "screen.organization.trips.tripWizardStep7PricingAndCapacity.nSeats": "{n} seats",
+  "screen.organization.trips.tripWizardStep7PricingAndCapacity.saveFailedTitle":
+    "The pricing was not saved",
+  "screen.organization.trips.tripWizardStep7PricingAndCapacity.saveFailedBody":
+    "Check the price and try again.",
+  "screen.organization.trips.tripWizardStep7PricingAndCapacity.basePriceAndCapacity":
+    "Base price and capacity",
+  "screen.organization.trips.tripWizardStep7PricingAndCapacity.basePricePerPerson":
+    "Base price per person",
   "screen.organization.trips.tripWizardStep7PricingAndCapacity.currency": "Currency",
-  "screen.organization.trips.tripWizardStep7PricingAndCapacity.currencyCode": "[Currency code]",
   "screen.organization.trips.tripWizardStep7PricingAndCapacity.capacityPerVehicle":
     "Capacity per vehicle",
-  "screen.organization.trips.tripWizardStep7PricingAndCapacity.seatCount": "[Seat count]",
-  "screen.organization.trips.tripWizardStep7PricingAndCapacity.setByTheSeatCount":
-    "Set by the seat count of each vehicle type.",
+  "screen.organization.trips.tripWizardStep7PricingAndCapacity.totalCapacity":
+    "Total capacity on this trip",
   "screen.organization.trips.tripWizardStep7PricingAndCapacity.childTracking": "Child tracking",
-  "screen.organization.trips.tripWizardStep7PricingAndCapacity.on": "On",
-  "screen.organization.trips.tripWizardStep7PricingAndCapacity.off": "Off",
-  "screen.organization.trips.tripWizardStep7PricingAndCapacity.childTrackingNeedsAParent":
-    "Child tracking needs a parent on Explorer or VIP and an organization on Growth or Enterprise.",
+  "screen.organization.trips.tripWizardStep7PricingAndCapacity.growthOrEnterprise":
+    "Growth or Enterprise",
+  "screen.organization.trips.tripWizardStep7PricingAndCapacity.turnOnChildTracking":
+    "Turn on child tracking for this trip",
+  "screen.organization.trips.tripWizardStep7PricingAndCapacity.childTrackingLocked":
+    "Locked on Starter. Growth and Enterprise can enable it. Parents need an Explorer or VIP booking.",
+  "screen.organization.trips.tripWizardStep7PricingAndCapacity.childTrackingBody":
+    "Parents need an Explorer or VIP booking.",
+  "screen.organization.trips.tripWizardStep7PricingAndCapacity.capacityNote":
+    "Capacity cannot be above the seat count of the vehicles on this trip.",
   // apps/web/src/screens/organization/trips/trip-wizard-step-8-publish.tsx
   "screen.organization.trips.tripWizardStep8Publish.basics": "Basics",
   "screen.organization.trips.tripWizardStep8Publish.scheduleAndRoute": "Schedule and route",
@@ -2415,80 +2721,117 @@ export const en = {
   "screen.organization.trips.tripWizardStep8Publish.programs": "Programs",
   "screen.organization.trips.tripWizardStep8Publish.seating": "Seating",
   "screen.organization.trips.tripWizardStep8Publish.pricingAndCapacity": "Pricing and capacity",
-  "screen.organization.trips.tripWizardStep8Publish.saveAsDraft": "Save as draft",
-  "screen.organization.trips.tripWizardStep8Publish.publishToEveryone": "Publish to everyone",
-  "screen.organization.trips.tripWizardStep8Publish.publishToATargetedAudience":
-    "Publish to a targeted audience list",
-  "screen.organization.trips.tripWizardStep8Publish.tripWizardStep8Publish":
-    "Trip wizard step 8: publish",
+  "screen.organization.trips.tripWizardStep8Publish.missingDriver": "Missing driver",
+  "screen.organization.trips.tripWizardStep8Publish.missingModerator": "Missing moderator",
+  "screen.organization.trips.tripWizardStep8Publish.blockedMissingDriver":
+    "Staffing is incomplete. Add a driver for {plate} to continue.",
+  "screen.organization.trips.tripWizardStep8Publish.blockedMissingModerator":
+    "Staffing is incomplete. Add a moderator for {plate} to continue.",
+  "screen.organization.trips.tripWizardStep8Publish.blockedIncompleteStep":
+    "{step} is incomplete. Finish it to continue.",
+  "screen.organization.trips.tripWizardStep8Publish.requiredStep": "Required step",
+  "screen.organization.trips.tripWizardStep8Publish.status": "Status",
+  "screen.organization.trips.tripWizardStep8Publish.complete": "Complete",
+  "screen.organization.trips.tripWizardStep8Publish.incomplete": "Incomplete",
+  "screen.organization.trips.tripWizardStep8Publish.action": "Action",
+  "screen.organization.trips.tripWizardStep8Publish.open": "Open",
+  "screen.organization.trips.tripWizardStep8Publish.openStepN": "Open step {n}",
+  "screen.organization.trips.tripWizardStep8Publish.public": "Public",
+  "screen.organization.trips.tripWizardStep8Publish.draft": "Draft",
+  "screen.organization.trips.tripWizardStep8Publish.targetedAudienceList": "Targeted audience list",
+  "screen.organization.trips.tripWizardStep8Publish.publishTrip": "Publish trip",
   "screen.organization.trips.tripWizardStep8Publish.publish": "Publish",
   "screen.organization.trips.tripWizardStep8Publish.saveDraft": "Save draft",
+  "screen.organization.trips.tripWizardStep8Publish.publishUnlocksNote":
+    "Publish unlocks when every required step is complete.",
+  "screen.organization.trips.tripWizardStep8Publish.publishBlocked": "Publish is blocked",
+  "screen.organization.trips.tripWizardStep8Publish.actionFailedTitle": "That did not go through",
+  "screen.organization.trips.tripWizardStep8Publish.actionFailedBody": "Try again in a moment.",
+  "screen.organization.trips.tripWizardStep8Publish.readinessChecklist": "Readiness checklist",
+  "screen.organization.trips.tripWizardStep8Publish.publishMode": "Publish mode",
+  "screen.organization.trips.tripWizardStep8Publish.audienceList": "Audience list",
+  "screen.organization.trips.tripWizardStep8Publish.audienceListHint":
+    "Audience ids, separated by commas.",
   "screen.organization.trips.tripWizardStep8Publish.tripsPublishedThisMonth":
     "Trips published this month",
-  "screen.organization.trips.tripWizardStep8Publish.monthlyLimitPlanLimit":
-    "Monthly limit: [plan limit]",
-  "screen.organization.trips.tripWizardStep8Publish.readiness": "Readiness",
-  "screen.organization.trips.tripWizardStep8Publish.requiredSteps": "Required steps",
-  "screen.organization.trips.tripWizardStep8Publish.publishMode": "Publish mode",
-  "screen.organization.trips.tripWizardStep8Publish.publishModeLabel": "Publish mode",
-  "screen.organization.trips.tripWizardStep8Publish.audienceList": "Audience list",
-  "screen.organization.trips.tripWizardStep8Publish.audienceListPlaceholder": "[Audience list]",
-  "screen.organization.trips.tripWizardStep8Publish.usedOnlyWhenPublishingTo":
-    "Used only when publishing to a targeted audience.",
+  "screen.organization.trips.tripWizardStep8Publish.nOfLimit": "{n} of {limit}",
   // apps/web/src/screens/organization/trips/trips-list.tsx
+  "screen.organization.trips.tripsList.title": "Trips",
+  "screen.organization.trips.tripsList.caption": "Every trip with its state and next action",
+  "screen.organization.trips.tripsList.createTrip": "Create trip",
+  "screen.organization.trips.tripsList.activeTripsThisMonth": "Active trips this month",
+  "screen.organization.trips.tripsList.tripsNeedingStaffing": "Trips needing staffing",
+  "screen.organization.trips.tripsList.filterByState": "Filter trips by state",
+  "screen.organization.trips.tripsList.all": "All",
   "screen.organization.trips.tripsList.trip": "Trip",
+  "screen.organization.trips.tripsList.state": "State",
   "screen.organization.trips.tripsList.dates": "Dates",
   "screen.organization.trips.tripsList.vehicles": "Vehicles",
   "screen.organization.trips.tripsList.seatsSold": "Seats sold",
   "screen.organization.trips.tripsList.staffing": "Staffing",
+  "screen.organization.trips.tripsList.dateRange": "{start} to {end}",
+  "screen.organization.trips.tripsList.nOfCapacity": "{n} of {capacity}",
+  "screen.organization.trips.tripsList.notStarted": "Not started",
   "screen.organization.trips.tripsList.staffingGap": "Staffing gap",
   "screen.organization.trips.tripsList.staffed": "Staffed",
-  "screen.organization.trips.tripsList.state": "State",
-  "screen.organization.trips.tripsList.allStates": "All states",
-  "screen.organization.trips.tripsList.tripsList": "Trips list",
-  "screen.organization.trips.tripsList.createTrip": "Create trip",
-  "screen.organization.trips.tripsList.activeTripsThisMonth": "Active trips this month",
-  "screen.organization.trips.tripsList.monthlyLimitPlanLimit": "Monthly limit: [plan limit]",
-  "screen.organization.trips.tripsList.tripsWithStaffingGaps": "Trips with staffing gaps",
-  "screen.organization.trips.tripsList.searchTrips": "Search trips",
-  "screen.organization.trips.tripsList.clearSearch": "Clear search",
-  "screen.organization.trips.tripsList.stateLabel": "State",
-  "screen.organization.trips.tripsList.trips": "Trips",
-  "screen.organization.trips.tripsList.noTripsMatch": "No trips match",
-  "screen.organization.trips.tripsList.changeTheSearchOrThe":
-    "Change the search or the state filter.",
+  "screen.organization.trips.tripsList.emptyTitle": "No trips yet",
+  "screen.organization.trips.tripsList.emptyBody":
+    "Create your first trip. The wizard saves a draft as you go.",
+  "screen.organization.trips.tripsList.noMatchTitle": "No trips in this state",
+  "screen.organization.trips.tripsList.noMatchBody":
+    "Choose another state, or All to see every trip.",
+  // apps/web/src/screens/organization/vehicles/seat-layout.tsx
+  "screen.organization.vehicles.seatLayout.gridLabel": "Seat layout grid",
+  // apps/web/src/screens/organization/vehicles/vehicle-editor-form.tsx
+  "screen.organization.vehicles.vehicleEditorForm.plateRequired": "Enter the plate number.",
+  "screen.organization.vehicles.vehicleEditorForm.modelRequired": "Enter the model.",
+  "screen.organization.vehicles.vehicleEditorForm.yearInvalid": "Enter a year from {min} to {max}.",
+  "screen.organization.vehicles.vehicleEditorForm.typeRequired": "Choose a vehicle type.",
+  "screen.organization.vehicles.vehicleEditorForm.seatCountMismatch":
+    "Seat count must match the vehicle type. The type has {n} seats; you entered {m}.",
+  "screen.organization.vehicles.vehicleEditorForm.chooseType": "Choose a vehicle type",
+  "screen.organization.vehicles.vehicleEditorForm.notSavedTitle": "Vehicle not saved",
+  "screen.organization.vehicles.vehicleEditorForm.fixSeatCount":
+    "Fix the seat count, then save again.",
+  "screen.organization.vehicles.vehicleEditorForm.notSavedBody":
+    "Fix the marked fields, then save again.",
+  "screen.organization.vehicles.vehicleEditorForm.notRemovedTitle": "Vehicle not removed",
+  "screen.organization.vehicles.vehicleEditorForm.notRemovedBody":
+    "It may be assigned to a trip. Try again later.",
+  "screen.organization.vehicles.vehicleEditorForm.photoNotUploaded":
+    "Photo not uploaded. Use a PNG, JPEG or WebP image and try again.",
+  "screen.organization.vehicles.vehicleEditorForm.vehicleDetails": "Vehicle details",
+  "screen.organization.vehicles.vehicleEditorForm.plateNumber": "Plate number",
+  "screen.organization.vehicles.vehicleEditorForm.model": "Model",
+  "screen.organization.vehicles.vehicleEditorForm.year": "Year",
+  "screen.organization.vehicles.vehicleEditorForm.vehicleType": "Vehicle type",
+  "screen.organization.vehicles.vehicleEditorForm.seatCount": "Seat count",
+  "screen.organization.vehicles.vehicleEditorForm.registrationStatus": "Registration status",
+  "screen.organization.vehicles.vehicleEditorForm.vehiclePhoto": "Vehicle photo",
+  "screen.organization.vehicles.vehicleEditorForm.photosAttached": "Photos attached: {n}",
+  "screen.organization.vehicles.vehicleEditorForm.removeVehicle": "Remove vehicle",
+  "screen.organization.vehicles.vehicleEditorForm.removalBlocked":
+    "Removal is blocked while this vehicle has {n} confirmed bookings.",
+  "screen.organization.vehicles.vehicleEditorForm.cancel": "Cancel",
+  "screen.organization.vehicles.vehicleEditorForm.saveVehicle": "Save vehicle",
   // apps/web/src/screens/organization/vehicles/vehicle-editor.tsx
-  "screen.organization.vehicles.vehicleEditor.confirmedBookingsCount":
-    "This vehicle has {count} confirmed bookings. A vehicle with confirmed bookings cannot be removed.",
+  "screen.organization.vehicles.vehicleEditor.addTitle": "Add vehicle",
+  "screen.organization.vehicles.vehicleEditor.editTitle": "Edit vehicle",
+  "screen.organization.vehicles.vehicleEditor.plateAndModel": "{plate} · {model}",
+  "screen.organization.vehicles.vehicleEditor.addCaption": "A new vehicle in your registry",
+  "screen.organization.vehicles.vehicleEditor.notFoundTitle": "Vehicle not found",
   "screen.organization.vehicles.vehicleEditor.backToVehicles": "Back to vehicles",
-  "screen.organization.vehicles.vehicleEditor.vehicleEditor": "Vehicle editor",
-  "screen.organization.vehicles.vehicleEditor.save": "Save",
-  "screen.organization.vehicles.vehicleEditor.vehicle": "Vehicle",
-  "screen.organization.vehicles.vehicleEditor.plate": "Plate",
-  "screen.organization.vehicles.vehicleEditor.platePlaceholder": "[Plate]",
-  "screen.organization.vehicles.vehicleEditor.model": "Model",
-  "screen.organization.vehicles.vehicleEditor.modelPlaceholder": "[Model]",
-  "screen.organization.vehicles.vehicleEditor.year": "Year",
-  "screen.organization.vehicles.vehicleEditor.yearPlaceholder": "[Year]",
-  "screen.organization.vehicles.vehicleEditor.vehicleType": "Vehicle type",
-  "screen.organization.vehicles.vehicleEditor.vehicleTypePlaceholder": "[Vehicle type]",
-  "screen.organization.vehicles.vehicleEditor.seatCount": "Seat count",
-  "screen.organization.vehicles.vehicleEditor.seatCountPlaceholder": "[Seat count]",
-  "screen.organization.vehicles.vehicleEditor.mustMatchTheSeatCount":
-    "Must match the seat count of the vehicle type.",
-  "screen.organization.vehicles.vehicleEditor.registrationStatus": "Registration status",
-  "screen.organization.vehicles.vehicleEditor.registrationStatusPlaceholder":
-    "[Registration status]",
-  "screen.organization.vehicles.vehicleEditor.uploadVehiclePhoto": "Upload vehicle photo",
-  "screen.organization.vehicles.vehicleEditor.removeVehicle": "Remove vehicle",
-  "screen.organization.vehicles.vehicleEditor.removalIsBlockedWhileBookings":
-    "Removal is blocked while bookings are confirmed",
-  "screen.organization.vehicles.vehicleEditor.removeVehicle2": "Remove vehicle",
+  "screen.organization.vehicles.vehicleEditor.notFoundBody":
+    "It may have been removed from the registry.",
   "screen.organization.vehicles.vehicleEditor.removeThisVehicle": "Remove this vehicle?",
-  "screen.organization.vehicles.vehicleEditor.theVehicleLeavesTheRegistry":
-    "The vehicle leaves the registry and future trips. It cannot be removed while bookings are confirmed.",
-  "screen.organization.vehicles.vehicleEditor.removeVehiclePrimaryLabel": "Remove vehicle",
+  "screen.organization.vehicles.vehicleEditor.removeDialogBody":
+    "The vehicle leaves the registry and can no longer be added to trips.",
+  "screen.organization.vehicles.vehicleEditor.removeVehicle": "Remove vehicle",
   "screen.organization.vehicles.vehicleEditor.keepVehicle": "Keep vehicle",
+  // apps/web/src/screens/organization/vehicles/vehicle-parts.tsx
+  "screen.organization.vehicles.vehicleParts.registered": "Registered",
+  "screen.organization.vehicles.vehicleParts.pendingReview": "Pending review",
+  "screen.organization.vehicles.vehicleParts.expired": "Registration expired",
   // apps/web/src/screens/organization/vehicles/vehicle-registry.tsx
   "screen.organization.vehicles.vehicleRegistry.plate": "Plate",
   "screen.organization.vehicles.vehicleRegistry.model": "Model",
@@ -2496,119 +2839,120 @@ export const en = {
   "screen.organization.vehicles.vehicleRegistry.vehicleType": "Vehicle type",
   "screen.organization.vehicles.vehicleRegistry.seats": "Seats",
   "screen.organization.vehicles.vehicleRegistry.registration": "Registration",
-  "screen.organization.vehicles.vehicleRegistry.allVehicleTypes": "All vehicle types",
-  "screen.organization.vehicles.vehicleRegistry.vehicleTypeLabel": "[Vehicle type]",
-  "screen.organization.vehicles.vehicleRegistry.allVehicleTypesLabel": "All vehicle types",
-  "screen.organization.vehicles.vehicleRegistry.vehicleRegistry": "Vehicle registry",
-  "screen.organization.vehicles.vehicleRegistry.vehicleTypes": "Vehicle types",
   "screen.organization.vehicles.vehicleRegistry.addVehicle": "Add vehicle",
-  "screen.organization.vehicles.vehicleRegistry.searchByPlate": "Search by plate",
-  "screen.organization.vehicles.vehicleRegistry.clearSearch": "Clear search",
-  "screen.organization.vehicles.vehicleRegistry.vehicleType2": "Vehicle type",
-  "screen.organization.vehicles.vehicleRegistry.vehicles": "Vehicles",
-  "screen.organization.vehicles.vehicleRegistry.noVehiclesYet": "No vehicles yet",
-  "screen.organization.vehicles.vehicleRegistry.addAVehicleToUse":
-    "Add a vehicle to use it on trips.",
+  "screen.organization.vehicles.vehicleRegistry.title": "Vehicles",
+  "screen.organization.vehicles.vehicleRegistry.caption":
+    "Your organization's vehicles and their seat counts",
+  "screen.organization.vehicles.vehicleRegistry.vehicleTypes": "Vehicle types",
+  "screen.organization.vehicles.vehicleRegistry.filterByRegistration":
+    "Filter vehicles by registration",
+  "screen.organization.vehicles.vehicleRegistry.all": "All",
+  "screen.organization.vehicles.vehicleRegistry.registered": "Registered",
+  "screen.organization.vehicles.vehicleRegistry.pendingReview": "Pending review",
+  "screen.organization.vehicles.vehicleRegistry.emptyTitle": "No vehicles yet",
+  "screen.organization.vehicles.vehicleRegistry.noMatchTitle": "No vehicles match this filter",
+  "screen.organization.vehicles.vehicleRegistry.emptyBody": "Add a vehicle to use it on trips.",
   // apps/web/src/screens/organization/vehicles/vehicle-types-and-seat-layout.tsx
-  "screen.organization.vehicles.vehicleTypesAndSeatLayout.backToVehicles": "Back to vehicles",
-  "screen.organization.vehicles.vehicleTypesAndSeatLayout.vehicleTypesAndSeatLayout":
-    "Vehicle types and seat layout",
-  "screen.organization.vehicles.vehicleTypesAndSeatLayout.archiveType": "Archive type",
-  "screen.organization.vehicles.vehicleTypesAndSeatLayout.save": "Save",
-  "screen.organization.vehicles.vehicleTypesAndSeatLayout.type": "Type",
-  "screen.organization.vehicles.vehicleTypesAndSeatLayout.name": "Name",
-  "screen.organization.vehicles.vehicleTypesAndSeatLayout.typeName": "[Type name]",
+  "screen.organization.vehicles.vehicleTypesAndSeatLayout.typeDetails": "Type details",
+  "screen.organization.vehicles.vehicleTypesAndSeatLayout.typeName": "Type name",
+  "screen.organization.vehicles.vehicleTypesAndSeatLayout.nameRequired": "Enter the type name.",
   "screen.organization.vehicles.vehicleTypesAndSeatLayout.seatCount": "Seat count",
-  "screen.organization.vehicles.vehicleTypesAndSeatLayout.seatCountPlaceholder": "[Seat count]",
+  "screen.organization.vehicles.vehicleTypesAndSeatLayout.seatCountInvalid":
+    "Enter a seat count from 1 to {max}.",
+  "screen.organization.vehicles.vehicleTypesAndSeatLayout.status": "Status",
+  "screen.organization.vehicles.vehicleTypesAndSeatLayout.active": "Active",
+  "screen.organization.vehicles.vehicleTypesAndSeatLayout.archived": "Archived",
+  "screen.organization.vehicles.vehicleTypesAndSeatLayout.archiveType": "Archive type",
   "screen.organization.vehicles.vehicleTypesAndSeatLayout.seatLayout": "Seat layout",
-  "screen.organization.vehicles.vehicleTypesAndSeatLayout.seatLayoutOfThisVehicle":
-    "Seat layout of this vehicle type",
-  "screen.organization.vehicles.vehicleTypesAndSeatLayout.seatLabelsAppearOnThe":
-    "Seat labels appear on the seat map. Archived types are not offered for new trips, and existing trips keep their layout.",
+  "screen.organization.vehicles.vehicleTypesAndSeatLayout.seatLayoutCaption":
+    "Each seat has a label. Labels appear on the seat map.",
+  "screen.organization.vehicles.vehicleTypesAndSeatLayout.title": "Vehicle type",
+  "screen.organization.vehicles.vehicleTypesAndSeatLayout.caption": "Reusable seat layout · {name}",
+  "screen.organization.vehicles.vehicleTypesAndSeatLayout.saveType": "Save type",
+  "screen.organization.vehicles.vehicleTypesAndSeatLayout.archivedNote":
+    "Archived types are not offered for new trips. Trips that already use this type keep their layout.",
+  "screen.organization.vehicles.vehicleTypesAndSeatLayout.notSavedTitle": "Vehicle type not saved",
+  "screen.organization.vehicles.vehicleTypesAndSeatLayout.notSavedBody":
+    "Check the name and seat count, then try again.",
+  "screen.organization.vehicles.vehicleTypesAndSeatLayout.saved": "Vehicle type saved",
+  // apps/web/src/screens/organization/workspace/organization-profile-parts.tsx
+  "screen.organization.workspace.organizationProfileParts.logoUrlInvalid":
+    "Enter a web address that starts with https://.",
+  "screen.organization.workspace.organizationProfileParts.brandColorInvalid":
+    "Enter a color as # and six characters, for example #1A2B3C.",
   // apps/web/src/screens/organization/workspace/organization-profile-settings-and-branding.tsx
-  "screen.organization.workspace.organizationProfileSettingsAndBranding.organizationProfileSettingsAndBranding":
-    "Organization profile, settings and branding",
-  "screen.organization.workspace.organizationProfileSettingsAndBranding.save": "Save",
-  "screen.organization.workspace.organizationProfileSettingsAndBranding.legalDetails":
-    "Legal details",
-  "screen.organization.workspace.organizationProfileSettingsAndBranding.legalNameArabic":
-    "Legal name (Arabic)",
-  "screen.organization.workspace.organizationProfileSettingsAndBranding.legalName": "[Legal name]",
-  "screen.organization.workspace.organizationProfileSettingsAndBranding.legalNameEnglish":
-    "Legal name (English)",
-  "screen.organization.workspace.organizationProfileSettingsAndBranding.legalNamePlaceholder":
-    "[Legal name]",
-  "screen.organization.workspace.organizationProfileSettingsAndBranding.tradeNameArabic":
-    "Trade name (Arabic)",
-  "screen.organization.workspace.organizationProfileSettingsAndBranding.tradeName": "[Trade name]",
-  "screen.organization.workspace.organizationProfileSettingsAndBranding.tradeNameEnglish":
-    "Trade name (English)",
-  "screen.organization.workspace.organizationProfileSettingsAndBranding.tradeNamePlaceholder":
-    "[Trade name]",
+  "screen.organization.workspace.organizationProfileSettingsAndBranding.tradeNameTooShort":
+    "Enter a trade name of at least 2 characters.",
+  "screen.organization.workspace.organizationProfileSettingsAndBranding.lockedOnYourPlan":
+    "Locked on your plan",
+  "screen.organization.workspace.organizationProfileSettingsAndBranding.legalAndInvoiceDetails":
+    "Legal and invoice details",
+  "screen.organization.workspace.organizationProfileSettingsAndBranding.legalName": "Legal name",
+  "screen.organization.workspace.organizationProfileSettingsAndBranding.setAtVerification":
+    "Set when the organization was verified. Contact support to change it.",
+  "screen.organization.workspace.organizationProfileSettingsAndBranding.tradeName": "Trade name",
   "screen.organization.workspace.organizationProfileSettingsAndBranding.country": "Country",
-  "screen.organization.workspace.organizationProfileSettingsAndBranding.countryPlaceholder":
-    "[Country]",
   "screen.organization.workspace.organizationProfileSettingsAndBranding.timeZone": "Time zone",
-  "screen.organization.workspace.organizationProfileSettingsAndBranding.timeZonePlaceholder":
-    "[Time zone]",
   "screen.organization.workspace.organizationProfileSettingsAndBranding.registrationNumber":
     "Registration number",
-  "screen.organization.workspace.organizationProfileSettingsAndBranding.registrationNumberPlaceholder":
-    "[Registration number]",
-  "screen.organization.workspace.organizationProfileSettingsAndBranding.taxNumber": "Tax number",
-  "screen.organization.workspace.organizationProfileSettingsAndBranding.taxNumberPlaceholder":
-    "[Tax number]",
-  "screen.organization.workspace.organizationProfileSettingsAndBranding.invoiceDetails":
-    "Invoice details",
+  "screen.organization.workspace.organizationProfileSettingsAndBranding.taxReference":
+    "Tax reference",
   "screen.organization.workspace.organizationProfileSettingsAndBranding.invoiceAddress":
     "Invoice address",
-  "screen.organization.workspace.organizationProfileSettingsAndBranding.invoiceAddressPlaceholder":
-    "[Invoice address]",
-  "screen.organization.workspace.organizationProfileSettingsAndBranding.integrations":
-    "Integrations",
-  "screen.organization.workspace.organizationProfileSettingsAndBranding.crmConnectionAndOutboundWebhooks":
-    "CRM connection and outbound webhooks",
-  "screen.organization.workspace.organizationProfileSettingsAndBranding.openCrmAndWebhooks":
-    "Open CRM and webhooks",
   "screen.organization.workspace.organizationProfileSettingsAndBranding.branding": "Branding",
-  "screen.organization.workspace.organizationProfileSettingsAndBranding.logoAndColorsAreAvailable":
-    "Logo and colors are available on the Enterprise plan.",
-  // apps/web/src/screens/organization/workspace/workspace-home.tsx
-  "screen.organization.workspace.workspaceHome.organizationProfile": "Organization profile",
-  "screen.organization.workspace.workspaceHome.accountingAndInvoiceDetails":
+  "screen.organization.workspace.organizationProfileSettingsAndBranding.enterpriseOnly":
+    "Enterprise only",
+  "screen.organization.workspace.organizationProfileSettingsAndBranding.brandingCaption":
+    "Logo and colors appear on trip pages and invoices on Enterprise. Your plan shows the Trips Enjoy mark.",
+  "screen.organization.workspace.organizationProfileSettingsAndBranding.logo": "Logo",
+  "screen.organization.workspace.organizationProfileSettingsAndBranding.brandColor": "Brand color",
+  "screen.organization.workspace.organizationProfileSettingsAndBranding.title":
+    "Organization profile",
+  "screen.organization.workspace.organizationProfileSettingsAndBranding.caption":
+    "Legal details, invoice details and branding",
+  "screen.organization.workspace.organizationProfileSettingsAndBranding.saveChanges":
+    "Save changes",
+  "screen.organization.workspace.organizationProfileSettingsAndBranding.notSavedTitle":
+    "Changes not saved",
+  "screen.organization.workspace.organizationProfileSettingsAndBranding.notSavedBody":
+    "Check the details, then save again.",
+  "screen.organization.workspace.organizationProfileSettingsAndBranding.saved": "Changes saved",
+  // apps/web/src/screens/organization/workspace/workspace-home-parts.tsx
+  "screen.organization.workspace.workspaceHomeParts.done": "Done",
+  "screen.organization.workspace.workspaceHomeParts.toDo": "To do",
+  "screen.organization.workspace.workspaceHomeParts.profile": "Profile",
+  "screen.organization.workspace.workspaceHomeParts.accountingAndInvoiceDetails":
     "Accounting and invoice details",
-  "screen.organization.workspace.workspaceHome.crmConnectionOptional": "CRM connection (optional)",
-  "screen.organization.workspace.workspaceHome.webhooksOptional": "Webhooks (optional)",
-  "screen.organization.workspace.workspaceHome.trip": "Trip",
-  "screen.organization.workspace.workspaceHome.dates": "Dates",
-  "screen.organization.workspace.workspaceHome.readyGaps": "Ready gaps",
-  "screen.organization.workspace.workspaceHome.vehicleRegistry": "Vehicle registry",
-  "screen.organization.workspace.workspaceHome.crmAndWebhooks": "CRM and webhooks",
-  "screen.organization.workspace.workspaceHome.childSafetyReports": "Child-safety reports",
-  "screen.organization.workspace.workspaceHome.workspaceHome": "Workspace home",
-  "screen.organization.workspace.workspaceHome.yourOrganizationSStatusAnd":
-    "Your organization's status and the next step.",
+  "screen.organization.workspace.workspaceHomeParts.crmAndWebhooks": "CRM and webhooks",
+  "screen.organization.workspace.workspaceHomeParts.optional": "Optional",
+  "screen.organization.workspace.workspaceHomeParts.departsFrom": "{date}, {time} from {place}",
+  "screen.organization.workspace.workspaceHomeParts.departsAt": "{date}, {time}",
+  "screen.organization.workspace.workspaceHomeParts.trip": "Trip",
+  "screen.organization.workspace.workspaceHomeParts.departs": "Departs",
+  "screen.organization.workspace.workspaceHomeParts.vehicles": "Vehicles",
+  "screen.organization.workspace.workspaceHomeParts.readiness": "Readiness",
+  "screen.organization.workspace.workspaceHomeParts.staffingGap": "Staffing gap",
+  "screen.organization.workspace.workspaceHomeParts.ready": "Ready",
+  "screen.organization.workspace.workspaceHomeParts.upcomingTripsCaption": "Upcoming trips",
+  "screen.organization.workspace.workspaceHomeParts.noUpcomingTrips": "No upcoming trips",
+  "screen.organization.workspace.workspaceHomeParts.createTrip": "Create trip",
+  "screen.organization.workspace.workspaceHomeParts.noUpcomingTripsBody":
+    "Trips with a departure date appear here.",
+  // apps/web/src/screens/organization/workspace/workspace-home.tsx
+  "screen.organization.workspace.workspaceHome.nOfLimit": "{n} of {limit}",
+  "screen.organization.workspace.workspaceHome.captionEmployee": "{name} · Employee view",
+  "screen.organization.workspace.workspaceHome.captionOwner": "{name} · Owner view",
+  "screen.organization.workspace.workspaceHome.title": "Workspace home",
   "screen.organization.workspace.workspaceHome.createTrip": "Create trip",
+  "screen.organization.workspace.workspaceHome.gracePeriod": "Grace period",
+  "screen.organization.workspace.workspaceHome.gracePeriodBody":
+    "Your features stay on until {date}. Update the payment method to avoid a downgrade.",
   "screen.organization.workspace.workspaceHome.activeTripsThisMonth": "Active trips this month",
-  "screen.organization.workspace.workspaceHome.monthlyLimitPlanLimit":
-    "Monthly limit: [plan limit]",
-  "screen.organization.workspace.workspaceHome.upcomingTrips": "Upcoming trips",
-  "screen.organization.workspace.workspaceHome.tripsWithReadyGaps": "Trips with Ready gaps",
-  "screen.organization.workspace.workspaceHome.alerts": "Alerts",
-  "screen.organization.workspace.workspaceHome.tripNameChangesRequested":
-    "[Trip name]: changes requested",
-  "screen.organization.workspace.workspaceHome.reviewTheRequestedChangesAnd":
-    "Review the requested changes and reply.",
-  "screen.organization.workspace.workspaceHome.pendingDealRequest": "Pending deal request",
-  "screen.organization.workspace.workspaceHome.vehicleOrSlotAPlatform":
-    "[Vehicle or slot]: a platform supplier is waiting for a reply.",
-  "screen.organization.workspace.workspaceHome.upcomingTripsTitle": "Upcoming trips",
-  "screen.organization.workspace.workspaceHome.upcomingTripsCaption": "Upcoming trips",
-  "screen.organization.workspace.workspaceHome.noUpcomingTrips": "No upcoming trips",
-  "screen.organization.workspace.workspaceHome.createATripToSee": "Create a trip to see it here.",
-  "screen.organization.workspace.workspaceHome.moreAreas": "More areas",
+  "screen.organization.workspace.workspaceHome.upcomingTripsWithReadyGaps":
+    "Upcoming trips with Ready gaps",
+  "screen.organization.workspace.workspaceHome.dealRequestsPending": "Deal requests pending",
   "screen.organization.workspace.workspaceHome.setupChecklist": "Setup checklist",
-  "screen.organization.workspace.workspaceHome.setupChecklistAriaLabel": "Setup checklist",
+  "screen.organization.workspace.workspaceHome.upcomingTrips": "Upcoming trips",
   // apps/web/src/screens/public/account-recovery/account-suspended.tsx
   "screen.public.accountSuspended.badge": "Account suspended",
   "screen.public.accountSuspended.title": "Your access is stopped",

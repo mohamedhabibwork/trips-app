@@ -1,57 +1,50 @@
-import { useMemo, useState } from "react";
-
+// SCR-ORG-37 Invoices: the invoices the organization has issued, filtered by buyer type.
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { TeDataTable, type TeDataTableColumn } from "@trips-app/ui/components/te-data-table";
-import { TePageHeader } from "@trips-app/ui/components/te-page-header";
-import { TeSearchField } from "@trips-app/ui/components/te-search-field";
+
 import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
 
-import { OrgButtonLink, WorkspaceBackLink } from "../common/org-link";
-import { StateBadge } from "../common/org-shared";
-import { StatePreview } from "../common/organization-state-preview";
+import { OrgChips } from "../common/org-form";
+import { OrgButtonLink } from "../common/org-link";
+import { OrgTable, type OrgColumn } from "../common/org-table";
+import { NO_VALUE, OrgBadge, OrgEmpty, OrgError, OrgPage, OrgPageHeader } from "../common/org-ui";
+import { formatMinor, rowsOf, type LedgerEntryView } from "../accounting/finance-format";
+
+type BuyerType = "b2b" | "b2c";
 
 interface InvoiceRow {
   id: string;
   number: string;
-  type: "B2B" | "B2C";
+  type: BuyerType;
   buyer: string;
-  amount: string;
+  minor: number;
+  currency: string;
 }
 
-const COLUMNS = (): readonly TeDataTableColumn<InvoiceRow>[] => [
-  { key: "number", header: t("screen.organization.billing.invoicesList.number") },
-  { key: "type", header: t("screen.organization.billing.invoicesList.type") },
-  { key: "buyer", header: t("screen.organization.billing.invoicesList.buyer") },
-  { key: "amount", header: t("screen.organization.billing.invoicesList.amount"), align: "end" },
-  {
-    key: "status",
-    header: t("screen.organization.billing.invoicesList.status"),
-    render: () => (
-      <StateBadge
-        tone="success"
-        icon="check"
-        label={t("screen.organization.billing.invoicesList.issued")}
-      />
-    ),
-  },
-  {
-    key: "open",
-    header: t("screen.organization.billing.invoicesList.open"),
-    align: "end",
-    render: () => (
-      <OrgButtonLink slug="issue-invoice-b2b-or-b2c" variant="ghost">
-        {t("screen.organization.billing.invoicesList.openInvoice")}
-      </OrgButtonLink>
-    ),
-  },
-];
+/** Issued invoices are written as "B2B: Buyer (tax number)"; older entries fall back on their type. */
+function parseInvoice(entry: LedgerEntryView): InvoiceRow {
+  const match = /^(B2B|B2C):\s*(.*)$/i.exec(entry.description);
+  const type: BuyerType = match
+    ? (match[1]?.toLowerCase() as BuyerType)
+    : entry.entryType === "payout_settlement"
+      ? "b2b"
+      : "b2c";
+  return {
+    id: entry.id,
+    number: entry.invoiceNumber ?? NO_VALUE,
+    type,
+    buyer: (match ? match[2] : entry.description) || NO_VALUE,
+    minor: Math.abs(entry.grossAmountMinor),
+    currency: entry.currencyCode,
+  };
+}
 
 export function InvoicesList() {
-  const { status: authStatus } = useAuth();
-  const [query, setQuery] = useState("");
+  const { status: authStatus, locale } = useAuth();
+  const [typeFilter, setTypeFilter] = useState<string>("all");
 
   const ledgerQuery = useQuery(
     orpc.accounting.listLedgerEntries.queryOptions({
@@ -60,51 +53,105 @@ export function InvoicesList() {
     }),
   );
 
-  const rows = useMemo<readonly InvoiceRow[]>(() => {
-    if (!ledgerQuery.data) return [];
-    return ledgerQuery.data.map((entry, idx) => ({
-      id: entry.id,
-      number: entry.invoiceNumber || `INV-${String(idx + 1).padStart(4, "0")}`,
-      type: entry.entryType === "payout_settlement" ? "B2B" : "B2C",
-      buyer: entry.description || entry.bookingId || entry.entryType,
-      amount: `${(Math.abs(entry.grossAmountMinor) / 100).toFixed(2)} ${entry.currencyCode}`,
-    }));
-  }, [ledgerQuery.data]);
+  const rows = rowsOf<LedgerEntryView>(ledgerQuery.data)
+    .filter((entry) => Boolean(entry.invoiceNumber))
+    .map(parseInvoice);
+  const visibleRows = rows.filter((row) => typeFilter === "all" || row.type === typeFilter);
 
-  const normalizedQuery = query.trim().toLowerCase();
-  const visibleRows = rows.filter(
-    (row) =>
-      row.number.toLowerCase().includes(normalizedQuery) ||
-      row.buyer.toLowerCase().includes(normalizedQuery),
-  );
+  const columns: readonly OrgColumn<InvoiceRow>[] = [
+    {
+      key: "number",
+      header: t("screen.organization.billing.invoicesList.number"),
+      render: (row) => <b className="font-semibold">{row.number}</b>,
+    },
+    {
+      key: "type",
+      header: t("screen.organization.billing.invoicesList.type"),
+      render: (row) => (
+        <OrgBadge tone="info">
+          {row.type === "b2b"
+            ? t("screen.organization.billing.invoicesList.b2b")
+            : t("screen.organization.billing.invoicesList.b2c")}
+        </OrgBadge>
+      ),
+    },
+    { key: "buyer", header: t("screen.organization.billing.invoicesList.buyer") },
+    {
+      key: "amount",
+      header: t("screen.organization.billing.invoicesList.amount"),
+      className: "whitespace-nowrap",
+      render: (row) => formatMinor(row.minor, row.currency, locale),
+    },
+    {
+      key: "status",
+      header: t("screen.organization.billing.invoicesList.status"),
+      render: () => (
+        <OrgBadge tone="ok">{t("screen.organization.billing.invoicesList.issued")}</OrgBadge>
+      ),
+    },
+    {
+      key: "action",
+      header: t("screen.organization.billing.invoicesList.action"),
+      render: () => (
+        <OrgButtonLink slug="issue-invoice-b2b-or-b2c" variant="text">
+          {t("screen.organization.billing.invoicesList.openInvoice")}
+        </OrgButtonLink>
+      ),
+    },
+  ];
 
   return (
-    <StatePreview>
-      <div className="flex flex-col gap-6">
-        <WorkspaceBackLink />
-        <TePageHeader
-          title={t("screen.organization.billing.invoicesList.invoicesList")}
-          actions={
-            <OrgButtonLink slug="issue-invoice-b2b-or-b2c">
-              {t("screen.organization.billing.invoicesList.issueInvoice")}
-            </OrgButtonLink>
+    <OrgPage>
+      <OrgPageHeader
+        title={t("screen.organization.billing.invoicesList.title")}
+        caption={t("screen.organization.billing.invoicesList.caption")}
+        actions={
+          <OrgButtonLink slug="issue-invoice-b2b-or-b2c">
+            {t("screen.organization.billing.invoicesList.issueInvoice")}
+          </OrgButtonLink>
+        }
+      />
+      <OrgChips
+        label={t("screen.organization.billing.invoicesList.filterByBuyerType")}
+        options={[
+          { value: "all", label: t("screen.organization.billing.invoicesList.all") },
+          { value: "b2b", label: t("screen.organization.billing.invoicesList.businessB2b") },
+          { value: "b2c", label: t("screen.organization.billing.invoicesList.consumerB2c") },
+        ]}
+        value={typeFilter}
+        onValueChange={setTypeFilter}
+      />
+      {ledgerQuery.isError ? (
+        <OrgError onRetry={() => void ledgerQuery.refetch()} />
+      ) : (
+        <OrgTable
+          columns={columns}
+          rows={visibleRows}
+          rowKey={(row) => row.id}
+          caption={t("screen.organization.billing.invoicesList.title")}
+          loading={ledgerQuery.isLoading}
+          empty={
+            <OrgEmpty
+              title={
+                rows.length === 0
+                  ? t("screen.organization.billing.invoicesList.noInvoicesYet")
+                  : t("screen.organization.billing.invoicesList.noMatchingInvoices")
+              }
+              action={
+                rows.length === 0 ? (
+                  <OrgButtonLink slug="issue-invoice-b2b-or-b2c" variant="secondary">
+                    {t("screen.organization.billing.invoicesList.issueInvoice")}
+                  </OrgButtonLink>
+                ) : undefined
+              }
+            >
+              {rows.length === 0
+                ? t("screen.organization.billing.invoicesList.issueAnInvoiceForA")
+                : undefined}
+            </OrgEmpty>
           }
         />
-        <TeSearchField
-          label={t("screen.organization.billing.invoicesList.searchInvoices")}
-          value={query}
-          onValueChange={setQuery}
-          clearLabel={t("screen.organization.billing.invoicesList.clearSearch")}
-        />
-        <TeDataTable
-          columns={COLUMNS()}
-          rows={visibleRows}
-          getRowKey={(row) => row.id}
-          caption={t("screen.organization.billing.invoicesList.issuedInvoices")}
-          emptyTitle={t("screen.organization.billing.invoicesList.noInvoicesYet")}
-          emptyDescription={t("screen.organization.billing.invoicesList.issueAnInvoiceForA")}
-        />
-      </div>
-    </StatePreview>
+      )}
+    </OrgPage>
   );
 }

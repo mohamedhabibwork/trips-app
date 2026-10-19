@@ -1,20 +1,30 @@
-import { useMemo, useState } from "react";
-
+// SCR-ORG-34 Employees: who can open this dashboard, their status and their permission areas.
+import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { TeButton } from "@trips-app/ui/components/te-button";
-import { TeDataTable, type TeDataTableColumn } from "@trips-app/ui/components/te-data-table";
+
 import { TeDialog } from "@trips-app/ui/components/te-dialog";
-import { TeInlineAlert } from "@trips-app/ui/components/te-inline-alert";
-import { TeKpiTile } from "@trips-app/ui/components/te-kpi-tile";
-import { TePageHeader } from "@trips-app/ui/components/te-page-header";
-import { TeSearchField } from "@trips-app/ui/components/te-search-field";
 import { t } from "@trips-app/i18n";
+
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
 
-import { OrgButtonLink, OrgLink, WorkspaceBackLink } from "../common/org-link";
-import { setSelectedEmployeeId, StateBadge } from "../common/org-shared";
-import { StatePreview } from "../common/organization-state-preview";
+import { OrgButtonLink, OrgLink } from "../common/org-link";
+import { setSelectedEmployeeId } from "../common/org-shared";
+import { OrgTable, type OrgColumn } from "../common/org-table";
+import {
+  NO_VALUE,
+  OrgAlert,
+  OrgBadge,
+  OrgButton,
+  OrgEmpty,
+  OrgError,
+  OrgKpi,
+  OrgKpiRow,
+  OrgPage,
+  OrgPageHeader,
+} from "../common/org-ui";
+
+import { AreaBadges, grantedAreas, type PermissionArea } from "./people-parts";
 
 type EmployeeStatus = "active" | "invited" | "suspended" | "revoked";
 
@@ -23,19 +33,33 @@ interface EmployeeRow {
   name: string;
   email: string;
   status: EmployeeStatus;
-  permissions: string;
+  areas: readonly PermissionArea[];
 }
 
-function summarizePermissions(permissions: Record<string, string>): string {
-  const granted = Object.entries(permissions)
-    .filter(([, level]) => level && level !== "none")
-    .map(([area, level]) => `${area} (${level})`);
-  return granted.length > 0 ? granted.join(", ") : "None";
+function StatusBadge({ status }: { status: EmployeeStatus }) {
+  switch (status) {
+    case "active":
+      return <OrgBadge tone="ok">{t("screen.organization.people.employeesList.active")}</OrgBadge>;
+    case "invited":
+      return (
+        <OrgBadge tone="warn" icon="mail">
+          {t("screen.organization.people.employeesList.invitationSent")}
+        </OrgBadge>
+      );
+    case "suspended":
+      return (
+        <OrgBadge tone="warn">{t("screen.organization.people.employeesList.suspended")}</OrgBadge>
+      );
+    case "revoked":
+      return (
+        <OrgBadge tone="neu" icon="close">
+          {t("screen.organization.people.employeesList.removed")}
+        </OrgBadge>
+      );
+  }
 }
 
-function buildColumns(
-  onRemove: (row: EmployeeRow) => void,
-): readonly TeDataTableColumn<EmployeeRow>[] {
+function columns(onRemove: (row: EmployeeRow) => void): readonly OrgColumn<EmployeeRow>[] {
   return [
     {
       key: "name",
@@ -44,6 +68,7 @@ function buildColumns(
         <OrgLink
           slug="employee-invitation-and-permissions"
           onClick={() => setSelectedEmployeeId(row.id)}
+          className="text-[var(--te-ink)]"
         >
           {row.name}
         </OrgLink>
@@ -53,33 +78,35 @@ function buildColumns(
     {
       key: "status",
       header: t("screen.organization.people.employeesList.status"),
-      render: (row) =>
-        row.status === "active" ? (
-          <StateBadge
-            tone="success"
-            icon="check"
-            label={t("screen.organization.people.employeesList.active")}
-          />
-        ) : row.status === "invited" ? (
-          <StateBadge
-            tone="info"
-            icon="clock"
-            label={t("screen.organization.people.employeesList.invited")}
-          />
-        ) : (
-          <StateBadge tone="warning" icon="alert" label={row.status} />
-        ),
+      render: (row) => <StatusBadge status={row.status} />,
     },
-    { key: "permissions", header: t("screen.organization.people.employeesList.permissionAreas") },
     {
-      key: "remove",
-      header: t("screen.organization.people.employeesList.remove"),
-      align: "end",
+      key: "areas",
+      header: t("screen.organization.people.employeesList.permissionAreas"),
       render: (row) => (
-        <TeButton variant="ghost" size="default" onClick={() => onRemove(row)}>
-          {t("screen.organization.people.employeesList.remove2")}
-        </TeButton>
+        <AreaBadges
+          areas={row.areas}
+          emptyLabel={t("screen.organization.people.employeesList.none")}
+        />
       ),
+    },
+    {
+      key: "action",
+      header: t("screen.organization.people.employeesList.action"),
+      render: (row) =>
+        row.status === "revoked" ? (
+          NO_VALUE
+        ) : (
+          <OrgButton
+            variant="text"
+            aria-label={t("screen.organization.people.employeesList.removeName", {
+              name: row.name,
+            })}
+            onClick={() => onRemove(row)}
+          >
+            {t("screen.organization.people.employeesList.remove")}
+          </OrgButton>
+        ),
     },
   ];
 }
@@ -87,9 +114,7 @@ function buildColumns(
 export function EmployeesList() {
   const queryClient = useQueryClient();
   const { status: authStatus, actor } = useAuth();
-  const [query, setQuery] = useState("");
   const [removeTarget, setRemoveTarget] = useState<EmployeeRow | null>(null);
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const employeesQuery = useQuery(
     orpc.employees.list.queryOptions({
@@ -106,102 +131,102 @@ export function EmployeesList() {
     }),
   );
 
-  const rows = useMemo<readonly EmployeeRow[]>(() => {
-    if (!employeesQuery.data?.employees) return [];
-    return employeesQuery.data.employees.map((emp) => ({
-      id: emp.id,
-      name: emp.fullName ?? emp.roleTitle,
-      email: emp.invitedEmail,
-      status: emp.status,
-      permissions: summarizePermissions(emp.permissions),
-    }));
-  }, [employeesQuery.data?.employees]);
+  const rows: readonly EmployeeRow[] =
+    employeesQuery.data?.employees.map((employee) => ({
+      id: employee.id,
+      name: employee.fullName ?? employee.roleTitle,
+      email: employee.invitedEmail,
+      status: employee.status,
+      areas: grantedAreas(employee.permissions),
+    })) ?? [];
 
-  const { quotaLabel, quotaHint } = useMemo(() => {
-    const q = employeesQuery.data?.quota;
-    if (!q) return { quotaLabel: "0 of 20", quotaHint: "Growth plan limit" };
-    const maxStr = q.maxAllowed !== null ? String(q.maxAllowed) : "Unlimited";
-    return {
-      quotaLabel: `${q.usedCount} of ${maxStr}`,
-      quotaHint: `${q.planTier} plan limit`,
-    };
-  }, [employeesQuery.data?.quota]);
+  const quota = employeesQuery.data?.quota;
+  const quotaValue = !quota
+    ? NO_VALUE
+    : quota.maxAllowed === null
+      ? String(quota.usedCount)
+      : t("screen.organization.people.employeesList.nOfLimit", {
+          n: quota.usedCount,
+          limit: quota.maxAllowed,
+        });
+  const waiting = employeesQuery.isSuccess
+    ? String(rows.filter((row) => row.status === "invited").length)
+    : NO_VALUE;
 
-  async function handleConfirmRemove() {
+  function handleConfirmRemove() {
     const target = removeTarget;
     setRemoveTarget(null);
-    if (!target) return;
-    if (authStatus === "authenticated" && !target.id.startsWith("employee-")) {
-      try {
-        await updateStatusMutation.mutateAsync({
-          membershipId: target.id,
-          status: "revoked",
-          reason: "Removed from organization people directory",
-        });
-      } catch (caught) {
-        setErrorMsg(caught instanceof Error ? caught.message : "Could not remove employee.");
-      }
-    }
+    if (!target || authStatus !== "authenticated") return;
+    updateStatusMutation.mutate({
+      membershipId: target.id,
+      status: "revoked",
+      reason: "Removed from organization people directory",
+    });
   }
 
-  const columns = buildColumns((row) => setRemoveTarget(row));
-  const normalizedQuery = query.trim().toLowerCase();
-  const visibleRows = rows.filter(
-    (row) =>
-      row.name.toLowerCase().includes(normalizedQuery) ||
-      row.email.toLowerCase().includes(normalizedQuery),
+  const inviteLink = (
+    <OrgButtonLink
+      slug="employee-invitation-and-permissions"
+      onClick={() => setSelectedEmployeeId(null)}
+    >
+      {t("screen.organization.people.employeesList.inviteEmployee")}
+    </OrgButtonLink>
   );
 
   return (
-    <StatePreview>
-      <div className="flex flex-col gap-6">
-        <WorkspaceBackLink />
-        <TePageHeader
-          title={t("screen.organization.people.employeesList.employeesList")}
-          actions={
-            <OrgButtonLink slug="employee-invitation-and-permissions">
-              {t("screen.organization.people.employeesList.inviteEmployee")}
-            </OrgButtonLink>
+    <OrgPage className="gap-5">
+      <OrgPageHeader
+        title={t("screen.organization.people.employeesList.title")}
+        caption={t("screen.organization.people.employeesList.caption")}
+        actions={inviteLink}
+      />
+      <OrgKpiRow>
+        <OrgKpi
+          label={t("screen.organization.people.employeesList.employeesOnYourPlan")}
+          value={quotaValue}
+        />
+        <OrgKpi
+          label={t("screen.organization.people.employeesList.invitationsWaiting")}
+          value={waiting}
+        />
+      </OrgKpiRow>
+      {updateStatusMutation.isError ? (
+        <OrgAlert tone="err" title={t("screen.organization.people.employeesList.notRemovedTitle")}>
+          {t("screen.organization.people.employeesList.notRemovedBody")}
+        </OrgAlert>
+      ) : null}
+      {employeesQuery.isError ? (
+        <OrgError onRetry={() => void employeesQuery.refetch()} />
+      ) : (
+        <OrgTable
+          columns={columns(setRemoveTarget)}
+          rows={rows}
+          rowKey={(row) => row.id}
+          caption={t("screen.organization.people.employeesList.title")}
+          loading={employeesQuery.isLoading}
+          empty={
+            <OrgEmpty title={t("screen.organization.people.employeesList.emptyTitle")}>
+              {t("screen.organization.people.employeesList.emptyBody")}
+            </OrgEmpty>
           }
         />
-        {errorMsg ? <TeInlineAlert tone="error">{errorMsg}</TeInlineAlert> : null}
-        <div className="grid gap-4 sm:grid-cols-2">
-          <TeKpiTile
-            label={t("screen.organization.people.employeesList.employees")}
-            value={quotaLabel}
-            hint={quotaHint}
-          />
-        </div>
-        <TeSearchField
-          label={t("screen.organization.people.employeesList.searchEmployees")}
-          value={query}
-          onValueChange={setQuery}
-          clearLabel={t("screen.organization.people.employeesList.clearSearch")}
-        />
-        <TeDataTable
-          columns={columns}
-          rows={visibleRows}
-          getRowKey={(row) => row.id}
-          caption={t("screen.organization.people.employeesList.employeesCaption")}
-          emptyTitle={t("screen.organization.people.employeesList.noEmployeesYet")}
-          emptyDescription={t(
-            "screen.organization.people.employeesList.inviteEmployeesAndGiveThem",
-          )}
-        />
-        <TeDialog
-          open={removeTarget !== null}
-          onOpenChange={(open) => {
-            if (!open) setRemoveTarget(null);
-          }}
-          title={t("screen.organization.people.employeesList.removeThisEmployee")}
-          description={t("screen.organization.people.employeesList.accessEndsAtOncePast")}
-          primaryLabel={t("screen.organization.people.employeesList.removeEmployee")}
-          onPrimary={() => void handleConfirmRemove()}
-          secondaryLabel={t("screen.organization.people.employeesList.keepEmployee")}
-          onSecondary={() => setRemoveTarget(null)}
-          tone="danger"
-        />
-      </div>
-    </StatePreview>
+      )}
+      <p className="te-caption m-0 text-[var(--te-ink-muted)]">
+        {t("screen.organization.people.employeesList.removalNote")}
+      </p>
+      <TeDialog
+        open={removeTarget !== null}
+        onOpenChange={(open) => {
+          if (!open) setRemoveTarget(null);
+        }}
+        title={t("screen.organization.people.employeesList.removeThisEmployee")}
+        description={t("screen.organization.people.employeesList.removalNote")}
+        primaryLabel={t("screen.organization.people.employeesList.removeEmployee")}
+        onPrimary={handleConfirmRemove}
+        secondaryLabel={t("screen.organization.people.employeesList.keepEmployee")}
+        onSecondary={() => setRemoveTarget(null)}
+        tone="danger"
+      />
+    </OrgPage>
   );
 }
