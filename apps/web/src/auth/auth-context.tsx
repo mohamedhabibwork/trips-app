@@ -5,7 +5,6 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "@tanstack/react-router";
 import {
-  DEFAULT_AUTH_LOCALE,
   directionOf,
   getLocale as getCurrentLocale,
   setLocale as rememberLocale,
@@ -56,14 +55,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const controller = authController;
   const router = useRouter();
   const queryClient = useQueryClient();
-  const [locale, setLocaleState] = useState<AuthLocale>(DEFAULT_AUTH_LOCALE);
-
-  // Adopt the visitor's remembered language after mount, so the first client render still equals the
-  // server render (the same reason `restore()` runs in an effect).
-  useEffect(() => {
-    const current = getCurrentLocale();
-    setLocaleState((previous) => (current === previous ? previous : current));
-  }, []);
+  // The server and the browser both answer from the locale cookie (Arabic when unset), so the first
+  // client render already equals the server render.
+  const [locale, setLocaleState] = useState<AuthLocale>(() => getCurrentLocale());
 
   /** Switches the language: remembered for the next visit, mirrored onto `<html lang dir>`. */
   const setLocale = useCallback((next: AuthLocale) => {

@@ -1,7 +1,6 @@
 // SCR-PUB-18 Appeal a rejection (`/application-status/appeal`): the recorded reason, the appeal
 // statement and optional supporting files.
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import type { TeFileUploadItem } from "@trips-app/ui/components/te-file-upload";
 import { TeIcon } from "@trips-app/ui/components/te-icon";
 import { useEffect, useState, type FormEvent } from "react";
 
@@ -11,11 +10,8 @@ import { ActionRow, PageIntro, PageMain, Panel } from "@/components/kit/layout";
 import { pathFor } from "@/navigation/web-routes";
 import { orpc } from "@/utils/orpc";
 
-import {
-  getApplicantApplicationId,
-  setApplicantApplicationId,
-  uploadItemsToDocuments,
-} from "../../onboarding-state";
+import { getApplicantApplicationId, setApplicantApplicationId } from "../../onboarding-state";
+import { uploadApplicationDocuments } from "../common/application-documents";
 import { DocumentDrop } from "../common/document-drop";
 
 const MIN_STATEMENT_LENGTH = 10;
@@ -39,16 +35,19 @@ export function AppealARejection() {
     }),
   );
   const [statement, setStatement] = useState("");
-  const [files, setFiles] = useState<readonly TeFileUploadItem[]>([]);
+  const [files, setFiles] = useState<readonly File[]>([]);
   const [submitted, setSubmitted] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const loaded = statusQuery.data?.application as unknown as
-    | { id: string; decisionNotes?: string | null }
+    | { id: string; state?: string; decisionNotes?: string | null }
     | undefined;
   const applicationId = loaded?.id ?? storedId ?? null;
   const reason = loaded?.decisionNotes ?? null;
-  const submitting = appealMutation.isPending;
+  const [uploading, setUploading] = useState(false);
+  const submitting = appealMutation.isPending || uploading;
+  // Only a rejected application can be appealed; any other state is shown, not appealed.
+  const rejected = loaded?.state === "rejected";
 
   useEffect(() => {
     if (loaded?.id) setApplicantApplicationId(loaded.id);
@@ -62,17 +61,22 @@ export function AppealARejection() {
       return;
     }
     setErrorMessage(null);
+    setUploading(true);
     try {
+      const documents = await uploadApplicationDocuments(files, "appeal_evidence");
+      setUploading(false);
       await appealMutation.mutateAsync({
         applicationId,
         appealStatement: statement.trim(),
-        documents: uploadItemsToDocuments(files, "appeal_evidence"),
+        documents,
       });
       setSubmitted(true);
     } catch (caught) {
       setErrorMessage(
         caught instanceof Error ? caught.message : t("screen.public.appeal.submitFailed"),
       );
+    } finally {
+      setUploading(false);
     }
   }
 
@@ -82,7 +86,13 @@ export function AppealARejection() {
         title={t("screen.public.appeal.title")}
         description={t("screen.public.appeal.lead")}
       />
-      <Panel as="section">
+      {authStatus === "authenticated" && statusQuery.isSuccess && !rejected ? (
+        <Notice tone="info">
+          {t("screen.public.appeal.notRejected")}{" "}
+          <TextLink to={pathFor("SCR-PUB-17")}>{t("screen.public.appeal.cancel")}</TextLink>
+        </Notice>
+      ) : null}
+      <Panel as="section" className={statusQuery.isSuccess && !rejected ? "hidden" : undefined}>
         <div className="flex flex-col gap-1.5 rounded-[var(--te-radius-md)] bg-[var(--te-danger-soft)] px-4 py-3.5 text-sm leading-5 text-[var(--te-danger)]">
           <span className="flex items-center gap-2 font-semibold">
             <TeIcon name="alert" className="size-4" />
@@ -109,7 +119,7 @@ export function AppealARejection() {
           <DocumentDrop
             title={t("screen.public.appeal.files")}
             hint={t("screen.public.appeal.filesHint")}
-            items={files}
+            files={files}
             onChange={setFiles}
             multiple
             disabled={submitting || submitted}

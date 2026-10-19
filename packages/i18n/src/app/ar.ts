@@ -2972,6 +2972,7 @@ export const ar: AppMessages = {
   "screen.public.appeal.submit": "إرسال الاعتراض",
   "screen.public.appeal.submitting": "جارٍ الإرسال…",
   "screen.public.appeal.cancel": "إلغاء",
+  "screen.public.appeal.notRejected": "يمكن الطعن في الطلب المرفوض فقط. طلبك ليس مرفوضًا.",
   "screen.public.appeal.submitted": "أُرسل اعتراضك. نراجعه خلال يومي عمل.",
   "screen.public.appeal.noApplication": "لم يُعثر على طلب مرفوض لهذا الحساب.",
   "screen.public.appeal.submitFailed": "تعذّر إرسال الاعتراض. حاول مرة أخرى.",
@@ -3013,10 +3014,10 @@ export const ar: AppMessages = {
   "screen.public.deletionGrace.title": "حسابك مجدول للحذف",
   "screen.public.deletionGrace.endsLabel": "تنتهي مهلة الاسترداد",
   "screen.public.deletionGrace.endsValue": "{date}، بعد {days} يومًا من طلبك",
+  "screen.public.deletionGrace.endsDaysOnly": "بعد {days} يومًا من طلبك",
   "screen.public.deletionGrace.body":
     "يؤدي تسجيل الدخول إلى استعادة حسابك وإلغاء طلب الحذف. لا تُلغى الحجوزات القادمة ولا تُسترد إلا عندما يصبح الحذف نهائيًا.",
   "screen.public.deletionGrace.continue": "المتابعة إلى الصفحة الرئيسية",
-  "screen.public.deletionGrace.restoreFailed": "تعذّرت استعادة حسابك. سجّل الدخول لاستعادته.",
   // apps/web/src/screens/public/account-recovery/password-reset.tsx
   "screen.public.passwordReset.step1": "الخطوة 1 من 2: الرمز",
   "screen.public.passwordReset.step2": "الخطوة 2 من 2: كلمة المرور الجديدة",
@@ -3091,11 +3092,11 @@ export const ar: AppMessages = {
   "screen.public.signIn.adminAuthenticator.title": "إعداد تطبيق المصادقة",
   "screen.public.signIn.adminAuthenticator.lead":
     "امسح الرمز في تطبيق المصادقة، ثم أدخل الرمز المكوّن من 6 أرقام الذي يظهر. تُفتح لوحة الإدارة بعد هذه الخطوة.",
-  "screen.public.signIn.adminAuthenticator.qrLabel": "رمز QR للإعداد",
-  "screen.public.signIn.adminAuthenticator.qrCode": "رمز QR",
-  "screen.public.signIn.adminAuthenticator.cannotScan": "لا يمكنك المسح؟",
-  "screen.public.signIn.adminAuthenticator.enterKey": "أدخل هذا المفتاح في تطبيقك:",
-  "screen.public.signIn.adminAuthenticator.keyMissing": "اطلب مفتاح الإعداد من مسؤول المنصة.",
+  "screen.public.signIn.adminAuthenticator.startOver":
+    "ابدأ من صفحة دخول المشرف. ستحصل على مفتاح إعداد جديد صالح لمدة 10 دقائق.",
+  "screen.public.signIn.adminAuthenticator.backToSignIn": "العودة إلى دخول المشرف",
+  "screen.public.signIn.adminAuthenticator.openInApp": "افتح في تطبيق المصادقة",
+  "screen.public.signIn.adminAuthenticator.enterKey": "أضف هذا المفتاح إلى تطبيق المصادقة:",
   "screen.public.signIn.adminAuthenticator.codeLabel": "رمز المصادقة",
   // apps/web/src/screens/public/sign-in/staff-code-set-up.tsx
   "screen.public.signIn.staffCodeSetUp.required": "مطلوب قبل فتح مساحة العمل",
@@ -3107,6 +3108,12 @@ export const ar: AppMessages = {
   "screen.public.signIn.staffCodeSetUp.sms": "رسالة نصية (SMS)",
   "screen.public.signIn.staffCodeSetUp.codeFromApp": "الرمز من تطبيقك",
   "screen.public.signIn.staffCodeSetUp.codeFromSms": "الرمز من الرسالة النصية",
+  "screen.public.signIn.staffCodeSetUp.smsTo": "رسالة نصية (SMS) إلى {phone}",
+  "screen.public.signIn.staffCodeSetUp.enterKey": "أضف هذا المفتاح إلى تطبيق المصادقة:",
+  "screen.public.signIn.staffCodeSetUp.openInApp": "افتح في تطبيق المصادقة",
+  "screen.public.signIn.staffCodeSetUp.startOver":
+    "سجّل الدخول مرة أخرى لتعيين الرمز. الإعداد صالح لمدة 10 دقائق.",
+  "screen.public.signIn.staffCodeSetUp.backToSignIn": "العودة إلى دخول الموظفين",
   "screen.public.signIn.staffCodeSetUp.confirm": "تأكيد",
   // apps/web/src/screens/public/sign-up/organization-sign-up.tsx
   "screen.public.signUp.organization.title": "سجّل مؤسستك",
@@ -3129,6 +3136,20 @@ export const ar: AppMessages = {
   "screen.public.signUp.organization.submit": "إرسال التسجيل",
   "screen.public.signUp.organization.submitting": "جارٍ الإرسال…",
   "screen.public.signUp.organization.submitFailed": "تعذّر إرسال التسجيل. حاول مرة أخرى.",
+  "screen.public.signUp.organization.countryUnsupported":
+    "يمكن تسجيل المؤسسات في مصر أو السعودية أو الإمارات.",
+  "screen.public.signUp.organization.tourismLicense": "رقم الترخيص السياحي",
+  "screen.public.signUp.organization.tourismLicenseExpiry": "تاريخ انتهاء الترخيص",
+  "screen.public.signUp.organization.licenseExpired": "انتهت صلاحية الترخيص. أدخل تاريخًا لاحقًا.",
+  "screen.public.signUp.organization.headquartersAddress": "عنوان المقر الرئيسي",
+  "screen.public.signUp.organization.ownerNationalId": "الرقم القومي للمالك",
+  "screen.public.signUp.organization.ownerRoleTitle": "المسمى الوظيفي للمالك",
+  "screen.public.signUp.organization.billingAddress": "عنوان الفوترة",
+  "screen.public.signUp.organization.payoutMethod": "طريقة استلام المستحقات",
+  "screen.public.signUp.organization.payoutBank": "تحويل بنكي",
+  "screen.public.signUp.organization.payoutWallet": "محفظة إلكترونية",
+  "screen.public.signUp.organization.payoutIban": "رقم IBAN",
+  "screen.public.signUp.organization.payoutWalletNumber": "رقم المحفظة",
   // apps/web/src/screens/public/sign-up/photographer-sign-up.tsx
   "screen.public.signUp.photographer.title": "قدّم طلبًا كمصوّر",
   "screen.public.signUp.photographer.lead":
@@ -3145,6 +3166,12 @@ export const ar: AppMessages = {
   "screen.public.signUp.photographer.submit": "إرسال الطلب",
   "screen.public.signUp.photographer.submitting": "جارٍ الإرسال…",
   "screen.public.signUp.photographer.submitFailed": "تعذّر إرسال الطلب. حاول مرة أخرى.",
+  "screen.public.signUp.photographer.nationalId": "الرقم القومي",
+  "screen.public.signUp.photographer.yearsOfExperience": "سنوات الخبرة",
+  "screen.public.signUp.photographer.cameraBodies": "الكاميرات",
+  "screen.public.signUp.photographer.lenses": "العدسات",
+  "screen.public.signUp.photographer.specialties": "التخصصات",
+  "screen.public.signUp.photographer.listHint": "افصل بين العناصر بفواصل.",
   // apps/web/src/screens/public/sign-up/platform-driver-sign-up.tsx
   "screen.public.signUp.driver.title": "قدّم طلبًا للقيادة",
   "screen.public.signUp.driver.lead": "طلب سائق المنصة. يمكنك تسجيل الدخول بعد المراجعة.",
@@ -3170,7 +3197,22 @@ export const ar: AppMessages = {
   "screen.public.signUp.driver.submit": "إرسال الطلب",
   "screen.public.signUp.driver.submitting": "جارٍ الإرسال…",
   "screen.public.signUp.driver.submitFailed": "تعذّر إرسال الطلب. حاول مرة أخرى.",
+  "screen.public.signUp.driver.nationalId": "الرقم القومي",
+  "screen.public.signUp.driver.yourLicense": "رخصتك",
+  "screen.public.signUp.driver.licenseNumber": "رقم الرخصة",
+  "screen.public.signUp.driver.licenseCategory": "فئة الرخصة",
+  "screen.public.signUp.driver.licenseExpiry": "تاريخ انتهاء الرخصة",
+  "screen.public.signUp.driver.licenseExpired": "انتهت صلاحية الرخصة. أدخل تاريخًا لاحقًا.",
+  "screen.public.signUp.driver.yearsOfExperience": "سنوات القيادة",
+  // apps/web/src/screens/public/sign-up/supplier-onboarding.tsx
+  "screen.public.signUp.supplier.password": "كلمة المرور",
+  "screen.public.signUp.supplier.passwordHint":
+    "{count} حرفًا على الأقل. ستسجّل الدخول بها بعد الموافقة.",
+  "screen.public.signUp.supplier.stepPhone": "الخطوة 2 من 2: الهاتف",
   // apps/web/src/screens/public/sign-up/verification-by-code.tsx
+  "screen.public.signUp.verification.noDestination":
+    "لا يوجد رمز بانتظارك هنا. تُرسل الرموز عند إنشاء حساب أو تسجيل الدخول.",
+  "screen.public.signUp.verification.startSignUp": "إنشاء حساب",
   "screen.public.signUp.verification.stepEmail": "الخطوة 1 من 2: البريد الإلكتروني",
   "screen.public.signUp.verification.stepPhone": "الخطوة 1 من 2: الهاتف",
   "screen.public.signUp.verification.changeNumber": "تغيير الرقم",

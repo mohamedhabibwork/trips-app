@@ -6,7 +6,9 @@ import type { QueryClient } from "@tanstack/react-query";
 import type { SessionController } from "@/auth/session-controller";
 import { PUBLIC_SCREENS } from "@/screens/public";
 import { SHARED_SCREENS } from "@/screens/shared";
-import { ensureSupplierSession, uploadItemsToDocuments } from "@/screens/onboarding-state";
+import { applicationMimeType } from "@/screens/public/common/application-documents";
+import { verificationTargets } from "@/screens/public/sign-up/supplier-onboarding";
+import { dateInputToIso, isFutureDate, splitList } from "@/screens/public/sign-up/supplier-fields";
 import { orpc } from "@/utils/orpc";
 
 describe("Empirical Challenger: Milestone 3 Public & Shared Migration Stress Test", () => {
@@ -298,49 +300,62 @@ describe("Empirical Challenger: Milestone 3 Public & Shared Migration Stress Tes
   });
 
   describe("Onboarding State Helper Stress Testing", () => {
-    test("uploadItemsToDocuments correctly sanitizes special characters and identifies mime types", () => {
-      const testFiles = [
-        { name: "normal.pdf", status: "done" as const },
-        { name: "image.PNG", status: "done" as const },
-        { name: "photo.jpeg", status: "done" as const },
-        { name: "modern.webp", status: "done" as const },
-        { name: "../../malicious/path.pdf", status: "done" as const },
-        { name: "strange#name$?& space.jpg", status: "done" as const },
-        { name: "", status: "done" as const },
+    test("applicationMimeType accepts documents and photos and rejects anything else", () => {
+      // Arrange
+      const picked = [
+        { name: "registry.pdf", type: "" },
+        { name: "photo.PNG", type: "" },
+        { name: "scan", type: "image/jpeg" },
+        { name: "modern.webp", type: "" },
+        { name: "notes.txt", type: "text/plain" },
       ];
 
-      const docs = uploadItemsToDocuments(testFiles, "national_id");
-      expect(docs.length).toBe(7);
+      // Act
+      const types = picked.map((file) => applicationMimeType(file));
 
-      expect(docs[0].mimeType).toBe("application/pdf");
-      expect(docs[1].mimeType).toBe("image/png");
-      expect(docs[2].mimeType).toBe("image/jpeg");
-      expect(docs[3].mimeType).toBe("image/webp");
-      expect(docs[4].mimeType).toBe("application/pdf");
-      expect(docs[4].storageKey).not.toContain("../");
-      expect(docs[4].storageKey).toContain("malicious_path.pdf");
-      expect(docs[5].storageKey).toContain("strange_name____space.jpg");
-      expect(docs[6].storageKey).toContain("file_7");
+      // Assert
+      expect(types).toEqual(["application/pdf", "image/png", "image/jpeg", "image/webp", null]);
     });
 
-    test("uploadItemsToDocuments handles empty items array cleanly", () => {
-      const docs = uploadItemsToDocuments([], "portfolio_sample");
-      expect(docs).toEqual([]);
+    test("verificationTargets keeps the server order and falls back to email then phone", () => {
+      // Arrange
+      const account = { email: "owner@example.test", phone: "+201000000000" };
+
+      // Act
+      const fromServer = verificationTargets(
+        [{ targetIdentifier: "owner@example.test" }, { targetIdentifier: "+201000000000" }],
+        account,
+      );
+      const fallback = verificationTargets(undefined, account);
+
+      // Assert
+      expect(fromServer).toEqual(["owner@example.test", "+201000000000"]);
+      expect(fallback).toEqual(["owner@example.test", "+201000000000"]);
     });
 
-    test("ensureSupplierSession is a no-op when already authenticated", async () => {
-      const signInSpy = mock(() => {});
+    test("date helpers turn a date input into ISO and reject expired or malformed dates", () => {
+      // Arrange
+      const now = new Date("2026-10-19T12:00:00.000Z");
 
-      await ensureSupplierSession({
-        isAuthenticated: true,
-        signInWithSession: signInSpy,
-        role: "platform_driver",
-        fullName: "Test Driver",
-        email: "driver@example.com",
-        phone: "+201000000000",
-      });
+      // Act
+      const iso = dateInputToIso("2027-01-31");
 
-      expect(signInSpy).not.toHaveBeenCalled();
+      // Assert
+      expect(iso).toBe("2027-01-31T00:00:00.000Z");
+      expect(dateInputToIso("31/01/2027")).toBeNull();
+      expect(isFutureDate("2027-01-31", now)).toBe(true);
+      expect(isFutureDate("2026-10-01", now)).toBe(false);
+    });
+
+    test("splitList reads comma, Arabic comma and newline separated answers", () => {
+      // Arrange
+      const answer = "Canon R5, Sony A7 IV،Nikon Z8\n , ";
+
+      // Act
+      const entries = splitList(answer);
+
+      // Assert
+      expect(entries).toEqual(["Canon R5", "Sony A7 IV", "Nikon Z8"]);
     });
   });
 

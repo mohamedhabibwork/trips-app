@@ -1,19 +1,33 @@
 // SCR-PUB-12 Staff code set-up (`/business/sign-in/set-up-code`): the first staff sign-in sets its
-// second factor here. The challenge token is left in session storage by the staff sign-in step.
+// second factor here. The set-up (challenge, TOTP key, SMS destination) comes from the staff sign-in
+// step in memory; without it the page sends the user back to sign in.
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
-import type { AuthErrorView, SessionTokenPayload } from "@trips-app/auth";
+import type { AuthErrorView } from "@trips-app/auth";
 import { useState, type FormEvent } from "react";
 
+import { isOtpAuthUri } from "@/auth/admin-enrollment";
 import { useAuth } from "@/auth/auth-context";
+import { getStaffSetup, setStaffSetup } from "@/auth/staff-setup";
 import { SubmitBanner } from "@/auth/components/submit-banner";
 import { toAuthErrorView } from "@/auth/errors";
-import { Button, ChoiceGroup, ChoiceRow, StatusPill, TextField } from "@/components/kit/controls";
+import {
+  Button,
+  ChoiceGroup,
+  ChoiceRow,
+  Notice,
+  StatusPill,
+  TextField,
+  TextLink,
+  linkClass,
+} from "@/components/kit/controls";
 import { CenteredPanel, Lead, PanelHeading } from "@/components/kit/layout";
+import { pathFor } from "@/navigation/web-routes";
 import { orpc } from "@/utils/orpc";
 
+import { maskDestination } from "../../shared/otp-entry-panel";
+
 const CODE_LENGTH = 6;
-const STAFF_CHALLENGE_KEY = "te:staffChallengeToken";
 
 type CodeMethod = "totp" | "sms";
 
@@ -29,36 +43,46 @@ export function StaffCodeSetUp() {
       },
     }),
   );
-  const [method, setMethod] = useState<CodeMethod>("totp");
+  const [setup] = useState(getStaffSetup);
+  const [method, setMethod] = useState<CodeMethod>(() =>
+    setup && !setup.totpSecret && setup.smsTarget ? "sms" : "totp",
+  );
   const [code, setCode] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<AuthErrorView | null>(null);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (submitting || code.length !== CODE_LENGTH) return;
+    if (!setup || submitting || code.length !== CODE_LENGTH) return;
     setSubmitting(true);
     setError(null);
     try {
-      const challengeToken =
-        (typeof sessionStorage !== "undefined"
-          ? sessionStorage.getItem(STAFF_CHALLENGE_KEY)
-          : null) ?? "staff-challenge-token";
-      const result = (await setupMutation.mutateAsync({
-        challengeToken,
+      const result = await setupMutation.mutateAsync({
+        challengeToken: setup.challengeToken,
         method,
         verificationCode: code,
-      })) as { session?: SessionTokenPayload };
-      if (result.session) {
-        sessionStorage.removeItem(STAFF_CHALLENGE_KEY);
-        signInWithSession(result.session);
-        await navigate({ to: "/business" });
-      }
+      });
+      setStaffSetup(null);
+      signInWithSession(result.session);
+      await navigate({ to: "/business" });
     } catch (caught) {
+      setCode("");
       setError(toAuthErrorView(caught, { locale, procedure: "auth/staffSetupSecondFactor" }));
     } finally {
       setSubmitting(false);
     }
+  }
+
+  if (!setup) {
+    return (
+      <CenteredPanel width={560}>
+        <PanelHeading>{t("screen.public.signIn.staffCodeSetUp.title")}</PanelHeading>
+        <Notice tone="info">{t("screen.public.signIn.staffCodeSetUp.startOver")}</Notice>
+        <TextLink to={pathFor("SCR-PUB-11")}>
+          {t("screen.public.signIn.staffCodeSetUp.backToSignIn")}
+        </TextLink>
+      </CenteredPanel>
+    );
   }
 
   return (
@@ -75,7 +99,7 @@ export function StaffCodeSetUp() {
             value="totp"
             checked={method === "totp"}
             onChange={() => setMethod("totp")}
-            disabled={submitting}
+            disabled={submitting || !setup.totpSecret}
           >
             {t("screen.public.signIn.staffCodeSetUp.app")}
           </ChoiceRow>
@@ -84,11 +108,30 @@ export function StaffCodeSetUp() {
             value="sms"
             checked={method === "sms"}
             onChange={() => setMethod("sms")}
-            disabled={submitting}
+            disabled={submitting || !setup.smsTarget}
           >
-            {t("screen.public.signIn.staffCodeSetUp.sms")}
+            {setup.smsTarget
+              ? t("screen.public.signIn.staffCodeSetUp.smsTo", {
+                  phone: maskDestination(setup.smsTarget),
+                })
+              : t("screen.public.signIn.staffCodeSetUp.sms")}
           </ChoiceRow>
         </ChoiceGroup>
+        {method === "totp" && setup.totpSecret ? (
+          <div className="flex flex-col gap-1.5 rounded-[var(--te-radius-md)] border-[1.5px] border-[var(--te-hairline)] bg-[var(--te-surface)] p-4 text-sm leading-5">
+            <span className="font-semibold">
+              {t("screen.public.signIn.staffCodeSetUp.enterKey")}
+            </span>
+            <span dir="ltr" className="font-mono text-base break-all select-all">
+              {setup.totpSecret}
+            </span>
+            {setup.otpauthUri && isOtpAuthUri(setup.otpauthUri) ? (
+              <a href={setup.otpauthUri} className={linkClass()}>
+                {t("screen.public.signIn.staffCodeSetUp.openInApp")}
+              </a>
+            ) : null}
+          </div>
+        ) : null}
         <TextField
           name="verificationCode"
           label={

@@ -10,6 +10,7 @@ import { Button, TextLink } from "@/components/kit/controls";
 import { pathFor } from "@/navigation/web-routes";
 
 import { client } from "../../utils/orpc";
+import { setAdminEnrollment } from "../admin-enrollment";
 import { useAuth } from "../auth-context";
 import { AuthField, AuthShell } from "../components/auth-shell";
 import { SubmitBanner } from "../components/submit-banner";
@@ -18,12 +19,15 @@ import { toAuthErrorView } from "../errors";
 interface AdminSignInResult {
   step: "totp_verification_required" | "totp_enrollment_required" | "authenticated";
   challengeToken?: string;
+  enrollmentToken?: string;
+  secret?: string;
+  otpauthUri?: string;
   session?: SessionTokenPayload;
 }
 
 type Step = { kind: "password" } | { kind: "totp"; challengeToken: string };
 
-/** D4 / O3: enrollment is P2. The seed enrols every demo admin, so this is a dead end by design. */
+/** Shown only when the server asks for enrollment without returning the set-up data. */
 const ENROLLMENT_VIEW: AuthErrorView = {
   key: "auth.admin.enrollmentRequired",
   params: {},
@@ -57,6 +61,20 @@ export function AdminSignInScreen() {
       if (result.step === "authenticated" && result.session) {
         signInWithSession(result.session);
         await navigate({ to: "/admin" });
+        return;
+      }
+      if (
+        result.step === "totp_enrollment_required" &&
+        result.enrollmentToken &&
+        result.secret &&
+        result.otpauthUri
+      ) {
+        setAdminEnrollment({
+          enrollmentToken: result.enrollmentToken,
+          secret: result.secret,
+          otpauthUri: result.otpauthUri,
+        });
+        await navigate({ to: pathFor("SCR-PUB-10") });
         return;
       }
       setError(ENROLLMENT_VIEW);

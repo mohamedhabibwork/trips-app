@@ -38,10 +38,12 @@ export function ScrShr14OtpEntry() {
   }, []);
 
   async function verify() {
+    // Without a destination from a sign-up or sign-in step there is no code to check.
+    if (!target) return;
     setError(null);
     try {
       const result = (await verifyMutation.mutateAsync({
-        targetIdentifier: target || "pending-verification",
+        targetIdentifier: target,
         purpose: "registration",
         code,
         surface: "web",

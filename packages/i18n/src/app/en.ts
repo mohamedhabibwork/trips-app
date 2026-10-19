@@ -3040,6 +3040,8 @@ export const en = {
   "screen.public.appeal.submit": "Submit appeal",
   "screen.public.appeal.submitting": "Submitting…",
   "screen.public.appeal.cancel": "Cancel",
+  "screen.public.appeal.notRejected":
+    "Only a rejected application can be appealed. Your application is not rejected.",
   "screen.public.appeal.submitted": "Your appeal was sent. We review it within 2 working days.",
   "screen.public.appeal.noApplication": "No rejected application was found for this account.",
   "screen.public.appeal.submitFailed": "The appeal could not be submitted. Try again.",
@@ -3082,11 +3084,10 @@ export const en = {
   "screen.public.deletionGrace.title": "Your account is scheduled for deletion",
   "screen.public.deletionGrace.endsLabel": "Grace period ends",
   "screen.public.deletionGrace.endsValue": "{date}, {days} days after your request",
+  "screen.public.deletionGrace.endsDaysOnly": "{days} days after your request",
   "screen.public.deletionGrace.body":
     "Signing in restores your account and cancels the deletion request. Future bookings are cancelled and refunded only when deletion becomes permanent.",
   "screen.public.deletionGrace.continue": "Continue to app home",
-  "screen.public.deletionGrace.restoreFailed":
-    "Your account could not be restored. Sign in to restore it.",
   // apps/web/src/screens/public/account-recovery/password-reset.tsx
   "screen.public.passwordReset.step1": "Step 1 of 2: code",
   "screen.public.passwordReset.step2": "Step 2 of 2: new password",
@@ -3164,11 +3165,11 @@ export const en = {
   "screen.public.signIn.adminAuthenticator.title": "Set up your authenticator",
   "screen.public.signIn.adminAuthenticator.lead":
     "Scan the code in your authenticator app, then enter the 6-digit code it shows. The admin console opens after this step.",
-  "screen.public.signIn.adminAuthenticator.qrLabel": "Set-up QR code",
-  "screen.public.signIn.adminAuthenticator.qrCode": "QR code",
-  "screen.public.signIn.adminAuthenticator.cannotScan": "Cannot scan?",
-  "screen.public.signIn.adminAuthenticator.enterKey": "Enter this key in your app:",
-  "screen.public.signIn.adminAuthenticator.keyMissing": "Ask a platform admin for your set-up key.",
+  "screen.public.signIn.adminAuthenticator.startOver":
+    "Start from the admin sign-in. It gives you a fresh set-up key, valid for 10 minutes.",
+  "screen.public.signIn.adminAuthenticator.backToSignIn": "Back to admin sign-in",
+  "screen.public.signIn.adminAuthenticator.openInApp": "Open in your authenticator app",
+  "screen.public.signIn.adminAuthenticator.enterKey": "Add this key to your authenticator app:",
   "screen.public.signIn.adminAuthenticator.codeLabel": "Authenticator code",
   // apps/web/src/screens/public/sign-in/staff-code-set-up.tsx
   "screen.public.signIn.staffCodeSetUp.required": "Required before the workspace opens",
@@ -3180,6 +3181,12 @@ export const en = {
   "screen.public.signIn.staffCodeSetUp.sms": "Text message (SMS)",
   "screen.public.signIn.staffCodeSetUp.codeFromApp": "Code from your app",
   "screen.public.signIn.staffCodeSetUp.codeFromSms": "Code from the text message",
+  "screen.public.signIn.staffCodeSetUp.smsTo": "Text message (SMS) to {phone}",
+  "screen.public.signIn.staffCodeSetUp.enterKey": "Add this key to your authenticator app:",
+  "screen.public.signIn.staffCodeSetUp.openInApp": "Open in your authenticator app",
+  "screen.public.signIn.staffCodeSetUp.startOver":
+    "Sign in again to set your code. The set-up is valid for 10 minutes.",
+  "screen.public.signIn.staffCodeSetUp.backToSignIn": "Back to staff sign-in",
   "screen.public.signIn.staffCodeSetUp.confirm": "Confirm",
   // apps/web/src/screens/public/sign-up/organization-sign-up.tsx
   "screen.public.signUp.organization.title": "Register your organization",
@@ -3203,6 +3210,21 @@ export const en = {
   "screen.public.signUp.organization.submitting": "Submitting…",
   "screen.public.signUp.organization.submitFailed":
     "The registration could not be submitted. Try again.",
+  "screen.public.signUp.organization.countryUnsupported":
+    "Organizations can register in Egypt, Saudi Arabia or the UAE.",
+  "screen.public.signUp.organization.tourismLicense": "Tourism licence number",
+  "screen.public.signUp.organization.tourismLicenseExpiry": "Licence expiry date",
+  "screen.public.signUp.organization.licenseExpired":
+    "The licence has expired. Enter a future date.",
+  "screen.public.signUp.organization.headquartersAddress": "Headquarters address",
+  "screen.public.signUp.organization.ownerNationalId": "Owner national ID",
+  "screen.public.signUp.organization.ownerRoleTitle": "Owner job title",
+  "screen.public.signUp.organization.billingAddress": "Billing address",
+  "screen.public.signUp.organization.payoutMethod": "Payout method",
+  "screen.public.signUp.organization.payoutBank": "Bank transfer",
+  "screen.public.signUp.organization.payoutWallet": "Mobile wallet",
+  "screen.public.signUp.organization.payoutIban": "IBAN",
+  "screen.public.signUp.organization.payoutWalletNumber": "Wallet number",
   // apps/web/src/screens/public/sign-up/photographer-sign-up.tsx
   "screen.public.signUp.photographer.title": "Apply as a photographer",
   "screen.public.signUp.photographer.lead":
@@ -3220,6 +3242,12 @@ export const en = {
   "screen.public.signUp.photographer.submitting": "Submitting…",
   "screen.public.signUp.photographer.submitFailed":
     "The application could not be submitted. Try again.",
+  "screen.public.signUp.photographer.nationalId": "National ID",
+  "screen.public.signUp.photographer.yearsOfExperience": "Years of experience",
+  "screen.public.signUp.photographer.cameraBodies": "Camera bodies",
+  "screen.public.signUp.photographer.lenses": "Lenses",
+  "screen.public.signUp.photographer.specialties": "Specialties",
+  "screen.public.signUp.photographer.listHint": "Separate entries with commas.",
   // apps/web/src/screens/public/sign-up/platform-driver-sign-up.tsx
   "screen.public.signUp.driver.title": "Apply to drive",
   "screen.public.signUp.driver.lead": "Platform driver application. You can sign in after review.",
@@ -3246,7 +3274,22 @@ export const en = {
   "screen.public.signUp.driver.submit": "Submit application",
   "screen.public.signUp.driver.submitting": "Submitting…",
   "screen.public.signUp.driver.submitFailed": "The application could not be submitted. Try again.",
+  "screen.public.signUp.driver.nationalId": "National ID",
+  "screen.public.signUp.driver.yourLicense": "Your licence",
+  "screen.public.signUp.driver.licenseNumber": "Licence number",
+  "screen.public.signUp.driver.licenseCategory": "Licence category",
+  "screen.public.signUp.driver.licenseExpiry": "Licence expiry date",
+  "screen.public.signUp.driver.licenseExpired": "The licence has expired. Enter a future date.",
+  "screen.public.signUp.driver.yearsOfExperience": "Years driving",
+  // apps/web/src/screens/public/sign-up/supplier-onboarding.tsx
+  "screen.public.signUp.supplier.password": "Password",
+  "screen.public.signUp.supplier.passwordHint":
+    "At least {count} characters. You sign in with it after approval.",
+  "screen.public.signUp.supplier.stepPhone": "Step 2 of 2: phone",
   // apps/web/src/screens/public/sign-up/verification-by-code.tsx
+  "screen.public.signUp.verification.noDestination":
+    "There is no code waiting here. Codes are sent when you create an account or sign in.",
+  "screen.public.signUp.verification.startSignUp": "Create an account",
   "screen.public.signUp.verification.stepEmail": "Step 1 of 2: email",
   "screen.public.signUp.verification.stepPhone": "Step 1 of 2: phone",
   "screen.public.signUp.verification.changeNumber": "Change number",

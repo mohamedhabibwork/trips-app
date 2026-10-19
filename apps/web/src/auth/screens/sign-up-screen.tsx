@@ -234,6 +234,14 @@ export function SignUpScreen({ returnTo, start = "choose" }: SignUpScreenProps) 
         target={dispatch.targetIdentifier}
         resendAvailableInSeconds={dispatch.resendAvailableInSeconds}
         devCodePreview={dispatch.devCodePreview}
+        stepLabel={
+          // "Step 1 of 2: email", then "Step 2 of 2: phone", when both channels need a code.
+          step.dispatches.length === 2
+            ? step.index === 0
+              ? t("screen.public.signUp.verification.stepEmail")
+              : t("screen.public.signUp.supplier.stepPhone")
+            : undefined
+        }
         submitting={submitting}
         error={error}
         onSubmit={(code) => void submitOtp(step, code)}

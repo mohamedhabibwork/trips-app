@@ -1,6 +1,6 @@
 // SCR-PUB-13 Password reset (`/reset-password`): step 1 sends and takes the code, step 2 sets the
 // new password. The server checks the code together with the new password.
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import type { AuthErrorView } from "@trips-app/auth";
 import { TeIcon } from "@trips-app/ui/components/te-icon";
@@ -51,6 +51,10 @@ export function PasswordReset() {
   const confirmResetMutation = useMutation(
     orpc.auth.confirmPasswordReset.mutationOptions({ onSuccess }),
   );
+  // The breached-list check runs on the server when the platform enables it; the rule is shown as a
+  // note (not ticked) only then.
+  const settingsQuery = useQuery(orpc.auth.getAuthSettings.queryOptions({ input: undefined }));
+  const breachCheck = settingsQuery.data?.breachedPasswordCheckEnabled === true;
   const [step, setStep] = useState<Step>("identify");
   const [identifier, setIdentifier] = useState("");
   const [code, setCode] = useState("");
@@ -129,7 +133,9 @@ export function PasswordReset() {
             <Rule met={longEnough}>
               {t("screen.public.passwordReset.ruleLength", { min: MIN_PASSWORD_LENGTH })}
             </Rule>
-            <Rule met={false}>{t("screen.public.passwordReset.ruleBreached")}</Rule>
+            {breachCheck ? (
+              <Rule met={false}>{t("screen.public.passwordReset.ruleBreached")}</Rule>
+            ) : null}
           </ul>
           <TextField
             name="confirmPassword"

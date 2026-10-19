@@ -11,6 +11,7 @@ import { pathFor } from "@/navigation/web-routes";
 
 import { client } from "../../utils/orpc";
 import { useAuth } from "../auth-context";
+import { setStaffSetup } from "../staff-setup";
 import { AuthField, AuthShell } from "../components/auth-shell";
 import { SubmitBanner } from "../components/submit-banner";
 import { toAuthErrorView } from "../errors";
@@ -18,13 +19,13 @@ import { toAuthErrorView } from "../errors";
 interface StaffSignInResult {
   step: "staff_2fa_verification_required" | "staff_2fa_setup_required" | "authenticated";
   challengeToken?: string;
+  totpSecret?: string;
+  otpauthUri?: string;
+  smsDispatch?: { targetIdentifier: string };
   session?: SessionTokenPayload;
 }
 
 type Step = { kind: "password" } | { kind: "secondFactor"; challengeToken: string };
-
-/** Read by the staff code set-up page (SCR-PUB-12). */
-const STAFF_CHALLENGE_KEY = "te:staffChallengeToken";
 
 export function StaffSignInScreen() {
   const { t, locale, signInWithSession } = useAuth();
@@ -56,11 +57,15 @@ export function StaffSignInScreen() {
         return;
       }
 
-      // First staff sign-in: the second factor is set on SCR-PUB-12, which reads the challenge token
-      // from session storage. Without a token the mapped message tells the user to contact their
-      // organization administrator.
+      // First staff sign-in: the second factor is set on SCR-PUB-12, which receives the set-up in
+      // memory. Without a token the mapped message tells the user to contact their administrator.
       if (result.step === "staff_2fa_setup_required" && result.challengeToken) {
-        sessionStorage.setItem(STAFF_CHALLENGE_KEY, result.challengeToken);
+        setStaffSetup({
+          challengeToken: result.challengeToken,
+          totpSecret: result.totpSecret ?? null,
+          otpauthUri: result.otpauthUri ?? null,
+          smsTarget: result.smsDispatch?.targetIdentifier ?? null,
+        });
         await navigate({ to: pathFor("SCR-PUB-12") });
         return;
       }

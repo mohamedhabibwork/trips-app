@@ -25,5 +25,6 @@ export {
   normalizeLocale,
   resetLocale,
   setLocale,
+  setLocaleResolver,
   subscribeLocale,
 } from "./locale";
