@@ -204,7 +204,7 @@ import { z } from 'zod'
   body: z.object({
     name: z.string(),
     age: z.number().min(0),
-    email: z.string().email()
+    email: z.email()
   })
 })
 ```

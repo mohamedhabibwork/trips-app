@@ -53,7 +53,7 @@ class AuthErrorMapperTest {
     }
 
     @Test
-    fun `UNAUTHORIZED on the refresh procedure is an expired session, never bad credentials`() {
+    fun `UNAUTHORIZED on the refresh procedure is an expired session and never bad credentials`() {
         val view = map("UNAUTHORIZED", status = 401, procedure = AuthRepository.PROC_REFRESH_SESSION)
 
         assertEquals(AuthErrorMapper.Keys.SESSION_EXPIRED, view.key)
@@ -131,7 +131,7 @@ class AuthErrorMapperTest {
     }
 
     @Test
-    fun `a wrong OTP is distinguished by wrongAttempts, not by an AUTH_OTP code`() {
+    fun `a wrong OTP is distinguished by wrongAttempts rather than an AUTH_OTP code`() {
         val view = map(
             code = "VALIDATION_ERROR",
             status = 400,

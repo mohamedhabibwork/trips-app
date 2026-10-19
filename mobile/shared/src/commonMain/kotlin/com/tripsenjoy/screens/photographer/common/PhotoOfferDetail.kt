@@ -31,6 +31,7 @@ internal fun OfferDetailContent(
     onBack: () -> Unit,
     onReject: () -> Unit,
 ) {
+    val session = LocalPhotographerSession.current
     var counterAmount by remember(offer.id) { mutableStateOf("") }
     var countered by remember(offer.id) { mutableStateOf(false) }
     TeButton(text = "Back to deal requests", onClick = onBack, variant = TeButtonVariant.Ghost)
@@ -66,11 +67,17 @@ internal fun OfferDetailContent(
     )
     TeButton(
         text = "Accept",
-        onClick = { nav.open(acceptTarget()) },
+        onClick = {
+            session.respondToOffer(offer.id, "accept")
+            nav.open(acceptTarget(session.bookingsUsed))
+        },
     )
     TeButton(
         text = "Counter",
-        onClick = { countered = true },
+        onClick = {
+            session.respondToOffer(offer.id, "counter", counterAmount.toLongOrNull())
+            countered = true
+        },
         variant = TeButtonVariant.Secondary,
         enabled = counterAmount.isNotBlank(),
     )
@@ -79,8 +86,8 @@ internal fun OfferDetailContent(
 }
 
 // Accepting finalizes the assignment. A full plan blocks it and shows the upgrade prompt instead.
-private fun acceptTarget(): String =
-    if (isWithinAllowance(DEMO_BOOKINGS_USED, CURRENT_PLAN.bookingsPerMonth)) {
+private fun acceptTarget(bookingsUsed: Int): String =
+    if (isWithinAllowance(bookingsUsed, CURRENT_PLAN.bookingsPerMonth)) {
         PhotoScreenId.TRIP_BRIEF
     } else {
         SharedScreenId.PLAN_LIMIT_PROMPT

@@ -4,7 +4,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import com.tripsenjoy.auth.LocalAuthApiOrNull
+import com.tripsenjoy.screens.LocalScreenNavigator
 import com.tripsenjoy.screens.traveler.common.AmountPlaceholder
 import com.tripsenjoy.screens.traveler.common.BackButton
 import com.tripsenjoy.screens.traveler.common.LabelValue
@@ -14,16 +17,20 @@ import com.tripsenjoy.screens.traveler.common.ScreenSection
 import com.tripsenjoy.screens.traveler.common.StatePreview
 import com.tripsenjoy.screens.traveler.common.TravelerScreenState
 import com.tripsenjoy.ui.components.AlertTone
+import com.tripsenjoy.ui.components.TeButton
 import com.tripsenjoy.ui.components.TeButtonVariant
 import com.tripsenjoy.ui.components.TeCheckbox
 import com.tripsenjoy.ui.components.TeInlineAlert
+import kotlinx.coroutines.launch
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 
-// SCR-TRV-12. Decision point, so a full screen rather than a modal. Refund shown under the policy row
-// for the time left. Placeholder tiers from D-07 (80 percent at 48 or more hours, 50 percent from 24 to
-// under 48, 0 percent under 24). Refund Pending until the gateway confirms (FR-PAY-03).
-// Confirm stays disabled until the traveler acknowledges the refund and that cancelling cannot be undone.
 @Composable
 fun CancelBookingAndRefundPreview() {
+    val nav = LocalScreenNavigator.current
+    val api = LocalAuthApiOrNull.current
+    val scope = rememberCoroutineScope()
     var acknowledged by remember { mutableStateOf(false) }
     ScreenPage(title = "Cancel booking and refund preview") {
         StatePreview(listedStates = setOf(TravelerScreenState.Loading, TravelerScreenState.Error)) {
@@ -50,7 +57,32 @@ fun CancelBookingAndRefundPreview() {
                 onCheckedChange = { acknowledged = it },
                 label = "I understand the refund shown above and that cancelling cannot be undone.",
             )
-            BackButton(text = "Confirm cancellation", variant = TeButtonVariant.Destructive, enabled = acknowledged)
+            TeButton(
+                text = "Confirm cancellation",
+                variant = TeButtonVariant.Destructive,
+                enabled = acknowledged,
+                onClick = {
+                    val client = api
+                    val bookingId = TravelerBookingState.selectedBookingId ?: "booking-1"
+                    if (client != null) {
+                        scope.launch {
+                            runCatching {
+                                client.call(
+                                    "booking/cancelBooking",
+                                    buildJsonObject {
+                                        put("bookingId", bookingId)
+                                        put("reason", "Traveler requested cancellation")
+                                    },
+                                    JsonElement.serializer(),
+                                )
+                            }
+                            nav.back()
+                        }
+                    } else {
+                        nav.back()
+                    }
+                },
+            )
             BackButton(text = "Keep booking")
         }
     }

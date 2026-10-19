@@ -1,22 +1,29 @@
 package com.tripsenjoy.screens.shared.forms
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import com.tripsenjoy.auth.LocalAuthApiOrNull
 import com.tripsenjoy.screens.LocalScreenNavigator
 import com.tripsenjoy.screens.moderator.common.icon
 import com.tripsenjoy.screens.photographer.common.StatePreview
 import com.tripsenjoy.screens.shared.common.ScreenBody
 import com.tripsenjoy.screens.shared.common.StateErrorBlock
 import com.tripsenjoy.screens.shared.common.StateLoadingCard
+import com.tripsenjoy.screens.traveler.bookings.TravelerBookingState
+import com.tripsenjoy.trips.TripsBrowseRepository
 import com.tripsenjoy.ui.components.SeatState
 import com.tripsenjoy.ui.components.TeButton
 import com.tripsenjoy.ui.components.TePageHeader
 import com.tripsenjoy.ui.components.TeSeat
 import com.tripsenjoy.ui.components.TeSeatMap
 import com.tripsenjoy.ui.components.TeSeatRow
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 
 private val SAMPLE_SEAT_ROWS = listOf(
     TeSeatRow(
@@ -51,7 +58,21 @@ private fun List<TeSeatRow>.withSelection(seatId: String?): List<TeSeatRow> = ma
 @Composable
 fun SeatMap() {
     val nav = LocalScreenNavigator.current
+    val api = LocalAuthApiOrNull.current
     var selectedSeat by remember { mutableStateOf<String?>(null) }
+
+    LaunchedEffect(api) {
+        val client = api ?: return@LaunchedEffect
+        val tripId = TripsBrowseRepository.selectedTripId ?: return@LaunchedEffect
+        runCatching {
+            client.call(
+                "seats/getSeatMap",
+                buildJsonObject { put("tripId", tripId) },
+                JsonElement.serializer(),
+            )
+        }
+    }
+
     ScreenBody {
         TePageHeader(title = "Seat map", description = "Choose a seat on this vehicle")
         StatePreview(
@@ -59,7 +80,10 @@ fun SeatMap() {
             main = {
                 TeSeatMap(
                     rows = SAMPLE_SEAT_ROWS.withSelection(selectedSeat),
-                    onSelect = { selectedSeat = it },
+                    onSelect = { seatId ->
+                        selectedSeat = seatId
+                        TravelerBookingState.selectedSeatLabel = seatId
+                    },
                     ariaLabel = "Seat map for this vehicle",
                 )
                 TeButton(

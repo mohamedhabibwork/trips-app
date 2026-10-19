@@ -9,6 +9,7 @@ import com.tripsenjoy.screens.LocalScreenNavigator
 import com.tripsenjoy.screens.ScreenNavigator
 import com.tripsenjoy.screens.moderator.common.icon
 import com.tripsenjoy.screens.photographer.common.CURRENT_PLAN
+import com.tripsenjoy.screens.photographer.common.LocalPhotographerSession
 import com.tripsenjoy.screens.photographer.common.PhotographerPlan
 import com.tripsenjoy.screens.photographer.common.StatePreview
 import com.tripsenjoy.screens.photographer.common.includes
@@ -53,6 +54,7 @@ fun AlbumPrivacyAndSharing() {
 
 @Composable
 private fun PrivacyContent(nav: ScreenNavigator) {
+    val session = LocalPhotographerSession.current
     var privacy by remember { mutableStateOf(AlbumPrivacy.Public) }
     var linkCreated by remember { mutableStateOf(false) }
     var publish by remember { mutableStateOf(true) }
@@ -115,7 +117,13 @@ private fun PrivacyContent(nav: ScreenNavigator) {
         onCheckedChange = { publish = it },
         label = "Publish album to the trip record",
     )
-    TeButton(text = "Save privacy", onClick = { nav.back() })
+    TeButton(
+        text = "Save privacy",
+        onClick = {
+            session.publishAlbum(privacy.value, publish)
+            nav.back()
+        },
+    )
 }
 
 @Composable

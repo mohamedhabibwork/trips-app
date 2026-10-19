@@ -4,7 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import com.tripsenjoy.auth.LocalAuthApiOrNull
 import com.tripsenjoy.screens.LocalScreenNavigator
 import com.tripsenjoy.screens.shared.common.ScreenBody
 import com.tripsenjoy.screens.shared.common.ScreenNote
@@ -12,6 +14,10 @@ import com.tripsenjoy.ui.components.TeButton
 import com.tripsenjoy.ui.components.TeButtonVariant
 import com.tripsenjoy.ui.components.TeOtpInput
 import com.tripsenjoy.ui.components.TePageHeader
+import kotlinx.coroutines.launch
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 
 private const val OTP_LENGTH = 6
 private const val RESEND_COUNTDOWN_SECONDS = 60
@@ -22,6 +28,8 @@ private const val RESEND_COUNTDOWN_SECONDS = 60
 @Composable
 fun OtpEntry() {
     val nav = LocalScreenNavigator.current
+    val api = LocalAuthApiOrNull.current
+    val scope = rememberCoroutineScope()
     var code by remember { mutableStateOf("") }
     ScreenBody {
         TePageHeader(title = "OTP entry", description = "Enter the $OTP_LENGTH-digit code we sent you")
@@ -34,7 +42,26 @@ fun OtpEntry() {
         ScreenNote(text = "The code expires in 5 minutes.")
         TeButton(
             text = "Verify",
-            onClick = { nav.back() },
+            onClick = {
+                val client = api
+                if (client != null) {
+                    scope.launch {
+                        runCatching {
+                            client.call(
+                                "auth/verifyOtp",
+                                buildJsonObject {
+                                    put("challengeId", "00000000-0000-0000-0000-000000000001")
+                                    put("code", code)
+                                },
+                                JsonElement.serializer(),
+                            )
+                        }
+                        nav.back()
+                    }
+                } else {
+                    nav.back()
+                }
+            },
             enabled = code.length == OTP_LENGTH,
         )
         TeButton(

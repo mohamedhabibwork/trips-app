@@ -6,8 +6,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import com.tripsenjoy.screens.LocalScreenNavigator
-import com.tripsenjoy.screens.photographer.common.DEMO_DEAL_OFFERS
 import com.tripsenjoy.screens.photographer.common.DealOffer
+import com.tripsenjoy.screens.photographer.common.LocalPhotographerSession
 import com.tripsenjoy.screens.photographer.common.OFFER_EXPIRY_TEXT
 import com.tripsenjoy.screens.photographer.common.OfferDetailContent
 import com.tripsenjoy.screens.photographer.common.StatePreview
@@ -24,6 +24,8 @@ import com.tripsenjoy.ui.components.TePageHeader
 @Composable
 fun DealRequestsAndOfferDetail() {
     val nav = LocalScreenNavigator.current
+    val session = LocalPhotographerSession.current
+    val offers = session.dealOffers
     var selectedId by remember { mutableStateOf<String?>(null) }
     var rejectedIds by remember { mutableStateOf<Set<String>>(emptySet()) }
     ScreenBody {
@@ -31,10 +33,10 @@ fun DealRequestsAndOfferDetail() {
         StatePreview(
             ariaLabel = "Deal request states",
             main = {
-                val offer = DEMO_DEAL_OFFERS.firstOrNull { it.id == selectedId }
+                val offer = offers.firstOrNull { it.id == selectedId }
                 if (offer == null) {
                     DealListContent(
-                        offers = DEMO_DEAL_OFFERS,
+                        offers = offers,
                         rejectedIds = rejectedIds,
                         onOpen = { selectedId = it },
                     )
@@ -44,6 +46,7 @@ fun DealRequestsAndOfferDetail() {
                         nav = nav,
                         onBack = { selectedId = null },
                         onReject = {
+                            session.respondToOffer(offer.id, "DECLINE")
                             rejectedIds = rejectedIds + offer.id
                             selectedId = null
                         },

@@ -123,9 +123,10 @@ private fun ProfileMain() {
 
 @Composable
 private fun DocumentsCard() {
+    val session = LocalDriverSession.current
     var files by remember { mutableStateOf(listOf<TeUploadFile>()) }
     TeCard(header = "Documents") {
-        DriverSampleData.documents.forEach { document ->
+        session.documents.forEach { document ->
             DrvField(label = document.name, value = document.detail)
             TeBadge(
                 label = if (document.expiringSoon) "Expiring soon" else "Valid",
