@@ -2,6 +2,7 @@ import { describe, expect, mock, test } from "bun:test";
 import { dehydrate, type QueryClient } from "@tanstack/react-query";
 
 import type { SessionController } from "@/auth/session-controller";
+import { screenLoader } from "@/navigation/load-screen";
 import { ALL_SCREENS, findScreen } from "@/screens/registry";
 import type { ScreenLoaderFn } from "@/screens/types";
 import { createQueryClient, orpc } from "@/utils/orpc";
@@ -10,7 +11,6 @@ import { Route as AdminRoute } from "./admin";
 import { Route as BusinessRoute } from "./business";
 import { Route as CrewRoute } from "./crew";
 import { Route as IndexRoute } from "./index";
-import { Route as ScreenDetailRoute } from "./screens.$surface.$slug";
 import { Route as StudioRoute } from "./studio";
 
 describe("Empirical Challenger: SSR Loader Integration & Auth Safety Stress Test", () => {
@@ -275,8 +275,8 @@ describe("Empirical Challenger: SSR Loader Integration & Auth Safety Stress Test
     });
   }
 
-  // 2. Stress test dynamic screen route /screens/$surface/$slug under adversarial inputs
-  describe("Dynamic Screen Route (/screens/$surface/$slug) Adversarial Stress", () => {
+  // 2. Stress test a screen route loader under adversarial inputs
+  describe("Screen route loader adversarial stress", () => {
     test("handles throwing screen loader gracefully (e.g. 401 or offline network error)", async () => {
       const qc = createQueryClient();
       const mockAuth = createMockAuth(null);
@@ -289,16 +289,15 @@ describe("Empirical Challenger: SSR Loader Integration & Auth Safety Stress Test
           throw new Error("Simulated 401 Unauthorized or Network Failure");
         };
 
-        const loader = ScreenDetailRoute.options.loader;
+        const loader = screenLoader(targetScreen.id);
         await expect(
           loader?.({
             context: { queryClient: qc, orpc, auth: mockAuth },
-            params: { surface: targetScreen.surface, slug: targetScreen.slug },
+            params: { tripId: "trip-1" },
             location: { search: {} } as any,
             abortController: new AbortController(),
             preload: false,
             cause: "enter",
-            route: ScreenDetailRoute,
           } as any),
         ).resolves.toBeUndefined();
       } finally {
@@ -306,17 +305,17 @@ describe("Empirical Challenger: SSR Loader Integration & Auth Safety Stress Test
       }
     });
 
-    test("handles malicious or invalid surface and slug parameters gracefully", async () => {
+    test("handles malicious or invalid route params gracefully", async () => {
       const qc = createQueryClient();
       const mockAuth = createMockAuth(null);
-      const loader = ScreenDetailRoute.options.loader;
+      const loader = screenLoader("SCR-ORG-14");
 
       const adversarialParams = [
-        { surface: "../admin", slug: "../../secret" },
-        { surface: "__proto__", slug: "toString" },
-        { surface: "undefined", slug: "null" },
-        { surface: "", slug: "" },
-        { surface: "unknown", slug: "nonexistent-slug" },
+        { tripId: "../../secret" },
+        { tripId: "__proto__" },
+        { tripId: "null" },
+        { tripId: "" },
+        { tripId: "nonexistent-trip" },
       ];
 
       for (const params of adversarialParams) {
@@ -328,7 +327,6 @@ describe("Empirical Challenger: SSR Loader Integration & Auth Safety Stress Test
             abortController: new AbortController(),
             preload: false,
             cause: "enter",
-            route: ScreenDetailRoute,
           } as any),
         ).resolves.toBeUndefined();
       }

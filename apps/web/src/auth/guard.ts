@@ -54,6 +54,22 @@ export function requireSurface(surface: SurfaceId, signInPath?: string) {
 }
 
 /**
+ * `beforeLoad` for a page any signed-in user may open, whatever their role (notifications,
+ * receipts, an applicant's status). Same SSR and hydration rules as `requireSurface`.
+ */
+export function requireSignedIn(signInPath = "/sign-in") {
+  return ({ context, location }: GuardArguments): void => {
+    if (typeof window === "undefined") return;
+
+    const { status, actor } = context.auth.getSnapshot();
+    if (status === "loading") return;
+    if (status === "authenticated" && actor) return;
+
+    throw redirect({ to: signInPath, search: { returnTo: location.href }, replace: true });
+  };
+}
+
+/**
  * The inverse guard for sign-in routes: a user who can already use this surface is sent to its home
  * instead of being shown a form. It never runs during SSR or hydration.
  *

@@ -1,4 +1,6 @@
 import { describe, expect, test } from "bun:test";
+import { readFileSync, readdirSync } from "node:fs";
+import { join, relative } from "node:path";
 
 import { ALL_SCREENS, findScreenById } from "@/screens/registry";
 
@@ -42,8 +44,8 @@ describe("web route table", () => {
     expect(new Set(paths).size).toBe(paths.length);
   });
 
-  test("every catch-all route matches its own pattern back to itself", () => {
-    for (const route of WEB_ROUTES.filter((candidate) => !candidate.fileRoute)) {
+  test("every route matches its own pattern back to itself", () => {
+    for (const route of WEB_ROUTES) {
       // Arrange
       const params = Object.fromEntries(
         [...route.path.matchAll(/\$([A-Za-z]+)/g)].map(([, name]) => [name, `sample-${name}`]),
@@ -76,8 +78,8 @@ describe("matchWebRoute", () => {
     expect(matchWebRoute("public", "/no-such-page")).toBeUndefined();
   });
 
-  test("skips pages served by their own file route", () => {
-    expect(matchWebRoute("public", "/sign-in")).toBeUndefined();
+  test("matches pages that have a hand-written route file", () => {
+    expect(matchWebRoute("public", "/sign-in")?.route.id).toBe("SCR-PUB-08");
   });
 });
 
@@ -100,6 +102,63 @@ describe("shell navigation", () => {
   test("every sidebar item opens a page in its own section", () => {
     for (const navItem of [...ORGANIZATION_NAV, ...ADMIN_NAV]) {
       expect(webRouteById(navItem.screenId)?.section).toBe(navItem.section);
+    }
+  });
+});
+
+const ROUTES_DIR = join(import.meta.dir, "..", "routes");
+
+/** Route path -> source of the file that declares it, for every file route. */
+function fileRoutes(): Map<string, string> {
+  const files = readdirSync(ROUTES_DIR, { recursive: true, encoding: "utf8" }).filter(
+    (file) => file.endsWith(".tsx") && !file.includes(".test."),
+  );
+  const byPath = new Map<string, string>();
+  for (const file of files) {
+    const source = readFileSync(join(ROUTES_DIR, file), "utf8");
+    const declared = /createFileRoute\("([^"]+)"\)/.exec(source)?.[1];
+    if (!declared) continue;
+    const path = declared.length > 1 ? declared.replace(/\/$/, "") : declared;
+    byPath.set(path.replace(/\/(admin|business)_\//, "/$1/").replace(/_\//g, "/"), source);
+  }
+  return byPath;
+}
+
+describe("file routes", () => {
+  const routes = fileRoutes();
+
+  test("every screen URL is served by its own route file", () => {
+    const missing = WEB_ROUTES.filter((route) => !routes.has(route.path)).map(
+      (route) => `${route.id} ${route.path}`,
+    );
+    expect(missing).toEqual([]);
+  });
+
+  test("no catch-all or screen gallery route exposes pages outside their guards", () => {
+    const open = [...routes.keys()].filter(
+      (path) =>
+        path.endsWith("/$") ||
+        path === "/$" ||
+        path.startsWith("/screens") ||
+        path === "/components",
+    );
+    expect(open).toEqual([]);
+  });
+
+  test("public pages that need a session use the signed-in guard", () => {
+    for (const route of WEB_ROUTES.filter((candidate) => candidate.signedIn)) {
+      expect(routes.get(route.path)).toContain("beforeLoad: requireSignedIn(");
+    }
+  });
+
+  test("organization and admin pages sit under their guarded layout", () => {
+    const layouts = { organization: "business.tsx", admin: "admin.tsx" } as const;
+    for (const [area, file] of Object.entries(layouts)) {
+      const source = readFileSync(join(ROUTES_DIR, file), "utf8");
+      expect(source).toContain("beforeLoad: requireSurface(");
+      for (const route of WEB_ROUTES.filter((candidate) => candidate.area === area)) {
+        expect(relative("/", route.path).split("/")[0]).toBe(file.replace(".tsx", ""));
+      }
     }
   });
 });

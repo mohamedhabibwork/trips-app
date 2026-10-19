@@ -1,42 +1,39 @@
-// Loader shared by the catch-all routes: maps the URL to a screen and runs that screen's prefetch.
-import { notFound } from "@tanstack/react-router";
-
+// Loader shared by the screen routes: runs the screen's prefetch with the route's params.
 import { findScreenById } from "@/screens/registry";
 import type { ScreenLoaderContext } from "@/screens/types";
 
-import { matchWebRoute } from "./web-routes";
-import type { RouteMatch, WebArea } from "./web-routes";
+import { webRouteById } from "./web-routes";
 
 interface LoaderArguments {
   context: Pick<ScreenLoaderContext, "queryClient" | "orpc" | "auth">;
-  location: { pathname: string; search?: unknown };
+  params: Record<string, string>;
+  location: { search?: unknown };
 }
 
 /**
- * Throws `notFound()` for a path no screen owns. On the server a protected page is not prefetched
- * without a token, so no 401 is dehydrated into the page (same rule as the surface routes).
+ * The `loader` of a screen's file route. On the server a page that needs a session is not
+ * prefetched without a token, so no 401 is dehydrated into the page (same rule as the surface
+ * routes). A failed prefetch never blocks the page: the screen's own query shows its error state.
  */
-export async function loadScreenForPath(
-  area: WebArea,
-  { context, location }: LoaderArguments,
-): Promise<RouteMatch> {
-  const match = matchWebRoute(area, location.pathname);
-  if (!match) throw notFound();
+export function screenLoader(screenId: string) {
+  const route = webRouteById(screenId);
+  if (!route) throw new Error(`No web route for screen ${screenId}`);
+  const needsSession = route.area !== "public" || route.signedIn === true;
 
-  const isProtected = area !== "public";
-  if (isProtected && typeof window === "undefined" && !context.auth.accessToken()) return match;
+  return async ({ context, params, location }: LoaderArguments): Promise<void> => {
+    if (needsSession && typeof window === "undefined" && !context.auth.accessToken()) return;
 
-  const loader = findScreenById(match.route.id)?.loader;
-  if (!loader) return match;
+    const loader = findScreenById(screenId)?.loader;
+    if (!loader) return;
 
-  try {
-    await loader({
-      ...context,
-      params: match.params,
-      search: (location.search as Record<string, unknown> | undefined) ?? {},
-    });
-  } catch {
-    // A failed prefetch must not block the page: the screen's own query shows its error state.
-  }
-  return match;
+    try {
+      await loader({
+        ...context,
+        params,
+        search: (location.search as Record<string, unknown> | undefined) ?? {},
+      });
+    } catch {
+      // The screen's query renders its own error state.
+    }
+  };
 }

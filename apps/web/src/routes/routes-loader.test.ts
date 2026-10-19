@@ -2,13 +2,13 @@ import { describe, expect, mock, test } from "bun:test";
 import { QueryClient } from "@tanstack/react-query";
 
 import { authController } from "@/auth/instance";
+import { screenLoader } from "@/navigation/load-screen";
 import type { SessionController } from "@/auth/session-controller";
 import { ALL_SCREENS, findScreen } from "@/screens/registry";
 import type { ScreenEntry, ScreenLoaderContext, ScreenLoaderFn } from "@/screens/types";
 import { createQueryClient, orpc } from "@/utils/orpc";
 
 import { Route as IndexRoute } from "./index";
-import { Route as ScreenDetailRoute } from "./screens.$surface.$slug";
 import { Route as AdminRoute } from "./admin";
 import { Route as BusinessRoute } from "./business";
 import { Route as CrewRoute } from "./crew";
@@ -50,8 +50,8 @@ describe("Unit: Route SSR Loaders & Screen Registry (M2)", () => {
     expect(loaderRan).toBe(true);
   });
 
-  describe("Dynamic Screen Route (/screens/$surface/$slug)", () => {
-    test("invokes findScreen(surface, slug).loader when loader is present", async () => {
+  describe("Screen route loader (screenLoader)", () => {
+    test("runs the screen loader with the route params and search", async () => {
       const queryClient = createQueryClient();
       const mockAuth = createMockAuth();
       const targetScreen = ALL_SCREENS[0];
@@ -66,22 +66,19 @@ describe("Unit: Route SSR Loaders & Screen Registry (M2)", () => {
         };
         (targetScreen as { loader?: ScreenLoaderFn }).loader = testLoader;
 
-        const loader = ScreenDetailRoute.options.loader;
-        expect(typeof loader).toBe("function");
+        const loader = screenLoader(targetScreen.id);
 
         await loader?.({
           context: { queryClient, orpc, auth: mockAuth },
-          params: { surface: targetScreen.surface, slug: targetScreen.slug },
+          params: { tripId: "trip-1" },
           location: { search: { page: 1 } } as any,
           abortController: new AbortController(),
           preload: false,
           cause: "enter",
-          route: ScreenDetailRoute,
         } as any);
 
         expect(loaderCalledWith).not.toBeNull();
-        expect(loaderCalledWith?.params.surface).toBe(targetScreen.surface);
-        expect(loaderCalledWith?.params.slug).toBe(targetScreen.slug);
+        expect(loaderCalledWith?.params).toEqual({ tripId: "trip-1" });
         expect(loaderCalledWith?.search).toEqual({ page: 1 });
         expect(loaderCalledWith?.queryClient).toBe(queryClient);
       } finally {
@@ -89,22 +86,8 @@ describe("Unit: Route SSR Loaders & Screen Registry (M2)", () => {
       }
     });
 
-    test("completes cleanly when screen does not exist", async () => {
-      const queryClient = createQueryClient();
-      const mockAuth = createMockAuth();
-      const loader = ScreenDetailRoute.options.loader;
-
-      await expect(
-        loader?.({
-          context: { queryClient, orpc, auth: mockAuth },
-          params: { surface: "nonexistent", slug: "unknown" },
-          location: { search: {} } as any,
-          abortController: new AbortController(),
-          preload: false,
-          cause: "enter",
-          route: ScreenDetailRoute,
-        } as any),
-      ).resolves.toBeUndefined();
+    test("refuses a screen ID that has no web route", () => {
+      expect(() => screenLoader("SCR-XXX-99")).toThrow(/SCR-XXX-99/);
     });
 
     test("handles screen loader errors gracefully without crashing route load", async () => {
@@ -119,16 +102,15 @@ describe("Unit: Route SSR Loaders & Screen Registry (M2)", () => {
           throw new Error("401 Unauthorized during unauthenticated SSR");
         };
 
-        const loader = ScreenDetailRoute.options.loader;
+        const loader = screenLoader(targetScreen.id);
         await expect(
           loader?.({
             context: { queryClient, orpc, auth: mockAuth },
-            params: { surface: targetScreen.surface, slug: targetScreen.slug },
+            params: { tripId: "trip-1" },
             location: { search: {} } as any,
             abortController: new AbortController(),
             preload: false,
             cause: "enter",
-            route: ScreenDetailRoute,
           } as any),
         ).resolves.toBeUndefined();
       } finally {

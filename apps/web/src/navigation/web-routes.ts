@@ -1,7 +1,7 @@
 // The URL of every web screen (docs/design/web), in one table.
 //
-// `path` is a pattern: static segments plus `$name` params. Screens served by their own file route
-// (sign-in, sign-up, /forbidden, the landing page) are listed too, so links can be built from the
+// `path` is a pattern: static segments plus `$name` params. Every page has its own file route under
+// `routes/` with the same path (`web-routes.test.ts` checks this), and links are built from the
 // screen ID alone. Screens that are components rather than pages (dialogs, banners, the seat map)
 // have no path; they are mounted inside other pages.
 import type { ScreenSurface } from "@/screens/types";
@@ -17,8 +17,8 @@ export interface WebRoute {
   area: WebArea;
   /** Sidebar section the page belongs to (organization and admin only). */
   section?: string;
-  /** The page is reached through its own file route, not the area's catch-all. */
-  fileRoute?: boolean;
+  /** A public-area page that still needs a session (any role), e.g. the notification centre. */
+  signedIn?: boolean;
 }
 
 export const ORGANIZATION_BASE = "/business";
@@ -38,42 +38,39 @@ const admin = (id: string, path: string, section: string): WebRoute => ({
   section,
 });
 
-const pub = (id: string, path: string, fileRoute = false): WebRoute => ({
-  id,
-  path,
-  area: "public",
-  fileRoute,
-});
+const pub = (id: string, path: string): WebRoute => ({ id, path, area: "public" });
+
+const signedIn = (id: string, path: string): WebRoute => ({ ...pub(id, path), signedIn: true });
 
 export const WEB_ROUTES: readonly WebRoute[] = [
   // Public site, sign-up and sign-in (SCR-PUB)
-  pub("SCR-PUB-01", "/", true),
-  pub("SCR-PUB-02", "/sign-up", true),
+  pub("SCR-PUB-01", "/"),
+  pub("SCR-PUB-02", "/sign-up"),
   pub("SCR-PUB-03", "/sign-up/traveler"),
   pub("SCR-PUB-04", "/sign-up/driver"),
   pub("SCR-PUB-05", "/sign-up/photographer"),
   pub("SCR-PUB-06", "/sign-up/organization"),
   pub("SCR-PUB-07", "/verify"),
-  pub("SCR-PUB-08", "/sign-in", true),
-  pub("SCR-PUB-09", "/admin/sign-in", true),
-  pub("SCR-PUB-10", "/admin/sign-in/authenticator", true),
-  pub("SCR-PUB-11", "/business/sign-in", true),
-  pub("SCR-PUB-12", "/business/sign-in/set-up-code", true),
+  pub("SCR-PUB-08", "/sign-in"),
+  pub("SCR-PUB-09", "/admin/sign-in"),
+  pub("SCR-PUB-10", "/admin/sign-in/authenticator"),
+  pub("SCR-PUB-11", "/business/sign-in"),
+  pub("SCR-PUB-12", "/business/sign-in/set-up-code"),
   pub("SCR-PUB-13", "/reset-password"),
   pub("SCR-PUB-14", "/session-expired"),
   pub("SCR-PUB-15", "/account/suspended"),
   pub("SCR-PUB-16", "/account/deletion"),
-  pub("SCR-PUB-17", "/application-status"),
-  pub("SCR-PUB-18", "/application-status/appeal"),
-  pub("SCR-PUB-19", "/crew/sign-in", true),
+  signedIn("SCR-PUB-17", "/application-status"),
+  signedIn("SCR-PUB-18", "/application-status/appeal"),
+  pub("SCR-PUB-19", "/crew/sign-in"),
 
   // Shared pages (SCR-SHR). 01, 08–10 and 13–16 are components, not pages.
-  pub("SCR-SHR-02", "/forbidden", true),
+  pub("SCR-SHR-02", "/forbidden"),
   pub("SCR-SHR-04", "/unauthorized"),
   pub("SCR-SHR-06", "/unavailable"),
   pub("SCR-SHR-07", "/maintenance"),
-  pub("SCR-SHR-11", "/notifications"),
-  pub("SCR-SHR-12", "/receipts/$receiptId"),
+  signedIn("SCR-SHR-11", "/notifications"),
+  signedIn("SCR-SHR-12", "/receipts/$receiptId"),
 
   // Organization dashboard (SCR-ORG)
   org("SCR-ORG-01", "", "home"),
@@ -216,9 +213,7 @@ function matchOne(route: WebRoute, segments: readonly string[]): Record<string, 
 /** Finds the screen for a pathname within one area. File-routed pages are skipped: they match first. */
 export function matchWebRoute(area: WebArea, pathname: string): RouteMatch | undefined {
   const segments = splitPath(pathname);
-  const candidates = WEB_ROUTES.filter((route) => route.area === area && !route.fileRoute).sort(
-    compareSpecificity,
-  );
+  const candidates = WEB_ROUTES.filter((route) => route.area === area).sort(compareSpecificity);
   for (const route of candidates) {
     const params = matchOne(route, segments);
     if (params) return { route, params };
