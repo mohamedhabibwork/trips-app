@@ -79,6 +79,28 @@ export function directionOf(locale: Locale): Direction {
 
 let override: Locale | null = null;
 
+/**
+ * A host-supplied source that wins over every other step, for hosts that know the locale per
+ * request (a server reading the visitor's cookie) or per document. Returns `null` to fall through.
+ */
+let scopeResolver: (() => Locale | null) | null = null;
+
+/**
+ * Registers (or clears, with `null`) the host locale source. A server uses it to answer
+ * `getLocale()` from the current request, so concurrent requests never share one module value.
+ */
+export function setLocaleResolver(resolver: (() => Locale | null) | null): void {
+  scopeResolver = resolver;
+}
+
+function fromResolver(): Locale | null {
+  try {
+    return normalizeLocale(scopeResolver?.() ?? null);
+  } catch {
+    return null;
+  }
+}
+
 const listeners = new Set<(locale: Locale) => void>();
 
 function fromStorage(): Locale | null {
@@ -116,7 +138,14 @@ function fromNavigator(): Locale | null {
  * so server rendering and unit tests get a stable answer.
  */
 export function getLocale(): Locale {
-  return override ?? fromStorage() ?? fromDocument() ?? fromNavigator() ?? DEFAULT_LOCALE;
+  return (
+    override ??
+    fromResolver() ??
+    fromStorage() ??
+    fromDocument() ??
+    fromNavigator() ??
+    DEFAULT_LOCALE
+  );
 }
 
 /**

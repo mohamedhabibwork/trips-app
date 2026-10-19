@@ -8,20 +8,20 @@ import {
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { Toaster } from "@trips-app/ui/components/sonner";
-import { setLocale, t } from "@trips-app/i18n";
+import { directionOf, getLocale, t } from "@trips-app/i18n";
 
 import { AuthProvider } from "@/auth/auth-context";
 import { SessionExpiredDialog } from "@/auth/components/session-expired-dialog";
 import type { RouterAppContext } from "@/types";
 
+import { installClientLocale } from "@/i18n/client-locale";
 import { PublicShell } from "@/components/shells/public-shell";
 import { ScreenById } from "@/components/shells/shell-content";
 import appCss from "../index.css?url";
 
-// The document this app renders declares English (`<html lang="en">`). The server has no document
-// to read, so without this the first paint would use the product default (Arabic) and every string
-// would be replaced on hydration.
-if (typeof window === "undefined") setLocale("en");
+// The browser reads the language from the same cookie the server rendered with (Arabic when unset),
+// so the first client render equals the server render. The server side is in server.ts.
+installClientLocale();
 
 export type { RouterAppContext } from "@/types";
 
@@ -78,8 +78,9 @@ function PageFrame() {
 }
 
 function RootDocument() {
+  const locale = getLocale();
   return (
-    <html lang="en">
+    <html lang={locale} dir={directionOf(locale)} suppressHydrationWarning>
       <head>
         <HeadContent />
       </head>
