@@ -214,6 +214,38 @@ export function createPaymentsRepository(db: Database) {
         .orderBy(desc(schema.paymentTransactions.createdAt));
     },
 
+    /**
+     * The payment with what its receipt shows: the booking and trip (when the payment is for one) and
+     * the payer's name. Access is decided by the service from `tenantId` and `payerAccountId`.
+     */
+    async findReceiptSource(paymentId: string) {
+      const [row] = await db
+        .select({
+          payment: schema.paymentTransactions,
+          booking: {
+            bookingReference: schema.bookings.bookingReference,
+            passengersCount: schema.bookings.passengersCount,
+            selectedProgramIds: schema.bookings.selectedProgramIds,
+            subtotalMinor: schema.bookings.subtotalMinor,
+            programsTotalMinor: schema.bookings.programsTotalMinor,
+            discountMinor: schema.bookings.discountMinor,
+            couponCode: schema.bookings.couponCode,
+          },
+          trip: { titleAr: schema.trips.titleAr, titleEn: schema.trips.titleEn },
+          payerName: schema.accounts.fullName,
+        })
+        .from(schema.paymentTransactions)
+        .innerJoin(
+          schema.accounts,
+          eq(schema.accounts.id, schema.paymentTransactions.payerAccountId),
+        )
+        .leftJoin(schema.bookings, eq(schema.bookings.id, schema.paymentTransactions.bookingId))
+        .leftJoin(schema.trips, eq(schema.trips.id, schema.bookings.tripId))
+        .where(eq(schema.paymentTransactions.id, paymentId))
+        .limit(1);
+      return row ?? null;
+    },
+
     async listPaymentsForTenant(tenantId: string) {
       return db
         .select()

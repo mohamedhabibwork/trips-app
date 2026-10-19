@@ -238,7 +238,7 @@ describe("Empirical Challenger: M3 Mutation Options & Query Key Invalidation Str
         queryClient: failingQc,
         orpc,
         auth: unauth,
-        params: {},
+        params: { receiptId: "0b6f1c1e-3c55-4c58-9d0a-1d8f8c2a7e11" },
         search: {},
       });
       expect(ensureSpy).not.toHaveBeenCalled();
@@ -250,7 +250,7 @@ describe("Empirical Challenger: M3 Mutation Options & Query Key Invalidation Str
           queryClient: failingQc,
           orpc,
           auth,
-          params: {},
+          params: { receiptId: "0b6f1c1e-3c55-4c58-9d0a-1d8f8c2a7e11" },
           search: {},
         }),
       ).resolves.toBeUndefined();

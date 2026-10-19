@@ -93,3 +93,97 @@ export function resolveGatewayCallbackAction(
 export function paymentConfirmDeadlineSafe(createdAt: Date): Date {
   return new Date(createdAt.getTime() + PAYMENT_CONFIRM_TIMEOUT_SECONDS * 1000);
 }
+
+/** The invoice number written to the ledger when a booking payment is confirmed. */
+export function invoiceNumberFor(providerReference: string): string {
+  return `INV-${providerReference}`;
+}
+
+/** A payment has a receipt once money has moved: paid, later refunded, or under dispute. */
+export const RECEIPT_STATUSES: readonly PaymentTransactionStatus[] = [
+  "succeeded",
+  "refunded",
+  "disputed",
+];
+
+export function hasReceipt(status: PaymentTransactionStatus): boolean {
+  return RECEIPT_STATUSES.includes(status);
+}
+
+export type ReceiptLineKind = "trip" | "programs" | "discount" | "subscription";
+
+export interface ReceiptLine {
+  kind: ReceiptLineKind;
+  /** Trip title in both languages for trip lines; null otherwise. */
+  titleAr: string | null;
+  titleEn: string | null;
+  /** Coupon code for a discount line; null otherwise. */
+  couponCode: string | null;
+  quantity: number;
+  /** Signed: a discount is negative. */
+  amountMinor: number;
+}
+
+export interface ReceiptBookingSource {
+  passengersCount: number;
+  selectedProgramIds: readonly string[];
+  subtotalMinor: number;
+  programsTotalMinor: number;
+  discountMinor: number;
+  couponCode: string | null;
+  tripTitleAr: string;
+  tripTitleEn: string;
+}
+
+/**
+ * The receipt lines for a payment: the trip seats, the programs and the coupon discount for a booking,
+ * or a single line for a payment with no booking (a subscription upgrade).
+ */
+export function buildReceiptLines(
+  booking: ReceiptBookingSource | null,
+  paymentAmountMinor: number,
+): ReceiptLine[] {
+  if (!booking) {
+    return [
+      {
+        kind: "subscription",
+        titleAr: null,
+        titleEn: null,
+        couponCode: null,
+        quantity: 1,
+        amountMinor: paymentAmountMinor,
+      },
+    ];
+  }
+  const lines: ReceiptLine[] = [
+    {
+      kind: "trip",
+      titleAr: booking.tripTitleAr,
+      titleEn: booking.tripTitleEn,
+      couponCode: null,
+      quantity: booking.passengersCount,
+      amountMinor: booking.subtotalMinor,
+    },
+  ];
+  if (booking.programsTotalMinor > 0) {
+    lines.push({
+      kind: "programs",
+      titleAr: null,
+      titleEn: null,
+      couponCode: null,
+      quantity: booking.selectedProgramIds.length,
+      amountMinor: booking.programsTotalMinor,
+    });
+  }
+  if (booking.discountMinor > 0) {
+    lines.push({
+      kind: "discount",
+      titleAr: null,
+      titleEn: null,
+      couponCode: booking.couponCode,
+      quantity: 1,
+      amountMinor: -booking.discountMinor,
+    });
+  }
+  return lines;
+}

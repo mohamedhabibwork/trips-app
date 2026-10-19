@@ -204,7 +204,13 @@ describe("Milestone 3: Public & Shared Screens Migration (M3)", () => {
       const shr16 = SHARED_SCREENS.find((s) => s.id === "SCR-SHR-16");
 
       await shr11!.loader!({ queryClient: mockQueryClient, orpc, auth, params: {}, search: {} });
-      await shr12!.loader!({ queryClient: mockQueryClient, orpc, auth, params: {}, search: {} });
+      await shr12!.loader!({
+        queryClient: mockQueryClient,
+        orpc,
+        auth,
+        params: { receiptId: "0b6f1c1e-3c55-4c58-9d0a-1d8f8c2a7e11" },
+        search: {},
+      });
       await shr16!.loader!({ queryClient: mockQueryClient, orpc, auth, params: {}, search: {} });
 
       expect(ensureSpy).toHaveBeenCalledTimes(3);

@@ -42,3 +42,7 @@ export const expireStalePaymentsSchema = z
     olderThanSeconds: z.number().int().min(1).max(3600).optional(),
   })
   .optional();
+
+export const getReceiptSchema = z.object({
+  paymentId: z.uuid(),
+});
