@@ -1,8 +1,10 @@
 import {
   confirmPaymentSchema,
   createPaymentIntentSchema,
+  getReceiptSchema,
   openDisputeSchema,
   paymentTransactionDtoSchema,
+  receiptDtoSchema,
   refundPaymentSchema,
   resolveDisputeSchema,
 } from "../schemas";
@@ -76,6 +78,27 @@ const listPayments = paymentsAuthenticatedProcedure
     return await svc.listMyPayments(context.auth.accountId, context.auth.activeTenantId);
   });
 
+const getReceipt = paymentsAuthenticatedProcedure
+  .route({
+    method: "POST",
+    path: "/payments/receipt",
+    summary: "Receipt for one paid payment (payer, receiving organization or admin)",
+    tags: ["payments"],
+  })
+  .input(getReceiptSchema)
+  .output(receiptDtoSchema)
+  .handler(async ({ context, input }) => {
+    const svc = createPaymentsService({ db: context.db });
+    return await svc.getReceipt(
+      {
+        accountId: context.auth.accountId,
+        tenantId: context.auth.activeTenantId,
+        role: context.auth.activeRole,
+      },
+      input,
+    );
+  });
+
 export const routes = {
   status,
   createPaymentIntent,
@@ -84,4 +107,5 @@ export const routes = {
   openDispute,
   resolveDispute,
   listPayments,
+  getReceipt,
 };

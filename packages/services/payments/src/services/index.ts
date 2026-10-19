@@ -3,13 +3,18 @@ import {
   DEFAULT_PLATFORM_COMMISSION_BPS,
   FAWRY_EXPIRY_HOURS,
   generateFawryReferenceCode,
+  buildReceiptLines,
   generateProviderReference,
+  hasReceipt,
+  invoiceNumberFor,
 } from "../model";
 import { createPaymentsRepository, type ServiceDatabase } from "../repository";
 import type {
   ConfirmPaymentInput,
   CreatePaymentIntentInput,
+  GetReceiptInput,
   OpenDisputeInput,
+  ReceiptDto,
   RefundPaymentInput,
   ResolveDisputeInput,
 } from "../types";
@@ -128,7 +133,7 @@ export function createPaymentsService(deps: { db: ServiceDatabase }) {
           commissionAmountMinor: commissionMinor,
           netAmountMinor: netMinor,
           currencyCode: payment.currencyCode,
-          invoiceNumber: `INV-${payment.providerReference}`,
+          invoiceNumber: invoiceNumberFor(payment.providerReference),
           description: `Booking payment ${booking?.bookingReference ?? payment.bookingId}`,
         });
       }
@@ -214,6 +219,56 @@ export function createPaymentsService(deps: { db: ServiceDatabase }) {
         throw new PaymentsServiceError("PAYMENT_NOT_FOUND", "Payment transaction not found.");
       }
       return updated;
+    },
+
+    /**
+     * The receipt for one paid payment (SCR-SHR-12). The payer, the organization that received the
+     * payment and platform admins may read it; anyone else is told it does not exist (IF-12).
+     */
+    async getReceipt(
+      actor: { accountId: string; tenantId?: string | null; role: string },
+      input: GetReceiptInput,
+    ): Promise<ReceiptDto> {
+      const source = await repo.findReceiptSource(input.paymentId);
+      const payment = source?.payment;
+      const isPayer = payment?.payerAccountId === actor.accountId;
+      const isTenant = Boolean(actor.tenantId) && payment?.tenantId === actor.tenantId;
+      const isAdmin = actor.role === "admin";
+      if (!source || !payment || (!isPayer && !isTenant && !isAdmin)) {
+        throw new PaymentsServiceError("PAYMENT_NOT_FOUND", "Receipt not found.");
+      }
+      if (!hasReceipt(payment.status) || !payment.paidAt) {
+        throw new PaymentsServiceError(
+          "INVALID_PAYMENT_STATE",
+          `A ${payment.status} payment has no receipt yet.`,
+        );
+      }
+
+      const booking =
+        source.booking && source.trip
+          ? {
+              ...source.booking,
+              tripTitleAr: source.trip.titleAr,
+              tripTitleEn: source.trip.titleEn,
+            }
+          : null;
+      const lines = buildReceiptLines(booking, payment.amountMinor);
+      return {
+        paymentId: payment.id,
+        invoiceNumber: invoiceNumberFor(payment.providerReference),
+        status: payment.status,
+        gateway: payment.gateway,
+        issuedAt: payment.paidAt,
+        billedToName: source.payerName,
+        bookingReference: source.booking?.bookingReference ?? null,
+        lines,
+        subtotalMinor: lines
+          .filter((line) => line.amountMinor > 0)
+          .reduce((sum, line) => sum + line.amountMinor, 0),
+        totalMinor: payment.amountMinor,
+        refundedMinor: payment.refundedAmountMinor,
+        currencyCode: payment.currencyCode,
+      };
     },
 
     async listMyPayments(accountId: string, tenantId?: string | null) {

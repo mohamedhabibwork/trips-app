@@ -27,3 +27,7 @@ export const resolveDisputeSchema = z.object({
   paymentId: z.uuid(),
   resolution: z.enum(["resolved_refund", "resolved_merchant"]),
 });
+
+export const getReceiptSchema = z.object({
+  paymentId: z.uuid(),
+});
