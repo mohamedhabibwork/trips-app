@@ -2973,6 +2973,8 @@ export const en = {
   "screen.public.appeal.submit": "Submit appeal",
   "screen.public.appeal.submitting": "Submitting…",
   "screen.public.appeal.cancel": "Cancel",
+  "screen.public.appeal.notRejected":
+    "Only a rejected application can be appealed. Your application is not rejected.",
   "screen.public.appeal.submitted": "Your appeal was sent. We review it within 2 working days.",
   "screen.public.appeal.noApplication": "No rejected application was found for this account.",
   "screen.public.appeal.submitFailed": "The appeal could not be submitted. Try again.",
@@ -3136,6 +3138,21 @@ export const en = {
   "screen.public.signUp.organization.submitting": "Submitting…",
   "screen.public.signUp.organization.submitFailed":
     "The registration could not be submitted. Try again.",
+  "screen.public.signUp.organization.countryUnsupported":
+    "Organizations can register in Egypt, Saudi Arabia or the UAE.",
+  "screen.public.signUp.organization.tourismLicense": "Tourism licence number",
+  "screen.public.signUp.organization.tourismLicenseExpiry": "Licence expiry date",
+  "screen.public.signUp.organization.licenseExpired":
+    "The licence has expired. Enter a future date.",
+  "screen.public.signUp.organization.headquartersAddress": "Headquarters address",
+  "screen.public.signUp.organization.ownerNationalId": "Owner national ID",
+  "screen.public.signUp.organization.ownerRoleTitle": "Owner job title",
+  "screen.public.signUp.organization.billingAddress": "Billing address",
+  "screen.public.signUp.organization.payoutMethod": "Payout method",
+  "screen.public.signUp.organization.payoutBank": "Bank transfer",
+  "screen.public.signUp.organization.payoutWallet": "Mobile wallet",
+  "screen.public.signUp.organization.payoutIban": "IBAN",
+  "screen.public.signUp.organization.payoutWalletNumber": "Wallet number",
   // apps/web/src/screens/public/sign-up/photographer-sign-up.tsx
   "screen.public.signUp.photographer.title": "Apply as a photographer",
   "screen.public.signUp.photographer.lead":
@@ -3153,6 +3170,12 @@ export const en = {
   "screen.public.signUp.photographer.submitting": "Submitting…",
   "screen.public.signUp.photographer.submitFailed":
     "The application could not be submitted. Try again.",
+  "screen.public.signUp.photographer.nationalId": "National ID",
+  "screen.public.signUp.photographer.yearsOfExperience": "Years of experience",
+  "screen.public.signUp.photographer.cameraBodies": "Camera bodies",
+  "screen.public.signUp.photographer.lenses": "Lenses",
+  "screen.public.signUp.photographer.specialties": "Specialties",
+  "screen.public.signUp.photographer.listHint": "Separate entries with commas.",
   // apps/web/src/screens/public/sign-up/platform-driver-sign-up.tsx
   "screen.public.signUp.driver.title": "Apply to drive",
   "screen.public.signUp.driver.lead": "Platform driver application. You can sign in after review.",
@@ -3179,6 +3202,18 @@ export const en = {
   "screen.public.signUp.driver.submit": "Submit application",
   "screen.public.signUp.driver.submitting": "Submitting…",
   "screen.public.signUp.driver.submitFailed": "The application could not be submitted. Try again.",
+  "screen.public.signUp.driver.nationalId": "National ID",
+  "screen.public.signUp.driver.yourLicense": "Your licence",
+  "screen.public.signUp.driver.licenseNumber": "Licence number",
+  "screen.public.signUp.driver.licenseCategory": "Licence category",
+  "screen.public.signUp.driver.licenseExpiry": "Licence expiry date",
+  "screen.public.signUp.driver.licenseExpired": "The licence has expired. Enter a future date.",
+  "screen.public.signUp.driver.yearsOfExperience": "Years driving",
+  // apps/web/src/screens/public/sign-up/supplier-onboarding.tsx
+  "screen.public.signUp.supplier.password": "Password",
+  "screen.public.signUp.supplier.passwordHint":
+    "At least {count} characters. You sign in with it after approval.",
+  "screen.public.signUp.supplier.stepPhone": "Step 2 of 2: phone",
   // apps/web/src/screens/public/sign-up/verification-by-code.tsx
   "screen.public.signUp.verification.stepEmail": "Step 1 of 2: email",
   "screen.public.signUp.verification.stepPhone": "Step 1 of 2: phone",

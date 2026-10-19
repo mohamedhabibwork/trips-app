@@ -1,7 +1,6 @@
 // SCR-PUB-17 Application status (`/application-status`): where a supplier application stands, the
 // requested changes with their deadline, resubmission, and the way to appeal.
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import type { TeFileUploadItem } from "@trips-app/ui/components/te-file-upload";
 import { TeIcon, type TeIconName } from "@trips-app/ui/components/te-icon";
 import { cn } from "@trips-app/ui/lib/utils";
 import { useEffect, useState } from "react";
@@ -20,11 +19,8 @@ import {
 import { pathFor } from "@/navigation/web-routes";
 import { orpc } from "@/utils/orpc";
 
-import {
-  getApplicantApplicationId,
-  setApplicantApplicationId,
-  uploadItemsToDocuments,
-} from "../../onboarding-state";
+import { getApplicantApplicationId, setApplicantApplicationId } from "../../onboarding-state";
+import { uploadApplicationDocuments } from "../common/application-documents";
 import { DocumentDrop } from "../common/document-drop";
 
 interface LiveApplication {
@@ -96,7 +92,7 @@ export function ApplicationStatusView({ applicationIdProp }: { applicationIdProp
   const extensionMutation = useMutation(
     orpc.onboarding.requestChangesExtension.mutationOptions({ onSuccess: invalidate }),
   );
-  const [files, setFiles] = useState<readonly TeFileUploadItem[]>([]);
+  const [files, setFiles] = useState<readonly File[]>([]);
   const [feedback, setFeedback] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const busy = resubmitMutation.isPending || extensionMutation.isPending;
@@ -159,10 +155,11 @@ export function ApplicationStatusView({ applicationIdProp }: { applicationIdProp
   const resubmit = () =>
     run(
       async () => {
+        // Only the documents change here; the application's answers stay as submitted.
         await resubmitMutation.mutateAsync({
           applicationId: app.id,
-          updatedPayload: { resubmittedFromWeb: true },
-          documents: uploadItemsToDocuments(files, "other"),
+          updatedPayload: {},
+          documents: await uploadApplicationDocuments(files, "other"),
         });
         setFiles([]);
       },
@@ -172,11 +169,7 @@ export function ApplicationStatusView({ applicationIdProp }: { applicationIdProp
 
   const extend = () =>
     run(
-      () =>
-        extensionMutation.mutateAsync({
-          applicationId: app.id,
-          reason: "Need additional time to obtain updated official documents.",
-        }),
+      () => extensionMutation.mutateAsync({ applicationId: app.id }),
       "screen.public.applicationStatus.extended",
       "screen.public.applicationStatus.extendFailed",
     );
@@ -243,7 +236,7 @@ export function ApplicationStatusView({ applicationIdProp }: { applicationIdProp
             <DocumentDrop
               title={t("screen.public.applicationStatus.updatedDocuments")}
               hint={t("screen.public.applicationStatus.updatedDocumentsHint")}
-              items={files}
+              files={files}
               onChange={setFiles}
               multiple
               disabled={busy}
