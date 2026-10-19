@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Org · Team</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+.te-row:hover{background:#f6f3e4}
+.te-act:hover{background:#f6f3e4}
+</style>
+</helmet>
+<div style="min-height: 1000px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="OrgNav" active="Team" hint-size="248px,1000px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 24px">
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; color: #5b5f86">Employees who sign in to business.trips-enjoy.com</span><h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Team</h1></div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px">
+<a href="OrgRoles.dc.html" style="height: 48px; box-sizing: border-box; padding: 0 20px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-size: 15px; font-weight: 600; display: flex; align-items: center; text-decoration: none">Roles &amp; permissions</a>
+<a href="OrgInvite.dc.html" style="height: 48px; padding: 0 20px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Invite employee</a>
+</div>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px">
+<section aria-label="Seat usage" style="flex: 2 1 360px; background: #ffffff; border-radius: 20px; padding: 18px 20px; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; justify-content: space-between; align-items: baseline; gap: 8px; flex-wrap: wrap"><span style="font-size: 16px; font-weight: 600">9 of 20 seats on Growth</span><a href="OrgBilling.dc.html" style="font-size: 14px; font-weight: 600">Plan &amp; usage</a></div>
+<div role="progressbar" aria-label="Employee seats used" aria-valuenow="9" aria-valuemin="0" aria-valuemax="20" style="height: 10px; border-radius: 999px; background: #e3dfc9; overflow: hidden"><div style="width: 45%; height: 100%; background: #262a67; border-radius: 999px"></div></div>
+<span style="font-size: 13px; color: #5b5f86">7 active · 2 invited (invites count toward seats) · suspended employees free their seat</span>
+</section>
+<section aria-label="Sign-in rule" style="flex: 1 1 260px; background: #e6e8f5; border-radius: 20px; padding: 18px 20px; display: flex; gap: 12px; align-items: flex-start">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M6 11h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1zM8 11V7a4 4 0 0 1 8 0v4"></path></svg>
+<span style="font-size: 14px; line-height: 20px"><strong>Every employee signs in with a one-time code</strong> sent to their email. Sessions end after 12 hours.</span>
+</section>
+</div>
+
+<section aria-labelledby="emp-h" style="background: #ffffff; border-radius: 20px; padding: 20px 0 8px">
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 0 20px 12px; gap: 12px; flex-wrap: wrap">
+<h2 id="emp-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">Employees</h2>
+<label style="display: flex; align-items: center; gap: 8px; height: 40px; padding: 0 12px; border-radius: 8px; border: 1px solid #7b7fa6; font-size: 14px; color: #5b5f86"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM20 20l-4-4"></path></svg><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Search employees</span><input type="search" placeholder="Search name or email" style="border: 0; outline-offset: 4px; font: inherit; font-size: 14px; color: #262a67; background: transparent; width: 180px"></label>
+</div>
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 900px; border-collapse: collapse; font-size: 15px">
+<thead><tr style="color: #5b5f86; font-size: 13px"><th scope="col" style="text-align: start; padding: 10px 20px; font-weight: 600">Name</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Email</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Role</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Status</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Last active</th><th scope="col" style="text-align: end; padding: 10px 20px; font-weight: 600">Actions</th></tr></thead>
+<tbody>
+<sc-for list="{{rows}}" as="r" hint-placeholder-count="9">
+<tr class="te-row" style="border-top: 1px solid #e3dfc9">
+<td style="padding: 10px 20px"><span style="display: flex; align-items: center; gap: 10px"><sc-if value="{{r.hasPhoto}}" hint-placeholder-val="{{true}}"><img src="{{r.photo}}" alt="" style="width: 36px; height: 36px; flex-shrink: 0; border-radius: 999px; object-fit: cover"></sc-if><sc-if value="{{r.noPhoto}}" hint-placeholder-val="{{false}}"><span style="width: 36px; height: 36px; flex-shrink: 0; border-radius: 999px; background: {{r.av}}; color: #262a67; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center">{{r.ini}}</span></sc-if><span style="font-weight: 600">{{r.n}}</span></span></td>
+<td style="padding: 10px 12px; font-size: 14px; color: #5b5f86">{{r.e}}</td>
+<td style="padding: 10px 12px"><span style="display: inline-flex; padding: 2px 10px; border-radius: 8px; font-size: 13px; font-weight: 600; background: #f6f3e4">{{r.role}}</span></td>
+<td style="padding: 10px 12px"><span style="{{r.ss}}">{{r.s}}</span></td>
+<td style="padding: 10px 12px; font-size: 14px; color: #5b5f86">{{r.last}}</td>
+<td style="padding: 10px 20px; text-align: end; white-space: nowrap">
+<sc-if value="{{r.canSuspend}}" hint-placeholder-val="{{true}}"><button type="button" class="te-act" onClick="{{r.suspend}}" style="height: 36px; padding: 0 12px; border-radius: 8px; border: 1px solid #e3dfc9; background: #fff; color: #262a67; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer">Suspend</button></sc-if>
+<sc-if value="{{r.canReactivate}}" hint-placeholder-val="{{false}}"><button type="button" class="te-act" onClick="{{r.reactivate}}" style="height: 36px; padding: 0 12px; border-radius: 8px; border: 1px solid #e3dfc9; background: #fff; color: #1f7a4d; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer">Reactivate</button></sc-if>
+<sc-if value="{{r.canResend}}" hint-placeholder-val="{{false}}"><button type="button" class="te-act" style="height: 36px; padding: 0 12px; border-radius: 8px; border: 1px solid #e3dfc9; background: #fff; color: #262a67; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer">Resend invite</button></sc-if>
+<sc-if value="{{r.canRevoke}}" hint-placeholder-val="{{true}}"><button type="button" class="te-act" onClick="{{r.revoke}}" style="height: 36px; padding: 0 12px; margin-inline-start: 6px; border-radius: 8px; border: 0; background: transparent; color: #b42318; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer">Revoke</button></sc-if>
+<sc-if value="{{r.isOwner}}" hint-placeholder-val="{{false}}"><span style="font-size: 13px; color: #5b5f86">Account owner</span></sc-if>
+</td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+</section>
+<span style="font-size: 13px; color: #5b5f86">Revoking removes access immediately and frees the seat. Their actions stay in the audit log. Own drivers, photographers and moderators are managed in <a href="OrgCrew.dc.html">Crew &amp; providers</a>.</span>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { over: {} }; }
+  renderVals() {
+    const pill = (tone) => 'display: inline-flex; align-items: center; gap: 6px; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; ' + ({ ok: 'background: #e3f3ea; color: #1f7a4d;', warn: 'background: #fdf0d5; color: #8a4b00;', bad: 'background: #fde8e6; color: #b42318;', info: 'background: #e6e8f5; color: #262a67;', mute: 'background: #f6f3e4; color: #5b5f86;' })[tone];
+    const base = [
+      { n: 'Mona Saleh', ini: 'MS', e: 'mona@sunrisetours.sa', role: 'Owner', s: 'Active', last: 'Now', owner: true },
+      { n: 'Yousef Amin', ini: 'YA', e: 'yousef.amin@sunrisetours.sa', role: 'Operations', s: 'Active', last: '12 min ago' },
+      { n: 'Hala Nasser', ini: 'HN', e: 'hala.nasser@sunrisetours.sa', role: 'Finance', s: 'Active', last: '1 h ago' },
+      { n: 'Rana Fadel', ini: 'RF', e: 'rana.fadel@sunrisetours.sa', role: 'Support', s: 'Active', last: '3 h ago' },
+      { n: 'Ibrahim Qasim', ini: 'IQ', e: 'ibrahim.q@sunrisetours.sa', role: 'Manager', s: 'Active', last: 'Yesterday 18:20' },
+      { n: 'Dana Al-Rashid', ini: 'DR', e: 'dana.r@sunrisetours.sa', role: 'Weekend ops', s: 'Active', last: 'Sat 4 Oct' },
+      { n: 'Sami Haddad', ini: 'SH', e: 'sami.h@sunrisetours.sa', role: 'Support', s: 'Active', last: 'Thu 2 Oct' },
+      { n: 'Layla Karim', ini: 'LK', e: 'layla.karim@sunrisetours.sa', role: 'Operations', s: 'Invited', last: 'Invite sent Mon 6 Oct' },
+      { n: 'Tariq Nouh', ini: 'TN', e: 'tariq.n@sunrisetours.sa', role: 'Finance', s: 'Invited', last: 'Invite sent Fri 3 Oct' },
+      { n: 'Bilal Saad', ini: 'BS', e: 'bilal.saad@sunrisetours.sa', role: 'Support', s: 'Suspended', last: 'Suspended by Mona · 28 Sep' }
+    ];
+    const tone = { Active: 'ok', Invited: 'info', Suspended: 'warn', Revoked: 'bad' };
+    const PH = { 'Mona Saleh': '../assets/1da5f4a1d52001ce8dfc722d595c772b.svg', 'Yousef Amin': '../assets/752b7ab031f2f70a93ff8107886b5b7e.svg', 'Hala Nasser': '../assets/17fb7a19876b9e012cc17bde6f69c632.svg', 'Rana Fadel': '../assets/1e346ba84a1175ce8c93e484460e54ec.svg' };
+    const avs = ['#ff6c2e', '#f89e23', '#e6e8f5', '#ffe7dc', '#e3f3ea'];
+    const set = (i, s) => this.setState({ over: { ...this.state.over, [i]: s } });
+    const rows = base.map((r, i) => {
+      const s = this.state.over[i] || r.s;
+      return { ...r, s, ss: pill(tone[s]), av: avs[i % avs.length], photo: PH[r.n] || '', hasPhoto: !!PH[r.n], noPhoto: !PH[r.n], isOwner: !!r.owner,
+        canSuspend: !r.owner && s === 'Active', canReactivate: s === 'Suspended', canResend: s === 'Invited', canRevoke: !r.owner && s !== 'Revoked',
+        suspend: () => set(i, 'Suspended'), reactivate: () => set(i, 'Active'), revoke: () => set(i, 'Revoked') };
+    });
+    return { rows };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>New trip · 8 Pricing &amp; capacity</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="min-height: 1000px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="OrgNav" active="Trips" hint-size="248px,1000px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 20px">
+
+<div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 2px">
+<span style="font-size: 14px; color: #5b5f86"><a href="OrgTrips.dc.html" style="font-weight: 600; text-decoration: none">Trips</a> / AlUla Heritage Weekend · Step 8 of 9</span>
+<h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Pricing &amp; capacity</h1>
+</div>
+<label style="display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600">Market &amp; currency<select aria-describedby="cur-note" style="height: 44px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 10px; font: inherit; font-size: 15px; font-weight: 500; color: #262a67"><option>Saudi Arabia · SAR</option><option>United Arab Emirates · AED</option><option>Egypt · EGP</option></select><span id="cur-note" style="font-weight: 400; color: #5b5f86">Set by the trip&#39;s country</span></label>
+</div>
+
+<nav aria-label="Trip builder steps">
+<ol style="list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{steps}}" as="s" hint-placeholder-count="9">
+<li style="flex: 1 1 100px; min-width: 0"><a href="{{s.href}}" aria-current="{{s.cur}}" style="display: flex; flex-direction: column; gap: 8px; text-decoration: none; color: #262a67"><span style="{{s.bar}}"></span><span style="display: flex; align-items: center; gap: 8px"><span style="{{s.dot}}"><sc-if value="{{s.done}}" hint-placeholder-val="{{false}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg></sc-if><sc-if value="{{s.notDone}}" hint-placeholder-val="{{true}}">{{s.n}}</sc-if></span><span style="{{s.lab}}">{{s.l}}</span></span></a></li>
+</sc-for>
+</ol>
+</nav>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
+<form style="flex: 3 1 520px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+
+<section style="background: #ffffff; border-radius: 20px; padding: 20px 24px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: space-between; align-items: baseline"><h2 style="margin: 0; font-size: 18px; font-weight: 600">Base price · SAR</h2><span style="font-size: 13px; color: #5b5f86">All amounts in SAR (Saudi riyal), VAT included</span></div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px">
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="ad" style="font-size: 14px; font-weight: 600">Adult (12+)</label><div style="position: relative"><input id="ad" inputmode="numeric" value="{{adult}}" onInput="{{setAdult}}" style="width: 100%; height: 52px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 56px 0 14px; font: inherit; font-size: 16px; color: #262a67"><span style="position: absolute; right: 14px; top: 15px; font-size: 14px; color: #5b5f86">SAR</span></div></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="ch" style="font-size: 14px; font-weight: 600">Child (2–11)</label><div style="position: relative"><input id="ch" inputmode="numeric" value="950" style="width: 100%; height: 52px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 56px 0 14px; font: inherit; font-size: 16px; color: #262a67"><span style="position: absolute; right: 14px; top: 15px; font-size: 14px; color: #5b5f86">SAR</span></div></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="inf" style="font-size: 14px; font-weight: 600">Infant (under 2, on lap)</label><div style="position: relative"><input id="inf" inputmode="numeric" value="0" style="width: 100%; height: 52px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 56px 0 14px; font: inherit; font-size: 16px; color: #262a67"><span style="position: absolute; right: 14px; top: 15px; font-size: 14px; color: #5b5f86">SAR</span></div></div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px">
+<label style="display: flex; gap: 10px; align-items: flex-start; padding: 12px; border-radius: 12px; border: 1px solid #e3dfc9; cursor: pointer"><input type="checkbox" checked="{{eb}}" onChange="{{toggleEb}}" style="width: 20px; height: 20px; margin: 2px 0 0; accent-color: #262a67"><span style="display: flex; flex-direction: column"><span style="font-size: 15px; font-weight: 600">Early-bird 10% off</span><span style="font-size: 13px; color: #5b5f86">Until Thu 2 Oct · adult {{ebPrice}}</span></span></label>
+<label style="display: flex; gap: 10px; align-items: flex-start; padding: 12px; border-radius: 12px; border: 1px solid #e3dfc9; cursor: pointer"><input type="checkbox" checked="checked" style="width: 20px; height: 20px; margin: 2px 0 0; accent-color: #262a67"><span style="display: flex; flex-direction: column"><span style="font-size: 15px; font-weight: 600">Group discount 5%</span><span style="font-size: 13px; color: #5b5f86">Bookings of 6 or more travelers</span></span></label>
+</div>
+</section>
+
+<section aria-labelledby="cap-h" style="background: #ffffff; border-radius: 20px; padding: 20px 24px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: space-between; align-items: center"><div style="display: flex; flex-direction: column; gap: 2px"><h2 id="cap-h" style="margin: 0; font-size: 18px; font-weight: 600">Capacity per vehicle</h2><span style="font-size: 13px; color: #5b5f86">The most you can sell comes from each vehicle type's seat count, minus staff seats.</span></div><a href="OrgNew7.dc.html" style="font-size: 14px; font-weight: 600">Change blocked seats</a></div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px">
+<sc-for list="{{cap}}" as="c" hint-placeholder-count="4">
+<div style="{{c.style}}">
+<label for="{{c.id}}" style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; font-weight: 600">{{c.l}}</span><span style="font-size: 12px; color: #5b5f86">{{c.type}}</span></label>
+<input id="{{c.id}}" inputmode="numeric" value="{{c.v}}" onInput="{{c.set}}" aria-invalid="{{c.bad}}" aria-describedby="{{c.mid}}" style="{{c.inStyle}}">
+<span id="{{c.mid}}" style="{{c.msgStyle}}">{{c.msg}}</span>
+</div>
+</sc-for>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: space-between; padding: 12px 14px; border-radius: 12px; background: #e6e8f5; font-size: 15px"><span>Total seats for sale</span><strong>{{capTotal}} of {{capMax}}</strong></div>
+</section>
+
+<section aria-labelledby="ct-h" style="background: #ffffff; border-radius: 20px; padding: 20px 24px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; gap: 16px; justify-content: space-between; align-items: flex-start">
+<div style="display: flex; flex-direction: column; gap: 4px"><h2 id="ct-h" style="margin: 0; font-size: 18px; font-weight: 600">Child tracking for this trip</h2><span style="font-size: 14px; line-height: 20px; color: #5b5f86">Parents follow the bus live and get a message when their child boards and gets off. Moderators scan each child in and out.</span></div>
+<button type="button" role="switch" aria-checked="{{trkChecked}}" aria-labelledby="ct-h" disabled="{{trkLocked}}" onClick="{{toggleTrk}}" style="{{trkStyle}}"><span style="{{trkKnob}}"></span></button>
+</div>
+<sc-if value="{{trkLocked}}" hint-placeholder-val="{{false}}"><div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding: 12px 14px; border-radius: 12px; background: #fdf0d5; color: #8a4b00; font-size: 14px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 11h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1zM8 11V7a4 4 0 0 1 8 0v4"></path></svg><span style="flex: 1 1 240px; color: #262a67"><strong style="color: #8a4b00">Child tracking needs Growth or Enterprise.</strong> Your organization is on Starter.</span><a href="OrgBilling.dc.html" style="font-weight: 700; color: #262a67">Upgrade plan</a></div></sc-if>
+<span style="display: flex; gap: 8px; font-size: 13px; line-height: 18px; color: #5b5f86"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 1px"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 11v5M12 8h.01"></path></svg>Both sides are needed: your organization on Growth or Enterprise, and the parent on the Explorer or VIP traveler plan. Parents on Free see the trip as usual, without live tracking.</span>
+</section>
+
+<section style="background: #ffffff; border-radius: 20px; padding: 20px 24px; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px">
+<div style="display: flex; flex-direction: column; gap: 10px">
+<h2 style="margin: 0; font-size: 18px; font-weight: 600">Cancellation policy</h2>
+<ol style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; font-size: 14px">
+<li style="display: flex; justify-content: space-between; gap: 8px; padding: 8px 12px; border-radius: 10px; background: #e3f3ea"><span>48 h or more before departure</span><strong style="color: #1f7a4d">80% refund</strong></li>
+<li style="display: flex; justify-content: space-between; gap: 8px; padding: 8px 12px; border-radius: 10px; background: #fdf0d5"><span>24 to under 48 h before</span><strong style="color: #8a4b00">50% refund</strong></li>
+<li style="display: flex; justify-content: space-between; gap: 8px; padding: 8px 12px; border-radius: 10px; background: #fde8e6"><span>Under 24 h · no-show</span><strong style="color: #b42318">No refund</strong></li>
+</ol>
+<span style="font-size: 13px; color: #5b5f86">Platform policy. Requests under 24 h come to you to decide. Required programs follow the same rule.</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 10px">
+<h2 style="margin: 0; font-size: 18px; font-weight: 600">Taxes</h2>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="vat" style="font-size: 14px; font-weight: 600">VAT</label><select id="vat" style="height: 52px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 12px; font: inherit; font-size: 16px; color: #262a67"><option>15% · Saudi Arabia · included in price</option><option>15% · added at checkout</option></select></div>
+<span style="font-size: 13px; color: #5b5f86">VAT no. 310 1073 4512 0003 appears on every receipt.</span>
+</div>
+</section>
+</form>
+
+<aside aria-labelledby="po-h" style="flex: 2 1 320px; min-width: 0; background: #262a67; color: #f6f3e4; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+<h2 id="po-h" style="margin: 0; font-size: 18px; font-weight: 600">Payout preview</h2>
+<span style="font-size: 13px; color: #b8bad6">One adult ticket at {{adultFmt}}</span>
+<dl style="margin: 0; display: flex; flex-direction: column; gap: 8px; font-size: 15px">
+<sc-for list="{{lines}}" as="l" hint-placeholder-count="5">
+<div style="display: flex; justify-content: space-between; gap: 12px"><dt style="color: #b8bad6">{{l.l}}</dt><dd style="margin: 0; font-variant-numeric: tabular-nums">{{l.v}}</dd></div>
+</sc-for>
+</dl>
+<div style="display: flex; justify-content: space-between; align-items: baseline; padding-top: 12px; border-top: 1px solid #31367a"><span style="font-size: 15px; font-weight: 600">Estimated net</span><span style="font-size: 24px; font-weight: 700; color: #ff8655">{{net}}</span></div>
+<div style="margin-top: 4px; padding: 14px; border-radius: 16px; background: #31367a; display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 13px; color: #b8bad6">If all 172 seats sell (142 adults · 30 children)</span>
+<span style="font-size: 22px; font-weight: 700">{{tripNet}}</span>
+<span style="font-size: 13px; color: #b8bad6">Net after commission, gateway fees, VAT and 3,650 SAR provider deals. Programs revenue comes on top.</span>
+</div>
+<span style="font-size: 12px; color: #b8bad6">Platform commission 8% on Growth · Gateway 2.5% per payment · Paid to Al Rajhi •••• 4512, 7 days after return.</span>
+</aside>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; align-items: center; padding-top: 16px; border-top: 1px solid #e3dfc9">
+<a href="OrgNew7.dc.html" style="height: 48px; box-sizing: border-box; padding: 0 20px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 6px; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg>Back</a>
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center">
+<span style="font-size: 13px; color: #5b5f86">Draft saved 10:27</span>
+<button type="button" style="height: 48px; padding: 0 16px; border-radius: 12px; border: 0; background: transparent; color: #262a67; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Save draft</button>
+<a href="OrgNew9.dc.html" style="height: 48px; padding: 0 22px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; text-decoration: none">Continue to review<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+</div>
+</div>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"plan":{"editor":"enum","options":["Growth","Starter"],"default":"Growth"},"$preview":{"width":1440,"height":1260}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { adult: '1250', eb: true, caps: ['47', '48', '32', '48'], trk: true }; }
+  renderVals() {
+    const names = ['Basics', 'Schedule', 'Vehicles', 'Staff', 'Photographer', 'Programs', 'Seats', 'Pricing', 'Publish'];
+    const cur = 7;
+    const steps = names.map((l, i) => {
+      const st = i < cur ? 'done' : i === cur ? 'cur' : 'todo';
+      return { l, n: String(i + 1), done: st === 'done', notDone: st !== 'done', href: 'OrgNew' + (i + 1) + '.dc.html', cur: st === 'cur' ? 'step' : 'false',
+        bar: 'display: block; height: 4px; border-radius: 999px; background: ' + (st === 'done' ? '#262a67' : st === 'cur' ? '#ff6c2e' : '#e3dfc9'),
+        dot: 'width: 24px; height: 24px; flex-shrink: 0; box-sizing: border-box; border-radius: 999px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; ' + (st === 'done' ? 'background: #262a67; color: #f6f3e4;' : st === 'cur' ? 'background: #ff6c2e; color: #262a67;' : 'background: #ffffff; color: #5b5f86; border: 1px solid #7b7fa6;'),
+        lab: 'font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; ' + (st === 'todo' ? 'font-weight: 500; color: #5b5f86;' : 'font-weight: 600; color: #262a67;') };
+    });
+    const fmt = (n) => Math.round(n).toLocaleString('en-US') + ' SAR';
+    const fmt2 = (n) => n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' SAR';
+    const a = Math.max(0, parseFloat(String(this.state.adult).replace(/[^0-9.]/g, '')) || 0);
+    const split = (g) => { const vat = g * 15 / 115; const ex = g - vat; const com = ex * 0.08; const gw = g * 0.025; return { vat, ex, com, gw, net: ex - com - gw }; };
+    const s = split(a);
+    const lines = [
+      { l: 'Ticket price', v: fmt2(a) },
+      { l: 'VAT 15% (included)', v: '− ' + fmt2(s.vat) },
+      { l: 'Platform commission 8%', v: '− ' + fmt2(s.com) },
+      { l: 'Gateway fee 2.5%', v: '− ' + fmt2(s.gw) }
+    ];
+    const g = 142 * a + 30 * 950;
+    const t = split(g);
+    const V = [['Bus 1', 'Mercedes Tourismo', 49, 2], ['Bus 2', 'Mercedes Tourismo', 49, 1], ['Bus 3', 'Toyota Coaster', 30, 1], ['Bus 4', 'Mercedes Tourismo', 49, 1]];
+    let capTotal = 0; let capMax = 0;
+    const cap = V.map((v, i) => {
+      const max = v[2] - v[3];
+      const raw = this.state.caps[i];
+      const n = parseInt(String(raw).replace(/[^0-9]/g, ''), 10) || 0;
+      const bad = n > max;
+      capMax += max; capTotal += bad ? 0 : n;
+      return { id: 'cap' + i, mid: 'capm' + i, l: v[0], type: v[1] + ' · ' + v[2] + ' seats', v: raw, bad,
+        set: (e) => { const c = this.state.caps.slice(); c[i] = e.target.value; this.setState({ caps: c }); },
+        msg: bad ? n + ' is more than this ' + v[1] + ' can sell: ' + v[2] + ' seats, ' + v[3] + ' for staff. Enter ' + max + ' or less.' : 'Up to ' + max + ' (' + v[3] + ' staff seat' + (v[3] > 1 ? 's' : '') + ')',
+        msgStyle: 'font-size: 12px; line-height: 16px; ' + (bad ? 'color: #b42318;' : 'color: #5b5f86;'),
+        inStyle: 'height: 48px; min-width: 0; box-sizing: border-box; border-radius: 8px; background: #fff; padding: 0 12px; font: inherit; font-size: 18px; font-weight: 700; color: #262a67; ' + (bad ? 'border: 2px solid #b42318;' : 'border: 1px solid #7b7fa6;'),
+        style: 'padding: 12px 14px; border-radius: 14px; display: flex; flex-direction: column; gap: 6px; ' + (bad ? 'background: #fde8e6;' : 'background: #f6f3e4;') };
+    });
+    const starter = (this.props.plan ?? 'Growth') === 'Starter';
+    const on = !starter && this.state.trk;
+    return { steps, adult: this.state.adult, setAdult: (e) => this.setState({ adult: e.target.value }),
+      eb: this.state.eb, toggleEb: () => this.setState({ eb: !this.state.eb }), ebPrice: fmt(a * 0.9),
+      cap, capTotal: String(capTotal), capMax: String(capMax), lines, adultFmt: fmt(a),
+      trkChecked: on ? 'true' : 'false', trkLocked: starter, toggleTrk: () => { if (!starter) this.setState({ trk: !this.state.trk }); },
+      trkStyle: 'flex-shrink: 0; width: 52px; height: 32px; border: 0; border-radius: 999px; padding: 3px; display: flex; cursor: ' + (starter ? 'not-allowed' : 'pointer') + '; justify-content: ' + (on ? 'flex-end' : 'flex-start') + '; background: ' + (on ? '#262a67' : starter ? '#e3dfc9' : '#7b7fa6'),
+      trkKnob: 'width: 26px; height: 26px; border-radius: 999px; background: #ffffff; display: block', net: fmt2(s.net), tripNet: fmt(t.net - 3650) };
+  }
+}
+</script>
+</body>
+</html>

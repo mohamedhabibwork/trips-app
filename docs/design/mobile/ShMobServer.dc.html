@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Shared · Server error</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="height: 100%; box-sizing: border-box; padding: 56px 16px 24px; display: flex; flex-direction: column; gap: 16px">
+
+<div style="display: flex; align-items: center; gap: 12px">
+<a href="TrvHome.dc.html" aria-label="Back" style="width: 44px; height: 44px; border-radius: 999px; background: #ffffff; color: #262a67; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a>
+</div>
+
+<div style="flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; text-align: center; padding: 0 8px">
+<span style="width: 72px; height: 72px; border-radius: 999px; background: {{iconBg}}; color: {{iconFg}}; display: flex; align-items: center; justify-content: center"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{icon}}"></path></svg></span>
+<span style="padding: 4px 12px; border-radius: 999px; background: #e6e8f5; font-size: 13px; font-weight: 700">{{code}}</span>
+<h1 style="margin: 4px 0 0; font-size: 26px; line-height: 32px; font-weight: 700">{{title}}</h1>
+<p style="margin: 0; font-size: 16px; line-height: 23px; color: #5b5f86">{{body}}</p>
+<sc-if value="{{is503}}" hint-placeholder-val="{{false}}">
+<a href="#" style="align-self: stretch; padding: 12px 14px; border-radius: 12px; border: 1px solid #e3dfc9; display: flex; align-items: center; gap: 10px; color: #262a67; text-decoration: none; text-align: start">
+<span style="padding: 2px 10px; border-radius: 999px; background: #fdf0d5; color: #8a4b00; font-size: 12px; font-weight: 700">Outage</span>
+<span style="flex-grow: 1; display: flex; flex-direction: column"><span style="font-size: 15px; font-weight: 600">status.trips-enjoy.com</span><span style="font-size: 13px; color: #5b5f86">Bookings unavailable since 14:05 · updates every 15 min</span></span>
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
+</a>
+</sc-if>
+
+<div style="margin-top: 12px; align-self: stretch; padding: 14px 16px; border-radius: 20px; background: #ffffff; display: flex; align-items: center; gap: 12px; text-align: start">
+<span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 13px; color: #5b5f86">Reference ID</span><span style="font-size: 18px; font-weight: 700; letter-spacing: 1px; font-variant-numeric: tabular-nums">TE-ERR-7Q2K</span></span>
+<button type="button" onClick="{{copy}}" aria-label="Copy reference ID" style="min-height: 44px; padding: 0 14px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer">{{copyLabel}}</button>
+</div>
+<span style="font-size: 14px; line-height: 20px; color: #5b5f86">Share this ID with support so they can find what happened.</span>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 10px">
+<a href="TrvHome.dc.html" style="height: 52px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7"></path></svg>Try again</a>
+<a href="TrvSupport.dc.html" style="height: 52px; box-sizing: border-box; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-size: 16px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16v12H4zM4 7l8 6 8-6"></path></svg>Contact support</a>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"variant":{"editor":"enum","options":["500 server error","503 unavailable"],"default":"500 server error"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { copied: false }; }
+  renderVals() {
+    const u = (this.props.variant ?? '500 server error') === '503 unavailable';
+    return {
+      is503: u,
+      code: u ? 'Error 503 · Unavailable' : 'Error 500',
+      icon: u ? 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7v5l3 2' : 'M12 3l9.5 17h-19zM12 10v4M12 17h.01',
+      iconBg: u ? '#fdf0d5' : '#fde8e6',
+      iconFg: u ? '#8a4b00' : '#b42318',
+      title: u ? 'Trips Enjoy is temporarily unavailable' : 'Something went wrong on our side',
+      body: u ? 'We’re working to bring it back. Confirmed payments are not lost: they are recorded as soon as we’re back. Saved tickets still open.' : 'Your booking and payments are safe. We couldn’t load this page just now. Try again in a minute.',
+      copyLabel: this.state.copied ? 'Copied' : 'Copy', copy: () => this.setState({ copied: true })
+    };
+  }
+}
+</script>
+</body>
+</html>

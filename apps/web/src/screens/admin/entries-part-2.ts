@@ -156,11 +156,7 @@ export const ADMIN_SCREENS_PART_2: readonly ScreenEntry[] = [
       if (typeof window === "undefined" && !auth.accessToken()) return;
       try {
         await Promise.allSettled([
-          queryClient.ensureQueryData(orpc.plans.getCatalog.queryOptions({ input: {} })),
           queryClient.ensureQueryData(orpc.coupons.listPlatformCoupons.queryOptions({ input: {} })),
-          queryClient.ensureQueryData(
-            orpc.accounting.listAdminReconciliationExceptions.queryOptions(),
-          ),
           queryClient.ensureQueryData(
             orpc.negotiation.listOrganizationNegotiations.queryOptions({ input: {} }),
           ),
@@ -242,15 +238,9 @@ export const ADMIN_SCREENS_PART_2: readonly ScreenEntry[] = [
     titleKey: "screen.registry.admin.auditLog.title",
     surface: "admin",
     component: AuditLog,
-    loader: async ({ queryClient, orpc, auth }) => {
+    loader: async ({ auth }) => {
       if (typeof window === "undefined" && !auth.accessToken()) return;
-      try {
-        await queryClient.ensureQueryData(
-          orpc.onboarding.listReviewQueue.queryOptions({ input: {} }),
-        );
-      } catch {
-        // Gracefully ignore SSR errors
-      }
+      // Rows arrive with an audit-log read procedure; nothing to prefetch yet.
     },
   },
   {
@@ -259,13 +249,9 @@ export const ADMIN_SCREENS_PART_2: readonly ScreenEntry[] = [
     titleKey: "screen.registry.admin.notificationTemplates.title",
     surface: "admin",
     component: NotificationTemplates,
-    loader: async ({ queryClient, orpc, auth }) => {
+    loader: async ({ auth }) => {
       if (typeof window === "undefined" && !auth.accessToken()) return;
-      try {
-        await queryClient.ensureQueryData(orpc.notifications.listInbox.queryOptions({ input: {} }));
-      } catch {
-        // Gracefully ignore SSR errors
-      }
+      // Templates arrive with a template-management procedure; nothing to prefetch yet.
     },
   },
   {

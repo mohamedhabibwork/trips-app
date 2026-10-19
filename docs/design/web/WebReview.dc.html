@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Application under review — web</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif; display: flex; flex-direction: column">
+<div style="height: 72px; padding: 0 48px; display: flex; align-items: center; justify-content: space-between; background: #ffffff; border-bottom: 1px solid #e3dfc9">
+<img src="../assets/1fbce194fcb16bf54904c32c189fca31.svg" alt="Trips Enjoy" style="height: 40px; width: auto">
+<span style="font-size: 14px; font-weight: 600">{{person}}</span>
+</div>
+<div style="flex-grow: 1; display: flex; justify-content: center; padding: 48px; gap: 48px">
+<dc-import name="WebStepper" role="{{role}}" active="{{last}}" hint-size="240px,300px"></dc-import>
+<div style="width: 640px; display: flex; flex-direction: column; gap: 24px">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<span style="align-self: flex-start; padding: 4px 12px; border-radius: 999px; background: #f89e23; font-size: 13px; font-weight: 600">Under review</span>
+<h1 style="margin: 0; font-size: 32px; line-height: 40px; font-weight: 700">Thanks — we're reviewing your {{role}} application</h1>
+<p style="margin: 0; font-size: 16px; line-height: 24px; color: #5b5f86">Usually within 2 working days. We'll text and email you. Meanwhile you can book trips as a traveler.</p>
+</div>
+<div style="background: #ffffff; border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 14px; box-shadow: 0 1px 2px rgba(38,42,103,.06), 0 6px 20px rgba(38,42,103,.08)">
+<span style="font-size: 16px; font-weight: 600">What we check</span>
+<sc-for list="{{checks}}" as="c" hint-placeholder-count="3"><span style="display: flex; gap: 10px; align-items: center; font-size: 15px"><span style="width: 8px; height: 8px; border-radius: 999px; background: #262a67"></span>{{c}}</span></sc-for>
+</div>
+<p style="margin: 0; font-size: 14px; color: #5b5f86">If something needs fixing, you'll see it here — <a href="WebStatus.dc.html" style="font-weight: 600">see an example</a>.</p>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"role":{"editor":"enum","options":["driver","photographer"],"default":"driver"},"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+renderVals() {
+const d = (this.props.role ?? 'driver') === 'driver';
+return { role: d ? 'driver' : 'photographer', last: d ? 5 : 4, person: d ? 'Khalid Al-Harbi' : 'Noura Al-Shehri',
+checks: d ? ['ID and selfie match', 'Licence class and expiry', 'Vehicle registration and insurance', 'Lab test result from an approved lab'] : ['ID and selfie match', 'Portfolio quality (at least 8 photos)', 'Pricing and coverage cities'] };
+}
+}
+</script>
+</body>
+</html>

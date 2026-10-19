@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Sign in</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif; display: flex; flex-direction: column; padding: 56px 16px 32px; gap: 20px">
+<div style="display: flex; align-items: center; justify-content: space-between">
+<a href="AuthWelcome.dc.html" aria-label="Back" style="width: 44px; height: 44px; border-radius: 999px; background: #ffffff; display: flex; align-items: center; justify-content: center; color: #262a67"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg></a>
+<img src="../assets/d8314577d8376991a72b92ec8ec2dadb.svg" alt="Trips Enjoy" style="height: 36px; width: auto">
+<span style="width: 44px"></span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 4px">
+<h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 700">Welcome back</h1>
+<p style="margin: 0; font-size: 16px; line-height: 24px; color: #5b5f86">Sign in to see your trips and your group.</p>
+</div>
+<div role="tablist" style="display: flex; padding: 4px; border-radius: 999px; background: #e3dfc9; gap: 4px">
+<button role="tab" aria-selected="{{phoneSel}}" onClick="{{toPhone}}" style="{{tabPhone}}">Phone</button>
+<button role="tab" aria-selected="{{emailSel}}" onClick="{{toEmail}}" style="{{tabEmail}}">Email</button>
+</div>
+<sc-if value="{{isPhone}}" hint-placeholder-val="{{true}}">
+<dc-import name="PhoneField" label="Mobile number" value="551234821" country="SA" field-id="si-phone" hint-size="100%,82px"></dc-import>
+</sc-if>
+<sc-if value="{{isEmail}}" hint-placeholder-val="{{false}}">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="si-email" style="font-size: 14px; font-weight: 600">Email</label>
+<input id="si-email" type="email" autocomplete="email" value="sara@example.com" style="height: 52px; box-sizing: border-box; padding: 0 14px; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-family: inherit; font-size: 16px">
+</div>
+</sc-if>
+<div style="display: flex; flex-direction: column; gap: 4px">
+<dc-import name="PasswordField" label="Password" value="Trips2026!" field-id="si-pass" hint-size="100%,82px"></dc-import>
+<a href="MobileForgot.dc.html" style="align-self: flex-end; font-size: 14px; font-weight: 600; padding: 10px 0">Forgot password?</a>
+</div>
+<a href="MobileLoginVerify.dc.html" style="height: 52px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 16px; font-weight: 600; display: flex; align-items: center; justify-content: center; text-decoration: none">Sign in</a>
+<a href="MobileOtpLogin.dc.html" style="height: 52px; box-sizing: border-box; border-radius: 12px; border: 1px solid #7b7fa6; color: #262a67; font-size: 16px; font-weight: 600; display: flex; align-items: center; justify-content: center; text-decoration: none">Sign in with a one-time code</a>
+<div style="display: flex; align-items: center; gap: 12px; color: #5b5f86; font-size: 13px"><span style="flex-grow: 1; height: 1px; background: #e3dfc9"></span>or<span style="flex-grow: 1; height: 1px; background: #e3dfc9"></span></div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
+<a href="MobileSocialComplete.dc.html" style="height: 52px; box-sizing: border-box; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-size: 15px; font-weight: 600; display: flex; align-items: center; justify-content: center; text-decoration: none">Continue with Apple</a>
+<a href="MobileSocialComplete.dc.html" style="height: 52px; box-sizing: border-box; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-size: 15px; font-weight: 600; display: flex; align-items: center; justify-content: center; text-decoration: none">Continue with Google</a>
+</div>
+<p style="margin: auto 0 0; text-align: center; font-size: 14px; color: #5b5f86">New to Trips Enjoy? <a href="MobileRole.dc.html" style="font-weight: 600">Create account</a></p>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+constructor(p) { super(p); this.state = { tab: 'phone' }; }
+renderVals() {
+const t = (on) => 'flex-grow: 1; height: 40px; border-radius: 999px; border: none; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; ' + (on ? 'background: #ffffff; color: #262a67;' : 'background: transparent; color: #5b5f86;');
+const p = this.state.tab === 'phone';
+return { isPhone: p, isEmail: !p, phoneSel: p ? 'true' : 'false', emailSel: p ? 'false' : 'true', tabPhone: t(p), tabEmail: t(!p),
+toPhone: () => this.setState({ tab: 'phone' }), toEmail: () => this.setState({ tab: 'email' }) };
+}
+}
+</script>
+</body>
+</html>

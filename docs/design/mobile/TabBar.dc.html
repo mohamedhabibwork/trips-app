@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Tab bar</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;family=Cairo:wght@500;600;700&amp;display=swap">
+<style>body{margin:0} .te-tab:focus-visible{outline:2px solid #262a67;outline-offset:2px}</style>
+</helmet>
+<div style="width: 390px; height: 120px; box-sizing: border-box; padding: 0 16px 24px; display: flex; align-items: flex-end; font-family: Outfit, Nunito, system-ui, sans-serif; color: #262a67">
+<nav aria-label="Main" dir="{{dir}}" style="font-family: {{font}}; flex-grow: 1; height: 68px; box-sizing: border-box; padding: 6px; border-radius: 999px; background: rgba(255,255,255,0.78); backdrop-filter: blur(24px) saturate(1.8); -webkit-backdrop-filter: blur(24px) saturate(1.8); border: 1px solid rgba(255,255,255,0.7); box-shadow: 0 10px 30px rgba(38,42,103,0.18); display: flex; gap: 2px">
+<sc-for list="{{tabs}}" as="t" hint-placeholder-count="5">
+<a href="{{t.href}}" class="te-tab" aria-current="{{t.cur}}" style="{{t.style}}">
+<span style="position: relative; display: flex">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{t.d}}"></path></svg>
+<sc-if value="{{t.hasBadge}}" hint-placeholder-val="{{false}}"><span style="position: absolute; top: -6px; inset-inline-end: -10px; min-width: 18px; height: 18px; padding: 0 5px; box-sizing: border-box; border-radius: 999px; background: #f89e23; color: #262a67; font-size: 11px; font-weight: 700; line-height: 18px; text-align: center">{{t.badge}}</span></sc-if>
+</span>
+<span style="font-size: 11px; line-height: 14px">{{t.label}}</span>
+</a>
+</sc-for>
+</nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"role":{"editor":"enum","options":["traveler","parent","driver","moderator","photographer"],"default":"traveler"},"active":{"editor":"text","default":"home"},"lang":{"editor":"enum","options":["en","ar"],"default":"en"},"$preview":{"width":390,"height":120}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const P = {
+      home: 'M4 11l8-7 8 7v8a1 1 0 0 1-1 1h-5v-6h-4v6H5a1 1 0 0 1-1-1z',
+      search: 'M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM20 20l-4-4',
+      ticket: 'M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v2a2.5 2.5 0 0 0 0 5v3a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-3a2.5 2.5 0 0 0 0-5zM14 5v14',
+      bell: 'M6 16v-5a6 6 0 0 1 12 0v5l2 2H4zM10 21a2 2 0 0 0 4 0',
+      user: 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0',
+      users: 'M9 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM3 20a6 6 0 0 1 12 0M16 4.5a3.5 3.5 0 0 1 0 6.5M18 14.5a6 6 0 0 1 3 5.5',
+      live: 'M12 10.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM8.5 15.5a5 5 0 0 1 0-7M15.5 8.5a5 5 0 0 1 0 7M5.6 18.4a9 9 0 0 1 0-12.8M18.4 5.6a9 9 0 0 1 0 12.8',
+      file: 'M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zM14 3v5h5',
+      calendar: 'M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zM4 10h16M8 3v4M16 3v4',
+      chart: 'M4 20h16M7 16v-4M12 16V8M17 16v-7',
+      bus: 'M6 4h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM4 11h16M8 18v2M16 18v2M8 14.5h.01M16 14.5h.01',
+      scan: 'M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3M7 12h10',
+      alert: 'M12 3l9.5 17h-19zM12 10v4M12 17h.01',
+      image: 'M5 4h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1zM8.5 10a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM20 15l-5-5L5 20'
+    };
+    const T = {
+      traveler: [['home', 'Home', 'home', 'TrvHome'], ['explore', 'Explore', 'search', 'TrvResults'], ['trips', 'Trips', 'ticket', 'TrvTrips'], ['alerts', 'Alerts', 'bell', 'TrvNotifications', '3'], ['profile', 'Profile', 'user', 'TrvProfile']],
+      parent: [['family', 'Family', 'users', 'ParHome'], ['live', 'Live', 'live', 'ParLive'], ['alerts', 'Alerts', 'bell', 'ParAlerts', '2'], ['profile', 'Account', 'user', 'TrvProfile']],
+      driver: [['home', 'Home', 'home', 'DrvHome'], ['offers', 'Offers', 'file', 'DrvOffers', '2'], ['schedule', 'Schedule', 'calendar', 'DrvTrips'], ['earnings', 'Earnings', 'chart', 'DrvEarnings'], ['profile', 'Profile', 'user', 'DrvProfile']],
+      moderator: [['bus', 'My bus', 'bus', 'ModToday'], ['manifest', 'Manifest', 'users', 'ModManifest'], ['scan', 'Scan', 'scan', 'ModScan'], ['report', 'Report', 'alert', 'ModIncident']],
+      photographer: [['home', 'Home', 'home', 'PhoHome'], ['offers', 'Offers', 'file', 'PhoOffers', '1'], ['albums', 'Albums', 'image', 'PhoAlbums'], ['earnings', 'Earnings', 'chart', 'PhoEarnings'], ['profile', 'Profile', 'user', 'PhoProfile']]
+    };
+    const role = this.props.role ?? 'traveler';
+    const ar = (this.props.lang ?? 'en') === 'ar';
+    const AR = { Home: 'الرئيسية', Explore: 'استكشف', Trips: 'رحلاتي', Alerts: 'التنبيهات', Profile: 'حسابي', Family: 'العائلة', Live: 'مباشر', Account: 'حسابي', Offers: 'العروض', Schedule: 'جدولي', Earnings: 'الأرباح', 'My bus': 'حافلتي', Manifest: 'الركاب', Scan: 'مسح', Report: 'بلاغ', Albums: 'الألبومات' };
+    const active = this.props.active ?? (T[role] || T.traveler)[0][0];
+    const tabs = (T[role] || T.traveler).map(([id, label, icon, file, badge]) => {
+      const on = id === active;
+      const lbl = ar ? (AR[label] || label) : label;
+      return { label: lbl, d: P[icon], href: file + '.dc.html', cur: on ? 'page' : 'false', hasBadge: !!badge, badge: badge || '',
+        style: 'flex: 1 1 0; min-width: 0; height: 56px; border-radius: 999px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; text-decoration: none; ' + (on ? 'background: rgba(255,108,46,0.16); color: #c93a00; font-weight: 700;' : 'color: #262a67; font-weight: 500;') };
+    });
+    return { tabs, dir: ar ? 'rtl' : 'ltr', font: ar ? 'Cairo, sans-serif' : 'Outfit, Nunito, system-ui, sans-serif' };
+  }
+}
+</script>
+</body>
+</html>

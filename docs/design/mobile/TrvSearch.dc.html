@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Traveler · Search &amp; filters</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+
+<div aria-hidden="true" style="padding: 56px 16px 0; display: flex; flex-direction: column; gap: 18px">
+<div style="display: flex; align-items: center; gap: 12px">
+<img src="../assets/9bae6808275a736bdbdad8b4ffd6c82b.svg" alt="" style="width: 44px; height: 44px; border-radius: 999px; object-fit: cover; flex-shrink: 0">
+<div style="display: flex; flex-direction: column"><span style="font-size: 13px; color: #5b5f86">Good evening</span><span style="font-size: 20px; font-weight: 700">Sara Al-Qahtani</span></div>
+</div>
+<div style="height: 52px; border-radius: 999px; background: #ffffff; border: 1px solid #7b7fa6"></div>
+<div style="height: 76px; border-radius: 20px; background: #262a67"></div>
+</div>
+
+<div style="position: absolute; inset: 0; background: rgba(16,18,48,.45)"></div>
+
+<div role="dialog" aria-modal="true" aria-labelledby="search-title" style="position: absolute; left: 0; right: 0; bottom: 0; top: 40px; box-sizing: border-box; background: #ffffff; border-radius: 20px 20px 0 0; padding: 8px 16px 24px; display: flex; flex-direction: column; gap: 8px">
+<div aria-hidden="true" style="align-self: center; width: 40px; height: 5px; border-radius: 999px; background: #e3dfc9"></div>
+<div style="display: flex; align-items: center; justify-content: space-between">
+<h1 id="search-title" style="margin: 0; font-size: 22px; line-height: 28px; font-weight: 700">Find a group trip</h1>
+<a href="TrvHome.dc.html" aria-label="Close search" style="width: 44px; height: 44px; border-radius: 999px; background: #f6f3e4; color: #262a67; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></a>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="dest" style="font-size: 14px; font-weight: 600">Destination</label>
+<div style="position: relative">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#262a67" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position: absolute; left: 14px; top: 16px"><path d="M12 21s-7-6.1-7-11.5A7 7 0 0 1 19 9.5C19 14.9 12 21 12 21zM12 7a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z"></path></svg>
+<input id="dest" type="text" value="{{dest}}" placeholder="City, region or landmark" style="width: 100%; box-sizing: border-box; height: 52px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 14px 0 44px; font: inherit; font-size: 16px; color: #262a67">
+</div>
+<div role="group" aria-label="Recent searches" style="display: flex; gap: 8px; align-items: center">
+<span style="font-size: 13px; color: #5b5f86">Recent</span>
+<sc-for list="{{recent}}" as="r" hint-placeholder-count="3"><button type="button" onClick="{{r.pick}}" aria-pressed="{{r.on}}" style="{{r.style}}">{{r.t}}</button></sc-for>
+</div>
+</div>
+
+<div style="display: flex; gap: 10px">
+<div style="flex: 1 1 0; display: flex; flex-direction: column; gap: 6px">
+<span id="dates-l" style="font-size: 14px; font-weight: 600">Dates</span>
+<button type="button" aria-labelledby="dates-l dates-v" style="height: 52px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 12px; display: flex; align-items: center; gap: 8px; font: inherit; font-size: 15px; color: #262a67; cursor: pointer"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zM4 10h16M8 3v4M16 3v4"></path></svg><span id="dates-v">Thu 16 – Sat 18 Oct</span></button>
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 14px; font-weight: 600">Travellers</span>
+<div style="display: flex; gap: 10px">
+<sc-for list="{{steppers}}" as="s" hint-placeholder-count="2">
+<div role="group" aria-label="{{s.label}}" style="flex: 1 1 0; height: 52px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; display: flex; align-items: center; justify-content: space-between; padding: 0 4px 0 12px">
+<span style="display: flex; flex-direction: column; line-height: 17px"><span style="font-size: 15px; font-weight: 600">{{s.label}}</span><span style="font-size: 12px; color: #5b5f86">{{s.sub}}</span></span>
+<span style="display: flex; align-items: center">
+<button type="button" onClick="{{s.dec}}" aria-label="{{s.decLabel}}" style="width: 36px; height: 44px; border: 0; background: transparent; color: #262a67; display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"></path></svg></button>
+<span aria-live="polite" style="min-width: 16px; text-align: center; font-size: 16px; font-weight: 700">{{s.n}}</span>
+<button type="button" onClick="{{s.inc}}" aria-label="{{s.incLabel}}" style="width: 36px; height: 44px; border: 0; background: transparent; color: #262a67; display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg></button>
+</span>
+</div>
+</sc-for>
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 6px">
+<span id="type-l" style="font-size: 14px; font-weight: 600">Trip type</span>
+<div role="group" aria-labelledby="type-l" style="display: flex; gap: 8px">
+<sc-for list="{{types}}" as="c" hint-placeholder-count="5"><button type="button" onClick="{{c.toggle}}" aria-pressed="{{c.on}}" style="{{c.style}}">{{c.t}}</button></sc-for>
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 6px">
+<div style="display: flex; justify-content: space-between"><span style="font-size: 14px; font-weight: 600">Price per person</span><span style="font-size: 14px; color: #5b5f86">200 – 1,500 SAR</span></div>
+<div role="img" aria-label="Price range 200 to 1,500 SAR" style="position: relative; height: 28px">
+<div style="position: absolute; left: 0; right: 0; top: 12px; height: 4px; border-radius: 999px; background: #e3dfc9"></div>
+<div style="position: absolute; left: 6%; right: 25%; top: 12px; height: 4px; border-radius: 999px; background: #262a67"></div>
+<div style="position: absolute; left: calc(6% - 12px); top: 2px; width: 24px; height: 24px; box-sizing: border-box; border-radius: 999px; background: #fff; border: 2px solid #262a67"></div>
+<div style="position: absolute; left: calc(75% - 12px); top: 2px; width: 24px; height: 24px; box-sizing: border-box; border-radius: 999px; background: #fff; border: 2px solid #262a67"></div>
+</div>
+</div>
+
+<div style="display: flex; gap: 10px">
+<div style="flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 6px">
+<label for="org" style="font-size: 14px; font-weight: 600">Organizer</label>
+<select id="org" style="height: 52px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 10px; font: inherit; font-size: 15px; color: #262a67">
+<option>Any organizer</option><option>Sunrise Tours Co.</option><option>Najd Adventures</option><option>Hijaz Journeys</option>
+</select>
+</div>
+<div style="flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 6px">
+<label for="from" style="font-size: 14px; font-weight: 600">Departing from</label>
+<select id="from" style="height: 52px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 10px; font: inherit; font-size: 15px; color: #262a67">
+<option>Riyadh</option><option>Jeddah</option><option>Dammam</option><option>Any city</option>
+</select>
+</div>
+</div>
+
+<div style="border-radius: 12px; border: 1px solid #e3dfc9">
+<sc-for list="{{switches}}" as="w" hint-placeholder-count="2">
+<button type="button" role="switch" aria-checked="{{w.on}}" onClick="{{w.toggle}}" style="{{w.rowStyle}}">
+<span style="display: flex; align-items: center; gap: 10px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{w.d}}"></path></svg>{{w.t}}</span>
+<span style="{{w.track}}"><span style="{{w.knob}}"></span></span>
+</button>
+</sc-for>
+</div>
+
+<a href="TrvResults.dc.html" style="margin-top: auto; height: 52px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-weight: 700; font-size: 16px; display: flex; align-items: center; justify-content: center; text-decoration: none">Show 24 trips</a>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(p) {
+    super(p);
+    this.state = { dest: 'AlUla', adults: 2, children: 2, types: ['Weekend', 'Family'], seat: true, child: true };
+  }
+  renderVals() {
+    const s = this.state;
+    const chip = (on) => 'height: 36px; padding: 0 12px; border-radius: 999px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; ' + (on ? 'background: #262a67; color: #f6f3e4; border: 1px solid #262a67;' : 'background: #ffffff; color: #262a67; border: 1px solid #7b7fa6;');
+    const recent = ['AlUla', 'Jeddah', 'Edge of the World'].map((t) => ({ t, on: s.dest === t ? 'true' : 'false', style: chip(s.dest === t).replace('height: 36px', 'height: 32px'), pick: () => this.setState({ dest: t }) }));
+    const types = ['Weekend', 'Family', 'Schools', 'Desert'].map((t) => {
+      const on = s.types.includes(t);
+      return { t, on: on ? 'true' : 'false', style: chip(on), toggle: () => this.setState({ types: on ? s.types.filter((x) => x !== t) : s.types.concat([t]) }) };
+    });
+    const mk = (key, label, sub, min) => ({ label, sub, n: s[key],
+      decLabel: 'Fewer ' + label.toLowerCase(), incLabel: 'More ' + label.toLowerCase(),
+      dec: () => this.setState({ [key]: Math.max(min, s[key] - 1) }),
+      inc: () => this.setState({ [key]: Math.min(9, s[key] + 1) }) });
+    const steppers = [mk('adults', 'Adults', '12 and over', 1), mk('children', 'Children', 'Under 12', 0)];
+    const sw = (key, t, d) => {
+      const on = s[key];
+      return { t, d, on: on ? 'true' : 'false', toggle: () => this.setState({ [key]: !on }),
+        rowStyle: 'width: 100%; min-height: 48px; border: 0; background: transparent; padding: 0 12px; display: flex; align-items: center; justify-content: space-between; font: inherit; font-size: 15px; font-weight: 500; color: #262a67; cursor: pointer; text-align: left;' + (key === 'child' ? ' border-top: 1px solid #e3dfc9;' : ''),
+        track: 'width: 44px; height: 26px; box-sizing: border-box; border-radius: 999px; padding: 3px; display: flex; ' + (on ? 'background: #262a67; justify-content: flex-end;' : 'background: #ffffff; border: 1px solid #7b7fa6; justify-content: flex-start;'),
+        knob: 'width: 20px; height: 20px; border-radius: 999px; ' + (on ? 'background: #f6f3e4;' : 'background: #7b7fa6; width: 18px; height: 18px;') };
+    };
+    const switches = [sw('seat', 'Seat selection available', 'M7 4h7a2 2 0 0 1 2 2v7H7zM5 13h12a2 2 0 0 1 2 2v2H5zM7 17v3M17 17v3'), sw('child', 'Child tracking available', 'M12 3l7 3v5.5c0 4.4-3 8-7 9.5-4-1.5-7-5.1-7-9.5V6zM9 12l2 2 4-4')];
+    return { dest: s.dest, recent, types, steppers, switches };
+  }
+}
+</script>
+</body>
+</html>

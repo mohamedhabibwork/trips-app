@@ -24,6 +24,7 @@ export const uploadLabTestResultSchema = z.object({
 export const adminRequestLabTestSchema = z.object({
   driverAccountId: z.string().uuid(),
   deadlineAt: z.string().datetime(),
+  testType: z.enum(["drug_screening", "medical_fitness", "both"]).default("both"),
 });
 
 export const adminReviewLabTestSchema = z.object({

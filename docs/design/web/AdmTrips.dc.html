@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Admin · All trips</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+.te-row:hover{background:#faf8ef}
+</style>
+</helmet>
+<div style="min-height: 1000px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="AdmNav" active="Trips" hint-size="248px,1000px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 20px">
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; color: #5b5f86">Marketplace</span><h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">All trips</h1><span style="font-size: 15px; color: #5b5f86">1,146 trips from 212 organizations · Tue 14 Oct</span></div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px">
+<a href="AdmOrgs.dc.html" style="height: 48px; box-sizing: border-box; padding: 0 20px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px; text-decoration: none">Organizations</a>
+<button type="button" style="height: 48px; padding: 0 20px; border: 0; border-radius: 12px; background: #ff6c2e; color: #262a67; font: inherit; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12M7 11l5 5 5-5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"></path></svg>Export trips</button>
+</div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 16px">
+<sc-for list="{{kpis}}" as="k" hint-placeholder-count="4">
+<div style="padding: 16px 20px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 14px; color: #5b5f86">{{k.l}}</span>
+<span style="font-size: 26px; line-height: 32px; font-weight: 700">{{k.v}} <span style="font-size: 14px; font-weight: 500; color: #5b5f86">{{k.u}}</span></span>
+<span style="{{k.ds}}">{{k.d}}</span>
+</div>
+</sc-for>
+</div>
+
+<section aria-labelledby="tr-h" style="background: #ffffff; border-radius: 20px; padding: 20px 0 8px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; align-items: center; padding: 0 20px">
+<h2 id="tr-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">Trips by lifecycle state</h2>
+<label style="flex: 0 1 360px; min-width: 220px; display: flex; align-items: center; gap: 8px; height: 44px; box-sizing: border-box; padding: 0 14px; border: 1px solid #7b7fa6; border-radius: 8px; background: #ffffff; color: #5b5f86">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM20 20l-4-4"></path></svg>
+<span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Search trips</span>
+<input type="search" placeholder="Search trip, organization or trip ID" style="flex: 1; min-width: 0; border: 0; outline-offset: 4px; font: inherit; font-size: 15px; color: #262a67; background: transparent">
+</label>
+</div>
+<div role="group" aria-label="Filter by status" style="display: flex; flex-wrap: wrap; gap: 8px; padding: 0 20px">
+<sc-for list="{{chips}}" as="c" hint-placeholder-count="13">
+<button type="button" aria-pressed="{{c.on}}" onClick="{{c.pick}}" style="{{c.style}}">{{c.l}} <span style="{{c.ns}}">{{c.n}}</span></button>
+</sc-for>
+</div>
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 1040px; border-collapse: collapse; font-size: 14px">
+<thead><tr style="color: #5b5f86; font-size: 13px"><th scope="col" style="text-align: start; padding: 10px 20px; font-weight: 600">Trip</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Organization</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Dates</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Buses</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Seats sold</th><th scope="col" style="text-align: end; padding: 10px 12px; font-weight: 600">GMV</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Status</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Flags</th><th scope="col" style="text-align: start; padding: 10px 20px; font-weight: 600"><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Actions</span></th></tr></thead>
+<tbody>
+<sc-for list="{{rows}}" as="r" hint-placeholder-count="8">
+<tr class="te-row" style="border-top: 1px solid #e3dfc9">
+<td style="padding: 12px 20px"><a href="AdmTrip.dc.html" style="display: flex; flex-direction: column; color: #262a67; text-decoration: none"><span style="font-weight: 600; font-size: 15px">{{r.n}}</span><span style="font-size: 12px; color: #5b5f86">{{r.id}}</span></a></td>
+<td style="padding: 12px"><a href="AdmOrg.dc.html" style="color: #262a67; font-weight: 500">{{r.o}}</a></td>
+<td style="padding: 12px; white-space: nowrap">{{r.d}}</td>
+<td style="padding: 12px">{{r.b}}</td>
+<td style="padding: 12px; white-space: nowrap">{{r.sold}}</td>
+<td style="padding: 12px; text-align: end; white-space: nowrap; font-weight: 600">{{r.gmv}}</td>
+<td style="padding: 12px"><span style="{{r.ss}}">{{r.s}}</span></td>
+<td style="padding: 12px"><sc-if value="{{r.hasF}}" hint-placeholder-val="{{true}}"><span style="{{r.fs}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9.5 17h-19zM12 10v4M12 17h.01"></path></svg>{{r.f}}</span></sc-if><sc-if value="{{r.noF}}" hint-placeholder-val="{{false}}"><span style="color: #5b5f86">None</span></sc-if></td>
+<td style="padding: 12px 20px; white-space: nowrap"><a href="OrgTrip.dc.html" style="font-size: 14px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px">View as organization<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg></a></td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+<sc-if value="{{empty}}" hint-placeholder-val="{{false}}"><p style="margin: 0; padding: 16px 20px; color: #5b5f86; font-size: 15px">No trips are in this state right now. Pick another status or clear the filter.</p></sc-if>
+<div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; padding: 8px 20px 12px; font-size: 13px; color: #5b5f86"><span>Viewing as an organization is read-only and is recorded in the audit log.</span><a href="AdmAudit.dc.html" style="font-weight: 600">Open audit log</a></div>
+</section>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1080}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { st: 'All' }; }
+  renderVals() {
+    const tone = { ok: 'background: #e3f3ea; color: #1f7a4d;', warn: 'background: #fdf0d5; color: #8a4b00;', bad: 'background: #fde8e6; color: #b42318;', info: 'background: #e6e8f5; color: #262a67;', live: 'background: #ffe7dc; color: #c93a00;', mute: 'background: #f6f3e4; color: #5b5f86;' };
+    const pill = (t) => 'display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; ' + tone[t];
+    const stTone = { 'Draft': 'mute', 'Published': 'info', 'Negotiating': 'warn', 'Ready': 'ok', 'Filling up': 'info', 'Sold out': 'ok', 'In progress': 'live', 'Partially completed': 'live', 'Completed': 'ok', 'Post-processing': 'info', 'Archived': 'mute', 'Cancelled': 'bad' };
+    const counts = { 'All': 1146, 'Draft': 64, 'Published': 38, 'Negotiating': 27, 'Ready': 41, 'Filling up': 112, 'Sold out': 46, 'In progress': 9, 'Partially completed': 2, 'Completed': 18, 'Post-processing': 23, 'Archived': 741, 'Cancelled': 25 };
+    const all = [
+      { n: 'AlUla Heritage Weekend', id: 'TRP-20418', o: 'Sunrise Tours Co.', d: 'Thu 16 – Sat 18 Oct', b: '4', sold: '168 / 172', gmv: '232,400 SAR', s: 'In progress', f: '' },
+      { n: 'Red Sea Snorkel Day', id: 'TRP-20502', o: 'Sunrise Tours Co.', d: 'Fri 24 Oct', b: '2', sold: '96 / 100', gmv: '33,920 SAR', s: 'Negotiating', f: 'Deal pending · Bus 2' },
+      { n: 'Jeddah Corniche Night', id: 'TRP-20477', o: 'Sunrise Tours Co.', d: 'Fri 17 Oct', b: '3', sold: '120 / 150', gmv: '22,800 SAR', s: 'Filling up', f: 'Bus missing moderator' },
+      { n: 'Al Noor School · Grade 4 Zoo Day', id: 'TRP-20463', o: 'Al Noor International School', d: 'Tue 14 Oct', b: '1', sold: '32 / 32', gmv: '4,160 SAR', s: 'In progress', f: '' },
+      { n: 'Edge of the World Hike', id: 'TRP-20511', o: 'Sunrise Tours Co.', d: 'Sat 25 Oct', b: '1', sold: '32 / 50', gmv: '8,800 SAR', s: 'Filling up', f: '' },
+      { n: 'Dubai Marina Dhow Cruise', id: 'TRP-20390', o: 'Gulf Wanderers LLC', d: 'Sat 11 Oct', b: '2', sold: '0 / 90', gmv: '0 SAR', s: 'Cancelled', f: 'Refunds pending · 37' },
+      { n: 'Taif Rose Farms', id: 'TRP-20520', o: 'Sunrise Tours Co.', d: 'Thu 30 Oct', b: '1', sold: '50 / 50', gmv: '14,500 SAR', s: 'Sold out', f: '' },
+      { n: 'Abha Mountain Escape', id: 'TRP-20355', o: 'Asir Trails', d: 'Thu 2 – Sat 4 Oct', b: '2', sold: '88 / 98', gmv: '101,200 SAR', s: 'Post-processing', f: 'Album overdue · 9 days' },
+      { n: 'Luxor Temples Tour', id: 'TRP-20544', o: 'Nile Horizons', d: 'Thu 6 Nov', b: '3', sold: '0 / 135', gmv: '0 SAR', s: 'Draft', f: '' },
+      { n: 'Hatta Kayak Morning', id: 'TRP-20297', o: 'Gulf Wanderers LLC', d: 'Fri 26 Sep', b: '1', sold: '44 / 49', gmv: '9,680 SAR', s: 'Archived', f: '' }
+    ];
+    const st = this.state.st;
+    const rows = all.filter((r) => st === 'All' || r.s === st).map((r) => ({ ...r, ss: pill(stTone[r.s]), hasF: !!r.f, noF: !r.f, fs: pill(r.s === 'Cancelled' || r.f.indexOf('moderator') > -1 ? 'bad' : 'warn') }));
+    const chips = Object.keys(counts).map((l) => {
+      const on = l === st;
+      return { l, n: counts[l].toLocaleString('en-US'), on: on ? 'true' : 'false', pick: () => this.setState({ st: l }),
+        style: 'height: 36px; padding: 0 12px; border-radius: 999px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; ' + (on ? 'background: #262a67; color: #f6f3e4; border: 1px solid #262a67;' : 'background: #ffffff; color: #262a67; border: 1px solid #e3dfc9;'),
+        ns: 'font-size: 12px; font-weight: 600; ' + (on ? 'color: #b8bad6;' : 'color: #5b5f86;') };
+    });
+    const kpis = [
+      { l: 'Running now', v: '11', u: 'trips · 29 buses', d: '1,204 travellers on board', ds: 'font-size: 13px; font-weight: 600; color: #5b5f86' },
+      { l: 'GMV this month', v: '3.84M', u: 'SAR', d: '▲ 9.6% vs September', ds: 'font-size: 13px; font-weight: 600; color: #1f7a4d' },
+      { l: 'Trips with flags', v: '14', u: '', d: '5 missing staff · 6 refunds pending', ds: 'font-size: 13px; font-weight: 600; color: #8a4b00' },
+      { l: 'Cancelled this month', v: '3', u: 'trips', d: '41,200 SAR refunded', ds: 'font-size: 13px; font-weight: 600; color: #5b5f86' }
+    ];
+    return { kpis, chips, rows, empty: rows.length === 0 };
+  }
+}
+</script>
+</body>
+</html>

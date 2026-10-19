@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Parent · Family today</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="height: 100%; box-sizing: border-box; padding: 56px 16px 120px; display: flex; flex-direction: column; gap: 14px">
+
+<div style="display: flex; align-items: center; gap: 12px">
+<img src="../assets/9bae6808275a736bdbdad8b4ffd6c82b.svg" alt="" style="width: 44px; height: 44px; border-radius: 999px; object-fit: cover">
+<div style="flex-grow: 1; display: flex; flex-direction: column"><span style="font-size: 13px; color: #5b5f86">Sara Al-Qahtani</span><h1 style="margin: 0; font-size: 22px; line-height: 28px; font-weight: 700">Family today</h1></div>
+<a href="ParAlerts.dc.html" aria-label="Alerts, 2 new" style="position: relative; width: 44px; height: 44px; border-radius: 999px; background: #ffffff; color: #262a67; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 16v-5a6 6 0 0 1 12 0v5l2 2H4zM10 21a2 2 0 0 0 4 0"></path></svg><span style="position: absolute; top: 6px; right: 8px; width: 10px; height: 10px; border-radius: 999px; background: #f89e23; border: 2px solid #ffffff"></span></a>
+</div>
+
+<section aria-labelledby="omar-h" style="background: #ffffff; border-radius: 20px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; align-items: center; gap: 12px">
+<img src="../assets/e627328c50e6893b77803c4a27b29c6e.svg" alt="" style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 999px; object-fit: cover; display: block">
+<div style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column"><h2 id="omar-h" style="margin: 0; font-size: 18px; line-height: 24px; font-weight: 600">Omar, 9</h2><span style="font-size: 13px; color: #5b5f86">Al Noor School · Grade 4 Zoo Day</span></div>
+<span style="padding: 4px 10px; border-radius: 999px; background: #e3f3ea; color: #1f7a4d; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 4px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg>Boarded</span>
+</div>
+<div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px">
+<div style="padding: 8px 10px; border-radius: 12px; background: #f6f3e4; display: flex; flex-direction: column"><span style="font-size: 12px; color: #5b5f86">Vehicle</span><span style="font-size: 15px; font-weight: 600">Bus 1</span></div>
+<div style="padding: 8px 10px; border-radius: 12px; background: #f6f3e4; display: flex; flex-direction: column"><span style="font-size: 12px; color: #5b5f86">Seat</span><span style="font-size: 15px; font-weight: 600">4C</span></div>
+<div style="padding: 8px 10px; border-radius: 12px; background: #f6f3e4; display: flex; flex-direction: column"><span style="font-size: 12px; color: #5b5f86">Boarded</span><span style="font-size: 15px; font-weight: 600">07:32</span></div>
+</div>
+<div style="font-size: 14px; line-height: 20px; color: #5b5f86">Supervisor <strong style="color: #262a67; font-weight: 600">Nadia Yusuf</strong> checked Omar in at Al Noor School gate.</div>
+
+<ol aria-label="Today's trip timeline" style="margin: 0; padding: 0; list-style: none; display: flex; gap: 4px">
+<sc-for list="{{steps}}" as="s" hint-placeholder-count="4">
+<li style="flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 6px">
+<span style="{{s.bar}}"></span>
+<span style="font-size: 12px; line-height: 15px; font-weight: 600">{{s.t}}</span>
+<span style="font-size: 12px; line-height: 15px; color: #5b5f86">{{s.time}}</span>
+</li>
+</sc-for>
+</ol>
+
+<div style="display: flex; gap: 8px">
+<a href="ParLive.dc.html" style="flex-grow: 1; height: 52px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-weight: 700; font-size: 16px; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 10.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM8.5 15.5a5 5 0 0 1 0-7M15.5 8.5a5 5 0 0 1 0 7M5.6 18.4a9 9 0 0 1 0-12.8M18.4 5.6a9 9 0 0 1 0 12.8"></path></svg>Track bus</a>
+<a href="ParChild.dc.html" style="width: 96px; height: 52px; box-sizing: border-box; border-radius: 12px; background: #ffffff; border: 1px solid #7b7fa6; color: #262a67; font-weight: 600; font-size: 15px; text-decoration: none; display: flex; align-items: center; justify-content: center">Details</a>
+</div>
+</section>
+
+<section aria-labelledby="lina-h" style="background: #ffffff; border-radius: 20px; padding: 16px; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; align-items: center; gap: 12px">
+<img src="../assets/1cd63ceb2af4109eddb6e3740d99b590.svg" alt="" style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 999px; object-fit: cover; display: block">
+<div style="flex-grow: 1; display: flex; flex-direction: column"><h2 id="lina-h" style="margin: 0; font-size: 18px; line-height: 24px; font-weight: 600">Lina, 6</h2><span style="font-size: 13px; color: #5b5f86">No trip today · at home</span></div>
+<span style="padding: 4px 10px; border-radius: 999px; background: #e6e8f5; color: #262a67; font-size: 13px; font-weight: 600">No trip</span>
+</div>
+<a href="ParChild.dc.html" style="padding: 10px 12px; border-radius: 12px; background: #f6f3e4; color: #262a67; text-decoration: none; display: flex; align-items: center; gap: 10px">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c93a00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zM4 10h16M8 3v4M16 3v4"></path></svg>
+<span style="flex-grow: 1; display: flex; flex-direction: column"><span style="font-size: 12px; color: #5b5f86">Next trip</span><span style="font-size: 15px; font-weight: 600">AlUla Heritage Weekend · Thu 16 Oct</span><span style="font-size: 13px; color: #5b5f86">Bus 2 · Seat 4D · tracking starts at boarding</span></span>
+</a>
+</section>
+
+<a href="ParLink.dc.html" style="height: 48px; border-radius: 12px; border: 1px dashed #7b7fa6; color: #262a67; font-size: 15px; font-weight: 600; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"></path></svg>Link a child to a trip</a>
+</div>
+<div style="position: absolute; left: 0; right: 0; bottom: 0; height: 120px">
+<dc-import name="TabBar" role="parent" active="family" hint-size="390px,120px"></dc-import>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const S = [['Boarded', '07:32', 'done'], ['Departed', '07:45', 'done'], ['At Riyadh Zoo', 'ETA 09:10', 'next'], ['Return', '15:30', 'later']];
+    const steps = S.map(([t, time, st]) => ({ t, time,
+      bar: 'height: 6px; border-radius: 999px; background: ' + (st === 'done' ? '#1f7a4d;' : st === 'next' ? '#ff6c2e;' : '#e3dfc9;') }));
+    return { steps };
+  }
+}
+</script>
+</body>
+</html>

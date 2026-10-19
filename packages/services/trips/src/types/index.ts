@@ -108,6 +108,8 @@ export interface PublicTripSummaryDto {
   origin: TripRoutePoint | null;
   destinations: readonly TripRoutePoint[];
   seatAssignmentMode: TripSeatAssignmentMode;
+  /** Hours before departure when the Explorer/VIP seat priority window opens (FR-SEAT-03). */
+  seatPriorityWindowHours: number;
   basePrice: Money;
   basePriceMinor: number;
   currencyCode: CurrencyCode;

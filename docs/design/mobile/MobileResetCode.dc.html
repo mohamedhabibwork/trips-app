@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Reset code</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif; display: flex; flex-direction: column; padding: 56px 16px 32px; gap: 24px">
+<a href="MobileForgot.dc.html" aria-label="Back" style="width: 44px; height: 44px; border-radius: 999px; background: #ffffff; display: flex; align-items: center; justify-content: center; color: #262a67"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg></a>
+<div style="display: flex; flex-direction: column; gap: 4px">
+<h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 700">Enter the reset code</h1>
+<p style="margin: 0; font-size: 16px; line-height: 24px; color: #5b5f86">Sent to <span style="font-weight: 600; color: #262a67">+966 55 ••• 4821</span>.</p>
+</div>
+<dc-import name="OtpField" digits="481920" length="{{six}}" error="That code doesn't match. 3 tries left." hint-size="100%,90px"></dc-import>
+<button style="align-self: flex-start; height: 44px; padding: 0; border: none; background: transparent; color: #c93a00; font-family: inherit; font-size: 14px; font-weight: 600">Resend code</button>
+<a href="MobileNewPassword.dc.html" style="margin-top: auto; height: 52px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 16px; font-weight: 600; display: flex; align-items: center; justify-content: center; text-decoration: none">Continue</a>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() { return { six: 6 }; }
+}
+</script>
+</body>
+</html>

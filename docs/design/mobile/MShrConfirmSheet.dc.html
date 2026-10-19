@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Mobile · Confirmation sheet</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="height: 100%; box-sizing: border-box; padding: 56px 16px 24px; display: flex; flex-direction: column; gap: 16px">
+
+<div style="display: flex; align-items: center; gap: 12px">
+<a href="TrvTrip.dc.html" aria-label="Back" style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 999px; background: #ffffff; color: #262a67; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a>
+<h1 style="margin: 0; font-size: 22px; line-height: 28px; font-weight: 700">Cancel booking</h1>
+</div>
+
+<div style="padding: 16px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 17px; font-weight: 600">Siwa Oasis Escape</span>
+<span style="font-size: 14px; color: #5b5f86">Thu 5 – Sat 7 Nov · Nile Horizon Tours</span>
+<span style="font-size: 14px; color: #5b5f86">Booking TE-E10482 · Mariam and Karim · 9,900 EGP paid</span>
+</div>
+
+<div style="padding: 16px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 8px">
+<span style="font-size: 14px; font-weight: 600">Refund policy</span>
+<div style="display: flex; justify-content: space-between; font-size: 15px; font-weight: 600"><span>48 h or more before departure</span><span>80%</span></div>
+<div style="display: flex; justify-content: space-between; font-size: 15px; color: #5b5f86"><span>24 – 48 h</span><span>50%</span></div>
+<div style="display: flex; justify-content: space-between; font-size: 15px; color: #5b5f86"><span>Under 24 h</span><span>No refund</span></div>
+</div>
+
+<button type="button" onClick="{{open}}" style="margin-top: auto; height: 52px; border: 0; border-radius: 12px; background: #b42318; color: #ffffff; font: inherit; font-size: 16px; font-weight: 700; cursor: pointer">Cancel booking</button>
+</div>
+
+<sc-if value="{{isCancelledToast}}" hint-placeholder-val="{{false}}">
+<div role="status" style="position: absolute; left: 16px; right: 16px; top: 56px; padding: 12px 14px; border-radius: 12px; background: #262a67; color: #f6f3e4; font-size: 14px; display: flex; gap: 10px; align-items: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 11v5M12 8h.01"></path></svg>Nothing changed. Your booking is kept.</div>
+</sc-if>
+
+<sc-if value="{{sheetOpen}}" hint-placeholder-val="{{true}}">
+<div style="position: absolute; inset: 0; background: rgba(16,18,48,.45)"></div>
+<div role="dialog" aria-modal="true" aria-labelledby="cs-title" style="position: absolute; left: 0; right: 0; bottom: 0; box-sizing: border-box; padding: 12px 16px 24px; border-radius: 20px 20px 0 0; background: #ffffff; display: flex; flex-direction: column; gap: 14px">
+<span style="align-self: center; width: 40px; height: 4px; border-radius: 999px; background: #e3dfc9"></span>
+
+<sc-if value="{{isForm}}" hint-placeholder-val="{{true}}">
+<h2 id="cs-title" style="margin: 0; font-size: 22px; line-height: 28px; font-weight: 700">Cancel your Siwa booking?</h2>
+<p style="margin: 0; font-size: 15px; line-height: 22px; color: #5b5f86">Both seats are released and your tickets stop working. You get <strong style="color: #262a67">7,920 EGP</strong> back (80% of 9,900 EGP) to the card you paid with. This can't be undone.</p>
+
+<fieldset style="margin: 0; padding: 0; border: 0; display: flex; flex-direction: column; gap: 8px">
+<legend style="padding: 0; margin-bottom: 8px; font-size: 14px; font-weight: 600">Reason (required)</legend>
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{reasons}}" as="r" hint-placeholder-count="4"><button type="button" aria-pressed="{{r.sel}}" onClick="{{r.pick}}" style="{{r.style}}">{{r.t}}</button></sc-for>
+</div>
+<sc-if value="{{blocked}}" hint-placeholder-val="{{false}}"><span role="alert" style="font-size: 13px; color: #b42318; display: flex; gap: 6px; align-items: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9.5 17h-19zM12 10v4M12 17h.01"></path></svg>Choose a reason to cancel the booking.</span></sc-if>
+</fieldset>
+
+<sc-if value="{{isError}}" hint-placeholder-val="{{false}}">
+<div role="alert" style="padding: 10px 12px; border-radius: 12px; background: #fde8e6; color: #b42318; font-size: 14px; line-height: 20px">We couldn't cancel just now, so your booking is unchanged. Check your connection and try again.</div>
+</sc-if>
+
+<div style="display: flex; gap: 10px">
+<button type="button" onClick="{{close}}" style="flex: 1 1 0; height: 52px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font: inherit; font-size: 16px; font-weight: 600; cursor: pointer">Keep booking</button>
+<button type="button" onClick="{{confirm}}" style="flex: 1 1 0; height: 52px; border: 0; border-radius: 12px; background: #b42318; color: #ffffff; font: inherit; font-size: 16px; font-weight: 700; cursor: pointer">{{confirmLabel}}</button>
+</div>
+</sc-if>
+
+<sc-if value="{{isDone}}" hint-placeholder-val="{{false}}">
+<div role="status" style="display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; padding: 8px 0">
+<span style="width: 56px; height: 56px; border-radius: 999px; background: #e3f3ea; color: #1f7a4d; display: flex; align-items: center; justify-content: center"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg></span>
+<h2 id="cs-title" style="margin: 0; font-size: 22px; line-height: 28px; font-weight: 700">Booking cancelled</h2>
+<p style="margin: 0; font-size: 15px; line-height: 22px; color: #5b5f86">Refund in progress: 7,920 EGP goes to your card. We send it to the payment provider within 2 working days and tell you when it lands.</p>
+</div>
+<a href="TrvCancelled.dc.html" style="height: 52px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; text-decoration: none">Done</a>
+</sc-if>
+</div>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"state":{"editor":"enum","options":["open","error"],"default":"open"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { open: true, reason: null, blocked: false, done: false, retried: false, kept: false }; }
+  renderVals() {
+    const s = this.state;
+    const err = (this.props.state ?? 'open') === 'error' && !s.retried;
+    const list = ['Plans changed', 'Found another trip', 'Price', 'Health or family', 'Other'];
+    const chip = sel => 'min-height: 44px; padding: 0 14px; border-radius: 999px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; ' + (sel ? 'background: #262a67; color: #f6f3e4; border: 1px solid #262a67' : 'background: #ffffff; color: #262a67; border: 1px solid ' + (s.blocked ? '#b42318' : '#7b7fa6'));
+    return {
+      sheetOpen: s.open,
+      isForm: !s.done,
+      isDone: s.done,
+      isError: err,
+      blocked: s.blocked,
+      isCancelledToast: s.kept && !s.open,
+      confirmLabel: err ? 'Try again' : 'Cancel booking',
+      reasons: list.map(t => ({ t, sel: s.reason === t, style: chip(s.reason === t), pick: () => this.setState({ reason: t, blocked: false }) })),
+      open: () => this.setState({ open: true, done: false, kept: false }),
+      close: () => this.setState({ open: false, kept: true, blocked: false }),
+      confirm: () => {
+        if (!s.reason) { this.setState({ blocked: true }); return; }
+        if (err) { this.setState({ retried: true }); return; }
+        this.setState({ done: true });
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>

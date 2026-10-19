@@ -38,6 +38,10 @@ export const INTENTIONALLY_PUBLIC: Readonly<Record<string, string>> = {
     "An invited person may decline from the email link without signing in (SCR-ORG-02). The invite token is the credential and only a pending invite changes. Needs owner review.",
   "programs.listPublicTripPrograms":
     "Read-only public trip program itinerary endpoint for web and mobile travelers viewing published trips (SCR-TRV-02).",
+  "traveler.account.getPlanComparison":
+    "Read-only traveler plan comparison catalog shown before sign-in (SCR-TRV-18).",
+  "traveler.albums.resolveSharedLink":
+    "Shared album links are resolved with the 32-char token as the credential (SCR-TRV-17); revoked or unknown tokens read as not found.",
 };
 
 function isProcedure(node: unknown): node is AnyProcedure {

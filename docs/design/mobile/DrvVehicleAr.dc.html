@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>سائق · الرخصة والمركبة</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div dir="rtl" style="width: 390px; height: 844px; box-sizing: border-box; background: #f6f3e4; color: #262a67; font-family: Cairo, 'Readex Pro', Tahoma, sans-serif; display: flex; flex-direction: column; padding: 56px 16px 32px; gap: 14px">
+<div style="display: flex; align-items: center; justify-content: space-between">
+<a href="DrvDetailsAr.dc.html" aria-label="رجوع" style="width: 44px; height: 44px; border-radius: 999px; background: #ffffff; display: flex; align-items: center; justify-content: center; color: #262a67"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"></path></svg></a>
+<span style="font-size: 13px; font-weight: 600; color: #5b5f86">الخطوة ٥ من ٧</span>
+</div>
+<h1 style="margin: 0; font-size: 26px; line-height: 40px; font-weight: 700">الرخصة والمركبة</h1>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="va-lic" style="font-size: 14px; font-weight: 600">رقم الرخصة</label><input id="va-lic" dir="ltr" value="DL-55271" style="height: 52px; min-width: 0; box-sizing: border-box; padding: 0 14px; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-family: inherit; font-size: 16px; text-align: right"></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="va-exp" style="font-size: 14px; font-weight: 600">تاريخ الانتهاء</label><input id="va-exp" dir="ltr" value="12/08/2029" style="height: 52px; min-width: 0; box-sizing: border-box; padding: 0 14px; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-family: inherit; font-size: 16px; text-align: right"></div>
+</div>
+<fieldset style="margin: 0; padding: 0; border: none">
+<legend style="padding: 0; margin-bottom: 8px; font-size: 14px; font-weight: 600">فئة الرخصة</legend>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
+<button aria-pressed="false" style="height: 48px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-family: inherit; font-size: 14px; font-weight: 700">خاصة</button>
+<button aria-pressed="true" style="height: 48px; border-radius: 12px; border: 2px solid #fb8030; background: #ffffff; color: #262a67; font-family: inherit; font-size: 14px; font-weight: 700">حافلة عامة</button>
+<button aria-pressed="false" style="height: 48px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-family: inherit; font-size: 14px; font-weight: 700">ثقيلة</button>
+</div>
+</fieldset>
+<label style="display: flex; gap: 10px; align-items: center; font-size: 15px; font-weight: 600"><input type="checkbox" checked style="width: 20px; height: 20px; margin: 0; accent-color: #262a67">أقود مركبتي الخاصة</label>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="va-pl" style="font-size: 14px; font-weight: 600">رقم اللوحة</label><input id="va-pl" value="ر س ط ٤٨٢١" style="height: 52px; min-width: 0; box-sizing: border-box; padding: 0 14px; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-family: inherit; font-size: 16px"></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="va-st" style="font-size: 14px; font-weight: 600">عدد المقاعد</label><input id="va-st" dir="ltr" inputmode="numeric" value="30" style="height: 52px; min-width: 0; box-sizing: border-box; padding: 0 14px; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-family: inherit; font-size: 16px; text-align: right"></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="va-mk" style="font-size: 14px; font-weight: 600">الطراز</label><input id="va-mk" value="تويوتا كوستر" style="height: 52px; min-width: 0; box-sizing: border-box; padding: 0 14px; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-family: inherit; font-size: 16px"></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="va-yr" style="font-size: 14px; font-weight: 600">سنة الصنع</label><input id="va-yr" dir="ltr" inputmode="numeric" value="2021" style="height: 52px; min-width: 0; box-sizing: border-box; padding: 0 14px; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-family: inherit; font-size: 16px; text-align: right"></div>
+</div>
+<a href="DrvDocsAr.dc.html" style="margin-top: auto; height: 52px; flex-shrink: 0; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; text-decoration: none">متابعة</a>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

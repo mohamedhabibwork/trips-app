@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Driver · On route</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #e9e6d3; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+
+<div role="img" aria-label="{{mapLabel}}" style="position: absolute; inset: 0; background: #e9e6d3">
+<div style="position: absolute; left: -40px; top: 120px; width: 300px; height: 120px; border-radius: 999px; background: #e0dcc4; transform: rotate(-18deg)"></div>
+<div style="position: absolute; right: -60px; top: 330px; width: 260px; height: 160px; border-radius: 999px; background: #e0dcc4; transform: rotate(24deg)"></div>
+<div style="position: absolute; left: 0; right: 0; top: 268px; height: 10px; background: #f6f3e4; transform: rotate(-8deg)"></div>
+<div style="position: absolute; left: 210px; top: 0; width: 10px; height: 560px; background: #f6f3e4; transform: rotate(10deg)"></div>
+<svg width="390" height="560" viewBox="0 0 390 560" style="position: absolute; left: 0; top: 0" aria-hidden="true">
+<path d="M70 500 C 90 430, 150 420, 170 360 S 160 260, 230 230 S 320 170, 300 110" fill="none" stroke="#262a67" stroke-width="5" stroke-linecap="round" stroke-dasharray="2 10"></path>
+<path d="M70 500 C 90 430, 150 420, 170 360" fill="none" stroke="#c93a00" stroke-width="6" stroke-linecap="round"></path>
+</svg>
+<span style="position: absolute; left: 62px; top: 492px; width: 16px; height: 16px; border-radius: 999px; background: #262a67; border: 3px solid #ffffff"></span>
+<span style="position: absolute; left: 221px; top: 221px; width: 18px; height: 18px; border-radius: 999px; background: #ffffff; border: 4px solid #c93a00; box-sizing: border-box"></span>
+<span style="position: absolute; left: 244px; top: 206px; padding: 4px 10px; border-radius: 999px; background: #ffffff; font-size: 13px; font-weight: 700">{{nextName}}</span>
+<span style="position: absolute; left: 292px; top: 102px; width: 16px; height: 16px; border-radius: 999px; background: #ffffff; border: 3px solid #262a67; box-sizing: border-box"></span>
+<span style="position: absolute; left: 144px; top: 334px; width: 52px; height: 52px; border-radius: 999px; background: rgba(255,108,46,0.25); display: flex; align-items: center; justify-content: center"><span style="width: 36px; height: 36px; border-radius: 999px; background: #ff6c2e; color: #262a67; display: flex; align-items: center; justify-content: center; border: 2px solid #ffffff"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 4h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM4 11h16M8 18v2M16 18v2M8 14.5h.01M16 14.5h.01"></path></svg></span></span>
+</div>
+
+<div style="position: absolute; top: 56px; left: 16px; right: 16px; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; align-items: center; gap: 10px">
+<a href="DrvTrip.dc.html" aria-label="Back to trip" style="width: 52px; height: 52px; flex-shrink: 0; border-radius: 999px; background: rgba(255,255,255,0.78); backdrop-filter: blur(24px) saturate(1.8); -webkit-backdrop-filter: blur(24px) saturate(1.8); border: 1px solid rgba(255,255,255,0.7); box-shadow: 0 10px 30px rgba(38,42,103,0.18); color: #262a67; display: flex; align-items: center; justify-content: center"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a>
+<div style="flex-grow: 1; height: 52px; box-sizing: border-box; padding: 0 16px; border-radius: 999px; background: rgba(255,255,255,0.78); backdrop-filter: blur(24px) saturate(1.8); -webkit-backdrop-filter: blur(24px) saturate(1.8); border: 1px solid rgba(255,255,255,0.7); box-shadow: 0 10px 30px rgba(38,42,103,0.18); display: flex; align-items: center; gap: 8px">
+<span style="padding: 2px 8px; border-radius: 999px; background: #ffe7dc; color: #c93a00; font-size: 12px; font-weight: 700">Live</span>
+<span style="font-size: 15px; font-weight: 600">On route · Bus 2 · Day 2</span>
+</div>
+</div>
+<div role="status" style="align-self: flex-start; height: 44px; box-sizing: border-box; padding: 0 16px; border-radius: 999px; background: #262a67; color: #f6f3e4; display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 600">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7dd3a8" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg>41 boarded · Nadia says ready</div>
+</div>
+
+<div style="position: absolute; right: 16px; top: 430px; display: flex; flex-direction: column; gap: 10px">
+<button type="button" aria-label="Recenter map on Bus 2" style="width: 52px; height: 52px; border-radius: 999px; background: rgba(255,255,255,0.78); backdrop-filter: blur(24px) saturate(1.8); -webkit-backdrop-filter: blur(24px) saturate(1.8); border: 1px solid rgba(255,255,255,0.7); box-shadow: 0 10px 30px rgba(38,42,103,0.18); color: #262a67; cursor: pointer; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.1-7-11.5A7 7 0 0 1 19 9.5C19 14.9 12 21 12 21zM12 7a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z"></path></svg></button>
+</div>
+
+<section aria-labelledby="ns-h" style="position: absolute; left: 0; right: 0; bottom: 0; padding: 16px 16px 24px; border-radius: 20px 20px 0 0; background: #ffffff; box-shadow: 0 -8px 24px rgba(38,42,103,0.12); display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 12px">
+<div style="display: flex; flex-direction: column"><span style="font-size: 13px; font-weight: 600; color: #5b5f86">{{stepText}}</span><h2 id="ns-h" style="margin: 0; font-size: 26px; line-height: 32px; font-weight: 700">{{nextName}}</h2></div>
+<div style="display: flex; flex-direction: column; align-items: flex-end"><span style="font-size: 13px; color: #5b5f86">ETA</span><span style="font-size: 26px; line-height: 32px; font-weight: 700">{{nextEta}}</span></div>
+</div>
+<span style="font-size: 14px; color: #5b5f86">{{nextMeta}}</span>
+<sc-if value="{{delaySent}}" hint-placeholder-val="{{false}}"><span role="status" style="padding: 8px 12px; border-radius: 12px; background: #fdf0d5; color: #8a4b00; font-size: 14px; font-weight: 600">Delay of {{delayMin}} min sent to Nadia and Sunrise ops</span></sc-if>
+<sc-if value="{{notLast}}" hint-placeholder-val="{{true}}">
+<button type="button" onClick="{{arrive}}" style="height: 64px; border-radius: 12px; border: none; background: #ff6c2e; color: #262a67; font: inherit; font-size: 19px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.1-7-11.5A7 7 0 0 1 19 9.5C19 14.9 12 21 12 21zM12 7a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z"></path></svg>Arrived at {{nextName}}</button>
+</sc-if>
+<sc-if value="{{isLast}}" hint-placeholder-val="{{false}}">
+<a href="DrvTripDone.dc.html" style="height: 64px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 19px; font-weight: 700; text-decoration: none; display: flex; align-items: center; justify-content: center">Arrived · finish trip day</a>
+</sc-if>
+<div style="display: flex; gap: 10px">
+<button type="button" onClick="{{openDelay}}" style="flex: 1 1 0; height: 56px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font: inherit; font-size: 17px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7v5l3 2"></path></svg>Report delay</button>
+<a href="#" style="flex: 1 1 0; height: 56px; border-radius: 12px; background: #262a67; color: #f6f3e4; font-size: 17px; font-weight: 600; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"></path></svg>Call ops</a>
+</div>
+</section>
+
+<sc-if value="{{showDelay}}" hint-placeholder-val="{{false}}">
+<div style="position: absolute; inset: 0; background: rgba(16,18,48,.45)"></div>
+<div role="dialog" aria-modal="true" aria-labelledby="dl-h" style="position: absolute; left: 0; right: 0; bottom: 0; padding: 16px 16px 24px; border-radius: 20px 20px 0 0; background: #ffffff; display: flex; flex-direction: column; gap: 12px">
+<h2 id="dl-h" style="margin: 0; font-size: 22px; font-weight: 600">How late will you be?</h2>
+<p style="margin: 0; font-size: 15px; color: #5b5f86">Nadia, Sunrise ops and parents following Bus 2 get the new ETA.</p>
+<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px">
+<sc-for list="{{delays}}" as="d" hint-placeholder-count="3">
+<button type="button" onClick="{{d.go}}" style="height: 64px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font: inherit; font-size: 20px; font-weight: 700; cursor: pointer">{{d.t}}</button>
+</sc-for>
+</div>
+<button type="button" onClick="{{closeDelay}}" style="height: 52px; border-radius: 12px; border: none; background: transparent; color: #262a67; font: inherit; font-size: 16px; font-weight: 600; cursor: pointer">Cancel</button>
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { idx: 0, sheet: false, delay: 0 }; }
+  renderVals() {
+    const S = [
+      ['Hegra', '10:30', '24 km · guided tour · park in bay C'],
+      ['AlUla Old Town', '13:30', '19 km · walk and lunch break'],
+      ['Elephant Rock', '16:30', '11 km · dinner program'],
+      ['Shaden Resort', '20:30', '14 km · final drop-off']
+    ];
+    const i = this.state.idx;
+    const [name, eta, meta] = S[i];
+    const last = i === S.length - 1;
+    const delays = [15, 30, 45].map((m) => ({ t: m + ' min', go: () => this.setState({ sheet: false, delay: m }) }));
+    return {
+      nextName: name, nextEta: eta, nextMeta: meta,
+      stepText: 'Next stop · ' + (i + 1) + ' of ' + S.length,
+      mapLabel: 'Bus 2 on route to ' + name + ', arriving ' + eta,
+      notLast: !last, isLast: last,
+      arrive: () => this.setState({ idx: Math.min(i + 1, S.length - 1), delay: 0 }),
+      showDelay: this.state.sheet, openDelay: () => this.setState({ sheet: true }), closeDelay: () => this.setState({ sheet: false }),
+      delays, delaySent: this.state.delay > 0, delayMin: String(this.state.delay)
+    };
+  }
+}
+</script>
+</body>
+</html>

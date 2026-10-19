@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Org · Settlements</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+.te-row:hover{background:#fbfaf3}
+</style>
+</helmet>
+<div style="min-height: 1200px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="OrgNav" active="Settlements" hint-size="248px,1200px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 24px">
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; color: #5b5f86">Trips Enjoy collects every booking and pays you out</span><h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Settlements</h1></div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px">
+<a href="OrgInvoices.dc.html" style="height: 48px; box-sizing: border-box; padding: 0 20px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2zM9 8h6M9 12h6"></path></svg>Invoices</a>
+<a href="OrgSettlement.dc.html" style="height: 48px; box-sizing: border-box; padding: 0 20px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zM14 3v5h5"></path></svg>September statement</a>
+</div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px">
+<sc-for list="{{cards}}" as="c" hint-placeholder-count="4">
+<div style="{{c.box}}">
+<span style="display: flex; align-items: center; gap: 8px; font-size: 14px; color: {{c.lc}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{c.i}}"></path></svg>{{c.l}}</span>
+<span style="font-size: 26px; line-height: 32px; font-weight: 700">{{c.v}} <span style="font-size: 15px; font-weight: 500; color: {{c.lc}}">SAR</span></span>
+<span style="font-size: 13px; line-height: 18px; color: {{c.lc}}">{{c.d}}</span>
+</div>
+</sc-for>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: stretch">
+<section aria-labelledby="fl-h" style="flex: 3 1 480px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 16px">
+<h2 id="fl-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">How your money moves</h2>
+<ol role="list" aria-label="Money flow from traveler payment to your payout" style="list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; align-items: stretch">
+<sc-for list="{{flow}}" as="f" hint-placeholder-count="4">
+<li style="flex: 1 1 150px; display: flex; align-items: stretch; gap: 8px">
+<div style="{{f.box}}">
+<span style="display: flex; align-items: center; gap: 8px"><span style="{{f.dot}}">{{f.n}}</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{f.i}}"></path></svg></span>
+<span style="font-size: 15px; font-weight: 700">{{f.t}}</span>
+<span style="font-size: 13px; line-height: 18px; color: {{f.dc}}">{{f.d}}</span>
+</div>
+<sc-if value="{{f.arrow}}" hint-placeholder-val="{{true}}"><span aria-hidden="true" style="display: flex; align-items: center; color: #c93a00"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span></sc-if>
+</li>
+</sc-for>
+</ol>
+<p style="margin: 0; display: flex; gap: 8px; align-items: flex-start; font-size: 13px; line-height: 18px; color: #5b5f86"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 1px"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 11v5M12 8h.01"></path></svg><span>School and company invoices (B2B) are paid by bank transfer straight to you, so they never pass through settlements. Refunds after a payout are recovered from the next one.</span></p>
+</section>
+
+<section aria-labelledby="sc-h" style="flex: 2 1 320px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 14px">
+<h2 id="sc-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">Payout schedule</h2>
+<dl style="margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 10px 16px; font-size: 14px">
+<dt style="color: #5b5f86">Frequency</dt><dd style="margin: 0"><strong>Weekly · every Monday 06:00</strong><span style="display: block; font-size: 13px; color: #5b5f86">Same schedule on every plan</span></dd>
+<dt style="color: #5b5f86">Bank account</dt><dd style="margin: 0; display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center"><strong>Al Rajhi Bank · SA•• •• 2207</strong><span style="display: inline-flex; align-items: center; gap: 4px; padding: 1px 8px; border-radius: 999px; background: #e3f3ea; color: #1f7a4d; font-size: 12px; font-weight: 600"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg>Verified</span><a href="OrgSettings.dc.html" style="font-size: 13px; font-weight: 600">Change</a></dd>
+<dt style="color: #5b5f86">Minimum</dt><dd style="margin: 0">None · every balance is paid</dd>
+<dt style="color: #5b5f86">Next payout</dt><dd style="margin: 0"><strong>Mon 20 Oct · {{nextAmt}} SAR</strong></dd>
+</dl>
+<label style="display: flex; gap: 12px; align-items: flex-start; padding: 12px 14px; border-radius: 12px; border: 1px solid {{tgBorder}}; cursor: pointer">
+<input type="checkbox" checked="{{deduct}}" onChange="{{toggleDeduct}}" style="width: 20px; height: 20px; margin: 2px 0 0; flex-shrink: 0; accent-color: #262a67">
+<span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 15px; font-weight: 600">Deduct subscription from payouts</span><span style="font-size: 13px; line-height: 18px; color: #5b5f86">{{deductNote}}</span></span>
+</label>
+</section>
+</div>
+
+<section aria-labelledby="stm-h" style="background: #ffffff; border-radius: 20px; padding: 20px 0 8px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; padding: 0 20px 12px"><h2 id="stm-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">Statements</h2><span style="font-size: 13px; color: #5b5f86">Amounts in SAR · deductions shown as negatives · each net = gross minus every column</span></div>
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 1120px; border-collapse: collapse; font-size: 14px">
+<thead><tr style="color: #5b5f86; font-size: 12px; line-height: 16px">
+<th scope="col" style="text-align: start; padding: 10px 12px 10px 20px; font-weight: 600">Period</th>
+<th scope="col" style="text-align: end; padding: 10px 8px; font-weight: 600">Gross</th>
+<th scope="col" style="text-align: end; padding: 10px 8px; font-weight: 600">Refunds</th>
+<th scope="col" style="text-align: end; padding: 10px 8px; font-weight: 600">Commission 8%</th>
+<th scope="col" style="text-align: end; padding: 10px 8px; font-weight: 600">Gateway 2.2%</th>
+<th scope="col" style="text-align: end; padding: 10px 8px; font-weight: 600">VAT on fees</th>
+<th scope="col" style="text-align: end; padding: 10px 8px; font-weight: 600">Provider deals paid for you</th>
+<th scope="col" style="text-align: end; padding: 10px 8px; font-weight: 600">Adjustments &amp; holds</th>
+<th scope="col" style="text-align: end; padding: 10px 8px; font-weight: 600">Net payout</th>
+<th scope="col" style="text-align: start; padding: 10px 8px 10px 16px; font-weight: 600">Status</th>
+<th scope="col" style="text-align: start; padding: 10px 20px 10px 8px; font-weight: 600">Payout ref</th>
+</tr></thead>
+<tbody>
+<sc-for list="{{rows}}" as="r" hint-placeholder-count="6">
+<tr class="te-row" style="border-top: 1px solid #e3dfc9">
+<td style="padding: 12px 12px 12px 20px"><a href="OrgSettlement.dc.html" style="display: flex; flex-direction: column; color: #262a67; text-decoration: none"><span style="font-weight: 600; text-decoration: underline; text-decoration-color: #e3dfc9; text-underline-offset: 3px">{{r.p}}</span><span style="font-size: 12px; color: #5b5f86">{{r.sub}}</span></a></td>
+<td style="padding: 12px 8px; text-align: end; white-space: nowrap">{{r.g}}</td>
+<td style="padding: 12px 8px; text-align: end; white-space: nowrap; color: #b42318">{{r.rf}}</td>
+<td style="padding: 12px 8px; text-align: end; white-space: nowrap; color: #b42318">{{r.c}}</td>
+<td style="padding: 12px 8px; text-align: end; white-space: nowrap; color: #b42318">{{r.f}}</td>
+<td style="padding: 12px 8px; text-align: end; white-space: nowrap; color: #b42318">{{r.v}}</td>
+<td style="padding: 12px 8px; text-align: end; white-space: nowrap; color: #b42318">{{r.dl}}</td>
+<td style="padding: 12px 8px; text-align: end; white-space: nowrap; color: #b42318">{{r.adj}}</td>
+<td style="padding: 12px 8px; text-align: end; white-space: nowrap; font-weight: 700">{{r.net}}</td>
+<td style="padding: 12px 8px 12px 16px"><span style="display: flex; flex-direction: column; gap: 2px; align-items: flex-start"><span style="{{r.ss}}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{r.si}}"></path></svg>{{r.s}}</span><span style="font-size: 12px; color: #5b5f86; white-space: nowrap">{{r.when}}</span></span></td>
+<td style="padding: 12px 20px 12px 8px; font-size: 13px; white-space: nowrap; color: #5b5f86">{{r.ref}}</td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; padding: 12px 20px 8px; border-top: 1px solid #e3dfc9; font-size: 13px; color: #5b5f86"><span>Showing June to October 2026 · January to May paid 812,430.18 SAR</span><span>Monthly statements; payouts run every Monday 06:00. PDF and CSV from each period</span></div>
+</section>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1200}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { deduct: false }; }
+  renderVals() {
+    const deduct = this.state.deduct;
+    const box = 'padding: 18px 20px; border-radius: 20px; display: flex; flex-direction: column; gap: 6px; ';
+    const cards = [
+      { l: 'Held until trips complete', v: '186,400.00', d: '12 upcoming trips · paid in the first Monday run after each one completes', box: box + 'background: #ffffff;', lc: '#5b5f86', i: 'M6 11h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1zM8 11V7a4 4 0 0 1 8 0v4' },
+      { l: 'Available for next payout', v: deduct ? '48,837.38' : '50,550.88', d: deduct ? 'Mon 20 Oct · after 1,713.50 subscription deduction' : 'Mon 20 Oct 06:00 to Al Rajhi SA•• •• 2207', box: box + 'background: #262a67; color: #f6f3e4;', lc: '#b8bad6', i: 'M4 7a2 2 0 0 1 2-2h12v4M4 7v11a2 2 0 0 0 2 2h14V9H6a2 2 0 0 1-2-2zM16 14.5h.01' },
+      { l: 'On hold · dispute', v: '640.00', d: 'DSP-2026-0192 · Red Sea Snorkel Day · traveler reply due Thu 15 Oct', box: box + 'background: #fdf0d5; color: #262a67;', lc: '#8a4b00', i: 'M12 3l9.5 17h-19zM12 10v4M12 17h.01' },
+      { l: 'Paid this year', v: '1,637,894.00', d: '41 weekly payouts · last on Mon 13 Oct', box: box + 'background: #ffffff;', lc: '#5b5f86', i: 'M5 12.5l4.5 4.5L19 7' }
+    ];
+    const fb = 'flex: 1 1 auto; min-width: 0; padding: 14px; border-radius: 12px; display: flex; flex-direction: column; gap: 6px; ';
+    const dot = 'width: 24px; height: 24px; border-radius: 999px; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; ';
+    const flow = [
+      { n: '1', t: 'Traveler pays Trips Enjoy', d: 'mada, cards or Apple Pay at checkout. Trips Enjoy is the merchant of record.', i: 'M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v2a2.5 2.5 0 0 0 0 5v3a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-3a2.5 2.5 0 0 0 0-5zM14 5v14' },
+      { n: '2', t: 'Held until the trip is completed', d: 'Refunds before then come out of the held amount. A settlement closes when payouts are done and no dispute is open.', i: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7v5l3 2' },
+      { n: '3', t: 'Deductions', d: 'Commission 8%, gateway 2.2%, VAT on both, and driver and photographer deals paid to them for you.', i: 'M5 12h14' },
+      { n: '4', t: 'Payout to your IBAN', d: 'Every Monday at 06:00 with a statement and linked invoices. No minimum.', i: 'M5 12h14M13 6l6 6-6 6', last: true }
+    ].map((f) => ({ ...f, arrow: !f.last, box: fb + (f.last ? 'background: #262a67; color: #f6f3e4;' : 'background: #f6f3e4;'), dc: f.last ? '#b8bad6' : '#5b5f86', dot: dot + (f.last ? 'background: #ff6c2e; color: #262a67;' : 'background: #262a67; color: #f6f3e4;') }));
+    const pill = 'display: inline-flex; align-items: center; gap: 4px; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; white-space: nowrap; ';
+    const S = { Paid: [pill + 'background: #e3f3ea; color: #1f7a4d;', 'M5 12.5l4.5 4.5L19 7'], Scheduled: [pill + 'background: #e6e8f5; color: #262a67;', 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7v5l3 2'], 'On hold': [pill + 'background: #fdf0d5; color: #8a4b00;', 'M12 3l9.5 17h-19zM12 10v4M12 17h.01'] };
+    const R = [
+      ['October 2026', 'To date · 4 trips completed', '58,400.00', '−1,100.00', '−4,584.00', '−1,284.80', '−880.32', '0.00', deduct ? '−1,713.50' : '0.00', deduct ? '48,837.38' : '50,550.88', 'Scheduled', 'Next run Mon 20 Oct', '—'],
+      ['September 2026', '6 trips · 1–30 Sep', '291,655.00', '−6,265.00', '−22,831.20', '−6,416.41', '−4,387.13', '−2,357.50', '−1,190.00', '248,207.76', 'Paid', 'Mondays · last 29 Sep', 'TE-PO-2026-10-0418'],
+      ['Held from September', 'Dispute on 2 seats', '—', '—', '—', '—', '—', '—', '640.00', '640.00', 'On hold', 'Until DSP-2026-0192 closes', 'DSP-2026-0192'],
+      ['August 2026', '5 trips · 1–31 Aug', '212,600.00', '−4,300.00', '−16,664.00', '−4,677.20', '−3,201.18', '−2,600.00', '0.00', '181,157.62', 'Paid', 'Mondays · last 1 Sep', 'TE-PO-2026-09-0391'],
+      ['July 2026', '7 trips · 1–31 Jul', '264,300.00', '−5,950.00', '−20,668.00', '−5,814.60', '−3,972.39', '−3,150.00', '0.00', '224,745.01', 'Paid', 'Mondays · last 4 Aug', 'TE-PO-2026-08-0352'],
+      ['June 2026', '5 trips · 1–30 Jun', '198,750.00', '−2,900.00', '−15,668.00', '−4,372.50', '−3,006.07', '−1,450.00', '0.00', '171,353.43', 'Paid', 'Mondays · last 7 Jul', 'TE-PO-2026-07-0317']
+    ];
+    const rows = R.map((a) => ({ p: a[0], sub: a[1], g: a[2], rf: a[3], c: a[4], f: a[5], v: a[6], dl: a[7], adj: a[8], net: a[9], s: a[10], when: a[11], ref: a[12], ss: S[a[10]][0], si: S[a[10]][1] }));
+    return {
+      cards, flow, rows, deduct,
+      nextAmt: deduct ? '48,837.38' : '50,550.88',
+      tgBorder: deduct ? '#fb8030' : '#e3dfc9',
+      deductNote: deduct ? 'From the Mon 20 Oct payout, your Growth plan (1,713.50 SAR incl. VAT) comes out of the payout and mada •• 4417 is no longer charged.' : 'Off · your Growth plan (1,713.50 SAR incl. VAT) is charged to mada •• 4417 on the 1st.',
+      toggleDeduct: () => this.setState({ deduct: !this.state.deduct })
+    };
+  }
+}
+</script>
+</body>
+</html>

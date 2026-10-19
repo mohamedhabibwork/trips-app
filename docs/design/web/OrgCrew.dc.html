@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Org · Crew &amp; providers</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+.te-row:hover{background:#f6f3e4}
+</style>
+</helmet>
+<div style="min-height: 1000px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="OrgNav" active="Crew &amp; providers" hint-size="248px,1000px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 20px">
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; color: #5b5f86">Drivers, photographers and moderators</span><h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Crew &amp; providers</h1></div>
+<button type="button" style="height: 48px; padding: 0 20px; border: 0; border-radius: 12px; background: #ff6c2e; color: #262a67; font: inherit; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>{{addLabel}}</button>
+</div>
+
+<div role="note" style="display: flex; gap: 12px; align-items: flex-start; padding: 12px 16px; border-radius: 12px; background: #e6e8f5; font-size: 14px; line-height: 20px">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M12 3l7 3v5.5c0 4.4-3 8-7 9.5-4-1.5-7-5.1-7-9.5V6zM9 12l2 2 4-4"></path></svg>
+<span><strong>Own staff are visible only to Sunrise Tours and are auto-confirmed on trips.</strong> No deals, no plan fees — you pay them directly. They sign in to the Trips Enjoy app with a code sent to their phone.</span>
+</div>
+
+<div role="tablist" aria-label="Own crew" style="display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{tabs}}" as="t" hint-placeholder-count="3">
+<button type="button" role="tab" aria-selected="{{t.sel}}" onClick="{{t.on}}" style="{{t.style}}">{{t.l}} · {{t.n}}</button>
+</sc-for>
+</div>
+
+<section aria-label="{{tabName}}" style="background: #ffffff; border-radius: 20px; padding: 8px 0">
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 860px; border-collapse: collapse; font-size: 15px">
+<thead><tr style="color: #5b5f86; font-size: 13px"><th scope="col" style="text-align: start; padding: 10px 20px; font-weight: 600">Name</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">{{col2}}</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Assigned trips</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Next</th><th scope="col" style="text-align: start; padding: 10px 20px; font-weight: 600">Status</th></tr></thead>
+<tbody>
+<sc-for list="{{rows}}" as="r" hint-placeholder-count="5">
+<tr class="te-row" style="border-top: 1px solid #e3dfc9">
+<td style="padding: 12px 20px"><span style="display: flex; align-items: center; gap: 10px"><img src="{{r.av}}" alt="" style="width: 36px; height: 36px; flex-shrink: 0; border-radius: 999px; object-fit: cover; background: #e6e8f5"><span style="display: flex; flex-direction: column"><span style="font-weight: 600">{{r.n}}</span><span style="font-size: 13px; color: #5b5f86">{{r.ph}}</span></span></span></td>
+<td style="padding: 12px; font-size: 14px">{{r.c2}}</td>
+<td style="padding: 12px; font-size: 14px">{{r.trips}}</td>
+<td style="padding: 12px; font-size: 14px; color: #5b5f86">{{r.next}}</td>
+<td style="padding: 12px 20px"><span style="{{r.ss}}">{{r.s}}</span></td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+</section>
+
+<section aria-labelledby="plat-h" style="background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap"><div style="display: flex; flex-direction: column"><h2 id="plat-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">Platform providers you've worked with</h2><span style="font-size: 13px; color: #5b5f86">Hired through deals. Send them a new offer any time.</span></div><a href="OrgMarket.dc.html" style="font-size: 14px; font-weight: 600">Find more providers</a></div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px">
+<sc-for list="{{platform}}" as="p" hint-placeholder-count="4">
+<a href="{{p.href}}" style="display: flex; flex-direction: column; gap: 6px; padding: 14px; border-radius: 12px; border: 1px solid #e3dfc9; color: #262a67; text-decoration: none">
+<span style="display: flex; justify-content: space-between; gap: 8px; align-items: center"><span style="font-weight: 600">{{p.n}}</span><span style="{{p.rs}}">{{p.role}}</span></span>
+<span style="font-size: 13px; color: #5b5f86">{{p.d}}</span>
+<span style="font-size: 13px; font-weight: 600">{{p.stat}}</span>
+</a>
+</sc-for>
+</div>
+</section>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { tab: 0 }; }
+  renderVals() {
+    const pill = (tone) => 'display: inline-flex; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; white-space: nowrap; ' + ({ ok: 'background: #e3f3ea; color: #1f7a4d;', warn: 'background: #fdf0d5; color: #8a4b00;', bad: 'background: #fde8e6; color: #b42318;', info: 'background: #e6e8f5; color: #262a67;', live: 'background: #ffe7dc; color: #c93a00;' })[tone];
+    const T = [
+      { l: 'Own drivers', add: 'Add own driver', col2: 'Licence & vehicle', rows: [
+        { n: 'Saeed Mubarak', ph: '+966 55 ••• 1182', c2: 'Heavy bus licence · usually Bus 1 (RUH 4410)', trips: '3 · AlUla Heritage Weekend, Red Sea Snorkel Day, Taif Rose Farms', next: 'Thu 16 Oct · 06:30', s: 'On trip today', t: 'live' },
+        { n: 'Ahmed Fathi', ph: '+966 50 ••• 7720', c2: 'Heavy bus licence · Bus 3 (RUH 5521)', trips: '2 · AlUla Heritage Weekend, Edge of the World Hike', next: 'Thu 16 Oct · 06:30', s: 'Available', t: 'ok' },
+        { n: 'Waleed Hamdan', ph: '+966 56 ••• 0413', c2: 'Light bus licence · Hiace (RUH 1209)', trips: '1 · Al Noor School · Grade 4 Zoo Day', next: 'Today · 08:00', s: 'On trip today', t: 'live' },
+        { n: 'Nasser Al-Dosari', ph: '+966 53 ••• 6634', c2: 'Heavy bus licence · licence renews 2 Nov', trips: '0', next: '—', s: 'Licence expiring', t: 'warn' },
+        { n: 'Hamza Rifai', ph: '+966 54 ••• 9051', c2: 'Heavy bus licence', trips: '0', next: '—', s: 'Invite sent', t: 'info' }
+      ] },
+      { l: 'Own photographers', add: 'Add own photographer', col2: 'Kit', rows: [
+        { n: 'Jana Mostafa', ph: '+966 55 ••• 2290', c2: 'Full-frame · drone', trips: '2 · AlUla Heritage Weekend, Taif Rose Farms', next: 'Thu 16 Oct · 06:30', s: 'Available', t: 'ok' },
+        { n: 'Ziad Halabi', ph: '+966 50 ••• 8812', c2: 'Mirrorless · 4K video', trips: '1 · Jeddah Corniche Night', next: 'Fri 17 Oct · 18:00', s: 'Available', t: 'ok' }
+      ] },
+      { l: 'Moderators', add: 'Add moderator', col2: 'Languages', rows: [
+        { n: 'Nadia Yusuf', ph: '+966 55 ••• 4407', c2: 'Arabic, English', trips: '2 · AlUla Heritage Weekend (Bus 2), Red Sea Snorkel Day (Bus 2)', next: 'Thu 16 Oct · 06:30', s: 'On trip today', t: 'live' },
+        { n: 'Huda Saleem', ph: '+966 50 ••• 3318', c2: 'Arabic, English, Urdu', trips: '2 · AlUla Heritage Weekend (Bus 1), Al Noor School (Bus 1)', next: 'Today · 08:00', s: 'On trip today', t: 'live' },
+        { n: 'Omar Bakri', ph: '+966 56 ••• 2201', c2: 'Arabic, English', trips: '1 · AlUla Heritage Weekend (Bus 3)', next: 'Thu 16 Oct · 06:30', s: 'Available', t: 'ok' },
+        { n: 'Maha Jaber', ph: '+966 53 ••• 7745', c2: 'Arabic, French', trips: '1 · AlUla Heritage Weekend (Bus 4)', next: 'Thu 16 Oct · 06:30', s: 'Available', t: 'ok' },
+        { n: 'Rami Aziz', ph: '+966 54 ••• 1180', c2: 'Arabic, English', trips: '0', next: '—', s: 'Unassigned', t: 'warn' }
+      ] }
+    ];
+    const cur = T[this.state.tab];
+    const tabs = T.map((t, i) => ({ l: t.l, n: t.rows.length, sel: i === this.state.tab ? 'true' : 'false', on: () => this.setState({ tab: i }),
+      style: 'height: 44px; padding: 0 18px; border-radius: 999px; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer; ' + (i === this.state.tab ? 'background: #262a67; color: #f6f3e4; border: 1px solid #262a67;' : 'background: #ffffff; color: #262a67; border: 1px solid #7b7fa6;') }));
+    const AV = { 'Ahmed Fathi': '../assets/3a4d2dfca2f7de1ed48b5ab6aa97969c.svg', 'Nadia Yusuf': '../assets/28ad7d346304ae503024b63430b79f78.svg', 'Huda Saleem': '../assets/6c8d11c7c22cf2debc4ba323f8a3daea.svg', 'Omar Bakri': '../assets/502f94ce03065558eab3443587ed14b0.svg' };
+    const WOMEN = ['Jana Mostafa', 'Maha Jaber'];
+    const GEN = (n, w) => { const M = ['c961e95bb720fceb6475e0c84bef99d2', '6c7170ef3161499dac790082c4e412a7', 'b07f316a17aca869b72b8f13a95e40ec', 'e59f3dc6430440d3c2c2df27a83c40bf'], W = ['0c8dd5946e0747703d008a98c24ab01b', 'd6709fc24649a3b41f4777c6ac15b1d0', '9ab70b27334c55738270c698b0fb1691', '00031e873884aa07e387fc72fb18f690']; let h = 0; for (const ch of n) h = (h * 31 + ch.charCodeAt(0)) % 997; return '/_blob/' + (w ? W : M)[h % 4]; };
+    const rows = cur.rows.map((r) => ({ ...r, av: AV[r.n] || GEN(r.n, WOMEN.includes(r.n)), ini: r.n.split(' ').map((w) => w[0]).join('').slice(0, 2), ss: pill(r.t) }));
+    const platform = [
+      { n: 'Khalid Al-Harbi', role: 'Driver', d: 'Verified · 4.9★ · Mercedes Tourismo 49', stat: 'Deal open · Red Sea Snorkel Day', href: 'OrgDeal.dc.html' },
+      { n: 'Omar Siddiqi', role: 'Photographer', d: 'Verified · 4.7★ · Studio', stat: 'Finalized · AlUla Heritage Weekend', href: 'OrgDeals.dc.html' },
+      { n: 'Noura Al-Shehri', role: 'Photographer', d: 'Verified · 4.9★ · Studio', stat: 'Accepted by Noura · confirm 900 SAR', href: 'OrgDeals.dc.html' },
+      { n: 'Turki Al-Ghamdi', role: 'Driver', d: 'Verified · 4.7★ · Mercedes Tourismo 49', stat: '2 past trips · 5.0★ from you', href: 'OrgDeals.dc.html' }
+    ].map((p) => ({ ...p, rs: pill(p.role === 'Driver' ? 'info' : 'live') }));
+    return { tabs, rows, tabName: cur.l, col2: cur.col2, addLabel: cur.add, platform };
+  }
+}
+</script>
+</body>
+</html>

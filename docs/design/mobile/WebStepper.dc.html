@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Application stepper</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<nav aria-label="Application steps" style="width: 240px; display: flex; flex-direction: column; gap: 8px; font-family: Outfit, Nunito, system-ui, sans-serif; color: #262a67">
+<span style="font-size: 13px; font-weight: 600; color: #5b5f86; letter-spacing: .5px">{{heading}}</span>
+<ol style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 4px">
+<sc-for list="{{steps}}" as="s" hint-placeholder-count="5">
+<li aria-current="{{s.cur}}" style="{{s.style}}">
+<sc-if value="{{s.done}}" hint-placeholder-val="{{false}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"></path></svg></sc-if>
+<sc-if value="{{s.notDone}}" hint-placeholder-val="{{true}}"><span style="width: 20px; text-align: center">{{s.n}}</span></sc-if>
+<span>{{s.t}}</span>
+</li>
+</sc-for>
+</ol>
+</nav>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"role":{"editor":"enum","options":["driver","photographer"],"default":"driver"},"active":{"editor":"int","min":1,"max":5,"default":2},"$preview":{"width":240,"height":300}}'>
+class Component extends DCLogic {
+renderVals() {
+const role = this.props.role ?? 'driver';
+const act = this.props.active ?? 2;
+const S = role === 'driver' ? ['Account & phone', 'Personal details', 'Licence & vehicle', 'Documents', 'Review & submit'] : ['Account & phone', 'Profile', 'Portfolio & ID', 'Review & submit'];
+return { heading: role === 'driver' ? 'DRIVER APPLICATION' : 'PHOTOGRAPHER APPLICATION',
+steps: S.map((t, i) => { const n = i + 1; const done = n < act, cur = n === act;
+return { t, n, done, notDone: !done, cur: cur ? 'step' : 'false',
+style: 'display: flex; align-items: center; gap: 10px; height: 44px; padding: 0 12px; box-sizing: border-box; border-radius: 12px; font-size: 15px; ' + (cur ? 'background: #ffffff; border: 2px solid #fb8030; font-weight: 600; color: #262a67;' : done ? 'color: #1f7a4d; font-weight: 600;' : 'color: #5b5f86;') }; }) };
+}
+}
+</script>
+</body>
+</html>

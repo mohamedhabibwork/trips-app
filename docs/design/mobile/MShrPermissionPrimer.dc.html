@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Mobile · Permission primer</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="height: 100%; box-sizing: border-box; padding: 56px 16px 24px; display: flex; flex-direction: column; gap: 16px">
+
+<div style="display: flex; align-items: center; gap: 12px">
+<a href="{{backHref}}" aria-label="Back" style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 999px; background: #ffffff; color: #262a67; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a>
+<span style="font-size: 14px; font-weight: 600; color: #5b5f86">{{context}}</span>
+</div>
+
+<div style="flex-grow: 1; display: flex; flex-direction: column; justify-content: center; gap: 16px">
+<span style="align-self: center; width: 112px; height: 112px; border-radius: 999px; background: {{iconBg}}; color: {{iconFg}}; display: flex; align-items: center; justify-content: center"><svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{icon}}"></path></svg></span>
+<div style="display: flex; flex-direction: column; gap: 8px; text-align: center">
+<h1 style="margin: 0; font-size: 26px; line-height: 32px; font-weight: 700">{{title}}</h1>
+<p style="margin: 0; font-size: 16px; line-height: 23px; color: #5b5f86">{{lead}}</p>
+</div>
+
+<div style="padding: 16px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 12px">
+<span style="font-size: 14px; font-weight: 600">{{listTitle}}</span>
+<sc-for list="{{points}}" as="p" hint-placeholder-count="3">
+<div style="display: flex; gap: 10px; align-items: flex-start"><span style="width: 28px; height: 28px; flex-shrink: 0; border-radius: 999px; background: {{p.bg}}; color: {{p.fg}}; display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{p.icon}}"></path></svg></span><span style="font-size: 15px; line-height: 21px">{{p.t}}</span></div>
+</sc-for>
+</div>
+<sc-if value="{{hasNote}}" hint-placeholder-val="{{false}}"><span role="status" style="font-size: 14px; line-height: 20px; color: #5b5f86; text-align: center">{{note}}</span></sc-if>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 10px">
+<sc-if value="{{isShown}}" hint-placeholder-val="{{true}}">
+<div style="display: flex; flex-direction: column; gap: 10px">
+<button type="button" onClick="{{cont}}" style="height: 52px; border: 0; border-radius: 12px; background: #ff6c2e; color: #262a67; font: inherit; font-size: 16px; font-weight: 700; cursor: pointer">Continue</button>
+<button type="button" onClick="{{notNow}}" style="height: 52px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font: inherit; font-size: 16px; font-weight: 600; cursor: pointer">Not now</button>
+</div>
+</sc-if>
+<sc-if value="{{isDeclined}}" hint-placeholder-val="{{false}}">
+<div style="display: flex; flex-direction: column; gap: 10px">
+<a href="{{fallbackHref}}" style="height: 52px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; text-decoration: none">{{fallbackLabel}}</a>
+<button type="button" onClick="{{reask}}" style="height: 52px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font: inherit; font-size: 16px; font-weight: 600; cursor: pointer">{{reaskLabel}}</button>
+</div>
+</sc-if>
+<sc-if value="{{isBlocked}}" hint-placeholder-val="{{false}}">
+<div style="display: flex; flex-direction: column; gap: 10px">
+<a href="#" style="height: 52px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none">Open phone settings</a>
+<a href="{{fallbackHref}}" style="height: 52px; box-sizing: border-box; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-size: 16px; font-weight: 600; display: flex; align-items: center; justify-content: center; text-decoration: none">{{fallbackLabel}}</a>
+</div>
+</sc-if>
+<sc-if value="{{isGranted}}" hint-placeholder-val="{{false}}">
+<a href="{{doneHref}}" style="height: 52px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; text-decoration: none">{{doneLabel}}</a>
+</sc-if>
+</div>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"permission":{"editor":"enum","options":["camera","location","notifications"],"default":"camera"},"state":{"editor":"enum","options":["shown","declined","blocked"],"default":"shown"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { local: null }; }
+  renderVals() {
+    const kind = this.props.permission ?? 'camera';
+    const st = this.state.local ?? (this.props.state ?? 'shown');
+    const I = {
+      camera: 'M4 8a2 2 0 0 1 2-2h2l2-2h4l2 2h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zM12 9.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7z',
+      location: 'M12 21s-7-6.1-7-11.5A7 7 0 0 1 19 9.5C19 14.9 12 21 12 21zM12 7a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z',
+      notifications: 'M6 16v-5a6 6 0 0 1 12 0v5l2 2H4zM10 21a2 2 0 0 0 4 0',
+      check: 'M5 12.5l4.5 4.5L19 7',
+      close: 'M6 6l12 12M18 6L6 18',
+      info: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 11v5M12 8h.01'
+    };
+    const ok = { bg: '#e3f3ea', fg: '#1f7a4d', icon: I.check };
+    const no = { bg: '#fdf0d5', fg: '#8a4b00', icon: I.close };
+    const inf = { bg: '#e6e8f5', fg: '#262a67', icon: I.info };
+    const C = {
+      camera: {
+        context: 'Bus 1 · Siwa Oasis Escape', backHref: 'ModToday.dc.html',
+        title: 'Use the camera to scan tickets',
+        lead: 'Heba, the scanner reads each traveler’s QR code so boarding is recorded in a second.',
+        listTitle: 'Without the camera',
+        pts: [{ ...no, t: 'Ticket QR codes can’t be scanned' }, { ...inf, t: 'You can still type the 6-character ticket code by hand' }, { ...inf, t: 'The camera is only used while the scanner is open' }],
+        fallbackLabel: 'Enter ticket codes by hand', fallbackHref: 'ModManifest.dc.html',
+        doneLabel: 'Open the scanner', doneHref: 'ModScan.dc.html',
+        blocked: 'Camera access is turned off for Trips Enjoy in your phone’s settings.'
+      },
+      location: {
+        context: 'Trip day · Siwa Oasis Escape', backHref: 'DrvPreTrip.dc.html',
+        title: 'Share the bus position during trips',
+        lead: 'Mahmoud, while a trip is in progress your location lets parents and the organizer see where the bus is.',
+        listTitle: 'Without location',
+        pts: [{ ...no, t: 'Parents and Nile Horizon Tours see “position not available”' }, { ...inf, t: 'Your trip, stops and check-ins work as normal' }, { ...inf, t: 'Location is only sent while a trip is In progress' }],
+        fallbackLabel: 'Start the trip without location', fallbackHref: 'DrvOnRoute.dc.html',
+        doneLabel: 'Start the trip', doneHref: 'DrvOnRoute.dc.html',
+        blocked: 'Location is turned off for Trips Enjoy Driver in your phone’s settings.'
+      },
+      notifications: {
+        context: 'Booking confirmed · TE-E10482', backHref: 'TrvBooked.dc.html',
+        title: 'Get trip updates on this phone',
+        lead: 'Mariam, we’ll tell you when Siwa Oasis Escape is about to start and when anything changes.',
+        listTitle: 'You’d get',
+        pts: [{ ...ok, t: 'A reminder 24 hours before departure' }, { ...ok, t: 'Boarding, stop and time-change notices on trip day' }, { ...inf, t: 'Nothing between 22:00 and 07:00 unless it’s urgent' }],
+        fallbackLabel: 'Continue without notifications', fallbackHref: 'TrvHome.dc.html',
+        doneLabel: 'Back to my booking', doneHref: 'TrvBooked.dc.html',
+        blocked: 'Notifications are turned off for Trips Enjoy in your phone’s settings.'
+      }
+    };
+    const c = C[kind] || C.camera;
+    const isBlocked = st === 'blocked';
+    const icoBg = isBlocked ? '#fde8e6' : (st === 'granted' ? '#e3f3ea' : '#ffe7dc');
+    const icoFg = isBlocked ? '#b42318' : (st === 'granted' ? '#1f7a4d' : '#c93a00');
+    let note = '';
+    if (st === 'declined') note = 'No problem. We’ll ask again next time you open this, not before.';
+    if (isBlocked) note = c.blocked + ' Turn it on there, then come back.';
+    if (st === 'granted') note = 'Allowed. You can change this any time in your phone’s settings.';
+    return {
+      context: c.context, backHref: c.backHref, title: c.title, lead: c.lead, listTitle: c.listTitle,
+      points: c.pts, icon: I[kind] || I.camera, iconBg: icoBg, iconFg: icoFg,
+      hasNote: note !== '', note,
+      isShown: st === 'shown', isDeclined: st === 'declined', isBlocked, isGranted: st === 'granted',
+      fallbackLabel: c.fallbackLabel, fallbackHref: c.fallbackHref,
+      doneLabel: c.doneLabel, doneHref: c.doneHref,
+      reaskLabel: 'Allow ' + (kind === 'notifications' ? 'notifications' : kind) + ' after all',
+      cont: () => this.setState({ local: 'granted' }),
+      notNow: () => this.setState({ local: 'declined' }),
+      reask: () => this.setState({ local: 'shown' })
+    };
+  }
+}
+</script>
+</body>
+</html>

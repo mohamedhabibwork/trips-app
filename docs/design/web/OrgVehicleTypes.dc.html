@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Org · Vehicle types &amp; seat layout</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+.te-seat:hover{border-color:#262a67}
+</style>
+</helmet>
+<div style="min-height: 1000px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="OrgNav" active="Fleet" hint-size="248px,1000px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 24px">
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 2px"><a href="OrgFleet.dc.html" style="display: inline-flex; align-items: center; gap: 4px; font-size: 14px; font-weight: 600; text-decoration: none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg>Fleet</a><h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Vehicle types &amp; seat layouts</h1><span style="font-size: 15px; color: #5b5f86">Seat IDs here are what travellers see on their ticket and what moderators check at boarding.</span></div>
+<a href="OrgFleet.dc.html" style="height: 48px; padding: 0 24px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg>Save layout</a>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start">
+<nav aria-label="Vehicle types" style="flex: 1 1 220px; background: #ffffff; border-radius: 20px; padding: 12px; display: flex; flex-direction: column; gap: 6px">
+<span style="padding: 6px 8px; font-size: 13px; font-weight: 600; color: #5b5f86">3 TYPES</span>
+<sc-for list="{{types}}" as="t" hint-placeholder-count="3">
+<button type="button" aria-current="{{t.cur}}" onClick="{{t.on}}" style="{{t.style}}"><span style="font-size: 15px; font-weight: 600">{{t.n}}</span><span style="font-size: 13px; color: #5b5f86">{{t.d}}</span></button>
+</sc-for>
+<button type="button" style="margin-top: 6px; height: 44px; border-radius: 12px; border: 1px dashed #7b7fa6; background: transparent; color: #262a67; font: inherit; font-size: 14px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>New vehicle type</button>
+</nav>
+
+<section aria-labelledby="ed-h" style="flex: 4 1 560px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 18px">
+<div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap"><h2 id="ed-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">{{typeName}}</h2><span style="font-size: 14px; color: #5b5f86">Used by {{typeUse}}</span></div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 12px">
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">Seat rows<input type="number" value="{{rowsN}}" style="height: 44px; min-width: 0; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 12px; font: inherit; font-size: 16px; font-weight: 400; color: #262a67"></label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">Seats per row<select style="height: 44px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 10px; font: inherit; font-size: 16px; font-weight: 400; color: #262a67"><option>4 (2 + 2)</option><option>3 (2 + 1)</option></select></label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">Aisle after<select style="height: 44px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 10px; font: inherit; font-size: 16px; font-weight: 400; color: #262a67"><option>Column B</option><option>Column A</option></select></label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">Back row<select style="height: 44px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 10px; font: inherit; font-size: 16px; font-weight: 400; color: #262a67"><option>5 seats (fills aisle)</option><option>Same as others</option></select></label>
+</div>
+
+<div role="toolbar" aria-label="Seat tools" style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 8px; border-radius: 12px; background: #f6f3e4">
+<button type="button" onClick="{{addRow}}" style="height: 40px; padding: 0 14px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; color: #262a67; font: inherit; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 6px; cursor: pointer"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Add row</button>
+<button type="button" onClick="{{removeRow}}" style="height: 40px; padding: 0 14px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; color: #262a67; font: inherit; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 6px; cursor: pointer"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14"></path></svg>Remove last row</button>
+<span style="width: 1px; height: 28px; background: #e3dfc9"></span>
+<sc-for list="{{tools}}" as="tl" hint-placeholder-count="3">
+<button type="button" aria-pressed="{{tl.pressed}}" onClick="{{tl.on}}" style="{{tl.style}}">{{tl.l}}</button>
+</sc-for>
+<span style="margin-inline-start: auto; font-size: 13px; color: #5b5f86">{{hint}}</span>
+</div>
+
+<div style="overflow-x: auto; padding-bottom: 4px">
+<div role="group" aria-label="Seat layout, front of the bus on the left" style="display: inline-flex; flex-direction: column; gap: 6px; padding: 16px 20px; border: 2px solid #262a67; border-radius: 28px 12px 12px 28px; background: #fbfaf3">
+<sc-for list="{{lanes}}" as="ln" hint-placeholder-count="5">
+<div style="display: flex; gap: 6px; align-items: center">
+<sc-for list="{{ln.cells}}" as="c" hint-placeholder-count="13">
+<sc-if value="{{c.isSeat}}" hint-placeholder-val="{{true}}"><button type="button" class="te-seat" aria-label="{{c.aria}}" onClick="{{c.on}}" style="{{c.style}}">{{c.id}}</button></sc-if>
+<sc-if value="{{c.isFixed}}" hint-placeholder-val="{{false}}"><span role="img" aria-label="{{c.aria}}" style="{{c.style}}">{{c.id}}</span></sc-if>
+</sc-for>
+</div>
+</sc-for>
+</div>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center; font-size: 13px">
+<span style="display: inline-flex; align-items: center; gap: 6px"><span style="width: 18px; height: 18px; border-radius: 5px; background: #fff; border: 1px solid #7b7fa6"></span>Bookable</span>
+<span style="display: inline-flex; align-items: center; gap: 6px"><span style="width: 18px; height: 18px; border-radius: 5px; background: #262a67"></span>Staff (moderator)</span>
+<span style="display: inline-flex; align-items: center; gap: 6px"><span style="width: 18px; height: 18px; border-radius: 5px; background: #fde8e6; border: 1px dashed #b42318"></span>Unavailable</span>
+<span style="display: inline-flex; align-items: center; gap: 6px"><span style="width: 18px; height: 18px; border-radius: 5px; background: #e3dfc9"></span>Driver · door</span>
+<span style="margin-inline-start: auto; font-size: 15px; font-weight: 600">{{summary}}</span>
+</div>
+</section>
+</div>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { type: 0, extra: 0, tool: 'select', marks: { '1A': 'staff', '11C': 'off' }, sel: '' }; }
+  renderVals() {
+    const TY = [
+      { n: 'Mercedes Tourismo', seats: 49, rows: 12, use: '4 vehicles · AlUla Heritage Weekend, Red Sea Snorkel Day' },
+      { n: 'Toyota Coaster', seats: 30, rows: 7, guide: true, use: '3 vehicles · Edge of the World Hike' },
+      { n: 'Toyota Hiace', seats: 14, rows: 3, guide: true, use: '2 vehicles · Al Noor School · Grade 4 Zoo Day' }
+    ];
+    const ty = TY[this.state.type];
+    const nRows = ty.rows + this.state.extra;
+    const lanesDef = ['A', 'B', 'aisle', 'C', 'D'];
+    const marks = this.state.marks;
+    const base = 'width: 44px; height: 40px; flex-shrink: 0; box-sizing: border-box; border-radius: 8px; font: inherit; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; ';
+    let total = 0, staff = 0, off = 0;
+    const lanes = lanesDef.map((lane) => {
+      const cells = [];
+      for (let r = 0; r <= nRows; r++) {
+        if (r === 0) {
+          if (lane === 'A') cells.push({ isSeat: false, isFixed: true, id: 'DRV', aria: 'Driver seat', style: base + 'background: #e3dfc9; color: #262a67;' });
+          else if (lane === 'D') cells.push({ isSeat: false, isFixed: true, id: 'DOOR', aria: 'Front door', style: base + 'background: #e3dfc9; color: #262a67; font-size: 10px;' });
+          else if (lane === 'B' && ty.guide) { total++; const gm = marks['G1'] || ''; if (gm === 'staff') staff++; if (gm === 'off') off++; cells.push({ isSeat: true, isFixed: false, id: 'G1', aria: 'Guide seat G1', style: base + 'cursor: pointer; ' + (gm === 'staff' ? 'background: #262a67; color: #f6f3e4; border: 1px solid #262a67;' : 'background: #ffffff; color: #262a67; border: 1px solid #7b7fa6;'), on: () => { const nm = { ...marks }; if (this.state.tool === 'select') { this.setState({ sel: 'G1' }); return; } if (nm.G1 === this.state.tool) delete nm.G1; else nm.G1 = this.state.tool; this.setState({ marks: nm, sel: 'G1' }); } }); }
+          else cells.push({ isSeat: false, isFixed: true, id: '', aria: 'Empty', style: base + 'background: transparent;' });
+          continue;
+        }
+        const last = r === nRows;
+        if (lane === 'aisle' && !last) { cells.push({ isSeat: false, isFixed: true, id: r === 1 ? 'AISLE' : '', aria: 'Aisle', style: base + 'height: 20px; background: transparent; color: #5b5f86; font-size: 9px; font-weight: 600;' }); continue; }
+        const letter = lane === 'aisle' ? 'E' : lane;
+        const id = r + letter;
+        const m = marks[id] || '';
+        total++; if (m === 'staff') staff++; if (m === 'off') off++;
+        const isSel = this.state.sel === id;
+        const look = m === 'staff' ? 'background: #262a67; color: #f6f3e4; border: 1px solid #262a67;' : (m === 'off' ? 'background: #fde8e6; color: #b42318; border: 1px dashed #b42318; text-decoration: line-through;' : 'background: #ffffff; color: #262a67; border: 1px solid #7b7fa6;');
+        cells.push({ isSeat: true, isFixed: false, id, aria: 'Seat ' + id + ', ' + (m === 'staff' ? 'staff seat' : (m === 'off' ? 'unavailable' : 'bookable')),
+          style: base + 'cursor: pointer; ' + look + (isSel ? ' box-shadow: 0 0 0 3px #fb8030;' : ''),
+          on: () => {
+            const t = this.state.tool;
+            if (t === 'select') { this.setState({ sel: id }); return; }
+            const nm = { ...marks };
+            if (nm[id] === t) delete nm[id]; else nm[id] = t;
+            this.setState({ marks: nm, sel: id });
+          } });
+      }
+      return { cells };
+    });
+    const toolDefs = [['select', 'Select'], ['staff', 'Mark staff seat'], ['off', 'Mark unavailable']];
+    const tools = toolDefs.map((d) => {
+      const on = this.state.tool === d[0];
+      return { l: d[1], pressed: on ? 'true' : 'false', on: () => this.setState({ tool: d[0] }),
+        style: 'height: 40px; padding: 0 14px; border-radius: 8px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; ' + (on ? 'background: #262a67; color: #f6f3e4; border: 1px solid #262a67;' : 'background: #fff; color: #262a67; border: 1px solid #7b7fa6;') };
+    });
+    const types = TY.map((t, i) => {
+      const on = i === this.state.type;
+      return { n: t.n, d: t.seats + ' seats · ' + t.use.split(' · ')[0], cur: on ? 'true' : 'false', on: () => this.setState({ type: i, extra: 0, sel: '' }),
+        style: 'display: flex; flex-direction: column; align-items: flex-start; gap: 2px; padding: 12px; border-radius: 12px; font: inherit; color: #262a67; text-align: start; cursor: pointer; ' + (on ? 'background: #ffe7dc; border: 2px solid #fb8030;' : 'background: #fff; border: 1px solid #e3dfc9;') };
+    });
+    const hint = this.state.tool === 'select' ? (this.state.sel ? 'Selected ' + this.state.sel : 'Click a seat to select it') : 'Click seats to ' + (this.state.tool === 'staff' ? 'reserve them for staff' : 'block them');
+    return {
+      types, lanes, tools, hint, typeName: ty.n + ' · ' + total + ' seats', typeUse: ty.use, rowsN: nRows,
+      summary: total + ' seats · ' + staff + ' staff · ' + off + ' unavailable · ' + (total - staff - off) + ' bookable',
+      addRow: () => this.setState({ extra: this.state.extra + 1 }),
+      removeRow: () => this.setState({ extra: Math.max(-(ty.rows - 1), this.state.extra - 1) })
+    };
+  }
+}
+</script>
+</body>
+</html>

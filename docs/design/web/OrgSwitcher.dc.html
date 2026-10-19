@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Organization · Switch organization</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+.te-org:hover{background:#f6f3e4}
+</style>
+</helmet>
+<div style="position: relative; min-height: 1000px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="OrgNav" active="Overview" hint-size="248px,1000px"></dc-import></div>
+<main aria-hidden="true" style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 24px">
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; color: #5b5f86">Tuesday 14 October</span><span style="font-size: 28px; line-height: 36px; font-weight: 600">Good morning, Mona</span></div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px">
+<div style="height: 112px; border-radius: 20px; background: #ffffff"></div><div style="height: 112px; border-radius: 20px; background: #ffffff"></div><div style="height: 112px; border-radius: 20px; background: #ffffff"></div><div style="height: 112px; border-radius: 20px; background: #ffffff"></div>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 24px"><div style="flex: 3 1 480px; height: 300px; border-radius: 20px; background: #ffffff"></div><div style="flex: 2 1 320px; height: 300px; border-radius: 20px; background: #ffffff"></div></div>
+</main>
+
+<div style="position: absolute; inset: 0; background: rgba(16,18,48,.45)"></div>
+
+<section role="dialog" aria-modal="true" aria-labelledby="sw-h" style="position: absolute; top: 76px; left: 16px; width: min(460px, calc(100% - 32px)); box-sizing: border-box; background: #ffffff; border-radius: 20px; box-shadow: 0 24px 60px rgba(16,18,48,.28); padding: 20px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 2px"><h2 id="sw-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">Switch organization</h2><span style="font-size: 13px; color: #5b5f86">Organizations that gave access to <strong style="color: #262a67">mona.saleh@outlook.com</strong></span></div>
+<a href="OrgHome.dc.html" aria-label="Close" style="width: 40px; height: 40px; flex-shrink: 0; border-radius: 999px; display: flex; align-items: center; justify-content: center; color: #262a67; background: #f6f3e4"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></a>
+</div>
+
+<label for="sw-q" style="position: relative; display: block">
+<span style="position: absolute; left: 1px; top: 1px; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Search organizations</span>
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5b5f86" stroke-width="2" stroke-linecap="round" aria-hidden="true" style="position: absolute; left: 14px; top: 15px"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM20 20l-4-4"></path></svg>
+<input id="sw-q" value="{{q}}" onInput="{{onQ}}" placeholder="Search by name" style="width: 100%; height: 48px; box-sizing: border-box; padding: 0 14px 0 42px; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; font-family: inherit; font-size: 15px; color: #262a67">
+</label>
+
+<div role="list" style="display: flex; flex-direction: column; gap: 4px">
+<sc-for list="{{orgs}}" as="o" hint-placeholder-count="4">
+<a role="listitem" href="{{o.href}}" class="te-org" aria-current="{{o.cur}}" style="{{o.style}}">
+<img src="{{o.logo}}" alt="" style="{{o.tile}}">
+<span style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px">
+<span style="font-size: 15px; font-weight: 600; color: #262a67">{{o.n}}</span>
+<span style="font-size: 13px; color: #5b5f86">{{o.role}} · {{o.plan}} · {{o.city}}</span>
+<sc-if value="{{o.hasNote}}" hint-placeholder-val="{{false}}"><span style="{{o.noteStyle}}">{{o.note}}</span></sc-if>
+</span>
+<sc-if value="{{o.isCur}}" hint-placeholder-val="{{false}}"><span style="display: inline-flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 600; color: #1f7a4d"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg>Current</span></sc-if>
+</a>
+</sc-for>
+<sc-if value="{{none}}" hint-placeholder-val="{{false}}"><p style="margin: 0; padding: 12px; font-size: 14px; color: #5b5f86">No organization matches “{{q}}”.</p></sc-if>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 8px; padding: 12px; border-radius: 12px; background: #fdf0d5">
+<span style="font-size: 12px; font-weight: 700; letter-spacing: .5px; color: #8a4b00">PENDING INVITATION</span>
+<div style="display: flex; align-items: center; gap: 12px">
+<img src="../assets/604626c00c7762fd3f4718f28e2a3ed2.svg" alt="" style="width: 36px; height: 36px; flex-shrink: 0; border-radius: 10px; object-fit: cover">
+<span style="flex-grow: 1; display: flex; flex-direction: column"><span style="font-size: 15px; font-weight: 600">Taif Heritage Tours</span><span style="font-size: 13px; color: #5b5f86">Invited you as Support · expires in 6 days</span></span>
+</div>
+<sc-if value="{{inviteOpen}}" hint-placeholder-val="{{true}}">
+<div style="display: flex; gap: 8px"><button onClick="{{accept}}" style="height: 40px; padding: 0 16px; border-radius: 12px; border: none; background: #262a67; color: #f6f3e4; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer">Accept</button><button onClick="{{decline}}" style="height: 40px; padding: 0 16px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer">Decline</button></div>
+</sc-if>
+<sc-if value="{{inviteDone}}" hint-placeholder-val="{{false}}"><span role="status" style="font-size: 14px; font-weight: 600; color: #262a67">{{inviteMsg}}</span></sc-if>
+</div>
+
+<p style="margin: 0; font-size: 13px; line-height: 19px; color: #5b5f86">Switching opens that organization's dashboard with only its data and your role there. Nothing is shared between organizations, and each switch is recorded in that organization's audit log.</p>
+<div style="display: flex; justify-content: space-between; align-items: center; padding-top: 10px; border-top: 1px solid #e3dfc9">
+<a href="OrgAccess.dc.html" style="font-size: 14px; font-weight: 600">Manage my organizations</a>
+<a href="#" style="font-size: 14px; font-weight: 600; color: #262a67">Register a new organization</a>
+</div>
+</section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { q: '', invite: 'open' }; }
+  renderVals() {
+    const O = [
+      { n: 'Sunrise Tours Co.', i: 'ST', logo: '../assets/697a49af6be5a077ae1851c1a8b9dfcd.svg', bg: '#f89e23', role: 'Owner', plan: 'Growth', city: 'Riyadh', href: 'OrgHome.dc.html', cur: true },
+      { n: 'Desert Events LLC', i: 'DE', logo: '../assets/472625e3fa0e959013f492568148458e.svg', bg: '#fb8030', role: 'Operations manager', plan: 'Starter', city: 'Dubai', href: 'OrgSwitched.dc.html' },
+      { n: 'Najd Adventures', i: 'NA', logo: '../assets/1134174426625e453cca9ca4339809ce.svg', bg: '#e6e8f5', role: 'Finance · view only', plan: 'Enterprise', city: 'Riyadh', href: 'OrgSwitched.dc.html', note: 'Asks for your authenticator code when you switch', tone: 'info' },
+      { n: 'Red Sea Diving Club', i: 'RS', logo: '../assets/f79d619b2dadb265155b85ab880f3c79.svg', bg: '#e3dfc9', role: 'Support', plan: 'Plan ended', city: 'Jeddah', href: 'ShStaffLocked.dc.html', note: 'Paused until the owner renews · invoices stay readable', tone: 'warn' }
+    ];
+    const q = (this.state.q || '').trim().toLowerCase();
+    const orgs = O.filter((o) => !q || o.n.toLowerCase().includes(q)).map((o) => ({ ...o, isCur: !!o.cur, cur: o.cur ? 'true' : 'false', hasNote: !!o.note,
+      noteStyle: 'align-self: flex-start; margin-top: 2px; padding: 1px 8px; border-radius: 999px; font-size: 12px; font-weight: 600; ' + (o.tone === 'warn' ? 'background: #fdf0d5; color: #8a4b00;' : 'background: #e6e8f5; color: #262a67;'),
+      tile: 'width: 40px; height: 40px; flex-shrink: 0; border-radius: 10px; object-fit: cover',
+      style: 'display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 12px; text-decoration: none; ' + (o.cur ? 'background: #f6f3e4; box-shadow: inset 0 0 0 2px #fb8030;' : '') }));
+    const inv = this.state.invite;
+    return { q: this.state.q, onQ: (e) => this.setState({ q: e.target.value }), orgs, none: orgs.length === 0,
+      inviteOpen: inv === 'open', inviteDone: inv !== 'open', inviteMsg: inv === 'accepted' ? 'Accepted. Taif Heritage Tours is now in your list.' : 'Declined. Taif Heritage Tours was told.',
+      accept: () => this.setState({ invite: 'accepted' }), decline: () => this.setState({ invite: 'declined' }) };
+  }
+}
+</script>
+</body>
+</html>

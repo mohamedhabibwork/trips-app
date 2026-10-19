@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Web · Confirmation dialog</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="position: relative; min-height: 1000px; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+
+<sc-if value="{{isAdmin}}" hint-placeholder-val="{{true}}">
+<div style="min-height: 1000px; display: flex; flex-wrap: wrap">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="AdmNav" active="Users" hint-size="248px,1000px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 24px">
+<a href="AdmUsers.dc.html" style="font-size: 14px; font-weight: 600">Users</a>
+<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center; justify-content: space-between">
+<div style="display: flex; gap: 16px; align-items: center">
+<img src="../assets/f1b41fb1b201b088e5114338fbe087be.svg" alt="" style="width: 64px; height: 64px; flex-shrink: 0; border-radius: 999px; object-fit: cover">
+<div style="display: flex; flex-direction: column; gap: 4px"><h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 700">Mahmoud Saeed</h1><span style="font-size: 15px; color: #5b5f86">Platform driver · Cairo, Egypt · Professional plan</span></div>
+<span style="{{statusStyle}}">{{statusWord}}</span>
+</div>
+<button type="button" onClick="{{open}}" style="height: 48px; padding: 0 20px; border: 0; border-radius: 12px; background: #b42318; color: #ffffff; font: inherit; font-size: 15px; font-weight: 700; cursor: pointer">Suspend driver</button>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px">
+<div style="padding: 18px 20px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 13px; color: #5b5f86">Upcoming trips</span><span style="font-size: 26px; font-weight: 700">2</span><span style="font-size: 13px; color: #5b5f86">Next: Siwa Oasis Escape, Thu 5 Nov</span></div>
+<div style="padding: 18px 20px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 13px; color: #5b5f86">Next payout · Mon 19 Oct</span><span style="font-size: 26px; font-weight: 700">3,420 EGP</span><span style="font-size: 13px; color: #5b5f86">Weekly, 06:00 Cairo time</span></div>
+<div style="padding: 18px 20px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 13px; color: #5b5f86">Open reports</span><span style="font-size: 26px; font-weight: 700">2</span><span style="font-size: 13px; color: #5b5f86">Conduct · from Nile Horizon Tours</span></div>
+</div>
+</main>
+</div>
+</sc-if>
+
+<sc-if value="{{isTraveler}}" hint-placeholder-val="{{false}}">
+<header style="border-bottom: 1px solid #e3dfc9">
+<div style="max-width: 1200px; margin: 0 auto; box-sizing: border-box; padding: 14px 24px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 32px">
+<a href="WebHome.dc.html" aria-label="Trips Enjoy home" style="display: flex; flex-grow: 1"><img src="../assets/1fbce194fcb16bf54904c32c189fca31.svg" alt="Trips Enjoy" style="height: 40px; width: auto"></a>
+<a href="WebBookings.dc.html" style="padding: 10px 0; font-size: 15px; font-weight: 600; color: #262a67; text-decoration: none">My bookings</a>
+</div>
+</header>
+<main style="max-width: 800px; margin: 0 auto; box-sizing: border-box; padding: 40px 24px; display: flex; flex-direction: column; gap: 20px">
+<h1 style="margin: 0; font-size: 32px; line-height: 40px; font-weight: 700">Privacy and data</h1>
+<div style="padding: 20px; border-radius: 20px; background: #ffffff; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between">
+<div style="flex: 1 1 320px; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 18px; font-weight: 600">Delete my account</span><span style="font-size: 15px; color: #5b5f86">You have 30 days to change your mind.</span></div>
+<button type="button" onClick="{{open}}" style="height: 48px; padding: 0 20px; border: 0; border-radius: 12px; background: #b42318; color: #ffffff; font: inherit; font-size: 15px; font-weight: 700; cursor: pointer">Delete account</button>
+</div>
+</main>
+</sc-if>
+
+<sc-if value="{{toast}}" hint-placeholder-val="{{false}}">
+<div role="status" style="position: absolute; left: 50%; transform: translateX(-50%); bottom: 32px; width: calc(100% - 48px); max-width: 560px; box-sizing: border-box; padding: 14px 18px; border-radius: 12px; background: {{toastBg}}; color: {{toastFg}}; display: flex; gap: 10px; align-items: flex-start; font-size: 15px; line-height: 22px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 1px"><path d="{{toastIcon}}"></path></svg><span>{{toastText}}</span></div>
+</sc-if>
+
+<sc-if value="{{dialogOpen}}" hint-placeholder-val="{{true}}">
+<div style="position: absolute; inset: 0; background: rgba(16,18,48,.45); display: flex; align-items: center; justify-content: center; padding: 24px; box-sizing: border-box">
+<div role="dialog" aria-modal="true" aria-labelledby="wc-title" aria-describedby="wc-desc" style="width: 100%; max-width: 520px; box-sizing: border-box; padding: 28px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; gap: 14px; align-items: flex-start">
+<span style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 999px; background: #fde8e6; color: #b42318; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9.5 17h-19zM12 10v4M12 17h.01"></path></svg></span>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<h2 id="wc-title" style="margin: 0; font-size: 22px; line-height: 28px; font-weight: 700">{{title}}</h2>
+<p id="wc-desc" style="margin: 0; font-size: 15px; line-height: 22px; color: #5b5f86">{{effect}}</p>
+</div>
+</div>
+
+<ul style="margin: 0; padding: 14px 16px 14px 34px; border-radius: 12px; background: #f6f3e4; display: flex; flex-direction: column; gap: 6px; font-size: 14px; line-height: 20px">
+<sc-for list="{{points}}" as="p" hint-placeholder-count="3"><li>{{p}}</li></sc-for>
+</ul>
+
+<sc-if value="{{needsReason}}" hint-placeholder-val="{{true}}">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="wc-reason" style="font-size: 14px; font-weight: 600">Reason (required, shared with the driver)</label>
+<textarea id="wc-reason" rows="3" aria-invalid="{{blocked}}" onInput="{{type}}" style="{{reasonStyle}}" placeholder="What happened and which rule it breaks"></textarea>
+<sc-if value="{{blocked}}" hint-placeholder-val="{{false}}"><span role="alert" style="font-size: 13px; color: #b42318">Add a reason before suspending. It's sent to Mahmoud and kept in the audit log.</span></sc-if>
+<span style="font-size: 13px; color: #5b5f86">This action is recorded in the audit log with your name and the time.</span>
+</div>
+</sc-if>
+
+<div style="display: flex; flex-wrap: wrap; gap: 12px">
+<button type="button" onClick="{{cancel}}" style="flex: 1 1 160px; height: 48px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Cancel</button>
+<button type="button" onClick="{{confirm}}" style="flex: 1 1 160px; height: 48px; border: 0; border-radius: 12px; background: #b42318; color: #ffffff; font: inherit; font-size: 15px; font-weight: 700; cursor: pointer">{{action}}</button>
+</div>
+</div>
+</div>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"example":{"editor":"enum","options":["admin · suspend user","traveler · delete account"],"default":"admin · suspend user"},"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { open: true, reason: '', blocked: false, result: null }; }
+  renderVals() {
+    const s = this.state;
+    const admin = (this.props.example ?? 'admin · suspend user') !== 'traveler · delete account';
+    const A = {
+      title: 'Suspend Mahmoud Saeed?',
+      effect: 'Mahmoud is signed out everywhere and can’t accept offers or start trips until an admin lifts the suspension.',
+      points: ['His 2 upcoming trips go back to the organizers to reassign', 'The 3,420 EGP already earned is still paid on Mon 19 Oct', 'He is told by email and SMS, with your reason'],
+      action: 'Suspend driver', needsReason: true
+    };
+    const T = {
+      title: 'Delete your account?',
+      effect: 'Your account is closed now and deleted for good on Tue 17 Nov. Signing in before Mon 16 Nov, 23:59 restores it.',
+      points: ['You can’t book or pay during these 30 days', 'Future bookings are cancelled and refunded when the account is deleted', 'Trip records are kept 5 years and payment records 7 years, as the law requires'],
+      action: 'Delete account', needsReason: false
+    };
+    const c = admin ? A : T;
+    const ok = s.result === 'confirmed', cancelled = s.result === 'cancelled';
+    const red = s.blocked;
+    return {
+      isAdmin: admin, isTraveler: !admin,
+      dialogOpen: s.open,
+      title: c.title, effect: c.effect, points: c.points, action: c.action, needsReason: c.needsReason,
+      blocked: red,
+      reasonStyle: 'box-sizing: border-box; border-radius: 8px; border: 1px solid ' + (red ? '#b42318' : '#7b7fa6') + '; background: #ffffff; padding: 10px 14px; font: inherit; font-size: 16px; line-height: 22px; color: #262a67; resize: vertical',
+      statusWord: admin && ok ? 'Suspended' : 'Active',
+      statusStyle: 'padding: 4px 12px; border-radius: 999px; font-size: 13px; font-weight: 700; ' + (admin && ok ? 'background: #fde8e6; color: #b42318' : 'background: #e3f3ea; color: #1f7a4d'),
+      toast: !s.open && (ok || cancelled),
+      toastBg: ok ? '#262a67' : '#ffffff',
+      toastFg: ok ? '#f6f3e4' : '#262a67',
+      toastIcon: ok ? 'M5 12.5l4.5 4.5L19 7' : 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 11v5M12 8h.01',
+      toastText: ok ? (admin ? 'Mahmoud Saeed is suspended. Logged as AUD-2026-118204 by Reem Othman at 14:20.' : 'Deletion requested. We’ve emailed you the details and you’ll be signed out now.') : 'Nothing changed.',
+      type: e => this.setState({ reason: e && e.target ? e.target.value : s.reason, blocked: false }),
+      open: () => this.setState({ open: true, result: null, blocked: false }),
+      cancel: () => this.setState({ open: false, result: 'cancelled', blocked: false }),
+      confirm: () => {
+        if (c.needsReason && !(s.reason || '').trim()) { this.setState({ blocked: true }); return; }
+        this.setState({ open: false, result: 'confirmed' });
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>

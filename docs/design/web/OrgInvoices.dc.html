@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Org · Invoices</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+.te-row:hover{background:#fbfaf3}
+.te-act:hover{background:#f6f3e4}
+</style>
+</helmet>
+<div style="min-height: 1040px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="OrgNav" active="Invoices" hint-size="248px,1040px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 24px">
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; color: #5b5f86">ZATCA e-invoicing · Phase 2 · VAT 310245678900003</span><h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Invoices</h1></div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px">
+<a href="OrgSettlements.dc.html" style="height: 48px; box-sizing: border-box; padding: 0 20px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h13l-3-3M20 16H7l3 3"></path></svg>Settlements</a>
+<a href="OrgInvoiceNew.dc.html" style="height: 48px; box-sizing: border-box; padding: 0 20px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>New invoice / credit note</a>
+</div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px">
+<sc-for list="{{kpis}}" as="k" hint-placeholder-count="4">
+<div style="padding: 18px 20px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 14px; color: #5b5f86">{{k.l}}</span>
+<span style="font-size: 26px; line-height: 32px; font-weight: 700">{{k.v}} <span style="font-size: 15px; font-weight: 500; color: #5b5f86">{{k.u}}</span></span>
+<span style="{{k.ds}}">{{k.d}}</span>
+</div>
+</sc-for>
+</div>
+
+<section aria-labelledby="inv-h" style="background: #ffffff; border-radius: 20px; padding: 20px 0 8px; display: flex; flex-direction: column">
+<h2 id="inv-h" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); margin: 0">Invoice list</h2>
+<div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; align-items: center; padding: 0 20px 16px">
+<div role="tablist" aria-label="Invoice type" style="display: flex; flex-wrap: wrap; gap: 4px; padding: 4px; border-radius: 12px; background: #f6f3e4">
+<sc-for list="{{tabs}}" as="t" hint-placeholder-count="4">
+<button type="button" role="tab" aria-selected="{{t.sel}}" onClick="{{t.pick}}" style="{{t.style}}">{{t.l}}<span style="{{t.cs}}">{{t.n}}</span></button>
+</sc-for>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center">
+<label style="position: relative; display: flex; align-items: center"><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Search invoices</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5b5f86" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position: absolute; left: 12px"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM20 20l-4-4"></path></svg><input type="search" placeholder="Number, customer, trip" style="height: 44px; width: 220px; max-width: 100%; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 12px 0 38px; font: inherit; font-size: 15px; color: #262a67"></label>
+<label style="display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600">ZATCA<select style="height: 44px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 10px; font: inherit; font-size: 15px; font-weight: 500; color: #262a67"><option>All statuses</option><option>Cleared</option><option>Reported</option><option>Pending</option><option>Rejected</option></select></label>
+</div>
+</div>
+
+<div role="note" style="margin: 0 20px 12px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding: 10px 14px; border-radius: 12px; background: #f6f3e4; font-size: 14px; line-height: 20px">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 11v5M12 8h.01"></path></svg>
+<span style="flex: 1 1 320px">{{tabNote}}</span>
+</div>
+
+<div role="tabpanel" style="overflow-x: auto">
+<table style="width: 100%; min-width: 1140px; border-collapse: collapse; font-size: 14px">
+<thead><tr style="color: #5b5f86; font-size: 13px">
+<th scope="col" style="text-align: start; padding: 10px 12px 10px 20px; font-weight: 600">Number · date</th>
+<th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">{{partyHead}}</th>
+<th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Type</th>
+<th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Trip / reference</th>
+<th scope="col" style="text-align: end; padding: 10px 12px; font-weight: 600">Excl. VAT</th>
+<th scope="col" style="text-align: end; padding: 10px 12px; font-weight: 600">VAT 15%</th>
+<th scope="col" style="text-align: end; padding: 10px 12px; font-weight: 600">Total SAR</th>
+<th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Payment</th>
+<th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">ZATCA</th>
+<th scope="col" style="text-align: end; padding: 10px 20px 10px 12px; font-weight: 600">Files</th>
+</tr></thead>
+<tbody>
+<sc-for list="{{rows}}" as="r" hint-placeholder-count="6">
+<tr class="te-row" style="border-top: 1px solid #e3dfc9; vertical-align: top">
+<td style="padding: 12px 12px 12px 20px"><span style="display: flex; flex-direction: column; gap: 2px"><a href="{{r.href}}" style="font-weight: 600; color: #262a67; white-space: nowrap">{{r.no}}</a><span style="font-size: 13px; color: #5b5f86">{{r.date}}</span></span></td>
+<td style="padding: 12px"><span style="display: flex; flex-direction: column; gap: 2px"><span style="font-weight: 600">{{r.party}}</span><span style="font-size: 13px; color: #5b5f86">{{r.partySub}}</span></span></td>
+<td style="padding: 12px"><span style="{{r.ts}}">{{r.type}}</span></td>
+<td style="padding: 12px; color: #5b5f86; max-width: 200px">{{r.trip}}</td>
+<td style="padding: 12px; text-align: end; white-space: nowrap">{{r.ex}}</td>
+<td style="padding: 12px; text-align: end; white-space: nowrap">{{r.vat}}</td>
+<td style="padding: 12px; text-align: end; white-space: nowrap; font-weight: 700">{{r.tot}}</td>
+<td style="padding: 12px"><span style="display: flex; flex-direction: column; gap: 4px; align-items: flex-start"><span style="{{r.ps}}">{{r.pay}}</span><span style="font-size: 12px; color: #5b5f86">{{r.paySub}}</span></span></td>
+<td style="padding: 12px"><span style="display: flex; flex-direction: column; gap: 4px; align-items: flex-start"><span style="{{r.zs}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{r.zi}}"></path></svg>{{r.z}}</span><sc-if value="{{r.rej}}" hint-placeholder-val="{{false}}"><span style="font-size: 12px; line-height: 16px; color: #b42318; max-width: 160px">{{r.reason}}</span><a href="OrgInvoiceNew.dc.html" style="font-size: 12px; font-weight: 600">Fix buyer and resubmit</a></sc-if></span></td>
+<td style="padding: 10px 20px 10px 12px; text-align: end; white-space: nowrap"><a href="../pdf/PdfInvoiceB2B.dc.html" class="te-act" aria-label="{{r.pdfL}}" style="display: inline-flex; align-items: center; vertical-align: middle; height: 32px; padding: 0 10px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; color: #262a67; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; text-decoration: none; box-sizing: border-box">PDF</a> <button type="button" class="te-act" aria-label="{{r.xmlL}}" style="height: 32px; padding: 0 10px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; color: #262a67; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer">XML</button></td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; padding: 12px 20px 8px; border-top: 1px solid #e3dfc9; font-size: 13px; color: #5b5f86"><span>{{footer}}</span><span>Invoices are stored 6 years as PDF/A-3 with embedded XML, as ZATCA requires.</span></div>
+</section>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1040}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { tab: 'b2b' }; }
+  renderVals() {
+    const base = 'display: inline-flex; align-items: center; gap: 4px; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; white-space: nowrap; ';
+    const tone = { ok: 'background: #e3f3ea; color: #1f7a4d;', warn: 'background: #fdf0d5; color: #8a4b00;', bad: 'background: #fde8e6; color: #b42318;', info: 'background: #e6e8f5; color: #262a67;', live: 'background: #ffe7dc; color: #c93a00;', plain: 'background: #f6f3e4; color: #262a67;' };
+    const ic = { check: 'M5 12.5l4.5 4.5L19 7', clock: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7v5l3 2', alert: 'M12 3l9.5 17h-19zM12 10v4M12 17h.01', minus: 'M5 12h14' };
+    const Z = { Cleared: ['ok', 'check'], Reported: ['ok', 'check'], Pending: ['warn', 'clock'], Rejected: ['bad', 'alert'], 'Not required': ['plain', 'minus'] };
+    const P = { Paid: 'ok', Unpaid: 'info', Overdue: 'bad', 'Not sent': 'plain', Scheduled: 'warn', Refunded: 'ok', 'Refund pending': 'warn', Applied: 'ok', 'Awaiting clearance': 'warn', 'Deducted from payout': 'ok' };
+    const T = { Simplified: 'plain', Standard: 'info', 'Credit note': 'live', 'Debit note': 'warn', 'Self-billed': 'plain' };
+    const mk = (a) => ({ no: a[0], date: a[1], party: a[2], partySub: a[3], type: a[4], trip: a[5], ex: a[6], vat: a[7], tot: a[8], pay: a[9], paySub: a[10], z: a[11], reason: a[12] || '', href: a[13] || 'OrgInvoice.dc.html',
+      rej: a[11] === 'Rejected', ts: base + tone[T[a[4]]], ps: base + tone[P[a[9]]], zs: base + tone[Z[a[11]][0]], zi: ic[Z[a[11]][1]], pdfL: 'Download PDF of ' + a[0], xmlL: 'Download XML of ' + a[0] });
+    const data = {
+      b2c: [
+        ['INV-ST-2026-005316', 'Mon 12 Oct · 18:04', 'Mohammed Al-Ghamdi', 'Traveler · 2 seats', 'Simplified', 'Edge of the World Hike · Sat 25 Oct', '478.26', '71.74', '550.00', 'Paid', 'mada', 'Pending'],
+        ['INV-ST-2026-005315', 'Mon 12 Oct · 11:37', 'Hessa Al-Mutairi', 'Traveler · 3 seats', 'Simplified', 'Red Sea Snorkel Day · Fri 24 Oct', '834.78', '125.22', '960.00', 'Paid', 'Apple Pay', 'Reported'],
+        ['INV-ST-2026-005314', 'Sun 11 Oct · 21:15', 'Yazeed Al-Shammari', 'Traveler · 4 seats', 'Simplified', 'Jeddah Corniche Night · Fri 17 Oct', '939.13', '140.87', '1,080.00', 'Paid', 'Visa', 'Reported'],
+        ['INV-ST-2026-005313', 'Sun 11 Oct · 09:52', 'Dana Al-Harthi', 'Traveler · 2 seats', 'Simplified', 'Taif Rose Farms · Thu 30 Oct', '956.52', '143.48', '1,100.00', 'Paid', 'mada', 'Reported'],
+        ['INV-ST-2026-004812', 'Mon 28 Sep · 20:11', 'Sara Al-Qahtani', 'VIP · 4 travelers', 'Simplified', 'AlUla Heritage Weekend · Thu 16 Oct', '5,200.00', '780.00', '5,980.00', 'Paid', 'Part refunded · CN-ST-2026-000031', 'Reported']
+      ],
+      b2b: [
+        ['B2B-ST-2026-000118', 'Wed 7 Oct · 14:20', 'Najd Engineering Co.', 'VAT 3109842210003 · CR 1010562290', 'Standard', 'Taif Rose Farms team day · Thu 30 Oct', '9,600.00', '1,440.00', '11,040.00', 'Not sent', 'Held until cleared', 'Rejected', 'Buyer VAT number invalid (BR-KSA-40). Ask the buyer to confirm their 15-digit VAT number.'],
+        ['B2B-ST-2026-000117', 'Tue 6 Oct · 10:41', 'Al Noor International School', 'PO-ANS-2291 · Net 30', 'Standard', 'Grade 6 Jeddah trip · Mon 26–Wed 28 Oct', '109,308.00', '16,396.20', '125,704.20', 'Unpaid', 'Due Thu 5 Nov', 'Cleared'],
+        ['DN-ST-2026-000004', 'Mon 12 Oct · 16:05', 'Al Noor International School', 'Ref B2B-ST-2026-000117', 'Debit note', 'Grade 6 Jeddah trip · 4 teachers added', '2,880.00', '432.00', '3,312.00', 'Awaiting clearance', 'Sent after clearance', 'Pending'],
+        ['B2B-ST-2026-000116', 'Fri 2 Oct · 09:15', 'Al Noor International School', 'PO-ANS-2264 · Net 30', 'Standard', 'Al Noor School · Grade 4 Zoo Day', '12,800.00', '1,920.00', '14,720.00', 'Paid', 'Bank transfer · Thu 8 Oct', 'Cleared'],
+        ['B2B-ST-2026-000115', 'Tue 15 Sep · 12:30', 'Al Noor International School', 'PO-ANS-2240 · Net 30', 'Standard', 'Grade 5 · Edge of the World Hike', '14,400.00', '2,160.00', '16,560.00', 'Paid', 'Bank transfer · Sun 4 Oct', 'Cleared'],
+        ['B2B-ST-2026-000112', 'Tue 1 Sep · 10:02', 'Riyadh Pharma Co.', 'PO-RP-88130 · Net 30', 'Standard', 'AlUla team retreat · Thu 10 Sep', '16,200.00', '2,430.00', '18,630.00', 'Overdue', '11 days late · reminder sent', 'Cleared']
+      ],
+      rec: [
+        ['INV-TE-2026-000944', 'Thu 1 Oct · 00:05', 'Trips Enjoy Co.', 'VAT 311098765400003', 'Standard', 'Commission 8% + payment fees · September 2026', '29,247.61', '4,387.13', '33,634.74', 'Deducted from payout', 'Statement September 2026', 'Cleared', '', 'OrgSettlement.dc.html'],
+        ['INV-TE-2026-000941', 'Thu 1 Oct · 00:05', 'Trips Enjoy Co.', 'VAT 311098765400003', 'Standard', 'Growth plan subscription · October 2026', '1,490.00', '223.50', '1,713.50', 'Paid', 'mada •• 4417 · paid on retry', 'Cleared', '', 'OrgBilling.dc.html'],
+        ['SB-KH-2026-000141', 'Tue 6 Oct · 09:12', 'Khalid Al-Harbi', 'Driver · self-billed by Trips Enjoy', 'Self-billed', 'Red Sea Snorkel Day · Bus 2 · deal finalized', '1,450.00', '217.50', '1,667.50', 'Scheduled', 'Paid from your Mon 27 Oct payout', 'Cleared', '', 'OrgDeal.dc.html'],
+        ['SB-NS-2026-000084', 'Sun 5 Oct · 17:48', 'Noura Al-Shehri', 'Photographer · self-billed by Trips Enjoy', 'Self-billed', 'AlUla Heritage Weekend · trip photography', '900.00', '135.00', '1,035.00', 'Scheduled', 'Paid from your Mon 20 Oct payout', 'Cleared', '', 'OrgDeals.dc.html'],
+        ['SB-KH-2026-000137', 'Mon 14 Sep · 08:30', 'Khalid Al-Harbi', 'Driver · self-billed by Trips Enjoy', 'Self-billed', 'Jeddah Corniche Night · Bus 3 · Thu 17 Sep', '1,300.00', '195.00', '1,495.00', 'Deducted from payout', 'Statement September 2026', 'Cleared', '', 'OrgSettlement.dc.html'],
+        ['SB-NS-2026-000079', 'Fri 11 Sep · 13:02', 'Noura Al-Shehri', 'Photographer · self-billed by Trips Enjoy', 'Self-billed', 'National Day Diriyah Evening · Wed 23 Sep', '750.00', '112.50', '862.50', 'Deducted from payout', 'Statement September 2026', 'Cleared', '', 'OrgSettlement.dc.html']
+      ],
+      cn: [
+        ['CN-ST-2026-000031', 'Sun 11 Oct · 12:26', 'Sara Al-Qahtani', 'Ref INV-ST-2026-004812', 'Credit note', 'Hot-air balloon cancelled (wind) · AlUla Heritage Weekend', '−826.09', '−123.91', '−950.00', 'Refunded', 'To Visa •• 1182 · 3–5 days', 'Reported'],
+        ['CN-ST-2026-000030', 'Sat 10 Oct · 19:40', 'Abdulrahman Al-Dossary', 'Ref INV-ST-2026-005107', 'Credit note', 'Booking cancelled · Red Sea Snorkel Day', '−556.52', '−83.48', '−640.00', 'Refund pending', 'To mada · 3–5 days', 'Pending'],
+        ['CN-ST-2026-000029', 'Thu 8 Oct · 08:14', 'Lama Al-Otaibi', 'Ref INV-ST-2026-004990', 'Credit note', '2 seats cancelled · Jeddah Corniche Night', '−313.04', '−46.96', '−360.00', 'Refunded', 'To mada · Thu 8 Oct', 'Reported'],
+        ['CN-ST-2026-000028', 'Wed 7 Oct · 10:00', 'Najd Engineering Co.', 'Ref B2B-ST-2026-000109', 'Credit note', 'Lunch package not served · Diriyah team evening', '−1,200.00', '−180.00', '−1,380.00', 'Applied', 'Offset on next invoice', 'Cleared']
+      ]
+    };
+    const notes = {
+      b2c: 'Simplified tax invoices are issued automatically for every booking with Sunrise Tours Co. as seller, and reported to ZATCA within 24 hours. Travelers download them from their receipts.',
+      b2b: 'Standard tax invoices to schools and companies are cleared by ZATCA before they reach the buyer. Buyers pay you directly by bank transfer, so these never appear in settlements.',
+      rec: 'Invoices issued to you: Trips Enjoy subscription and commission, and self-billed invoices that Trips Enjoy issues on behalf of drivers and photographers after a deal is finalized.',
+      cn: 'Credit notes reverse all or part of an invoice after a refund or cancellation. Each one references its original invoice.'
+    };
+    const heads = { b2c: 'Traveler', b2b: 'Customer', rec: 'Supplier', cn: 'Customer' };
+    const foot = { b2c: 'Showing 5 of 498 simplified invoices in October', b2b: 'Showing 6 of 24 standard invoices and notes this year', rec: 'Showing 6 of 41 received invoices this year', cn: 'Showing 4 of 11 credit notes in October' };
+    const L = [['b2c', 'Issued to travelers (B2C)', '498'], ['b2b', 'Issued to businesses (B2B)', '6'], ['rec', 'Received', '6'], ['cn', 'Credit notes', '11']];
+    const tab = this.state.tab;
+    const tabs = L.map(([id, l, n]) => {
+      const on = id === tab;
+      return { l, n, sel: on ? 'true' : 'false', pick: () => this.setState({ tab: id }),
+        style: 'height: 40px; padding: 0 14px; border: 0; border-radius: 8px; font: inherit; font-size: 14px; font-weight: ' + (on ? '700; background: #262a67; color: #f6f3e4;' : '600; background: transparent; color: #262a67;') + ' display: flex; align-items: center; gap: 8px; cursor: pointer',
+        cs: 'padding: 0 7px; border-radius: 999px; font-size: 12px; font-weight: 700; line-height: 18px; ' + (on ? 'background: #31367a; color: #f6f3e4;' : 'background: #ffffff; color: #262a67;') };
+    });
+    const kpis = [
+      { l: 'Issued in October', v: '514', u: 'invoices', d: '498 simplified · 5 standard · 11 credit notes', ds: 'font-size: 13px; color: #5b5f86' },
+      { l: 'VAT collected · October', v: '85,150.98', u: 'SAR', d: 'B2C 66,834.78 · B2B 18,316.20', ds: 'font-size: 13px; color: #5b5f86' },
+      { l: 'Unpaid B2B', v: '144,334.20', u: 'SAR', d: '2 invoices · next due Thu 5 Nov', ds: 'font-size: 13px; font-weight: 600; color: #262a67' },
+      { l: 'Overdue', v: '18,630.00', u: 'SAR', d: 'Riyadh Pharma Co. · 11 days late', ds: 'font-size: 13px; font-weight: 600; color: #b42318' }
+    ];
+    return { kpis, tabs, rows: data[tab].map(mk), tabNote: notes[tab], partyHead: heads[tab], footer: foot[tab] };
+  }
+}
+</script>
+</body>
+</html>

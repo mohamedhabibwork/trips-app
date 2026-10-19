@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Org · Trip reports</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="min-height: 1000px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="OrgNav" active="Trips" hint-size="248px,1000px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 24px">
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<a href="OrgTrip.dc.html" style="display: inline-flex; align-items: center; gap: 4px; font-size: 14px; font-weight: 600; text-decoration: none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg>AlUla Heritage Weekend</a>
+<h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Trip reports</h1>
+<span style="font-size: 15px; color: #5b5f86">One report per vehicle from its moderator. Trip ended Sat 18 Oct · 4 buses · 172 travelers booked</span>
+</div>
+<a href="OrgTripLive.dc.html" style="height: 48px; box-sizing: border-box; padding: 0 20px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px; text-decoration: none">Check-in log</a>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px">
+<sc-for list="{{cards}}" as="c" hint-placeholder-count="4">
+<button type="button" aria-pressed="{{c.pressed}}" onClick="{{c.on}}" style="{{c.style}}">
+<span style="display: flex; justify-content: space-between; align-items: center; gap: 8px; width: 100%"><span style="font-size: 18px; font-weight: 700">{{c.bus}}</span><span style="{{c.ss}}">{{c.s}}</span></span>
+<span style="font-size: 14px; color: #5b5f86">{{c.mod}}</span>
+<span style="font-size: 15px; font-weight: 600">{{c.counts}}</span>
+<span style="font-size: 13px; color: #5b5f86">{{c.when}}</span>
+</button>
+</sc-for>
+</div>
+
+<section aria-labelledby="det-h" style="background: #ffffff; border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; align-items: flex-start">
+<div style="display: flex; flex-direction: column; gap: 2px"><h2 id="det-h" style="margin: 0; font-size: 22px; line-height: 28px; font-weight: 600">{{d.bus}} · {{d.vehicle}}</h2><span style="font-size: 14px; color: #5b5f86">Moderator {{d.mod}} · driver {{d.drv}}</span></div>
+<span style="{{d.ss}}">{{d.s}}</span>
+</div>
+
+<sc-if value="{{d.pending}}" hint-placeholder-val="{{false}}">
+<div role="status" style="display: flex; gap: 12px; padding: 16px; border-radius: 12px; background: #fdf0d5; color: #8a4b00">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 2px"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7v5l3 2"></path></svg>
+<span style="display: flex; flex-direction: column; gap: 4px; font-size: 15px; line-height: 22px"><strong>Report not submitted yet</strong><span>Bus 3 finished at 22:05. Your operations team was alerted at 23:05 (1 hour after). If there is still no report by Sun 19 Oct 22:05, platform admin is alerted too.</span><span>Check-in log shows 29 of 29 boarded on the return leg.</span></span>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px"><a href="OrgInbox.dc.html" style="height: 44px; padding: 0 18px; border-radius: 12px; background: #262a67; color: #f6f3e4; font-size: 15px; font-weight: 600; display: flex; align-items: center; text-decoration: none">Message Layla Mansour</a></div>
+</sc-if>
+
+<sc-if value="{{d.submitted}}" hint-placeholder-val="{{true}}">
+<dl style="margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px">
+<div style="padding: 14px 16px; border-radius: 14px; background: #f6f3e4; display: flex; flex-direction: column; gap: 2px"><dt style="font-size: 13px; color: #5b5f86">Final headcount</dt><dd style="margin: 0; font-size: 24px; font-weight: 700">{{d.head}}</dd></div>
+<div style="padding: 14px 16px; border-radius: 14px; background: #f6f3e4; display: flex; flex-direction: column; gap: 2px"><dt style="font-size: 13px; color: #5b5f86">Checked in</dt><dd style="margin: 0; font-size: 24px; font-weight: 700">{{d.chk}}</dd></div>
+<div style="padding: 14px 16px; border-radius: 14px; background: #f6f3e4; display: flex; flex-direction: column; gap: 2px"><dt style="font-size: 13px; color: #5b5f86">Incidents</dt><dd style="margin: 0; font-size: 24px; font-weight: 700">{{d.inc}}</dd></div>
+<div style="padding: 14px 16px; border-radius: 14px; background: #f6f3e4; display: flex; flex-direction: column; gap: 2px"><dt style="font-size: 13px; color: #5b5f86">Submitted</dt><dd style="margin: 0; font-size: 17px; font-weight: 600; line-height: 30px">{{d.at}}</dd></div>
+</dl>
+
+<sc-if value="{{d.mismatch}}" hint-placeholder-val="{{true}}">
+<div style="display: flex; gap: 12px; padding: 16px; border-radius: 12px; background: #fde8e6; color: #b42318">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 2px"><path d="M12 3l9.5 17h-19zM12 10v4M12 17h.01"></path></svg>
+<span style="display: flex; flex-direction: column; gap: 4px; font-size: 15px; line-height: 22px; color: #262a67"><strong style="color: #b42318">Headcount differs from check-in by 1 · flagged</strong><span>Reason from {{d.mod}}: "Abdullah R. left the group at the Khaybar rest stop on Sat 18 Oct, 15:20. His brother collected him by car; he signed the early-leave form. He did not ride the return leg."</span></span>
+</div>
+</sc-if>
+
+<div style="display: flex; flex-direction: column; gap: 10px">
+<h3 style="margin: 0; font-size: 17px; font-weight: 600">Incidents</h3>
+<sc-if value="{{d.noInc}}" hint-placeholder-val="{{false}}"><span style="font-size: 15px; color: #5b5f86">No incidents reported on this bus.</span></sc-if>
+<sc-for list="{{d.incidents}}" as="i" hint-placeholder-count="1">
+<div style="display: flex; flex-wrap: wrap; gap: 12px; padding: 14px 16px; border-radius: 12px; border: 1px solid #e3dfc9">
+<span style="{{i.cs}}">{{i.cat}}</span>
+<span style="flex: 1 1 320px; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 15px; font-weight: 600">{{i.t}}</span><span style="font-size: 14px; line-height: 20px; color: #5b5f86">{{i.d}}</span></span>
+<span style="font-size: 13px; color: #5b5f86">{{i.when}}</span>
+</div>
+</sc-for>
+</div>
+<span style="display: flex; align-items: center; gap: 6px; font-size: 13px; color: #5b5f86"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 11h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1zM8 11V7a4 4 0 0 1 8 0v4"></path></svg>The submitted report is read only. Your organization can add notes below; notes can't be edited or deleted.</span>
+</sc-if>
+
+<div style="display: flex; flex-direction: column; gap: 10px; padding-top: 16px; border-top: 1px solid #e3dfc9">
+<h3 style="margin: 0; font-size: 17px; font-weight: 600">Organization notes</h3>
+<sc-for list="{{d.notes}}" as="n" hint-placeholder-count="1">
+<div style="padding: 12px 14px; border-radius: 12px; background: #e6e8f5; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 13px; color: #5b5f86"><strong style="color: #262a67">{{n.who}}</strong> · {{n.when}}</span><span style="font-size: 15px; line-height: 22px">{{n.t}}</span></div>
+</sc-for>
+<label for="note" style="font-size: 14px; font-weight: 600">Add a note</label>
+<textarea id="note" rows="3" value="{{draft}}" onInput="{{setDraft}}" placeholder="For example: called the family on Sun 19 Oct, all fine." style="min-height: 84px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 12px 14px; font: inherit; font-size: 16px; color: #262a67; resize: vertical"></textarea>
+<div style="display: flex; justify-content: flex-end"><button type="button" onClick="{{addNote}}" style="height: 48px; padding: 0 22px; border: 0; border-radius: 12px; background: #ff6c2e; color: #262a67; font: inherit; font-size: 15px; font-weight: 700; cursor: pointer">Add note</button></div>
+</div>
+</section>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1300}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { sel: 1, draft: '', added: {} }; }
+  renderVals() {
+    const pill = (tone) => 'display: inline-flex; align-items: center; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; white-space: nowrap; ' + ({ ok: 'background: #e3f3ea; color: #1f7a4d;', warn: 'background: #fdf0d5; color: #8a4b00;', bad: 'background: #fde8e6; color: #b42318;', info: 'background: #e6e8f5; color: #262a67;' })[tone];
+    const B = [
+      { bus: 'Bus 1', vehicle: 'Mercedes Tourismo · RUH 3318', mod: 'Huda Saleh', drv: 'Saeed Mubarak', state: 'ok', head: 47, chk: 47, at: 'Sat 18 Oct · 21:58', incidents: [], notes: [] },
+      { bus: 'Bus 2', vehicle: 'Mercedes Tourismo · RUH 5520', mod: 'Nadia Yusuf', drv: 'Fahad Al-Otaibi', state: 'mismatch', head: 47, chk: 48, at: 'Sat 18 Oct · 22:14',
+        incidents: [{ cat: 'Medical', t: 'Traveler felt unwell at the Khaybar rest stop', d: 'Dizziness in the heat. First aid given, water and shade; recovered within 30 minutes and continued the trip.', when: 'Thu 16 Oct · 10:42' }],
+        notes: [{ who: 'Mona Saleh', when: 'Sun 19 Oct · 09:10', t: 'Early-leave form received and filed. Brother confirmed Abdullah reached Riyadh safely.' }] },
+      { bus: 'Bus 3', vehicle: 'Toyota Coaster · RUH 7741', mod: 'Layla Mansour', drv: 'Majed Al-Zahrani', state: 'pending', incidents: [], notes: [] },
+      { bus: 'Bus 4', vehicle: 'Mercedes Tourismo · ABC 4821', mod: 'Omar Haddad', drv: 'Khalid Al-Harbi', state: 'ok', head: 48, chk: 48, at: 'Sat 18 Oct · 22:31',
+        incidents: [{ cat: 'Vehicle fault', t: 'Air conditioning weak on rows 10-12', d: 'Driver adjusted the system at Hegra; travelers moved to free seats for the afternoon leg.', when: 'Fri 17 Oct · 13:15' }], notes: [] }
+    ];
+    const ST = { ok: ['Submitted', 'ok'], mismatch: ['Submitted · mismatch flagged', 'bad'], pending: ['Report pending', 'warn'] };
+    const sel = this.state.sel;
+    const cards = B.map((b, i) => ({ bus: b.bus, mod: 'Moderator ' + b.mod, s: ST[b.state][0], ss: pill(ST[b.state][1]),
+      counts: b.state === 'pending' ? 'Waiting for report' : b.head + ' headcount · ' + b.chk + ' checked in',
+      when: b.state === 'pending' ? 'Ops alerted 23:05' : b.at,
+      pressed: i === sel ? 'true' : 'false', on: () => this.setState({ sel: i, draft: '' }),
+      style: 'display: flex; flex-direction: column; align-items: flex-start; gap: 6px; text-align: start; padding: 16px 18px; border-radius: 20px; background: #ffffff; color: #262a67; font: inherit; cursor: pointer; ' + (i === sel ? 'border: 2px solid #fb8030;' : 'border: 2px solid transparent;') }));
+    const b = B[sel];
+    const catTone = { Medical: 'bad', 'Vehicle fault': 'warn', Safety: 'bad', 'Lost traveler': 'bad', Conduct: 'warn', Other: 'info' };
+    const notes = b.notes.concat(this.state.added[sel] || []);
+    const d = { ...b, s: ST[b.state][0], ss: pill(ST[b.state][1]), pending: b.state === 'pending', submitted: b.state !== 'pending', mismatch: b.state === 'mismatch',
+      head: String(b.head), chk: String(b.chk), inc: String(b.incidents.length), noInc: b.incidents.length === 0,
+      incidents: b.incidents.map((x) => ({ ...x, cs: pill(catTone[x.cat]) + ' align-self: flex-start;' })), notes };
+    return { cards, d, draft: this.state.draft, setDraft: (e) => this.setState({ draft: e.target.value }),
+      addNote: () => { const t = String(this.state.draft).trim(); if (!t) return; const a = { ...this.state.added }; a[sel] = (a[sel] || []).concat([{ who: 'Mona Saleh', when: 'Just now', t }]); this.setState({ added: a, draft: '' }); } };
+  }
+}
+</script>
+</body>
+</html>

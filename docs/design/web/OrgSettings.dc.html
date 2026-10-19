@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Org · Company settings</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="min-height: 1000px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="OrgNav" active="Settings" hint-size="248px,1000px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 24px">
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; color: #5b5f86">Sunrise Tours Co. · CR 1010734512</span><h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Company settings</h1></div>
+<button type="button" onClick="{{save}}" style="height: 48px; padding: 0 24px; border: 0; border-radius: 12px; background: #ff6c2e; color: #262a67; font: inherit; font-size: 15px; font-weight: 700; cursor: pointer">{{saveLabel}}</button>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: center; justify-content: space-between; border-bottom: 1px solid #e3dfc9">
+<div role="tablist" aria-label="Settings sections" style="display: flex; flex-wrap: wrap; gap: 4px">
+<sc-for list="{{tabs}}" as="t" hint-placeholder-count="6">
+<button type="button" role="tab" aria-selected="{{t.sel}}" onClick="{{t.on}}" style="{{t.style}}">{{t.l}}<sc-if value="{{t.locked}}" hint-placeholder-val="{{false}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="Enterprise" role="img"><path d="M6 11h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1zM8 11V7a4 4 0 0 1 8 0v4"></path></svg></sc-if></button>
+</sc-for>
+</div>
+<a href="OrgWebhooks.dc.html" style="height: 48px; padding: 0 12px; display: inline-flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 600; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3v5M15 3v5M7 8h10v4a5 5 0 0 1-10 0zM12 17v4"></path></svg>Integrations · webhooks &amp; API keys<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg></a>
+<a href="OrgSupport.dc.html" style="height: 48px; padding: 0 12px; display: inline-flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 600; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 11v5M12 8h.01"></path></svg>Help &amp; support</a>
+</div>
+
+<sc-if value="{{isProfile}}" hint-placeholder-val="{{true}}">
+<section role="tabpanel" aria-label="Profile" style="background: #ffffff; border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap">
+<img src="../assets/697a49af6be5a077ae1851c1a8b9dfcd.svg" alt="Sunrise Tours Co. logo" style="width: 72px; height: 72px; border-radius: 16px; object-fit: cover; flex-shrink: 0; border: 1px solid #e3dfc9">
+<span style="display: flex; flex-direction: column; gap: 6px"><span style="font-size: 14px; font-weight: 600">Logo</span><span style="display: flex; gap: 8px; flex-wrap: wrap"><button type="button" style="height: 40px; padding: 0 14px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; color: #262a67; font: inherit; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 6px; cursor: pointer"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"></path></svg>Upload new</button></span><span style="font-size: 13px; color: #5b5f86">Square PNG or SVG, at least 256 px. Shown on trip pages and tickets.</span></span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px">
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">Company name<input type="text" value="Sunrise Tours Co." style="height: 52px; min-width: 0; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 14px; font: inherit; font-size: 16px; font-weight: 400; color: #262a67"></label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">Name in Arabic<input type="text" dir="rtl" value="شركة صن رايز للرحلات" style="height: 52px; min-width: 0; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 14px; font-family: Cairo, sans-serif; font-size: 16px; font-weight: 400; color: #262a67"></label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">Commercial registration (CR)<input type="text" value="1010734512" readonly style="height: 52px; min-width: 0; border-radius: 8px; border: 1px solid #e3dfc9; background: #f6f3e4; padding: 0 14px; font: inherit; font-size: 16px; font-weight: 400; color: #262a67"><span style="font-size: 13px; font-weight: 400; color: #5b5f86">Verified by Trips Enjoy. Contact support to change it.</span></label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">VAT number<input type="text" value="310 4521 8870 0003" style="height: 52px; min-width: 0; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 14px; font: inherit; font-size: 16px; font-weight: 400; color: #262a67"></label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">Contact email<input type="email" value="hello@sunrisetours.sa" style="height: 52px; min-width: 0; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 14px; font: inherit; font-size: 16px; font-weight: 400; color: #262a67"></label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">Contact phone<input type="tel" value="+966 11 ••• 4400" style="height: 52px; min-width: 0; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 14px; font: inherit; font-size: 16px; font-weight: 400; color: #262a67"></label>
+<label style="grid-column: 1 / -1; display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">Address<input type="text" value="Olaya Street, Al Olaya, Riyadh 12213" style="height: 52px; min-width: 0; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 14px; font: inherit; font-size: 16px; font-weight: 400; color: #262a67"></label>
+</div>
+</section>
+</sc-if>
+
+<sc-if value="{{isBranding}}" hint-placeholder-val="{{false}}">
+<section role="tabpanel" aria-label="Branding" style="background: #ffffff; border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center; padding: 16px; border-radius: 12px; background: #e6e8f5">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 11h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1zM8 11V7a4 4 0 0 1 8 0v4"></path></svg>
+<span style="flex: 1 1 300px; font-size: 15px"><strong>Custom branding needs Enterprise.</strong> Use your colours, cover images and a custom domain on trip pages and emails.</span>
+<a href="OrgBilling.dc.html" style="height: 44px; padding: 0 16px; border-radius: 12px; background: #262a67; color: #f6f3e4; font-size: 15px; font-weight: 600; display: flex; align-items: center; text-decoration: none">See Enterprise</a>
+</div>
+<div aria-disabled="true" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; opacity: .55">
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">Brand colour<input type="text" value="#E4572E" disabled style="height: 52px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 14px; font: inherit; font-size: 16px; color: #262a67"></label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">Custom domain<input type="text" value="trips.sunrisetours.sa" disabled style="height: 52px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 14px; font: inherit; font-size: 16px; color: #262a67"></label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">Email sender name<input type="text" value="Sunrise Tours" disabled style="height: 52px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 14px; font: inherit; font-size: 16px; color: #262a67"></label>
+</div>
+</section>
+</sc-if>
+
+<sc-if value="{{isBooking}}" hint-placeholder-val="{{false}}">
+<section role="tabpanel" aria-label="Booking defaults" style="background: #ffffff; border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 20px">
+<fieldset style="margin: 0; padding: 0; border: 0; display: flex; flex-direction: column; gap: 8px">
+<legend style="padding: 0 0 8px; font-size: 14px; font-weight: 600">Default seat mode for new trips</legend>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 8px">
+<label style="display: flex; gap: 10px; align-items: flex-start; padding: 14px; border-radius: 12px; border: 1px solid #e3dfc9; cursor: pointer"><input type="radio" name="seat" style="width: 18px; height: 18px; margin: 2px 0 0; accent-color: #262a67"><span style="display: flex; flex-direction: column"><span style="font-weight: 600">Company assigns seats</span><span style="font-size: 13px; color: #5b5f86">Travellers see "Seat assigned before departure"</span></span></label>
+<label style="display: flex; gap: 10px; align-items: flex-start; padding: 14px; border-radius: 12px; border: 2px solid #fb8030; background: #fff7f2; cursor: pointer"><input type="radio" name="seat" checked style="width: 18px; height: 18px; margin: 2px 0 0; accent-color: #262a67"><span style="display: flex; flex-direction: column"><span style="font-weight: 600">Travellers pick their seats</span><span style="font-size: 13px; color: #5b5f86">Live seat map · Explorer and VIP pick first · Growth+</span></span></label>
+</div>
+</fieldset>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px">
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">Seat hold during checkout<select style="height: 52px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 12px; font: inherit; font-size: 16px; font-weight: 400; color: #262a67"><option>15 minutes</option><option>10 minutes</option><option>20 minutes</option></select></label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">80% refund until<select style="height: 52px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 12px; font: inherit; font-size: 16px; font-weight: 400; color: #262a67"><option>48 hours before departure</option></select></label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">After that, refund<select style="height: 52px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 12px; font: inherit; font-size: 16px; font-weight: 400; color: #262a67"><option>50% until 24 h, then none</option></select></label>
+</div>
+<span style="font-size: 13px; color: #5b5f86">Platform cancellation policy (placeholder): 80% at 48 h or more, 50% from 24 to 48 h, none under 24 h. Requests after that come to you to decide.</span>
+</section>
+</sc-if>
+
+<sc-if value="{{isPayouts}}" hint-placeholder-val="{{false}}">
+<section role="tabpanel" aria-label="Payouts" style="background: #ffffff; border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; align-items: center; gap: 14px; padding: 16px; border-radius: 12px; border: 1px solid #e3dfc9; flex-wrap: wrap">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7a2 2 0 0 1 2-2h12v4M4 7v11a2 2 0 0 0 2 2h14V9H6a2 2 0 0 1-2-2zM16 14.5h.01"></path></svg>
+<span style="flex: 1 1 260px; display: flex; flex-direction: column"><strong style="font-size: 16px">Al Rajhi Bank · SA•• •• 2207</strong><span style="font-size: 14px; color: #5b5f86">Account name Sunrise Tours Co. · verified 12 Aug</span></span>
+<span style="display: inline-flex; align-items: center; gap: 4px; padding: 2px 10px; border-radius: 999px; background: #e3f3ea; color: #1f7a4d; font-size: 13px; font-weight: 600"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg>Verified</span>
+<button type="button" style="height: 40px; padding: 0 14px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; color: #262a67; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer">Change account</button>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px">
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">Payout schedule<select style="height: 52px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 12px; font: inherit; font-size: 16px; font-weight: 400; color: #262a67"><option>Weekly · every Monday 06:00</option></select></label>
+<div style="display: flex; flex-direction: column; gap: 6px; font-size: 14px"><span style="font-weight: 600">Next payout</span><span style="height: 52px; display: flex; align-items: center; font-size: 16px"><strong>48,320 SAR</strong>&#160;on Mon 20 Oct</span></div>
+</div>
+<span style="font-size: 13px; color: #5b5f86">Payouts include completed trips, after refunds, commission and gateway fees. No minimum. A settlement closes when its payouts are done and no dispute is open. Changing the bank account pauses payouts for 48 hours.</span>
+</section>
+</sc-if>
+
+<sc-if value="{{isNotif}}" hint-placeholder-val="{{false}}">
+<section role="tabpanel" aria-label="Notifications" style="background: #ffffff; border-radius: 20px; padding: 8px 24px; display: flex; flex-direction: column">
+<sc-for list="{{notif}}" as="n" hint-placeholder-count="6">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; padding: 14px 0; border-top: 1px solid #e3dfc9">
+<span style="flex: 1 1 260px; display: flex; flex-direction: column"><span style="font-weight: 600">{{n.t}}</span><span style="font-size: 13px; color: #5b5f86">{{n.d}}</span></span>
+<span style="display: flex; gap: 16px; font-size: 14px"><label style="display: flex; align-items: center; gap: 6px"><input type="checkbox" checked="{{n.e}}" style="width: 18px; height: 18px; accent-color: #262a67">Email</label><label style="display: flex; align-items: center; gap: 6px"><input type="checkbox" checked="{{n.p}}" style="width: 18px; height: 18px; accent-color: #262a67">In app</label><label style="display: flex; align-items: center; gap: 6px"><input type="checkbox" checked="{{n.s}}" style="width: 18px; height: 18px; accent-color: #262a67">SMS</label></span>
+</div>
+</sc-for>
+</section>
+</sc-if>
+
+<sc-if value="{{isSecurity}}" hint-placeholder-val="{{false}}">
+<section role="tabpanel" aria-label="Security" style="background: #ffffff; border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; padding: 16px; border-radius: 12px; background: #f6f3e4">
+<span style="flex: 1 1 300px; display: flex; flex-direction: column"><span style="font-weight: 600; font-size: 16px">Sign-in code required for all staff</span><span style="font-size: 14px; color: #5b5f86">Every employee signs in with a one-time code to their work email. Codes expire after 5 minutes; 5 wrong tries pause sign-in for 15 minutes.</span></span>
+<span style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 999px; background: #e3f3ea; color: #1f7a4d; font-size: 13px; font-weight: 600"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 11h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1zM8 11V7a4 4 0 0 1 8 0v4"></path></svg>Always on</span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px">
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">Session length<select style="height: 52px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 12px; font: inherit; font-size: 16px; font-weight: 400; color: #262a67"><option>12 hours</option><option>8 hours</option><option>4 hours</option></select></label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">Allowed email domain<input type="text" value="sunrisetours.sa" style="height: 52px; min-width: 0; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 14px; font: inherit; font-size: 16px; font-weight: 400; color: #262a67"></label>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px"><span style="font-size: 14px; font-weight: 600">Active sessions</span>
+<span style="display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-size: 14px; padding: 10px 0; border-top: 1px solid #e3dfc9"><span>Mona Saleh · Chrome on macOS · Riyadh</span><span style="color: #5b5f86">This session</span></span>
+<span style="display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-size: 14px; padding: 10px 0; border-top: 1px solid #e3dfc9"><span>Yousef Amin · Safari on iPad · Riyadh</span><button type="button" style="border: 0; background: transparent; color: #b42318; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; min-height: 32px">Sign out</button></span>
+<span style="display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-size: 14px; padding: 10px 0; border-top: 1px solid #e3dfc9"><span>Hala Nasser · Edge on Windows · Riyadh</span><button type="button" style="border: 0; background: transparent; color: #b42318; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; min-height: 32px">Sign out</button></span>
+</div>
+</section>
+</sc-if>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { tab: 0, saved: false }; }
+  renderVals() {
+    const L = ['Profile', 'Branding', 'Booking defaults', 'Payouts', 'Notifications', 'Security'];
+    const tabs = L.map((l, i) => {
+      const on = i === this.state.tab;
+      return { l, locked: l === 'Branding', sel: on ? 'true' : 'false', on: () => this.setState({ tab: i, saved: false }),
+        style: 'height: 48px; padding: 0 16px; border: 0; background: transparent; font: inherit; font-size: 15px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; margin-bottom: -1px; ' + (on ? 'color: #262a67; font-weight: 700; border-bottom: 3px solid #ff6c2e;' : 'color: #5b5f86; font-weight: 500; border-bottom: 3px solid transparent;') };
+    });
+    const notif = [
+      { t: 'Deal countered or accepted', d: 'Drivers and photographers replying to your offers', e: true, p: true, s: false },
+      { t: 'Booking cancelled or refund requested', d: 'Sent to Support and Owner', e: true, p: true, s: false },
+      { t: 'Bus missing staff', d: '48 hours before departure', e: true, p: true, s: true },
+      { t: 'Incident reported by a moderator', d: 'Live trips only', e: true, p: true, s: true },
+      { t: 'Coupon exhausted or plan limit reached', d: 'Sent to Finance and Owner', e: true, p: true, s: false },
+      { t: 'Payout sent', d: 'Weekly summary', e: true, p: false, s: false }
+    ];
+    const t = this.state.tab;
+    return { tabs, notif, isProfile: t === 0, isBranding: t === 1, isBooking: t === 2, isPayouts: t === 3, isNotif: t === 4, isSecurity: t === 5,
+      saveLabel: this.state.saved ? 'Saved' : 'Save changes', save: () => this.setState({ saved: true }) };
+  }
+}
+</script>
+</body>
+</html>

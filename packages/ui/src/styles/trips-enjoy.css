@@ -81,6 +81,15 @@
   --te-brand-cream: #f6f3e4;
   --te-white: #ffffff;
 
+  /* Artboard aliases (docs/design/traveler WebHome): convenience names over the tokens above.
+     --te-page/--te-outline track their base token, so they flip correctly in the dark scopes. */
+  --te-page: var(--te-surface);
+  --te-navy: #262a67;
+  --te-primary-strong: #ff8655;
+  --te-outline: var(--te-control-border);
+  --te-hairline-strong: #7b7fa6;
+  --te-chip-soft: #ffe7dc;
+
   /* Surfaces, ink and lines */
   --te-surface: #f6f3e4;
   --te-surface-raised: #ffffff;
@@ -170,6 +179,8 @@
   --te-primary-text: #ff8655;
   --te-focus-ring: #f89e23;
   --te-control-border: #8e92c8;
+  --te-hairline-strong: #8e92c8;
+  --te-primary-strong: #ff8655;
   --te-on-danger: #262a67;
   --te-danger: #ff9b8f;
   --te-danger-soft: #4a2340;
@@ -208,6 +219,8 @@
     --te-primary-text: #ff8655;
     --te-focus-ring: #f89e23;
     --te-control-border: #8e92c8;
+    --te-hairline-strong: #8e92c8;
+    --te-primary-strong: #ff8655;
     --te-on-danger: #262a67;
     --te-danger: #ff9b8f;
     --te-danger-soft: #4a2340;

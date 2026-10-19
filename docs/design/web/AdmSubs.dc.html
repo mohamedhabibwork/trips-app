@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Admin · Subscriptions &amp; dunning</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+.te-tr:hover{background:#fbf9f0}
+</style>
+</helmet>
+<div style="min-height: 1000px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="AdmNav" active="Subscriptions" hint-size="248px,1000px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 20px">
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; color: #5b5f86">11,419 paid subscriptions · 1.42M SAR MRR</span><h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Subscriptions</h1></div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px">
+<button type="button" style="height: 48px; padding: 0 18px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Revoke</button>
+<button type="button" style="height: 48px; padding: 0 18px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Upgrade</button>
+<button type="button" style="height: 48px; padding: 0 20px; border-radius: 12px; border: 0; background: #ff6c2e; color: #262a67; font: inherit; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Grant subscription</button>
+</div>
+</div>
+
+<div role="group" aria-label="Billing status" style="display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{chips}}" as="c" hint-placeholder-count="7"><button type="button" onClick="{{c.on}}" aria-pressed="{{c.pr}}" style="{{c.st}}">{{c.t}}</button></sc-for>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
+<div style="flex: 3 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; flex-wrap: wrap; gap: 12px">
+<div style="flex: 1 1 140px; display: flex; flex-direction: column; gap: 6px"><label for="s-role" style="font-size: 14px; font-weight: 600">Role</label><select id="s-role" style="height: 44px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 12px; font: inherit; font-size: 15px; color: #262a67"><option>All roles</option><option>Organization</option><option>Driver</option><option>Photographer</option><option>User</option></select></div>
+<div style="flex: 1 1 140px; display: flex; flex-direction: column; gap: 6px"><label for="s-tier" style="font-size: 14px; font-weight: 600">Tier</label><select id="s-tier" style="height: 44px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 12px; font: inherit; font-size: 15px; color: #262a67"><option>All tiers</option><option>Starter / Basic / Free</option><option>Growth / Professional / Studio / Explorer</option><option>Enterprise / Premium / Pro / VIP</option></select></div>
+<div style="flex: 1 1 140px; display: flex; flex-direction: column; gap: 6px"><label for="s-ren" style="font-size: 14px; font-weight: 600">Renews</label><select id="s-ren" style="height: 44px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 12px; font: inherit; font-size: 15px; color: #262a67"><option>Any date</option><option>Next 7 days</option><option>Next 30 days</option><option>This quarter</option></select></div>
+</div>
+<section aria-label="Subscriptions" style="background: #ffffff; border-radius: 20px; padding: 8px 0">
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 860px; border-collapse: collapse; font-size: 15px">
+<thead><tr style="color: #5b5f86; font-size: 13px"><th scope="col" style="text-align: start; padding: 10px 20px; font-weight: 600">Subscriber</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Plan</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Billing</th><th scope="col" style="text-align: end; padding: 10px 12px; font-weight: 600">Amount</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Status</th><th scope="col" style="text-align: start; padding: 10px 20px; font-weight: 600">Renews / ends</th></tr></thead>
+<tbody>
+<sc-for list="{{rows}}" as="r" hint-placeholder-count="9">
+<tr class="te-tr" style="border-top: 1px solid #e3dfc9">
+<td style="padding: 10px 20px"><a href="{{r.href}}" style="display: flex; flex-direction: column; color: #262a67; text-decoration: none"><span style="font-weight: 600">{{r.n}}</span><span style="font-size: 13px; color: #5b5f86">{{r.role}}</span></a></td>
+<td style="padding: 10px 12px">{{r.p}}</td>
+<td style="padding: 10px 12px; color: #5b5f86">{{r.b}}</td>
+<td style="padding: 10px 12px; text-align: end; font-variant-numeric: tabular-nums">{{r.a}}</td>
+<td style="padding: 10px 12px"><span style="{{r.ss}}">{{r.s}}</span></td>
+<td style="padding: 10px 20px; white-space: nowrap"><span style="display: flex; flex-direction: column"><span>{{r.d}}</span><span style="font-size: 13px; color: #5b5f86">{{r.dn}}</span></span></td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+</section>
+</div>
+
+<aside style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+<section aria-labelledby="dun-h" style="background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 14px">
+<h2 id="dun-h" style="margin: 0; font-size: 18px; font-weight: 600">Dunning settings</h2>
+<div style="display: flex; flex-direction: column; gap: 8px">
+<span style="font-size: 14px; font-weight: 600">Card retry schedule</span>
+<div style="display: flex; align-items: center; gap: 6px; font-size: 13px">
+<span style="padding: 4px 10px; border-radius: 999px; background: #262a67; color: #f6f3e4; font-weight: 600">Day 1</span><span aria-hidden="true" style="flex: 1 1 auto; height: 2px; background: #e3dfc9"></span>
+<span style="padding: 4px 10px; border-radius: 999px; background: #262a67; color: #f6f3e4; font-weight: 600">Day 3</span><span aria-hidden="true" style="flex: 1 1 auto; height: 2px; background: #e3dfc9"></span>
+<span style="padding: 4px 10px; border-radius: 999px; background: #262a67; color: #f6f3e4; font-weight: 600">Day 5</span><span aria-hidden="true" style="flex: 1 1 auto; height: 2px; background: #e3dfc9"></span>
+<span style="padding: 4px 10px; border-radius: 999px; background: #fdf0d5; color: #8a4b00; font-weight: 600">Downgrade</span>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="d-g" style="font-size: 14px; font-weight: 600">Grace period (days)</label><input id="d-g" inputmode="numeric" value="7" aria-describedby="d-g-h" style="height: 44px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 14px; font: inherit; font-size: 16px; color: #262a67"><span id="d-g-h" style="font-size: 12px; color: #5b5f86">Full access continues. After it ends the account drops to the lowest tier.</span></div>
+<sc-for list="{{mails}}" as="m" hint-placeholder-count="4">
+<div style="display: flex; gap: 12px; align-items: center; justify-content: space-between; padding-top: 10px; border-top: 1px solid #e3dfc9">
+<span id="{{m.id}}" style="font-size: 14px">{{m.t}}</span>
+<button type="button" role="switch" aria-checked="{{m.on}}" aria-labelledby="{{m.id}}" onClick="{{m.toggle}}" style="{{m.track}}"><span style="width: 22px; height: 22px; border-radius: 999px; background: #ffffff"></span></button>
+</div>
+</sc-for>
+<a href="AdmTemplates.dc.html" style="font-size: 14px; font-weight: 600">Edit reminder emails</a>
+</section>
+<section aria-labelledby="gr-h" style="background: #262a67; color: #f6f3e4; border-radius: 20px; padding: 18px 20px; display: flex; flex-direction: column; gap: 6px">
+<h2 id="gr-h" style="margin: 0; font-size: 16px; font-weight: 600">In grace right now</h2>
+<span style="font-size: 28px; font-weight: 700">9 accounts</span>
+<span style="font-size: 14px; color: #b8bad6">41,870 SAR at risk · recovered 68% of failed payments in September</span>
+</section>
+</aside>
+</div>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { chip: 'All', m: { pre: true, fail: true, last: true, win: false } }; }
+  renderVals() {
+    const pill = (tone) => 'display: inline-flex; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; white-space: nowrap; ' + ({ ok: 'background: #e3f3ea; color: #1f7a4d;', warn: 'background: #fdf0d5; color: #8a4b00;', bad: 'background: #fde8e6; color: #b42318;', info: 'background: #e6e8f5; color: #262a67;', live: 'background: #ffe7dc; color: #c93a00;', none: 'background: #f6f3e4; color: #5b5f86;' })[tone];
+    const names = ['All', 'Trial 412', 'Active 10,986', 'Past due 21', 'Grace period 9', 'Cancelled 138', 'Expired 64'];
+    const chips = names.map((t) => { const on = this.state.chip === t; return { t, pr: on ? 'true' : 'false', on: () => this.setState({ chip: t }),
+      st: 'height: 36px; padding: 0 14px; border-radius: 999px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; ' + (on ? 'background: #262a67; color: #f6f3e4; border: 1px solid #262a67;' : 'background: #ffffff; color: #262a67; border: 1px solid #7b7fa6;') }; });
+    const tone = { Trial: 'info', Active: 'ok', 'Past due': 'bad', 'Grace period': 'warn', Cancelled: 'none', Expired: 'none', Gifted: 'live' };
+    const D = [
+      ['Sunrise Tours Co.', 'Organization', 'Company Growth', 'Monthly · Mada', '1,490 SAR', 'Active', 'Sat 1 Nov', 'auto-renew', 'AdmOrg.dc.html'],
+      ['Najd Adventures', 'Organization', 'Company Starter', 'Monthly · Visa •• 1180', '590 SAR', 'Grace period', 'Ends Sun 19 Oct', 'retry 3 of 3 failed', 'AdmOrg.dc.html'],
+      ['Khalid Al-Harbi', 'Driver', 'Driver Professional', 'Monthly · Apple Pay', '149 SAR', 'Active', 'Sat 1 Nov', 'auto-renew', 'AdmUser.dc.html'],
+      ['Ibrahim Saleh', 'Driver', 'Driver Professional', 'Monthly · Mada', '149 SAR', 'Past due', 'Retry Thu 16 Oct', 'day 3 of 5', 'AdmUser.dc.html'],
+      ['Noura Al-Shehri', 'Photographer', 'Photographer Studio', 'Annual · Visa •• 7731', '1,280 SAR', 'Active', '21 Feb 2027', 'auto-renew', 'AdmUser.dc.html'],
+      ['Hejaz Heritage Tours', 'Organization', 'Company Growth', 'Trial', '0 SAR', 'Trial', 'Ends Mon 27 Oct', 'extended 7 days', 'AdmOrg.dc.html'],
+      ['Sara Al-Qahtani', 'User', 'User Explorer', 'Annual · Mada', '290 SAR', 'Active', '03 Jan 2027', 'auto-renew', 'AdmUser.dc.html'],
+      ['Layla Haddad', 'User', 'User VIP', 'Monthly · Mastercard •• 4420', '79 SAR', 'Cancelled', 'Access until Fri 31 Oct', 'by user', 'AdmUser.dc.html'],
+      ['Desert Pearl Events', 'Organization', 'Company Starter', 'Monthly', '590 SAR', 'Expired', 'Ended 30 Sep', 'tenant suspended', 'AdmOrg.dc.html']
+    ];
+    const rows = D.map((d) => ({ n: d[0], role: d[1], p: d[2], b: d[3], a: d[4], s: d[5], ss: pill(tone[d[5]]), d: d[6], dn: d[7], href: d[8] }));
+    const M = [['pre', 'Reminder 7 days before renewal'], ['fail', 'Email on each failed retry'], ['last', 'Final notice 2 days before downgrade'], ['win', 'Win-back email 14 days after expiry']];
+    const mails = M.map((x) => { const v = !!this.state.m[x[0]]; return { id: 'dm-' + x[0], t: x[1], on: v ? 'true' : 'false',
+      toggle: () => this.setState({ m: { ...this.state.m, [x[0]]: !this.state.m[x[0]] } }),
+      track: 'flex-shrink: 0; width: 46px; height: 28px; border-radius: 999px; border: 0; padding: 3px; cursor: pointer; display: flex; ' + (v ? 'background: #262a67; justify-content: flex-end;' : 'background: #7b7fa6; justify-content: flex-start;') }; });
+    return { chips, rows, mails };
+  }
+}
+</script>
+</body>
+</html>

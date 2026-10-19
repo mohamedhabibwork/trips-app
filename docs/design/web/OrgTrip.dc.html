@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Trip · AlUla Heritage Weekend</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+.te-row:hover{background:#fbfaf3}
+.te-tab:hover{color:#262a67;background:#ffffff}
+</style>
+</helmet>
+<div style="min-height: 1000px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="OrgNav" active="Trips" hint-size="248px,1000px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 20px">
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<a href="OrgTrips.dc.html" style="font-size: 14px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px; text-decoration: none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg>All trips</a>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px"><h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">AlUla Heritage Weekend</h1><span style="display: inline-flex; align-items: center; gap: 6px; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; background: #e6e8f5; color: #262a67"><span aria-hidden="true" style="width: 6px; height: 6px; border-radius: 999px; background: currentColor"></span>Filling up</span></div>
+<span style="font-size: 15px; color: #5b5f86">Thu 16 – Sat 18 Oct · Riyadh → Buraidah → AlUla · 4 buses · Public · Bookings close Tue 14 Oct, 23:59</span>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px">
+<a href="OrgTripCancel.dc.html" style="height: 48px; padding: 0 18px; border-radius: 12px; background: #b42318; color: #ffffff; font-size: 15px; font-weight: 600; display: flex; align-items: center; text-decoration: none">Cancel trip</a>
+<a href="OrgTripLive.dc.html" style="height: 48px; box-sizing: border-box; padding: 0 18px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px; text-decoration: none"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 999px; background: #c93a00"></span>Live operations</a>
+<a href="OrgTripEdit.dc.html" style="height: 48px; padding: 0 20px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16zM14 6l4 4"></path></svg>Edit trip</a>
+</div>
+</div>
+
+<nav aria-label="Trip sections" style="display: flex; flex-wrap: wrap; gap: 4px; border-bottom: 1px solid #e3dfc9; padding-bottom: 8px">
+<sc-for list="{{tabs}}" as="t" hint-placeholder-count="8">
+<a href="{{t.href}}" class="te-tab" aria-current="{{t.cur}}" style="{{t.style}}">{{t.l}}</a>
+</sc-for>
+</nav>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px">
+<sc-for list="{{kpis}}" as="k" hint-placeholder-count="4">
+<div style="padding: 18px 20px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 14px; color: #5b5f86">{{k.l}}</span>
+<span style="font-size: 28px; line-height: 34px; font-weight: 700">{{k.v}} <span style="font-size: 15px; font-weight: 500; color: #5b5f86">{{k.u}}</span></span>
+<span style="{{k.ds}}">{{k.d}}</span>
+</div>
+</sc-for>
+</div>
+
+<section id="fleet" aria-labelledby="fleet-h" style="background: #ffffff; border-radius: 20px; padding: 18px 0 8px">
+<div style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: space-between; align-items: center; padding: 0 20px 10px"><h2 id="fleet-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">Fleet · 4 buses</h2><span style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center"><span style="font-size: 14px; color: #5b5f86">2 ready · 1 missing staff · 1 deal pending</span><a href="OrgTripReports.dc.html" style="font-size: 14px; font-weight: 600">Trip reports</a></span></div>
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 980px; border-collapse: collapse; font-size: 15px">
+<thead><tr style="color: #5b5f86; font-size: 13px"><th scope="col" style="text-align: start; padding: 10px 20px; font-weight: 600">Bus</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Plate</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Driver</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Moderator</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Booked / seats</th><th scope="col" style="text-align: start; padding: 10px 20px; font-weight: 600">Status</th></tr></thead>
+<tbody>
+<sc-for list="{{fleet}}" as="b" hint-placeholder-count="4">
+<tr class="te-row" style="border-top: 1px solid #e3dfc9">
+<td style="padding: 12px 20px"><span style="display: flex; align-items: center; gap: 10px"><img src="{{b.img}}" alt="{{b.v}}" style="width: 48px; height: 36px; border-radius: 8px; object-fit: cover; flex-shrink: 0"><span style="display: flex; flex-direction: column"><span style="font-weight: 600">{{b.n}}</span><span style="font-size: 13px; color: #5b5f86">{{b.v}}</span></span></span></td>
+<td style="padding: 12px; font-variant-numeric: tabular-nums">{{b.p}}</td>
+<td style="padding: 12px"><span style="display: flex; flex-direction: column"><span style="{{b.drs}}">{{b.dr}}</span><span style="font-size: 13px; color: #5b5f86">{{b.drsub}}</span></span></td>
+<td style="padding: 12px"><span style="{{b.mos}}">{{b.mo}}</span></td>
+<td style="padding: 12px; min-width: 140px"><div style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 14px">{{b.bk}}</span><div aria-hidden="true" style="height: 6px; border-radius: 999px; background: #e3dfc9; overflow: hidden"><div style="{{b.bar}}"></div></div></div></td>
+<td style="padding: 12px 20px"><a href="{{b.href}}" style="{{b.ss}}">{{b.s}}</a></td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+</section>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
+<section aria-labelledby="pr-h" style="flex: 3 1 460px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 18px 0 8px">
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 0 20px 8px"><h2 id="pr-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">Programs · 7</h2><a href="OrgPrograms.dc.html" style="font-size: 14px; font-weight: 600">Enrollment report</a></div>
+<sc-for list="{{programs}}" as="p" hint-placeholder-count="7">
+<div style="display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1.2fr) minmax(0, 1fr) 110px; gap: 12px; align-items: center; padding: 9px 20px; border-top: 1px solid #e3dfc9; font-size: 14px">
+<span style="display: flex; align-items: center; gap: 10px; min-width: 0"><img src="{{p.img}}" alt="{{p.alt}}" style="width: 40px; height: 30px; border-radius: 6px; object-fit: cover; flex-shrink: 0"><span style="display: flex; flex-direction: column; min-width: 0"><span style="font-size: 15px; font-weight: 600">{{p.n}}</span><span style="font-size: 13px; color: #5b5f86">{{p.m}}</span></span></span>
+<span>{{p.e}}</span>
+<span style="{{p.fs}}">{{p.f}}</span>
+<span style="text-align: end; font-weight: 600; font-variant-numeric: tabular-nums">{{p.r}}</span>
+</div>
+</sc-for>
+</section>
+
+<section aria-labelledby="todo-h" style="flex: 2 1 320px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 18px 20px; display: flex; flex-direction: column; gap: 10px">
+<h2 id="todo-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">Before departure</h2>
+<sc-for list="{{todo}}" as="a" hint-placeholder-count="4">
+<a href="{{a.href}}" style="display: flex; gap: 12px; padding: 12px; border-radius: 12px; background: {{a.bg}}; color: #262a67; text-decoration: none">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 2px"><path d="{{a.icon}}"></path></svg>
+<span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 15px; font-weight: 600">{{a.t}}</span><span style="font-size: 13px; line-height: 18px; color: #5b5f86">{{a.d}}</span></span>
+</a>
+</sc-for>
+</section>
+</div>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1100}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const tones = { ok: 'background: #e3f3ea; color: #1f7a4d;', warn: 'background: #fdf0d5; color: #8a4b00;', bad: 'background: #fde8e6; color: #b42318;', info: 'background: #e6e8f5; color: #262a67;', live: 'background: #ffe7dc; color: #c93a00;' };
+    const pill = (t) => 'display: inline-flex; align-items: center; gap: 6px; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; white-space: nowrap; text-decoration: none; ' + tones[t];
+    const tabs = [['Overview', 'OrgTrip.dc.html'], ['Buses', 'OrgSeatAssign.dc.html'], ['Passengers', 'OrgRoster.dc.html'], ['Programs', 'OrgPrograms.dc.html'], ['Bookings', 'OrgBookings.dc.html'], ['Deals', 'OrgDeals.dc.html'], ['Albums', '#'], ['Accounting', 'OrgAccounting.dc.html']].map(([l, href], i) => ({
+      l, href, cur: i === 0 ? 'page' : 'false',
+      style: 'height: 40px; padding: 0 14px; border-radius: 10px; display: inline-flex; align-items: center; font-size: 15px; font-weight: 600; text-decoration: none; ' + (i === 0 ? 'background: #262a67; color: #f6f3e4;' : 'color: #5b5f86;')
+    }));
+    const kpis = [
+      { l: 'Seats sold', v: '168', u: 'of 172', d: '98% full · 4 seats left', ds: 'font-size: 13px; font-weight: 600; color: #8a4b00' },
+      { l: 'Ticket revenue', v: '180,390', u: 'SAR', d: '142 adults · 26 children', ds: 'font-size: 13px; color: #5b5f86' },
+      { l: 'Programs revenue', v: '50,850', u: 'SAR', d: '558 enrollments across 7 programs', ds: 'font-size: 13px; color: #5b5f86' },
+      { l: 'Departs in', v: '2', u: 'days', d: 'Thu 16 Oct · 06:30 from Olaya', ds: 'font-size: 13px; color: #5b5f86' }
+    ];
+    const muted = 'color: #5b5f86;';
+    const fleet = [
+      { n: 'Bus 1', v: 'Mercedes Tourismo · 49', p: 'RUH 3318', dr: 'Saeed Mubarak', drsub: 'Own driver · confirmed', mo: 'Huda Saleh', b: 47, c: 47, s: 'Ready', t: 'ok', href: 'OrgRoster.dc.html' },
+      { n: 'Bus 2', v: 'Mercedes Tourismo · 49', p: 'RUH 5520', dr: 'Fahad Al-Otaibi', drsub: 'Own driver · confirmed', mo: 'Nadia Yusuf', b: 48, c: 48, s: 'Ready', t: 'ok', href: 'OrgRoster.dc.html' },
+      { n: 'Bus 3', v: 'Toyota Coaster · 30', p: 'RUH 7741', dr: 'Majed Al-Zahrani', drsub: 'Own driver · confirmed', mo: 'Not assigned', b: 27, c: 29, s: 'Missing moderator', t: 'bad', href: 'OrgNew4.dc.html' },
+      { n: 'Bus 4', v: 'Mercedes Tourismo · 49', p: 'ABC 4821', dr: 'Negotiating with Khalid', drsub: 'Khalid Al-Harbi countered 1,450 SAR', mo: 'Omar Haddad', b: 46, c: 48, s: 'Deal pending', t: 'warn', href: 'OrgDeal.dc.html' }
+    ].map((x) => ({ ...x, img: x.v.indexOf('Coaster') >= 0 ? '../assets/394cc1d7971d348a095c4e6aefff9233.svg' : '../assets/b2dc1c7bb6179469c82e971872c53cdd.svg', bk: x.b + ' / ' + x.c, ss: pill(x.t),
+      bar: 'height: 6px; width: ' + Math.round((x.b / x.c) * 100) + '%; background: ' + (x.b === x.c ? '#1f7a4d' : '#262a67') + ';',
+      drs: x.t === 'warn' ? 'font-weight: 600; color: #8a4b00;' : 'font-weight: 500;',
+      mos: x.mo === 'Not assigned' ? 'font-weight: 600; color: #b42318;' : '' }));
+    const fl = (t) => 'justify-self: start; padding: 2px 8px; border-radius: 999px; font-size: 12px; font-weight: 600; ' + (t ? tones[t] : 'color: #5b5f86;');
+    const programs = [
+      { n: 'Hegra guided tour', img: '../assets/44a218548719fe367b614a0dd5151345.svg', alt: 'Sandstone rock tombs under a night sky', m: 'Per person · 180 SAR', e: '112 people', f: 'Optional', ft: '', r: '20,160 SAR' },
+      { n: 'Elephant Rock dinner', img: '../assets/dd052dab07949cd087d95323479af226.svg', alt: 'Group dinner around a desert campfire', m: 'Tiered · 90 / 150 / 240 SAR', e: '94 people', f: 'Optional', ft: '', r: '13,860 SAR' },
+      { n: 'Hot-air balloon', img: '../assets/073b7fe9ddee4e94c5d8ddaa41cbb4f4.svg', alt: 'Dunes at sunset', m: 'Per person · 950 SAR', e: '9 of 12 places', f: 'VIP only', ft: 'info', r: '8,550 SAR' },
+      { n: 'Travel insurance', img: '../assets/5d1598097ad2c90e309e91f94f4c905d.svg', alt: 'Travel documents ready for review', m: 'Per person · 25 SAR', e: '168 people', f: 'Required', ft: 'warn', r: '4,200 SAR' },
+      { n: 'Desert camp kit', img: '../assets/39057213b7b92ac9886e5089cdf16941.svg', alt: 'Night camp among desert rocks', m: 'By quantity · 60 SAR each', e: '38 kits', f: 'Optional', ft: '', r: '2,280 SAR' },
+      { n: 'Group photo package', img: '../assets/8285215df674a3dee0a35b58d0d931e6.svg', alt: 'Photographer framing the group', m: 'Per group · 300 SAR', e: '6 groups', f: 'Optional', ft: '', r: '1,800 SAR' },
+      { n: 'Old Town walk', img: '../assets/ec6a722ee32901158955f2a8dec188bd.svg', alt: 'Mud-brick old town lit at dusk', m: 'Free', e: '131 people', f: 'Optional', ft: '', r: '0 SAR' }
+    ].map((p) => ({ ...p, fs: fl(p.ft) }));
+    const todo = [
+      { t: 'Bus 3 needs a moderator', d: 'Assign one of your 6 moderators before Tue 14 Oct.', href: 'OrgNew4.dc.html', bg: '#fde8e6', icon: 'M12 3l9.5 17h-19zM12 10v4M12 17h.01' },
+      { t: 'Reply to Khalid Al-Harbi', d: 'Countered 1,450 SAR for Bus 4 (you offered 1,300 SAR).', href: 'OrgDeal.dc.html', bg: '#fdf0d5', icon: 'M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zM14 3v5h5' },
+      { t: '14 passengers without a seat', d: 'Company-assigned seats. Assign before boarding opens.', href: 'OrgSeatAssign.dc.html', bg: '#f6f3e4', icon: 'M7 4h7a2 2 0 0 1 2 2v7H7zM5 13h12a2 2 0 0 1 2 2v2H5zM7 17v3M17 17v3' },
+      { t: '2 refund requests', d: '48 h or more before departure (80% refund).', href: 'OrgBooking.dc.html', bg: '#f6f3e4', icon: 'M4 7a2 2 0 0 1 2-2h12v4M4 7v11a2 2 0 0 0 2 2h14V9H6a2 2 0 0 1-2-2zM16 14.5h.01' }
+    ];
+    return { tabs, kpis, fleet, programs, todo };
+  }
+}
+</script>
+</body>
+</html>

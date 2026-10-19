@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Program · Elephant Rock dinner</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="height: 100%; box-sizing: border-box; padding: 56px 16px 24px; display: flex; flex-direction: column; gap: 12px">
+
+<div style="display: flex; align-items: center; gap: 12px">
+<a href="TrvBookPrograms.dc.html" aria-label="Back to programs" style="width: 44px; height: 44px; border-radius: 999px; background: #ffffff; color: #262a67; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a>
+<div style="display: flex; flex-direction: column"><h1 style="margin: 0; font-size: 22px; line-height: 28px; font-weight: 700">Elephant Rock dinner</h1><span style="font-size: 13px; color: #5b5f86">AlUla Heritage Weekend · Tiered program</span></div>
+</div>
+
+<div style="border-radius: 20px; background: #ffffff; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px">
+<p style="margin: 0; font-size: 14px; line-height: 20px">Dinner under the stars facing Jabal AlFil. Arabic mezze, grills and live oud, seated in the sand with lanterns.</p>
+<div style="display: flex; gap: 8px; align-items: center; font-size: 14px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7v5l3 2"></path></svg>Thu 16 Oct · 19:30–22:00</div>
+<div style="display: flex; gap: 8px; align-items: center; font-size: 14px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.1-7-11.5A7 7 0 0 1 19 9.5C19 14.9 12 21 12 21zM12 7a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z"></path></svg>Elephant Rock · Bus 2 leaves hotel 19:00</div>
+<div style="display: flex; gap: 8px; align-items: center; font-size: 13px; color: #5b5f86"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1f7a4d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg>{{tierInfo}}</div>
+</div>
+
+<div role="radiogroup" aria-label="Dinner tier" style="display: flex; gap: 4px; padding: 3px; border-radius: 12px; background: #ffffff">
+<sc-for list="{{tiers}}" as="t" hint-placeholder-count="3"><button type="button" role="radio" aria-checked="{{t.on}}" onClick="{{t.pick}}" style="{{t.style}}"><span style="font-size: 14px; font-weight: 600">{{t.name}}</span><span style="font-size: 12px">{{t.price}}</span></button></sc-for>
+</div>
+
+<div style="border-radius: 20px; background: #ffffff; padding: 10px 16px">
+<div style="display: flex; justify-content: space-between; align-items: baseline"><span id="who-l" style="font-size: 14px; font-weight: 600">Who's joining</span><span style="font-size: 13px; font-weight: 600; color: #8a4b00">38 of 60 places taken</span></div>
+<div role="group" aria-labelledby="who-l" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 8px">
+<sc-for list="{{people}}" as="p" hint-placeholder-count="4"><label style="min-height: 44px; display: flex; align-items: center; gap: 8px; font-size: 15px; cursor: pointer"><input type="checkbox" checked="{{p.on}}" onChange="{{p.toggle}}" style="width: 20px; height: 20px; accent-color: #262a67; margin: 0">{{p.name}}</label></sc-for>
+</div>
+</div>
+
+<div style="padding: 10px 12px; border-radius: 12px; background: #e6e8f5; display: flex; gap: 10px; font-size: 13px; line-height: 18px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 11v5M12 8h.01"></path></svg><span>80% refund until Tue 14 Oct (48 h before departure). 50% from 24 to 48 h before; no refund under 24 h.</span></div>
+
+<div style="margin-top: auto; display: flex; flex-direction: column; gap: 6px">
+<div style="display: flex; justify-content: space-between; font-size: 14px; color: #5b5f86"><span>{{line}}</span><span>{{gross}} SAR</span></div>
+<div style="display: flex; justify-content: space-between; font-size: 14px; color: #1f7a4d; font-weight: 600"><span>Explorer 5% off programs</span><span>−{{disc}} SAR</span></div>
+<div style="display: flex; justify-content: space-between; align-items: baseline"><span style="font-size: 15px; font-weight: 600">Program total</span><span aria-live="polite" style="font-size: 22px; font-weight: 700">{{net}} SAR</span></div>
+<a href="TrvBookPrograms.dc.html" style="margin-top: 4px; height: 52px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-weight: 700; font-size: 16px; display: flex; align-items: center; justify-content: center; text-decoration: none">Add to booking</a>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { tier: 'Standard', who: { Sara: true, Faisal: true, Omar: false, Lina: false } }; }
+  renderVals() {
+    const s = this.state;
+    const TP = { Basic: 90, Standard: 150, Premium: 240 };
+    const INFO = { Basic: 'Basic: mezze, grills, soft drinks', Standard: 'Standard: adds dessert table and front-row seating', Premium: 'Premium: private majlis, chef menu, photo by Noura' };
+    const tiers = Object.keys(TP).map((name) => {
+      const on = s.tier === name;
+      return { name, price: TP[name] + ' SAR', on: on ? 'true' : 'false', pick: () => this.setState({ tier: name }),
+        style: 'flex: 1 1 0; height: 48px; border-radius: 10px; font: inherit; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 16px; color: #262a67; ' + (on ? 'background: #f6f3e4; border: 2px solid #fb8030;' : 'background: transparent; border: 0;') };
+    });
+    const people = Object.keys(s.who).map((name) => ({ name, on: s.who[name], toggle: () => this.setState({ who: Object.assign({}, s.who, { [name]: !s.who[name] }) }) }));
+    const n = people.filter((p) => p.on).length;
+    const gross = n * TP[s.tier];
+    const disc = Math.round(gross * 0.05);
+    return { tiers, people, tierInfo: INFO[s.tier], line: s.tier + ' · ' + n + ' × ' + TP[s.tier] + ' SAR', gross: gross.toLocaleString('en-US'), disc: disc, net: (gross - disc).toLocaleString('en-US') };
+  }
+}
+</script>
+</body>
+</html>

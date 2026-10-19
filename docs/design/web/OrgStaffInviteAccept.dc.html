@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Organization dashboard · Accept invite</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif; display: flex; flex-direction: column; align-items: center; padding: 40px; gap: 32px">
+<img src="../assets/1fbce194fcb16bf54904c32c189fca31.svg" alt="Trips Enjoy" style="height: 48px; width: auto">
+<div style="width: 480px; box-sizing: border-box; background: #ffffff; border-radius: 20px; padding: 32px; display: flex; flex-direction: column; gap: 16px; box-shadow: 0 1px 2px rgba(38,42,103,.06), 0 6px 20px rgba(38,42,103,.08)">
+<div style="display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 12px; background: #f6f3e4">
+<img src="../assets/697a49af6be5a077ae1851c1a8b9dfcd.svg" alt="" style="width: 44px; height: 44px; border-radius: 12px; object-fit: cover; flex-shrink: 0">
+<span style="display: flex; flex-direction: column"><span style="font-size: 15px; font-weight: 600">Fahad invited you to Sunrise Tours Co.</span><span style="font-size: 13px; color: #5b5f86">Role: Trip manager · invite expires in 6 days</span></span>
+</div>
+<h1 style="margin: 0; font-size: 24px; line-height: 32px; font-weight: 600">Set up your staff account</h1>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="oi-e" style="font-size: 14px; font-weight: 600">Work email</label><input id="oi-e" type="email" value="maha@sunrisetours.sa" readonly style="height: 48px; padding: 0 14px; border-radius: 8px; border: 1px solid #e3dfc9; background: #f6f3e4; font-family: inherit; font-size: 16px; color: #5b5f86"></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="oi-n" style="font-size: 14px; font-weight: 600">Full name</label><input id="oi-n" dir="auto" value="Maha Al-Dosari" style="height: 48px; padding: 0 14px; border-radius: 8px; border: 1px solid #7b7fa6; font-family: inherit; font-size: 16px; color: #262a67"></div>
+<dc-import name="PhoneField" label="Mobile number" value="" country="SA" helper="Used for sign-in codes and trip-day alerts." field-id="oi-phone" hint-size="100%,106px"></dc-import>
+<dc-import name="PasswordField" label="Create a password" value="" show-strength="{{yes}}" is-new="{{yes}}" field-id="oi-pass" hint-size="100%,112px"></dc-import>
+<a href="OrgWorkspace.dc.html" style="height: 52px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 16px; font-weight: 600; display: flex; align-items: center; justify-content: center; text-decoration: none">Join Sunrise Tours Co.</a>
+<p style="margin: 0; font-size: 14px; color: #5b5f86; text-align: center">Not you? <a href="OrgLogin.dc.html" style="font-weight: 600">Decline invite</a></p>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+renderVals() { return { yes: true }; }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Organization · Customer 360</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+.te-row:hover{background:#f6f3e4}
+</style>
+</helmet>
+<div style="min-height: 1000px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="OrgNav" active="Customers" hint-size="248px,1000px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 20px">
+
+<nav aria-label="Breadcrumb" style="font-size: 14px; display: flex; gap: 8px; align-items: center"><a href="OrgCustomers.dc.html" style="font-weight: 600; display: inline-flex; align-items: center; gap: 4px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg>Customers</a><span style="color: #5b5f86">/ Sara Al-Qahtani</span></nav>
+
+<section aria-labelledby="cust-h" style="background: #ffffff; border-radius: 20px; padding: 20px 24px; display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start; justify-content: space-between">
+<div style="display: flex; gap: 16px; align-items: flex-start; flex: 1 1 520px; min-width: 0">
+<img src="../assets/9bae6808275a736bdbdad8b4ffd6c82b.svg" alt="" style="width: 72px; height: 72px; border-radius: 999px; object-fit: cover; flex-shrink: 0">
+<div style="display: flex; flex-direction: column; gap: 8px; min-width: 0">
+<div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center"><h1 id="cust-h" style="margin: 0; font-size: 28px; line-height: 34px; font-weight: 700">Sara Al-Qahtani</h1><span style="display: inline-flex; padding: 2px 10px; border-radius: 999px; background: #fdf0d5; color: #8a4b00; font-size: 13px; font-weight: 600">Family</span><span style="display: inline-flex; align-items: center; gap: 4px; padding: 2px 10px; border-radius: 999px; background: #e6e8f5; font-size: 13px; font-weight: 600"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"></path></svg>Explorer plan</span></div>
+<span style="font-size: 14px; color: #5b5f86">+966 55 ••• 4821 · sa•••@outlook.sa · Riyadh, Al Yasmin · Customer since Thu 10 Apr</span>
+<div style="display: flex; flex-wrap: wrap; gap: 6px; align-items: center">
+<sc-for list="{{tags}}" as="g" hint-placeholder-count="4"><span style="padding: 2px 10px; border-radius: 999px; background: #f6f3e4; border: 1px solid #e3dfc9; font-size: 13px; font-weight: 600">{{g}}</span></sc-for>
+<button type="button" style="height: 28px; padding: 0 10px; border-radius: 999px; border: 1px dashed #7b7fa6; background: #fff; color: #262a67; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer">+ Add tag</button>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-size: 13px"><span style="color: #5b5f86; font-weight: 600">Marketing consent</span>
+<sc-for list="{{consent}}" as="c" hint-placeholder-count="4"><span style="{{c.st}}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{c.icon}}"></path></svg>{{c.l}}</span></sc-for>
+<span style="color: #5b5f86">Updated by Sara · Tue 2 Sep</span></div>
+</div>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 10px">
+<a href="OrgInvoices.dc.html" style="height: 44px; box-sizing: border-box; padding: 0 16px; border-radius: 12px; border: 1px solid #7b7fa6; background: #fff; color: #262a67; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2zM9 8h6M9 12h6"></path></svg>Invoices</a>
+<a href="OrgCouponNew.dc.html" style="height: 44px; box-sizing: border-box; padding: 0 16px; border-radius: 12px; border: 1px solid #7b7fa6; background: #fff; color: #262a67; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12V4a1 1 0 0 1 1-1h8l9 9-9 9zM7.5 7.5h.01"></path></svg>Coupon for Sara</a>
+<button type="button" onClick="{{openNote}}" style="height: 44px; padding: 0 16px; border-radius: 12px; border: 1px solid #7b7fa6; background: #fff; color: #262a67; font: inherit; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16zM14 6l4 4"></path></svg>Add note</button>
+<a href="OrgInbox.dc.html" style="height: 44px; box-sizing: border-box; padding: 0 18px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"></path></svg>Message Sara</a>
+</div>
+</section>
+
+<div role="tablist" aria-label="Customer sections" style="display: flex; flex-wrap: wrap; gap: 4px; border-bottom: 1px solid #e3dfc9">
+<sc-for list="{{tabs}}" as="t" hint-placeholder-count="6">
+<button type="button" role="tab" aria-selected="{{t.sel}}" onClick="{{t.on}}" style="{{t.style}}">{{t.l}} <span style="font-size: 12px; color: #5b5f86; font-weight: 600">{{t.n}}</span></button>
+</sc-for>
+</div>
+
+<sc-if value="{{isOverview}}" hint-placeholder-val="{{true}}">
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
+<div style="flex: 2 1 520px; min-width: 0; display: flex; flex-direction: column; gap: 20px">
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px">
+<sc-for list="{{stats}}" as="s" hint-placeholder-count="4">
+<div style="padding: 16px 18px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 13px; color: #5b5f86">{{s.l}}</span><span style="font-size: 24px; line-height: 30px; font-weight: 700">{{s.v}} <span style="font-size: 14px; font-weight: 500; color: #5b5f86">{{s.u}}</span></span><span style="font-size: 13px; color: #5b5f86">{{s.d}}</span></div>
+</sc-for>
+</div>
+
+<section aria-labelledby="tl-h" style="background: #ffffff; border-radius: 20px; padding: 20px">
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px"><h2 id="tl-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">Trips timeline</h2><a href="OrgBookings.dc.html" style="font-size: 14px; font-weight: 600">All bookings</a></div>
+<ol style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column">
+<sc-for list="{{timeline}}" as="e" hint-placeholder-count="3">
+<li style="display: grid; grid-template-columns: 20px minmax(0, 1fr) auto; gap: 14px; padding: 10px 0">
+<span style="display: flex; flex-direction: column; align-items: center; gap: 4px"><span style="{{e.dot}}"></span><span style="flex-grow: 1; width: 2px; background: #e3dfc9"></span></span>
+<a href="OrgBooking.dc.html" style="display: flex; flex-direction: column; gap: 2px; color: #262a67; text-decoration: none; min-width: 0"><span style="font-size: 13px; color: #5b5f86">{{e.date}} · {{e.ref}}</span><span style="font-size: 16px; font-weight: 600">{{e.trip}}</span><span style="font-size: 14px; color: #5b5f86">{{e.d}}</span></a>
+<span style="display: flex; flex-direction: column; align-items: flex-end; gap: 6px"><span style="font-weight: 700">{{e.amt}}</span><span style="{{e.ss}}">{{e.s}}</span></span>
+</li>
+</sc-for>
+</ol>
+</section>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px">
+<section aria-labelledby="pg-h" style="background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 10px">
+<h2 id="pg-h" style="margin: 0; font-size: 18px; line-height: 26px; font-weight: 600">Programs bought</h2>
+<sc-for list="{{programs}}" as="p" hint-placeholder-count="5"><div style="display: flex; justify-content: space-between; gap: 8px; font-size: 14px; padding-bottom: 8px; border-bottom: 1px solid #e3dfc9"><span>{{p.n}}</span><span style="color: #5b5f86; white-space: nowrap">{{p.q}}</span></div></sc-for>
+</section>
+<section aria-labelledby="cpn-h" style="background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 10px">
+<h2 id="cpn-h" style="margin: 0; font-size: 18px; line-height: 26px; font-weight: 600">Coupons used</h2>
+<sc-for list="{{coupons}}" as="c" hint-placeholder-count="2"><div style="display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 14px"><span style="display: flex; flex-direction: column; gap: 2px"><span style="align-self: flex-start; padding: 2px 8px; border-radius: 6px; border: 1px dashed #7b7fa6; font-size: 13px; font-weight: 700; letter-spacing: .4px">{{c.code}}</span><span style="color: #5b5f86; font-size: 13px">{{c.on}}</span></span><span style="font-weight: 600; color: #1f7a4d">{{c.amt}}</span></div></sc-for>
+<a href="OrgCouponNew.dc.html" style="font-size: 14px; font-weight: 600">Create a coupon only Sara can use</a>
+</section>
+</div>
+</div>
+
+<div style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column; gap: 20px">
+<section aria-labelledby="na-h" style="background: #262a67; color: #f6f3e4; border-radius: 20px; padding: 18px 20px; display: flex; flex-direction: column; gap: 8px">
+<span id="na-h" style="font-size: 12px; font-weight: 700; letter-spacing: .6px; color: #b8bad6">NEXT ACTION</span>
+<span style="font-size: 16px; font-weight: 600; line-height: 22px">Confirm seat change for Omar and Lina on Bus 2</span>
+<span style="font-size: 14px; color: #b8bad6">Due Wed 15 Oct 18:00 · Rana Fadel (Support)</span>
+<a href="OrgInbox.dc.html" style="color: #ff8655; font-size: 14px; font-weight: 600">Open conversation</a>
+</section>
+
+<section aria-labelledby="fm-h" style="background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+<h2 id="fm-h" style="margin: 0; font-size: 18px; line-height: 26px; font-weight: 600">Family members</h2>
+<sc-for list="{{family}}" as="f" hint-placeholder-count="3">
+<div style="display: flex; align-items: center; gap: 12px"><img src="{{f.av}}" alt="" style="width: 36px; height: 36px; flex-shrink: 0; border-radius: 999px; object-fit: cover"><span style="flex-grow: 1; display: flex; flex-direction: column"><span style="font-weight: 600; font-size: 15px">{{f.n}}</span><span style="font-size: 13px; color: #5b5f86">{{f.d}}</span></span><span style="{{f.ts}}">{{f.t}}</span></div>
+</sc-for>
+</section>
+
+<section aria-labelledby="sg-h" style="background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 10px">
+<h2 id="sg-h" style="margin: 0; font-size: 18px; line-height: 26px; font-weight: 600">In segments</h2>
+<div style="display: flex; flex-wrap: wrap; gap: 6px"><sc-for list="{{segments}}" as="s" hint-placeholder-count="3"><a href="OrgSegments.dc.html" style="padding: 4px 12px; border-radius: 999px; background: #e6e8f5; color: #262a67; font-size: 13px; font-weight: 600; text-decoration: none">{{s}}</a></sc-for></div>
+</section>
+
+<section aria-labelledby="nt-h" style="background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+<h2 id="nt-h" style="margin: 0; font-size: 18px; line-height: 26px; font-weight: 600">Notes</h2>
+<sc-if value="{{noteOpen}}" hint-placeholder-val="{{true}}">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<label for="note" style="font-size: 14px; font-weight: 600">New note · visible to your team only</label>
+<textarea id="note" rows="3" style="border-radius: 8px; border: 1px solid #7b7fa6; padding: 10px 12px; font: inherit; font-size: 15px; color: #262a67; resize: vertical">Prefers front rows; Lina gets travel-sick on long drives.</textarea>
+<div style="display: flex; gap: 8px; justify-content: flex-end"><button type="button" onClick="{{closeNote}}" style="height: 40px; padding: 0 14px; border-radius: 12px; border: 0; background: transparent; color: #262a67; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer">Cancel</button><button type="button" onClick="{{saveNote}}" style="height: 40px; padding: 0 16px; border-radius: 12px; border: 0; background: #262a67; color: #f6f3e4; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer">Save note</button></div>
+</div>
+</sc-if>
+<sc-for list="{{notes}}" as="n" hint-placeholder-count="2">
+<div style="padding: 12px; border-radius: 12px; background: #f6f3e4; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 14px; line-height: 20px">{{n.t}}</span><span style="font-size: 12px; color: #5b5f86">{{n.a}} · {{n.w}}</span></div>
+</sc-for>
+</section>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{isList}}" hint-placeholder-val="{{false}}">
+<section aria-label="{{tabTitle}}" style="background: #ffffff; border-radius: 20px; padding: 8px 0">
+<sc-for list="{{listRows}}" as="r" hint-placeholder-count="4">
+<a href="{{r.href}}" class="te-row" style="display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) auto; gap: 16px; align-items: center; padding: 14px 20px; border-bottom: 1px solid #e3dfc9; color: #262a67; text-decoration: none">
+<span style="display: flex; flex-direction: column; min-width: 0"><span style="font-weight: 600">{{r.t}}</span><span style="font-size: 13px; color: #5b5f86">{{r.d}}</span></span>
+<span style="font-size: 14px">{{r.m}}</span>
+<span style="{{r.ss}}">{{r.s}}</span>
+</a>
+</sc-for>
+</section>
+</sc-if>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1300}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { tab: 'Overview', noteOpen: true, saved: false }; }
+  renderVals() {
+    const tones = { ok: 'background: #e3f3ea; color: #1f7a4d;', warn: 'background: #fdf0d5; color: #8a4b00;', info: 'background: #e6e8f5; color: #262a67;', neutral: 'background: #f6f3e4; color: #5b5f86;', live: 'background: #ffe7dc; color: #c93a00;' };
+    const pill = (t) => 'display: inline-flex; align-items: center; gap: 4px; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; white-space: nowrap; ' + tones[t];
+    const C = { mail: 'M4 6h16v12H4zM4 7l8 6 8-6', sms: 'M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2', wa: 'M4 5h16v11H9l-5 4z', push: 'M6 16v-5a6 6 0 0 1 12 0v5l2 2H4zM10 21a2 2 0 0 0 4 0' };
+    const consent = [['mail', 'Email · opted in', 1], ['sms', 'SMS · not opted in', 0], ['wa', 'WhatsApp · opted in', 1], ['push', 'Push · opted in', 1]].map(([k, l, on]) => ({ icon: C[k], l,
+      st: 'display: inline-flex; align-items: center; gap: 5px; padding: 2px 10px; border-radius: 999px; font-weight: 600; ' + (on ? 'background: #e3f3ea; color: #1f7a4d;' : 'background: #ffffff; color: #5b5f86; border: 1px dashed #7b7fa6;') }));
+    const tabNames = [['Overview', ''], ['Bookings', '3'], ['Family', '3'], ['Conversations', '4'], ['Reviews', '2'], ['Invoices', '5']];
+    const tab = this.state.tab;
+    const tabs = tabNames.map(([l, n]) => { const on = l === tab; return { l, n, sel: on ? 'true' : 'false', on: () => this.setState({ tab: l }),
+      style: 'height: 44px; padding: 0 14px; border: 0; background: transparent; color: #262a67; font: inherit; font-size: 15px; cursor: pointer; margin-bottom: -1px; ' + (on ? 'font-weight: 700; border-bottom: 3px solid #fb8030;' : 'font-weight: 500; border-bottom: 3px solid transparent;') }; });
+    const stats = [
+      { l: 'Lifetime value', v: '14,980', u: 'SAR', d: 'Top 6% of customers' },
+      { l: 'Trips', v: '3', u: '', d: '2 completed · 1 upcoming' },
+      { l: 'Avg per trip', v: '4,993', u: 'SAR', d: '4 travellers each time' },
+      { l: 'Avg rating given', v: '4.5', u: 'of 5', d: '2 reviews' }
+    ];
+    const timeline = [
+      { date: 'Thu 16 Oct', ref: 'TE-48217', trip: 'AlUla Heritage Weekend', d: '4 travellers · Bus 2 · seats 7A 7B 12C 12D', amt: '5,720 SAR', s: 'Seat change requested', t: 'warn', dot: 'width: 14px; height: 14px; border-radius: 999px; background: #ff6c2e; border: 3px solid #ffe7dc' },
+      { date: 'Thu 12 Jun', ref: 'TE-39102', trip: 'Al Ahsa Oasis Day', d: '4 travellers · Bus 1 · FAMILY10 applied', amt: '4,060 SAR', s: 'Completed', t: 'ok', dot: 'width: 14px; height: 14px; border-radius: 999px; background: #262a67; border: 3px solid #e6e8f5' },
+      { date: 'Thu 10 Apr', ref: 'TE-35517', trip: 'Taif Rose Farms · spring', d: '4 travellers · Bus 2 · first trip with Sunrise', amt: '5,200 SAR', s: 'Completed', t: 'ok', dot: 'width: 14px; height: 14px; border-radius: 999px; background: #262a67; border: 3px solid #e6e8f5' }
+    ].map((e) => ({ ...e, ss: pill(e.t) }));
+    const programs = [
+      { n: 'Hegra guided tour', q: '4 × 180 SAR' }, { n: 'Elephant Rock dinner · Standard', q: '4 × 150 SAR' }, { n: 'Travel insurance', q: '12 × 25 SAR' },
+      { n: 'Date farm lunch', q: '4 × 65 SAR' }, { n: 'Rose distillery visit', q: '4 × 80 SAR' }
+    ];
+    const coupons = [{ code: 'AUTUMN15', on: 'AlUla Heritage Weekend · Oct', amt: '−858 SAR' }, { code: 'FAMILY10', on: 'Al Ahsa Oasis Day · Jun', amt: '−451 SAR' }];
+    const family = [
+      { i: 'F', av: '../assets/9027ab49e36dcb334b88be60fa1fb65c.svg', n: 'Faisal Al-Qahtani', d: 'Husband · adult', t: 'Adult', ts: pill('neutral') },
+      { i: 'O', av: '../assets/e627328c50e6893b77803c4a27b29c6e.svg', n: 'Omar', d: 'Son · 9 years', t: 'Tracking on', ts: pill('ok') },
+      { i: 'L', av: '../assets/1cd63ceb2af4109eddb6e3740d99b590.svg', n: 'Lina', d: 'Daughter · 6 years', t: 'Tracking on', ts: pill('ok') }
+    ];
+    const baseNotes = [
+      { t: 'Asked for the kids to sit with a parent on every trip. Bus 2 moderator Nadia Yusuf is aware.', a: 'Rana Fadel', w: 'Mon 13 Oct 10:12' },
+      { t: 'Good fit for the Taif Rose Farms autumn edition — loved the spring trip.', a: 'Mona Saleh', w: 'Sun 13 Apr 19:40' }
+    ];
+    const notes = this.state.saved ? [{ t: 'Prefers front rows; Lina gets travel-sick on long drives.', a: 'Mona Saleh', w: 'Just now' }, ...baseNotes] : baseNotes;
+    const lists = {
+      Bookings: timeline.map((e) => ({ t: e.trip + ' · ' + e.ref, d: e.date + ' · ' + e.d, m: e.amt, s: e.s, ss: e.ss, href: 'OrgBooking.dc.html' })),
+      Family: family.map((f) => ({ t: f.n, d: f.d, m: f.i === 'F' ? 'Travels on all bookings' : 'Parent: Sara · Explorer', s: f.t, ss: f.ts, href: 'OrgCustomer.dc.html' })),
+      Conversations: [
+        { t: 'Seat change for Omar and Lina', d: 'AlUla Heritage Weekend · Inbox', m: 'Today 09:41', s: 'Open', ss: pill('warn'), href: 'OrgInbox.dc.html' },
+        { t: 'Is insurance included for children?', d: 'Pre-booking question', m: 'Fri 3 Oct', s: 'Resolved', ss: pill('ok'), href: 'OrgInbox.dc.html' },
+        { t: 'Pickup point in Al Ahsa', d: 'Al Ahsa Oasis Day', m: 'Tue 10 Jun', s: 'Resolved', ss: pill('ok'), href: 'OrgInbox.dc.html' },
+        { t: 'Photo album link', d: 'Taif Rose Farms · spring', m: 'Mon 14 Apr', s: 'Resolved', ss: pill('ok'), href: 'OrgInbox.dc.html' }
+      ],
+      Reviews: [
+        { t: 'Lina loved the rose distillery. Moderator was patient with the kids.', d: 'Taif Rose Farms · spring', m: '5 of 5', s: 'Replied', ss: pill('ok'), href: 'OrgReviews.dc.html' },
+        { t: 'Great oasis day, lunch came 40 minutes late.', d: 'Al Ahsa Oasis Day', m: '4 of 5', s: 'Replied', ss: pill('ok'), href: 'OrgReviews.dc.html' }
+      ],
+      Invoices: [
+        { t: 'INV-ST-2026-004812', d: 'AlUla Heritage Weekend · simplified tax invoice', m: '5,720 SAR', s: 'Paid · Reported', ss: pill('ok'), href: 'OrgInvoice.dc.html' },
+        { t: 'INV-ST-2026-003120', d: 'Al Ahsa Oasis Day', m: '4,060 SAR', s: 'Paid · Reported', ss: pill('ok'), href: 'OrgInvoice.dc.html' },
+        { t: 'CN-ST-2026-000214', d: 'Credit note · Elephant Rock dinner removed', m: '−300 SAR', s: 'Reported', ss: pill('info'), href: 'OrgInvoice.dc.html' },
+        { t: 'INV-ST-2026-001988', d: 'Taif Rose Farms · spring', m: '5,200 SAR', s: 'Paid · Reported', ss: pill('ok'), href: 'OrgInvoice.dc.html' }
+      ]
+    };
+    return {
+      tags: ['Repeat traveller', 'Family of 4', 'Front rows', 'Tracking on'], consent, tabs, stats, timeline, programs, coupons, family, notes,
+      segments: ['Families with children', 'Repeat travellers', 'Explorer & VIP members', 'High spenders'],
+      isOverview: tab === 'Overview', isList: tab !== 'Overview', listRows: lists[tab] || [], tabTitle: tab,
+      noteOpen: this.state.noteOpen,
+      openNote: () => this.setState({ noteOpen: true, tab: 'Overview' }),
+      closeNote: () => this.setState({ noteOpen: false }),
+      saveNote: () => this.setState({ noteOpen: false, saved: true })
+    };
+  }
+}
+</script>
+</body>
+</html>

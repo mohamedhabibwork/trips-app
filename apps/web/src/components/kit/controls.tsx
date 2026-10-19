@@ -197,9 +197,10 @@ export type ButtonTone = "primary" | "outline" | "danger";
 
 const BUTTON_TONE: Record<ButtonTone, string> = {
   primary:
-    "border-0 bg-[var(--te-primary)] text-[var(--te-on-primary)] hover:shadow-[var(--te-card-shadow-hover)]",
+    "border-0 bg-[var(--te-primary)] text-[var(--te-on-primary)] hover:bg-[var(--te-primary-strong)] hover:shadow-[var(--te-card-shadow-hover)]",
+  // Artboard secondary: hairline-light outline on a raised surface, ink border on hover.
   outline:
-    "border-2 border-[var(--te-ink)] bg-transparent text-[var(--te-ink)] hover:bg-[var(--te-hairline)]",
+    "border-[1.5px] border-[var(--te-outline)] bg-[var(--te-surface-raised)] text-[var(--te-ink)] hover:border-[var(--te-ink)] hover:bg-[var(--te-surface-raised)]",
   danger: "border-0 bg-[var(--te-danger)] text-[var(--te-on-danger)]",
 };
 

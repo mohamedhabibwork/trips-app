@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Photographer · Edit profile</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="height: 100%; box-sizing: border-box; padding: 56px 16px 24px; display: flex; flex-direction: column; gap: 10px">
+
+<div style="display: flex; align-items: center; gap: 12px">
+<a href="PhoProfile.dc.html" aria-label="Back" style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 999px; background: #ffffff; color: #262a67; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a>
+<h1 style="margin: 0; flex-grow: 1; font-size: 22px; line-height: 28px; font-weight: 700">Edit profile</h1>
+<span style="font-size: 13px; color: #5b5f86">Studio · Verified</span>
+</div>
+
+<div style="position: relative; height: 112px; flex-shrink: 0">
+<div style="position: absolute; top: 0; left: 0; right: 0; height: 88px; border-radius: 20px; overflow: hidden; background: #262a67">
+<img src="../assets/8285215df674a3dee0a35b58d0d931e6.svg" alt="Cover photo: Noura framing a group in front of the trip bus" style="width: 100%; height: 100%; object-fit: cover; object-position: 50% 45%">
+</div>
+<button type="button" style="position: absolute; top: 8px; right: 8px; height: 44px; padding: 0 14px; border-radius: 999px; background: rgba(255,255,255,0.78); backdrop-filter: blur(24px) saturate(1.8); -webkit-backdrop-filter: blur(24px) saturate(1.8); border: 1px solid rgba(255,255,255,0.7); box-shadow: 0 10px 30px rgba(38,42,103,0.18); color: #262a67; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1zM8.5 10a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM20 15l-5-5L5 20"></path></svg>Change cover</button>
+<button type="button" aria-label="Change profile photo" style="position: absolute; top: 44px; left: 14px; width: 68px; height: 68px; box-sizing: border-box; padding: 0; border-radius: 999px; border: 4px solid #f6f3e4; background: #1a1c4b; color: #f89e23; font: inherit; font-size: 22px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center"><img src="../assets/380d7985babc06d16544f4085cdec2d7.svg" alt="" style="width: 100%; height: 100%; object-fit: cover; border-radius: 999px"><span style="position: absolute; right: -4px; bottom: -4px; width: 26px; height: 26px; border-radius: 999px; background: #ff6c2e; color: #262a67; border: 2px solid #f6f3e4; display: flex; align-items: center; justify-content: center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8a2 2 0 0 1 2-2h2l2-2h4l2 2h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zM12 9.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7z"></path></svg></span></button>
+<span style="position: absolute; left: 94px; top: 92px; font-size: 15px; line-height: 20px; font-weight: 700">Noura Al-Shehri</span>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 4px">
+<div style="display: flex; justify-content: space-between; align-items: baseline"><label for="bio" style="font-size: 14px; line-height: 18px; font-weight: 600">Bio</label><span style="font-size: 12px; color: #5b5f86">124 / 300</span></div>
+<textarea id="bio" rows="2" style="height: 64px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; padding: 8px 14px; font: inherit; font-size: 15px; line-height: 22px; color: #262a67; resize: none; width: 100%">Group and heritage trip photographer for 7 years. Candid moments, drone shots where allowed, edits in 72 hours.</textarea>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px">
+<div style="display: flex; flex-direction: column; gap: 4px"><label for="half" style="font-size: 14px; line-height: 18px; font-weight: 600">Half day · 5 h (SAR)</label><input id="half" type="text" inputmode="numeric" value="1,400" style="height: 52px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; padding: 0 14px; font: inherit; font-size: 16px; color: #262a67; width: 100%"></div>
+<div style="display: flex; flex-direction: column; gap: 4px"><label for="full" style="font-size: 14px; line-height: 18px; font-weight: 600">Full day · 10 h (SAR)</label><input id="full" type="text" inputmode="numeric" value="2,400" style="height: 52px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; padding: 0 14px; font: inherit; font-size: 16px; color: #262a67; width: 100%"></div>
+<div style="display: flex; flex-direction: column; gap: 4px"><label for="edits" style="font-size: 14px; line-height: 18px; font-weight: 600">Edited photos / day</label><input id="edits" type="text" inputmode="numeric" value="200" style="height: 52px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; padding: 0 14px; font: inherit; font-size: 16px; color: #262a67; width: 100%"></div>
+<div style="display: flex; flex-direction: column; gap: 4px"><label for="deliv" style="font-size: 14px; line-height: 18px; font-weight: 600">Delivery time</label><select id="deliv" style="height: 52px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; padding: 0 10px; font: inherit; font-size: 16px; color: #262a67; width: 100%"><option>48 h</option><option selected>72 h</option><option>5 days</option><option>7 days</option></select></div>
+</div>
+
+<section aria-labelledby="kit-h" style="display: flex; flex-direction: column; gap: 4px">
+<div style="display: flex; justify-content: space-between; align-items: center">
+<h2 id="kit-h" style="margin: 0; font-size: 14px; line-height: 18px; font-weight: 600">Equipment <span style="font-weight: 400; color: #5b5f86">· {{kitCount}} items</span></h2>
+<button type="button" onClick="{{addKit}}" style="height: 44px; padding: 0 4px; border: none; background: transparent; color: #c93a00; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 4px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Add item</button>
+</div>
+<div role="list" aria-labelledby="kit-h" style="height: 86px; overflow-y: auto; display: grid; grid-template-columns: 1fr 1fr; grid-auto-rows: 40px; gap: 6px">
+<sc-for list="{{kit}}" as="k" hint-placeholder-count="4">
+<span role="listitem" style="min-width: 0; box-sizing: border-box; padding: 0 2px 0 12px; border-radius: 12px; background: #ffffff; display: flex; align-items: center; gap: 2px">
+<span style="flex-grow: 1; min-width: 0; font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{k.t}}</span>
+<button type="button" aria-label="{{k.al}}" onClick="{{k.rm}}" style="width: 36px; height: 36px; flex-shrink: 0; border: none; border-radius: 999px; background: transparent; color: #5b5f86; cursor: pointer; display: flex; align-items: center; justify-content: center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+</span>
+</sc-for>
+</div>
+</section>
+
+<div style="display: flex; flex-direction: column; gap: 8px">
+<div style="display: flex; align-items: center; gap: 8px">
+<span id="reg-l" style="width: 76px; flex-shrink: 0; font-size: 14px; font-weight: 600">Regions</span>
+<div role="group" aria-labelledby="reg-l" style="flex-grow: 1; min-width: 0; display: flex; gap: 6px; overflow-x: auto; margin-inline-end: -16px; padding-inline-end: 16px">
+<sc-for list="{{regions}}" as="r" hint-placeholder-count="5"><button type="button" aria-pressed="{{r.on}}" onClick="{{r.go}}" style="{{r.style}}">{{r.t}}</button></sc-for>
+</div>
+</div>
+<div style="display: flex; align-items: center; gap: 8px">
+<span id="lang-l" style="width: 76px; flex-shrink: 0; font-size: 14px; font-weight: 600">Languages</span>
+<div role="group" aria-labelledby="lang-l" style="flex-grow: 1; min-width: 0; display: flex; gap: 6px; overflow-x: auto; margin-inline-end: -16px; padding-inline-end: 16px">
+<sc-for list="{{langs}}" as="l" hint-placeholder-count="3"><button type="button" aria-pressed="{{l.on}}" onClick="{{l.go}}" style="{{l.style}}">{{l.t}}</button></sc-for>
+</div>
+</div>
+</div>
+
+<a href="PhoProfile.dc.html" style="margin-top: auto; height: 52px; flex-shrink: 0; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 17px; font-weight: 700; text-decoration: none; display: flex; align-items: center; justify-content: center">Save profile</a>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(p) {
+    super(p);
+    this.state = {
+      kit: ['Sony A7 IV', '24–70 mm f/2.8', '70–200 mm f/4', 'DJI Mini 4 Pro drone (GACA registered)'],
+      regions: { Riyadh: true, AlUla: true, Jeddah: true, Taif: true, Madinah: false, Abha: false, 'Eastern Province': false },
+      langs: { Arabic: true, English: true, French: false }
+    };
+  }
+  renderVals() {
+    const chip = (on) => 'height: 40px; flex-shrink: 0; padding: 0 14px; border-radius: 999px; font: inherit; font-size: 14px; font-weight: 600; white-space: nowrap; cursor: pointer; ' + (on ? 'background: #262a67; color: #f6f3e4; border: 1px solid #262a67;' : 'background: #ffffff; color: #262a67; border: 1px solid #7b7fa6;');
+    const toggles = (key) => {
+      const M = this.state[key];
+      return Object.keys(M).map((t) => ({ t, on: M[t] ? 'true' : 'false', style: chip(M[t]), go: () => this.setState({ [key]: { ...M, [t]: !M[t] } }) }));
+    };
+    const K = this.state.kit;
+    const kit = K.map((t, i) => ({ t, al: 'Remove ' + t, rm: () => this.setState({ kit: K.filter((_, j) => j !== i) }) }));
+    const pool = ['Godox V1 flash', 'Spare batteries x6', '35 mm f/1.4', 'Gimbal'];
+    const next = pool.find((x) => K.indexOf(x) < 0);
+    return {
+      kit, kitCount: String(K.length),
+      addKit: () => { if (next) this.setState({ kit: [...K, next] }); },
+      regions: toggles('regions'), langs: toggles('langs')
+    };
+  }
+}
+</script>
+</body>
+</html>

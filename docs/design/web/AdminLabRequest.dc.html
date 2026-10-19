@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Admin · Request lab test</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; display: flex; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif; position: relative">
+<dc-import name="AdminNav" active="Drivers" hint-size="248px,900px"></dc-import>
+<div style="flex-grow: 1; padding: 32px 40px; display: flex; flex-direction: column; gap: 24px">
+<span style="font-size: 14px; color: #5b5f86"><a href="AdmProviders.dc.html" style="font-weight: 600">Drivers</a> / Khalid Al-Harbi</span>
+<div style="display: flex; align-items: center; gap: 16px">
+<img src="../assets/c311d0b40fa5c0d792261872e7c7b89d.svg" alt="" style="width: 64px; height: 64px; border-radius: 999px; object-fit: cover; flex-shrink: 0">
+<div style="flex-grow: 1; display: flex; flex-direction: column; gap: 4px"><h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Khalid Al-Harbi</h1><span style="font-size: 14px; color: #5b5f86">Driver · Riyadh · Toyota Coaster, 30 seats · joined Mar 2026</span></div>
+<span style="padding: 4px 12px; border-radius: 999px; background: #e3f3ea; color: #1f7a4d; font-size: 13px; font-weight: 600">Active</span>
+<button style="height: 44px; padding: 0 18px; border-radius: 12px; border: none; background: #ff6c2e; color: #262a67; font-family: inherit; font-size: 15px; font-weight: 600">Request lab test</button>
+</div>
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px">
+<div style="padding: 16px; border-radius: 12px; background: #ffffff; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 13px; color: #5b5f86">Trips completed</span><span style="font-size: 24px; font-weight: 700">142</span></div>
+<div style="padding: 16px; border-radius: 12px; background: #ffffff; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 13px; color: #5b5f86">Rating</span><span style="font-size: 24px; font-weight: 700">4.8</span></div>
+<div style="padding: 16px; border-radius: 12px; background: #ffffff; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 13px; color: #5b5f86">Last lab test</span><span style="font-size: 24px; font-weight: 700">14 Mar</span></div>
+<div style="padding: 16px; border-radius: 12px; background: #ffffff; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 13px; color: #5b5f86">Upcoming trips</span><span style="font-size: 24px; font-weight: 700">2</span></div>
+</div>
+</div>
+<div style="position: absolute; inset: 0; background: rgba(16,18,48,.45)"></div>
+<div role="dialog" aria-modal="true" aria-labelledby="rq-h" style="position: absolute; top: 90px; left: 50%; margin-left: -260px; width: 560px; box-sizing: border-box; background: #ffffff; border-radius: 20px; padding: 28px; display: flex; flex-direction: column; gap: 16px; box-shadow: 0 8px 30px rgba(38,42,103,.3)">
+<div style="display: flex; justify-content: space-between; align-items: flex-start"><div style="display: flex; flex-direction: column; gap: 4px"><h2 id="rq-h" style="margin: 0; font-size: 22px; line-height: 28px; font-weight: 600">Request lab test</h2><span style="font-size: 14px; color: #5b5f86">Khalid Al-Harbi · last test 14 Mar 2026</span></div><button aria-label="Close" style="width: 40px; height: 40px; border: none; border-radius: 999px; background: #f6f3e4; color: #262a67; font-size: 18px">×</button></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="rq-r" style="font-size: 14px; font-weight: 600">Reason</label><select id="rq-r" style="height: 48px; padding: 0 10px; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; font-family: inherit; font-size: 16px; color: #262a67"><option>Random compliance check</option><option>After an incident report</option><option>Annual renewal</option><option>Passenger complaint</option></select></div>
+<fieldset style="margin: 0; padding: 0; border: none; display: flex; flex-direction: column; gap: 8px"><legend style="padding: 0; margin-bottom: 8px; font-size: 14px; font-weight: 600">Tests</legend>
+<label style="display: flex; gap: 10px; align-items: center; font-size: 15px"><input type="checkbox" checked style="width: 18px; height: 18px; accent-color: #262a67">Drug screening</label>
+<label style="display: flex; gap: 10px; align-items: center; font-size: 15px"><input type="checkbox" style="width: 18px; height: 18px; accent-color: #262a67">Medical fitness (vision, blood pressure)</label></fieldset>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="rq-d" style="font-size: 14px; font-weight: 600">Deadline</label><select id="rq-d" style="height: 48px; padding: 0 10px; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; font-family: inherit; font-size: 16px; color: #262a67"><option>3 days · Wed 7 Oct</option><option>24 hours</option><option>7 days</option></select></div>
+<label style="display: flex; gap: 10px; align-items: flex-start; padding: 12px; border-radius: 12px; background: #fde8e6; font-size: 14px; line-height: 20px"><input type="checkbox" checked style="width: 18px; height: 18px; margin: 0; accent-color: #b42318; flex-shrink: 0"><span><span style="font-weight: 600; color: #b42318">Pause driver now.</span> The app blocks trips immediately; 2 upcoming trips go back to their organizers.</span></label>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="rq-n" style="font-size: 14px; font-weight: 600">Note to driver <span style="font-weight: 500; color: #5b5f86">(optional)</span></label><textarea id="rq-n" rows="2" style="padding: 10px 14px; border-radius: 8px; border: 1px solid #7b7fa6; font-family: inherit; font-size: 15px; color: #262a67; resize: none">Routine check — thanks for completing it on time.</textarea></div>
+<div style="display: flex; justify-content: flex-end; gap: 12px"><button style="height: 48px; padding: 0 20px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-family: inherit; font-size: 15px; font-weight: 600">Cancel</button><a href="AdminLabReview.dc.html" style="height: 48px; padding: 0 22px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 15px; font-weight: 600; display: flex; align-items: center; text-decoration: none">Send request</a></div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

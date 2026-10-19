@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Web · Receipts and invoices</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+footer a:focus-visible{outline-color:#f89e23}
+.te-nav:hover{color:#c93a00}
+.te-side:hover{background:#f6f3e4}
+.te-row:hover{background:#fbfaf3}
+</style>
+</helmet>
+<div style="min-height: 1000px; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif; display: flex; flex-direction: column">
+
+<header style="border-bottom: 1px solid #e3dfc9">
+<div style="max-width: 1200px; margin: 0 auto; box-sizing: border-box; padding: 14px 24px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 32px">
+<a href="WebHome.dc.html" aria-label="Trips Enjoy home" style="display: flex"><img src="../assets/1fbce194fcb16bf54904c32c189fca31.svg" alt="Trips Enjoy" style="height: 40px; width: auto"></a>
+<nav aria-label="Main" style="flex-grow: 1; display: flex; flex-wrap: wrap; gap: 4px 24px">
+<a href="WebExplore.dc.html" class="te-nav" style="padding: 10px 0; font-size: 15px; font-weight: 600; color: #262a67; text-decoration: none">Explore trips</a>
+<a href="WebBookings.dc.html" class="te-nav" style="padding: 10px 0; font-size: 15px; font-weight: 600; color: #262a67; text-decoration: none">My bookings</a>
+<a href="WebAlbums.dc.html" class="te-nav" style="padding: 10px 0; font-size: 15px; font-weight: 600; color: #262a67; text-decoration: none">Albums</a>
+</nav>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px">
+<a href="WebHomeAr.dc.html" lang="ar" dir="rtl" style="height: 44px; padding: 0 12px; display: flex; align-items: center; font-family: Cairo, sans-serif; font-size: 15px; font-weight: 600; color: #262a67; text-decoration: none">العربية</a>
+<a href="WebProfile.dc.html" aria-current="true" style="height: 48px; box-sizing: border-box; padding: 0 14px 0 4px; border-radius: 999px; background: #ffffff; border: 2px solid #fb8030; display: flex; align-items: center; gap: 10px; color: #262a67; font-size: 15px; font-weight: 600; text-decoration: none"><img src="../assets/6c1d1b4ec8611e67e7f6f2ac68edcb50.svg" alt="" style="width: 36px; height: 36px; border-radius: 999px; object-fit: cover; display: block">Mariam<span style="padding: 2px 8px; border-radius: 999px; background: #f89e23; font-size: 12px; font-weight: 700">{{planName}}</span></a>
+</div>
+</div>
+</header>
+
+<main style="flex-grow: 1; width: 100%; max-width: 1200px; margin: 0 auto; box-sizing: border-box; padding: 32px 24px 48px; display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start">
+<nav aria-label="Account" style="flex: 1 1 220px; max-width: 280px; box-sizing: border-box; padding: 12px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 4px">
+<a href="WebProfile.dc.html" class="te-side" style="min-height: 44px; padding: 0 12px; border-radius: 12px; display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 600; color: #262a67; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0"></path></svg>Profile and notifications</a>
+<a href="WebPlans.dc.html" class="te-side" style="min-height: 44px; padding: 0 12px; border-radius: 12px; display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 600; color: #262a67; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"></path></svg>Plan</a>
+<a href="WebReceipts.dc.html" aria-current="page" style="min-height: 44px; padding: 0 12px; border-radius: 12px; background: #ffe7dc; display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 700; color: #c93a00; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zM14 3v5h5"></path></svg>Receipts and invoices</a>
+<a href="WebPrivacy.dc.html" class="te-side" style="min-height: 44px; padding: 0 12px; border-radius: 12px; display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 600; color: #262a67; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5.5c0 4.4-3 8-7 9.5-4-1.5-7-5.1-7-9.5V6zM9 12l2 2 4-4"></path></svg>Privacy</a>
+<a href="WebBecomeProvider.dc.html" class="te-side" style="min-height: 44px; padding: 0 12px; border-radius: 12px; display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 600; color: #262a67; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Become a provider</a>
+</nav>
+
+<div style="flex: 999 1 600px; min-width: 0; display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 2px"><h1 style="margin: 0; font-size: 32px; line-height: 40px; font-weight: 700">Receipts and invoices</h1><span style="font-size: 15px; color: #5b5f86">{{historyNote}}</span></div>
+<sc-if value="{{isVip}}" hint-placeholder-val="{{false}}">
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<button type="button" style="height: 48px; padding: 0 16px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12M7 11l5 5 5-5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"></path></svg>Export CSV</button>
+<button type="button" style="height: 48px; padding: 0 16px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12M7 11l5 5 5-5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"></path></svg>Export PDF</button>
+</div>
+</sc-if>
+<sc-if value="{{notVip}}" hint-placeholder-val="{{true}}">
+<span role="button" aria-disabled="true" aria-describedby="ex-lock" style="height: 48px; box-sizing: border-box; padding: 0 16px; border-radius: 12px; border: 1px solid #e3dfc9; background: #f6f3e4; color: #5b5f86; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 11h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1zM8 11V7a4 4 0 0 1 8 0v4"></path></svg>Export · VIP</span>
+</sc-if>
+</div>
+
+<sc-if value="{{notVip}}" hint-placeholder-val="{{true}}">
+<div id="ex-lock" style="padding: 14px 18px; border-radius: 16px; background: #262a67; color: #f6f3e4; display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center">
+<span style="width: 40px; height: 40px; flex-shrink: 0; border-radius: 12px; background: #31367a; color: #ff8655; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"></path></svg></span>
+<span style="flex: 1 1 320px; font-size: 15px; line-height: 22px"><strong>Export to CSV or PDF comes with VIP.</strong> <span style="color: #b8bad6">You can still open and download each receipt or invoice on its own.</span></span>
+<a href="WebPlans.dc.html" style="height: 44px; padding: 0 16px; border-radius: 12px; background: #f6f3e4; color: #262a67; font-size: 15px; font-weight: 700; display: flex; align-items: center; text-decoration: none">Compare plans</a>
+</div>
+</sc-if>
+
+<div role="group" aria-label="Document type" style="display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{chips}}" as="c" hint-placeholder-count="4"><button type="button" aria-pressed="{{c.on}}" onClick="{{c.pick}}" style="{{c.style}}">{{c.t}}</button></sc-for>
+</div>
+
+<sc-if value="{{isList}}" hint-placeholder-val="{{true}}">
+<div style="border-radius: 20px; background: #ffffff; overflow-x: auto">
+<table style="width: 100%; min-width: 760px; border-collapse: collapse; font-size: 15px">
+<thead><tr style="font-size: 13px; color: #5b5f86"><th scope="col" style="padding: 14px 20px; text-align: start; font-weight: 600">Date</th><th scope="col" style="padding: 14px 12px; text-align: start; font-weight: 600">Booking</th><th scope="col" style="padding: 14px 12px; text-align: start; font-weight: 600">Number</th><th scope="col" style="padding: 14px 12px; text-align: start; font-weight: 600">Type</th><th scope="col" style="padding: 14px 12px; text-align: end; font-weight: 600">Amount</th><th scope="col" style="padding: 14px 20px; text-align: end; font-weight: 600"><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Open</span></th></tr></thead>
+<tbody>
+<sc-for list="{{rows}}" as="r" hint-placeholder-count="5">
+<tr class="te-row" style="border-top: 1px solid #e3dfc9">
+<td style="padding: 14px 20px; white-space: nowrap">{{r.date}}</td>
+<td style="padding: 14px 12px"><span style="display: flex; flex-direction: column"><a href="WebBooking.dc.html" style="font-weight: 600">{{r.ref}}</a><span style="font-size: 13px; color: #5b5f86">{{r.trip}}</span></span></td>
+<td style="padding: 14px 12px; font-variant-numeric: tabular-nums">{{r.num}}<sc-if value="{{r.hasNote}}" hint-placeholder-val="{{false}}"><span style="display: block; font-size: 12px; color: #5b5f86">{{r.note}}</span></sc-if></td>
+<td style="padding: 14px 12px"><span style="{{r.ts}}">{{r.type}}</span></td>
+<td style="padding: 14px 12px; text-align: end; font-weight: 600; white-space: nowrap">{{r.amt}}</td>
+<td style="padding: 14px 20px; text-align: end"><a href="../pdf/PdfInvoiceB2C.dc.html" aria-label="{{r.aria}}" style="height: 40px; padding: 0 12px; border-radius: 12px; border: 1px solid #7b7fa6; color: #262a67; font-size: 14px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; text-decoration: none">Open</a></td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+<span style="font-size: 13px; color: #5b5f86">Amounts include tax at the Egypt rate. A credit note corrects an invoice and always names the invoice it changes.</span>
+</sc-if>
+
+<sc-if value="{{isLoading}}" hint-placeholder-val="{{false}}">
+<div role="status" aria-label="Loading receipts" style="padding: 20px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 16px">
+<sc-for list="{{skeleton}}" as="k" hint-placeholder-count="5"><div style="display: flex; gap: 16px; align-items: center"><span style="width: 90px; height: 14px; border-radius: 999px; background: #e3dfc9"></span><span style="flex: 1 1 auto; height: 14px; border-radius: 999px; background: #efecdd"></span><span style="width: 100px; height: 14px; border-radius: 999px; background: #e3dfc9"></span></div></sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{isEmpty}}" hint-placeholder-val="{{false}}">
+<div style="padding: 48px 24px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center">
+<img src="../assets/c1fe45a90a3a1b8eace395f8df7ad821.svg" alt="" style="width: 160px; height: 160px; object-fit: contain; display: block">
+<h2 style="margin: 0; font-size: 22px; font-weight: 600">No receipts yet</h2>
+<p style="margin: 0; max-width: 420px; font-size: 15px; line-height: 22px; color: #5b5f86">When you book a trip, its receipt and invoice appear here.</p>
+<a href="WebExplore.dc.html" style="height: 48px; padding: 0 20px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 15px; font-weight: 700; display: flex; align-items: center; text-decoration: none">Explore trips</a>
+</div>
+</sc-if>
+
+<sc-if value="{{isError}}" hint-placeholder-val="{{false}}">
+<div role="alert" style="padding: 20px; border-radius: 20px; background: #fde8e6; color: #b42318; display: flex; flex-wrap: wrap; gap: 12px 16px; align-items: center">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9.5 17h-19zM12 10v4M12 17h.01"></path></svg>
+<span style="flex: 1 1 320px; font-size: 15px; line-height: 22px"><strong>We couldn't load your receipts.</strong> Your documents are safe. Try again in a moment.</span>
+<button type="button" style="height: 44px; padding: 0 16px; border-radius: 12px; border: 1px solid #b42318; background: #ffffff; color: #b42318; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Try again</button>
+</div>
+</sc-if>
+</div>
+</main>
+
+<footer style="background: #262a67; color: #f6f3e4">
+<div style="max-width: 1200px; margin: 0 auto; box-sizing: border-box; padding: 24px; display: flex; flex-wrap: wrap; gap: 16px 32px; align-items: center; justify-content: space-between; font-size: 13px; color: #b8bad6">
+<img src="../assets/6ea846350ba3adc0e289d47fa0612c3b.svg" alt="Trips Enjoy" style="height: 32px; width: auto">
+<span>© 2026 Trips Enjoy · Cairo, Egypt</span>
+<nav aria-label="Footer" style="display: flex; flex-wrap: wrap; gap: 20px"><a href="WebLegal.dc.html" style="color: #b8bad6">Privacy</a><a href="WebLegal.dc.html" style="color: #b8bad6">Terms</a><a href="WebBecomeProvider.dc.html" style="color: #b8bad6">Become a provider</a><a href="WebHomeAr.dc.html" lang="ar" dir="rtl" style="color: #b8bad6; font-family: Cairo, sans-serif">العربية</a></nav>
+</div>
+</footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1000},"state":{"editor":"enum","options":["list","loading","empty","error"],"default":"list"},"vip":{"editor":"boolean","default":false}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { type: 'all' }; }
+  renderVals() {
+    const m = this.props.state || 'list';
+    const vip = !!this.props.vip;
+    const tone = { Invoice: 'background: #e6e8f5; color: #262a67;', Receipt: 'background: #e3f3ea; color: #1f7a4d;', 'Credit note': 'background: #fdf0d5; color: #8a4b00;' };
+    const R = [
+      ['17 Oct 2026', 'TE-50217', 'Siwa Oasis Escape', 'INV-EG-2026-00418', 'Invoice', '25,285 EGP', ''],
+      ['17 Oct 2026', 'TE-50217', 'Siwa Oasis Escape', 'RCT-EG-2026-01922', 'Receipt', '25,285 EGP', ''],
+      ['05 Oct 2026', 'TE-49810', 'Wadi El Rayan Day Trip', 'CN-EG-2026-00031', 'Credit note', '−1,150 EGP', 'Corrects INV-EG-2026-00377'],
+      ['28 Sep 2026', 'TE-49810', 'Wadi El Rayan Day Trip', 'INV-EG-2026-00377', 'Invoice', '2,300 EGP', ''],
+      ['02 Sep 2026', 'TE-48802', 'Alexandria by the Sea', 'INV-EG-2026-00290', 'Invoice', '1,780 EGP', '']
+    ];
+    const map = { all: null, inv: 'Invoice', rct: 'Receipt', cn: 'Credit note' };
+    const rows = R.filter((r) => !map[this.state.type] || r[4] === map[this.state.type]).map(([date, ref, trip, num, type, amt, note]) => ({ date, ref, trip, num, type, amt, note, hasNote: !!note,
+      aria: 'Open ' + type.toLowerCase() + ' ' + num,
+      ts: 'display: inline-flex; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; white-space: nowrap; ' + tone[type] }));
+    const chips = [['all', 'All'], ['inv', 'Invoices'], ['rct', 'Receipts'], ['cn', 'Credit notes']].map(([id, t]) => {
+      const on = this.state.type === id;
+      return { t, on: on ? 'true' : 'false', pick: () => this.setState({ type: id }),
+        style: 'min-height: 40px; padding: 0 16px; border-radius: 999px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; ' + (on ? 'border: 2px solid #fb8030; background: #fff7f2; color: #c93a00;' : 'border: 1px solid #7b7fa6; background: #ffffff; color: #262a67;') };
+    });
+    return { rows, chips, skeleton: [1, 2, 3, 4, 5], isVip: vip, notVip: !vip, planName: vip ? 'VIP' : 'Explorer',
+      historyNote: vip ? 'Full history on VIP, with export.' : 'Full booking history on Explorer. Free plans show the last 12 months.',
+      isList: m === 'list', isLoading: m === 'loading', isEmpty: m === 'empty', isError: m === 'error' };
+  }
+}
+</script>
+</body>
+</html>

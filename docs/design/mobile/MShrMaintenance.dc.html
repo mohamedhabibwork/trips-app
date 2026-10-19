@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Mobile · Planned maintenance</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+
+<sc-if value="{{during}}" hint-placeholder-val="{{true}}">
+<div style="height: 100%; box-sizing: border-box; padding: 56px 16px 24px; display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; padding: 8px 8px 0">
+<span style="width: 72px; height: 72px; border-radius: 999px; background: #fdf0d5; color: #8a4b00; display: flex; align-items: center; justify-content: center"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7v5l3 2"></path></svg></span>
+<h1 style="margin: 4px 0 0; font-size: 26px; line-height: 32px; font-weight: 700">We're doing planned maintenance</h1>
+<p style="margin: 0; font-size: 16px; line-height: 23px; color: #5b5f86">Booking, paying and account changes are paused until we finish. We announced this on Sat 17 Oct.</p>
+</div>
+
+<div style="padding: 16px; border-radius: 20px; background: #262a67; color: #f6f3e4; display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 13px; color: #b8bad6">Maintenance window · your time (Cairo)</span>
+<span style="font-size: 20px; font-weight: 700">Wed 21 Oct, 01:00 – 03:00</span>
+<span style="font-size: 14px; color: #b8bad6">Back by 03:00 at the latest</span>
+</div>
+
+<div style="padding: 16px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 10px">
+<span style="font-size: 14px; font-weight: 600">Still working now</span>
+<sc-for list="{{works}}" as="w" hint-placeholder-count="2">
+<div style="display: flex; gap: 10px; align-items: flex-start"><span style="width: 28px; height: 28px; flex-shrink: 0; border-radius: 999px; background: #e3f3ea; color: #1f7a4d; display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg></span><span style="font-size: 15px; line-height: 21px">{{w}}</span></div>
+</sc-for>
+</div>
+
+<a href="#" style="padding: 12px 14px; border-radius: 12px; border: 1px solid #e3dfc9; display: flex; align-items: center; gap: 10px; color: #262a67; text-decoration: none">
+<span style="padding: 2px 10px; border-radius: 999px; background: #fdf0d5; color: #8a4b00; font-size: 12px; font-weight: 700">Maintenance</span>
+<span style="flex-grow: 1; display: flex; flex-direction: column"><span style="font-size: 15px; font-weight: 600">status.trips-enjoy.com</span><span style="font-size: 13px; color: #5b5f86">Live progress and updates</span></span>
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
+</a>
+
+<div style="margin-top: auto; display: flex; flex-direction: column; gap: 10px">
+<sc-if value="{{tried}}" hint-placeholder-val="{{false}}"><span role="status" style="text-align: center; font-size: 14px; color: #5b5f86">Still in maintenance. Try again after 03:00.</span></sc-if>
+<button type="button" onClick="{{retry}}" style="height: 52px; border: 0; border-radius: 12px; background: #ff6c2e; color: #262a67; font: inherit; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7"></path></svg>Try again</button>
+<a href="TrvTicket.dc.html" style="height: 52px; box-sizing: border-box; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-size: 16px; font-weight: 600; display: flex; align-items: center; justify-content: center; text-decoration: none">Open saved tickets</a>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{notice}}" hint-placeholder-val="{{false}}">
+<div style="height: 100%; box-sizing: border-box; padding: 56px 16px 120px; display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; align-items: center; gap: 12px">
+<img src="../assets/6c1d1b4ec8611e67e7f6f2ac68edcb50.svg" alt="" style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 999px; object-fit: cover">
+<div style="flex-grow: 1; display: flex; flex-direction: column"><span style="font-size: 13px; color: #5b5f86">Good morning</span><span style="font-size: 20px; line-height: 26px; font-weight: 700">Mariam Adel</span></div>
+</div>
+
+<sc-if value="{{showBanner}}" hint-placeholder-val="{{true}}">
+<div role="status" style="padding: 14px; border-radius: 20px; background: #fdf0d5; color: #262a67; display: flex; gap: 12px; align-items: flex-start">
+<span style="width: 36px; height: 36px; flex-shrink: 0; border-radius: 999px; background: #ffffff; color: #8a4b00; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7v5l3 2"></path></svg></span>
+<span style="flex-grow: 1; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 15px; font-weight: 700">Planned maintenance Wed 21 Oct, 01:00–03:00</span><span style="font-size: 14px; line-height: 20px">Cairo time. Booking and paying pause for up to 2 hours. Saved tickets and check-ins keep working.</span><a href="#" style="font-size: 14px; font-weight: 600; color: #8a4b00">Status page</a></span>
+<button type="button" onClick="{{dismiss}}" aria-label="Dismiss maintenance notice" style="width: 44px; height: 44px; flex-shrink: 0; margin: -6px -6px 0 0; border: 0; border-radius: 999px; background: transparent; color: #262a67; display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+</div>
+</sc-if>
+
+<a href="TrvTicket.dc.html" style="padding: 14px 16px; border-radius: 20px; background: #262a67; color: #f6f3e4; display: flex; align-items: center; gap: 12px; text-decoration: none">
+<span style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 12px; background: #31367a; color: #ff8655; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v2a2.5 2.5 0 0 0 0 5v3a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-3a2.5 2.5 0 0 0 0-5zM14 5v14"></path></svg></span>
+<span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 12px; font-weight: 600; color: #b8bad6">NEXT TRIP · IN 19 DAYS</span><span style="font-size: 16px; font-weight: 600">Siwa Oasis Escape</span><span style="font-size: 13px; color: #b8bad6">Thu 5 – Sat 7 Nov · Nile Horizon Tours</span></span>
+<span style="font-size: 14px; font-weight: 600; color: #ff8655">Ticket</span>
+</a>
+
+<h2 style="margin: 0; font-size: 20px; line-height: 26px; font-weight: 600">Popular this week</h2>
+<sc-for list="{{trips}}" as="t" hint-placeholder-count="2">
+<a href="TrvTrip.dc.html" style="padding: 12px; border-radius: 20px; background: #ffffff; display: flex; gap: 12px; align-items: center; color: #262a67; text-decoration: none">
+<span style="position: relative; width: 64px; height: 64px; flex-shrink: 0; border-radius: 12px; overflow: hidden; background: #262a67"><img src="{{t.img}}" alt="{{t.alt}}" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover"></span>
+<span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 16px; font-weight: 600">{{t.n}}</span><span style="font-size: 13px; color: #5b5f86">{{t.m}}</span><span style="font-size: 13px; color: #5b5f86">from <strong style="font-size: 16px; color: #262a67">{{t.p}}</strong> EGP</span></span>
+</a>
+</sc-for>
+</div>
+<div style="position: absolute; left: 0; right: 0; bottom: 0; height: 120px"><dc-import name="TabBar" role="traveler" active="home" hint-size="390px,120px"></dc-import></div>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"state":{"editor":"enum","options":["during window","notice banner"],"default":"during window"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { tried: false, dismissed: false }; }
+  renderVals() {
+    const notice = (this.props.state ?? 'during window') === 'notice banner';
+    return {
+      during: !notice,
+      notice,
+      tried: this.state.tried,
+      retry: () => this.setState({ tried: true }),
+      showBanner: !this.state.dismissed,
+      dismiss: () => this.setState({ dismissed: true }),
+      works: [
+        'Tickets saved on your phone open and show their QR code',
+        'Moderator check-ins keep queuing and send when we’re back',
+        'Bookings and payments already confirmed are safe'
+      ],
+      trips: [
+        { n: 'Wadi El Rayan Day Trip', m: 'Sat 24 Oct · Nile Horizon Tours', p: '1,150', img: '../assets/6c681277de59192cae4171833ad9e5e7.svg', alt: 'Wadi El Rayan waterfall between golden dunes' },
+        { n: 'Alexandria by the Sea', m: 'Sat 14 Nov · Nile Horizon Tours', p: '890', img: '../assets/f307c5f03eb23299e4b0e9acc1833c87.svg', alt: 'Alexandria Corniche and the Qaitbay citadel' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

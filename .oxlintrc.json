@@ -5,6 +5,7 @@
     "correctness": "error"
   },
   "rules": {},
+  "ignorePatterns": ["docs/design/**"],
   "env": {
     "builtin": true
   }

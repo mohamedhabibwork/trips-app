@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Organization · Application outcome</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif; display: flex; flex-direction: column">
+<div style="height: 72px; padding: 0 48px; display: flex; align-items: center; justify-content: space-between; background: #ffffff; border-bottom: 1px solid #e3dfc9">
+<div style="display: flex; align-items: center; gap: 12px"><img src="../assets/1fbce194fcb16bf54904c32c189fca31.svg" alt="Trips Enjoy" style="height: 40px; width: auto"><span style="padding: 4px 10px; border-radius: 999px; background: #262a67; color: #f6f3e4; font-size: 13px; font-weight: 600">Business</span></div>
+<span style="font-size: 14px; font-weight: 600">{{org}} · <a href="OrgLogin.dc.html">Sign out</a></span>
+</div>
+<div style="flex-grow: 1; display: flex; justify-content: center; padding: 48px">
+<div style="width: 720px; display: flex; flex-direction: column; gap: 24px">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<span style="{{badgeStyle}}">{{badge}}</span>
+<h1 style="margin: 0; font-size: 32px; line-height: 40px; font-weight: 700">{{title}}</h1>
+<p style="margin: 0; font-size: 16px; line-height: 24px; color: #5b5f86">{{body}}</p>
+</div>
+<div style="background: #ffffff; border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 16px; box-shadow: 0 1px 2px rgba(38,42,103,.06), 0 6px 20px rgba(38,42,103,.08)">
+<sc-for list="{{items}}" as="i" hint-placeholder-count="3">
+<div style="display: flex; align-items: center; gap: 12px; padding-bottom: 14px; border-bottom: 1px solid #e3dfc9">
+<span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 16px; font-weight: 600">{{i.t}}</span><span style="{{i.noteStyle}}">{{i.note}}</span></span>
+<sc-if value="{{i.action}}" hint-placeholder-val="{{false}}"><button style="height: 44px; padding: 0 18px; border-radius: 12px; border: none; background: #ff6c2e; color: #262a67; font-family: inherit; font-size: 15px; font-weight: 600">{{i.action}}</button></sc-if>
+</div>
+</sc-for>
+</div>
+<p style="margin: 0; font-size: 14px; line-height: 20px; color: #5b5f86">{{foot}} <a href="#" style="font-weight: 600">{{link}}</a></p>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"state":{"editor":"enum","options":["changes","rejected"],"default":"changes"},"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+renderVals() {
+const pill = (bg, fg) => 'align-self: flex-start; padding: 4px 12px; border-radius: 999px; font-size: 13px; font-weight: 600; background: ' + bg + '; color: ' + fg + ';';
+const ok = 'font-size: 14px; font-weight: 500; color: #1f7a4d;', bad = 'font-size: 14px; font-weight: 500; color: #b42318;';
+const S = {
+changes: { org: 'Desert Events LLC', badge: 'Changes needed', badgeStyle: pill('#f89e23', '#262a67'), title: 'Your VAT details need correcting', body: 'Reviewed on 6 Oct. Your dashboard unlocks as soon as this is fixed — the rest of your application stays approved.',
+items: [{ t: 'Commercial Registration', note: 'Verified with the registry', noteStyle: ok, action: '' }, { t: 'VAT number', note: 'The number entered does not match the name on your VAT certificate.', noteStyle: bad, action: 'Fix VAT number' }, { t: 'Payout account (IBAN)', note: 'Account holder matches legal name', noteStyle: ok, action: '' }],
+foot: 'Fix within 14 days to keep your application open.', link: 'Message the review team' },
+rejected: { org: 'Desert Events LLC', badge: 'Not approved', badgeStyle: pill('#fde8e6', '#b42318'), title: "We couldn't approve Desert Events LLC", body: 'Decided on 6 Oct by the Trips Enjoy review team.',
+items: [{ t: 'Commercial Registration expired', note: 'The registry shows this CR expired on 30 Jun 2026.', noteStyle: bad, action: '' }, { t: 'What you can do', note: 'Renew your CR, then register again — your account and team invites are kept.', noteStyle: 'font-size: 14px; font-weight: 500; color: #5b5f86;', action: 'Start a new application' }],
+foot: 'Think this is a mistake?', link: 'Appeal this decision' }
+};
+return S[this.props.state ?? 'changes'] || S.changes;
+}
+}
+</script>
+</body>
+</html>

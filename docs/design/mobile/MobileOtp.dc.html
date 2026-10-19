@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Verify phone</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif; display: flex; flex-direction: column; padding: 56px 16px 32px; gap: 24px">
+<div style="display: flex; align-items: center; justify-content: space-between">
+<a href="{{back}}" aria-label="Back" style="width: 44px; height: 44px; border-radius: 999px; background: #ffffff; display: flex; align-items: center; justify-content: center; color: #262a67"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg></a>
+<span style="font-size: 13px; font-weight: 500; color: #5b5f86">{{step}}</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 4px">
+<h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 700">Verify your number</h1>
+<p style="margin: 0; font-size: 16px; line-height: 24px; color: #5b5f86">Enter the 6-digit code sent by SMS to <span style="font-weight: 600; color: #262a67">+966 55 ••• 4821</span>. <a href="{{back}}" style="font-weight: 600">Edit number</a></p>
+</div>
+<dc-import name="OtpField" digits="481" length="{{six}}" hint-size="100%,60px"></dc-import>
+<div style="display: flex; flex-direction: column; gap: 8px; font-size: 14px; color: #5b5f86">
+<span>Didn't get it? Resend in <span style="font-weight: 600; color: #262a67">00:42</span></span>
+<button disabled="" style="align-self: flex-start; height: 44px; padding: 0; border: none; background: transparent; color: #5b5f86; font-family: inherit; font-size: 14px; font-weight: 600">Send by WhatsApp instead</button>
+</div>
+<p style="margin: 0; padding: 12px; border-radius: 12px; background: #ffffff; font-size: 13px; line-height: 18px; color: #5b5f86">Codes expire after 5 minutes. After 5 wrong codes, verification pauses for 15 minutes.</p>
+<a href="{{next}}" style="margin-top: auto; height: 52px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 16px; font-weight: 600; display: flex; align-items: center; justify-content: center; text-decoration: none">Verify</a>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"step":{"editor":"text","default":"Step 3 of 4"},"next":{"editor":"text","default":"MobileReady.dc.html"},"back":{"editor":"text","default":"MobileSignUp.dc.html"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() { return { six: 6, step: this.props.step ?? 'Step 3 of 4', next: this.props.next ?? 'MobileReady.dc.html', back: this.props.back ?? 'MobileSignUp.dc.html' }; }
+}
+</script>
+</body>
+</html>

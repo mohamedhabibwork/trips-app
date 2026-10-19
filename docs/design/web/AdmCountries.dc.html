@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Admin · Countries and markets</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+.te-rb:hover{background:#faf8ef}
+input::placeholder{color:#5b5f86}
+</style>
+</helmet>
+<div style="min-height: 1000px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="AdmNav" active="Countries" hint-size="248px,1000px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 20px">
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; color: #5b5f86">Money, tax, legal and plan prices for each market. Every change is saved to the audit log.</span><h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Countries &amp; markets</h1></div>
+<button type="button" style="height: 48px; padding: 0 18px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font: inherit; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Add market</button>
+</div>
+
+<section aria-labelledby="mk-h" style="background: #ffffff; border-radius: 20px; padding: 16px 0 6px">
+<h2 id="mk-h" style="margin: 0; padding: 0 20px 8px; font-size: 18px; font-weight: 600">Markets</h2>
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 1000px; border-collapse: collapse; font-size: 14px">
+<thead><tr style="color: #5b5f86; font-size: 13px"><th scope="col" style="text-align: start; padding: 8px 20px; font-weight: 600">Market</th><th scope="col" style="text-align: start; padding: 8px 10px; font-weight: 600">Launch status</th><th scope="col" style="text-align: start; padding: 8px 10px; font-weight: 600">Currency</th><th scope="col" style="text-align: start; padding: 8px 10px; font-weight: 600">Payment gateways</th><th scope="col" style="text-align: start; padding: 8px 10px; font-weight: 600">Tax rate</th><th scope="col" style="text-align: start; padding: 8px 10px; font-weight: 600">E-invoicing</th><th scope="col" style="text-align: start; padding: 8px 10px; font-weight: 600">Time zone</th><th scope="col" style="text-align: start; padding: 8px 20px 8px 10px; font-weight: 600">Languages</th></tr></thead>
+<tbody>
+<sc-for list="{{rows}}" as="r" hint-placeholder-count="3">
+<tr class="te-rb" style="{{r.rs}}">
+<td style="padding: 12px 20px"><button type="button" aria-pressed="{{r.cur}}" aria-controls="detail" onClick="{{r.on}}" style="display: flex; flex-direction: column; align-items: flex-start; border: 0; background: transparent; padding: 0; font: inherit; color: #262a67; cursor: pointer; text-align: start"><span style="font-size: 15px; font-weight: 700; text-decoration: underline; text-decoration-color: #e3dfc9">{{r.name}}</span><span style="font-size: 12px; color: #5b5f86">{{r.phase}}</span></button></td>
+<td style="padding: 12px 10px"><span style="{{r.ss}}">{{r.status}}</span></td>
+<td style="padding: 12px 10px; font-weight: 600">{{r.cur3}}</td>
+<td style="padding: 12px 10px; line-height: 19px">{{r.gws}}</td>
+<td style="padding: 12px 10px"><span style="{{r.ts}}">{{r.tax}}</span></td>
+<td style="padding: 12px 10px">{{r.einv}}</td>
+<td style="padding: 12px 10px; white-space: nowrap">{{r.tz}}</td>
+<td style="padding: 12px 20px 12px 10px">{{r.lang}}</td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+</section>
+
+<section id="detail" aria-labelledby="dt-h" style="background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 18px">
+<div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; align-items: center">
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 13px; color: #5b5f86">{{c.phase}}</span><h2 id="dt-h" style="margin: 0; font-size: 22px; font-weight: 600">{{c.name}} · settings</h2></div>
+<div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center">
+<span style="font-size: 13px; color: #5b5f86">{{c.saveNote}}</span>
+<button type="button" style="height: 48px; padding: 0 16px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Discard</button>
+<button type="button" style="height: 48px; padding: 0 20px; border-radius: 12px; border: 0; background: #ff6c2e; color: #262a67; font: inherit; font-size: 15px; font-weight: 700; cursor: pointer">Save {{c.name}}</button>
+</div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px">
+
+<fieldset style="margin: 0; padding: 16px; border: 1px solid #e3dfc9; border-radius: 16px; display: flex; flex-direction: column; gap: 12px; min-width: 0">
+<legend style="padding: 0 6px; font-size: 15px; font-weight: 700">Market</legend>
+<div style="display: flex; flex-direction: column; gap: 6px"><span id="c-status" style="font-size: 14px; font-weight: 600">Launch status</span><div role="radiogroup" aria-labelledby="c-status" style="display: flex; flex-wrap: wrap; gap: 6px"><sc-for list="{{c.stOpts}}" as="o" hint-placeholder-count="4"><button type="button" role="radio" aria-checked="{{o.ch}}" style="{{o.st}}">{{o.t}}</button></sc-for></div></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="c-tz" style="font-size: 14px; font-weight: 600">Default time zone</label><input id="c-tz" type="text" value="{{c.tz}}" style="height: 48px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 14px; font: inherit; font-size: 15px; color: #262a67"><span style="font-size: 13px; color: #5b5f86">New organizations start here. Trip times show in the trip's own zone.</span></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><span style="font-size: 14px; font-weight: 600">Languages</span><div style="display: flex; flex-wrap: wrap; gap: 8px"><span style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 999px; background: #262a67; color: #f6f3e4; font-size: 14px; font-weight: 600">Arabic · default</span><span style="display: inline-flex; padding: 4px 12px; border-radius: 999px; background: #e6e8f5; font-size: 14px; font-weight: 600">English</span></div><span style="font-size: 13px; color: #5b5f86">Western digits 0-9 in both languages. Phone code {{c.phone}}.</span></div>
+</fieldset>
+
+<fieldset style="margin: 0; padding: 16px; border: 1px solid #e3dfc9; border-radius: 16px; display: flex; flex-direction: column; gap: 10px; min-width: 0">
+<legend style="padding: 0 6px; font-size: 15px; font-weight: 700">Currency &amp; payments</legend>
+<div style="display: flex; justify-content: space-between; gap: 12px; font-size: 14px"><span style="color: #5b5f86">Currency</span><span style="font-weight: 700">{{c.curName}}</span></div>
+<div style="display: flex; justify-content: space-between; gap: 12px; font-size: 14px"><span style="color: #5b5f86">Commission</span><span style="font-weight: 600; text-align: end">10% of base trip price · placeholder, Finance to set</span></div>
+<span style="font-size: 14px; font-weight: 600; padding-top: 4px">Gateways</span>
+<sc-for list="{{c.gw}}" as="g" hint-placeholder-count="4">
+<div style="display: flex; gap: 12px; align-items: center; padding: 6px 0; border-top: 1px solid #e3dfc9">
+<span style="flex: 1; display: flex; flex-direction: column"><span style="font-size: 14px; font-weight: 600">{{g.n}}</span><span style="font-size: 12px; line-height: 16px; color: #5b5f86">{{g.d}}</span></span>
+<button type="button" role="switch" aria-checked="{{g.ch}}" aria-label="{{g.aria}}" onClick="{{g.on}}" style="{{g.track}}"><span style="{{g.knob}}"></span></button>
+</div>
+</sc-for>
+<span style="font-size: 12px; line-height: 16px; color: #5b5f86">Card details are only typed on the gateway's hosted page; Trips Enjoy shows no card fields.</span>
+</fieldset>
+
+<fieldset style="margin: 0; padding: 16px; border: 1px solid #e3dfc9; border-radius: 16px; display: flex; flex-direction: column; gap: 12px; min-width: 0">
+<legend style="padding: 0 6px; font-size: 15px; font-weight: 700">Tax &amp; invoicing</legend>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="c-tax" style="font-size: 14px; font-weight: 600">Tax rate on invoices</label><div style="{{c.taxBox}}"><input id="c-tax" type="text" inputmode="decimal" value="{{c.taxVal}}" placeholder="[rate]" aria-invalid="{{c.taxInvalid}}" aria-describedby="c-tax-h" style="flex: 1; min-width: 0; border: 0; background: transparent; font: inherit; font-size: 15px; color: #262a67"><span style="font-weight: 600; color: #5b5f86">%</span></div><span id="c-tax-h" style="{{c.taxHs}}">{{c.taxHelp}}</span></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><span id="c-einv" style="font-size: 14px; font-weight: 600">E-invoicing</span><div role="radiogroup" aria-labelledby="c-einv" style="display: flex; flex-wrap: wrap; gap: 6px"><sc-for list="{{c.einvOpts}}" as="o" hint-placeholder-count="2"><button type="button" role="radio" aria-checked="{{o.ch}}" style="{{o.st}}">{{o.t}}</button></sc-for></div><span style="font-size: 13px; line-height: 18px; color: #5b5f86">{{c.einvHelp}}</span></div>
+<span style="font-size: 13px; line-height: 18px; color: #5b5f86">Invoices are B2B when the buyer gives a tax number at checkout, otherwise B2C. Corrections are credit notes.</span>
+</fieldset>
+
+<fieldset style="margin: 0; padding: 16px; border: 1px solid #e3dfc9; border-radius: 16px; display: flex; flex-direction: column; gap: 12px; min-width: 0">
+<legend style="padding: 0 6px; font-size: 15px; font-weight: 700">Legal entity</legend>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="c-le" style="font-size: 14px; font-weight: 600">Entity name on invoices</label><input id="c-le" type="text" value="{{c.le}}" placeholder="[Legal entity name]" style="height: 48px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 14px; font: inherit; font-size: 15px; color: #262a67"></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="c-trn" style="font-size: 14px; font-weight: 600">{{c.trnLabel}}</label><input id="c-trn" type="text" placeholder="[registration number]" style="height: 48px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 14px; font: inherit; font-size: 15px; color: #262a67"></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="c-addr" style="font-size: 14px; font-weight: 600">Registered address</label><input id="c-addr" type="text" placeholder="[address]" style="height: 48px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 14px; font: inherit; font-size: 15px; color: #262a67"></div>
+<span style="font-size: 13px; color: #5b5f86">To confirm with Legal before invoices go out.</span>
+</fieldset>
+</div>
+
+<section aria-labelledby="pp-h" style="display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: space-between; align-items: baseline"><h3 id="pp-h" style="margin: 0; font-size: 17px; font-weight: 700">Plan price list · {{c.cur3}} per month</h3><span style="font-size: 13px; color: #5b5f86">No prices are set yet · annual discount 15% (placeholder, Finance to set) · <a href="AdmPlans.dc.html" style="font-weight: 600">Limits and features in Plans</a></span></div>
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 720px; border-collapse: collapse; font-size: 14px">
+<thead><tr style="color: #5b5f86; font-size: 13px"><th scope="col" style="text-align: start; padding: 8px 12px 8px 0; font-weight: 600">Role</th><th scope="col" style="text-align: start; padding: 8px 12px; font-weight: 600">Entry tier</th><th scope="col" style="text-align: start; padding: 8px 12px; font-weight: 600">Middle tier</th><th scope="col" style="text-align: start; padding: 8px 0 8px 12px; font-weight: 600">Top tier</th></tr></thead>
+<tbody>
+<sc-for list="{{prices}}" as="p" hint-placeholder-count="4">
+<tr style="border-top: 1px solid #e3dfc9">
+<th scope="row" style="text-align: start; padding: 10px 12px 10px 0; font-weight: 600">{{p.role}}</th>
+<sc-for list="{{p.cells}}" as="x" hint-placeholder-count="3">
+<td style="padding: 8px 12px"><label style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 13px; font-weight: 600">{{x.tier}}</span><span style="display: flex; align-items: center; gap: 8px; height: 40px; box-sizing: border-box; padding: 0 12px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff"><input type="text" inputmode="decimal" value="{{x.v}}" placeholder="[price]" style="flex: 1; min-width: 0; border: 0; background: transparent; font: inherit; font-size: 15px; color: #262a67"><span style="font-weight: 600; color: #5b5f86">{{x.cur}}</span></span></label></td>
+</sc-for>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1460}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { sel: 'EG', off: {} }; }
+  renderVals() {
+    const tone = { ok: 'background: #e3f3ea; color: #1f7a4d;', warn: 'background: #fdf0d5; color: #8a4b00;', info: 'background: #e6e8f5; color: #262a67;', mute: 'background: #f6f3e4; color: #5b5f86;' };
+    const pill = (t) => 'display: inline-flex; white-space: nowrap; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; ' + tone[t];
+    const C = {
+      EG: { name: 'Egypt', phase: 'Phase 2 · pilot launch market', status: 'Live', st: 'ok', cur3: 'EGP', curName: 'EGP · Egyptian pound', tz: 'Africa/Cairo', phone: '+20',
+        gwList: [['paymob', 'Paymob', 'Hosted payment page · local cards and wallets', true], ['tap', 'Tap', 'Hosted payment page · backup for local cards', true], ['fawry', 'Fawry', 'Cash at any Fawry outlet · reference code valid 48 h, seats held meanwhile', true], ['stripe', 'Stripe', 'International cards, Apple Pay, Google Pay', true]],
+        gws: 'Paymob or Tap hosted page · Fawry cash · Stripe international', tax: 'Not set · Finance to supply', taxT: 'warn', taxVal: '', einv: 'None', einvHelp: 'No e-invoicing in the pilot: no QR codes or clearance stamps on invoices.',
+        le: '', trnLabel: 'Tax registration number', saveNote: 'Live market: saving needs a second admin' },
+      SA: { name: 'Saudi Arabia', phase: 'Phase 5 · launches after the ZATCA scope is decided', status: 'Configured', st: 'info', cur3: 'SAR', curName: 'SAR · Saudi riyal', tz: 'Asia/Riyadh', phone: '+966',
+        gwList: [['tap', 'Tap', 'Hosted payment page · mada and Apple Pay on the gateway page', true], ['paymob', 'Paymob', 'Hosted payment page', false], ['stripe', 'Stripe', 'International cards, Apple Pay, Google Pay', true]],
+        gws: 'Tap hosted page (mada, Apple Pay) · Stripe international', tax: '15% VAT', taxT: 'info', taxVal: '15', einv: 'ZATCA Phase 2', einvHelp: 'Scope is decided before the Saudi launch. Invoices then carry the ZATCA QR.',
+        le: '', trnLabel: 'VAT number and CR', saveNote: 'Not live yet: changes apply at launch' },
+      AE: { name: 'United Arab Emirates', phase: 'Phase 5', status: 'Draft', st: 'mute', cur3: 'AED', curName: 'AED · UAE dirham', tz: 'Asia/Dubai', phone: '+971',
+        gwList: [['tap', 'Tap', 'Hosted payment page · local cards', true], ['stripe', 'Stripe', 'International cards, Apple Pay, Google Pay', true]],
+        gws: 'Tap hosted page · Stripe international', tax: '5% VAT', taxT: 'info', taxVal: '5', einv: 'None', einvHelp: 'No e-invoicing set for this market.',
+        le: '', trnLabel: 'Tax registration number (TRN)', saveNote: 'Draft: not visible to anyone' }
+    };
+    const order = ['EG', 'SA', 'AE'];
+    const sel = this.state.sel;
+    const rows = order.map((k) => { const x = C[k]; const on = k === sel; return { name: x.name, phase: x.phase, status: x.status, ss: pill(x.st), cur3: x.cur3, gws: x.gws, tax: x.tax, ts: pill(x.taxT), einv: x.einv, tz: x.tz, lang: 'Arabic, English',
+      cur: on ? 'true' : 'false', on: () => this.setState({ sel: k }), rs: 'border-top: 1px solid #e3dfc9;' + (on ? ' background: #fff8f3; box-shadow: inset 3px 0 0 #fb8030;' : '') }; });
+    const x = C[sel];
+    const off = this.state.off;
+    const gw = x.gwList.map(([id, n, d, def]) => { const key = sel + '-' + id; const onv = off[key] === undefined ? def : off[key]; return { n, d, ch: onv ? 'true' : 'false', aria: n + ' for ' + x.name, on: () => this.setState({ off: { ...off, [key]: !onv } }),
+      track: 'flex-shrink: 0; width: 48px; height: 28px; border-radius: 999px; border: 0; padding: 3px; cursor: pointer; display: flex; ' + (onv ? 'background: #262a67; justify-content: flex-end;' : 'background: #b8bad6; justify-content: flex-start;'),
+      knob: 'width: 22px; height: 22px; border-radius: 999px; background: #ffffff;' }; });
+    const unset = x.taxVal === '';
+    const seg = (t, on) => ({ t, ch: on ? 'true' : 'false', st: 'min-height: 36px; padding: 0 12px; border-radius: 999px; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; ' + (on ? 'background: #262a67; color: #f6f3e4; border: 1px solid #262a67;' : 'background: #ffffff; color: #262a67; border: 1px solid #7b7fa6;') });
+    const c = { ...x, gw, stOpts: ['Draft', 'Configured', 'Live', 'Paused'].map((t) => seg(t, t === x.status)), einvOpts: ['None', 'ZATCA Phase 2'].map((t) => seg(t, t === x.einv)), taxInvalid: unset ? 'true' : 'false',
+      taxBox: 'display: flex; align-items: center; gap: 8px; height: 48px; box-sizing: border-box; padding: 0 14px; border-radius: 8px; background: #fff; border: 1px solid ' + (unset ? '#8a4b00' : '#7b7fa6') + ';',
+      taxHelp: unset ? 'Not set. Finance to supply the Egypt rate. Until then invoices and receipts show "Tax (Egypt rate)" with no amount filled in.' : 'Applied to new invoices from the save time. Earlier invoices keep their rate.',
+      taxHs: 'font-size: 13px; line-height: 18px; ' + (unset ? 'color: #8a4b00; font-weight: 600;' : 'color: #5b5f86;') };
+    const P = [['Organization', ['Starter', 'Growth', 'Enterprise']], ['Platform driver', ['Basic', 'Professional', 'Premium']], ['Photographer', ['Basic', 'Studio', 'Pro']], ['Traveler', ['Free', 'Explorer', 'VIP']]];
+    const prices = P.map(([role, tiers]) => ({ role, cells: tiers.map((tier) => ({ tier, cur: x.cur3, v: tier === 'Free' ? '0' : '' })) }));
+    return { rows, c, prices };
+  }
+}
+</script>
+</body>
+</html>

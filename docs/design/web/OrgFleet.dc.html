@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Org · Vehicles</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+.te-row:hover{background:#f6f3e4}
+</style>
+</helmet>
+<div style="min-height: 1000px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="OrgNav" active="Fleet" hint-size="248px,1000px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 24px">
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; color: #5b5f86">Your own buses and vans</span><h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Fleet</h1></div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px">
+<a href="OrgVehicleTypes.dc.html" style="height: 48px; box-sizing: border-box; padding: 0 20px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4h7a2 2 0 0 1 2 2v7H7zM5 13h12a2 2 0 0 1 2 2v2H5zM7 17v3M17 17v3"></path></svg>Vehicle types &amp; seat layouts</a>
+<a href="OrgVehicleEdit.dc.html" style="height: 48px; padding: 0 20px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Add vehicle</a>
+</div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px">
+<div style="padding: 18px 20px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 6px"><span style="font-size: 14px; color: #5b5f86">Vehicles</span><span style="font-size: 28px; line-height: 34px; font-weight: 700">9</span><span style="font-size: 13px; color: #5b5f86">367 seats in total</span></div>
+<div style="padding: 18px 20px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 6px"><span style="font-size: 14px; color: #5b5f86">On a trip today</span><span style="font-size: 28px; line-height: 34px; font-weight: 700">5</span><span style="font-size: 13px; color: #5b5f86">AlUla ×4 · Al Noor School ×1</span></div>
+<div style="padding: 18px 20px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 6px"><span style="font-size: 14px; color: #5b5f86">In maintenance</span><span style="font-size: 28px; line-height: 34px; font-weight: 700">1</span><span style="font-size: 13px; color: #5b5f86">Back Sun 12 Oct</span></div>
+<div style="padding: 18px 20px; border-radius: 20px; background: #fdf0d5; display: flex; flex-direction: column; gap: 6px"><span style="font-size: 14px; color: #8a4b00; font-weight: 600">Documents expiring</span><span style="font-size: 28px; line-height: 34px; font-weight: 700">2</span><span style="font-size: 13px; color: #8a4b00">Insurance must stay valid 3+ months</span></div>
+</div>
+
+<section aria-labelledby="veh-h" style="background: #ffffff; border-radius: 20px; padding: 20px 0 8px">
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 0 20px 12px; gap: 12px; flex-wrap: wrap"><h2 id="veh-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">Vehicles</h2>
+<div style="display: flex; gap: 8px; flex-wrap: wrap">
+<label style="display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600">Type<select style="height: 40px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 10px; font: inherit; font-size: 14px; color: #262a67"><option>All types</option><option>Mercedes Tourismo · 49</option><option>Toyota Coaster · 30</option><option>Toyota Hiace · 14</option></select></label>
+<label style="display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600">Status<select style="height: 40px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 10px; font: inherit; font-size: 14px; color: #262a67"><option>Any</option><option>Available</option><option>On trip</option><option>Maintenance</option></select></label>
+</div></div>
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 920px; border-collapse: collapse; font-size: 15px">
+<thead><tr style="color: #5b5f86; font-size: 13px"><th scope="col" style="text-align: start; padding: 10px 20px; font-weight: 600">Plate</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Type</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Seats</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Registration expiry</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Insurance expiry</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Usual driver</th><th scope="col" style="text-align: start; padding: 10px 20px; font-weight: 600">Status</th></tr></thead>
+<tbody>
+<sc-for list="{{rows}}" as="r" hint-placeholder-count="9">
+<tr class="te-row" style="border-top: 1px solid #e3dfc9">
+<td style="padding: 12px 20px; font-weight: 700; letter-spacing: .5px; white-space: nowrap"><a href="OrgVehicleEdit.dc.html" aria-label="Edit vehicle {{r.p}}" style="color: #262a67">{{r.p}}</a></td>
+<td style="padding: 12px"><span style="display: flex; align-items: center; gap: 12px"><span style="position: relative; width: 64px; height: 48px; flex-shrink: 0; border-radius: 8px; overflow: hidden; background: #f6f3e4"><img src="{{r.img}}" alt="{{r.alt}}" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover"></span><span style="display: flex; flex-direction: column"><span>{{r.t}}</span><span style="font-size: 13px; color: #5b5f86">{{r.y}}</span></span></span></td>
+<td style="padding: 12px">{{r.s}}</td>
+<td style="padding: 12px; font-size: 14px; {{r.regStyle}}">{{r.reg}}</td>
+<td style="padding: 12px; font-size: 14px"><span style="display: inline-flex; align-items: center; gap: 6px; {{r.insStyle}}"><sc-if value="{{r.insWarn}}" hint-placeholder-val="{{false}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9.5 17h-19zM12 10v4M12 17h.01"></path></svg></sc-if>{{r.ins}}</span></td>
+<td style="padding: 12px; font-size: 14px; color: #5b5f86">{{r.d}}</td>
+<td style="padding: 12px 20px"><span style="{{r.ss}}">{{r.st}}</span></td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+</section>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const pill = (tone) => 'display: inline-flex; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; white-space: nowrap; ' + ({ ok: 'background: #e3f3ea; color: #1f7a4d;', warn: 'background: #fdf0d5; color: #8a4b00;', bad: 'background: #fde8e6; color: #b42318;', info: 'background: #e6e8f5; color: #262a67;', live: 'background: #ffe7dc; color: #c93a00;' })[tone];
+    const V = [
+      ['RUH 4410', 'Mercedes Tourismo', '2021', 49, '12 Mar 2027', '30 Jan 2027', '', 'Saeed Mubarak', 'On trip', 'live'],
+      ['RUH 5521', 'Mercedes Tourismo', '2022', 49, '04 Jun 2027', '18 May 2027', '', 'Ahmed Fathi', 'On trip', 'live'],
+      ['RUH 6610', 'Mercedes Tourismo', '2019', 49, '21 Nov 2026', 'Expires 28 Nov 2026 · renew now', 'bad', 'Platform driver per trip', 'On trip', 'live'],
+      ['RUH 7742', 'Mercedes Tourismo', '2020', 49, '15 Feb 2027', '09 Dec 2026 · within 3 months', 'warn', 'Platform driver per trip', 'On trip', 'live'],
+      ['RUH 2287', 'Toyota Coaster', '2023', 30, '30 Aug 2027', '30 Aug 2027', '', '—', 'Available', 'ok'],
+      ['RUH 2290', 'Toyota Coaster', '2023', 30, '30 Aug 2027', '30 Aug 2027', '', '—', 'Maintenance · until Sun 12 Oct', 'warn'],
+      ['RUH 3305', 'Toyota Coaster', '2021', 30, '02 Apr 2027', '14 Mar 2027', '', '—', 'Available', 'ok'],
+      ['RUH 1209', 'Toyota Hiace', '2022', 14, '19 Jul 2027', '19 Jul 2027', '', 'Waleed Hamdan', 'On trip', 'live'],
+      ['RUH 1388', 'Toyota Hiace', '2024', 14, '07 Jan 2028', '07 Jan 2028', '', '—', 'Available', 'ok']
+    ];
+    const IMG = { 'Mercedes Tourismo': '../assets/b2dc1c7bb6179469c82e971872c53cdd.svg', 'Toyota Coaster': '../assets/b33043139687e3d53c2a4ccf4a1dee44.svg', 'Toyota Hiace': '../assets/394cc1d7971d348a095c4e6aefff9233.svg' };
+    const rows = V.map((v) => ({ img: IMG[v[1]], alt: v[1] + ' ' + v[0], p: v[0], t: v[1], y: 'Model year ' + v[2], s: v[3] + ' seats', reg: v[4], regStyle: '', ins: v[5], insWarn: !!v[6],
+      insStyle: v[6] === 'bad' ? 'color: #b42318; font-weight: 600;' : (v[6] === 'warn' ? 'color: #8a4b00; font-weight: 600;' : ''), d: v[7], st: v[8], ss: pill(v[9]) }));
+    return { rows };
+  }
+}
+</script>
+</body>
+</html>

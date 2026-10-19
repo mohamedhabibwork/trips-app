@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>مصور · الملف الشخصي</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div dir="rtl" style="width: 390px; height: 844px; box-sizing: border-box; background: #f6f3e4; color: #262a67; font-family: Cairo, 'Readex Pro', Tahoma, sans-serif; display: flex; flex-direction: column; padding: 56px 16px 32px; gap: 14px">
+<div style="display: flex; align-items: center; justify-content: space-between">
+<a href="PhoOtpAr.dc.html" aria-label="رجوع" style="width: 44px; height: 44px; border-radius: 999px; background: #ffffff; display: flex; align-items: center; justify-content: center; color: #262a67"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"></path></svg></a>
+<span style="font-size: 13px; font-weight: 600; color: #5b5f86">الخطوة ٤ من ٦</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 2px">
+<h1 style="margin: 0; font-size: 26px; line-height: 40px; font-weight: 700">ملفك كمصوّر</h1>
+<p style="margin: 0; font-size: 14px; line-height: 22px; font-weight: 500; color: #5b5f86">هذا ما يراه المنظمون والمسافرون عند الحجز.</p>
+</div>
+<div style="display: flex; align-items: center; gap: 12px">
+<img src="../assets/380d7985babc06d16544f4085cdec2d7.svg" alt="صورتك الشخصية" style="width: 64px; height: 64px; border-radius: 999px; object-fit: cover; object-position: center">
+<button style="height: 44px; padding: 0 16px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-family: inherit; font-size: 14px; font-weight: 700">تغيير الصورة</button>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="ppa-n" style="font-size: 14px; font-weight: 600">الاسم الظاهر</label><input id="ppa-n" value="عدسة نورة" style="height: 52px; box-sizing: border-box; padding: 0 14px; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-family: inherit; font-size: 16px"></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="ppa-id" style="font-size: 14px; font-weight: 600">رقم الهوية / الإقامة</label><input id="ppa-id" dir="ltr" value="1093318820" style="height: 52px; box-sizing: border-box; padding: 0 14px; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-family: inherit; font-size: 16px; text-align: right"></div>
+<fieldset style="margin: 0; padding: 0; border: none">
+<legend style="padding: 0; margin-bottom: 8px; font-size: 14px; font-weight: 600">ماذا تصوّر؟</legend>
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{tags}}" as="t" hint-placeholder-count="6"><button aria-pressed="{{t.on}}" onClick="{{t.tog}}" style="{{t.style}}">{{t.label}}</button></sc-for>
+</div>
+</fieldset>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="ppa-pr" style="font-size: 14px; font-weight: 600">السعر المبدئي للرحلة (ريال)</label><input id="ppa-pr" dir="ltr" inputmode="numeric" value="750" style="height: 52px; box-sizing: border-box; padding: 0 14px; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-family: inherit; font-size: 16px; text-align: right"></div>
+<a href="PhoPortfolioAr.dc.html" style="margin-top: auto; height: 52px; flex-shrink: 0; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; text-decoration: none">متابعة</a>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+constructor(p) { super(p); this.state = { on: { 'رحلات جماعية': true, 'فعاليات': true } }; }
+renderVals() {
+const xs = ['رحلات جماعية', 'فعاليات', 'رحلات مدرسية', 'درون', 'فيديو', 'بورتريه'];
+return { tags: xs.map(l => { const on = !!this.state.on[l]; return { label: l, on: on ? 'true' : 'false',
+style: 'height: 40px; padding: 0 14px; border-radius: 999px; background: #ffffff; color: #262a67; font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer; ' + (on ? 'border: 2px solid #fb8030;' : 'border: 1px solid #7b7fa6;'),
+tog: () => this.setState({ on: { ...this.state.on, [l]: !on } }) }; }) };
+}
+}
+</script>
+</body>
+</html>

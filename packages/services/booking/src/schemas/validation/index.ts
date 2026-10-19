@@ -9,6 +9,8 @@ export const createBookingSchema = z.object({
   seatLabels: z.array(z.string().trim().min(1).max(16)).default([]),
   couponCode: z.string().trim().min(3).max(40).nullable().optional(),
   paymentGateway: z.enum(["stripe", "paymob", "fawry"]).default("paymob"),
+  /** Traveler plan used for the program-only discount (Explorer 5% / VIP 10%). */
+  planTier: z.enum(["free", "explorer", "vip"]).default("free"),
 });
 
 export const cancelBookingSchema = z.object({

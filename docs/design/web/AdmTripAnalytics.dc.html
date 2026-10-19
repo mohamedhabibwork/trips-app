@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Admin · Trip analytics</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+.te-row:hover{background:#f6f3e4}
+</style>
+</helmet>
+<div style="min-height: 1000px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="AdmNav" active="Analytics" hint-size="248px,1000px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 20px">
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; color: #5b5f86">Trips marketplace · categories, regions, sell-through and pricing · updated today 09:00</span><h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Analytics</h1></div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center">
+<label for="ta-range" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Date range</label>
+<select id="ta-range" style="height: 48px; border-radius: 12px; border: 1px solid #7b7fa6; background: #fff; padding: 0 14px; font: inherit; font-size: 15px; font-weight: 600; color: #262a67"><option>October to date · 1–14 Oct 2026</option><option>Last 12 weeks</option><option>Last 12 months</option><option>This quarter</option><option>Custom range…</option></select>
+<button type="button" style="height: 48px; padding: 0 20px; border-radius: 12px; border: 0; background: #ff6c2e; color: #262a67; font: inherit; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12M7 11l5 5 5-5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"></path></svg>Export CSV</button>
+</div>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; border-bottom: 1px solid #e3dfc9">
+<nav aria-label="Analytics sections" style="display: flex; flex-wrap: wrap; gap: 4px">
+<sc-for list="{{tabs}}" as="t" hint-placeholder-count="5"><a href="{{t.href}}" aria-current="{{t.cur}}" style="{{t.st}}">{{t.l}}</a></sc-for>
+</nav>
+<div role="group" aria-label="Country" style="display: flex; flex-wrap: wrap; gap: 4px; padding: 4px; margin-bottom: 8px; background: #ffffff; border-radius: 999px">
+<sc-for list="{{countries}}" as="c" hint-placeholder-count="4"><button type="button" aria-pressed="{{c.p}}" onClick="{{c.on}}" style="{{c.st}}">{{c.l}}</button></sc-for>
+</div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px">
+<sc-for list="{{kpis}}" as="k" hint-placeholder-count="6">
+<div style="padding: 14px 18px; border-radius: 16px; background: #ffffff; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 13px; color: #5b5f86">{{k.l}}</span><span style="font-size: 24px; font-weight: 700">{{k.v}} <span style="font-size: 14px; font-weight: 500; color: #5b5f86">{{k.u}}</span></span><span style="{{k.ds}}">{{k.d}}</span></div>
+</sc-for>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: stretch">
+<section aria-labelledby="cat-h" style="flex: 1 1 420px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px"><h2 id="cat-h" style="margin: 0; font-size: 18px; font-weight: 600">Trips by category</h2><span style="font-size: 13px; color: #5b5f86">Published in October · sell-through</span></div>
+<sc-for list="{{cats}}" as="c" hint-placeholder-count="7">
+<div style="display: grid; grid-template-columns: minmax(120px, 1.2fr) minmax(0, 2fr) 44px 56px; gap: 10px; align-items: center; font-size: 14px">
+<span style="font-weight: 600">{{c.n}}</span>
+<div role="img" aria-label="{{c.aria}}" style="height: 14px; border-radius: 999px; background: #f6f3e4; overflow: hidden"><div style="{{c.bar}}"></div></div>
+<span style="text-align: end; font-weight: 700">{{c.t}}</span>
+<span style="{{c.ss}}">{{c.s}}</span>
+</div>
+</sc-for>
+<p style="margin: auto 0 0; padding-top: 6px; font-size: 14px; line-height: 20px"><span style="font-weight: 600">Takeaway:</span> School trips sell through best (92%); city and nightlife trips are the weakest at 69%.</p>
+</section>
+
+<section aria-labelledby="reg-h" style="flex: 1 1 420px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px"><h2 id="reg-h" style="margin: 0; font-size: 18px; font-weight: 600">Trips by region</h2><span style="font-size: 13px; color: #5b5f86">{{regNote}}</span></div>
+<sc-for list="{{regions}}" as="r" hint-placeholder-count="9">
+<div style="display: grid; grid-template-columns: minmax(120px, 1.2fr) minmax(0, 2fr) 44px 56px; gap: 10px; align-items: center; font-size: 14px">
+<span style="display: flex; flex-direction: column; line-height: 17px"><span style="font-weight: 600">{{r.n}}</span><span style="font-size: 12px; color: #5b5f86">{{r.c}}</span></span>
+<div role="img" aria-label="{{r.aria}}" style="height: 14px; border-radius: 999px; background: #f6f3e4; overflow: hidden"><div style="{{r.bar}}"></div></div>
+<span style="text-align: end; font-weight: 700">{{r.t}}</span>
+<span style="{{r.ss}}">{{r.s}}</span>
+</div>
+</sc-for>
+<p style="margin: auto 0 0; padding-top: 6px; font-size: 14px; line-height: 20px"><span style="font-weight: 600">Takeaway:</span> AlUla and Madinah fill fastest (85%); Asir and the Egyptian Red Sea coast need more demand.</p>
+</section>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: stretch">
+<section aria-labelledby="st-h" style="flex: 3 1 520px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px"><h2 id="st-h" style="margin: 0; font-size: 18px; font-weight: 600">Sell-through rate by departure week</h2>
+<span style="display: flex; flex-wrap: wrap; gap: 14px; font-size: 13px; color: #5b5f86"><span style="display: inline-flex; align-items: center; gap: 6px"><span style="width: 14px; height: 3px; border-radius: 2px; background: #262a67"></span>All trips</span><span style="display: inline-flex; align-items: center; gap: 6px"><span style="width: 14px; height: 3px; border-radius: 2px; background: #ff6c2e"></span>Trips with seat self-selection</span></span></div>
+<svg viewBox="0 0 660 226" role="img" aria-label="Weekly sell-through from 21 July to 6 October. All trips rose from 68% to 80%. Trips with seat self-selection rose from 75% to 89%, about 9 points higher every week." style="width: 100%; height: auto; display: block; font-family: Outfit, sans-serif">
+<g stroke="#e3dfc9" stroke-width="1"><line x1="48" y1="10" x2="640" y2="10"></line><line x1="48" y1="46" x2="640" y2="46"></line><line x1="48" y1="82" x2="640" y2="82"></line><line x1="48" y1="118" x2="640" y2="118"></line><line x1="48" y1="154" x2="640" y2="154"></line><line x1="48" y1="190" x2="640" y2="190"></line></g>
+<g fill="#5b5f86" font-size="12" text-anchor="end"><text x="38" y="14">100%</text><text x="38" y="50">90%</text><text x="38" y="86">80%</text><text x="38" y="122">70%</text><text x="38" y="158">60%</text><text x="38" y="194">50%</text></g>
+<g fill="#5b5f86" font-size="12" text-anchor="middle"><text x="48" y="214">21 Jul</text><text x="153.5" y="214">04 Aug</text><text x="258.9" y="214">18 Aug</text><text x="364.4" y="214">01 Sep</text><text x="469.8" y="214">15 Sep</text><text x="575.3" y="214">29 Sep</text><text x="628" y="214" text-anchor="end">06 Oct</text></g>
+<path d="{{st.all}}" fill="none" stroke="#262a67" stroke-width="3" stroke-linejoin="round"></path>
+<path d="{{st.self}}" fill="none" stroke="#ff6c2e" stroke-width="3" stroke-linejoin="round"></path>
+<circle cx="628" cy="{{st.ay}}" r="4.5" fill="#262a67"></circle>
+<circle cx="628" cy="{{st.sy}}" r="4.5" fill="#ff6c2e"></circle>
+</svg>
+<p style="margin: 0; font-size: 14px; line-height: 20px"><span style="font-weight: 600">Takeaway:</span> Trips that let travellers pick seats (Growth and Enterprise) sell through about 9 points higher.</p>
+</section>
+
+<section aria-labelledby="pr-h" style="flex: 2 1 320px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px"><h2 id="pr-h" style="margin: 0; font-size: 18px; font-weight: 600">Average price per seat</h2><span style="font-size: 13px; color: #5b5f86">SAR · before programs</span></div>
+<sc-for list="{{prices}}" as="p" hint-placeholder-count="7">
+<div style="display: grid; grid-template-columns: minmax(110px, 1.2fr) minmax(0, 2fr) 54px; gap: 10px; align-items: center; font-size: 14px">
+<span style="font-weight: 600">{{p.n}}</span>
+<div role="img" aria-label="{{p.aria}}" style="height: 14px; border-radius: 4px; background: #f6f3e4; overflow: hidden"><div style="{{p.bar}}"></div></div>
+<span style="text-align: end; font-weight: 700">{{p.v}}</span>
+</div>
+</sc-for>
+<p style="margin: auto 0 0; padding-top: 6px; font-size: 14px; line-height: 20px"><span style="font-weight: 600">Takeaway:</span> Platform average 486 SAR; multi-day heritage and Umrah trips carry the highest seat prices.</p>
+</section>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; align-items: stretch">
+<section aria-labelledby="lt-h" style="min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 2px"><h2 id="lt-h" style="margin: 0; font-size: 18px; font-weight: 600">Lead time</h2><span style="font-size: 13px; color: #5b5f86">Days booked before departure · % of bookings</span></div>
+<div role="img" aria-label="Lead time: 8% booked 0 to 2 days ahead, 19% 3 to 7 days, 27% 8 to 14 days, 26% 15 to 30 days, 14% 31 to 60 days, 6% more than 60 days" style="position: relative; display: flex; gap: 8px; align-items: flex-end; height: 170px; border-bottom: 1px solid #e3dfc9">
+<div aria-hidden="true" style="position: absolute; left: 0; right: 0; top: 40px; border-top: 1px solid #e3dfc9"></div>
+<div aria-hidden="true" style="position: absolute; left: 0; right: 0; top: 105px; border-top: 1px solid #e3dfc9"></div>
+<sc-for list="{{lead}}" as="l" hint-placeholder-count="6">
+<div style="position: relative; flex: 1 1 0; min-width: 0; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 4px"><span style="font-size: 13px; font-weight: 600">{{l.v}}</span><div style="{{l.bar}}"></div></div>
+</sc-for>
+</div>
+<div aria-hidden="true" style="display: flex; gap: 8px; margin-top: -6px">
+<sc-for list="{{lead}}" as="l" hint-placeholder-count="6"><span style="flex: 1 1 0; min-width: 0; text-align: center; font-size: 12px; color: #5b5f86">{{l.l}}</span></sc-for>
+</div>
+<p style="margin: auto 0 0; font-size: 14px; line-height: 20px"><span style="font-weight: 600">Takeaway:</span> Median lead time is 12 days; school trips book 21 days ahead, beach days only 5.</p>
+</section>
+
+<section aria-labelledby="cx-h" style="min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; flex-direction: column; gap: 2px"><h2 id="cx-h" style="margin: 0; font-size: 18px; font-weight: 600">Cancellations by reason</h2><span style="font-size: 13px; color: #5b5f86">1,321 cancellations · 312,400 SAR refunded</span></div>
+<sc-for list="{{cancels}}" as="c" hint-placeholder-count="6">
+<div style="display: flex; flex-direction: column; gap: 3px">
+<div style="display: flex; justify-content: space-between; gap: 8px; font-size: 14px"><span style="font-weight: 600">{{c.l}}</span><span>{{c.v}}</span></div>
+<div role="img" aria-label="{{c.aria}}" style="height: 10px; border-radius: 999px; background: #f6f3e4; overflow: hidden"><div style="{{c.bar}}"></div></div>
+</div>
+</sc-for>
+<p style="margin: auto 0 0; padding-top: 4px; font-size: 14px; line-height: 20px"><span style="font-weight: 600">Takeaway:</span> 18% are caused by organizers moving dates; <a href="AdmDisputes.dc.html" style="font-weight: 600">4 became disputes</a>.</p>
+</section>
+
+<section aria-labelledby="ct-h" style="min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 2px"><h2 id="ct-h" style="margin: 0; font-size: 18px; font-weight: 600">Child tracking on school trips</h2><span style="font-size: 13px; color: #5b5f86">174 school trips in October</span></div>
+<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center">
+<svg viewBox="0 0 140 140" width="128" height="128" role="img" aria-label="Child tracking enabled on 118 of 174 school trips, 68%" style="flex-shrink: 0; font-family: Outfit, sans-serif">
+<circle cx="70" cy="70" r="52" fill="none" stroke="#e3dfc9" stroke-width="18"></circle>
+<circle cx="70" cy="70" r="52" fill="none" stroke="#262a67" stroke-width="18" stroke-dasharray="222.2 104.5" transform="rotate(-90 70 70)"></circle>
+<text x="70" y="70" text-anchor="middle" font-size="24" font-weight="700" fill="#262a67">68%</text>
+<text x="70" y="88" text-anchor="middle" font-size="12" fill="#5b5f86">118 of 174</text>
+</svg>
+<div style="flex: 1 1 140px; display: flex; flex-direction: column; gap: 8px; font-size: 14px">
+<span style="display: flex; align-items: center; gap: 8px"><span style="width: 10px; height: 10px; border-radius: 3px; background: #262a67"></span>Tracking on · 118</span>
+<span style="display: flex; align-items: center; gap: 8px"><span style="width: 10px; height: 10px; border-radius: 3px; background: #e3dfc9; border: 1px solid #8a8fc4; box-sizing: border-box"></span>Tracking off · 56</span>
+<span style="color: #5b5f86; font-size: 13px; line-height: 18px">31 of the 56 are organizations on Starter; child tracking needs Growth or Enterprise.</span>
+</div>
+</div>
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px">
+<span style="display: flex; flex-direction: column; padding: 10px 12px; border-radius: 12px; background: #f6f3e4"><span style="font-size: 18px; font-weight: 700">4,210</span><span style="font-size: 12px; color: #5b5f86">parents linked</span></span>
+<span style="display: flex; flex-direction: column; padding: 10px 12px; border-radius: 12px; background: #f6f3e4"><span style="font-size: 18px; font-weight: 700">96%</span><span style="font-size: 12px; color: #5b5f86">children checked in by scan</span></span>
+</div>
+<p style="margin: auto 0 0; font-size: 14px; line-height: 20px"><span style="font-weight: 600">Takeaway:</span> Adoption up from 54% in September; Starter schools are the main upgrade lead.</p>
+</section>
+</div>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1580}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { country: 'All countries' }; }
+  renderVals() {
+    const pill = (tone) => 'justify-self: end; display: inline-flex; padding: 2px 8px; border-radius: 999px; font-size: 12px; font-weight: 600; white-space: nowrap; ' + ({ ok: 'background: #e3f3ea; color: #1f7a4d;', warn: 'background: #fdf0d5; color: #8a4b00;', bad: 'background: #fde8e6; color: #b42318;', info: 'background: #e6e8f5; color: #262a67;' })[tone];
+    const TABS = [['Platform', 'AdmAnalytics.dc.html'], ['Companies', 'AdmCompanyAnalytics.dc.html'], ['Trips', 'AdmTripAnalytics.dc.html'], ['Pages & app', 'AdmPageAnalytics.dc.html'], ['Providers', 'AdmProviderAnalytics.dc.html']];
+    const tabs = TABS.map(([l, href]) => { const on = l === 'Trips'; return { l, href, cur: on ? 'page' : 'false', st: 'display: flex; align-items: center; height: 44px; padding: 0 14px; font-size: 15px; text-decoration: none; margin-bottom: -1px; border-bottom: 3px solid ' + (on ? '#ff6c2e; font-weight: 700; color: #262a67;' : 'transparent; font-weight: 500; color: #5b5f86;') }; });
+    const country = this.state.country;
+    const countries = ['All countries', 'Saudi Arabia', 'UAE', 'Egypt'].map((l) => ({ l, p: l === country ? 'true' : 'false', on: () => this.setState({ country: l }),
+      st: 'height: 40px; padding: 0 14px; border-radius: 999px; border: 0; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; ' + (l === country ? 'background: #262a67; color: #f6f3e4;' : 'background: transparent; color: #262a67;') }));
+    const up = 'font-size: 13px; font-weight: 600; color: #1f7a4d';
+    const mut = 'font-size: 13px; color: #5b5f86';
+    const kpis = [
+      { l: 'Trips published (Oct)', v: '1,284', u: '', d: '▲ 6% vs September', ds: up },
+      { l: 'Seats listed', v: '214,600', u: '', d: '167,400 sold', ds: mut },
+      { l: 'Sell-through', v: '78%', u: '', d: '▲ 2 pts vs September', ds: up },
+      { l: 'Avg price per seat', v: '486', u: 'SAR', d: '▲ 3% vs September', ds: up },
+      { l: 'Median lead time', v: '12', u: 'days', d: 'Same as September', ds: mut },
+      { l: 'Cancellation rate', v: '4.2%', u: '', d: '▼ 0.5 pts vs September', ds: up }
+    ];
+    const tone = (s) => s >= 80 ? 'ok' : s >= 70 ? 'info' : 'warn';
+    const C = [['Heritage & culture', 312, 81, 742], ['Beach & sea', 248, 84, 398], ['Adventure & hiking', 196, 76, 289], ['School trips', 174, 92, 165], ['City & nightlife', 158, 69, 214], ['Family day out', 132, 73, 236], ['Umrah & religious', 64, 88, 1180]];
+    const cats = C.map((c) => ({ n: c[0], t: c[1], s: c[2] + '%', ss: pill(tone(c[2])), aria: c[0] + ': ' + c[1] + ' trips, ' + c[2] + '% sell-through', bar: 'height: 100%; border-radius: 999px; width: ' + Math.round(c[1] / 312 * 100) + '%; background: #262a67;' }));
+    const prices = C.slice().sort((a, b) => b[3] - a[3]).map((c) => ({ n: c[0], v: c[3].toLocaleString('en-US'), aria: c[0] + ': ' + c[3] + ' SAR per seat', bar: 'height: 100%; border-radius: 4px; width: ' + Math.round(c[3] / 1180 * 100) + '%; background: ' + (c[3] >= 486 ? '#ff6c2e' : '#8a8fc4') + ';' }));
+    const RG = [['Riyadh', 'Saudi Arabia', 402, 79], ['Makkah region · Jeddah, Taif', 'Saudi Arabia', 318, 80], ['AlUla & Madinah', 'Saudi Arabia', 176, 85], ['Eastern Province', 'Saudi Arabia', 98, 71], ['Asir · Abha', 'Saudi Arabia', 64, 66], ['Dubai', 'UAE', 112, 82], ['Abu Dhabi', 'UAE', 44, 74], ['Cairo & Giza', 'Egypt', 46, 70], ['Red Sea coast', 'Egypt', 24, 64]];
+    const rf = RG.filter((r) => country === 'All countries' || r[1] === country);
+    const regions = rf.map((r) => ({ n: r[0], c: r[1], t: r[2], s: r[3] + '%', ss: pill(tone(r[3])), aria: r[0] + ': ' + r[2] + ' trips, ' + r[3] + '% sell-through', bar: 'height: 100%; border-radius: 999px; width: ' + Math.round(r[2] / 402 * 100) + '%; background: #262a67;' }));
+    const regNote = rf.reduce((a, r) => a + r[2], 0).toLocaleString('en-US') + ' trips · ' + (country === 'All countries' ? 'all countries' : country);
+    const A = [68, 70, 69, 71, 72, 74, 76, 77, 78, 79, 78, 80]; const S = [75, 78, 77, 80, 81, 83, 85, 86, 87, 88, 87, 89];
+    const X = (i) => 48 + i * 580 / 11; const Y = (v) => 190 - (v - 50) / 50 * 180;
+    const pts = (a) => a.map((v, i) => (i ? 'L' : 'M') + X(i).toFixed(1) + ' ' + Y(v).toFixed(1)).join(' ');
+    const st = { all: pts(A), self: pts(S), ay: Y(80).toFixed(1), sy: Y(89).toFixed(1) };
+    const LT = [['0–2 d', 8], ['3–7', 19], ['8–14', 27], ['15–30', 26], ['31–60', 14], ['60+', 6]];
+    const lead = LT.map((l, i) => ({ l: l[0], v: l[1] + '%', bar: 'width: 100%; max-width: 52px; border-radius: 6px 6px 0 0; height: ' + Math.round(l[1] / 27 * 130) + 'px; background: ' + (i === 2 ? '#ff6c2e' : '#262a67') + ';' }));
+    const CX = [['Change of plans', 41], ['Organizer moved or cancelled the trip', 18], ['Family or health reasons', 14], ['Weather', 11], ['Found a cheaper option', 9], ['Payment or booking error', 7]];
+    const cancels = CX.map((c, i) => ({ l: c[0], v: c[1] + '% · ' + Math.round(1321 * c[1] / 100).toLocaleString('en-US'), aria: c[0] + ': ' + c[1] + '% of cancellations', bar: 'height: 100%; border-radius: 999px; width: ' + Math.round(c[1] / 41 * 100) + '%; background: ' + (i === 1 ? '#f89e23' : '#262a67') + ';' }));
+    return { tabs, countries, kpis, cats, prices, regions, regNote, st, lead, cancels };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Studio web · Home</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+.te-nav:focus-visible{outline:2px solid #f89e23;outline-offset:2px}
+.te-row:hover{background:#f6f3e4}
+</style>
+</helmet>
+<div style="min-height: 1000px; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif; display: flex; flex-direction: column">
+
+<header style="background: #1a1c4b; color: #f6f3e4">
+<div style="box-sizing: border-box; padding: 12px 40px; display: flex; flex-wrap: wrap; align-items: center; gap: 16px 28px">
+<a href="PhoWebHome.dc.html" class="te-nav" style="display: flex; align-items: center; gap: 10px; text-decoration: none"><img src="../assets/6ea846350ba3adc0e289d47fa0612c3b.svg" alt="Trips Enjoy" style="height: 36px; width: auto"><span style="padding: 2px 10px; border-radius: 999px; background: #f89e23; color: #1a1c4b; font-size: 12px; font-weight: 700">Studio</span></a>
+<nav aria-label="Studio" style="display: flex; flex-wrap: wrap; gap: 4px; flex-grow: 1">
+<sc-for list="{{nav}}" as="n" hint-placeholder-count="8"><a href="{{n.href}}" class="te-nav" aria-current="{{n.cur}}" style="{{n.style}}">{{n.label}}</a></sc-for>
+</nav>
+<a href="PhoWebProfile.dc.html" class="te-nav" style="display: flex; align-items: center; gap: 10px; color: #f6f3e4; text-decoration: none">
+<span style="display: flex; flex-direction: column; align-items: flex-end"><span style="font-size: 14px; font-weight: 600">Laila Fathy</span><span style="font-size: 12px; color: #b8bad6">{{planLine}}</span></span>
+<span style="width: 40px; height: 40px; border-radius: 999px; background: #31367a; color: #f89e23; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; overflow: hidden" aria-hidden="true"><img src="../assets/fa4aea3b99ab1c92ea071dc7fc9f9299.svg" alt="" style="width: 100%; height: 100%; object-fit: cover"></span>
+</a>
+</div>
+</header>
+
+<div style="box-sizing: border-box; width: 100%; max-width: 1440px; margin: 0 auto; padding: 24px 40px 40px; display: flex; flex-direction: column; gap: 20px">
+
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px">
+<div style="display: flex; flex-direction: column; gap: 2px">
+<span style="font-size: 14px; color: #5b5f86">Saturday 17 October · Cairo time</span>
+<h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 700">Good morning, Laila</h1>
+<span style="font-size: 14px; color: #5b5f86">{{subtitle}}</span>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px">
+<a href="PhoWebRates.dc.html" style="height: 48px; box-sizing: border-box; padding: 0 20px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zM4 10h16M8 3v4M16 3v4"></path></svg>Availability</a>
+<a href="{{cta.href}}" style="height: 48px; box-sizing: border-box; padding: 0 20px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; text-decoration: none">{{cta.label}}<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+</div>
+</div>
+
+<sc-if value="{{limit}}" hint-placeholder-val="{{false}}">
+<div role="status" style="padding: 16px 20px; border-radius: 20px; background: #fde8e6; color: #b42318; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9.5 17h-19zM12 10v4M12 17h.01"></path></svg>
+<span style="flex: 1 1 420px; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 16px; font-weight: 700">Monthly booking limit reached · 10 of 10 on Studio</span><span style="font-size: 14px; color: #262a67">You can still reply to deal requests, but new deals can't be finalized until the count resets on Sun 1 Nov at 00:00. Pro has unlimited bookings.</span></span>
+<a href="../mobile/PhoPlanManage.dc.html" style="height: 44px; box-sizing: border-box; padding: 0 18px; border-radius: 12px; background: #262a67; color: #f6f3e4; font-size: 15px; font-weight: 600; display: flex; align-items: center; text-decoration: none">Compare plans</a>
+</div>
+</sc-if>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px">
+<sc-for list="{{kpis}}" as="k" hint-placeholder-count="4">
+<a href="{{k.href}}" class="te-row" style="padding: 18px 20px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 6px; color: #262a67; text-decoration: none">
+<span style="display: flex; align-items: center; gap: 8px; font-size: 14px; color: #5b5f86"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{k.icon}}"></path></svg>{{k.l}}</span>
+<span style="font-size: 28px; line-height: 34px; font-weight: 700">{{k.v}} <span style="font-size: 15px; font-weight: 500; color: #5b5f86">{{k.u}}</span></span>
+<sc-if value="{{k.bar}}" hint-placeholder-val="{{false}}"><span role="progressbar" aria-label="{{k.l}}" aria-valuenow="{{k.pct}}" aria-valuemin="0" aria-valuemax="100" style="height: 8px; border-radius: 999px; background: #e3dfc9; display: flex; overflow: hidden"><span style="{{k.fill}}"></span></span></sc-if>
+<span style="{{k.ds}}">{{k.d}}</span>
+</a>
+</sc-for>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start">
+
+<section aria-labelledby="as-h" style="flex: 3 1 560px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px 0 8px">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 0 20px 12px"><h2 id="as-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">Assignments</h2><a href="PhoWebAlbums.dc.html" style="font-size: 14px; font-weight: 600">Trip albums</a></div>
+<sc-if value="{{hasAssign}}" hint-placeholder-val="{{true}}">
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 640px; border-collapse: collapse; font-size: 15px">
+<thead><tr style="color: #5b5f86; font-size: 13px"><th scope="col" style="text-align: start; padding: 10px 20px; font-weight: 600">Trip</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Dates</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Status</th><th scope="col" style="text-align: start; padding: 10px 20px; font-weight: 600">Next step</th></tr></thead>
+<tbody>
+<sc-for list="{{assign}}" as="a" hint-placeholder-count="4">
+<tr class="te-row" style="border-top: 1px solid #e3dfc9">
+<td style="padding: 12px 20px"><span style="display: flex; flex-direction: column"><a href="{{a.href}}" style="color: #262a67; font-weight: 600; text-decoration: none">{{a.n}}</a><span style="font-size: 13px; color: #5b5f86">{{a.org}}</span></span></td>
+<td style="padding: 12px; font-size: 14px">{{a.d}}</td>
+<td style="padding: 12px"><span style="{{a.ss}}">{{a.s}}</span></td>
+<td style="padding: 12px 20px; font-size: 14px"><a href="{{a.href}}" style="font-weight: 600">{{a.next}}</a></td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+</sc-if>
+<sc-if value="{{noAssign}}" hint-placeholder-val="{{false}}">
+<div style="margin: 0 20px 12px; padding: 32px 20px; border-radius: 12px; background: #f6f3e4; display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center">
+<img src="../assets/c1fe45a90a3a1b8eace395f8df7ad821.svg" alt="" style="width: 160px; height: 160px; object-fit: contain">
+<span style="font-size: 17px; font-weight: 600">No invitations yet</span>
+<span style="font-size: 14px; line-height: 20px; color: #5b5f86; max-width: 420px">Nile Horizon Tours assigns you to trips from their dashboard. You'll get a push and an email when a trip brief is ready.</span>
+<a href="PhoWebPortfolio.dc.html" style="font-size: 14px; font-weight: 600">Keep your portfolio fresh meanwhile</a>
+</div>
+</sc-if>
+</section>
+
+<section aria-labelledby="att-h" style="flex: 2 1 320px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+<h2 id="att-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">Needs your attention</h2>
+<sc-for list="{{attention}}" as="t" hint-placeholder-count="4">
+<a href="{{t.href}}" style="display: flex; gap: 12px; padding: 12px; border-radius: 12px; background: {{t.bg}}; color: #262a67; text-decoration: none">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 2px"><path d="{{t.icon}}"></path></svg>
+<span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 15px; font-weight: 600">{{t.t}}</span><span style="font-size: 13px; line-height: 18px; color: #5b5f86">{{t.d}}</span></span>
+</a>
+</sc-for>
+</section>
+
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"limitReached":{"editor":"boolean","default":false},"orgOwned":{"editor":"boolean","default":false},"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const org = !!this.props.orgOwned;
+    const limit = !org && !!this.props.limitReached;
+    const items = [['Home', 'PhoWebHome'], ['Portfolio', 'PhoWebPortfolio'], ['Profile', 'PhoWebProfile'], ['Rates', 'PhoWebRates'], ['Deals', 'PhoWebDeals'], ['Albums', 'PhoWebAlbums'], ['Earnings', 'PhoWebEarnings'], ['Coupons', 'PhoWebCoupons']].filter(([l]) => !(org && (l === 'Deals' || l === 'Coupons' || l === 'Rates')));
+    const nav = items.map(([label, f]) => {
+      const on = label === 'Home';
+      return { label, href: f + '.dc.html', cur: on ? 'page' : 'false',
+        style: 'height: 40px; padding: 0 14px; border-radius: 999px; display: flex; align-items: center; font-size: 15px; font-weight: 600; text-decoration: none; ' + (on ? 'background: #31367a; color: #f89e23;' : 'color: #f6f3e4;') };
+    });
+    const pill = (tone) => 'display: inline-flex; align-items: center; gap: 4px; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; white-space: nowrap; ' + ({ ok: 'background: #e3f3ea; color: #1f7a4d;', warn: 'background: #fdf0d5; color: #8a4b00;', bad: 'background: #fde8e6; color: #b42318;', info: 'background: #e6e8f5; color: #262a67;', live: 'background: #ffe7dc; color: #c93a00;' })[tone];
+    const I = {
+      deal: 'M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zM14 3v5h5',
+      cal: 'M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zM4 10h16M8 3v4M16 3v4',
+      ticket: 'M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v2a2.5 2.5 0 0 0 0 5v3a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-3a2.5 2.5 0 0 0 0-5zM14 5v14',
+      star: 'M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z',
+      upload: 'M12 16V4M7 9l5-5 5 5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3',
+      clock: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7v5l3 2',
+      users: 'M9 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM3 20a6 6 0 0 1 12 0M16 4.5a3.5 3.5 0 0 1 0 6.5M18 14.5a6 6 0 0 1 3 5.5',
+      alert: 'M12 3l9.5 17h-19zM12 10v4M12 17h.01',
+      wallet: 'M4 7a2 2 0 0 1 2-2h12v4M4 7v11a2 2 0 0 0 2 2h14V9H6a2 2 0 0 1-2-2zM16 14.5h.01'
+    };
+    const used = limit ? 10 : 7;
+    const barFill = (p, tone) => 'width: ' + p + '%; border-radius: 999px; background: ' + tone;
+    const kpis = org ? [
+      { l: 'Organization', v: 'Nile Horizon Tours', u: '', d: 'Covered by their Growth plan', ds: 'font-size: 13px; color: #5b5f86', icon: I.users, href: 'PhoWebProfile.dc.html' },
+      { l: 'Assignments', v: '0', u: 'trips', d: 'Invitations come from Nile Horizon Tours', ds: 'font-size: 13px; color: #5b5f86', icon: I.ticket, href: 'PhoWebHome.dc.html' },
+      { l: 'Albums waiting for upload', v: '0', u: '', d: 'Nothing due', ds: 'font-size: 13px; color: #5b5f86', icon: I.upload, href: 'PhoWebAlbums.dc.html' },
+      { l: 'Portfolio', v: '6', u: 'photos', d: 'Add 2 more before your first album', ds: 'font-size: 13px; font-weight: 600; color: #8a4b00', icon: I.star, href: 'PhoWebPortfolio.dc.html' }
+    ] : [
+      { l: 'Open deal requests', v: '2', u: 'waiting', d: '1 expires Mon 19 Oct, 14:20', ds: 'font-size: 13px; font-weight: 600; color: #8a4b00', icon: I.deal, href: 'PhoWebDeals.dc.html' },
+      { l: 'Bookings this month', v: String(used), u: 'of 10', d: limit ? 'Limit reached · resets Sun 1 Nov' : 'Studio plan · 3 left · resets Sun 1 Nov', ds: 'font-size: 13px; font-weight: 600; color: ' + (limit ? '#b42318' : '#5b5f86'), icon: I.ticket, href: 'PhoPlanManage.dc.html', bar: true, pct: String(used * 10), fill: barFill(used * 10, limit ? '#b42318' : '#262a67') },
+      { l: 'Next unavailable dates', v: 'Tue 27 Oct', u: '– Wed 28', d: 'Plus Thu 22 – Sat 24 Oct (Siwa)', ds: 'font-size: 13px; color: #5b5f86', icon: I.cal, href: 'PhoWebRates.dc.html' },
+      { l: 'Profile visibility', v: 'Featured', u: '', d: 'Verified badge shown on Studio', ds: 'font-size: 13px; font-weight: 600; color: #1f7a4d', icon: I.star, href: 'PhoWebProfile.dc.html' }
+    ];
+    const assign = [
+      { n: 'Wadi El Rayan Day Trip', org: 'Nile Horizon Tours · 2 buses', d: 'Sat 10 Oct', s: 'Completed', t: 'ok', next: 'Upload album · 7 days left', href: 'PhoWebAlbums.dc.html' },
+      { n: 'Siwa Oasis Escape', org: 'Nile Horizon Tours · 3 buses', d: 'Thu 22 – Sat 24 Oct', s: 'Assigned', t: 'info', next: 'Read trip brief', href: 'PhoWebBrief.dc.html' },
+      { n: 'Alexandria by the Sea', org: 'Cairo Weekenders · 1 bus', d: 'Fri 30 Oct', s: 'Negotiating', t: 'warn', next: 'Reply to counter', href: 'PhoWebDeals.dc.html' },
+      { n: 'Al Azhar Park School Day', org: 'Nile Horizon Tours · 1 bus', d: 'Tue 3 Nov', s: 'Invited', t: 'live', next: 'Review request', href: 'PhoWebDeals.dc.html' }
+    ].map((a) => ({ ...a, ss: pill(a.t) }));
+    const attention = org ? [
+      { t: 'Add 2 more portfolio photos', d: 'Your first album upload stays locked until the portfolio has at least 8 photos.', href: 'PhoWebPortfolio.dc.html', bg: '#fdf0d5', icon: I.alert },
+      { t: 'Check your profile', d: 'Travelers on Nile Horizon trips see your name and studio on each album.', href: 'PhoWebProfile.dc.html', bg: '#f6f3e4', icon: I.users }
+    ] : [
+      { t: 'Wadi El Rayan album is due', d: 'Upload window closes Sat 24 Oct, 14 days after the trip. 1 of 5 albums used.', href: 'PhoWebAlbums.dc.html', bg: '#fdf0d5', icon: I.upload },
+      { t: 'Counter from Cairo Weekenders', d: 'They offered 2,600 EGP for Alexandria by the Sea. Expires Mon 19 Oct, 14:20.', href: 'PhoWebDeals.dc.html', bg: '#fdf0d5', icon: I.clock },
+      { t: 'Payout on Mon 19 Oct, 06:00', d: '2,480 EGP: Wadi El Rayan Day Trip after the platform fee, less a 400 EGP adjustment.', href: 'PhoWebEarnings.dc.html', bg: '#f6f3e4', icon: I.wallet },
+      limit ? { t: 'Pro removes the monthly limit', d: 'Upgrade now and the price difference is prorated for this cycle.', href: 'PhoPlanManage.dc.html', bg: '#fde8e6', icon: I.star } : { t: 'SIWA10 coupon is live', d: '4 of 30 redemptions on bookings where you are assigned.', href: 'PhoWebCoupons.dc.html', bg: '#f6f3e4', icon: 'M3 12V4a1 1 0 0 1 1-1h8l9 9-9 9zM7.5 7.5h.01' }
+    ];
+    return {
+      nav, kpis, assign, attention, limit,
+      hasAssign: !org, noAssign: org,
+      planLine: org ? 'Nile Horizon Tours photographer' : 'Studio plan · Verified',
+      subtitle: org ? 'Organization photographer for Nile Horizon Tours, Cairo' : 'Platform photographer · Cairo, Giza and Alexandria',
+      cta: org ? { href: 'PhoWebPortfolio.dc.html', label: 'Add portfolio photos' } : { href: 'PhoWebDeals.dc.html', label: 'Review 2 deal requests' }
+    };
+  }
+}
+</script>
+</body>
+</html>

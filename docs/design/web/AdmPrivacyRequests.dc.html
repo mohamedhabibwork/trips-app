@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Admin · Deletion and data requests</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+.te-row:hover{background:#faf8ef}
+</style>
+</helmet>
+<div style="min-height: 1000px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="AdmNav" active="Users" hint-size="248px,1000px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 20px">
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 2px"><a href="AdmUsers.dc.html" style="align-self: flex-start; font-size: 14px; font-weight: 600; text-decoration: none">Users</a><h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Deletion &amp; data requests</h1></div>
+<div style="display: flex; align-items: center; gap: 8px; height: 48px; box-sizing: border-box; padding: 0 14px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; min-width: 280px">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM20 20l-4-4"></path></svg>
+<label for="pr-q" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Search requests</label>
+<input id="pr-q" type="search" placeholder="Name, email or request ID" style="flex: 1; min-width: 0; border: 0; outline-offset: 4px; font: inherit; font-size: 15px; color: #262a67; background: transparent">
+</div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px">
+<sc-for list="{{kpis}}" as="k" hint-placeholder-count="4">
+<div style="padding: 14px 18px; border-radius: 16px; background: #ffffff; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 13px; color: #5b5f86">{{k.l}}</span><span style="font-size: 26px; font-weight: 700">{{k.v}}</span><span style="{{k.ds}}">{{k.d}}</span></div>
+</sc-for>
+</div>
+
+<section aria-labelledby="q-h" style="background: #ffffff; border-radius: 20px; padding: 18px 0 8px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; align-items: center; padding: 0 20px">
+<h2 id="q-h" style="margin: 0; font-size: 18px; font-weight: 600">Requests</h2>
+<div role="tablist" aria-label="Filter requests" style="display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{filters}}" as="f" hint-placeholder-count="5">
+<button type="button" role="tab" aria-selected="{{f.sel}}" onClick="{{f.on}}" style="{{f.st}}">{{f.t}} <span style="font-weight: 500">{{f.n}}</span></button>
+</sc-for>
+</div>
+</div>
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 900px; border-collapse: collapse; font-size: 14px">
+<thead><tr style="color: #5b5f86; font-size: 13px"><th scope="col" style="text-align: start; padding: 8px 20px; font-weight: 600">Request</th><th scope="col" style="text-align: start; padding: 8px 12px; font-weight: 600">Account</th><th scope="col" style="text-align: start; padding: 8px 12px; font-weight: 600">Requested</th><th scope="col" style="text-align: start; padding: 8px 12px; font-weight: 600">Grace end / due</th><th scope="col" style="text-align: start; padding: 8px 12px; font-weight: 600">Status</th><th scope="col" style="text-align: start; padding: 8px 12px; font-weight: 600">Handled by</th><th scope="col" style="text-align: end; padding: 8px 20px; font-weight: 600"><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Action</span></th></tr></thead>
+<tbody>
+<sc-for list="{{rows}}" as="r" hint-placeholder-count="8">
+<tr class="te-row" style="border-top: 1px solid #e3dfc9">
+<td style="padding: 10px 20px"><span style="display: flex; flex-direction: column"><span style="display: inline-flex; align-items: center; gap: 6px; font-weight: 600"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{r.icon}}"></path></svg>{{r.type}}</span><span style="font-size: 12px; color: #5b5f86">{{r.id}}</span></span></td>
+<td style="padding: 10px 12px"><span style="display: flex; flex-direction: column"><span style="font-weight: 600">{{r.n}}</span><span style="font-size: 12px; color: #5b5f86">{{r.role}}</span></span></td>
+<td style="padding: 10px 12px; white-space: nowrap">{{r.rq}}</td>
+<td style="padding: 10px 12px"><span style="display: flex; flex-direction: column"><span style="{{r.ds}}">{{r.due}}</span><span style="font-size: 12px; color: #5b5f86">{{r.dueSub}}</span></span></td>
+<td style="padding: 10px 12px"><span style="{{r.ss}}">{{r.s}}</span></td>
+<td style="padding: 10px 12px; color: #5b5f86">{{r.h}}</td>
+<td style="padding: 10px 20px; text-align: end"><a href="AdmUser.dc.html" style="font-weight: 600; white-space: nowrap">Open account</a></td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+<sc-if value="{{empty}}" hint-placeholder-val="{{false}}"><p style="margin: 0; padding: 12px 20px; font-size: 15px; color: #5b5f86">No requests match this filter.</p></sc-if>
+</section>
+
+<section aria-labelledby="ru-h" style="background: #262a67; color: #f6f3e4; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+<h2 id="ru-h" style="margin: 0; font-size: 16px; font-weight: 600">How these requests run</h2>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px 24px">
+<sc-for list="{{rules}}" as="x" hint-placeholder-count="5"><div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; font-weight: 600">{{x.t}}</span><span style="font-size: 13px; line-height: 18px; color: #b8bad6">{{x.d}}</span></div></sc-for>
+</div>
+</section>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1040}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { f: 'All' }; }
+  renderVals() {
+    const tone = { ok: 'background: #e3f3ea; color: #1f7a4d;', warn: 'background: #fdf0d5; color: #8a4b00;', bad: 'background: #fde8e6; color: #b42318;', info: 'background: #e6e8f5; color: #262a67;', mute: 'background: #f6f3e4; color: #5b5f86;' };
+    const pill = (t) => 'display: inline-flex; white-space: nowrap; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; ' + tone[t];
+    const kpis = [
+      { l: 'Deletions in grace', v: '9', d: '3 purge in the next 7 days', ds: 'font-size: 13px; color: #5b5f86' },
+      { l: 'Data copies open', v: '4', d: '1 overdue', ds: 'font-size: 13px; font-weight: 600; color: #b42318' },
+      { l: 'Deferred', v: '2', d: 'Legal hold or open dispute', ds: 'font-size: 13px; font-weight: 600; color: #8a4b00' },
+      { l: 'Need a Super admin', v: '1', d: 'Organization deletion', ds: 'font-size: 13px; font-weight: 600; color: #8a4b00' }
+    ];
+    const DEL = 'M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13';
+    const COPY = 'M12 4v12M7 11l5 5 5-5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3';
+    const R = [
+      ['copy', 'DR-EG-0091', 'Mariam Adel', 'Traveler · Cairo', 'Fri 12 Sep', 'Due Sun 12 Oct', 'Overdue 2 days', 'Overdue', 'bad', 'Operations · Ahmed Zaki', 'overdue'],
+      ['del', 'DL-EG-0214', 'Nile Horizon Tours', 'Organization · Cairo · owner deletion', 'Mon 6 Oct', 'Grace ends Wed 5 Nov', 'Purge Thu 6 Nov', 'Needs Super admin', 'warn', 'Unassigned', 'open'],
+      ['del', 'DL-EG-0209', 'Karim Hassan', 'Traveler · Giza', 'Wed 1 Oct', 'Grace ends Fri 31 Oct', 'Day 14 of 30', 'In grace', 'info', 'Operations · Ahmed Zaki', 'open'],
+      ['del', 'DL-EG-0198', 'Ahmed Samir', 'Platform driver · Cairo', 'Thu 25 Sep', 'Grace ends Sat 25 Oct', 'Purge held while DSP-EG-118 is open', 'Deferred · open dispute', 'warn', 'Operations · Reem Othman', 'deferred'],
+      ['del', 'DL-EG-0187', 'Omar Nabil', 'Photographer · Alexandria', 'Fri 12 Sep', 'Grace ended Sun 12 Oct', 'Purge held by legal hold', 'Deferred · legal hold', 'warn', 'Legal · Dina Hamdy', 'deferred'],
+      ['copy', 'DR-EG-0097', 'Heba Mostafa', 'Moderator · Cairo', 'Thu 2 Oct', 'Due Sat 1 Nov', '18 days left', 'In progress', 'info', 'Operations · Ahmed Zaki', 'open'],
+      ['del', 'DL-EG-0201', 'Dina Farouk', 'Traveler · Cairo', 'Sat 27 Sep', 'Restored Mon 6 Oct', 'Signed in on day 9', 'Restored', 'ok', 'Automatic', 'done'],
+      ['copy', 'DR-SA-0012', 'Sara Al-Qahtani', 'Traveler · Riyadh', 'Sun 7 Sep', 'Delivered Mon 6 Oct', 'Link expires Mon 13 Oct', 'Delivered', 'ok', 'Operations · Ahmed Zaki', 'done']
+    ];
+    const F = [['All', () => true], ['Deletion', (r) => r[0] === 'del'], ['Data copy', (r) => r[0] === 'copy'], ['Overdue', (r) => r[10] === 'overdue'], ['Deferred', (r) => r[10] === 'deferred']];
+    const f = this.state.f;
+    const filters = F.map(([t, fn]) => ({ t, n: String(R.filter(fn).length), sel: t === f ? 'true' : 'false', on: () => this.setState({ f: t }),
+      st: 'height: 36px; padding: 0 14px; border-radius: 999px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; ' + (t === f ? 'background: #262a67; color: #f6f3e4; border: 1px solid #262a67;' : 'background: #ffffff; color: #262a67; border: 1px solid #7b7fa6;') }));
+    const fn = F.find((x) => x[0] === f)[1];
+    const rows = R.filter(fn).map((r) => ({ type: r[0] === 'del' ? 'Deletion' : 'Data copy', icon: r[0] === 'del' ? DEL : COPY, id: r[1], n: r[2], role: r[3], rq: r[4], due: r[5], dueSub: r[6], s: r[7], ss: pill(r[8]), h: r[9],
+      ds: 'white-space: nowrap; ' + (r[10] === 'overdue' ? 'font-weight: 700; color: #b42318;' : 'font-weight: 500;') }));
+    const rules = [
+      { t: '30-day grace, purge on day 31', d: 'Signing in during grace restores the account. No bookings or payments while in grace.' },
+      { t: 'Data copy within 30 days', d: 'Counted from the verified request. Overdue copies are flagged here.' },
+      { t: 'Deferred purge', d: 'A legal hold or an open dispute holds the purge; it runs once lifted.' },
+      { t: 'Who can approve', d: 'Operations handles personal accounts. Organizations, or accounts with a trip in progress, need a Super admin.' },
+      { t: 'What is kept', d: 'Trip records 5 years; bookings, payments and audit log 7 years.' }
+    ];
+    return { kpis, filters, rows, empty: rows.length === 0, rules };
+  }
+}
+</script>
+</body>
+</html>

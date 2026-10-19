@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Photographer · Statements &amp; invoices</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="height: 100%; box-sizing: border-box; padding: 56px 16px 120px; display: flex; flex-direction: column; gap: 10px">
+
+<div style="display: flex; align-items: center; gap: 12px">
+<a href="PhoEarnings.dc.html" aria-label="Back to earnings" style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 999px; background: #ffffff; color: #262a67; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a>
+<h1 style="margin: 0; flex-grow: 1; font-size: 22px; line-height: 28px; font-weight: 700">Statements &amp; invoices</h1>
+</div>
+
+<section aria-labelledby="st-h" style="padding: 14px 16px; border-radius: 20px; background: #1a1c4b; color: #f6f3e4; display: flex; flex-direction: column; gap: 6px">
+<div style="display: flex; align-items: center; gap: 8px">
+<h2 id="st-h" style="margin: 0; flex-grow: 1; font-size: 16px; font-weight: 600">{{s.title}}</h2>
+<div role="group" aria-label="Statement month" style="display: flex; gap: 4px">
+<sc-for list="{{months}}" as="m" hint-placeholder-count="2"><button aria-pressed="{{m.pressed}}" onClick="{{m.go}}" style="{{m.style}}">{{m.label}}</button></sc-for>
+</div>
+<button aria-label="Download statement PDF" style="width: 44px; height: 44px; border: 0; border-radius: 999px; background: #31367a; color: #f89e23; cursor: pointer; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12M7 11l5 5 5-5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"></path></svg></button>
+</div>
+<div style="display: flex; justify-content: space-between; font-size: 14px; color: #b8bad6"><span>Gross deals · {{s.deals}}</span><span style="color: #f6f3e4">{{s.gross}} SAR</span></div>
+<div style="display: flex; justify-content: space-between; font-size: 14px; color: #b8bad6"><span>Platform commission</span><span style="color: #f6f3e4">−{{s.comm}} SAR</span></div>
+<div style="padding-top: 8px; border-top: 1px solid #31367a; display: flex; justify-content: space-between; align-items: baseline"><span style="font-size: 14px; font-weight: 600">Net payout</span><span style="font-size: 22px; line-height: 28px; font-weight: 700">{{s.net}} <span style="font-size: 14px; font-weight: 500; color: #b8bad6">SAR</span></span></div>
+<span style="display: flex; align-items: center; gap: 6px; font-size: 13px; color: #b8bad6"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f89e23" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg>{{s.payout}}</span>
+</section>
+
+<section aria-labelledby="ap-h" style="padding: 10px 14px; border-radius: 20px; background: #ffffff; border: 2px solid #f89e23; display: flex; flex-direction: column; gap: 8px">
+<div style="display: flex; align-items: flex-start; gap: 10px">
+<span style="width: 36px; height: 36px; flex-shrink: 0; border-radius: 10px; background: #fdf0d5; color: #8a4b00; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zM14 3v5h5"></path></svg></span>
+<span style="display: flex; flex-direction: column; gap: 2px">
+<span id="ap-h" style="font-size: 15px; font-weight: 600">Approve invoice to Sunrise Tours Co.</span>
+<span style="font-size: 13px; line-height: 18px; color: #5b5f86">INV-PH-2026-000318 · Taif Rose Farms · 1,840 SAR incl. VAT. Issued on your behalf; sent to ZATCA after you approve.</span>
+</span>
+</div>
+<div style="display: flex; gap: 8px">
+<button style="flex: 1 1 0; height: 44px; border: 0; border-radius: 12px; background: #ff6c2e; color: #262a67; font: inherit; font-size: 15px; font-weight: 700; cursor: pointer">Review and approve</button>
+<a href="TrvSupport.dc.html" style="height: 44px; padding: 0 14px; box-sizing: border-box; border-radius: 12px; background: #ffffff; border: 1px solid #7b7fa6; color: #262a67; font-size: 14px; font-weight: 600; display: flex; align-items: center; text-decoration: none">Something&#39;s wrong</a>
+</div>
+</section>
+
+<div role="tablist" aria-label="Invoices" style="display: flex; padding: 4px; border-radius: 999px; background: #ffffff; gap: 4px">
+<sc-for list="{{tabs}}" as="t" hint-placeholder-count="2"><button role="tab" aria-selected="{{t.sel}}" onClick="{{t.go}}" style="{{t.style}}">{{t.label}}</button></sc-for>
+</div>
+
+<section aria-label="{{tabLabel}}" style="border-radius: 20px; background: #ffffff; padding: 2px 0">
+<sc-for list="{{rows}}" as="r" hint-placeholder-count="2">
+<div style="{{r.rowStyle}}">
+<span style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px">
+<span style="display: flex; justify-content: space-between; gap: 8px; font-size: 14px"><span style="font-weight: 600">{{r.t}}</span><span style="font-weight: 700; white-space: nowrap">{{r.amt}}</span></span>
+<span style="font-size: 12px; color: #5b5f86">{{r.no}}</span>
+<span style="display: flex; gap: 8px; align-items: center"><span style="{{r.ps}}">{{r.status}}</span><span style="display: flex; align-items: center; gap: 3px; font-size: 12px; color: #1f7a4d; font-weight: 600"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg>ZATCA {{r.z}}</span></span>
+</span>
+<button aria-label="{{r.dl}}" style="width: 40px; height: 44px; flex-shrink: 0; border: 0; border-radius: 10px; background: #f6f3e4; color: #262a67; cursor: pointer; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12M7 11l5 5 5-5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"></path></svg></button>
+</div>
+</sc-for>
+<a href="#" style="height: 40px; border-top: 1px solid #e3dfc9; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600">{{allLabel}}</a>
+</section>
+
+</div>
+<div style="position: absolute; left: 0; right: 0; bottom: 0; height: 120px">
+<dc-import name="TabBar" role="photographer" active="earnings" hint-size="390px,120px"></dc-import>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { mon: 'sep', tab: 'behalf' }; }
+  renderVals() {
+    const S = {
+      sep: { title: 'September 2026', deals: '3 shoots', gross: '7,160.00', comm: '859.20', net: '6,300.80', payout: 'Paid in Monday runs · last Mon 29 Sep to IBAN SA•• •••• 4410' },
+      aug: { title: 'August 2026', deals: '2 shoots', gross: '4,550.00', comm: '546.00', net: '4,004.00', payout: 'Paid weekly on Mondays to IBAN SA•• •••• 4410' }
+    };
+    const s = S[this.state.mon];
+    const months = [['sep', 'Sep'], ['aug', 'Aug']].map(([id, label]) => {
+      const on = this.state.mon === id;
+      return { label, pressed: on ? 'true' : 'false', go: () => this.setState({ mon: id }),
+        style: 'height: 44px; min-width: 44px; padding: 0 10px; border-radius: 999px; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; ' + (on ? 'border: 0; background: #f89e23; color: #1a1c4b;' : 'border: 1px solid #5b5f86; background: transparent; color: #f6f3e4;') };
+    });
+    const pill = (k) => 'padding: 1px 8px; border-radius: 999px; font-size: 12px; font-weight: 700; ' + (k === 'ok' ? 'background: #e3f3ea; color: #1f7a4d;' : k === 'wait' ? 'background: #fdf0d5; color: #8a4b00;' : 'background: #e6e8f5; color: #262a67;');
+    const D = {
+      behalf: [
+        ['Jeddah Corniche Night', 'INV-PH-2026-000301 · to Sunrise Tours Co.', '1,955.00 SAR', 'Paid', 'ok'],
+        ['Edge of the World Hike', 'INV-PH-2026-000296 · to Najd Adventures', '1,840.00 SAR', 'Paid', 'ok']
+      ],
+      te: [
+        ['Studio plan · October', 'INV-TE-2026-118402 · 99 + VAT 14.85', '113.85 SAR', 'Paid · Mada •• 7719', 'ok'],
+        ['Commission · Sep', 'INV-TE-2026-118977 · 859.20 + VAT 128.88', '988.08 SAR', 'Deducted from payout', 'info']
+      ]
+    };
+    const rows = D[this.state.tab].map(([t, no, amt, status, k], i) => ({ t, no, amt, status, ps: pill(k), z: 'cleared',
+      dl: 'Download ' + no.split(' ')[0] + ' PDF and XML',
+      rowStyle: 'padding: 7px 10px 7px 14px; display: flex; align-items: center; gap: 8px; ' + (i ? 'border-top: 1px solid #e3dfc9;' : '') }));
+    const allLabel = this.state.tab === 'behalf' ? 'All 11 invoices issued for you' : 'All 9 invoices from Trips Enjoy';
+    const tabs = [['behalf', 'Issued for you'], ['te', 'From Trips Enjoy']].map(([id, label]) => {
+      const on = this.state.tab === id;
+      return { label, sel: on ? 'true' : 'false', go: () => this.setState({ tab: id }),
+        style: 'flex: 1 1 0; height: 40px; border: 0; border-radius: 999px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; ' + (on ? 'background: #262a67; color: #f6f3e4;' : 'background: transparent; color: #262a67;') };
+    });
+    const tabLabel = this.state.tab === 'behalf' ? 'Invoices issued on your behalf to organizations' : 'Invoices from Trips Enjoy to you';
+    return { s, months, rows, tabs, tabLabel, allLabel };
+  }
+}
+</script>
+</body>
+</html>

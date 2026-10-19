@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Admin · User detail</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="position: relative; min-height: 1000px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="AdmNav" active="Users" hint-size="248px,1000px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 20px">
+
+<a href="AdmUsers.dc.html" style="align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 600; text-decoration: none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg>All users</a>
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: center">
+<div style="display: flex; gap: 16px; align-items: center">
+<img src="../assets/c311d0b40fa5c0d792261872e7c7b89d.svg" alt="" style="width: 64px; height: 64px; border-radius: 999px; object-fit: cover; flex-shrink: 0">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Khalid Al-Harbi</h1>
+<div style="display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 14px; color: #5b5f86">
+<span style="padding: 1px 8px; border-radius: 999px; font-size: 12px; font-weight: 600; background: #e6e8f5; color: #262a67">Traveller</span>
+<span style="padding: 1px 8px; border-radius: 999px; font-size: 12px; font-weight: 600; background: #262a67; color: #f6f3e4">Driver</span>
+<span style="{{statusPill}}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{statusIcon}}"></path></svg>{{statusLabel}}</span>
+<span>ID U-204817 · Riyadh · +966 55 ••• 4821 · joined 12 Mar 2025</span>
+</div>
+</div>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 10px">
+<button type="button" style="height: 44px; padding: 0 16px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer">Reset credentials</button>
+<sc-if value="{{notSuspended}}" hint-placeholder-val="{{true}}"><button type="button" onClick="{{openSuspend}}" style="height: 44px; padding: 0 16px; border-radius: 12px; border: 0; background: #b42318; color: #ffffff; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer">Suspend…</button></sc-if>
+</div>
+</div>
+<p style="margin: -8px 0 0; font-size: 13px; color: #5b5f86">Merging two accounts is not available in this phase. Merge requests are answered manually by Operations.</p>
+
+<sc-if value="{{isSuspended}}" hint-placeholder-val="{{false}}">
+<div role="status" style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; padding: 14px 16px; border-radius: 16px; background: #fde8e6; color: #b42318">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 11h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1zM8 11V7a4 4 0 0 1 8 0v4"></path></svg>
+<span style="flex: 1 1 380px; display: flex; flex-direction: column; gap: 2px; font-size: 14px; line-height: 20px"><span style="font-weight: 700">Suspended Tue 14 Oct 10:12 by Reem Othman · Document issue</span><span style="color: #262a67">Sign-in is refused and his data is kept. Red Sea Snorkel Day (Bus 2) went back to Sunrise Tours Co. to reassign. {{reinText}}</span></span>
+<sc-if value="{{canReinstate}}" hint-placeholder-val="{{true}}"><button type="button" onClick="{{reinstate}}" style="height: 44px; padding: 0 16px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer">Reinstate · ask second admin</button></sc-if>
+</div>
+</sc-if>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px">
+<sc-for list="{{facts}}" as="f" hint-placeholder-count="5">
+<div style="padding: 14px 16px; border-radius: 16px; background: #ffffff; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 13px; color: #5b5f86">{{f.l}}</span><span style="font-size: 18px; font-weight: 700">{{f.v}}</span><span style="font-size: 13px; color: #5b5f86">{{f.d}}</span></div>
+</sc-for>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
+<div style="flex: 3 1 520px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+<div role="tablist" aria-label="User records" style="display: flex; flex-wrap: wrap; gap: 4px; border-bottom: 1px solid #e3dfc9">
+<sc-for list="{{tabs}}" as="t" hint-placeholder-count="6">
+<button type="button" role="tab" aria-selected="{{t.sel}}" onClick="{{t.on}}" style="{{t.st}}">{{t.t}}</button>
+</sc-for>
+</div>
+
+<sc-if value="{{isDocs}}" hint-placeholder-val="{{true}}">
+<section aria-labelledby="doc-h" style="background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+<h2 id="doc-h" style="margin: 0; font-size: 18px; font-weight: 600">Driver documents</h2>
+<sc-for list="{{docs}}" as="d" hint-placeholder-count="5">
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; padding: 10px 0; border-top: 1px solid #e3dfc9">
+<img src="{{d.img}}" alt="{{d.alt}}" style="{{d.imgSt}}">
+<span style="flex: 1 1 200px; display: flex; flex-direction: column"><span style="font-size: 15px; font-weight: 600">{{d.n}}</span><span style="font-size: 13px; color: #5b5f86">{{d.d}}</span></span>
+<span style="{{d.ss}}">{{d.s}}</span>
+<a href="#" style="font-size: 14px; font-weight: 600">View</a>
+</div>
+</sc-for>
+<h2 style="margin: 8px 0 0; font-size: 18px; font-weight: 600">Lab tests</h2>
+<sc-for list="{{labs}}" as="l" hint-placeholder-count="2">
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; padding: 10px 0; border-top: 1px solid #e3dfc9">
+<span style="flex: 1 1 200px; display: flex; flex-direction: column"><span style="font-size: 15px; font-weight: 600">{{l.n}}</span><span style="font-size: 13px; color: #5b5f86">{{l.d}}</span></span>
+<span style="{{l.ss}}">{{l.s}}</span>
+</div>
+</sc-for>
+<a href="AdminLabRequest.dc.html" style="align-self: flex-start; font-size: 14px; font-weight: 600">Request a new lab test</a>
+</section>
+</sc-if>
+
+<sc-if value="{{isTable}}" hint-placeholder-val="{{false}}">
+<section aria-label="{{tabTitle}}" style="background: #ffffff; border-radius: 20px; padding: 8px 0">
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 620px; border-collapse: collapse; font-size: 15px">
+<thead><tr style="color: #5b5f86; font-size: 13px"><sc-for list="{{tHead}}" as="h" hint-placeholder-count="4"><th scope="col" style="text-align: start; padding: 10px 16px; font-weight: 600">{{h}}</th></sc-for></tr></thead>
+<tbody>
+<sc-for list="{{tRows}}" as="r" hint-placeholder-count="5">
+<tr style="border-top: 1px solid #e3dfc9"><td style="padding: 11px 16px; font-weight: 600">{{r.a}}</td><td style="padding: 11px 16px">{{r.b}}</td><td style="padding: 11px 16px; color: #5b5f86">{{r.c}}</td><td style="padding: 11px 16px"><span style="{{r.ss}}">{{r.d}}</span></td></tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+</section>
+</sc-if>
+</div>
+
+<aside style="flex: 2 1 300px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+<section aria-labelledby="ov-h" style="background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+<h2 id="ov-h" style="margin: 0; font-size: 18px; font-weight: 600">Override plan</h2>
+<p style="margin: 0; font-size: 14px; color: #5b5f86; line-height: 20px">Current: Driver Professional · monthly · renews Sat 1 Nov. A gift pauses billing and resumes the paid plan afterwards.</p>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="ov-plan" style="font-size: 14px; font-weight: 600">Grant plan</label><select id="ov-plan" style="height: 48px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 12px; font: inherit; font-size: 15px; color: #262a67"><option>Driver Premium</option><option>Driver Professional</option><option>Driver Basic</option></select></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="ov-len" style="font-size: 14px; font-weight: 600">Duration</label><select id="ov-len" style="height: 48px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 12px; font: inherit; font-size: 15px; color: #262a67"><option>3 months (until Wed 14 Jan 2027)</option><option>1 month</option><option>6 months</option><option>12 months</option></select></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="ov-r" style="font-size: 14px; font-weight: 600">Reason (shown in audit log)</label><textarea id="ov-r" rows="2" style="border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 10px 14px; font: inherit; font-size: 15px; color: #262a67; resize: vertical">Top-rated driver, AlUla launch partner</textarea></div>
+<p style="margin: 0; font-size: 13px; color: #5b5f86; line-height: 18px">Needs a second admin's approval. Khalid is emailed, and the plan reverts on the end date.</p>
+<button type="button" style="height: 48px; border-radius: 12px; border: 0; background: #ff6c2e; color: #262a67; font: inherit; font-size: 15px; font-weight: 700; cursor: pointer">Send override for approval</button>
+</section>
+<section aria-labelledby="dz-h" style="background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 10px; border: 1px solid #f3c7c2">
+<h2 id="dz-h" style="margin: 0; font-size: 18px; font-weight: 600; color: #b42318">Delete account</h2>
+<p style="margin: 0; font-size: 14px; color: #5b5f86; line-height: 20px">Starts a 30-day grace period. 2 future bookings are cancelled and refunded, 3,880 SAR pending earnings are paid on the next payout, and trip records are kept for 5 years.</p>
+<button type="button" style="align-self: flex-start; height: 44px; padding: 0 16px; border-radius: 12px; border: 1px solid #b42318; background: #ffffff; color: #b42318; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer">Schedule deletion…</button>
+</section>
+</aside>
+</div>
+
+</main>
+
+<sc-if value="{{showSuspend}}" hint-placeholder-val="{{false}}">
+<div style="position: absolute; inset: 0; background: rgba(16,18,48,.45); display: flex; align-items: flex-start; justify-content: center; padding: 120px 24px 24px">
+<div role="dialog" aria-modal="true" aria-labelledby="sus-h" style="width: 100%; max-width: 520px; box-sizing: border-box; background: #ffffff; border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 14px">
+<h2 id="sus-h" style="margin: 0; font-size: 22px; font-weight: 600">Suspend Khalid Al-Harbi?</h2>
+<ul style="margin: 0; padding: 0 0 0 18px; font-size: 14px; line-height: 22px">
+<li>Access ends at once: he is signed out on all devices and hidden from the provider pool.</li>
+<li>His data, documents and earnings are kept. Completed trips are still paid.</li>
+<li>His upcoming trips go back to the organization: Red Sea Snorkel Day, Bus 2 (Fri 24 Oct) returns to Sunrise Tours Co. to reassign.</li>
+</ul>
+<fieldset aria-describedby="sus-err" style="margin: 0; padding: 0; border: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 6px">
+<legend style="padding: 0 0 6px; font-size: 14px; font-weight: 600">Reason (required)</legend>
+<sc-for list="{{reasons}}" as="r" hint-placeholder-count="6"><button type="button" role="radio" aria-checked="{{r.ch}}" onClick="{{r.on}}" style="{{r.st}}"><span style="{{r.dot}}"></span>{{r.t}}</button></sc-for>
+</fieldset>
+<sc-if value="{{noReason}}" hint-placeholder-val="{{true}}"><span id="sus-err" style="font-size: 13px; color: #b42318; margin-top: -6px">Choose a reason. Suspend stays off until one is picked.</span></sc-if>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="sus-n" style="font-size: 14px; font-weight: 600">{{noteLabel}}</label><textarea id="sus-n" rows="2" style="border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 10px 14px; font: inherit; font-size: 15px; color: #262a67"></textarea></div>
+<span style="font-size: 13px; color: #5b5f86">Saved to the audit log with your name, the reason and the time.</span>
+<div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end">
+<button type="button" onClick="{{closeSuspend}}" style="height: 48px; padding: 0 18px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Cancel</button>
+<button type="button" aria-disabled="{{susDisabled}}" onClick="{{confirmSuspend}}" style="{{susBtn}}">Suspend account</button>
+</div>
+</div>
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"showSuspend":{"editor":"boolean","default":false},"suspended":{"editor":"boolean","default":false},"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { tab: 'Documents', sus: null, reason: null, susp: null, rein: false }; }
+  renderVals() {
+    const pill = (tone) => 'display: inline-flex; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; white-space: nowrap; ' + ({ ok: 'background: #e3f3ea; color: #1f7a4d;', warn: 'background: #fdf0d5; color: #8a4b00;', bad: 'background: #fde8e6; color: #b42318;', info: 'background: #e6e8f5; color: #262a67;', live: 'background: #ffe7dc; color: #c93a00;' })[tone];
+    const facts = [
+      { l: 'Plan', v: 'Driver Professional', d: '149 SAR / month · since Apr 2025' },
+      { l: 'Rating', v: '4.9 ★', d: '212 trips · Verified' },
+      { l: 'Bookings this month', v: '8 of 10', d: 'Professional limit' },
+      { l: 'Vehicle', v: 'Mercedes Tourismo', d: '49 seats · ABC 4821' },
+      { l: 'Earnings (2026)', v: '96,400 SAR', d: 'Next payout Mon 20 Oct 06:00' }
+    ];
+    const names = ['Documents', 'Deals & trips', 'Payouts', 'Coupons', 'Devices', 'Audit trail'];
+    const tab = this.state.tab;
+    const tabs = names.map((t) => ({ t, sel: t === tab ? 'true' : 'false', on: () => this.setState({ tab: t }),
+      st: 'height: 44px; padding: 0 14px; border: 0; background: transparent; font: inherit; font-size: 15px; cursor: pointer; color: #262a67; ' + (t === tab ? 'font-weight: 700; box-shadow: inset 0 -3px 0 #ff6c2e;' : 'font-weight: 500;') }));
+    const docs = [
+      { n: 'National ID', d: 'Verified 14 Mar 2025 · expires 2031', s: 'Valid', t: 'ok' },
+      { n: 'Driving licence (public transport)', d: 'Expires Sun 12 Jul 2027', s: 'Valid', t: 'ok' },
+      { n: 'Vehicle registration · ABC 4821', d: 'Expires Mon 1 Feb 2027', s: 'Valid', t: 'ok' },
+      { n: 'Vehicle insurance', d: 'Expires Thu 18 Dec 2026 · under 3 months', s: 'Expires soon', t: 'warn' },
+      { n: 'IBAN · Al Rajhi Bank', d: 'SA03 8000 •••• •••• 6021', s: 'Verified', t: 'ok' }
+    ].map((x, i) => ({ ...x, ss: pill(x.t), img: '../assets/5d1598097ad2c90e309e91f94f4c905d.svg', alt: 'Uploaded ' + x.n, imgSt: 'width: 48px; height: 36px; flex-shrink: 0; border-radius: 6px; object-fit: cover; object-position: ' + ['20% 50%', '45% 40%', '70% 50%', '85% 60%', '50% 80%'][i] + ';' }));
+    const labs = [
+      { n: 'Drug & alcohol screening', d: 'Requested Tue 14 Oct by Dalia Fouad · due Thu 16 Oct', s: 'Pending', t: 'warn' },
+      { n: 'Annual medical fitness', d: 'Passed Sun 9 Mar 2025', s: 'Passed', t: 'ok' }
+    ].map((x) => ({ ...x, ss: pill(x.t) }));
+    const T = {
+      'Deals & trips': [['Trip / deal', 'Organization', 'Date', 'Status'], [
+        ['Red Sea Snorkel Day · Bus 2', 'Sunrise Tours Co.', 'Fri 24 Oct', 'Countered 1,450 SAR', 'warn'],
+        ['AlUla Heritage Weekend · Bus 1', 'Sunrise Tours Co.', 'Thu 16–Sat 18 Oct', 'Finalized', 'ok'],
+        ['Taif Rose Farms', 'Rawabi Travel', 'Thu 30 Oct', 'Finalized', 'ok'],
+        ['Edge of the World Hike', 'Najd Adventures', 'Sat 25 Oct', 'Rejected by driver', 'bad']]],
+      Payouts: [['Run', 'Net', 'Bank', 'Status'], [
+        ['Mon 20 Oct', '3,880 SAR', 'Al Rajhi •••• 6021', 'Scheduled', 'info'],
+        ['Mon 13 Oct', '2,240 SAR', 'Al Rajhi •••• 6021', 'Paid', 'ok'],
+        ['Mon 6 Oct', '3,060 SAR', 'Al Rajhi •••• 6021', 'Paid', 'ok']]],
+      Coupons: [['Code', 'Type', 'Used', 'Status'], [
+        ['KHALID10', '10% · his bookings only', '7 of 10', 'Active', 'ok'],
+        ['ALULA150', '150 SAR fixed', '10 of 10', 'Exhausted', 'info']]],
+      Devices: [['Device', 'Location', 'Last seen', 'Session'], [
+        ['iPhone 15 · Driver app 3.8', 'Riyadh, SA', 'Today 07:51', 'Active', 'ok'],
+        ['Chrome on Windows', 'Riyadh, SA', 'Sun 12 Oct', 'Expired', 'info'],
+        ['Samsung A54 · Traveller app', 'Jeddah, SA', '22 Sep', 'Signed out', 'info']]],
+      'Audit trail': [['Event', 'By', 'When', 'Result'], [
+        ['Lab test requested', 'Dalia Fouad', 'Tue 14 Oct 08:31', 'Pending', 'warn'],
+        ['Insurance document uploaded', 'Khalid Al-Harbi', 'Fri 18 Jul', 'Approved', 'ok'],
+        ['Plan upgraded Basic to Professional', 'Khalid Al-Harbi', 'Tue 1 Apr', 'Prorated', 'info'],
+        ['Driver application approved', 'Reem Othman', 'Sun 16 Mar 2025', 'Approved', 'ok']]]
+    };
+    const cur = T[tab];
+    const tRows = cur ? cur[1].map((r) => ({ a: r[0], b: r[1], c: r[2], d: r[3], ss: pill(r[4]) })) : [];
+    const sus = this.state.sus === null ? !!this.props.showSuspend : this.state.sus;
+    const reason = this.state.reason;
+    const reasons = ['Safety', 'Fraud or abuse', 'Document issue', 'Policy breach', 'Non-payment', 'Other'].map((t) => { const on = t === reason; return { t, ch: on ? 'true' : 'false', on: () => this.setState({ reason: t }),
+      st: 'display: flex; gap: 8px; align-items: center; min-height: 44px; padding: 0 10px; border-radius: 12px; font: inherit; font-size: 14px; font-weight: 500; color: #262a67; text-align: start; cursor: pointer; ' + (on ? 'background: #fff8f3; border: 1px solid #fb8030;' : 'background: #ffffff; border: 1px solid ' + (reason ? '#e3dfc9' : '#f3c7c2') + ';'),
+      dot: 'width: 16px; height: 16px; flex-shrink: 0; box-sizing: border-box; border-radius: 999px; ' + (on ? 'border: 5px solid #262a67;' : 'border: 2px solid #7b7fa6;') }; });
+    const susp = this.state.susp === null ? !!this.props.suspended : this.state.susp;
+    return { facts, tabs, docs, labs, isDocs: tab === 'Documents', isTable: !!cur, tabTitle: tab, tHead: cur ? cur[0] : [], tRows,
+      showSuspend: sus, openSuspend: () => this.setState({ sus: true }), closeSuspend: () => this.setState({ sus: false }),
+      reasons, noReason: !reason, noteLabel: reason === 'Other' ? 'Note (required for Other)' : 'Note to Khalid (optional)',
+      susDisabled: reason ? 'false' : 'true',
+      susBtn: 'height: 48px; padding: 0 18px; border-radius: 12px; border: 0; font: inherit; font-size: 15px; font-weight: 600; ' + (reason ? 'background: #b42318; color: #ffffff; cursor: pointer;' : 'background: #e3dfc9; color: #5b5f86; cursor: not-allowed;'),
+      confirmSuspend: () => { if (reason) this.setState({ sus: false, susp: true, rein: false }); },
+      reinstate: () => this.setState({ rein: true }), canReinstate: !this.state.rein,
+      reinText: this.state.rein ? 'Reinstatement requested Tue 14 Oct 10:40. Waiting for a second admin to approve; access stays off until then.' : 'Lifting a suspension early needs a second admin to approve it.',
+      isSuspended: susp, notSuspended: !susp,
+      statusLabel: susp ? 'Suspended' : 'Active', statusIcon: susp ? 'M6 6l12 12M18 6L6 18' : 'M5 12.5l4.5 4.5L19 7',
+      statusPill: 'display: inline-flex; align-items: center; gap: 4px; padding: 1px 8px; border-radius: 999px; font-size: 12px; font-weight: 600; ' + (susp ? 'background: #fde8e6; color: #b42318;' : 'background: #e3f3ea; color: #1f7a4d;') };
+  }
+}
+</script>
+</body>
+</html>

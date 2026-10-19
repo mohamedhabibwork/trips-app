@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Photographer · Album privacy</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+.te-radio:focus-within{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="height: 100%; box-sizing: border-box; padding: 56px 16px 24px; display: flex; flex-direction: column; gap: 12px">
+
+<div style="display: flex; align-items: center; gap: 12px">
+<a href="PhoAlbumNew.dc.html" aria-label="Back" style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 999px; background: #ffffff; color: #262a67; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a>
+<div style="flex-grow: 1; display: flex; flex-direction: column"><h1 style="margin: 0; font-size: 22px; line-height: 28px; font-weight: 700">Who can see it</h1><span style="font-size: 13px; color: #5b5f86">Step 2 of 2 · Taif Rose Farms · 186 photos</span></div>
+</div>
+
+<fieldset style="margin: 0; padding: 0; border: 0; display: flex; flex-direction: column; gap: 10px">
+<legend style="padding: 0 0 8px; font-size: 14px; font-weight: 600">Album privacy</legend>
+
+<label class="te-radio" style="{{pubStyle}}">
+<input type="radio" name="priv" value="public" checked="{{pubChecked}}" onChange="{{pickPub}}" style="width: 20px; height: 20px; margin: 2px 0 0; accent-color: #262a67; flex-shrink: 0">
+<span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 16px; font-weight: 600">Public</span><span style="font-size: 13px; line-height: 18px; color: #5b5f86">Everyone on the trip sees it in their app · 172 travellers</span></span>
+</label>
+
+<label class="te-radio" style="{{linkStyle}}">
+<input type="radio" name="priv" value="link" checked="{{linkChecked}}" onChange="{{pickLink}}" style="width: 20px; height: 20px; margin: 2px 0 0; accent-color: #262a67; flex-shrink: 0">
+<span style="flex-grow: 1; display: flex; flex-direction: column; gap: 6px">
+<span style="display: flex; align-items: center; gap: 8px"><span style="font-size: 16px; font-weight: 600">Shared link</span><span style="padding: 0 8px; border-radius: 999px; background: #1a1c4b; color: #f89e23; font-size: 11px; font-weight: 700">Studio+</span></span>
+<span style="font-size: 13px; line-height: 18px; color: #5b5f86">Only people with the link can open it. You choose who gets it.</span>
+<sc-if value="{{isLink}}" hint-placeholder-val="{{true}}">
+<span style="display: flex; align-items: center; gap: 8px; padding-top: 4px">
+<span style="font-size: 13px; font-weight: 600">Link expires</span>
+<select aria-label="Link expires after" style="height: 44px; flex-grow: 1; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; padding: 0 8px; font: inherit; font-size: 14px; color: #262a67"><option>After 30 days</option><option>After 7 days</option><option>After 90 days</option><option>Never</option></select>
+</span>
+</sc-if>
+</span>
+</label>
+
+<div style="padding: 14px; border-radius: 16px; background: transparent; border: 1px dashed #7b7fa6; display: flex; gap: 12px; align-items: flex-start">
+<input type="radio" name="priv" value="selected" disabled aria-describedby="sel-d" id="sel" style="width: 20px; height: 20px; margin: 2px 0 0; flex-shrink: 0">
+<span style="flex-grow: 1; display: flex; flex-direction: column; gap: 4px">
+<label for="sel" style="display: flex; align-items: center; gap: 8px"><span style="font-size: 16px; font-weight: 600">Selected people</span><span style="display: inline-flex; align-items: center; gap: 4px; padding: 0 8px; border-radius: 999px; background: #262a67; color: #f6f3e4; font-size: 11px; font-weight: 700"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 11h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1zM8 11V7a4 4 0 0 1 8 0v4"></path></svg>Pro only</span></label>
+<span id="sel-d" style="font-size: 13px; line-height: 18px; color: #5b5f86">Pick names from the trip roster. Only they get notified and can see it.</span>
+<span style="display: flex; gap: 16px; font-size: 14px; font-weight: 600"><a href="PhoPlanManage.dc.html">Upgrade to Pro</a><a href="PhoAlbumUsers.dc.html">Preview</a></span>
+</span>
+</div>
+</fieldset>
+
+<section style="padding: 12px 14px; border-radius: 16px; background: #ffffff; display: flex; align-items: center; gap: 12px">
+<span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px"><span id="dl-l" style="font-size: 15px; font-weight: 600">Allow downloads</span><span style="font-size: 13px; color: #5b5f86">Full-size, watermarked copies</span></span>
+<button role="switch" aria-checked="{{dlAria}}" aria-labelledby="dl-l" onClick="{{toggleDl}}" style="{{dlTrack}}"><span style="width: 26px; height: 26px; border-radius: 999px; background: #ffffff; display: block"></span></button>
+</section>
+
+<p style="margin: 0; font-size: 13px; line-height: 18px; color: #5b5f86">{{summary}}</p>
+
+<a href="PhoAlbumLive.dc.html" style="margin-top: auto; height: 52px; flex-shrink: 0; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; text-decoration: none">Publish album</a>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { p: 'link', dl: true }; }
+  renderVals() {
+    const card = (on) => 'padding: 14px; border-radius: 16px; background: #ffffff; cursor: pointer; display: flex; gap: 12px; align-items: flex-start; ' + (on ? 'border: 2px solid #fb8030;' : 'border: 2px solid #e3dfc9;');
+    const isLink = this.state.p === 'link', dl = this.state.dl;
+    return {
+      isLink, pubChecked: !isLink, linkChecked: isLink,
+      pubStyle: card(!isLink), linkStyle: card(isLink),
+      pickPub: () => this.setState({ p: 'public' }), pickLink: () => this.setState({ p: 'link' }),
+      dlAria: dl ? 'true' : 'false', toggleDl: () => this.setState({ dl: !this.state.dl }),
+      dlTrack: 'width: 52px; height: 32px; flex-shrink: 0; border: 0; border-radius: 999px; padding: 3px; cursor: pointer; display: flex; ' + (dl ? 'background: #262a67; justify-content: flex-end;' : 'background: #7b7fa6; justify-content: flex-start;'),
+      summary: isLink ? 'When you publish, all 172 travellers get a notification with the link. You can turn the link off at any time.' : 'When you publish, the album appears in the trip for all 172 travellers and they get a notification.'
+    };
+  }
+}
+</script>
+</body>
+</html>

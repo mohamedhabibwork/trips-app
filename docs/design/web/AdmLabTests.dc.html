@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Admin · Lab tests</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+.te-row:hover{background:#faf8ef}
+</style>
+</helmet>
+<div style="min-height: 1000px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="AdmNav" active="Lab tests" hint-size="248px,1000px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 20px">
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; color: #5b5f86">Drivers only · platform and organization-owned · free at partner labs</span><h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Lab tests</h1></div>
+<a href="AdminLabRequest.dc.html" style="height: 48px; padding: 0 20px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Request lab test</a>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px">
+<sc-for list="{{kpis}}" as="k" hint-placeholder-count="4">
+<div style="padding: 14px 18px; border-radius: 16px; background: #ffffff; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 13px; color: #5b5f86">{{k.l}}</span><span style="font-size: 26px; font-weight: 700">{{k.v}}</span><span style="{{k.ds}}">{{k.d}}</span></div>
+</sc-for>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
+<section aria-labelledby="q-h" style="flex: 3 1 600px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 18px 0 8px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; align-items: center; padding: 0 20px">
+<h2 id="q-h" style="margin: 0; font-size: 18px; font-weight: 600">Queue</h2>
+<div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center">
+<label for="lt-track" style="font-size: 14px; font-weight: 600">Track</label>
+<select id="lt-track" style="height: 40px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 10px; font: inherit; font-size: 14px; color: #262a67"><option>All tracks</option><option>Platform drivers</option><option>Organization-owned drivers</option></select>
+</div>
+</div>
+<div role="tablist" aria-label="Filter by state" style="display: flex; flex-wrap: wrap; gap: 8px; padding: 0 20px">
+<sc-for list="{{filters}}" as="f" hint-placeholder-count="6">
+<button type="button" role="tab" aria-selected="{{f.sel}}" onClick="{{f.on}}" style="{{f.st}}">{{f.t}} <span style="font-weight: 500">{{f.n}}</span></button>
+</sc-for>
+</div>
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 740px; border-collapse: collapse; font-size: 14px">
+<thead><tr style="color: #5b5f86; font-size: 13px"><th scope="col" style="text-align: start; padding: 8px 20px; font-weight: 600">Driver</th><th scope="col" style="text-align: start; padding: 8px 12px; font-weight: 600">Track</th><th scope="col" style="text-align: start; padding: 8px 12px; font-weight: 600">Test</th><th scope="col" style="text-align: start; padding: 8px 12px; font-weight: 600">Requested</th><th scope="col" style="text-align: start; padding: 8px 12px; font-weight: 600">Deadline</th><th scope="col" style="text-align: start; padding: 8px 12px; font-weight: 600">State</th><th scope="col" style="text-align: end; padding: 8px 20px; font-weight: 600"><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Action</span></th></tr></thead>
+<tbody>
+<sc-for list="{{rows}}" as="r" hint-placeholder-count="8">
+<tr class="te-row" style="border-top: 1px solid #e3dfc9">
+<td style="padding: 10px 20px"><span style="display: flex; align-items: center; gap: 12px"><sc-if value="{{r.hasAv}}" hint-placeholder-val="{{true}}"><img src="{{r.av}}" alt="" style="width: 36px; height: 36px; flex-shrink: 0; border-radius: 999px; object-fit: cover"></sc-if><sc-if value="{{r.noAv}}" hint-placeholder-val="{{false}}"><span aria-hidden="true" style="width: 36px; height: 36px; flex-shrink: 0; border-radius: 999px; background: #e6e8f5; color: #262a67; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center">{{r.ini}}</span></sc-if><span style="display: flex; flex-direction: column"><a href="AdmUser.dc.html" style="color: #262a67; font-weight: 600; text-decoration: none">{{r.n}}</a><span style="font-size: 12px; color: #5b5f86">{{r.sub}}</span></span></span></td>
+<td style="padding: 10px 12px">{{r.tr}}</td>
+<td style="padding: 10px 12px">{{r.t}}</td>
+<td style="padding: 10px 12px; white-space: nowrap">{{r.rq}}</td>
+<td style="padding: 10px 12px"><span style="display: flex; flex-direction: column"><span style="{{r.dls}}">{{r.dl}}</span><span style="font-size: 12px; color: #5b5f86">{{r.days}}</span></span></td>
+<td style="padding: 10px 12px"><span style="{{r.ss}}">{{r.s}}</span></td>
+<td style="padding: 10px 20px; text-align: end"><a href="AdminLabReview.dc.html" style="font-weight: 600; white-space: nowrap">{{r.act}}</a></td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+<sc-if value="{{empty}}" hint-placeholder-val="{{false}}"><p style="margin: 0; padding: 16px 20px; font-size: 15px; color: #5b5f86">No lab tests in this state.</p></sc-if>
+<p style="margin: 0; padding: 4px 20px 8px; font-size: 13px; color: #5b5f86">Deadline checks run every hour. A test with no result at its deadline becomes Missed and the driver is suspended.</p>
+</section>
+
+<aside aria-labelledby="rules-h" style="flex: 1 1 280px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+<section style="background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 10px">
+<h2 id="rules-h" style="margin: 0; font-size: 18px; font-weight: 600">What a request does</h2>
+<sc-for list="{{rules}}" as="x" hint-placeholder-count="6">
+<div style="display: flex; gap: 10px; font-size: 14px; line-height: 20px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 1px"><path d="{{x.i}}"></path></svg><span>{{x.t}}</span></div>
+</sc-for>
+</section>
+<section style="background: #262a67; color: #f6f3e4; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 8px">
+<h2 style="margin: 0; font-size: 16px; font-weight: 600">Lifting a pause early</h2>
+<p style="margin: 0; font-size: 14px; line-height: 20px; color: #b8bad6">Needs a passing result and a second admin's approval. Both names are written to the audit log.</p>
+<a href="AdmAudit.dc.html" style="color: #ff8655; font-size: 14px; font-weight: 600">Open audit log</a>
+</section>
+</aside>
+</div>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { f: 'All' }; }
+  renderVals() {
+    const tone = { ok: 'background: #e3f3ea; color: #1f7a4d;', warn: 'background: #fdf0d5; color: #8a4b00;', bad: 'background: #fde8e6; color: #b42318;', info: 'background: #e6e8f5; color: #262a67;', live: 'background: #ffe7dc; color: #c93a00;' };
+    const pill = (t) => 'display: inline-flex; white-space: nowrap; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; ' + tone[t];
+    const kpis = [
+      { l: 'Requested or pending', v: '7', d: 'Drivers paused while open', ds: 'font-size: 13px; color: #5b5f86' },
+      { l: 'Result uploaded', v: '3', d: 'Decision needed', ds: 'font-size: 13px; font-weight: 600; color: #8a4b00' },
+      { l: 'Overdue', v: '1', d: 'Missed · driver suspended', ds: 'font-size: 13px; font-weight: 600; color: #b42318' },
+      { l: 'Passed this month', v: '21', d: 'Drivers unpaused', ds: 'font-size: 13px; font-weight: 600; color: #1f7a4d' }
+    ];
+    const R = [
+      ['Tamer Fawzy', 'Cairo · Toyota Coaster 22 seats', 'Platform', 'Medical fitness', 'Sat 11 Oct', 'Tue 14 Oct 10:00', '3 days · result in', 'Result uploaded', 'warn', 'Review result', 'decide'],
+      ['Walid Mansour', 'Giza · Nile Horizon Tours', 'Organization-owned', 'Both', 'Wed 8 Oct', 'Wed 15 Oct 09:00', '7 days · result in', 'Result uploaded', 'warn', 'Review result', 'decide'],
+      ['Mahmoud Saeed', 'Cairo · Mercedes Travego 49 seats', 'Platform', 'Drug screening', 'Tue 14 Oct 08:31', 'Fri 17 Oct 08:31', '3 days · 2 days left', 'Requested', 'info', 'Open', 'open'],
+      ['Ashraf Kamel', 'Alexandria · Nile Horizon Tours', 'Organization-owned', 'Both', 'Mon 13 Oct', 'Thu 16 Oct 12:00', '3 days · lab booked Wed 15 Oct', 'Pending', 'info', 'Open', 'open'],
+      ['Khalid Al-Harbi', 'Riyadh · Mercedes Tourismo 49 seats', 'Platform', 'Drug screening', 'Tue 14 Oct 08:31', 'Thu 16 Oct 08:31', '2 days', 'Pending', 'info', 'Open', 'open'],
+      ['Hany Ibrahim', 'Fayoum · Hyundai County 28 seats', 'Platform', 'Drug screening', 'Thu 9 Oct', 'Sun 12 Oct 09:00', 'Overdue 2 days · closes Tue 11 Nov', 'Missed', 'bad', 'View suspension', 'missed'],
+      ['Sherif Adel', 'Cairo · King Long 35 seats', 'Platform', 'Drug screening', 'Sun 5 Oct', 'Wed 8 Oct', 'Case CS-EG-207 open', 'Failed', 'bad', 'Open case', 'failed'],
+      ['Mostafa Gamal', 'Giza · Toyota Hiace 14 seats', 'Platform', 'Medical fitness', 'Wed 1 Oct', 'Sat 4 Oct', 'Passed Fri 3 Oct · Reem Othman', 'Passed', 'ok', 'Open', 'passed']
+    ];
+    const F = [['All', () => true], ['Needs decision', (r) => r[10] === 'decide'], ['Open', (r) => r[10] === 'open'], ['Overdue', (r) => r[10] === 'missed'], ['Failed', (r) => r[10] === 'failed'], ['Passed', (r) => r[10] === 'passed']];
+    const f = this.state.f;
+    const filters = F.map(([t, fn]) => ({ t, n: String(R.filter(fn).length), sel: t === f ? 'true' : 'false', on: () => this.setState({ f: t }),
+      st: 'height: 36px; padding: 0 14px; border-radius: 999px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; ' + (t === f ? 'background: #262a67; color: #f6f3e4; border: 1px solid #262a67;' : 'background: #ffffff; color: #262a67; border: 1px solid #7b7fa6;') }));
+    const fn = F.find((x) => x[0] === f)[1];
+    const AVS = { 'Mahmoud Saeed': '../assets/f1b41fb1b201b088e5114338fbe087be.svg', 'Khalid Al-Harbi': '../assets/c311d0b40fa5c0d792261872e7c7b89d.svg' };
+    const rows = R.filter(fn).map((r) => ({ av: AVS[r[0]] || '', hasAv: !!AVS[r[0]], noAv: !AVS[r[0]], ini: r[0].split(' ').map((w) => w.replace('Al-', '')[0]).slice(0, 2).join('').toUpperCase(), n: r[0], sub: r[1], tr: r[2], t: r[3], rq: r[4], dl: r[5], days: r[6], s: r[7], ss: pill(r[8]), act: r[9],
+      dls: 'white-space: nowrap; ' + (r[10] === 'missed' ? 'font-weight: 700; color: #b42318;' : 'font-weight: 500;') }));
+    const rules = [
+      { i: 'M6 11h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1zM8 11V7a4 4 0 0 1 8 0v4', t: 'The driver is paused at once. Only book lab, upload result, support and sign out stay open.' },
+      { i: 'M6 4h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM4 11h16M8 18v2M16 18v2M8 14.5h.01M16 14.5h.01', t: 'Upcoming trips go back to their organizers to reassign.' },
+      { i: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7v5l3 2', t: 'Deadline 1 to 7 days, 3 by default.' },
+      { i: 'M12 3l9.5 17h-19zM12 10v4M12 17h.01', t: 'Missed: driver suspended. Over 30 days suspended closes the account. A late passing result is reviewed within 2 working days.' },
+      { i: 'M6 6l12 12M18 6L6 18', t: 'Failed: driver stays paused. A second fail within 12 months closes the account.' },
+      { i: 'M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zM14 3v5h5', t: 'Partner labs send results directly. Driver uploads are a fallback.' }
+    ];
+    return { kpis, filters, rows, empty: rows.length === 0, rules };
+  }
+}
+</script>
+</body>
+</html>

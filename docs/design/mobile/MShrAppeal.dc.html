@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Mobile · Appeal a rejection</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="height: 100%; box-sizing: border-box; padding: 56px 16px 24px; display: flex; flex-direction: column; gap: 14px">
+
+<div style="display: flex; align-items: center; gap: 12px">
+<a href="#" aria-label="Back" style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 999px; background: #ffffff; color: #262a67; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a>
+<h1 style="margin: 0; font-size: 22px; line-height: 28px; font-weight: 700">Appeal the decision</h1>
+</div>
+
+<sc-if value="{{showReason}}" hint-placeholder-val="{{true}}">
+<div style="padding: 14px 16px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 6px">
+<div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between"><span style="font-size: 13px; color: #5b5f86">Driver application · rejected Tue 13 Oct</span><span style="{{pillStyle}}">{{pill}}</span></div>
+<span style="font-size: 13px; font-weight: 600; color: #5b5f86">Reason recorded by the reviewer</span>
+<span style="font-size: 15px; line-height: 21px">Insurance must be valid for at least 3 more months. The policy you uploaded ends on 2 Dec 2026.</span>
+</div>
+</sc-if>
+
+<sc-if value="{{isOpen}}" hint-placeholder-val="{{true}}">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="ap-text" style="font-size: 14px; font-weight: 600">Why should we look again?</label>
+<textarea id="ap-text" rows="3" style="box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; padding: 10px 14px; font: inherit; font-size: 16px; line-height: 22px; color: #262a67; resize: none">I renewed the policy on 15 Oct. The new one runs to 15 Oct 2027 and is attached.</textarea>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 8px">
+<div style="display: flex; justify-content: space-between; align-items: baseline"><span style="font-size: 14px; font-weight: 600">Supporting files</span><span style="font-size: 13px; color: #5b5f86">{{fileCount}} of 5 · PDF, JPG, PNG · 10 MB each</span></div>
+<sc-for list="{{files}}" as="f" hint-placeholder-count="2">
+<div style="min-height: 52px; padding: 6px 6px 6px 12px; box-sizing: border-box; border-radius: 12px; background: #ffffff; display: flex; align-items: center; gap: 10px">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c93a00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zM14 3v5h5"></path></svg>
+<span style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column"><span style="font-size: 14px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap">{{f.n}}</span><span style="font-size: 12px; color: #5b5f86">{{f.s}}</span></span>
+<button type="button" onClick="{{f.remove}}" aria-label="{{f.label}}" style="width: 44px; height: 44px; border: 0; border-radius: 999px; background: transparent; color: #262a67; display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+</div>
+</sc-for>
+<sc-if value="{{showRefused}}" hint-placeholder-val="{{true}}">
+<div role="alert" style="padding: 10px 12px; border-radius: 12px; background: #fde8e6; color: #b42318; display: flex; gap: 10px; align-items: flex-start">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 2px"><path d="M12 3l9.5 17h-19zM12 10v4M12 17h.01"></path></svg>
+<span style="flex-grow: 1; font-size: 13px; line-height: 18px"><b>dashcam-clip.mov wasn't added.</b> Use a PDF, JPG or PNG under 10 MB, or a photo of the page.</span>
+<button type="button" onClick="{{dismiss}}" aria-label="Dismiss file error" style="width: 32px; height: 32px; flex-shrink: 0; border: 0; border-radius: 999px; background: transparent; color: #b42318; cursor: pointer; display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+</div>
+</sc-if>
+<button type="button" onClick="{{addFile}}" disabled="{{full}}" style="height: 48px; border-radius: 12px; border: 1px dashed #7b7fa6; background: transparent; color: #262a67; font: inherit; font-size: 15px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"></path></svg>{{addLabel}}</button>
+</div>
+
+<div style="margin-top: auto; display: flex; flex-direction: column; gap: 8px">
+<span style="font-size: 13px; line-height: 18px; color: #5b5f86; text-align: center">One appeal per decision. Last day to send: Tue 27 Oct (10 days left).</span>
+<button type="button" onClick="{{submit}}" style="height: 52px; border: 0; border-radius: 12px; background: #ff6c2e; color: #262a67; font: inherit; font-size: 16px; font-weight: 700; cursor: pointer">Send appeal</button>
+</div>
+</sc-if>
+
+<sc-if value="{{isSubmitted}}" hint-placeholder-val="{{false}}">
+<div role="status" style="padding: 18px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; gap: 12px; align-items: center"><span style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 999px; background: #e3f3ea; color: #1f7a4d; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg></span><span style="font-size: 18px; font-weight: 700">Appeal sent Sat 17 Oct, 11:20</span></div>
+<span style="font-size: 15px; line-height: 21px; color: #5b5f86">A different reviewer reads it. You'll get a decision by Thu 22 Oct (within 5 working days), by push and email.</span>
+<div style="padding-top: 10px; border-top: 1px solid #e3dfc9; display: flex; flex-direction: column; gap: 4px; font-size: 14px"><span>Statement and 2 files received</span><span style="color: #5b5f86">Reference APL-E-20417</span></div>
+</div>
+<a href="#" style="margin-top: auto; height: 52px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; text-decoration: none">Back to application status</a>
+</sc-if>
+
+<sc-if value="{{isDecided}}" hint-placeholder-val="{{false}}">
+<div style="padding: 18px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 10px">
+<span style="align-self: flex-start; padding: 4px 12px; border-radius: 999px; background: #e3f3ea; color: #1f7a4d; font-size: 13px; font-weight: 700">Appeal accepted · Wed 21 Oct</span>
+<span style="font-size: 18px; font-weight: 700">Your application is back in review</span>
+<span style="font-size: 15px; line-height: 21px; color: #5b5f86">The renewed policy meets the 3-month rule. Your lab test result from Mon 5 Oct is still valid, so the next step is a final check within 2 working days.</span>
+</div>
+<a href="#" style="margin-top: auto; height: 52px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; text-decoration: none">See application status</a>
+</sc-if>
+
+<sc-if value="{{isClosed}}" hint-placeholder-val="{{false}}">
+<div style="padding: 18px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 10px">
+<span style="font-size: 18px; font-weight: 700">The appeal window has closed</span>
+<span style="font-size: 15px; line-height: 21px; color: #5b5f86">Appeals were open until Tue 27 Oct. You can send a new application from Thu 12 Nov, 30 days after the decision.</span>
+</div>
+<a href="#" style="margin-top: auto; height: 52px; border-radius: 12px; background: #262a67; color: #f6f3e4; font-size: 16px; font-weight: 600; display: flex; align-items: center; justify-content: center; text-decoration: none">Remind me on Thu 12 Nov</a>
+</sc-if>
+
+<sc-if value="{{isHandoff}}" hint-placeholder-val="{{false}}">
+<div style="padding: 18px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 10px">
+<span style="width: 44px; height: 44px; border-radius: 12px; background: #e6e8f5; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"></path></svg></span>
+<span style="font-size: 18px; font-weight: 700">Appeals are sent from the driver app or the web</span>
+<span style="font-size: 15px; line-height: 21px; color: #5b5f86">This is the traveler app. Open Trips Enjoy Driver, or sign in at trips-enjoy.com, with the same account. Your appeal window is open until Tue 27 Oct.</span>
+</div>
+<div style="margin-top: auto; display: flex; flex-direction: column; gap: 10px">
+<a href="DrvHome.dc.html" style="height: 52px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; text-decoration: none">Open the driver app</a>
+<a href="../web/WebHome.dc.html" style="height: 52px; box-sizing: border-box; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-size: 16px; font-weight: 600; display: flex; align-items: center; justify-content: center; text-decoration: none">Continue on the web</a>
+</div>
+</sc-if>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"state":{"editor":"enum","options":["open","submitted","decided","window closed","traveler app"],"default":"open"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(p) {
+    super(p);
+    this.state = { sent: false, refused: true, files: [
+      { n: 'insurance-policy-2027.pdf', s: 'PDF · 1.2 MB' },
+      { n: 'insurance-receipt.jpg', s: 'JPG · 640 KB' }
+    ] };
+  }
+  renderVals() {
+    const st = this.state.sent ? 'submitted' : (this.props.state ?? 'open');
+    const extra = [{ n: 'vehicle-registration.pdf', s: 'PDF · 880 KB' }, { n: 'renewal-letter.png', s: 'PNG · 2.4 MB' }, { n: 'insurer-email.pdf', s: 'PDF · 210 KB' }];
+    const files = this.state.files;
+    const pills = {
+      open: ['Appeal open', '#fdf0d5', '#8a4b00'],
+      submitted: ['Appealed', '#e6e8f5', '#262a67'],
+      decided: ['Appeal accepted', '#e3f3ea', '#1f7a4d'],
+      'window closed': ['Window closed', '#fde8e6', '#b42318'],
+      'traveler app': ['Appeal open', '#fdf0d5', '#8a4b00']
+    };
+    const p = pills[st] || pills.open;
+    return {
+      isOpen: st === 'open',
+      isSubmitted: st === 'submitted',
+      isDecided: st === 'decided',
+      isClosed: st === 'window closed',
+      isHandoff: st === 'traveler app',
+      showReason: true,
+      pill: p[0],
+      pillStyle: 'padding: 2px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; background: ' + p[1] + '; color: ' + p[2],
+      showRefused: this.state.refused,
+      dismiss: () => this.setState({ refused: false }),
+      fileCount: files.length,
+      full: files.length >= 5,
+      addLabel: files.length >= 5 ? '5 of 5 files added' : 'Add a file',
+      files: files.map((f, i) => ({ ...f, label: 'Remove ' + f.n, remove: () => this.setState({ files: files.filter((_, j) => j !== i) }) })),
+      addFile: () => { if (files.length < 5) { const next = extra.find(e => !files.some(f => f.n === e.n)); if (next) this.setState({ files: [...files, next] }); } },
+      submit: () => this.setState({ sent: true })
+    };
+  }
+}
+</script>
+</body>
+</html>

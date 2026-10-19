@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Shared · Update required</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="height: 100%; box-sizing: border-box; padding: 56px 16px 24px; display: flex; flex-direction: column; gap: 16px">
+
+<img src="../assets/1fbce194fcb16bf54904c32c189fca31.svg" alt="Trips Enjoy" style="align-self: center; height: 32px; width: auto">
+
+<div style="flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; text-align: center; padding: 0 8px">
+<span style="width: 72px; height: 72px; border-radius: 999px; background: #ffe7dc; color: #c93a00; display: flex; align-items: center; justify-content: center"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12M7 11l5 5 5-5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"></path></svg></span>
+<h1 style="margin: 4px 0 0; font-size: 26px; line-height: 32px; font-weight: 700">Update to keep live tracking</h1>
+<p style="margin: 0; font-size: 16px; line-height: 23px; color: #5b5f86">This version can no longer show where the bus is. The update takes about a minute, and your bookings and tickets stay as they are.</p>
+<span style="padding: 4px 12px; border-radius: 999px; background: #e6e8f5; font-size: 13px; font-weight: 600">You have 3.8.2 · needed 4.0 or later</span>
+
+<section aria-labelledby="new-h" style="margin-top: 8px; align-self: stretch; padding: 16px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 10px; text-align: start">
+<h2 id="new-h" style="margin: 0; font-size: 16px; font-weight: 700">What's new in 4.0</h2>
+<ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px">
+<sc-for list="{{items}}" as="i" hint-placeholder-count="3">
+<li style="display: flex; gap: 10px; font-size: 15px; line-height: 21px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1f7a4d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M5 12.5l4.5 4.5L19 7"></path></svg><span><strong>{{i.t}}</strong> <span style="color: #5b5f86">{{i.d}}</span></span></li>
+</sc-for>
+</ul>
+</section>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 10px">
+<a href="#" style="height: 52px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none">Update now in the App Store</a>
+<a href="TrvTicket.dc.html" style="height: 52px; box-sizing: border-box; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-size: 16px; font-weight: 600; display: flex; align-items: center; justify-content: center; text-decoration: none">Show my ticket first</a>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const items = [
+      { t: 'Smoother live map.', d: 'The bus position updates every few seconds, even on weak signal.' },
+      { t: 'Boarding alerts for parents.', d: 'Know which bus your child boarded and when.' },
+      { t: 'Arabic layout fixes.', d: 'Tickets and receipts read correctly right to left.' }
+    ];
+    return { items };
+  }
+}
+</script>
+</body>
+</html>

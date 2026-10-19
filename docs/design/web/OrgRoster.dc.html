@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Passenger roster · AlUla</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+.te-row:hover{background:#fbfaf3}
+</style>
+</helmet>
+<div style="min-height: 1000px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="OrgNav" active="Trips" hint-size="248px,1000px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 20px">
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<a href="OrgTrip.dc.html" style="font-size: 14px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px; text-decoration: none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg>AlUla Heritage Weekend</a>
+<h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Passenger roster</h1>
+<span style="font-size: 15px; color: #5b5f86">Thu 16 Oct · boarding at Olaya · updated 07:38 · 168 passengers · 26 children · 19 with parent tracking</span>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px">
+<a href="OrgSeatAssign.dc.html" style="height: 48px; box-sizing: border-box; padding: 0 18px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4h7a2 2 0 0 1 2 2v7H7zM5 13h12a2 2 0 0 1 2 2v2H5zM7 17v3M17 17v3"></path></svg>Assign seats</a>
+<a href="../pdf/PdfManifest.dc.html" style="height: 48px; padding: 0 20px; border-radius: 12px; border: 0; background: #ff6c2e; color: #262a67; font: inherit; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; cursor: pointer; text-decoration: none; box-sizing: border-box"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zM14 3v5h5"></path></svg>{{printLabel}}</a>
+</div>
+</div>
+
+<div role="tablist" aria-label="Buses" style="display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{tabs}}" as="t" hint-placeholder-count="4">
+<button type="button" role="tab" aria-selected="{{t.sel}}" onClick="{{t.on}}" style="{{t.style}}"><span style="font-size: 15px; font-weight: 700">{{t.n}}</span><span style="{{t.ss}}">{{t.sub}}</span></button>
+</sc-for>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center; justify-content: space-between; padding: 12px 16px; border-radius: 12px; background: #ffffff">
+<span style="font-size: 15px">{{busLine}}</span>
+<span style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center">
+<span style="{{boardPill}}">{{boardText}}</span>
+<a href="OrgTripLive.dc.html" style="font-size: 14px; font-weight: 600">Live operations</a>
+</span>
+</div>
+
+<section aria-labelledby="ro-h" style="background: #ffffff; border-radius: 20px; padding: 16px 0 8px">
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 0 20px 8px"><h2 id="ro-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">{{tableTitle}}</h2><span style="font-size: 13px; color: #5b5f86">Sorted by seat</span></div>
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 1060px; border-collapse: collapse; font-size: 15px">
+<thead><tr style="color: #5b5f86; font-size: 13px"><th scope="col" style="text-align: start; padding: 10px 20px; font-weight: 600">Seat</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Passenger</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Age</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Programs</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Check-in</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Parent tracking</th><th scope="col" style="text-align: start; padding: 10px 20px; font-weight: 600">Move to bus</th></tr></thead>
+<tbody>
+<sc-for list="{{rows}}" as="r" hint-placeholder-count="10">
+<tr class="te-row" style="border-top: 1px solid #e3dfc9">
+<td style="padding: 10px 20px; font-weight: 700">{{r.seat}}</td>
+<td style="padding: 10px 12px"><span style="display: flex; flex-direction: column"><span style="font-weight: 600">{{r.n}}</span><a href="OrgBooking.dc.html" style="font-size: 13px">{{r.ref}}</a></span></td>
+<td style="padding: 10px 12px; white-space: nowrap">{{r.age}} <sc-if value="{{r.child}}" hint-placeholder-val="{{false}}"><span style="margin-left: 4px; padding: 1px 8px; border-radius: 999px; background: #e6e8f5; font-size: 12px; font-weight: 700">Child</span></sc-if></td>
+<td style="padding: 10px 12px; font-size: 14px; color: #5b5f86">{{r.prog}}</td>
+<td style="padding: 10px 12px"><span style="{{r.cs}}">{{r.check}}</span></td>
+<td style="padding: 10px 12px; font-size: 14px"><span style="{{r.ts}}">{{r.track}}</span></td>
+<td style="padding: 10px 20px"><label style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)" for="{{r.id}}">{{r.ml}}</label><select id="{{r.id}}" style="height: 40px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 8px; font: inherit; font-size: 14px; color: #262a67"><sc-for list="{{moveOpts}}" as="o" hint-placeholder-count="4"><option>{{o}}</option></sc-for></select></td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+<div style="padding: 10px 20px 4px; border-top: 1px solid #e3dfc9; font-size: 14px; color: #5b5f86">{{shown}}</div>
+</section>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1100}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { bus: 1 }; }
+  renderVals() {
+    const tones = { ok: 'background: #e3f3ea; color: #1f7a4d;', warn: 'background: #fdf0d5; color: #8a4b00;', bad: 'background: #fde8e6; color: #b42318;', info: 'background: #e6e8f5; color: #262a67;' };
+    const pill = (t) => 'display: inline-flex; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; white-space: nowrap; ' + tones[t];
+    const BUSES = [
+      { n: 'Bus 1', in: 47, of: 47, mod: 'Huda Saleh', drv: 'Saeed Mubarak', v: 'Tourismo · RUH 3318' },
+      { n: 'Bus 2', in: 45, of: 47, mod: 'Nadia Yusuf', drv: 'Fahad Al-Otaibi', v: 'Tourismo · RUH 5520' },
+      { n: 'Bus 3', in: 27, of: 27, mod: 'Layla Al-Mutairi', drv: 'Majed Al-Zahrani', v: 'Coaster · RUH 7741' },
+      { n: 'Bus 4', in: 44, of: 46, mod: 'Omar Haddad', drv: 'Khalid Al-Harbi', v: 'Tourismo · ABC 4821' }
+    ];
+    const bi = this.state.bus;
+    const tabs = BUSES.map((b, i) => { const on = i === bi; const all = b.in === b.of; return { n: b.n, sub: b.in + ' / ' + b.of + ' boarded', sel: on ? 'true' : 'false', on: () => this.setState({ bus: i }),
+      style: 'min-width: 150px; padding: 10px 16px; border-radius: 14px; font: inherit; cursor: pointer; display: flex; flex-direction: column; align-items: flex-start; gap: 2px; ' + (on ? 'background: #262a67; color: #f6f3e4; border: 1px solid #262a67;' : 'background: #ffffff; color: #262a67; border: 1px solid #e3dfc9;'),
+      ss: 'font-size: 13px; font-weight: 600; ' + (on ? (all ? 'color: #b8bad6;' : 'color: #f89e23;') : (all ? 'color: #1f7a4d;' : 'color: #8a4b00;')) }; });
+    const D = {
+      0: [
+        ['1C', 'Abdullah Al-Shammari', 'TE-48233', '41', false, 'Hot-air balloon, Insurance', 'in', '07:31', ''],
+        ['2A', 'Huda Al-Ghamdi', 'TE-48201', '28', false, 'Hegra tour, Insurance', 'in', '07:22', ''],
+        ['2B', 'Rawan Al-Ghamdi', 'TE-48201', '11', true, 'Hegra tour, Insurance', 'in', '07:22', 'Huda Al-Ghamdi'],
+        ['3A', 'Saud Al-Otaibi', 'TE-48177', '55', false, 'Dinner Premium, Insurance', 'in', '07:12', '']
+      ],
+      1: [
+        ['2A', 'Khaled Al-Mansour', 'TE-48119', '34', false, 'Hegra tour, Insurance', 'in', '07:18', ''],
+        ['2B', 'Mariam Al-Mansour', 'TE-48119', '31', false, 'Hegra tour, Dinner Basic, Insurance', 'in', '07:18', ''],
+        ['2C', 'Yousef Al-Mansour', 'TE-48119', '7', true, 'Dinner Basic, Insurance', 'in', '07:18', 'Mariam Al-Mansour'],
+        ['3A', 'Ahmed Bakr', 'TE-48266', '45', false, 'Hot-air balloon, Insurance', 'no', '', ''],
+        ['3B', 'Dalia Bakr', 'TE-48266', '42', false, 'Insurance', 'in', '07:25', ''],
+        ['4B', 'Sara Al-Qahtani', 'TE-48217', '36', false, 'Hegra tour, Dinner Standard, Insurance', 'in', '07:36', ''],
+        ['4C', 'Omar Al-Qahtani', 'TE-48217', '9', true, 'Hegra tour, Dinner Standard, Insurance', 'in', '07:32', 'Sara Al-Qahtani'],
+        ['4D', 'Lina Al-Qahtani', 'TE-48217', '6', true, 'Hegra tour, Dinner Standard, Insurance', 'in', '07:34', 'Sara Al-Qahtani'],
+        ['5A', 'Hamad Al-Subaie', 'TE-48271', '52', false, 'Camp kit × 2, Insurance', 'no', '', ''],
+        ['5B', 'Noor Al-Subaie', 'TE-48271', '49', false, 'Insurance', 'in', '07:29', '']
+      ],
+      2: [
+        ['2B', 'Reem Al-Dosari', 'TE-48240', '29', false, 'Camp kit × 2, Insurance', 'in', '07:29', ''],
+        ['2C', 'Faris Al-Dosari', 'TE-48240', '33', false, 'Insurance', 'in', '07:29', ''],
+        ['3A', 'Jana Al-Zahrani', 'TE-48188', '10', true, 'Old Town walk, Insurance', 'in', '07:20', 'Amal Al-Zahrani']
+      ],
+      3: [
+        ['2C', 'Huda Al-Ghamdi', 'TE-48250', '38', false, 'Insurance', 'in', '07:27', ''],
+        ['3D', 'Bader Al-Harbi', 'TE-48281', '27', false, 'Group photo, Insurance', 'no', '', ''],
+        ['4A', 'Salma Al-Harbi', 'TE-48281', '8', true, 'Insurance', 'no', '', 'Bader Al-Harbi']
+      ]
+    };
+    const b = BUSES[bi];
+    const rows = D[bi].map(([seat, n, ref, age, child, prog, st, time, parent], i) => ({ seat, n, ref, age, child, prog, id: 'mv' + bi + '-' + i, ml: 'Move ' + n + ' to another bus',
+      check: st === 'in' ? 'Checked in ' + time : 'Not boarded', cs: pill(st === 'in' ? 'ok' : 'bad'),
+      track: child ? (parent ? 'On · ' + parent : 'Off') : '—', ts: child ? 'color: #1f7a4d; font-weight: 600;' : 'color: #5b5f86;' }));
+    const moveOpts = ['Keep on ' + b.n, ...BUSES.filter((_, i) => i !== bi).map((x) => x.n + ' · ' + ({ 'Bus 1': 0, 'Bus 2': 1, 'Bus 3': 2, 'Bus 4': 2 })[x.n] + ' seats free')];
+    const missing = b.of - b.in;
+    return { tabs, rows, moveOpts,
+      busLine: b.n + ' · ' + b.v + ' · Driver ' + b.drv + ' · Moderator ' + b.mod,
+      boardText: missing ? missing + ' not boarded yet · moderator notified' : 'Everyone on board',
+      boardPill: pill(missing ? 'bad' : 'ok'),
+      tableTitle: b.n + ' passengers', printLabel: 'Print ' + b.n + ' manifest',
+      shown: 'Showing ' + rows.length + ' of ' + b.of + ' · children are seated next to the adult on their booking' };
+  }
+}
+</script>
+</body>
+</html>

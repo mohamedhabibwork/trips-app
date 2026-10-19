@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Admin · Message templates</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;family=Cairo:wght@400;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+.te-tp:hover{background:#f6f3e4}
+</style>
+</helmet>
+<div style="min-height: 1000px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="AdmNav" active="Templates" hint-size="248px,1000px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 20px">
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; color: #5b5f86">System</span><h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Message templates</h1><span style="font-size: 15px; color: #5b5f86">Email, SMS / WhatsApp and push messages sent on platform events, in Arabic and English</span></div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px">
+<button type="button" style="height: 48px; padding: 0 20px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Send test to me</button>
+<button type="button" style="height: 48px; padding: 0 24px; border: 0; border-radius: 12px; background: #ff6c2e; color: #262a67; font: inherit; font-size: 15px; font-weight: 700; cursor: pointer">Save template</button>
+</div>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
+<nav aria-labelledby="ev-h" style="flex: 1 1 260px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 16px 8px 8px; display: flex; flex-direction: column">
+<h2 id="ev-h" style="margin: 0; padding: 0 12px 8px; font-size: 18px; font-weight: 600">Events</h2>
+<sc-for list="{{events}}" as="e" hint-placeholder-count="12">
+<sc-if value="{{e.isHead}}" hint-placeholder-val="{{false}}"><span style="padding: 12px 12px 4px; font-size: 11px; font-weight: 700; letter-spacing: .6px; color: #5b5f86">{{e.t}}</span></sc-if>
+<sc-if value="{{e.isItem}}" hint-placeholder-val="{{true}}">
+<button type="button" class="te-tp" aria-current="{{e.cur}}" onClick="{{e.pick}}" style="{{e.style}}"><span style="font-size: 14px; font-weight: 600">{{e.t}}</span><span style="font-size: 12px; color: #5b5f86">{{e.ch}}</span></button>
+</sc-if>
+</sc-for>
+</nav>
+
+<div style="flex: 3 1 600px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+<section aria-labelledby="ed-h" style="background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; align-items: center">
+<div style="display: flex; flex-direction: column"><h2 id="ed-h" style="margin: 0; font-size: 22px; line-height: 28px; font-weight: 600">{{title}}</h2><span style="font-size: 13px; color: #5b5f86">{{sub}}</span></div>
+<div role="tablist" aria-label="Channel" style="display: flex; padding: 4px; gap: 4px; border-radius: 12px; background: #f6f3e4">
+<sc-for list="{{chans}}" as="c" hint-placeholder-count="3">
+<button type="button" role="tab" aria-selected="{{c.on}}" onClick="{{c.pick}}" style="{{c.style}}">{{c.l}}</button>
+</sc-for>
+</div>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center">
+<span style="font-size: 14px; font-weight: 600">Variables</span>
+<sc-for list="{{vars}}" as="v" hint-placeholder-count="7">
+<button type="button" style="height: 30px; padding: 0 10px; border-radius: 999px; border: 1px solid #e3dfc9; background: #e6e8f5; color: #262a67; font-family: ui-monospace, Menlo, monospace; font-size: 13px; cursor: pointer">{{v}}</button>
+</sc-for>
+<span style="font-size: 12px; color: #5b5f86">Click to insert at the cursor</span>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px">
+<div style="display: flex; flex-direction: column; gap: 10px">
+<span style="display: flex; justify-content: space-between; align-items: center"><span style="font-size: 15px; font-weight: 700">English</span><span style="font-size: 12px; color: #5b5f86">Left-to-right</span></span>
+<sc-if value="{{hasSubject}}" hint-placeholder-val="{{true}}"><div style="display: flex; flex-direction: column; gap: 6px"><label for="en-s" style="font-size: 14px; font-weight: 600">{{subjLabel}}</label><input id="en-s" value="{{en.s}}" style="height: 48px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 14px; font: inherit; font-size: 15px; color: #262a67"></div></sc-if>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="en-b" style="font-size: 14px; font-weight: 600">Message</label><textarea id="en-b" rows="{{rows}}" style="border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 10px 14px; font: inherit; font-size: 15px; line-height: 22px; color: #262a67; resize: vertical">{{en.b}}</textarea><span style="font-size: 12px; color: #5b5f86">{{en.n}}</span></div>
+</div>
+<div lang="ar" dir="rtl" style="display: flex; flex-direction: column; gap: 10px; font-family: Cairo, sans-serif">
+<span style="display: flex; justify-content: space-between; align-items: center"><span style="font-size: 15px; font-weight: 700">العربية</span><span style="font-size: 12px; color: #5b5f86">من اليمين إلى اليسار</span></span>
+<sc-if value="{{hasSubject}}" hint-placeholder-val="{{true}}"><div style="display: flex; flex-direction: column; gap: 6px"><label for="ar-s" style="font-size: 14px; font-weight: 600">{{subjLabelAr}}</label><input id="ar-s" value="{{ar.s}}" style="height: 48px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 14px; font-family: Cairo, sans-serif; font-size: 15px; color: #262a67"></div></sc-if>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="ar-b" style="font-size: 14px; font-weight: 600">الرسالة</label><textarea id="ar-b" rows="{{rows}}" style="border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 10px 14px; font-family: Cairo, sans-serif; font-size: 15px; line-height: 24px; color: #262a67; resize: vertical">{{ar.b}}</textarea><span style="font-size: 12px; color: #5b5f86">{{ar.n}}</span></div>
+</div>
+</div>
+</section>
+
+<section aria-labelledby="pv-h" style="background: #262a67; color: #f6f3e4; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: space-between; align-items: center"><h2 id="pv-h" style="margin: 0; font-size: 18px; font-weight: 600">{{pvTitle}}</h2><span style="font-size: 13px; color: #b8bad6">Sample: Omar · Bus 2 · seat 4C · 07:32 · AlUla Heritage Weekend</span></div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px">
+<div style="background: #ffffff; color: #262a67; border-radius: 20px; padding: 14px 16px; display: flex; gap: 12px; align-items: flex-start">
+<img src="../assets/d8314577d8376991a72b92ec8ec2dadb.svg" alt="" style="width: 36px; height: 36px; border-radius: 10px; object-fit: contain; background: #f6f3e4; flex-shrink: 0">
+<span style="display: flex; flex-direction: column; gap: 2px; min-width: 0"><span style="display: flex; justify-content: space-between; gap: 8px; font-size: 12px; color: #5b5f86"><span>{{pvFrom}}</span><span>now</span></span><span style="font-size: 15px; font-weight: 700">{{pvEn.s}}</span><span style="font-size: 14px; line-height: 20px">{{pvEn.b}}</span><sc-if value="{{hasHero}}" hint-placeholder-val="{{true}}"><img src="../assets/44a218548719fe367b614a0dd5151345.svg" alt="AlUla sandstone rocks under a night sky" style="width: 100%; height: 120px; margin-top: 6px; border-radius: 12px; object-fit: cover"></sc-if></span>
+</div>
+<div lang="ar" dir="rtl" style="background: #ffffff; color: #262a67; border-radius: 20px; padding: 14px 16px; display: flex; gap: 12px; align-items: flex-start; font-family: Cairo, sans-serif">
+<img src="../assets/d8314577d8376991a72b92ec8ec2dadb.svg" alt="" style="width: 36px; height: 36px; border-radius: 10px; object-fit: contain; background: #f6f3e4; flex-shrink: 0">
+<span style="display: flex; flex-direction: column; gap: 2px; min-width: 0"><span style="display: flex; justify-content: space-between; gap: 8px; font-size: 12px; color: #5b5f86"><span>{{pvFromAr}}</span><span>الآن</span></span><span style="font-size: 15px; font-weight: 700">{{pvAr.s}}</span><span style="font-size: 14px; line-height: 22px">{{pvAr.b}}</span><sc-if value="{{hasHero}}" hint-placeholder-val="{{true}}"><img src="../assets/44a218548719fe367b614a0dd5151345.svg" alt="صخور العلا الرملية تحت سماء الليل" style="width: 100%; height: 120px; margin-top: 6px; border-radius: 12px; object-fit: cover"></sc-if></span>
+</div>
+</div>
+<span style="display: flex; gap: 8px; align-items: center; font-size: 13px; color: #b8bad6"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 11v5M12 8h.01"></path></svg>Sent to parents and guardians linked to the child, in each person’s app language. Last edited by Ali Hamdan, Mon 13 Oct.</span>
+</section>
+</div>
+</div>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { ev: 'Boarding confirmed', ch: 'push' }; }
+  renderVals() {
+    const S = this.state;
+    const E = [
+      ['h', 'APPLICATIONS'], ['Application approved', 'Email · Push'], ['Application rejected', 'Email'], ['Changes needed', 'Email · Push'],
+      ['h', 'BOOKINGS'], ['Booking confirmed', 'Email · SMS / WhatsApp · Push'], ['Payment failed', 'Email · Push'], ['Booking cancelled', 'Email · Push'],
+      ['h', 'TRIP DAY'], ['Boarding confirmed', 'SMS / WhatsApp · Push · Email'], ['Not boarded alert', 'SMS / WhatsApp · Push'], ['Checked out', 'Push'],
+      ['h', 'PROVIDERS'], ['Deal countered', 'Push · Email'], ['Payout sent', 'Email · Push']
+    ];
+    const events = E.map((r) => r[0] === 'h' ? { isHead: true, isItem: false, t: r[1] } : { isHead: false, isItem: true, t: r[0], ch: r[1], cur: r[0] === S.ev ? 'page' : 'false', pick: () => {},
+      style: 'display: flex; flex-direction: column; align-items: flex-start; text-align: start; gap: 1px; padding: 8px 12px; border: 0; border-radius: 12px; font: inherit; color: #262a67; cursor: pointer; ' + (r[0] === S.ev ? 'background: #e6e8f5; box-shadow: inset 3px 0 0 #ff6c2e;' : 'background: transparent;') });
+    const C = { push: 'Push', sms: 'SMS / WhatsApp', email: 'Email' };
+    const chans = Object.keys(C).map((k) => ({ l: C[k], on: k === S.ch ? 'true' : 'false', pick: () => this.setState({ ch: k }),
+      style: 'height: 36px; padding: 0 14px; border: 0; border-radius: 8px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; ' + (k === S.ch ? 'background: #ffffff; color: #262a67; box-shadow: 0 1px 3px rgba(38,42,103,.15);' : 'background: transparent; color: #5b5f86;') }));
+    const T = {
+      push: { en: { s: '{child_name} is on board', b: '{child_name} boarded Bus {bus_number} at {time}, seat {seat}. Trip: {trip_name}.' }, ar: { s: '{child_name} على متن الحافلة', b: 'صعد {child_name} إلى الحافلة {bus_number} الساعة {time}، المقعد {seat}. الرحلة: {trip_name}.' } },
+      sms: { en: { s: '', b: 'Trips Enjoy: {child_name} boarded Bus {bus_number} at {time} (seat {seat}), checked in by {moderator_name}. Follow live: {tracking_link}' }, ar: { s: '', b: 'تريبس إنجوي: صعد {child_name} إلى الحافلة {bus_number} الساعة {time} (المقعد {seat})، سجّلته {moderator_name}. تابع مباشرة: {tracking_link}' } },
+      email: { en: { s: '{child_name} boarded Bus {bus_number} at {time}', b: 'Hello {parent_name},\n\n{child_name} boarded Bus {bus_number} at {time} and is in seat {seat}. {moderator_name} is the moderator on this bus.\n\nYou can follow the bus live in the app until the trip ends.\n\nTrips Enjoy' }, ar: { s: 'صعد {child_name} إلى الحافلة {bus_number} الساعة {time}', b: 'مرحبًا {parent_name}،\n\nصعد {child_name} إلى الحافلة {bus_number} الساعة {time} ومقعده {seat}. المشرفة على هذه الحافلة {moderator_name}.\n\nيمكنك متابعة الحافلة مباشرة في التطبيق حتى نهاية الرحلة.\n\nتريبس إنجوي' } }
+    };
+    const t = T[S.ch];
+    const sample = { child_name: 'Omar', bus_number: '2', time: '07:32', seat: '4C', trip_name: 'AlUla Heritage Weekend', moderator_name: 'Nadia Yusuf', tracking_link: 'te.sa/l/8K2Q', parent_name: 'Sara' };
+    const sampleAr = { ...sample, child_name: 'عمر', trip_name: 'عطلة العلا التراثية', moderator_name: 'نادية يوسف', parent_name: 'سارة' };
+    const fill = (s, m) => s.replace(/\{(\w+)\}/g, (_, k) => m[k] || k);
+    const short = (s) => s.split('\n').filter((x) => x).slice(1, 2).join(' ') || s;
+    const len = (s) => s.length;
+    const note = (s, ar) => S.ch === 'sms' ? (ar ? len(s) + ' حرفًا · رسالتان (عربي 70 حرفًا للرسالة)' : len(s) + ' characters · 1 SMS segment') : S.ch === 'push' ? (ar ? 'يُقص النص بعد 110 أحرف' : 'Cut off after 110 characters on the lock screen') : (ar ? 'نص عادي، يُضاف التذييل تلقائيًا' : 'Plain text, footer and unsubscribe added automatically');
+    const en = { ...t.en, n: note(t.en.b, false) };
+    const ar = { ...t.ar, n: note(t.ar.b, true) };
+    const pvEn = { s: S.ch === 'sms' ? 'Trips Enjoy' : fill(t.en.s, sample), b: S.ch === 'email' ? fill(short(t.en.b), sample) : fill(t.en.b, sample).replace('Trips Enjoy: ', '') };
+    const pvAr = { s: S.ch === 'sms' ? 'تريبس إنجوي' : fill(t.ar.s, sampleAr), b: S.ch === 'email' ? fill(short(t.ar.b), sampleAr) : fill(t.ar.b, sampleAr).replace('تريبس إنجوي: ', '') };
+    const pv = { push: ['Push preview · lock screen', 'TRIPS ENJOY', 'تريبس إنجوي'], sms: ['WhatsApp preview', 'WhatsApp · Trips Enjoy', 'واتساب · تريبس إنجوي'], email: ['Email preview · inbox', 'Trips Enjoy · no-reply@trips-enjoy.com', 'تريبس إنجوي'] }[S.ch];
+    return { events, chans, vars: ['{child_name}', '{bus_number}', '{seat}', '{time}', '{trip_name}', '{moderator_name}', '{tracking_link}', '{parent_name}'],
+      title: S.ev, sub: 'Sent when a moderator checks a child in · Parents and guardians · Active in 3 channels',
+      hasSubject: S.ch !== 'sms', hasHero: S.ch !== 'sms', subjLabel: S.ch === 'email' ? 'Subject' : 'Title', subjLabelAr: S.ch === 'email' ? 'الموضوع' : 'العنوان', rows: S.ch === 'email' ? '8' : '4',
+      en, ar, pvEn, pvAr, pvTitle: pv[0], pvFrom: pv[1], pvFromAr: pv[2] };
+  }
+}
+</script>
+</body>
+</html>

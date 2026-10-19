@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Subscribe · payment</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif; display: flex; flex-direction: column; padding: 56px 16px 24px; gap: 14px">
+<div style="display: flex; align-items: center; gap: 12px">
+<a href="DrvPlan.dc.html" aria-label="Back" style="width: 44px; height: 44px; border-radius: 999px; background: #ffffff; display: flex; align-items: center; justify-content: center; color: #262a67"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg></a>
+<h1 style="margin: 0; font-size: 22px; line-height: 28px; font-weight: 700">Start your free trial</h1>
+</div>
+<div style="padding: 16px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 8px; font-size: 15px">
+<span style="display: flex; justify-content: space-between; font-weight: 700"><span>Driver · Professional</span><span>SAR 79/mo</span></span>
+<span style="display: flex; justify-content: space-between; color: #5b5f86"><span>Due today</span><span style="font-weight: 600; color: #1f7a4d">SAR 0.00</span></span>
+<span style="display: flex; justify-content: space-between; color: #5b5f86"><span>First charge on 18 Oct</span><span>SAR 90.85 incl. 15% VAT</span></span>
+</div>
+<span style="font-size: 14px; font-weight: 600">Pay with</span>
+<div role="radiogroup" aria-label="Payment method" style="display: flex; flex-direction: column; gap: 8px">
+<sc-for list="{{methods}}" as="m" hint-placeholder-count="4">
+<button role="radio" aria-checked="{{m.sel}}" onClick="{{m.pick}}" style="{{m.style}}"><span style="flex-grow: 1; text-align: start; font-size: 15px; font-weight: 600">{{m.t}}</span><span style="font-size: 13px; color: #5b5f86">{{m.d}}</span></button>
+</sc-for>
+</div>
+<sc-if value="{{isCard}}" hint-placeholder-val="{{false}}">
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="cc" style="font-size: 14px; font-weight: 600">Card number</label><input id="cc" inputmode="numeric" autocomplete="cc-number" dir="ltr" value="4847 •••• •••• 2210" style="height: 52px; box-sizing: border-box; padding: 0 14px; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-family: inherit; font-size: 16px; letter-spacing: 1px"></div>
+</sc-if>
+<p style="margin: 0; font-size: 13px; line-height: 18px; color: #5b5f86">Cancel before 18 Oct and you won't be charged. Cancelling later keeps access until the end of the paid period. <a href="../web/WebLegal.dc.html">Subscription terms</a></p>
+<a href="DrvLabApproved.dc.html" style="margin-top: auto; height: 52px; flex-shrink: 0; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 16px; font-weight: 600; display: flex; align-items: center; justify-content: center; text-decoration: none">Start free trial</a>
+<span style="display: flex; justify-content: center; align-items: center; gap: 6px; font-size: 12px; color: #5b5f86"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg>Payments secured · VAT invoice sent by email</span>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+constructor(p) { super(p); this.state = { m: 'apple' }; }
+renderVals() {
+const M = [['apple', 'Apple Pay', 'Default'], ['mada', 'mada', 'Debit card'], ['card', 'Credit card', 'Visa · Mastercard'], ['stc', 'STC Pay', 'Wallet']];
+return { isCard: this.state.m === 'card' || this.state.m === 'mada',
+methods: M.map(([k, t, d]) => ({ t, d, sel: this.state.m === k ? 'true' : 'false', pick: () => this.setState({ m: k }),
+style: 'display: flex; align-items: center; gap: 10px; min-height: 52px; padding: 0 14px; border-radius: 12px; background: #ffffff; color: #262a67; font-family: inherit; cursor: pointer; ' + (this.state.m === k ? 'border: 2px solid #fb8030;' : 'border: 1px solid #e3dfc9;') })) };
+}
+}
+</script>
+</body>
+</html>

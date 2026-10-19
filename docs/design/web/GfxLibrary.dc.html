@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Brand graphics library</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="min-height: 100vh; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="max-width: 1360px; margin: 0 auto; padding: 48px 24px 64px; display: flex; flex-direction: column; gap: 40px">
+<header style="display: flex; flex-direction: column; gap: 12px; max-width: 820px">
+<img src="../assets/1fbce194fcb16bf54904c32c189fca31.svg" alt="Trips Enjoy" style="height: 44px; width: auto; align-self: flex-start">
+<h1 style="margin: 0; font-size: 40px; line-height: 48px; font-weight: 700">Brand graphics library</h1>
+<p style="margin: 0; font-size: 17px; line-height: 26px; color: #5b5f86">Every image used across the screens: logos, trip and destination scenes, vehicles, people, organization logos and state illustrations. Flat shapes in the brand palette — real group moments, buses, sea and desert light; no airplanes, suitcases or globes.</p>
+</header>
+
+<section style="display: flex; flex-direction: column; gap: 16px">
+<h2 style="margin: 0; font-size: 24px; line-height: 32px; font-weight: 600">Logos</h2>
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px">
+<sc-for list="{logos}" as="l" hint-placeholder-count="4">
+<figure style="{l.box}"><img src="{l.src}" alt="{l.t}" style="max-height: 72px; max-width: 80%; width: auto"><figcaption style="{l.cap}">{l.t} · {l.d}</figcaption></figure>
+</sc-for>
+</div>
+</section>
+
+<section style="display: flex; flex-direction: column; gap: 16px">
+<h2 style="margin: 0; font-size: 24px; line-height: 32px; font-weight: 600">Trips, destinations & scenes</h2>
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px">
+<sc-for list="{scenes}" as="s" hint-placeholder-count="12">
+<figure style="margin: 0; background: #ffffff; border-radius: 20px; overflow: hidden; display: flex; flex-direction: column"><img src="{s.src}" alt="{s.alt}" style="display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover"><figcaption style="padding: 12px 16px; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 15px; font-weight: 600">{s.t}</span><span style="font-size: 13px; line-height: 18px; color: #5b5f86">{s.alt}</span></figcaption></figure>
+</sc-for>
+</div>
+</section>
+
+<section style="display: flex; flex-direction: column; gap: 16px">
+<h2 style="margin: 0; font-size: 24px; line-height: 32px; font-weight: 600">People</h2>
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 16px">
+<sc-for list="{people}" as="p" hint-placeholder-count="12">
+<figure style="margin: 0; background: #ffffff; border-radius: 20px; padding: 16px 8px; display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center"><img src="{p.src}" alt="" style="width: 72px; height: 72px; border-radius: 999px; object-fit: cover"><figcaption style="font-size: 13px; line-height: 18px">{p.alt}</figcaption></figure>
+</sc-for>
+</div>
+</section>
+
+<section style="display: flex; flex-direction: column; gap: 16px">
+<h2 style="margin: 0; font-size: 24px; line-height: 32px; font-weight: 600">Organization logos</h2>
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 16px">
+<sc-for list="{orgs}" as="o" hint-placeholder-count="8">
+<figure style="margin: 0; background: #ffffff; border-radius: 20px; padding: 16px; display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center"><img src="{o.src}" alt="" style="width: 64px; height: 64px; border-radius: 16px"><figcaption style="font-size: 13px; line-height: 18px">{o.alt}</figcaption></figure>
+</sc-for>
+</div>
+</section>
+
+<section style="display: flex; flex-direction: column; gap: 16px">
+<h2 style="margin: 0; font-size: 24px; line-height: 32px; font-weight: 600">State illustrations</h2>
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px">
+<sc-for list="{states}" as="s" hint-placeholder-count="8">
+<figure style="margin: 0; background: #ffffff; border-radius: 20px; padding: 16px; display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center"><img src="{s.src}" alt="" style="width: 160px; height: 160px; object-fit: contain"><figcaption style="font-size: 13px; line-height: 18px">{s.alt}</figcaption></figure>
+</sc-for>
+</div>
+</section>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":4200}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const B = (id) => '/_blob/' + id;
+    const L = [["Logo · horizontal", "1fbce194fcb16bf54904c32c189fca31", "Light grounds"], ["Logo · reversed", "6ea846350ba3adc0e289d47fa0612c3b", "Navy grounds only"], ["Logo · stacked", "57a48d7abca0af546dd0b0d15d03255f", "Square, centred"], ["Symbol", "d8314577d8376991a72b92ec8ec2dadb", "Favicon, watermark"]];
+    const I = [["Beach group photo", "b2bcb63d43641eb25576376d35060477"], ["Coach on desert road", "d69d91e9f1749b4b6bbebf258113beb4"], ["Parent & child to Bus 3", "7af26845f1899d68ac8358f14ccdccea"], ["Moderator & group", "e15e301529dfca735deed42db0d8dd3c"]];
+    const S = [["alexandria", "f307c5f03eb23299e4b0e9acc1833c87", "Alexandria by the sea: the Qaitbay citadel, the Corniche and the Mediterranean"], ["alula", "44a218548719fe367b614a0dd5151345", "AlUla heritage weekend: sandstone rock formations under a night sky"], ["azhar-park", "3c9baf624f42e5a28246b4e6de48737d", "Al Azhar Park school day: children on the lawn with the Cairo skyline of domes and minarets"], ["beach-games", "61261514261614e6b661d310c333264d", "Beach day: the group plays ball by the water"], ["bus-front", "b33043139687e3d53c2a4ccf4a1dee44", "Coach front view with headlights and destination sign"], ["bus-interior", "c2b6fb096becc4338329772e0c793a7d", "Coach interior: rows of seats and a centre aisle"], ["bus-side", "b2dc1c7bb6179469c82e971872c53cdd", "White coach, side view: 49 seats, orange and navy livery"], ["campfire", "dd052dab07949cd087d95323479af226", "Desert night: the group around a campfire under the stars"], ["city-nights", "62d2606f595dcc6d67eacd30496bf379", "City nights: the group on a lit-up evening walk downtown"], ["corporate", "0c7fc407d5a661af4089ffca289df2d8", "Company retreat: colleagues talking under a desert tent"], ["diriyah", "ec6a722ee32901158955f2a8dec188bd", "Diriyah old town at dusk: mud-brick walls and towers lit warm"], ["documents", "5d1598097ad2c90e309e91f94f4c905d", "Licence, ID and insurance documents ready for review"], ["driver", "92f31a1e8051b0122485e134ddb4f444", "A driver waves beside his coach before departure"], ["edge-world", "767dc865917d29911dbc19beb44053f6", "Hikers at the Edge of the World cliffs above the plain at sunrise"], ["event", "d9f59a124604f8f752246a02064d57f6", "Evening event: a crowd in front of a lit stage"], ["giza", "e0896ba1c1106bfc2b93677050629a1c", "Group photo in front of the Giza pyramids with the trip bus"], ["group-selfie", "79a6ce5310828e799852c7aef2cdc987", "Friends take a group selfie on the trip"], ["jeddah-corniche", "c05dcb937e01218b8073e886669c75d4", "Jeddah Corniche: the sea, the fountain and the city skyline"], ["lab-test", "7a6d570500a318cae2af7ef076baddd9", "Lab test: a sample tube and a cleared result sheet"], ["luxor-nile", "cdab8dd228095fdedbd0b08ca38eb7bd", "A felucca sailing on the Nile at Luxor, palms and temple columns on the bank"], ["minibus", "394cc1d7971d348a095c4e6aefff9233", "Minibus for small groups, side view"], ["moderator", "2aa00ba26802eee172c9d17e0643b9ec", "A moderator checks passengers in at the bus door"], ["museum", "cafd59426799492e5f83c95087214500", "Kids on a school visit at the museum, looking at an ancient statue"], ["nature-farm", "8e86331acb7080e5e12facebe9aa4069", "Nature and farms day: families picking fruit in a green orchard"], ["photographer", "8285215df674a3dee0a35b58d0d931e6", "A trip photographer frames the group in front of the bus"], ["red-sea", "dc9df8d5382e0fc7d2bf084f5632c713", "Snorkel day on the Red Sea: a boat on turquoise water over a coral reef"], ["school-trip", "2c90013b05936cc82deb2ba3571360d4", "School trip: a teacher counts the class as they line up for the bus"], ["siwa", "d86de248246e3c2af9ac141f04f94d0a", "Sunset over Siwa Oasis: palm groves and the old Shali fortress beside the salt lake"], ["sunset-silhouettes", "073b7fe9ddee4e94c5d8ddaa41cbb4f4", "Silhouettes of the group jumping on a dune at sunset"], ["support", "9a93ae3315fd0bc21317d883d7428672", "Support: a friendly agent with a headset answering a chat"], ["taif-roses", "cc51d7ccafd703646b5cfbed3b8222aa", "Taif rose farms: rows of pink roses below green mountains"], ["wadi-rayan", "6c681277de59192cae4171833ad9e5e7", "Wadi El Rayan: a small waterfall between golden dunes and blue lakes"], ["white-desert", "39057213b7b92ac9886e5089cdf16941", "Night camp in the White Desert: chalk rocks, a campfire and a sky full of stars"]];
+    const P = [["abdullah", "5a3a8cea8806a7f987187c7aa25dca06", "Abdullah Al-Shammari"], ["ahmed", "3a4d2dfca2f7de1ed48b5ab6aa97969c", "Ahmed Zaki"], ["boy", "431be398747ec7d1561d112828d3af52", "Child (boy)"], ["fahad", "7e66e8655f3311525ea257141f723cd1", "Fahad Al-Otaibi"], ["faisal", "9027ab49e36dcb334b88be60fa1fb65c", "Faisal Al-Qahtani"], ["girl", "fc1fd32144a35529e8955982a9559622", "Child (girl)"], ["hala", "17fb7a19876b9e012cc17bde6f69c632", "Hala Nasser"], ["heba", "6d4490977a71e8d9bfb9389ba01af68e", "Heba Mostafa (moderator)"], ["huda", "6c8d11c7c22cf2debc4ba323f8a3daea", "Huda Saleh"], ["karim", "efa256a2f8e91a9b7c53c0666efed019", "Karim Hassan"], ["khalid", "c311d0b40fa5c0d792261872e7c7b89d", "Khalid Al-Harbi (driver)"], ["laila", "fa4aea3b99ab1c92ea071dc7fc9f9299", "Laila Fathy (photographer)"], ["layla", "0d922cfc36bb6ec3d9b9bc5efe08448e", "Layla Al-Mutairi"], ["lina-child", "1cd63ceb2af4109eddb6e3740d99b590", "Lina (child)"], ["mahmoud", "f1b41fb1b201b088e5114338fbe087be", "Mahmoud Saeed (driver)"], ["majed", "7f591a95b676f687e8c91ce1047f3169", "Majed Al-Otaibi"], ["majed-z", "14de0e7e7d95f9f3f5bdca50a4649a01", "Majed Al-Zahrani"], ["man", "c961e95bb720fceb6475e0c84bef99d2", "Traveler (man)"], ["man-2", "6c7170ef3161499dac790082c4e412a7", "Traveler (man) 2"], ["man-3", "b07f316a17aca869b72b8f13a95e40ec", "Traveler (man) 3"], ["man-4", "e59f3dc6430440d3c2c2df27a83c40bf", "Traveler (man) 4"], ["mariam", "6c1d1b4ec8611e67e7f6f2ac68edcb50", "Mariam Adel"], ["mona", "1da5f4a1d52001ce8dfc722d595c772b", "Mona Saleh (Sunrise Tours)"], ["nadia", "28ad7d346304ae503024b63430b79f78", "Nadia Yusuf"], ["noura", "380d7985babc06d16544f4085cdec2d7", "Noura Al-Shehri (photographer)"], ["omar-adult", "502f94ce03065558eab3443587ed14b0", "Omar Haddad"], ["omar-child", "e627328c50e6893b77803c4a27b29c6e", "Omar (child)"], ["rana", "1e346ba84a1175ce8c93e484460e54ec", "Rana Fadel"], ["reem", "a2107042fb2903c5e36101018e509bf2", "Reem Othman (admin)"], ["salma-child", "dfa2765c8a511633e1838be374d89602", "Salma (child)"], ["sara", "9bae6808275a736bdbdad8b4ffd6c82b", "Sara Al-Qahtani"], ["tariq", "d7fa0be95acff480cb481a7efbccdc2b", "Tariq Mansour (photographer)"], ["turki", "85f6f3b7fe4b74a8eb53982178d5a91d", "Turki"], ["woman", "0c8dd5946e0747703d008a98c24ab01b", "Traveler (woman)"], ["woman-2", "d6709fc24649a3b41f4777c6ac15b1d0", "Traveler (woman) 2"], ["woman-3", "9ab70b27334c55738270c698b0fb1691", "Traveler (woman) 3"], ["woman-4", "00031e873884aa07e387fc72fb18f690", "Traveler (woman) 4"], ["yousef", "752b7ab031f2f70a93ff8107886b5b7e", "Yousef Amin"], ["youssef-child", "f265ad96f0a4653d686827dc8cddfe31", "Youssef (child)"]];
+    const O = [["al-noor", "f622ae191805b644d9e8f7a2610bfe1b", "Al Noor School logo"], ["desert-events", "472625e3fa0e959013f492568148458e", "Desert Events LLC logo"], ["desert-pearl", "9e07d30ac23c588de2379b5afaa1eaf8", "Desert Pearl Travel logo"], ["desert-rose", "9ac6dfa35492ae80417c29eea7121d4f", "Desert Rose Travel logo"], ["emirates-family", "b72539cbc54a907a08b52c7e75c9d8f6", "Emirates Family Outings logo"], ["generic-school", "90293947766fb82e7a2a990071208101", "School logo"], ["gulf-wanderers", "18eebe3df66e30d05047134639c55cc1", "Gulf Wanderers LLC logo"], ["hejaz-heritage", "604626c00c7762fd3f4718f28e2a3ed2", "Hejaz Heritage Tours logo"], ["hijaz-coach", "6939d469038573048b668d44cbbbc85b", "Hijaz Coach logo"], ["jeddah-sea-club", "208fe698e35b926d65dfaf092b0de68a", "Jeddah Sea Club logo"], ["najd", "1134174426625e453cca9ca4339809ce", "Najd Adventures logo"], ["nile-horizon", "2e100411aaec4ed457eb0b41922f0daa", "Nile Horizon Tours logo"], ["nile-wanderers", "0f93d48237cb75064eb826b9351e4d0f", "Nile Wanderers logo"], ["rawabi", "85f14457e398d1218ed034afdc47c8ce", "Rawabi Travel logo"], ["red-sea-diving", "f79d619b2dadb265155b85ab880f3c79", "Red Sea Diving Club logo"], ["sunrise", "697a49af6be5a077ae1851c1a8b9dfcd", "Sunrise Tours Co. logo"]];
+    const T = [["album", "607b02e363e185447ebb9acf4f00a536", "Album: stacked trip photos"], ["empty-trips", "c1fe45a90a3a1b8eace395f8df7ad821", "No trips yet: an empty road with a map pin"], ["family", "e8c6e70ab62a9f9714519c39a71a6a0f", "Family members: a parent with two children"], ["locked", "257fcb5b0eb667e3fd21e8475667d3c8", "Plan needed: a padlock on the app"], ["not-found", "bc4a243214747d2f6ffae3319dc5cf0a", "Page not found: a road sign pointing nowhere"], ["offline", "54740ee0b7f851c5569e7bd53689f03c", "Offline: the bus waits under a cloud with no signal"], ["review", "ea1bd24ebd3fbbe1d84b06bfb904fa93", "Under review: a document with an hourglass"], ["search", "d295183985a4e48eb598df8972be7176", "No results: a magnifier over empty dunes"], ["success", "4208f5e6c42ba5df6287d744097d751e", "Booked: a ticket with a check mark and confetti"], ["welcome", "7d5003ef14416fc87ea8946d3b9e7e8d", "Welcome: three friends — the group travelling together"]];
+    const logos = L.map(([t, id, d]) => ({ t, d, src: B(id),
+      box: 'margin: 0; height: 160px; border-radius: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; background: ' + (t === 'Logo · reversed' ? '#262a67' : '#ffffff') + ';',
+      cap: 'font-size: 13px; color: ' + (t === 'Logo · reversed' ? '#b8bad6' : '#5b5f86') + ';' }));
+    const scenes = I.map(([t, id]) => ({ t, alt: t, src: B(id) })).concat(S.map(([k, id, alt]) => ({ t: k.replace(/-/g, ' '), alt, src: B(id) })));
+    const people = P.map(([k, id, alt]) => ({ alt, src: B(id) }));
+    const orgs = O.map(([k, id, alt]) => ({ alt: alt.replace(' logo', ''), src: B(id) }));
+    const states = T.map(([k, id, alt]) => ({ alt, src: B(id) }));
+    return { logos, scenes, people, orgs, states };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Driver · Book lab test</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif; display: flex; flex-direction: column; padding: 56px 16px 32px; gap: 16px">
+<div style="display: flex; align-items: center; gap: 12px">
+<a href="DrvLabBlocked.dc.html" aria-label="Back" style="width: 44px; height: 44px; border-radius: 999px; background: #ffffff; display: flex; align-items: center; justify-content: center; color: #262a67"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg></a>
+<h1 style="margin: 0; font-size: 22px; line-height: 28px; font-weight: 700">Book a lab test</h1>
+</div>
+<span style="font-size: 14px; font-weight: 600">Approved labs near you</span>
+<div role="radiogroup" aria-label="Lab" style="display: flex; flex-direction: column; gap: 8px">
+<sc-for list="{{labs}}" as="l" hint-placeholder-count="3">
+<button role="radio" aria-checked="{{l.on}}" onClick="{{l.pick}}" style="{{l.style}}">
+<span style="display: flex; flex-direction: column; gap: 2px; flex-grow: 1; text-align: start"><span style="font-size: 15px; font-weight: 600">{{l.n}}</span><span style="font-size: 13px; color: #5b5f86">{{l.d}}</span></span>
+<span style="font-size: 13px; font-weight: 600; color: #1f7a4d">{{l.tag}}</span>
+</button>
+</sc-for>
+</div>
+<span style="font-size: 14px; font-weight: 600">Pick a time · Mon 5 Oct</span>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
+<sc-for list="{{slots}}" as="s" hint-placeholder-count="6">
+<button aria-pressed="{{s.on}}" onClick="{{s.pick}}" disabled="{{s.off}}" style="{{s.style}}">{{s.t}}</button>
+</sc-for>
+</div>
+<p style="margin: 0; padding: 12px; border-radius: 12px; background: #ffffff; font-size: 13px; line-height: 18px; color: #5b5f86">Bring your National ID or Iqama. The test is free at partner labs and the result is sent to Trips Enjoy directly.</p>
+<a href="DrvLabPending.dc.html" style="margin-top: auto; height: 52px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 16px; font-weight: 600; display: flex; align-items: center; justify-content: center; text-decoration: none">Confirm appointment</a>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+constructor(p) { super(p); this.state = { lab: 0, slot: '09:30' }; }
+renderVals() {
+const L = [{ n: 'Al Borg Diagnostics · Olaya', d: '2.1 km · open until 10 PM', tag: 'Partner' }, { n: 'Al Mokhtabar Labs · Malaz', d: '4.8 km · open until 9 PM', tag: 'Partner' }, { n: 'Dr. Sulaiman Al Habib Lab', d: '6.3 km · open 24 hours', tag: 'Partner' }];
+const S = [['08:30', true], ['09:30', false], ['10:30', false], ['12:00', false], ['16:00', true], ['18:30', false]];
+return {
+labs: L.map((l, i) => ({ ...l, on: this.state.lab === i ? 'true' : 'false', pick: () => this.setState({ lab: i }),
+style: 'display: flex; align-items: center; gap: 12px; min-height: 64px; padding: 10px 14px; border-radius: 12px; background: #ffffff; color: #262a67; font-family: inherit; cursor: pointer; ' + (this.state.lab === i ? 'border: 2px solid #fb8030;' : 'border: 1px solid #e3dfc9;') })),
+slots: S.map(([t, full]) => ({ t, off: full, on: this.state.slot === t ? 'true' : 'false', pick: () => this.setState({ slot: t }),
+style: 'height: 44px; border-radius: 12px; font-family: inherit; font-size: 14px; font-weight: 600; ' + (full ? 'border: 1px dashed #e3dfc9; background: transparent; color: #7b7fa6; text-decoration: line-through;' : this.state.slot === t ? 'border: 2px solid #262a67; background: #262a67; color: #f6f3e4; cursor: pointer;' : 'border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; cursor: pointer;') }))
+};
+}
+}
+</script>
+</body>
+</html>

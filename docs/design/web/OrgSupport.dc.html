@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Organization · Help and support</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+.te-row:hover{background:#fbfaf3}
+.te-topic:hover{border-color:#fb8030}
+</style>
+</helmet>
+<div style="min-height: 1000px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="OrgNav" active="Settings" hint-size="248px,1000px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 20px">
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<a href="OrgSettings.dc.html" style="font-size: 14px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px; text-decoration: none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg>Company settings</a>
+<h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Help and support</h1>
+<span style="display: inline-flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 15px; color: #5b5f86">Sunrise Tours Co. · Growth plan<span style="display: inline-flex; align-items: center; gap: 6px; padding: 2px 10px; border-radius: 999px; background: #e6e8f5; color: #262a67; font-size: 13px; font-weight: 600"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7v5l3 2"></path></svg>Standard support · replies within 1 business day</span></span>
+</div>
+</div>
+
+<section aria-labelledby="hs-h" style="background: #262a67; color: #f6f3e4; border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 16px">
+<h2 id="hs-h" style="margin: 0; font-size: 22px; font-weight: 600">How can we help your team?</h2>
+<div style="position: relative; max-width: 720px">
+<label for="q" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Search help articles</label>
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5b5f86" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position: absolute; left: 14px; top: 16px"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM20 20l-4-4"></path></svg>
+<input id="q" type="search" value="{{q}}" onInput="{{setQ}}" placeholder="Search articles, e.g. credit note, payout date, webhook signature" style="width: 100%; height: 52px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; padding: 0 14px 0 44px; font: inherit; font-size: 16px; color: #262a67">
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px">
+<sc-for list="{{topics}}" as="t" hint-placeholder-count="4">
+<a href="{{t.href}}" class="te-topic" style="display: flex; gap: 12px; padding: 14px; border-radius: 12px; background: #31367a; border: 1px solid #31367a; color: #f6f3e4; text-decoration: none">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ff8655" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="{{t.ic}}"></path></svg>
+<span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 15px; font-weight: 600">{{t.l}}</span><span style="font-size: 13px; line-height: 18px; color: #b8bad6">{{t.d}}</span></span>
+</a>
+</sc-for>
+</div>
+<sc-if value="{{hasQ}}" hint-placeholder-val="{{true}}">
+<div style="display: flex; flex-direction: column; gap: 6px; background: #ffffff; color: #262a67; border-radius: 12px; padding: 8px">
+<span style="font-size: 13px; font-weight: 600; color: #5b5f86; padding: 4px 8px">{{resCount}}</span>
+<sc-for list="{{results}}" as="r" hint-placeholder-count="3">
+<a href="#" class="te-row" style="display: flex; flex-direction: column; gap: 2px; padding: 8px; border-radius: 8px; color: #262a67; text-decoration: none"><span style="font-size: 15px; font-weight: 600">{{r.t}}</span><span style="font-size: 13px; color: #5b5f86">{{r.d}}</span></a>
+</sc-for>
+</div>
+</sc-if>
+</section>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
+<div style="flex: 3 1 480px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+<section aria-labelledby="tk-h" style="background: #ffffff; border-radius: 20px; padding: 18px 0 8px">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 0 20px 10px"><h2 id="tk-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">Your tickets</h2><span style="font-size: 14px; color: #5b5f86">2 open · 1 waiting on you</span></div>
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 680px; border-collapse: collapse; font-size: 15px">
+<thead><tr style="color: #5b5f86; font-size: 13px"><th scope="col" style="text-align: start; padding: 10px 20px; font-weight: 600">Ticket</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Subject</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Status</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Last reply</th><th scope="col" style="text-align: start; padding: 10px 20px; font-weight: 600">Priority</th></tr></thead>
+<tbody>
+<sc-for list="{{tickets}}" as="t" hint-placeholder-count="4">
+<tr class="te-row" style="border-top: 1px solid #e3dfc9">
+<td style="padding: 12px 20px; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap"><a href="#" style="color: #262a67">{{t.id}}</a></td>
+<td style="padding: 12px"><span style="display: flex; flex-direction: column"><span style="font-weight: 500">{{t.s}}</span><span style="font-size: 13px; color: #5b5f86">{{t.link}}</span></span></td>
+<td style="padding: 12px"><span style="{{t.ps}}">{{t.st}}</span></td>
+<td style="padding: 12px; font-size: 14px"><span style="display: flex; flex-direction: column"><span>{{t.who}}</span><span style="font-size: 13px; color: #5b5f86">{{t.at}}</span></span></td>
+<td style="padding: 12px 20px; font-size: 14px; color: #5b5f86">{{t.pr}}</td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+</section>
+
+<section aria-labelledby="am-h" style="background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-wrap: wrap; gap: 16px; align-items: center">
+<div aria-hidden="true" style="width: 56px; height: 56px; flex-shrink: 0; border-radius: 999px; background: #e6e8f5; color: #262a67; display: flex; align-items: center; justify-content: center"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 11h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1zM8 11V7a4 4 0 0 1 8 0v4"></path></svg></div>
+<div style="flex: 1 1 260px; display: flex; flex-direction: column; gap: 2px">
+<h2 id="am-h" style="margin: 0; font-size: 18px; font-weight: 600">Dedicated account manager</h2>
+<span style="font-size: 14px; line-height: 20px; color: #5b5f86">Account managers and priority support (replies within 2 hours, phone line) need Enterprise. You are on Growth.</span>
+</div>
+<a href="OrgBilling.dc.html" style="height: 44px; padding: 0 16px; border-radius: 12px; background: #262a67; color: #f6f3e4; font-size: 15px; font-weight: 600; display: flex; align-items: center; text-decoration: none">See Enterprise</a>
+</section>
+</div>
+
+<section aria-labelledby="nw-h" style="flex: 2 1 340px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 14px">
+<h2 id="nw-h" style="margin: 0; font-size: 20px; font-weight: 600">New ticket</h2>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="cat" style="font-size: 14px; font-weight: 600">Category</label>
+<select id="cat" style="height: 52px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 14px; font: inherit; font-size: 16px; color: #262a67"><option>Settlements and payouts</option><option>ZATCA invoices and credit notes</option><option>Deals with drivers and photographers</option><option>Webhooks and API</option><option>Trips and bookings</option><option>Plan and billing · talk to sales</option><option>Something else</option></select>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="lnk" style="font-size: 14px; font-weight: 600">Related trip or booking <span style="font-weight: 500; color: #5b5f86">· optional</span></label>
+<select id="lnk" style="height: 52px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 14px; font: inherit; font-size: 16px; color: #262a67"><option>Jeddah Corniche Night · Fri 17 Oct</option><option>AlUla Heritage Weekend · Thu 16 Oct</option><option>Booking BK-88412 · Sara Al-Qahtani</option><option>None</option></select>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="dsc" style="font-size: 14px; font-weight: 600">What happened?</label>
+<textarea id="dsc" rows="5" onInput="{{setDesc}}" aria-invalid="{{descInvalid}}" aria-describedby="dsc-h" style="{{descStyle}}">{{desc}}</textarea>
+<span id="dsc-h" style="{{descHelpS}}">{{descHelp}}</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 14px; font-weight: 600">Attachments</span>
+<button type="button" style="height: 52px; border-radius: 12px; border: 1px dashed #7b7fa6; background: #f6f3e4; color: #262a67; font: inherit; font-size: 14px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"></path></svg>Add screenshots or PDFs · up to 5</button>
+<span style="display: flex; gap: 8px; align-items: center; padding: 8px 10px; border-radius: 12px; background: #e6e8f5; font-size: 13px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zM14 3v5h5"></path></svg>statement-oct-2026.pdf · 212 KB</span>
+</div>
+<button type="button" onClick="{{send}}" style="height: 48px; border: 0; border-radius: 12px; background: #ff6c2e; color: #262a67; font: inherit; font-size: 16px; font-weight: 700; cursor: pointer">{{sendLabel}}</button>
+<sc-if value="{{sent}}" hint-placeholder-val="{{false}}"><span role="status" style="padding: 10px 12px; border-radius: 12px; background: #e3f3ea; color: #1f7a4d; font-size: 14px; font-weight: 600">TKT-21058 created. We reply by Thu 16 Oct, 17:00 Riyadh, by email and here.</span></sc-if>
+<span style="font-size: 13px; line-height: 18px; color: #5b5f86">Mona Saleh, Hala Nasser and Rana Fadel can see this ticket. Travellers never see support tickets.</span>
+</section>
+</div>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1240}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { q: 'credit note', desc: 'The 1 Oct settlement for Jeddah Corniche Night shows 3,820 SAR in deal costs, but our finalized deals add up to 3,620 SAR. Please check the difference of 200 SAR.', sent: false }; }
+  renderVals() {
+    const s = this.state;
+    const topics = [
+      { l: 'Settlements', d: 'Payout dates, holds, statements', ic: 'M4 7a2 2 0 0 1 2-2h12v4M4 7v11a2 2 0 0 0 2 2h14V9H6a2 2 0 0 1-2-2zM16 14.5h.01', href: 'OrgSettlements.dc.html' },
+      { l: 'ZATCA invoices', d: 'Clearance, credit notes, rejections', ic: 'M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zM14 3v5h5', href: 'OrgInvoices.dc.html' },
+      { l: 'Deals', d: 'Counters, cancellation fees, self-billing', ic: 'M9 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM3 20a6 6 0 0 1 12 0M16 4.5a3.5 3.5 0 0 1 0 6.5M18 14.5a6 6 0 0 1 3 5.5', href: 'OrgDeals.dc.html' },
+      { l: 'Webhooks', d: 'Signatures, retries, test events', ic: 'M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1', href: 'OrgWebhooks.dc.html' }
+    ];
+    const all = [
+      { t: 'When is a credit note issued automatically?', d: 'ZATCA invoices · refunds and trip cancellations' },
+      { t: 'Credit note rejected by ZATCA: what to fix', d: 'ZATCA invoices · common rejection reasons' },
+      { t: 'How refunds after a payout are recovered', d: 'Settlements · negative balance and carry-forward' },
+      { t: 'Verify the X-TE-Signature header', d: 'Webhooks · HMAC-SHA256 example' },
+      { t: 'Cancellation fees in driver deals', d: 'Deals · fees when you cancel within 72 h' }
+    ];
+    const q = s.q.trim().toLowerCase();
+    const results = q ? all.filter((a) => (a.t + ' ' + a.d).toLowerCase().includes(q)) : [];
+    const tones = { ok: 'background: #e3f3ea; color: #1f7a4d;', warn: 'background: #fdf0d5; color: #8a4b00;', info: 'background: #e6e8f5; color: #262a67;', live: 'background: #ffe7dc; color: #c93a00;', neutral: 'background: #f6f3e4; color: #5b5f86;' };
+    const tickets = [
+      { id: 'TKT-21044', s: 'Settlement deal costs off by 200 SAR', link: 'Jeddah Corniche Night', st: 'Waiting on you', t: 'live', who: 'Ali Hamdan · Trips Enjoy', at: 'Today 09:14', pr: 'Standard' },
+      { id: 'TKT-21012', s: 'Credit note CN-ST-2026-000031 rejected', link: 'Booking TE-48144', st: 'In progress', t: 'warn', who: 'Hala Nasser', at: 'Mon 13 Oct 16:40', pr: 'Standard' },
+      { id: 'TKT-20987', s: 'Webhook endpoint auto-disabled', link: 'erp.sunrisetours.sa', st: 'Resolved', t: 'ok', who: 'Ali Hamdan · Trips Enjoy', at: 'Thu 9 Oct 11:02', pr: 'Standard' },
+      { id: 'TKT-20951', s: 'Change CR on invoices', link: 'Company profile', st: 'Closed', t: 'neutral', who: 'Mona Saleh', at: 'Sun 5 Oct 10:20', pr: 'Standard' }
+    ].map((t) => ({ ...t, ps: 'display: inline-flex; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; white-space: nowrap; ' + tones[t.t] }));
+    const descOk = s.desc.trim().length >= 20;
+    return {
+      q: s.q, hasQ: q.length > 0, results, topics, tickets, desc: s.desc, sent: s.sent,
+      resCount: results.length ? results.length + ' articles for “' + s.q + '”' : 'No articles for “' + s.q + '”. Try another word or open a ticket below.',
+      setQ: (e) => this.setState({ q: e.target.value }),
+      setDesc: (e) => this.setState({ desc: e.target.value, sent: false }),
+      descInvalid: descOk ? 'false' : 'true',
+      descStyle: 'border-radius: 8px; background: #fff; padding: 10px 14px; font: inherit; font-size: 15px; line-height: 21px; color: #262a67; resize: vertical; border: 1px solid ' + (descOk ? '#7b7fa6' : '#b42318') + ';',
+      descHelp: descOk ? 'Include dates, amounts and IDs so we can answer in one reply.' : 'Describe the problem in at least 20 characters so we can help.',
+      descHelpS: 'font-size: 13px; color: ' + (descOk ? '#5b5f86' : '#b42318') + ';',
+      send: () => { if (descOk) this.setState({ sent: true }); },
+      sendLabel: s.sent ? 'Ticket sent' : 'Send ticket'
+    };
+  }
+}
+</script>
+</body>
+</html>

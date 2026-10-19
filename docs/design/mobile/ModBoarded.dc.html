@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Moderator · All boarded</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="height: 100%; box-sizing: border-box; padding: 56px 16px 24px; display: flex; flex-direction: column; gap: 12px">
+
+<div style="display: flex; align-items: center; gap: 12px">
+<a href="ModManifest.dc.html" aria-label="Back" style="width: 44px; height: 44px; border-radius: 999px; background: #ffffff; color: #262a67; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a>
+<h1 style="margin: 0; flex-grow: 1; font-size: 22px; line-height: 28px; font-weight: 700">Boarding complete</h1>
+<span style="font-size: 14px; font-weight: 600; color: #5b5f86">06:11</span>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px">
+<div style="padding: 12px; border-radius: 16px; background: #e3f3ea; color: #1f7a4d"><div style="font-size: 26px; line-height: 30px; font-weight: 700">41</div><div style="font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 4px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg>Boarded</div></div>
+<div style="padding: 12px; border-radius: 16px; background: #fde8e6; color: #b42318"><div style="font-size: 26px; line-height: 30px; font-weight: 700">2</div><div style="font-size: 13px; font-weight: 600">No-show</div></div>
+<div style="padding: 12px; border-radius: 16px; background: #ffffff"><div style="font-size: 26px; line-height: 30px; font-weight: 700">43</div><div style="font-size: 13px; font-weight: 600; color: #5b5f86">Booked</div></div>
+</div>
+
+<section aria-labelledby="ns-h" style="padding: 12px 14px; border-radius: 16px; background: #ffffff; display: flex; flex-direction: column; gap: 8px">
+<h2 id="ns-h" style="margin: 0; font-size: 15px; font-weight: 600">No-shows · notified 06:10</h2>
+<div style="display: flex; justify-content: space-between; font-size: 14px"><span><strong style="font-weight: 600">Abdullah Rashed</strong> · 5A · TE-48377</span><span style="color: #5b5f86">Ops told</span></div>
+<div style="display: flex; justify-content: space-between; font-size: 14px"><span><strong style="font-weight: 600">Rakan Al-Dosari</strong> · 9D · Child</span><span style="color: #5b5f86">Ops + guardian told</span></div>
+</section>
+
+<section aria-labelledby="seat-h" style="padding: 12px 14px; border-radius: 16px; background: #ffffff; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; justify-content: space-between; align-items: baseline"><h2 id="seat-h" style="margin: 0; font-size: 15px; font-weight: 600">Seat occupancy</h2><span style="font-size: 13px; color: #5b5f86">Front of bus on the left</span></div>
+<div role="img" aria-label="Bus 2 seat map: 41 seats occupied, 2 no-show seats 5A and 9D, 6 empty seats in rows 11 and 12" style="display: grid; grid-template-columns: repeat(13, 18px); grid-template-rows: repeat(5, 18px); grid-auto-flow: column; gap: 4px; justify-content: center">
+<sc-for list="{{cells}}" as="c" hint-placeholder-count="65"><span style="{{c.style}}"></span></sc-for>
+</div>
+<div style="display: flex; gap: 14px; font-size: 12px; color: #5b5f86">
+<span style="display: flex; align-items: center; gap: 4px"><span style="width: 12px; height: 12px; border-radius: 3px; background: #262a67"></span>Boarded 41</span>
+<span style="display: flex; align-items: center; gap: 4px"><span style="width: 12px; height: 12px; border-radius: 3px; background: #b42318"></span>No-show 2</span>
+<span style="display: flex; align-items: center; gap: 4px"><span style="width: 12px; height: 12px; box-sizing: border-box; border-radius: 3px; border: 1px solid #7b7fa6"></span>Empty 6</span>
+</div>
+</section>
+
+<section aria-labelledby="chk-h" style="padding: 12px 14px; border-radius: 16px; background: #ffffff; display: flex; flex-direction: column; gap: 4px">
+<h2 id="chk-h" style="margin: 0 0 4px; font-size: 15px; font-weight: 600">Before departure</h2>
+<sc-for list="{{checks}}" as="k" hint-placeholder-count="3">
+<button type="button" role="checkbox" aria-checked="{{k.checked}}" onClick="{{k.on}}" style="min-height: 44px; padding: 0; border: 0; background: transparent; font: inherit; color: #262a67; cursor: pointer; display: flex; align-items: center; gap: 10px; text-align: start">
+<span style="{{k.box}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg></span>
+<span style="font-size: 15px">{{k.t}}</span>
+</button>
+</sc-for>
+</section>
+
+<div style="margin-top: auto; display: flex; flex-direction: column; gap: 6px">
+<a href="ModOnTrip.dc.html" style="height: 52px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-weight: 700; font-size: 16px; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 4h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM4 11h16M8 18v2M16 18v2M8 14.5h.01M16 14.5h.01"></path></svg>Tell driver we're ready</a>
+<span style="font-size: 13px; color: #5b5f86; text-align: center">Khalid Al-Harbi gets a ready-to-depart alert</span>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { done: [true, true, false] }; }
+  renderVals() {
+    const lanes = ['A', 'B', 'E', 'C', 'D'];
+    const noShow = { '5A': 1, '9D': 1 };
+    const empty = { '11C': 1, '11D': 1, '12A': 1, '12B': 1, '12C': 1, '12D': 1 };
+    const cells = [];
+    for (let r = 1; r <= 13; r++) {
+      lanes.forEach((l) => {
+        const id = r + l;
+        const seat = r < 13 ? l !== 'E' : l === 'E';
+        let s = 'width: 18px; height: 18px; box-sizing: border-box; border-radius: 4px; ';
+        if (!seat) s += 'background: transparent;';
+        else if (noShow[id]) s += 'background: #b42318;';
+        else if (empty[id]) s += 'border: 1px solid #7b7fa6; background: #ffffff;';
+        else s += 'background: #262a67;';
+        cells.push({ style: s });
+      });
+    }
+    const T = ['Headcount matches manifest (41)', 'Luggage hold closed and locked', 'Seat-belt and safety briefing done'];
+    const done = this.state.done;
+    const checks = T.map((t, i) => ({ t, checked: done[i] ? 'true' : 'false',
+      on: () => { const d = done.slice(); d[i] = !d[i]; this.setState({ done: d }); },
+      box: 'width: 24px; height: 24px; flex-shrink: 0; box-sizing: border-box; border-radius: 6px; display: flex; align-items: center; justify-content: center; ' + (done[i] ? 'background: #1f7a4d; color: #ffffff;' : 'border: 2px solid #7b7fa6; color: transparent;') }));
+    return { cells, checks };
+  }
+}
+</script>
+</body>
+</html>

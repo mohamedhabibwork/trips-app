@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Photographer · Profile — web</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif; display: flex; flex-direction: column">
+<div style="height: 72px; padding: 0 48px; display: flex; align-items: center; justify-content: space-between; background: #ffffff; border-bottom: 1px solid #e3dfc9">
+<img src="../assets/1fbce194fcb16bf54904c32c189fca31.svg" alt="Trips Enjoy" style="height: 40px; width: auto">
+<span style="font-size: 14px; color: #5b5f86">trips-enjoy.com/register/photographer · Saved as draft · <a href="#" style="font-weight: 600">Save and exit</a></span>
+</div>
+<div style="flex-grow: 1; display: flex; justify-content: center; padding: 40px 48px; gap: 48px">
+<dc-import name="WebStepper" role="photographer" active="{{two}}" hint-size="240px,260px"></dc-import>
+<div style="width: 640px; background: #ffffff; border-radius: 20px; padding: 32px; display: flex; flex-direction: column; gap: 16px; box-shadow: 0 1px 2px rgba(38,42,103,.06), 0 6px 20px rgba(38,42,103,.08)">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Your photographer profile</h1>
+<p style="margin: 0; font-size: 15px; color: #5b5f86">This is what trip organizers and travelers see when they book you.</p>
+</div>
+<div style="display: flex; align-items: center; gap: 16px">
+<img src="../assets/380d7985babc06d16544f4085cdec2d7.svg" alt="Your profile photo" style="width: 72px; height: 72px; border-radius: 999px; object-fit: cover; object-position: center">
+<button style="height: 44px; padding: 0 16px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-family: inherit; font-size: 14px; font-weight: 600">Change photo</button>
+</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px">
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="p-n" style="font-size: 14px; font-weight: 600">Display name</label><input id="p-n" dir="auto" value="Noura Shots" style="height: 48px; min-width: 0; padding: 0 14px; border-radius: 8px; border: 1px solid #7b7fa6; font-family: inherit; font-size: 16px; color: #262a67"></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="p-id" style="font-size: 14px; font-weight: 600">National ID / Iqama number</label><input id="p-id" value="1093318820" style="height: 48px; min-width: 0; padding: 0 14px; border-radius: 8px; border: 1px solid #7b7fa6; font-family: inherit; font-size: 16px; color: #262a67"></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="p-c" style="font-size: 14px; font-weight: 600">Cities you cover</label><input id="p-c" value="Riyadh, AlUla" style="height: 48px; min-width: 0; padding: 0 14px; border-radius: 8px; border: 1px solid #7b7fa6; font-family: inherit; font-size: 16px; color: #262a67"></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="p-pr" style="font-size: 14px; font-weight: 600">Starting price per trip (SAR)</label><input id="p-pr" value="750" style="height: 48px; min-width: 0; padding: 0 14px; border-radius: 8px; border: 1px solid #7b7fa6; font-family: inherit; font-size: 16px; color: #262a67"></div>
+</div>
+<fieldset style="margin: 0; padding: 0; border: none">
+<legend style="padding: 0; margin-bottom: 8px; font-size: 14px; font-weight: 600">What do you shoot?</legend>
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{tags}}" as="t" hint-placeholder-count="6"><button aria-pressed="{{t.on}}" onClick="{{t.tog}}" style="{{t.style}}">{{t.label}}</button></sc-for>
+</div>
+</fieldset>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="p-bio" style="font-size: 14px; font-weight: 600">Short bio</label><textarea id="p-bio" rows="2" style="padding: 12px 14px; border-radius: 8px; border: 1px solid #7b7fa6; font-family: inherit; font-size: 16px; color: #262a67; resize: none">Group and outdoor photographer, 6 years shooting school and desert trips.</textarea></div>
+<div style="display: flex; justify-content: space-between; margin-top: auto">
+<a href="WebVerifyPhotographer.dc.html" style="height: 48px; padding: 0 24px; box-sizing: border-box; border-radius: 12px; border: 1px solid #7b7fa6; color: #262a67; font-size: 16px; font-weight: 600; display: flex; align-items: center; text-decoration: none">Back</a>
+<a href="WebPhoPortfolio.dc.html" style="height: 48px; padding: 0 28px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 16px; font-weight: 600; display: flex; align-items: center; text-decoration: none">Continue</a>
+</div>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+constructor(p) { super(p); this.state = { on: { 'Group trips': true, 'Events': true } }; }
+renderVals() {
+const xs = ['Group trips', 'Events', 'School trips', 'Drone', 'Video', 'Portraits'];
+return { two: 2, tags: xs.map(l => { const on = !!this.state.on[l]; return { label: l, on: on ? 'true' : 'false',
+style: 'height: 40px; padding: 0 14px; border-radius: 999px; background: #ffffff; color: #262a67; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; ' + (on ? 'border: 2px solid #fb8030;' : 'border: 1px solid #7b7fa6;'),
+tog: () => this.setState({ on: { ...this.state.on, [l]: !on } }) }; }) };
+}
+}
+</script>
+</body>
+</html>

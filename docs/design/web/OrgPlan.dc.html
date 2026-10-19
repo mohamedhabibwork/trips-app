@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Organization · Choose a plan</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif; display: flex; flex-direction: column">
+<div style="height: 72px; padding: 0 48px; display: flex; align-items: center; justify-content: space-between; background: #ffffff; border-bottom: 1px solid #e3dfc9">
+<div style="display: flex; align-items: center; gap: 12px"><img src="../assets/1fbce194fcb16bf54904c32c189fca31.svg" alt="Trips Enjoy" style="height: 40px; width: auto"><span style="padding: 4px 10px; border-radius: 999px; background: #262a67; color: #f6f3e4; font-size: 13px; font-weight: 600">Business</span></div>
+<span style="font-size: 14px; font-weight: 600">Al-Noor International School · <a href="OrgLogin.dc.html">Sign out</a></span>
+</div>
+<div style="flex-grow: 1; display: flex; flex-direction: column; align-items: center; padding: 36px 48px; gap: 24px">
+<div style="display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center">
+<span style="display: flex; gap: 6px; align-items: center; padding: 4px 12px; border-radius: 999px; background: #e3f3ea; color: #1f7a4d; font-size: 13px; font-weight: 600"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"></path></svg>Organization approved</span>
+<h1 style="margin: 0; font-size: 36px; line-height: 44px; font-weight: 700">Choose a plan to open your dashboard</h1>
+<div role="radiogroup" aria-label="Billing period" style="display: flex; padding: 4px; border-radius: 999px; background: #e3dfc9; gap: 4px">
+<button role="radio" aria-checked="{{mSel}}" onClick="{{toM}}" style="{{mStyle}}">Monthly</button>
+<button role="radio" aria-checked="{{ySel}}" onClick="{{toY}}" style="{{yStyle}}">Annual · save 20%</button>
+</div>
+</div>
+<div role="radiogroup" aria-label="Plan" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; width: 100%; max-width: 1100px">
+<sc-for list="{{plans}}" as="p" hint-placeholder-count="3">
+<button role="radio" aria-checked="{{p.sel}}" onClick="{{p.pick}}" style="{{p.style}}">
+<span style="display: flex; justify-content: space-between; align-items: center; width: 100%"><span style="font-size: 22px; font-weight: 700">{{p.name}}</span><sc-if value="{{p.tag}}" hint-placeholder-val="{{false}}"><span style="padding: 2px 10px; border-radius: 999px; background: #f89e23; font-size: 12px; font-weight: 700">{{p.tag}}</span></sc-if></span>
+<span style="font-size: 28px; font-weight: 700">{{p.price}}</span>
+<span style="height: 1px; width: 100%; background: #e3dfc9"></span>
+<sc-for list="{{p.f}}" as="f" hint-placeholder-count="6"><span style="display: flex; gap: 8px; align-items: center; font-size: 14px; text-align: start"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1f7a4d" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M5 12l5 5L20 7"></path></svg>{{f}}</span></sc-for>
+</button>
+</sc-for>
+</div>
+<div style="display: flex; align-items: center; gap: 20px">
+<span style="font-size: 14px; color: #5b5f86">14-day free trial · upgrades apply immediately, downgrades at the next billing cycle</span>
+<a href="OrgCheckout.dc.html" style="height: 52px; padding: 0 28px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 16px; font-weight: 600; display: flex; align-items: center; text-decoration: none">Continue with {{selName}}</a>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+constructor(p) { super(p); this.state = { pick: 1, yearly: true }; }
+renderVals() {
+const P = [
+{ name: 'Starter', m: 299, f: ['5 active trips / month', '5 employees', '2 vehicles per trip', 'Own drivers & photographers only', 'Basic accounting', 'Up to 5 coupons'] },
+{ name: 'Growth', m: 899, tag: 'Popular', f: ['20 active trips / month', '20 employees · 10 vehicles per trip', 'Platform drivers & photographers', 'Seat self-selection', 'Child tracking for parents', 'Advanced accounting · basic reports'] },
+{ name: 'Enterprise', m: 2499, f: ['Unlimited trips, employees, vehicles', 'Unlimited coupons', 'Full accounting + export', 'Full analytics', 'Priority support', 'Custom branding'] }
+];
+const y = this.state.yearly;
+const t = (on) => 'height: 40px; padding: 0 18px; border-radius: 999px; border: none; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; ' + (on ? 'background: #ffffff; color: #262a67;' : 'background: transparent; color: #5b5f86;');
+return { mSel: y ? 'false' : 'true', ySel: y ? 'true' : 'false', mStyle: t(!y), yStyle: t(y),
+toM: () => this.setState({ yearly: false }), toY: () => this.setState({ yearly: true }), selName: P[this.state.pick].name,
+plans: P.map((p, i) => ({ name: p.name, tag: p.tag || '', f: p.f, sel: i === this.state.pick ? 'true' : 'false', pick: () => this.setState({ pick: i }),
+price: 'SAR ' + (y ? Math.round(p.m * 0.8).toLocaleString('en') + '/mo, billed yearly' : p.m.toLocaleString('en') + '/mo'),
+style: 'display: flex; flex-direction: column; align-items: flex-start; gap: 12px; padding: 24px; border-radius: 20px; background: #ffffff; color: #262a67; font-family: inherit; cursor: pointer; box-shadow: 0 1px 2px rgba(38,42,103,.06), 0 6px 20px rgba(38,42,103,.08); ' + (i === this.state.pick ? 'border: 2px solid #fb8030;' : 'border: 1px solid #e3dfc9;') })) };
+}
+}
+</script>
+</body>
+</html>

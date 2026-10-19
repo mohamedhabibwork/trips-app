@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Admin · Invoices</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+.te-tr:hover{background:#fbf9f0}
+</style>
+</helmet>
+<div style="min-height: 1000px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="AdmNav" active="Invoices" hint-size="248px,1000px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 20px">
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; color: #5b5f86">Every invoice issued on the platform · ZATCA e-invoicing Phase 2 · VAT 15%</span><h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Invoices</h1></div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px">
+<button type="button" style="height: 48px; padding: 0 20px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font: inherit; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12M7 11l5 5 5-5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"></path></svg>Export CSV</button>
+<a href="#rej-h" style="height: 48px; box-sizing: border-box; padding: 0 20px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7"></path></svg>Fix 3 rejected</a>
+</div>
+</div>
+
+<section aria-labelledby="zatca-h" style="display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between">
+<h2 id="zatca-h" style="margin: 0; font-size: 18px; font-weight: 600">ZATCA integration health</h2>
+<span style="display: inline-flex; align-items: center; gap: 6px; padding: 2px 10px; border-radius: 999px; background: #e3f3ea; color: #1f7a4d; font-size: 13px; font-weight: 600"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg>Fatoora API connected · last call 09:41</span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px">
+<sc-for list="{{health}}" as="k" hint-placeholder-count="4">
+<a href="{{k.href}}" style="padding: 16px 18px; border-radius: 16px; background: {{k.bg}}; color: #262a67; text-decoration: none; display: flex; flex-direction: column; gap: 2px">
+<span style="font-size: 13px; color: #5b5f86">{{k.l}}</span>
+<span style="font-size: 26px; line-height: 32px; font-weight: 700">{{k.v}}</span>
+<span style="{{k.ds}}">{{k.d}}</span>
+</a>
+</sc-for>
+</div>
+</section>
+
+<section aria-label="Invoice list" style="background: #ffffff; border-radius: 20px; padding: 8px 0 4px">
+<div role="tablist" aria-label="Invoice type" style="display: flex; flex-wrap: wrap; gap: 4px; padding: 0 16px; border-bottom: 1px solid #e3dfc9">
+<sc-for list="{{tabs}}" as="t" hint-placeholder-count="4"><button type="button" role="tab" aria-selected="{{t.sel}}" onClick="{{t.on}}" style="{{t.st}}">{{t.t}} <span style="font-size: 13px; color: #5b5f86; font-weight: 500">{{t.n}}</span></button></sc-for>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; padding: 14px 20px">
+<label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px; font-weight: 600">Issuer<select style="height: 40px; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; padding: 0 10px; font: inherit; font-size: 15px; font-weight: 400; color: #262a67"><option>All issuers</option><option>Trips Enjoy Co.</option><option>Organizations</option><option>Drivers (self-billed)</option><option>Photographers (self-billed)</option></select></label>
+<label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px; font-weight: 600">Document type<select style="height: 40px; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; padding: 0 10px; font: inherit; font-size: 15px; font-weight: 400; color: #262a67"><option>All types</option><option>Standard tax invoice</option><option>Simplified tax invoice</option><option>Credit note</option><option>Debit note</option></select></label>
+<label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px; font-weight: 600">ZATCA status<select style="height: 40px; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; padding: 0 10px; font: inherit; font-size: 15px; font-weight: 400; color: #262a67"><option>Any status</option><option>Cleared</option><option>Reported</option><option>Pending</option><option>Rejected</option></select></label>
+<label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px; font-weight: 600">Created<select style="height: 40px; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; padding: 0 10px; font: inherit; font-size: 15px; font-weight: 400; color: #262a67"><option>Last 7 days</option><option>Today</option><option>October 2026</option><option>September 2026</option><option>Custom range</option></select></label>
+</div>
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 1040px; border-collapse: collapse; font-size: 14px">
+<thead><tr style="color: #5b5f86; font-size: 13px; border-top: 1px solid #e3dfc9"><th scope="col" style="text-align: start; padding: 10px 20px; font-weight: 600">Number</th><th scope="col" style="text-align: start; padding: 10px 10px; font-weight: 600">Issuer</th><th scope="col" style="text-align: start; padding: 10px 10px; font-weight: 600">Buyer</th><th scope="col" style="text-align: start; padding: 10px 10px; font-weight: 600">Type</th><th scope="col" style="text-align: end; padding: 10px 10px; font-weight: 600">Total</th><th scope="col" style="text-align: end; padding: 10px 10px; font-weight: 600">VAT</th><th scope="col" style="text-align: start; padding: 10px 10px; font-weight: 600">Payment</th><th scope="col" style="text-align: start; padding: 10px 10px; font-weight: 600">ZATCA</th><th scope="col" style="text-align: start; padding: 10px 20px; font-weight: 600">Created</th></tr></thead>
+<tbody>
+<sc-for list="{{rows}}" as="r" hint-placeholder-count="6">
+<tr class="te-tr" style="border-top: 1px solid #e3dfc9">
+<td style="padding: 10px 20px; white-space: nowrap"><a href="AdmInvoice.dc.html" style="font-weight: 600; font-variant-numeric: tabular-nums">{{r.no}}</a></td>
+<td style="padding: 10px 10px">{{r.iss}}</td>
+<td style="padding: 10px 10px">{{r.buy}}</td>
+<td style="padding: 10px 10px; color: #5b5f86">{{r.type}}</td>
+<td style="padding: 10px 10px; text-align: end; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap">{{r.tot}}</td>
+<td style="padding: 10px 10px; text-align: end; color: #5b5f86; font-variant-numeric: tabular-nums; white-space: nowrap">{{r.vat}}</td>
+<td style="padding: 10px 10px"><span style="{{r.ps}}">{{r.pay}}</span></td>
+<td style="padding: 10px 10px"><span style="{{r.zs}}">{{r.z}}</span></td>
+<td style="padding: 10px 20px; color: #5b5f86; white-space: nowrap">{{r.at}}</td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+<div style="padding: 10px 20px; border-top: 1px solid #e3dfc9; font-size: 14px; color: #5b5f86">{{foot}}</div>
+</section>
+
+<section aria-labelledby="rej-h" id="rej-h-wrap" style="background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: space-between; align-items: center">
+<h2 id="rej-h" style="margin: 0; font-size: 18px; font-weight: 600">Rejected by ZATCA · {{rejCount}} to fix</h2>
+<span style="font-size: 13px; color: #5b5f86">Rejected invoices are not shared with the buyer until cleared. Fix the data, then resubmit.</span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px">
+<sc-for list="{{rejected}}" as="x" hint-placeholder-count="3">
+<div style="padding: 14px; border-radius: 12px; background: {{x.bg}}; display: flex; flex-direction: column; gap: 8px">
+<div style="display: flex; justify-content: space-between; gap: 8px; align-items: center"><a href="AdmInvoice.dc.html" style="font-weight: 700; font-size: 15px">{{x.no}}</a><span style="{{x.ss}}">{{x.s}}</span></div>
+<span style="font-size: 14px">{{x.who}}</span>
+<span style="font-size: 13px; line-height: 18px; color: #b42318; font-weight: 600">{{x.code}}</span>
+<span style="font-size: 13px; line-height: 18px; color: #5b5f86">{{x.fix}}</span>
+<button type="button" onClick="{{x.on}}" aria-disabled="{{x.dis}}" style="{{x.bs}}">{{x.bl}}</button>
+</div>
+</sc-for>
+</div>
+</section>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1240}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { tab: 'B2B', sent: [] }; }
+  renderVals() {
+    const pill = (tone) => 'display: inline-flex; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; white-space: nowrap; ' + ({ ok: 'background: #e3f3ea; color: #1f7a4d;', warn: 'background: #fdf0d5; color: #8a4b00;', bad: 'background: #fde8e6; color: #b42318;', info: 'background: #e6e8f5; color: #262a67;', none: 'background: #f6f3e4; color: #5b5f86;' })[tone];
+    const payTone = { Paid: 'ok', Unpaid: 'info', Overdue: 'bad', 'Partially paid': 'warn', Void: 'none', Refunded: 'none', Applied: 'ok' };
+    const zTone = { Cleared: 'ok', Reported: 'ok', Pending: 'warn', Rejected: 'bad' };
+    const health = [
+      { l: 'Cleared today (B2B)', v: '1,284', d: 'Avg clearance 1.8 s', ds: 'font-size: 13px; color: #5b5f86', bg: '#ffffff', href: '#' },
+      { l: 'Reported within 24 h (B2C)', v: '99.6%', d: '18,402 of 18,476 this week', ds: 'font-size: 13px; font-weight: 600; color: #1f7a4d', bg: '#ffffff', href: '#' },
+      { l: 'Pending submission', v: '74', d: 'Queued · retrying every 10 min', ds: 'font-size: 13px; font-weight: 600; color: #8a4b00', bg: '#ffffff', href: '#' },
+      { l: 'Rejected', v: '3', d: 'Open the queue to fix', ds: 'font-size: 13px; font-weight: 600; color: #b42318', bg: '#fde8e6', href: '#rej-h' }
+    ];
+    const D = {
+      B2C: { n: '18,476', rows: [
+        ['SIM-ST-2026-118204', 'Sunrise Tours Co.', 'Sara Al-Qahtani', 'Simplified · booking', '2,875.00', '375.00', 'Paid', 'Reported', 'Tue 14 Oct 09:12'],
+        ['SIM-TE-2026-052117', 'Trips Enjoy Co.', 'Faisal Al-Qahtani', 'Simplified · Explorer plan', '21.85', '2.85', 'Paid', 'Reported', 'Tue 14 Oct 08:40'],
+        ['SIM-DP-2026-020931', 'Desert Pearl Travel', 'Hessa Al-Dosari', 'Simplified · booking', '368.00', '48.00', 'Paid', 'Pending', 'Tue 14 Oct 08:31'],
+        ['SIM-ST-2026-118188', 'Sunrise Tours Co.', 'Majed Al-Otaibi', 'Simplified · booking', '1,437.50', '187.50', 'Refunded', 'Reported', 'Mon 13 Oct 22:05'],
+        ['SIM-TE-2026-052102', 'Trips Enjoy Co.', 'Lama Al-Harthi', 'Simplified · VIP plan', '56.35', '7.35', 'Paid', 'Reported', 'Mon 13 Oct 19:47'],
+        ['SIM-RS-2026-009814', 'Red Sea Escapes', 'Omar Haddad', 'Simplified · booking', '736.00', '96.00', 'Paid', 'Reported', 'Mon 13 Oct 18:02']] },
+      B2B: { n: '2,941', rows: [
+        ['INV-TE-2026-000981', 'Trips Enjoy Co.', 'Sunrise Tours Co.', 'Standard · plan + commission', '45,307.70', '5,909.70', 'Paid', 'Cleared', 'Fri 31 Oct 23:10'],
+        ['INV-TE-2026-000977', 'Trips Enjoy Co.', 'Desert Pearl Travel', 'Standard · plan + commission', '12,642.95', '1,649.08', 'Unpaid', 'Cleared', 'Fri 31 Oct 23:10'],
+        ['INV-ST-2026-004812', 'Sunrise Tours Co.', 'Al Noor International School', 'Standard · group booking', '36,800.00', '4,800.00', 'Unpaid', 'Cleared', 'Tue 14 Oct 10:22'],
+        ['INV-TE-2026-000962', 'Trips Enjoy Co.', 'Khalid Al-Harbi', 'Standard · driver plan', '171.35', '22.35', 'Paid', 'Cleared', 'Wed 1 Oct 00:05'],
+        ['INV-RS-2026-001204', 'Red Sea Escapes', 'Aramco Family Club', 'Standard · group booking', '58,650.00', '7,650.00', 'Overdue', 'Cleared', 'Mon 8 Sep 11:30'],
+        ['INV-TE-2026-000959', 'Trips Enjoy Co.', 'Hijaz Coach Lines', 'Standard · plan + commission', '9,214.40', '1,201.88', 'Partially paid', 'Rejected', 'Wed 1 Oct 00:05']] },
+      Self: { n: '1,206', rows: [
+        ['SB-KH-2026-000143', 'Khalid Al-Harbi (driver)', 'Sunrise Tours Co.', 'Self-billed · deal DL-2208', '4,849.55', '632.55', 'Paid', 'Cleared', 'Sat 18 Oct 21:40'],
+        ['SB-NS-2026-000088', 'Noura Al-Shehri (photographer)', 'Sunrise Tours Co.', 'Self-billed · deal DL-2214', '6,440.00', '840.00', 'Paid', 'Cleared', 'Sat 18 Oct 21:44'],
+        ['SB-SZ-2026-000311', 'Saad Al-Zahrani (driver)', 'Desert Pearl Travel', 'Self-billed · deal DL-2190', '3,105.00', '405.00', 'Unpaid', 'Pending', 'Fri 17 Oct 16:02'],
+        ['SB-YK-2026-000067', 'Yara Khoury (photographer)', 'Red Sea Escapes', 'Self-billed · deal DL-2177', '2,760.00', '360.00', 'Unpaid', 'Rejected', 'Thu 16 Oct 12:18'],
+        ['SB-WN-2026-000402', 'Waleed Nasr (driver)', 'Hijaz Coach Lines', 'Self-billed · deal DL-2169', '5,520.00', '720.00', 'Paid', 'Cleared', 'Wed 15 Oct 09:55'],
+        ['SB-LH-2026-000052', 'Lama Al-Harthi (photographer)', 'Sunrise Tours Co.', 'Self-billed · deal DL-2151', '1,840.00', '240.00', 'Paid', 'Cleared', 'Tue 14 Oct 17:30']] },
+      CN: { n: '612', rows: [
+        ['CN-ST-2026-002931', 'Sunrise Tours Co.', 'Majed Al-Otaibi', 'Credit note · ref SIM-ST-2026-118188', '−1,437.50', '−187.50', 'Refunded', 'Reported', 'Tue 14 Oct 09:02'],
+        ['CN-TE-2026-000204', 'Trips Enjoy Co.', 'Hijaz Coach Lines', 'Credit note · ref INV-TE-2026-000959', '−1,713.50', '−223.50', 'Applied', 'Cleared', 'Mon 13 Oct 15:20'],
+        ['CN-RS-2026-000731', 'Red Sea Escapes', 'Omar Haddad', 'Credit note · ref SIM-RS-2026-009790', '−320.00', '−41.74', 'Refunded', 'Pending', 'Mon 13 Oct 11:48'],
+        ['CN-DP-2026-000390', 'Desert Pearl Travel', 'Hessa Al-Dosari', 'Credit note · ref SIM-DP-2026-020870', '−184.00', '−24.00', 'Refunded', 'Rejected', 'Sun 12 Oct 20:10'],
+        ['DN-TE-2026-000017', 'Trips Enjoy Co.', 'Sunrise Tours Co.', 'Debit note · commission adj.', '920.00', '120.00', 'Paid', 'Cleared', 'Sat 11 Oct 10:00'],
+        ['CN-ST-2026-002917', 'Sunrise Tours Co.', 'Sara Al-Qahtani', 'Credit note · program removed', '−172.50', '−22.50', 'Refunded', 'Reported', 'Fri 10 Oct 14:36']] }
+    };
+    const labels = [['B2C', 'B2C'], ['B2B', 'B2B'], ['Self', 'Self-billed (provider → org)'], ['CN', 'Credit & debit notes']];
+    const tab = this.state.tab;
+    const tabs = labels.map((l) => ({ t: l[1], n: D[l[0]].n, sel: l[0] === tab ? 'true' : 'false', on: () => this.setState({ tab: l[0] }),
+      st: 'height: 44px; padding: 0 12px; border: 0; background: transparent; font: inherit; font-size: 15px; cursor: pointer; color: #262a67; ' + (l[0] === tab ? 'font-weight: 700; box-shadow: inset 0 -3px 0 #ff6c2e;' : 'font-weight: 500;') }));
+    const rows = D[tab].rows.map((r) => ({ no: r[0], iss: r[1], buy: r[2], type: r[3], tot: r[4] + ' SAR', vat: r[5], pay: r[6], ps: pill(payTone[r[6]]), z: r[7], zs: pill(zTone[r[7]]), at: r[8] }));
+    const R = [
+      ['INV-TE-2026-000959', 'Trips Enjoy Co. → Hijaz Coach Lines', 'BR-KSA-40 · Buyer VAT number fails the 15-digit check', 'Buyer VAT on file is 30012345678900 (14 digits). Ask Hijaz Coach Lines to confirm it in Organization settings.'],
+      ['SB-YK-2026-000067', 'Yara Khoury → Red Sea Escapes', 'BR-KSA-08 · Seller CR / ID missing', 'Self-billed invoice needs the provider ID. Yara added her ID on Tue 14 Oct, ready to resubmit.'],
+      ['CN-DP-2026-000390', 'Desert Pearl Travel → Hessa Al-Dosari', 'BR-KSA-56 · Original invoice reference not found', 'Credit note points to SIM-DP-2026-020870, which was never reported. Report the original first, then resubmit.']
+    ];
+    const sent = this.state.sent;
+    const rejected = R.map((r) => { const done = sent.indexOf(r[0]) >= 0; return { no: r[0], who: r[1], code: r[2], fix: r[3], s: done ? 'Resubmitted' : 'Rejected', ss: pill(done ? 'warn' : 'bad'), bg: done ? '#f6f3e4' : '#fde8e6', dis: done ? 'true' : 'false',
+      bl: done ? 'Waiting for ZATCA' : 'Resubmit', on: () => { if (!done) this.setState({ sent: sent.concat([r[0]]) }); },
+      bs: 'align-self: flex-start; height: 40px; padding: 0 16px; border-radius: 12px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; ' + (done ? 'border: 1px solid #e3dfc9; background: #ffffff; color: #5b5f86;' : 'border: 0; background: #262a67; color: #f6f3e4;') }; });
+    return { health, tabs, rows, foot: 'Showing 6 of ' + D[tab].n + ' · newest first', rejected, rejCount: String(R.length - sent.length) };
+  }
+}
+</script>
+</body>
+</html>

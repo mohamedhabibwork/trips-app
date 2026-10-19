@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Admin · Dispute detail</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="min-height: 1000px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="AdmNav" active="Disputes" hint-size="248px,1000px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 20px">
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: flex-start">
+<div style="display: flex; align-items: flex-start; gap: 14px">
+<a href="AdmDisputes.dc.html" aria-label="Back to disputes" style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 999px; background: #ffffff; color: #262a67; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a>
+<div style="display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 14px; color: #5b5f86">DSP-1184 · Refund · Taif Rose Festival Weekend · BK-88412 · opened Sun 12 Oct 21:05 UTC</span>
+<h1 style="margin: 0; font-size: 28px; line-height: 34px; font-weight: 600">No refund after cancellation in the 80% window</h1>
+<span style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-size: 15px"><a href="AdmUser.dc.html" style="color: #262a67; font-weight: 600">Sara Al-Qahtani</a><span style="color: #5b5f86">vs</span><a href="AdmOrg.dc.html" style="color: #262a67; font-weight: 600">Sunrise Tours Co.</a><span style="padding: 2px 10px; border-radius: 999px; background: #ffe7dc; color: #c93a00; font-size: 13px; font-weight: 600">Open</span><span style="display: inline-flex; gap: 4px; align-items: center; padding: 2px 10px; border-radius: 999px; background: #fdf0d5; color: #8a4b00; font-size: 13px; font-weight: 600"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7v5l3 2"></path></svg>Resolve by Sun 26 Oct · 10 working days</span></span>
+</div>
+</div>
+<span style="font-size: 14px; color: #5b5f86">Assigned to <strong style="color: #262a67">Reem Othman</strong></span>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
+<div style="flex: 3 1 540px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+
+<section aria-labelledby="pc-h" style="background: #e3f3ea; color: #1f7a4d; border-radius: 20px; padding: 16px 20px; display: flex; gap: 12px; align-items: flex-start">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 2px"><path d="M12 3l7 3v5.5c0 4.4-3 8-7 9.5-4-1.5-7-5.1-7-9.5V6zM9 12l2 2 4-4"></path></svg>
+<div style="display: flex; flex-direction: column; gap: 2px"><h2 id="pc-h" style="margin: 0; font-size: 17px; font-weight: 600">Policy check: 80% refund owed</h2><span style="font-size: 14px; line-height: 20px; color: #262a67">Cancellation policy: 80% refund at 48 h or more before departure, 50% from 24 to 48 h, none under 24 h. Sara cancelled <strong>31 h 42 min before</strong> the 48 h deadline. Sunrise’s automatic rule used a deadline of Sun 12 Oct 18:30 UTC (33 h earlier than the policy), which marked it late.</span></div>
+</section>
+
+<section aria-labelledby="tl-h" style="background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+<h2 id="tl-h" style="margin: 0; font-size: 18px; font-weight: 600">Booking timeline <span style="font-size: 13px; font-weight: 500; color: #5b5f86">· UTC (Riyadh = UTC+3)</span></h2>
+<ol style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column">
+<sc-for list="{{tl}}" as="e" hint-placeholder-count="6">
+<li style="display: grid; grid-template-columns: 150px 20px minmax(0, 1fr); gap: 12px">
+<span style="font-size: 13px; color: #5b5f86; padding-top: 1px">{{e.at}}</span>
+<span style="display: flex; flex-direction: column; align-items: center"><span style="{{e.dot}}"></span><span style="flex: 1; width: 2px; background: #e3dfc9"></span></span>
+<span style="display: flex; flex-direction: column; gap: 2px; padding-bottom: 12px"><span style="{{e.ts}}">{{e.t}}</span><span style="font-size: 13px; color: #5b5f86">{{e.d}}</span></span>
+</li>
+</sc-for>
+</ol>
+</section>
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px">
+<section aria-labelledby="pay-h" style="flex: 1 1 280px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 8px; font-size: 14px">
+<h2 id="pay-h" style="margin: 0 0 4px; font-size: 18px; font-weight: 600">Payment records</h2>
+<sc-for list="{{pay}}" as="p" hint-placeholder-count="5">
+<span style="display: flex; justify-content: space-between; gap: 12px"><span style="color: #5b5f86">{{p.l}}</span><span style="{{p.vs}}">{{p.v}}</span></span>
+</sc-for>
+<span style="height: 1px; background: #e3dfc9; margin: 4px 0"></span>
+<span style="display: flex; justify-content: space-between; gap: 12px"><span style="font-weight: 600">Charged · Mada •• 4821 · Sun 28 Sep</span><span style="font-weight: 700">4,592 SAR</span></span>
+<span style="display: flex; justify-content: space-between; gap: 12px"><span style="font-weight: 600">Refunded</span><span style="font-weight: 700; color: #b42318">0 SAR</span></span>
+<span style="display: flex; gap: 6px; align-items: center; padding: 8px 10px; border-radius: 12px; background: #e6e8f5; font-size: 13px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 11h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1zM8 11V7a4 4 0 0 1 8 0v4"></path></svg>4,592 SAR held from Sunrise payout on Mon 20 Oct</span>
+</section>
+<section aria-labelledby="msg-h" style="flex: 1 1 280px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 10px">
+<h2 id="msg-h" style="margin: 0; font-size: 18px; font-weight: 600">Messages</h2>
+<sc-for list="{{msgs}}" as="m" hint-placeholder-count="3">
+<div style="{{m.box}}"><span style="font-size: 12px; font-weight: 600; color: #5b5f86">{{m.who}} · {{m.at}}</span><span style="font-size: 14px; line-height: 20px">{{m.t}}</span></div>
+</sc-for>
+</section>
+</div>
+</div>
+
+<aside style="flex: 2 1 340px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+<section aria-labelledby="dec-h" style="background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+<h2 id="dec-h" style="margin: 0; font-size: 20px; font-weight: 600">Decision</h2>
+<div role="radiogroup" aria-labelledby="dec-h" style="display: flex; flex-direction: column; gap: 8px">
+<sc-for list="{{opts}}" as="o" hint-placeholder-count="3">
+<button type="button" role="radio" aria-checked="{{o.ac}}" onClick="{{o.pick}}" style="{{o.style}}"><span style="{{o.dot}}"></span><span style="display: flex; flex-direction: column; flex: 1"><span style="display: flex; justify-content: space-between; gap: 8px; font-size: 15px; font-weight: 600"><span>{{o.l}}</span><span>{{o.amt}}</span></span><span style="font-size: 13px; color: #5b5f86">{{o.d}}</span></span></button>
+</sc-for>
+</div>
+<sc-if value="{{partial}}" hint-placeholder-val="{{false}}"><div style="display: flex; flex-direction: column; gap: 6px"><label for="pa" style="font-size: 14px; font-weight: 600">Refund amount (SAR)</label><input id="pa" value="3,000" style="height: 48px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 14px; font: inherit; font-size: 16px; color: #262a67"></div></sc-if>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="why" style="font-size: 14px; font-weight: 600">Reason <span style="font-weight: 500; color: #5b5f86">· shown to both parties</span></label>
+<textarea id="why" rows="4" style="border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 10px 14px; font: inherit; font-size: 15px; line-height: 21px; color: #262a67; resize: vertical">Sara cancelled on Sun 12 Oct at 22:48 Riyadh time. The 80% refund deadline (48 h before departure) was Tue 14 Oct at 06:30 Riyadh time, so 80% of the amount is refunded under the cancellation policy.</textarea>
+</div>
+<span style="font-size: 13px; line-height: 18px; color: #5b5f86">{{effect}}</span>
+<button type="button" style="height: 48px; border: 0; border-radius: 12px; background: #ff6c2e; color: #262a67; font: inherit; font-size: 16px; font-weight: 700; cursor: pointer">Issue decision</button>
+<a href="AdmDisputes.dc.html" style="align-self: center; font-size: 14px; font-weight: 600">Request more info instead</a>
+</section>
+
+<section aria-labelledby="nt-h" style="background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 10px">
+<h2 id="nt-h" style="margin: 0; font-size: 18px; font-weight: 600; display: flex; align-items: center; gap: 8px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 11h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1zM8 11V7a4 4 0 0 1 8 0v4"></path></svg>Internal notes</h2>
+<div style="padding: 10px 12px; border-radius: 12px; background: #f6f3e4; font-size: 14px; line-height: 20px"><span style="display: block; font-size: 12px; font-weight: 600; color: #5b5f86">Ali Hamdan (Support) · Mon 13 Oct 08:20</span>Same deadline rule error hit 3 Sunrise bookings this week. Raised with engineering, ticket ENG-2291.</div>
+<label for="nn" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Add internal note</label>
+<textarea id="nn" rows="2" placeholder="Add a note for the admin team only" style="border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 10px 14px; font: inherit; font-size: 15px; color: #262a67; resize: vertical"></textarea>
+<button type="button" style="align-self: flex-start; height: 40px; padding: 0 16px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer">Add note</button>
+</section>
+</aside>
+</div>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1180}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { opt: 0 }; }
+  renderVals() {
+    const dotC = { n: '#262a67', ok: '#1f7a4d', bad: '#b42318', warn: '#f89e23' };
+    const tl = [
+      { at: 'Sun 28 Sep · 11:12', t: 'Booked · 4 travellers', d: 'Sara, Faisal, Omar (9), Lina (6) · Bus 1 · paid 4,592 SAR', k: 'n' },
+      { at: 'Sun 12 Oct · 18:30', t: 'Deadline used by Sunrise’s rule', d: 'Rule error · 33 h earlier than the policy', k: 'bad' },
+      { at: 'Sun 12 Oct · 19:48', t: 'Cancelled by Sara in the app', d: '22:48 Riyadh · reason: family emergency · iPhone 15', k: 'warn' },
+      { at: 'Sun 12 Oct · 19:48', t: 'Marked “late cancellation · no refund”', d: 'Sunrise automatic rule · seats released', k: 'bad' },
+      { at: 'Sun 12 Oct · 21:05', t: 'Dispute opened by Sara', d: 'After the app showed “No refund”', k: 'n' },
+      { at: 'Mon 13 Oct · 12:40', t: 'Sunrise replied', d: 'Rana Fadel (Support) · upheld no refund', k: 'n' },
+      { at: 'Tue 14 Oct · 03:30', t: 'Correct 80% refund deadline', d: '48 h before departure Thu 16 Oct 06:30 Riyadh', k: 'ok' }
+    ].map((e) => ({ ...e, dot: 'width: 12px; height: 12px; margin-top: 3px; border-radius: 999px; background: ' + dotC[e.k] + ';', ts: 'font-size: 15px; font-weight: 600; color: ' + (e.k === 'bad' ? '#b42318' : '#262a67') + ';' }));
+    const pay = [
+      { l: 'Seats · 2 adults × 1,250 + 2 children × 850', v: '4,200 SAR' },
+      { l: 'Rose distillery tour × 2', v: '360 SAR' },
+      { l: 'Travel insurance × 4 (required)', v: '100 SAR' },
+      { l: 'Explorer 5% program discount', v: '−18 SAR' },
+      { l: 'Coupon FIRSTRIDE', v: '−50 SAR' }
+    ].map((p) => ({ ...p, vs: 'font-weight: 600; white-space: nowrap;' }));
+    const msgs = [
+      { who: 'Sara Al-Qahtani', at: 'Sun 12 Oct 21:05', t: 'I cancelled on Sunday night, well before Monday morning. The app now says no refund for all four of us.', me: false },
+      { who: 'Rana Fadel · Sunrise Tours', at: 'Mon 13 Oct 12:40', t: 'Our records show the cancellation after the refund deadline, so the policy fee applies.', me: false },
+      { who: 'Reem Othman · Trips Enjoy', at: 'Tue 14 Oct 09:02', t: 'We are checking the timestamps on both sides and will decide by Wed 15 Oct.', me: true }
+    ].map((m) => ({ ...m, box: 'display: flex; flex-direction: column; gap: 2px; padding: 10px 12px; border-radius: 12px; ' + (m.me ? 'background: #e6e8f5;' : 'background: #f6f3e4;') }));
+    const O = [
+      ['Policy refund · 80%', '3,674 SAR', 'Recommended by policy check · 918 SAR stays with the organization'],
+      ['Partial refund', 'Set amount', 'Rest stays with the organization'],
+      ['Reject', '0 SAR', 'Booking stays cancelled, no refund']
+    ];
+    const s = this.state.opt;
+    const opts = O.map((o, i) => ({ l: o[0], amt: o[1], d: o[2], ac: i === s ? 'true' : 'false', pick: () => this.setState({ opt: i }),
+      style: 'display: flex; gap: 10px; align-items: flex-start; text-align: start; font: inherit; color: #262a67; padding: 12px; border-radius: 12px; cursor: pointer; ' + (i === s ? 'border: 2px solid #fb8030; background: #fffaf5;' : 'border: 1px solid #e3dfc9; background: #ffffff;'),
+      dot: 'width: 18px; height: 18px; flex-shrink: 0; margin-top: 2px; box-sizing: border-box; border-radius: 999px; background: #ffffff; ' + (i === s ? 'border: 6px solid #262a67;' : 'border: 2px solid #7b7fa6;') }));
+    const effect = ['Refund goes back to Mada •• 4821 in 3–5 working days, taken from the held Sunrise payout. Both parties get the reason by email and in-app.', 'The partial amount is refunded to Mada •• 4821 and deducted from the held Sunrise payout. Both parties get the reason.', 'The held 4,592 SAR is released to Sunrise in the Mon 20 Oct payout. Sara gets the reason and can reply once.'][s];
+    return { tl, pay, msgs, opts, partial: s === 1, effect };
+  }
+}
+</script>
+</body>
+</html>

@@ -21,11 +21,11 @@ const DAY_MS = 86_400_000;
 function testTypeOptions() {
   return [
     {
-      value: "drug-screening",
+      value: "drug_screening",
       label: t("screen.admin.labTests.requestLabTestDecision.drugScreening"),
     },
     {
-      value: "medical-fitness",
+      value: "medical_fitness",
       label: t("screen.admin.labTests.requestLabTestDecision.medicalFitness"),
     },
     { value: "both", label: t("screen.admin.labTests.requestLabTestDecision.both") },
@@ -85,7 +85,7 @@ export function RequestLabTestDecision() {
   const queryClient = useQueryClient();
   const goTo = useAdminNavigate();
   const [pickedDriver, setPickedDriver] = useState<string | null>(null);
-  const [testType, setTestType] = useState("drug-screening");
+  const [testType, setTestType] = useState("drug_screening");
   const [days, setDays] = useState(DEFAULT_DEADLINE_DAYS);
 
   const queueQuery = useQuery({
@@ -123,7 +123,11 @@ export function RequestLabTestDecision() {
   const submit = () => {
     if (!driverAccountId) return;
     requestMutation.mutate(
-      { driverAccountId, deadlineAt: new Date(Date.now() + days * DAY_MS).toISOString() },
+      {
+        driverAccountId,
+        deadlineAt: new Date(Date.now() + days * DAY_MS).toISOString(),
+        testType: testType as "drug_screening" | "medical_fitness" | "both",
+      },
       { onSuccess: () => void goTo("SCR-ADM-12") },
     );
   };

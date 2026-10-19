@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Org · Trip analytics</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+.te-tab:hover{background:#f6f3e4}
+</style>
+</helmet>
+<div style="min-height: 1500px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="OrgNav" active="Analytics" hint-size="248px,1500px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 24px">
+
+<div style="display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; color: #5b5f86">Analytics · Basic on Growth plan</span><h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Trip analytics</h1></div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end">
+<label style="display: flex; flex-direction: column; gap: 4px; font-size: 14px; font-weight: 600">Trip<select style="height: 48px; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; padding: 0 12px; font: inherit; font-size: 15px; font-weight: 500; color: #262a67"><option>AlUla Heritage Weekend · Thu 16 Oct</option><option>AlUla Heritage Weekend · Thu 18 Sep</option><option>Red Sea Snorkel Day · Fri 24 Oct</option><option>Edge of the World Hike · Sat 25 Oct</option><option>Taif Rose Farms · Thu 30 Oct</option></select></label>
+<label style="display: flex; flex-direction: column; gap: 4px; font-size: 14px; font-weight: 600">Date range<select style="height: 48px; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; padding: 0 12px; font: inherit; font-size: 15px; font-weight: 500; color: #262a67"><option>Since publish · 1 Sep–14 Oct</option><option>Last 7 days</option><option>Custom range</option></select></label>
+<a href="OrgBilling.dc.html" style="height: 48px; box-sizing: border-box; padding: 0 16px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 11h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1zM8 11V7a4 4 0 0 1 8 0v4"></path></svg>Export<span style="padding: 1px 8px; border-radius: 999px; background: #e6e8f5; font-size: 12px; font-weight: 700">Enterprise</span></a>
+</div>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; align-items: center">
+<nav aria-label="Analytics reports" style="max-width: 100%; display: flex; flex-wrap: wrap; gap: 4px; padding: 4px; border-radius: 14px; background: #ffffff">
+<sc-for list="{{tabs}}" as="t" hint-placeholder-count="5"><a href="{{t.href}}" class="te-tab" aria-current="{{t.cur}}" style="{{t.style}}">{{t.l}}<sc-if value="{{t.ent}}" hint-placeholder-val="{{false}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 11h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1zM8 11V7a4 4 0 0 1 8 0v4"></path></svg><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap">(Enterprise)</span></sc-if></a></sc-for>
+</nav>
+<a href="OrgTrip.dc.html" style="font-size: 14px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px">Open trip<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg></a>
+</div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 16px">
+<sc-for list="{{kpis}}" as="k" hint-placeholder-count="5">
+<div style="padding: 16px 20px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 14px; color: #5b5f86">{{k.l}}</span>
+<span style="font-size: 28px; line-height: 34px; font-weight: 700">{{k.v}} <span style="font-size: 15px; font-weight: 500; color: #5b5f86">{{k.u}}</span></span>
+<span style="font-size: 13px; font-weight: 600; color: {{k.dc}}">{{k.d}}</span>
+</div>
+</sc-for>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: stretch">
+<section aria-labelledby="sc-h" style="flex: 2 1 520px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; align-items: center">
+<h2 id="sc-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">Sales curve</h2>
+<div style="display: flex; gap: 16px; flex-wrap: wrap; font-size: 13px"><span style="display: inline-flex; align-items: center; gap: 6px"><span style="width: 16px; height: 3px; border-radius: 2px; background: #262a67"></span>Seats sold · this departure</span><span style="display: inline-flex; align-items: center; gap: 6px"><span style="width: 16px; height: 3px; border-radius: 2px; background: #8a8fc4"></span>18 Sep departure</span><span style="display: inline-flex; align-items: center; gap: 6px"><span style="width: 16px; height: 0; border-top: 3px dashed #ff6c2e"></span>Capacity 172</span></div>
+</div>
+<svg viewBox="0 0 640 224" role="img" aria-label="Cumulative seats sold by days since publish. This departure: 22 seats by day 3, 84 by day 14, 133 by day 28, 168 of 172 by day 43. The 18 September departure sold out at day 38. Capacity line at 172 seats." style="width: 100%; height: auto; display: block; font-family: Outfit, Nunito, system-ui, sans-serif">
+<g stroke="#e3dfc9" stroke-width="1"><line x1="48" y1="16" x2="624" y2="16"></line><line x1="48" y1="76" x2="624" y2="76"></line><line x1="48" y1="136" x2="624" y2="136"></line><line x1="48" y1="196" x2="624" y2="196"></line></g>
+<g fill="#5b5f86" font-size="11" text-anchor="end"><text x="40" y="20">180</text><text x="40" y="80">120</text><text x="40" y="140">60</text><text x="40" y="200">0</text></g>
+<line x1="48" y1="24" x2="624" y2="24" stroke="#ff6c2e" stroke-width="2" stroke-dasharray="7 5"></line>
+<polyline points="48,196 112,166 176,138 240,106 304,78 368,56 432,38 496,28 534.4,24" fill="none" stroke="#8a8fc4" stroke-width="2.5" stroke-linejoin="round"></polyline>
+<polygon points="48,196 48.0,196.0 86.4,174.0 137.6,148.0 176.0,135.0 227.2,112.0 278.4,99.0 316.8,84.0 368.0,75.0 406.4,63.0 457.6,50.0 496.0,41.0 534.4,35.0 572.8,30.0 598.4,28.0 598.4,196" fill="#262a67" fill-opacity="0.07"></polygon>
+<polyline points="48.0,196.0 86.4,174.0 137.6,148.0 176.0,135.0 227.2,112.0 278.4,99.0 316.8,84.0 368.0,75.0 406.4,63.0 457.6,50.0 496.0,41.0 534.4,35.0 572.8,30.0 598.4,28.0" fill="none" stroke="#262a67" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"></polyline>
+<line x1="227.2" y1="112" x2="227.2" y2="196" stroke="#5b5f86" stroke-width="1" stroke-dasharray="3 3"></line>
+<text x="233" y="160" font-size="11" fill="#5b5f86">AUTUMN15 campaign</text>
+<circle cx="598.4" cy="28" r="5" fill="#ff6c2e" stroke="#262a67" stroke-width="2"></circle>
+<text x="592" y="48" font-size="11" font-weight="700" fill="#262a67" text-anchor="end">Today · 168</text>
+<g fill="#5b5f86" font-size="11" text-anchor="middle"><text x="48" y="216">Day 0</text><text x="176" y="216">10</text><text x="304" y="216">20</text><text x="432" y="216">30</text><text x="560" y="216">40</text><text x="620" y="216">45</text></g>
+</svg>
+<p style="margin: 0; font-size: 14px; line-height: 20px; color: #5b5f86"><strong style="color: #262a67">Takeaway:</strong> 98% sold 2 days before departure, but 5 days behind the September departure. Sales jumped after the AUTUMN15 campaign on day 14.</p>
+</section>
+
+<section aria-labelledby="pl-h" style="flex: 1 1 300px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; flex-direction: column"><h2 id="pl-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">Projected P&amp;L</h2><span style="font-size: 13px; color: #5b5f86">Settles once the trip is completed and no dispute is open</span></div>
+<dl style="margin: 0; display: flex; flex-direction: column; font-size: 14px">
+<sc-for list="{{pl}}" as="r" hint-placeholder-count="10">
+<div style="{{r.rs}}"><dt style="margin: 0">{{r.l}}</dt><dd style="margin: 0; white-space: nowrap; {{r.vs}}">{{r.v}}</dd></div>
+</sc-for>
+</dl>
+<div style="display: flex; justify-content: space-between; align-items: baseline; padding: 12px; border-radius: 12px; background: #e3f3ea; color: #1f7a4d"><span style="font-size: 15px; font-weight: 700">Net · 31.2% margin</span><span style="font-size: 20px; font-weight: 700">72,244 SAR</span></div>
+<p style="margin: 0; font-size: 14px; line-height: 20px; color: #5b5f86"><strong style="color: #262a67">Takeaway:</strong> accommodation is 55% of costs. <a href="OrgAccounting.dc.html" style="font-weight: 600">Accounting</a></p>
+</section>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: stretch">
+<section aria-labelledby="pr-h" style="flex: 2 1 520px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px 0 12px; display: flex; flex-direction: column">
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 0 20px 8px"><h2 id="pr-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">Program attach rate &amp; revenue</h2><a href="OrgPrograms.dc.html" style="font-size: 14px; font-weight: 600">Manage programs</a></div>
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 560px; border-collapse: collapse; font-size: 14px">
+<thead><tr style="color: #5b5f86; font-size: 12px"><th scope="col" style="text-align: start; padding: 8px 20px; font-weight: 600">Program</th><th scope="col" style="text-align: start; padding: 8px; font-weight: 600; width: 34%">Attach rate</th><th scope="col" style="text-align: end; padding: 8px; font-weight: 600">Enrolled</th><th scope="col" style="text-align: end; padding: 8px 20px; font-weight: 600">Revenue</th></tr></thead>
+<tbody>
+<sc-for list="{{programs}}" as="p" hint-placeholder-count="7">
+<tr style="border-top: 1px solid #e3dfc9"><td style="padding: 9px 20px"><span style="display: flex; flex-direction: column"><strong>{{p.n}}</strong><span style="font-size: 12px; color: #5b5f86">{{p.m}}</span></span></td><td style="padding: 9px 8px"><span style="display: flex; align-items: center; gap: 8px"><span style="flex: 1 1 auto; height: 8px; border-radius: 999px; background: #f6f3e4; overflow: hidden"><span style="display: block; height: 100%; width: {{p.a}}; background: {{p.c}}"></span></span><strong style="width: 40px; text-align: end">{{p.a}}</strong></span></td><td style="padding: 9px 8px; text-align: end">{{p.e}}</td><td style="padding: 9px 20px; text-align: end; font-weight: 600">{{p.r}}</td></tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+<p style="margin: 0; padding: 10px 20px 0; font-size: 14px; line-height: 20px; color: #5b5f86"><strong style="color: #262a67">Takeaway:</strong> 558 enrollments, 3.3 per traveller, 50,850 SAR. Hegra tour earns the most; balloon has 3 places left (orange = required or capped).</p>
+</section>
+
+<section aria-labelledby="bus-h" style="flex: 1 1 300px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; justify-content: space-between; align-items: center"><h2 id="bus-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">Occupancy by bus</h2><a href="OrgSeatAssign.dc.html" style="font-size: 14px; font-weight: 600">Seats</a></div>
+<div role="img" aria-label="Occupancy by bus: Bus 1 47 of 47, 100 percent; Bus 2 48 of 48, 100 percent; Bus 3 27 of 29, 93 percent; Bus 4 46 of 48, 96 percent" style="display: flex; flex-direction: column; gap: 6px">
+<div style="position: relative; height: 200px; display: flex; align-items: flex-end; gap: 16px; border-bottom: 1px solid #7b7fa6">
+<sc-for list="{{buses}}" as="b" hint-placeholder-count="4">
+<div style="flex: 1 1 0; align-self: stretch; display: flex; flex-direction: column; justify-content: flex-end; align-items: center">
+<span style="font-size: 13px; font-weight: 700; margin-bottom: 4px">{{b.p}}</span>
+<div style="width: 80%; height: {{b.h}}; border-radius: 6px 6px 0 0; background: {{b.c}}"></div>
+</div>
+</sc-for>
+</div>
+<div aria-hidden="true" style="display: flex; gap: 16px"><sc-for list="{{buses}}" as="b" hint-placeholder-count="4"><span style="flex: 1 1 0; display: flex; flex-direction: column; align-items: center; font-size: 12px; line-height: 16px; color: #5b5f86"><strong style="color: #262a67">{{b.n}}</strong>{{b.s}}</span></sc-for></div>
+</div>
+<p style="margin: 0; font-size: 14px; line-height: 20px; color: #5b5f86"><strong style="color: #262a67">Takeaway:</strong> the 4 open seats are on Bus 3 (2) and Bus 4 (2); Bus 1 and 2 are full (orange).</p>
+</section>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px">
+<section aria-labelledby="cu-h" style="background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 10px">
+<h2 id="cu-h" style="margin: 0; font-size: 18px; line-height: 26px; font-weight: 600">Coupon usage</h2>
+<span style="font-size: 14px; color: #5b5f86"><strong style="font-size: 22px; color: #262a67">41</strong> of 74 bookings · 5,010 SAR off</span>
+<div role="img" aria-label="Coupons on this trip: ALULA100 28 uses, AUTUMN15 9 uses, FIRSTSUN 4 uses, no coupon 33 bookings" style="display: flex; height: 14px; border-radius: 4px; overflow: hidden; gap: 2px"><span style="width: 37.8%; background: #262a67"></span><span style="width: 12.2%; background: #ff6c2e"></span><span style="width: 5.4%; background: #f89e23"></span><span style="flex-grow: 1; background: #e3dfc9"></span></div>
+<div style="display: flex; flex-direction: column; gap: 6px; font-size: 13px">
+<span style="display: flex; justify-content: space-between; gap: 8px"><span style="display: inline-flex; align-items: center; gap: 6px"><span style="width: 12px; height: 12px; border-radius: 3px; background: #262a67"></span>ALULA100</span><span>28 · 2,800 SAR</span></span>
+<span style="display: flex; justify-content: space-between; gap: 8px"><span style="display: inline-flex; align-items: center; gap: 6px"><span style="width: 12px; height: 12px; border-radius: 3px; background: #ff6c2e"></span>AUTUMN15</span><span>9 · 1,690 SAR</span></span>
+<span style="display: flex; justify-content: space-between; gap: 8px"><span style="display: inline-flex; align-items: center; gap: 6px"><span style="width: 12px; height: 12px; border-radius: 3px; background: #f89e23"></span>FIRSTSUN</span><span>4 · 520 SAR</span></span>
+<span style="display: flex; justify-content: space-between; gap: 8px"><span style="display: inline-flex; align-items: center; gap: 6px"><span style="width: 12px; height: 12px; border-radius: 3px; background: #e3dfc9"></span>No coupon</span><span>33</span></span>
+</div>
+<p style="margin: 0; font-size: 14px; line-height: 20px; color: #5b5f86"><strong style="color: #262a67">Takeaway:</strong> discounts cost 2.2% of revenue.</p>
+</section>
+
+<section aria-labelledby="src-h" style="background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 10px">
+<h2 id="src-h" style="margin: 0; font-size: 18px; line-height: 26px; font-weight: 600">Booking sources</h2>
+<sc-for list="{{sources}}" as="s" hint-placeholder-count="5">
+<div style="display: flex; flex-direction: column; gap: 3px; font-size: 13px">
+<span style="display: flex; justify-content: space-between; gap: 8px"><span>{{s.n}}</span><strong>{{s.v}}</strong></span>
+<span style="height: 8px; border-radius: 999px; background: #f6f3e4; display: block; overflow: hidden"><span style="display: block; height: 100%; width: {{s.p}}; background: #262a67"></span></span>
+</div>
+</sc-for>
+<p style="margin: 0; font-size: 14px; line-height: 20px; color: #5b5f86"><strong style="color: #262a67">Takeaway:</strong> 27% came from the marketplace. <a href="OrgPageAnalytics.dc.html" style="font-weight: 600">Full funnel</a></p>
+</section>
+
+<section aria-labelledby="pn-h" style="background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; flex-direction: column"><h2 id="pn-h" style="margin: 0; font-size: 18px; line-height: 26px; font-weight: 600">Check-in punctuality</h2><span style="font-size: 13px; color: #5b5f86">Previous departure · Thu 18 Sep</span></div>
+<span style="font-size: 14px; color: #5b5f86"><strong style="font-size: 22px; color: #262a67">95%</strong> boarded on time · avg delay 6 min</span>
+<sc-for list="{{punct}}" as="b" hint-placeholder-count="4">
+<div style="display: grid; grid-template-columns: 44px minmax(0, 1fr) 40px; gap: 8px; align-items: center; font-size: 13px">
+<span style="font-weight: 600">{{b.n}}</span>
+<span style="position: relative; height: 10px; border-radius: 999px; background: #f6f3e4; overflow: hidden"><span style="display: block; height: 100%; width: {{b.p}}; background: {{b.c}}"></span></span>
+<strong style="text-align: end">{{b.p}}</strong>
+</div>
+</sc-for>
+<p style="margin: 0; font-size: 14px; line-height: 20px; color: #5b5f86"><strong style="color: #262a67">Takeaway:</strong> Bus 3 and Bus 4 are below the 95% target (amber).</p>
+</section>
+
+<section aria-labelledby="rt-h" style="background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 8px">
+<div style="display: flex; justify-content: space-between; align-items: center"><h2 id="rt-h" style="margin: 0; font-size: 18px; line-height: 26px; font-weight: 600">Ratings</h2><a href="OrgReviews.dc.html" style="font-size: 14px; font-weight: 600">Reviews</a></div>
+<span style="font-size: 14px; color: #5b5f86"><strong style="font-size: 22px; color: #262a67">4.8★</strong> from 112 reviews</span>
+<div role="img" aria-label="Star breakdown: 5 stars 82, 4 stars 22, 3 stars 6, 2 stars 1, 1 star 1" style="display: flex; flex-direction: column; gap: 4px">
+<sc-for list="{{stars}}" as="s" hint-placeholder-count="5">
+<div style="display: grid; grid-template-columns: 24px minmax(0, 1fr) 24px; gap: 8px; align-items: center; font-size: 12px"><span>{{s.n}}★</span><span style="height: 8px; border-radius: 999px; background: #f6f3e4; overflow: hidden"><span style="display: block; height: 100%; width: {{s.p}}; background: #f89e23"></span></span><span style="text-align: end">{{s.v}}</span></div>
+</sc-for>
+</div>
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4px 12px; font-size: 13px; color: #5b5f86"><span>Guide <strong style="color: #262a67">4.9</strong></span><span>Programs <strong style="color: #262a67">4.8</strong></span><span>Bus comfort <strong style="color: #262a67">4.6</strong></span><span>Value <strong style="color: #262a67">4.5</strong></span></div>
+<p style="margin: 0; font-size: 14px; line-height: 20px; color: #5b5f86"><strong style="color: #262a67">Takeaway:</strong> value is the lowest score.</p>
+</section>
+</div>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1500}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const ACTIVE = 1;
+    const tabs = [['Company', 'OrgAnalytics.dc.html', false], ['Trip', 'OrgTripAnalytics.dc.html', false], ['Pages & funnel', 'OrgPageAnalytics.dc.html', true], ['Customers', 'OrgCustomerAnalytics.dc.html', true], ['Drivers & photographers', 'OrgProviderAnalytics.dc.html', true]].map(([l, href, ent], i) => ({
+      l, href, ent, cur: i === ACTIVE ? 'page' : 'false',
+      style: 'height: 40px; padding: 0 14px; border-radius: 10px; display: inline-flex; align-items: center; gap: 6px; font-size: 15px; font-weight: 600; text-decoration: none; white-space: nowrap; ' + (i === ACTIVE ? 'background: #262a67; color: #f6f3e4;' : 'color: #5b5f86;')
+    }));
+    const kpis = [
+      { l: 'Seats sold', v: '168', u: 'of 172', d: '98% full · 4 seats left', dc: '#8a4b00' },
+      { l: 'Revenue', v: '231,240', u: 'SAR', d: '180,390 seats + 50,850 programs', dc: '#5b5f86' },
+      { l: 'Bookings', v: '74', u: '', d: 'avg 3,125 SAR · 2.3 seats each', dc: '#5b5f86' },
+      { l: 'Programs per traveller', v: '3.3', u: '', d: '▲ 0.4 vs 18 Sep departure', dc: '#1f7a4d' },
+      { l: 'Projected margin', v: '31.2%', u: '', d: '72,244 SAR net', dc: '#1f7a4d' }
+    ];
+    const line = 'display: flex; justify-content: space-between; gap: 12px; padding: 6px 0; border-top: 1px solid #e3dfc9;';
+    const pl = [
+      ['Ticket revenue', '180,390', 0], ['Programs revenue', '50,850', 0], ['Accommodation · 84 rooms × 2 nights', '−87,360', 1], ['Program suppliers', '−31,200', 1],
+      ['Own buses & drivers · 3 buses', '−12,600', 1], ['Bus 4 · Khalid Al-Harbi (pending)', '−1,450', 1], ['Photographer · Noura Al-Shehri', '−2,800', 1],
+      ['Platform commission 8%', '−18,499', 1], ['Gateway fees 2.2%', '−5,087', 1]
+    ].map(([l, v, cost], i) => ({ l, v: v + ' SAR', rs: i === 0 ? line.replace('border-top: 1px solid #e3dfc9;', '') : line, vs: cost ? 'color: #5b5f86;' : 'font-weight: 700;' }));
+    const programs = [
+      { n: 'Travel insurance', m: 'Required · 25 SAR per person', a: '100%', e: '168 people', r: '4,200 SAR', c: '#ff6c2e' },
+      { n: 'Old Town walk', m: 'Free', a: '78%', e: '131 people', r: '0 SAR', c: '#262a67' },
+      { n: 'Hegra guided tour', m: 'Per person · 180 SAR', a: '67%', e: '112 people', r: '20,160 SAR', c: '#262a67' },
+      { n: 'Elephant Rock dinner', m: 'Tiered · 90 / 150 / 240 SAR', a: '56%', e: '94 people', r: '13,860 SAR', c: '#262a67' },
+      { n: 'Desert camp kit', m: 'By quantity · 60 SAR each', a: '30%', e: '38 kits · 22 bookings', r: '2,280 SAR', c: '#262a67' },
+      { n: 'Group photo package', m: 'Per group · 300 SAR', a: '8%', e: '6 groups', r: '1,800 SAR', c: '#262a67' },
+      { n: 'Hot-air balloon', m: 'VIP only · 950 SAR · 12 places', a: '75%', e: '9 of 12 places', r: '8,550 SAR', c: '#ff6c2e' }
+    ];
+    const buses = [['Bus 1', 47, 47], ['Bus 2', 48, 48], ['Bus 3', 27, 29], ['Bus 4', 46, 48]].map(([n, b, c]) => {
+      const pct = Math.round(b / c * 100);
+      return { n, s: b + ' / ' + c, p: pct + '%', h: (pct * 0.85).toFixed(1) + '%', c: pct === 100 ? '#ff6c2e' : '#262a67' };
+    });
+    const sources = [
+      { n: 'Trip page · direct', v: '28 · 38%', p: '38%' },
+      { n: 'Trips Enjoy marketplace', v: '20 · 27%', p: '27%' },
+      { n: 'Instagram', v: '10 · 14%', p: '14%' },
+      { n: 'WhatsApp campaign', v: '9 · 12%', p: '12%' },
+      { n: 'Corporate leads', v: '7 · 9%', p: '9%' }
+    ];
+    const punct = [['Bus 1', 96], ['Bus 2', 98], ['Bus 3', 91], ['Bus 4', 94]].map(([n, p]) => ({ n, p: p + '%', c: p < 95 ? '#f89e23' : '#262a67' }));
+    const stars = [[5, 82], [4, 22], [3, 6], [2, 1], [1, 1]].map(([n, v]) => ({ n, v, p: (v / 82 * 100).toFixed(0) + '%' }));
+    return { tabs, kpis, pl, programs, buses, sources, punct, stars };
+  }
+}
+</script>
+</body>
+</html>

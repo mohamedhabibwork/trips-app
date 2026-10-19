@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Console sign in</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; background: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24px">
+<div style="display: flex; align-items: center; gap: 12px">
+<img src="../assets/6ea846350ba3adc0e289d47fa0612c3b.svg" alt="Trips Enjoy" style="height: 48px; width: auto">
+<span style="padding: 4px 10px; border-radius: 999px; background: #31367a; font-size: 13px; font-weight: 600; color: #b8bad6">Admin</span>
+</div>
+<div style="width: 440px; box-sizing: border-box; background: #ffffff; color: #262a67; border-radius: 20px; padding: 32px; display: flex; flex-direction: column; gap: 18px; box-shadow: 0 8px 30px rgba(0,0,0,.4)">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 13px; font-weight: 600; color: #5b5f86">admin.trips-enjoy.com</span>
+<h1 style="margin: 0; font-size: 24px; line-height: 32px; font-weight: 600">Admin console sign in</h1>
+<p style="margin: 0; font-size: 14px; color: #5b5f86">Trips Enjoy staff only. Organizations sign in at <a href="OrgLogin.dc.html" style="font-weight: 600">business.trips-enjoy.com</a>.</p>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="ae" style="font-size: 14px; font-weight: 600">Work email</label><input id="ae" type="email" autocomplete="username" value="ops@trips-enjoy.com" style="height: 48px; padding: 0 14px; border-radius: 8px; border: 1px solid #7b7fa6; font-family: inherit; font-size: 16px; color: #262a67"></div>
+<div style="display: flex; flex-direction: column; gap: 4px">
+<dc-import name="PasswordField" label="Password" value="Ops-Console-2026" field-id="dl-pass" hint-size="100%,82px"></dc-import>
+<a href="DashForgot.dc.html" style="align-self: flex-end; font-size: 14px; font-weight: 600; padding: 8px 0">Forgot password?</a>
+</div>
+<a href="Dash2fa.dc.html" style="height: 48px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 16px; font-weight: 600; display: flex; align-items: center; justify-content: center; text-decoration: none">Continue</a>
+<button style="height: 48px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-family: inherit; font-size: 15px; font-weight: 600">Sign in with Trips Enjoy Google Workspace</button>
+<p style="margin: 0; font-size: 13px; line-height: 18px; color: #5b5f86">Access is logged. Accounts lock after 5 failed attempts. <a href="DashLocked.dc.html" style="font-weight: 600">Locked out?</a></p>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

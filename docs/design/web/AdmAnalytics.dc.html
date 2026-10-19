@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Admin · Platform analytics</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+.te-row:hover{background:#f6f3e4}
+</style>
+</helmet>
+<div style="min-height: 1000px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="AdmNav" active="Analytics" hint-size="248px,1000px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 20px">
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; color: #5b5f86">Marketplace, subscriptions and users · SAR, VAT exclusive · updated today 09:00</span><h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Analytics</h1></div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center">
+<label for="an-range" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Date range</label>
+<select id="an-range" style="height: 48px; border-radius: 12px; border: 1px solid #7b7fa6; background: #fff; padding: 0 14px; font: inherit; font-size: 15px; font-weight: 600; color: #262a67"><option>Last 12 months · Nov 2025 – Oct 2026</option><option>October to date</option><option>Last 30 days</option><option>This quarter</option><option>Year to date</option><option>Custom range…</option></select>
+<button type="button" style="height: 48px; padding: 0 20px; border-radius: 12px; border: 0; background: #ff6c2e; color: #262a67; font: inherit; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12M7 11l5 5 5-5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"></path></svg>Export CSV</button>
+</div>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; border-bottom: 1px solid #e3dfc9">
+<nav aria-label="Analytics sections" style="display: flex; flex-wrap: wrap; gap: 4px">
+<sc-for list="{{tabs}}" as="t" hint-placeholder-count="5"><a href="{{t.href}}" aria-current="{{t.cur}}" style="{{t.st}}">{{t.l}}</a></sc-for>
+</nav>
+<div role="group" aria-label="Country" style="display: flex; flex-wrap: wrap; gap: 4px; padding: 4px; margin-bottom: 8px; background: #ffffff; border-radius: 999px">
+<sc-for list="{{countries}}" as="c" hint-placeholder-count="4"><button type="button" aria-pressed="{{c.p}}" onClick="{{c.on}}" style="{{c.st}}">{{c.l}}</button></sc-for>
+</div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px">
+<sc-for list="{{kpis}}" as="k" hint-placeholder-count="6">
+<div style="padding: 14px 18px; border-radius: 16px; background: #ffffff; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 13px; color: #5b5f86">{{k.l}}</span><span style="font-size: 24px; font-weight: 700">{{k.v}} <span style="font-size: 14px; font-weight: 500; color: #5b5f86">{{k.u}}</span></span><span style="{{k.ds}}">{{k.d}}</span></div>
+</sc-for>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: stretch">
+<section aria-labelledby="gmv-h" style="flex: 3 1 520px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px"><h2 id="gmv-h" style="margin: 0; font-size: 18px; font-weight: 600">GMV by month</h2>
+<span style="display: flex; flex-wrap: wrap; gap: 14px; font-size: 13px; color: #5b5f86"><span style="display: inline-flex; align-items: center; gap: 6px"><span style="width: 14px; height: 3px; border-radius: 2px; background: #262a67"></span>Nov 2025 – Oct 2026</span><span style="display: inline-flex; align-items: center; gap: 6px"><span style="width: 14px; height: 3px; border-radius: 2px; background: #8a8fc4"></span>Previous 12 months</span><span style="display: inline-flex; align-items: center; gap: 6px"><span style="width: 14px; height: 0; border-top: 3px dashed #ff6c2e"></span>October projected</span></span></div>
+<svg viewBox="0 0 660 226" role="img" aria-label="Monthly GMV in millions of SAR. November 2025 24.1, peaking at 31.8 in December, dipping to 19.6 in July, then 31.2 in September and October projected at 39.0. Every month is above the same month last year." style="width: 100%; height: auto; display: block; font-family: Outfit, sans-serif">
+<g stroke="#e3dfc9" stroke-width="1"><line x1="48" y1="10" x2="640" y2="10"></line><line x1="48" y1="55" x2="640" y2="55"></line><line x1="48" y1="100" x2="640" y2="100"></line><line x1="48" y1="145" x2="640" y2="145"></line><line x1="48" y1="190" x2="640" y2="190"></line></g>
+<g fill="#5b5f86" font-size="12" text-anchor="end"><text x="38" y="14">40M</text><text x="38" y="59">30M</text><text x="38" y="104">20M</text><text x="38" y="149">10M</text><text x="38" y="194">0</text></g>
+<g fill="#5b5f86" font-size="12" text-anchor="middle"><text x="48" y="214">Nov</text><text x="100.7" y="214">Dec</text><text x="153.5" y="214">Jan</text><text x="206.2" y="214">Feb</text><text x="258.9" y="214">Mar</text><text x="311.6" y="214">Apr</text><text x="364.4" y="214">May</text><text x="417.1" y="214">Jun</text><text x="469.8" y="214">Jul</text><text x="522.5" y="214">Aug</text><text x="575.3" y="214">Sep</text><text x="628" y="214">Oct</text></g>
+<path d="{{gmv.area}}" fill="#262a67" fill-opacity="0.06" stroke="none"></path>
+<path d="{{gmv.prev}}" fill="none" stroke="#8a8fc4" stroke-width="2.5" stroke-linejoin="round"></path>
+<path d="{{gmv.cur}}" fill="none" stroke="#262a67" stroke-width="3" stroke-linejoin="round"></path>
+<path d="{{gmv.proj}}" fill="none" stroke="#ff6c2e" stroke-width="3" stroke-dasharray="6 5"></path>
+<circle cx="{{gmv.sx}}" cy="{{gmv.sy}}" r="4.5" fill="#262a67"></circle>
+<circle cx="{{gmv.px}}" cy="{{gmv.py}}" r="5.5" fill="#ff6c2e" stroke="#ffffff" stroke-width="2"></circle>
+<text x="618" y="20" font-size="12" font-weight="600" fill="#c93a00" text-anchor="end">39.0M projected</text>
+</svg>
+<p style="margin: 0; font-size: 14px; line-height: 20px"><span style="font-weight: 600">Takeaway:</span> GMV is up 43% on the previous 12 months (323.8M vs 226.4M SAR); October is on track for a record month.</p>
+</section>
+
+<section aria-labelledby="cty-h" style="flex: 2 1 320px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px"><h2 id="cty-h" style="margin: 0; font-size: 18px; font-weight: 600">Bookings by country</h2><span style="font-size: 13px; color: #5b5f86">October to date · 31,460</span></div>
+<sc-for list="{{byCountry}}" as="b" hint-placeholder-count="3">
+<div style="{{b.wrap}}">
+<div style="display: flex; justify-content: space-between; gap: 8px; font-size: 15px"><span style="font-weight: 600">{{b.c}}</span><span>{{b.n}} <span style="color: #5b5f86; font-size: 13px">· {{b.p}}%</span></span></div>
+<div role="img" aria-label="{{b.aria}}" style="height: 14px; border-radius: 999px; background: #f6f3e4; overflow: hidden"><div style="{{b.bar}}"></div></div>
+<span style="font-size: 13px; color: #5b5f86">{{b.sub}}</span>
+</div>
+</sc-for>
+<p style="margin: auto 0 0; font-size: 14px; line-height: 20px"><span style="font-weight: 600">Takeaway:</span> Egypt has the smallest basket (424 SAR) but grew fastest, +38% bookings vs September.</p>
+</section>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: stretch">
+<section aria-labelledby="role-h" style="flex: 3 1 520px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px"><h2 id="role-h" style="margin: 0; font-size: 18px; font-weight: 600">Active users by role</h2>
+<span style="display: flex; flex-wrap: wrap; gap: 14px; font-size: 13px; color: #5b5f86"><span style="display: inline-flex; align-items: center; gap: 6px"><span style="width: 10px; height: 10px; border-radius: 3px; background: #262a67"></span>Daily active</span><span style="display: inline-flex; align-items: center; gap: 6px"><span style="width: 10px; height: 10px; border-radius: 3px; background: #ff6c2e"></span>Monthly, not daily</span><span style="display: inline-flex; align-items: center; gap: 6px"><span style="width: 10px; height: 10px; border-radius: 3px; background: #8a8fc4"></span>Inactive 30 days+</span></span></div>
+<sc-for list="{{roles}}" as="r" hint-placeholder-count="4">
+<div style="display: grid; grid-template-columns: minmax(120px, 1.1fr) minmax(0, 3fr) 92px; gap: 12px; align-items: center">
+<span style="display: flex; flex-direction: column"><span style="font-size: 15px; font-weight: 600">{{r.r}}</span><span style="font-size: 13px; color: #5b5f86">{{r.reg}}</span></span>
+<div role="img" aria-label="{{r.aria}}" style="display: flex; height: 22px; border-radius: 8px; overflow: hidden; gap: 2px"><div style="{{r.a}}"></div><div style="{{r.b}}"></div><div style="{{r.c}}"></div></div>
+<span style="display: flex; flex-direction: column; text-align: end"><span style="font-size: 15px; font-weight: 700">{{r.ratio}}</span><span style="font-size: 12px; color: #5b5f86">DAU / MAU</span></span>
+</div>
+</sc-for>
+<p style="margin: 0; font-size: 14px; line-height: 20px"><span style="font-weight: 600">Takeaway:</span> Organizations use the console almost daily (81% DAU/MAU); 38% of travellers have not opened the app in 30 days.</p>
+</section>
+
+<section aria-labelledby="mrr-h" style="flex: 2 1 320px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px"><h2 id="mrr-h" style="margin: 0; font-size: 18px; font-weight: 600">MRR and subscriptions by role</h2><a href="AdmRevenue.dc.html" style="font-size: 14px; font-weight: 600">Revenue</a></div>
+<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center">
+<svg viewBox="0 0 160 160" width="148" height="148" role="img" aria-label="MRR 1.42 million SAR: organizations 52%, platform drivers 21%, travellers 19%, photographers 8%" style="flex-shrink: 0; font-family: Outfit, sans-serif">
+<g transform="rotate(-90 80 80)">
+<circle cx="80" cy="80" r="60" fill="none" stroke="#f6f3e4" stroke-width="22"></circle>
+<circle cx="80" cy="80" r="60" fill="none" stroke="#262a67" stroke-width="22" stroke-dasharray="{{d0.da}}" stroke-dashoffset="{{d0.off}}"></circle>
+<circle cx="80" cy="80" r="60" fill="none" stroke="#ff6c2e" stroke-width="22" stroke-dasharray="{{d1.da}}" stroke-dashoffset="{{d1.off}}"></circle>
+<circle cx="80" cy="80" r="60" fill="none" stroke="#f89e23" stroke-width="22" stroke-dasharray="{{d2.da}}" stroke-dashoffset="{{d2.off}}"></circle>
+<circle cx="80" cy="80" r="60" fill="none" stroke="#8a8fc4" stroke-width="22" stroke-dasharray="{{d3.da}}" stroke-dashoffset="{{d3.off}}"></circle>
+</g>
+<text x="80" y="78" text-anchor="middle" font-size="20" font-weight="700" fill="#262a67">1.42M</text>
+<text x="80" y="96" text-anchor="middle" font-size="12" fill="#5b5f86">SAR MRR</text>
+</svg>
+<div style="flex: 1 1 160px; display: flex; flex-direction: column; gap: 8px">
+<sc-for list="{{mrr}}" as="m" hint-placeholder-count="4">
+<div style="display: grid; grid-template-columns: 12px minmax(0, 1fr) auto; gap: 8px; align-items: center; font-size: 14px"><span style="{{m.dot}}"></span><span style="display: flex; flex-direction: column"><span style="font-weight: 600">{{m.r}}</span><span style="font-size: 12px; color: #5b5f86">{{m.subs}}</span></span><span style="font-weight: 600">{{m.v}}</span></div>
+</sc-for>
+</div>
+</div>
+<p style="margin: auto 0 0; font-size: 14px; line-height: 20px"><span style="font-weight: 600">Takeaway:</span> 11,419 paid subscriptions; organizations are 3% of them but 52% of MRR.</p>
+</section>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: stretch">
+<section aria-labelledby="conv-h" style="flex: 1 1 420px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px"><h2 id="conv-h" style="margin: 0; font-size: 18px; font-weight: 600">Traveller conversion · Free to paid</h2><span style="font-size: 13px; color: #5b5f86">All registered travellers</span></div>
+<sc-for list="{{funnel}}" as="f" hint-placeholder-count="4">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<div style="display: flex; justify-content: space-between; gap: 8px; font-size: 14px"><span style="font-weight: 600">{{f.l}}</span><span>{{f.n}} <span style="color: #5b5f86">· {{f.p}}</span></span></div>
+<div role="img" aria-label="{{f.aria}}" style="height: 18px; border-radius: 6px; background: #f6f3e4; overflow: hidden"><div style="{{f.bar}}"></div></div>
+</div>
+</sc-for>
+<p style="margin: 0; font-size: 13px; color: #5b5f86">Paid today: Explorer 7,640 · VIP 2,240 · October upgrades: 412 Free to Explorer, 96 Explorer to VIP</p>
+<p style="margin: 0; font-size: 14px; line-height: 20px"><span style="font-weight: 600">Takeaway:</span> Child tracking is the reason given for 38% of upgrades; parents convert at 46%, other travellers at 14%.</p>
+</section>
+
+<section aria-labelledby="sd-h" style="flex: 1 1 420px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px"><h2 id="sd-h" style="margin: 0; font-size: 18px; font-weight: 600">Supply vs demand health</h2><a href="AdmProviderAnalytics.dc.html" style="font-size: 14px; font-weight: 600">Provider analytics</a></div>
+<sc-for list="{{health}}" as="h" hint-placeholder-count="4">
+<div style="display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; align-items: center; padding-top: 10px; border-top: 1px solid #e3dfc9">
+<span style="font-size: 15px; font-weight: 600">{{h.t}}</span><span style="{{h.ss}}">{{h.s}}</span>
+<span style="grid-column: 1 / -1; font-size: 13px; color: #5b5f86">{{h.d}}</span>
+</div>
+</sc-for>
+<p style="margin: 0; font-size: 14px; line-height: 20px"><span style="font-weight: 600">Takeaway:</span> Weekend driver supply is the bottleneck; 61 trips waited over 48 h for a platform driver in October.</p>
+</section>
+</div>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1440}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { country: 'All countries' }; }
+  renderVals() {
+    const pill = (tone) => 'display: inline-flex; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; white-space: nowrap; ' + ({ ok: 'background: #e3f3ea; color: #1f7a4d;', warn: 'background: #fdf0d5; color: #8a4b00;', bad: 'background: #fde8e6; color: #b42318;', info: 'background: #e6e8f5; color: #262a67;', live: 'background: #ffe7dc; color: #c93a00;' })[tone];
+    const TABS = [['Platform', 'AdmAnalytics.dc.html'], ['Companies', 'AdmCompanyAnalytics.dc.html'], ['Trips', 'AdmTripAnalytics.dc.html'], ['Pages & app', 'AdmPageAnalytics.dc.html'], ['Providers', 'AdmProviderAnalytics.dc.html']];
+    const tabs = TABS.map(([l, href]) => { const on = l === 'Platform'; return { l, href, cur: on ? 'page' : 'false', st: 'display: flex; align-items: center; height: 44px; padding: 0 14px; font-size: 15px; text-decoration: none; margin-bottom: -1px; border-bottom: 3px solid ' + (on ? '#ff6c2e; font-weight: 700; color: #262a67;' : 'transparent; font-weight: 500; color: #5b5f86;') }; });
+    const country = this.state.country;
+    const countries = ['All countries', 'Saudi Arabia', 'UAE', 'Egypt'].map((l) => ({ l, p: l === country ? 'true' : 'false', on: () => this.setState({ country: l }),
+      st: 'height: 40px; padding: 0 14px; border-radius: 999px; border: 0; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; ' + (l === country ? 'background: #262a67; color: #f6f3e4;' : 'background: transparent; color: #262a67;') }));
+    const up = 'font-size: 13px; font-weight: 600; color: #1f7a4d';
+    const mut = 'font-size: 13px; color: #5b5f86';
+    const K = {
+      'All countries': [['18.6M', '▲ 14% vs Sep same day'], ['6.3%', '1.18M SAR commission'], ['31,460', '▲ 9% vs Sep same day'], ['31,580', 'DAU / MAU 20%'], ['1.42M', '▲ 6.8% vs September'], ['20.5%', '▲ 1.1 pts vs September']],
+      'Saudi Arabia': [['13.9M', '▲ 12% vs Sep same day'], ['6.4%', '890K SAR commission'], ['22,650', '▲ 7% vs Sep same day'], ['22,100', 'DAU / MAU 21%'], ['1.02M', '▲ 6.1% vs September'], ['21.8%', '▲ 1.0 pts vs September']],
+      'UAE': [['3.5M', '▲ 16% vs Sep same day'], ['6.1%', '214K SAR commission'], ['5,980', '▲ 11% vs Sep same day'], ['6,320', 'DAU / MAU 19%'], ['0.27M', '▲ 8.4% vs September'], ['22.4%', '▲ 1.6 pts vs September']],
+      'Egypt': [['1.2M', '▲ 31% vs Sep same day'], ['5.6%', '67K SAR commission'], ['2,830', '▲ 38% vs Sep same day'], ['3,160', 'DAU / MAU 16%'], ['0.13M', '▲ 9.2% vs September'], ['12.1%', '▲ 0.8 pts vs September']]
+    }[country];
+    const L = [['GMV (Oct to date)', 'SAR', up], ['Take rate', '', mut], ['Bookings (Oct to date)', '', up], ['Monthly active users', '', mut], ['MRR', 'SAR', up], ['Traveller Free → paid', '', up]];
+    const kpis = L.map((x, i) => ({ l: x[0], u: x[1], ds: x[2], v: K[i][0], d: K[i][1] }));
+
+    const cur = [24.1, 31.8, 29.4, 27.2, 22.0, 30.5, 26.8, 21.3, 19.6, 20.9, 31.2, 39.0];
+    const prev = [16.2, 22.4, 20.1, 19.0, 15.8, 21.7, 18.9, 14.6, 13.2, 14.8, 22.1, 27.6];
+    const X = (i) => 48 + i * 580 / 11; const Y = (v) => 190 - v / 40 * 180;
+    const pts = (a) => a.map((v, i) => (i ? 'L' : 'M') + X(i).toFixed(1) + ' ' + Y(v).toFixed(1)).join(' ');
+    const c11 = cur.slice(0, 11);
+    const gmv = { cur: pts(c11), prev: pts(prev), proj: 'M' + X(10).toFixed(1) + ' ' + Y(cur[10]).toFixed(1) + ' L' + X(11).toFixed(1) + ' ' + Y(cur[11]).toFixed(1),
+      area: pts(c11) + ' L' + X(10).toFixed(1) + ' 190 L48 190 Z', sx: X(10).toFixed(1), sy: Y(cur[10]).toFixed(1), px: X(11).toFixed(1), py: Y(cur[11]).toFixed(1) };
+
+    const BC = [['Saudi Arabia', 22650, 72, '13.9M SAR GMV · avg booking 614 SAR'], ['UAE', 5980, 19, '3.5M SAR GMV · avg booking 585 SAR'], ['Egypt', 2830, 9, '1.2M SAR GMV · avg booking 424 SAR']];
+    const byCountry = BC.map((b) => { const dim = country !== 'All countries' && country !== b[0];
+      return { c: b[0], n: b[1].toLocaleString('en-US'), p: b[2], sub: b[3], aria: b[0] + ': ' + b[1].toLocaleString('en-US') + ' bookings, ' + b[2] + '% of total',
+        wrap: 'display: flex; flex-direction: column; gap: 4px; opacity: ' + (dim ? '0.45' : '1') + ';',
+        bar: 'height: 100%; border-radius: 999px; width: ' + Math.round(b[2] / 72 * 100) + '%; background: ' + (b[0] === country ? '#ff6c2e' : '#262a67') + ';' }; });
+
+    const seg = (p, c) => 'width: ' + p + '%; background: ' + c + ';';
+    const R = [['Travellers', '48,200 registered', 11, 51, 38, '18%', '5,420 daily, 29,900 monthly'], ['Organizations', '312 accounts', 77, 18, 5, '81%', '241 daily, 296 monthly'], ['Platform drivers', '1,140 accounts', 54, 32, 14, '62%', '612 daily, 980 monthly'], ['Photographers', '486 accounts', 39, 44, 17, '47%', '188 daily, 401 monthly']];
+    const roles = R.map((r) => ({ r: r[0], reg: r[1], ratio: r[5], a: seg(r[2], '#262a67'), b: seg(r[3], '#ff6c2e'), c: seg(r[4], '#8a8fc4'),
+      aria: r[0] + ': ' + r[6] + '; ' + r[2] + '% daily active, ' + r[3] + '% monthly not daily, ' + r[4] + '% inactive' }));
+
+    const C = 2 * Math.PI * 60; let acc = 0;
+    const M = [['Organizations', '742K SAR', 52, '297 subscriptions', '#262a67'], ['Platform drivers', '298K SAR', 21, '904 subscriptions', '#ff6c2e'], ['Travellers', '266K SAR', 19, '9,880 subscriptions', '#f89e23'], ['Photographers', '114K SAR', 8, '338 subscriptions', '#8a8fc4']];
+    const mrr = M.map((m) => { const len = C * m[2] / 100; const o = { r: m[0], v: m[1], subs: m[3] + ' · ' + m[2] + '%', col: m[4], da: (len - 1.5).toFixed(1) + ' ' + (C - len + 1.5).toFixed(1), off: (-acc).toFixed(1), dot: 'width: 12px; height: 12px; border-radius: 4px; background: ' + m[4] + ';' }; acc += len; return o; });
+
+    const F = [['Registered travellers', '48,200', 100, '100%'], ['Booked at least one trip', '31,800', 66, '66%'], ['Viewed Explorer or VIP plans', '17,900', 37, '37%'], ['On a paid plan', '9,880', 20.5, '20.5%']];
+    const funnel = F.map((f, i) => ({ l: f[0], n: f[1], p: f[3], aria: f[0] + ': ' + f[1] + ', ' + f[3], bar: 'height: 100%; border-radius: 6px; width: ' + f[2] + '%; background: ' + (i === 3 ? '#ff6c2e' : '#262a67') + ';' }));
+
+    const health = [
+      { t: 'Platform drivers · weekends', d: '1.34 requests per available driver · Riyadh and Jeddah tightest', s: 'Tight', tone: 'warn' },
+      { t: 'Platform drivers · weekdays', d: '0.71 requests per available driver', s: 'Healthy', tone: 'ok' },
+      { t: 'Photographers', d: '0.62 requests per available photographer · 41% utilization', s: 'Surplus', tone: 'info' },
+      { t: 'Seats listed vs sold', d: '214,600 listed · 167,400 sold · sell-through 78%', s: 'Healthy', tone: 'ok' }
+    ].map((x) => ({ ...x, ss: pill(x.tone) }));
+    return { tabs, countries, kpis, gmv, byCountry, roles, mrr, d0: mrr[0], d1: mrr[1], d2: mrr[2], d3: mrr[3], funnel, health };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Org · Child-safety reports</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+.te-row:hover{background:#f6f3e4}
+</style>
+</helmet>
+<div style="min-height: 1000px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="OrgNav" active="Live operations" hint-size="248px,1000px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 24px">
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<a href="OrgTripLive.dc.html" style="display: inline-flex; align-items: center; gap: 4px; font-size: 14px; font-weight: 600; text-decoration: none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg>Live operations</a>
+<h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Child-safety reports</h1>
+<span style="font-size: 15px; color: #5b5f86">Concerns about a child on a trip, from parents, moderators or your team. Visible to people with the Tracking permission.</span>
+</div>
+</div>
+
+<sc-if value="{{hasContact}}" hint-placeholder-val="{{true}}">
+<section aria-labelledby="ct-h" style="background: #262a67; color: #f6f3e4; border-radius: 20px; padding: 20px 24px; display: flex; flex-wrap: wrap; gap: 20px 32px; align-items: center">
+<div style="display: flex; align-items: center; gap: 12px"><span style="width: 44px; height: 44px; border-radius: 999px; background: #31367a; display: flex; align-items: center; justify-content: center; color: #ff8655"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5.5c0 4.4-3 8-7 9.5-4-1.5-7-5.1-7-9.5V6zM9 12l2 2 4-4"></path></svg></span><h2 id="ct-h" style="margin: 0; font-size: 18px; font-weight: 600">Reports go to</h2></div>
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 13px; color: #b8bad6">Your safety lead</span><span style="font-size: 16px; font-weight: 600">Yousef Amin · Operations</span><span style="font-size: 14px; color: #b8bad6">+966 55 ••• 3307</span></div>
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 13px; color: #b8bad6">Platform 24/7 safety hotline</span><span style="font-size: 16px; font-weight: 600">[hotline number]</span><span style="font-size: 14px; color: #b8bad6">Set by Trips Enjoy Operations before launch</span></div>
+<a href="OrgSettings.dc.html" style="margin-inline-start: auto; font-size: 14px; font-weight: 600; color: #ff8655">Change contact</a>
+</section>
+</sc-if>
+<sc-if value="{{noContact}}" hint-placeholder-val="{{false}}">
+<div role="alert" style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; padding: 16px 20px; border-radius: 20px; background: #fdf0d5; color: #8a4b00">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9.5 17h-19zM12 10v4M12 17h.01"></path></svg>
+<span style="flex: 1 1 360px; font-size: 15px; line-height: 22px; color: #262a67"><strong style="color: #8a4b00">No safety lead is set.</strong> Reports are still saved and go straight to the Trips Enjoy safety queue. Add a safety lead so your own team hears about them first.</span>
+<a href="OrgSettings.dc.html" style="height: 44px; padding: 0 18px; border-radius: 12px; background: #262a67; color: #f6f3e4; font-size: 15px; font-weight: 600; display: flex; align-items: center; text-decoration: none">Add safety lead</a>
+</div>
+</sc-if>
+
+<div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start">
+<section aria-labelledby="cs-h" style="flex: 3 1 520px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px 0 8px">
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 0 20px 12px; gap: 12px; flex-wrap: wrap"><h2 id="cs-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">Cases</h2><span style="font-size: 13px; color: #5b5f86">{{openCount}} open · kept on record</span></div>
+<sc-if value="{{justSent}}" hint-placeholder-val="{{false}}">
+<div role="status" style="margin: 0 20px 12px; display: flex; gap: 10px; padding: 12px 14px; border-radius: 12px; background: #e3f3ea; color: #1f7a4d; font-size: 14px; line-height: 20px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 1px"><path d="M5 12.5l4.5 4.5L19 7"></path></svg><span style="color: #262a67"><strong style="color: #1f7a4d">Report CS-0143 saved.</strong> {{routedTo}}</span></div>
+</sc-if>
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 640px; border-collapse: collapse; font-size: 15px">
+<thead><tr style="color: #5b5f86; font-size: 13px"><th scope="col" style="text-align: start; padding: 10px 20px; font-weight: 600">Case</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Trip · vehicle</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Reported</th><th scope="col" style="text-align: start; padding: 10px 20px; font-weight: 600">Status</th></tr></thead>
+<tbody>
+<sc-for list="{{cases}}" as="c" hint-placeholder-count="4">
+<tr class="te-row" style="border-top: 1px solid #e3dfc9">
+<td style="padding: 12px 20px"><span style="display: flex; flex-direction: column"><span style="font-weight: 600">{{c.id}}</span><span style="font-size: 13px; color: #5b5f86">{{c.sum}}</span></span></td>
+<td style="padding: 12px"><span style="display: flex; flex-direction: column"><a href="OrgTrip.dc.html" style="font-weight: 600; color: #262a67">{{c.trip}}</a><span style="font-size: 13px; color: #5b5f86">{{c.veh}}</span></span></td>
+<td style="padding: 12px; font-size: 14px"><span style="display: flex; flex-direction: column"><span>{{c.when}}</span><span style="font-size: 13px; color: #5b5f86">{{c.by}}</span></span></td>
+<td style="padding: 12px 20px"><span style="{{c.ss}}">{{c.s}}</span></td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+</section>
+
+<form aria-labelledby="nw-h" style="flex: 2 1 340px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 14px">
+<h2 id="nw-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">New report</h2>
+<div role="note" style="display: flex; gap: 8px; padding: 10px 12px; border-radius: 12px; background: #fde8e6; color: #b42318; font-size: 14px; line-height: 20px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 1px"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"></path></svg><span style="color: #262a67">If a child is in danger right now, call emergency services on <strong>911</strong> first, then file this report.</span></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="tr" style="font-size: 14px; font-weight: 600">Trip</label><select id="tr" style="height: 52px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 12px; font: inherit; font-size: 16px; color: #262a67"><option>Al Noor School · Grade 4 Zoo Day · Thu 16 Oct</option><option>AlUla Heritage Weekend · Thu 16 Oct</option><option>Jeddah Corniche Night · Fri 17 Oct</option></select></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="vh" style="font-size: 14px; font-weight: 600">Vehicle</label><select id="vh" style="height: 52px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 12px; font: inherit; font-size: 16px; color: #262a67"><option>Bus 1 · RUH 4410 · moderator Huda Saleh</option><option>Not sure</option></select></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="ds" style="font-size: 14px; font-weight: 600">What happened</label><textarea id="ds" rows="4" value="{{desc}}" onInput="{{setDesc}}" aria-invalid="{{descBad}}" aria-describedby="ds-msg" style="{{descStyle}}"></textarea>
+<sc-if value="{{descBad}}" hint-placeholder-val="{{false}}"><span id="ds-msg" style="font-size: 13px; color: #b42318">Describe what happened so the safety lead can act. Include the child's name or seat if you know it.</span></sc-if></div>
+<fieldset style="margin: 0; padding: 0; border: 0; display: flex; flex-direction: column; gap: 8px">
+<legend style="padding: 0 0 6px; font-size: 14px; font-weight: 600">How should we contact you?</legend>
+<sc-for list="{{contacts}}" as="o" hint-placeholder-count="3"><label style="{{o.style}}"><input type="radio" name="cp" checked="{{o.on}}" onChange="{{o.pick}}" style="width: 20px; height: 20px; margin: 0; accent-color: #262a67">{{o.l}}</label></sc-for>
+</fieldset>
+<button type="button" onClick="{{submit}}" style="height: 48px; border: 0; border-radius: 12px; background: #ff6c2e; color: #262a67; font: inherit; font-size: 15px; font-weight: 700; cursor: pointer">Send report</button>
+<span style="font-size: 13px; line-height: 18px; color: #5b5f86">{{routeNote}}</span>
+</form>
+</div>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"noContact":{"editor":"boolean","default":false},"$preview":{"width":1440,"height":1040}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { desc: '', cp: 0, sent: false, tried: false }; }
+  renderVals() {
+    const noContact = !!this.props.noContact;
+    const pill = (tone) => 'display: inline-flex; align-items: center; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; white-space: nowrap; ' + ({ ok: 'background: #e3f3ea; color: #1f7a4d;', warn: 'background: #fdf0d5; color: #8a4b00;', bad: 'background: #fde8e6; color: #b42318;', info: 'background: #e6e8f5; color: #262a67;' })[tone];
+    const base = [
+      { id: 'CS-0142', sum: 'Pickup concern at the zoo gate', trip: 'Al Noor School · Grade 4 Zoo Day', veh: 'Bus 1 · RUH 4410', when: 'Thu 16 Oct · 11:05', by: 'Parent · Sara Al-Qahtani', s: 'Open', t: 'bad' },
+      { id: 'CS-0139', sum: 'Child separated from group for 10 min', trip: 'AlUla Heritage Weekend', veh: 'Bus 2 · RUH 5520', when: 'Thu 16 Oct · 09:48', by: 'Moderator · Nadia Yusuf', s: 'With safety lead', t: 'warn' },
+      { id: 'CS-0127', sum: 'Seatbelt not fastened on departure', trip: 'Taif Rose Farms', veh: 'Bus 1 · RUH 4410', when: 'Thu 2 Oct · 07:14', by: 'Moderator · Huda Saleh', s: 'Resolved', t: 'ok' },
+      { id: 'CS-0118', sum: 'Unknown adult asked about a child', trip: 'Edge of the World Hike', veh: 'Bus 1 · RUH 6610', when: 'Sat 20 Sep · 15:32', by: 'Team · Rana Fadel', s: 'Closed', t: 'info' }
+    ];
+    const sent = this.state.sent;
+    const rows = (sent ? [{ id: 'CS-0143', sum: String(this.state.desc).slice(0, 40) || 'New report', trip: 'Al Noor School · Grade 4 Zoo Day', veh: 'Bus 1 · RUH 4410', when: 'Just now', by: 'Team · Mona Saleh', s: noContact ? 'In platform queue' : 'Open', t: 'bad' }] : []).concat(base);
+    const cases = rows.map((c) => ({ ...c, ss: pill(c.t) }));
+    const C = ['Phone call to +966 55 ••• 1190', 'Message in Trips Enjoy', 'Email to mona@sunrisetours.sa'];
+    const contacts = C.map((l, i) => ({ l, on: i === this.state.cp, pick: () => this.setState({ cp: i }),
+      style: 'display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 12px; border-radius: 12px; font-size: 15px; cursor: pointer; ' + (i === this.state.cp ? 'border: 2px solid #fb8030;' : 'border: 1px solid #e3dfc9;') }));
+    const descBad = this.state.tried && !String(this.state.desc).trim();
+    const routeNote = noContact ? 'With no safety lead set, the report goes to the Trips Enjoy safety queue. It is never blocked.' : 'Sent to Yousef Amin right away, with the platform safety hotline copied.';
+    return { hasContact: !noContact, noContact, cases, contacts, openCount: String(cases.filter((c) => c.t === 'bad' || c.t === 'warn').length),
+      desc: this.state.desc, setDesc: (e) => this.setState({ desc: e.target.value }), descBad,
+      descStyle: 'min-height: 104px; box-sizing: border-box; border-radius: 8px; background: #fff; padding: 12px 14px; font: inherit; font-size: 16px; color: #262a67; resize: vertical; ' + (descBad ? 'border: 2px solid #b42318;' : 'border: 1px solid #7b7fa6;'),
+      justSent: sent, routedTo: noContact ? 'Routed to the Trips Enjoy safety queue because no safety lead is set.' : 'Routed to Yousef Amin (safety lead) and the platform safety hotline.',
+      routeNote, submit: () => { if (!String(this.state.desc).trim()) { this.setState({ tried: true }); return; } this.setState({ sent: true, tried: false }); } };
+  }
+}
+</script>
+</body>
+</html>

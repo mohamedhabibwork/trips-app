@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Studio web · Trip brief</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+.te-nav:focus-visible{outline:2px solid #f89e23;outline-offset:2px}
+</style>
+</helmet>
+<div style="min-height: 1000px; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif; display: flex; flex-direction: column">
+
+<header style="background: #1a1c4b; color: #f6f3e4">
+<div style="box-sizing: border-box; padding: 12px 40px; display: flex; flex-wrap: wrap; align-items: center; gap: 16px 28px">
+<a href="PhoWebHome.dc.html" class="te-nav" style="display: flex; align-items: center; gap: 10px; text-decoration: none"><img src="../assets/6ea846350ba3adc0e289d47fa0612c3b.svg" alt="Trips Enjoy" style="height: 36px; width: auto"><span style="padding: 2px 10px; border-radius: 999px; background: #f89e23; color: #1a1c4b; font-size: 12px; font-weight: 700">Studio</span></a>
+<nav aria-label="Studio" style="display: flex; flex-wrap: wrap; gap: 4px; flex-grow: 1">
+<sc-for list="{{nav}}" as="n" hint-placeholder-count="8"><a href="{{n.href}}" class="te-nav" aria-current="{{n.cur}}" style="{{n.style}}">{{n.label}}</a></sc-for>
+</nav>
+<a href="PhoWebProfile.dc.html" class="te-nav" style="display: flex; align-items: center; gap: 10px; color: #f6f3e4; text-decoration: none">
+<span style="display: flex; flex-direction: column; align-items: flex-end"><span style="font-size: 14px; font-weight: 600">Laila Fathy</span><span style="font-size: 12px; color: #b8bad6">Studio plan · Verified</span></span>
+<span style="width: 40px; height: 40px; border-radius: 999px; background: #31367a; color: #f89e23; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; overflow: hidden" aria-hidden="true"><img src="../assets/fa4aea3b99ab1c92ea071dc7fc9f9299.svg" alt="" style="width: 100%; height: 100%; object-fit: cover"></span>
+</a>
+</div>
+</header>
+
+<div style="box-sizing: border-box; width: 100%; max-width: 1440px; margin: 0 auto; padding: 24px 40px 40px; display: flex; flex-direction: column; gap: 20px">
+
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<nav aria-label="Breadcrumb" style="font-size: 14px; color: #5b5f86"><a href="PhoWebHome.dc.html">Home</a> / <a href="PhoWebDeals.dc.html">Deals</a> / Siwa Oasis Escape</nav>
+<h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 700">Siwa Oasis Escape · trip brief</h1>
+<span style="font-size: 14px; color: #5b5f86">Nile Horizon Tours · Thu 22 – Sat 24 Oct · Cairo → Marsa Matrouh → Siwa · agreed fee 9,000 EGP</span>
+</div>
+<div role="group" aria-label="Preview assignment state" style="display: flex; flex-wrap: wrap; padding: 4px; border-radius: 20px; background: #ffffff; border: 1px solid #e3dfc9">
+<sc-for list="{{states}}" as="m" hint-placeholder-count="6"><button aria-pressed="{{m.on}}" onClick="{{m.go}}" style="{{m.style}}">{{m.label}}</button></sc-for>
+</div>
+</div>
+
+<div role="status" style="{{banner.style}}">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="{{banner.icon}}"></path></svg>
+<span style="flex: 1 1 420px; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 16px; font-weight: 700">{{banner.t}}</span><span style="font-size: 14px; line-height: 20px; color: #262a67">{{banner.d}}</span></span>
+<sc-if value="{{banner.hasCta}}" hint-placeholder-val="{{true}}"><a href="{{banner.href}}" style="height: 48px; box-sizing: border-box; padding: 0 20px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 15px; font-weight: 700; display: flex; align-items: center; text-decoration: none">{{banner.cta}}</a></sc-if>
+<sc-if value="{{banner.hasOff}}" hint-placeholder-val="{{false}}"><button disabled="true" style="height: 48px; padding: 0 20px; border: 0; border-radius: 12px; background: #e3dfc9; color: #5b5f86; font: inherit; font-size: 15px; font-weight: 700; cursor: not-allowed">{{banner.off}}</button></sc-if>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start">
+
+<section aria-labelledby="sch-h" style="flex: 3 1 560px; min-width: 0; padding: 20px 24px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; align-items: center"><h2 id="sch-h" style="margin: 0; font-size: 20px; font-weight: 600">Schedule and scope</h2><span style="font-size: 13px; color: #5b5f86">Times in Africa/Cairo · <span style="display: inline-flex; align-items: center; gap: 4px; padding: 1px 8px; border-radius: 999px; background: #ffe7dc; color: #c93a00; font-weight: 600">In scope</span> = photograph this</span></div>
+<sc-for list="{{days}}" as="d" hint-placeholder-count="3">
+<div style="display: flex; flex-direction: column; gap: 6px; padding-top: 10px; border-top: 1px solid #e3dfc9">
+<h3 style="margin: 0; font-size: 16px; font-weight: 600">{{d.day}}</h3>
+<ol style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 4px">
+<sc-for list="{{d.items}}" as="i" hint-placeholder-count="3">
+<li style="display: grid; grid-template-columns: 56px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 4px 0; font-size: 15px">
+<span style="font-weight: 700">{{i.t}}</span>
+<span style="display: flex; flex-direction: column"><span style="font-weight: 500">{{i.what}}</span><span style="font-size: 13px; color: #5b5f86">{{i.where}}</span></span>
+<span style="{{i.ss}}">{{i.s}}</span>
+</li>
+</sc-for>
+</ol>
+</div>
+</sc-for>
+</section>
+
+<aside style="flex: 2 1 340px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+
+<section aria-labelledby="alb-h" style="padding: 20px; border-radius: 20px; background: #262a67; color: #f6f3e4; display: flex; flex-direction: column; gap: 10px">
+<h2 id="alb-h" style="margin: 0; font-size: 18px; font-weight: 600">Album upload window</h2>
+<span style="font-size: 28px; line-height: 34px; font-weight: 700">{{win.v}}</span>
+<span style="font-size: 14px; line-height: 20px; color: #b8bad6">{{win.d}}</span>
+<span style="display: flex; justify-content: space-between; font-size: 13px; color: #b8bad6"><span>Albums on this trip</span><span style="color: #f6f3e4; font-weight: 600">0 of 5 · Studio</span></span>
+</section>
+
+<section aria-labelledby="gr-h" style="padding: 20px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 10px">
+<h2 id="gr-h" style="margin: 0; font-size: 18px; font-weight: 600">Group and vehicles</h2>
+<sc-for list="{{buses}}" as="b" hint-placeholder-count="3">
+<div style="display: flex; gap: 12px; align-items: center; padding: 8px 0; border-top: 1px solid #e3dfc9">
+<span style="width: 36px; height: 36px; flex-shrink: 0; border-radius: 999px; background: #e6e8f5; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 4h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM4 11h16M8 18v2M16 18v2M8 14.5h.01M16 14.5h.01"></path></svg></span>
+<span style="flex-grow: 1; display: flex; flex-direction: column"><span style="font-size: 15px; font-weight: 600">{{b.n}}</span><span style="font-size: 13px; color: #5b5f86">{{b.d}}</span></span>
+<span style="font-size: 14px; font-weight: 600">{{b.seats}}</span>
+</div>
+</sc-for>
+<span style="display: flex; gap: 8px; align-items: flex-start; font-size: 13px; line-height: 18px; color: #5b5f86"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 1px"><path d="M6 11h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1zM8 11V7a4 4 0 0 1 8 0v4"></path></svg>{{privacyNote}}</span>
+</section>
+
+<section aria-labelledby="ct-h" style="padding: 20px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 10px">
+<h2 id="ct-h" style="margin: 0; font-size: 18px; font-weight: 600">Organization contact</h2>
+<span style="display: flex; flex-direction: column"><span style="font-size: 15px; font-weight: 600">Nile Horizon Tours · Operations</span><span style="font-size: 14px; color: #5b5f86">On trip days 05:00 – 23:00</span></span>
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<a href="tel:+20" style="height: 44px; box-sizing: border-box; padding: 0 14px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 6px; text-decoration: none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"></path></svg>+20 12 ••• 5530</a>
+<a href="mailto:ops@nilehorizon.example" style="height: 44px; box-sizing: border-box; padding: 0 14px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 6px; text-decoration: none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16v12H4zM4 7l8 6 8-6"></path></svg>Email operations</a>
+</div>
+</section>
+
+</aside>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { st: 'assigned' }; }
+  renderVals() {
+    const nav = [['Home', 'PhoWebHome'], ['Portfolio', 'PhoWebPortfolio'], ['Profile', 'PhoWebProfile'], ['Rates', 'PhoWebRates'], ['Deals', 'PhoWebDeals'], ['Albums', 'PhoWebAlbums'], ['Earnings', 'PhoWebEarnings'], ['Coupons', 'PhoWebCoupons']].map(([label, f]) => {
+      const on = label === 'Deals';
+      return { label, href: f + '.dc.html', cur: on ? 'page' : 'false',
+        style: 'height: 40px; padding: 0 14px; border-radius: 999px; display: flex; align-items: center; font-size: 15px; font-weight: 600; text-decoration: none; ' + (on ? 'background: #31367a; color: #f89e23;' : 'color: #f6f3e4;') };
+    });
+    const st = this.state.st;
+    const states = [['invited', 'Invited'], ['assigned', 'Assigned'], ['progress', 'In progress'], ['done', 'Completed'], ['closed', 'Window closed'], ['cancelled', 'Cancelled']].map(([id, label]) => {
+      const on = st === id;
+      return { label, on: on ? 'true' : 'false', go: () => this.setState({ st: id }),
+        style: 'height: 36px; padding: 0 12px; border: 0; border-radius: 999px; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; ' + (on ? 'background: #262a67; color: #f6f3e4;' : 'background: transparent; color: #262a67;') };
+    });
+    const tone = { ok: 'background: #e3f3ea; color: #1f7a4d;', warn: 'background: #fdf0d5; color: #8a4b00;', bad: 'background: #fde8e6; color: #b42318;', info: 'background: #e6e8f5; color: #262a67;', live: 'background: #ffe7dc; color: #c93a00;' };
+    const bstyle = (t) => 'padding: 16px 20px; border-radius: 20px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; ' + tone[t];
+    const ALERT = 'M12 3l9.5 17h-19zM12 10v4M12 17h.01', INFO = 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 11v5M12 8h.01', CHECK = 'M5 12.5l4.5 4.5L19 7', LIVE = 'M12 10.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM8.5 15.5a5 5 0 0 1 0-7M15.5 8.5a5 5 0 0 1 0 7', LOCK = 'M6 11h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1zM8 11V7a4 4 0 0 1 8 0v4';
+    const B = {
+      invited: { t: 'Invited · nothing is committed yet', d: 'Read the brief before you reply. Traveler details stay hidden until the deal is finalized.', icon: INFO, tone: 'info', cta: 'Reply to the request', href: 'PhoWebDeals.dc.html' },
+      assigned: { t: 'You are assigned to this trip', d: 'Departure in 5 days, Thu 22 Oct at 05:30 from Tahrir Square. Album actions open when the trip is Completed.', icon: CHECK, tone: 'ok', off: 'Create album' },
+      progress: { t: 'Trip in progress · Day 2 of 3', d: 'Shoot now, upload later. Albums can only be created after the organization marks the trip Completed.', icon: LIVE, tone: 'live', off: 'Create album' },
+      done: { t: 'Trip completed Sat 24 Oct · album actions unlocked', d: 'You have until Sat 7 Nov to create albums and upload. Studio allows 5 albums on this trip.', icon: CHECK, tone: 'ok', cta: 'Create album', href: 'PhoWebStudio.dc.html' },
+      closed: { t: 'Upload window closed Sat 7 Nov', d: 'No new albums or uploads. Published albums stay visible and are archived 30 days after the window closed, on Mon 7 Dec.', icon: LOCK, tone: 'warn', cta: 'See albums', href: 'PhoWebAlbums.dc.html' },
+      cancelled: { t: 'Trip cancelled by Nile Horizon Tours on Wed 21 Oct', d: 'Your assignment is cancelled and no album is needed. Payment for work already done is not set yet; Trips Enjoy finance will contact you.', icon: ALERT, tone: 'bad', cta: 'Contact support', href: '#' }
+    }[st];
+    const banner = { ...B, style: bstyle(B.tone), hasCta: !!B.cta, hasOff: !!B.off };
+    const pill = (t) => 'display: inline-flex; padding: 2px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; white-space: nowrap; ' + (t === 'in' ? tone.live : 'background: #f6f3e4; color: #5b5f86;');
+    const mk = (rows) => rows.map(([t, what, where, sc]) => ({ t, what, where, s: sc ? 'In scope' : 'Not needed', ss: pill(sc ? 'in' : 'out') }));
+    const days = [
+      { day: 'Thu 22 Oct · Cairo to Siwa', items: mk([['05:30', 'Boarding and group photo', 'Tahrir Square meeting point', true], ['11:30', 'Lunch stop', 'Marsa Matrouh corniche', false], ['17:20', 'Sunset at Shali Fortress', 'Siwa old town', true]]) },
+      { day: 'Fri 23 Oct · Siwa', items: mk([['09:00', 'Cleopatra Spring and salt lakes', 'Program: Salt lake float', true], ['15:00', 'Great Sand Sea safari', 'Program: 4x4 dunes and sandboarding', true], ['20:00', 'Bedouin dinner', 'Program: dinner at the camp', true]]) },
+      { day: 'Sat 24 Oct · Return', items: mk([['08:00', 'Oracle Temple walk', 'Aghurmi', true], ['10:30', 'Departure to Cairo', 'Coverage ends at departure', false]]) }
+    ];
+    const hide = st === 'invited' || st === 'cancelled';
+    const buses = [['Bus 1', 'Driver Mahmoud Saeed · moderator Heba Mostafa', '44 seats'], ['Bus 2', 'Nile Horizon own driver', '44 seats'], ['Bus 3', 'Nile Horizon own driver', '44 seats']].map(([n, d, seats]) => ({ n, d: hide ? 'Crew shown after finalization' : d, seats: hide ? '' : seats }));
+    const win = { done: { v: '14 days left', d: 'Opened Sat 24 Oct when the trip was Completed. Closes Sat 7 Nov at 23:59.' }, closed: { v: 'Closed', d: 'Closed Sat 7 Nov. Albums archive on Mon 7 Dec.' }, cancelled: { v: 'Not needed', d: 'The trip was cancelled, so no album is due.' } }[st] || { v: 'Opens Sat 24 Oct', d: 'The window opens when the trip is Completed and lasts 14 days, until Sat 7 Nov.' };
+    return { nav, states, banner, days, buses, win,
+      privacyNote: hide ? 'Traveler details stay hidden until the deal is finalized.' : '132 travelers on 3 buses. Names appear only on the album roster after the trip.' };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Shared · My trips empty</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="height: 100%; box-sizing: border-box; padding: 56px 16px 120px; display: flex; flex-direction: column; gap: 16px">
+
+<h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 700">My trips</h1>
+<div role="tablist" aria-label="Trips" style="display: flex; padding: 4px; border-radius: 999px; background: #ffffff; border: 1px solid #e3dfc9">
+<sc-for list="{{tabs}}" as="t" hint-placeholder-count="2"><button type="button" role="tab" aria-selected="{{t.sel}}" onClick="{{t.pick}}" style="{{t.style}}">{{t.t}}</button></sc-for>
+</div>
+
+<div role="tabpanel" aria-label="{{panel}}" style="flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; text-align: center; padding: 0 12px">
+<img src="../assets/c1fe45a90a3a1b8eace395f8df7ad821.svg" alt="" style="width: 200px; height: 200px; object-fit: contain; flex-shrink: 0">
+<h2 style="margin: 4px 0 0; font-size: 24px; line-height: 30px; font-weight: 700">{{title}}</h2>
+<p style="margin: 0; font-size: 16px; line-height: 23px; color: #5b5f86">{{body}}</p>
+<a href="TrvResults.dc.html" style="margin-top: 8px; align-self: stretch; height: 52px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM20 20l-4-4"></path></svg>Explore trips</a>
+<a href="ParLink.dc.html" style="min-height: 44px; display: flex; align-items: center; font-size: 15px; font-weight: 600">Have a booking reference or school code?</a>
+</div>
+</div>
+<div style="position: absolute; left: 0; right: 0; bottom: 0; height: 120px">
+<dc-import name="TabBar" role="traveler" active="trips" hint-size="390px,120px"></dc-import>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { tab: 0 }; }
+  renderVals() {
+    const tab = this.state.tab;
+    const tabs = ['Upcoming', 'Past'].map((t, i) => ({ t, sel: i === tab ? 'true' : 'false', pick: () => this.setState({ tab: i }),
+      style: 'flex: 1 1 0; height: 40px; border: 0; border-radius: 999px; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer; ' + (i === tab ? 'background: #262a67; color: #f6f3e4;' : 'background: transparent; color: #262a67;') }));
+    const up = tab === 0;
+    return { tabs, panel: up ? 'Upcoming trips' : 'Past trips',
+      title: up ? 'No trips yet' : 'No past trips yet',
+      body: up ? 'When you book a trip, or a family member adds you to theirs, your ticket and seat show up here.' : 'After your first trip, you will find photo albums, receipts and a place to rate the trip here.' };
+  }
+}
+</script>
+</body>
+</html>

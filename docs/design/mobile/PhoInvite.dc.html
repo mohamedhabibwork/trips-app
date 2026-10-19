@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Photographer · Organization invite</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;family=Cairo:wght@600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="height: 100%; box-sizing: border-box; padding: 56px 16px 24px; display: flex; flex-direction: column; gap: 12px">
+
+<div style="display: flex; align-items: center; gap: 10px">
+<img src="../assets/1fbce194fcb16bf54904c32c189fca31.svg" alt="Trips Enjoy" style="height: 30px; width: auto">
+<span style="margin-inline-start: auto; padding: 4px 10px; border-radius: 999px; background: #e6e8f5; font-size: 12px; font-weight: 700">Photographer invite</span>
+</div>
+
+<section aria-labelledby="org-h" style="padding: 14px 16px; border-radius: 20px; background: #262a67; color: #f6f3e4; display: flex; flex-direction: column; gap: 8px">
+<div style="display: flex; align-items: center; gap: 12px">
+<img src="../assets/2e100411aaec4ed457eb0b41922f0daa.svg" alt="" style="width: 48px; height: 48px; flex-shrink: 0; border-radius: 12px; object-fit: cover">
+<span style="flex-grow: 1; display: flex; flex-direction: column">
+<h1 id="org-h" style="margin: 0; font-size: 20px; line-height: 26px; font-weight: 700">Nile Horizon Tours</h1>
+<span lang="ar" dir="rtl" style="font-family: Cairo, sans-serif; font-size: 15px; font-weight: 600; color: #b8bad6; text-align: start">نايل هورايزن للرحلات</span>
+</span>
+</div>
+<p style="margin: 0; font-size: 14px; line-height: 20px; color: #f6f3e4">{{orgLine}}</p>
+<span style="{{validStyle}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{validIcon}}"></path></svg>{{valid}}</span>
+</section>
+
+<sc-if value="{{isValid}}" hint-placeholder-val="{{true}}">
+<div style="display: flex; flex-direction: column; gap: 12px">
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px">
+<div style="display: flex; flex-direction: column; gap: 4px"><label for="nm" style="font-size: 14px; font-weight: 600">Name</label><input id="nm" value="Laila Fathy" autocomplete="name" style="height: 48px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; padding: 0 12px; font: inherit; font-size: 16px; color: #262a67; min-width: 0"></div>
+<div style="display: flex; flex-direction: column; gap: 4px"><label for="mb" style="font-size: 14px; font-weight: 600">Mobile</label><input id="mb" value="+20 10 ••• 2210" readonly aria-describedby="mb-h" style="height: 48px; box-sizing: border-box; border-radius: 8px; border: 1px solid #e3dfc9; background: #f6f3e4; padding: 0 12px; font: inherit; font-size: 16px; color: #262a67; min-width: 0"></div>
+</div>
+<span id="mb-h" style="margin-top: -8px; font-size: 12px; color: #5b5f86">Mobile comes from the invitation. You verify it next.</span>
+
+<fieldset style="margin: 0; padding: 0; border: 0">
+<legend style="padding: 0; margin-bottom: 6px; font-size: 14px; font-weight: 600">How you will sign in</legend>
+<div role="radiogroup" aria-label="Sign-in method" style="height: 44px; box-sizing: border-box; padding: 3px; border-radius: 999px; background: #ffffff; border: 1px solid #e3dfc9; display: flex">
+<sc-for list="{{methods}}" as="m" hint-placeholder-count="2"><button type="button" role="radio" aria-checked="{{m.sel}}" onClick="{{m.go}}" style="{{m.style}}">{{m.t}}</button></sc-for>
+</div>
+</fieldset>
+
+<section aria-labelledby="pf-h" style="padding: 12px 14px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 8px">
+<div style="display: flex; justify-content: space-between; align-items: baseline"><h2 id="pf-h" style="margin: 0; font-size: 15px; font-weight: 600">Portfolio</h2><span style="{{countStyle}}">{{countText}}</span></div>
+<div role="meter" aria-label="Portfolio photos" aria-valuemin="0" aria-valuemax="8" aria-valuenow="{{n}}" style="height: 6px; border-radius: 999px; background: #e3dfc9; display: flex; overflow: hidden"><span style="{{bar}}"></span></div>
+<div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px">
+<sc-for list="{{thumbs}}" as="t" hint-placeholder-count="4">
+<sc-if value="{{t.photo}}" hint-placeholder-val="{{true}}"><span style="position: relative; height: 56px; border-radius: 10px; overflow: hidden; background: #262a67"><img src="{{t.img}}" alt="{{t.alt}}" style="{{t.pos}}"></span></sc-if>
+<sc-if value="{{t.tile}}" hint-placeholder-val="{{false}}"><span aria-hidden="true" style="height: 56px; border-radius: 10px; background: #262a67; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b8bad6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1zM8.5 10a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM20 15l-5-5L5 20"></path></svg></span></sc-if>
+</sc-for>
+<button type="button" onClick="{{addPhoto}}" aria-label="Add a portfolio photo" style="height: 56px; border-radius: 10px; border: 2px dashed #7b7fa6; background: #ffffff; color: #262a67; cursor: pointer; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg></button>
+</div>
+<span style="font-size: 12px; line-height: 16px; color: #5b5f86">{{pfNote}}</span>
+</section>
+</div>
+</sc-if>
+
+<sc-if value="{{notValid}}" hint-placeholder-val="{{false}}">
+<div role="status" style="padding: 16px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 6px">
+<h2 style="margin: 0; font-size: 20px; line-height: 26px; font-weight: 700">{{sTitle}}</h2>
+<p style="margin: 0; font-size: 15px; line-height: 21px; color: #5b5f86">{{sBody}}</p>
+</div>
+</sc-if>
+
+<div style="margin-top: auto; display: flex; flex-direction: column; gap: 6px">
+<sc-if value="{{hasPrimary}}" hint-placeholder-val="{{true}}"><a href="{{primaryHref}}" style="height: 52px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 16px; font-weight: 700; text-decoration: none; display: flex; align-items: center; justify-content: center">{{primary}}</a></sc-if>
+<span style="font-size: 12px; line-height: 16px; color: #5b5f86; text-align: center">{{foot}}</span>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"state":{"editor":"enum","options":["valid","expired","withdrawn","accepted","existing"],"default":"valid"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { method: 0, n: 3 }; }
+  renderVals() {
+    const st = this.props.state || 'valid';
+    const n = this.state.n;
+    const methods = ['One-time code', 'Password'].map((t, i) => {
+      const on = this.state.method === i;
+      return { t, sel: on ? 'true' : 'false', go: () => this.setState({ method: i }),
+        style: 'flex: 1 1 0; border: none; border-radius: 999px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; ' + (on ? 'background: #262a67; color: #f6f3e4;' : 'background: transparent; color: #262a67;') };
+    });
+    const imgs = [['../assets/e0896ba1c1106bfc2b93677050629a1c.svg', '50% 45%', 'Group photo at the Giza pyramids'], ['../assets/cdab8dd228095fdedbd0b08ca38eb7bd.svg', '40% 50%', 'Felucca on the Nile at Luxor'], ['../assets/073b7fe9ddee4e94c5d8ddaa41cbb4f4.svg', '60% 50%', 'Group jumping on a dune at sunset'], ['../assets/39057213b7b92ac9886e5089cdf16941.svg', '50% 60%', 'Night camp in the White Desert']];
+    const shown = Math.min(n, 4);
+    const thumbs = [];
+    for (let i = 0; i < shown; i++) {
+      const im = imgs[i];
+      thumbs.push(im ? { photo: true, tile: false, img: im[0], pos: 'position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: ' + im[1], alt: im[2] } : { photo: false, tile: true, img: '', pos: '', alt: '' });
+    }
+    const enough = n >= 8;
+    const S = {
+      valid: ['Invited you to join as their own photographer. No admin approval is needed; they assign you to trips.', 'Valid until Thu 23 Oct, 18:00 Cairo time', 'ok'],
+      expired: ['Sent you an invitation on Thu 9 Oct.', 'Expired Thu 16 Oct · links last 7 days', 'bad'],
+      withdrawn: ['Sent you an invitation on Mon 13 Oct.', 'Withdrawn by the organization', 'bad'],
+      accepted: ['You already accepted this invitation on Wed 15 Oct.', 'Already accepted', 'info'],
+      existing: ['Invited +20 10 ••• 2210, which already has a Trips Enjoy account.', 'Valid until Thu 23 Oct, 18:00 Cairo time', 'ok']
+    };
+    const R = {
+      expired: ['This invitation has expired', 'Ask Nile Horizon Tours to send a new one. Invitation links are valid for 7 days.', '', '', 'Contact the organization that invited you.'],
+      withdrawn: ['This invitation was withdrawn', 'Nile Horizon Tours cancelled it. If you expected to work with them, ask them to invite you again.', '', '', 'Nothing was linked to your number.'],
+      accepted: ['You are already linked', 'Sign in to see trips from Nile Horizon Tours.', 'Sign in', 'PhoHome.dc.html', 'Signed in elsewhere? Use the same mobile number.'],
+      existing: ['Sign in to link your account', 'Sign in with your existing account first. Nile Horizon Tours is then added to it, and your portfolio carries over.', 'Sign in and link', 'PhoHome.dc.html', 'You will not need a second account.']
+    };
+    const s = S[st] || S.valid;
+    const T = { ok: ['#e3f3ea', '#1f7a4d', 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7v5l3 2'], bad: ['#fde8e6', '#b42318', 'M6 6l12 12M18 6L6 18'], info: ['#e6e8f5', '#262a67', 'M5 12.5l4.5 4.5L19 7'] }[s[2]];
+    const r = R[st];
+    const isValid = st === 'valid';
+    return {
+      orgLine: s[0], valid: s[1], validIcon: T[2],
+      validStyle: 'align-self: flex-start; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 4px; background: ' + T[0] + '; color: ' + T[1],
+      isValid, notValid: !isValid, methods, n, thumbs,
+      bar: 'width: ' + Math.min(100, Math.round(n / 8 * 100)) + '%; background: ' + (enough ? '#1f7a4d' : '#ff6c2e') + '; border-radius: 999px',
+      countText: n + ' of 8 photos', countStyle: 'font-size: 13px; font-weight: 700; color: ' + (enough ? '#1f7a4d' : '#8a4b00'),
+      pfNote: enough ? 'Portfolio ready. You can upload albums as soon as a trip is Completed.' : 'You can accept now. Album uploads unlock once you have at least 8 photos. JPEG, PNG or HEIC, up to 25 MB each.',
+      addPhoto: () => this.setState({ n: Math.min(n + 1, 12) }),
+      sTitle: r ? r[0] : '', sBody: r ? r[1] : '',
+      hasPrimary: isValid || !!(r && r[2]),
+      primary: isValid ? 'Accept invitation' : (r ? r[2] : ''),
+      primaryHref: isValid ? 'PhoHome.dc.html' : (r ? r[3] : '#'),
+      foot: isValid ? 'Next: verify your mobile with a code. Nile Horizon Tours sees your name, mobile and portfolio.' : (r ? r[4] : '')
+    };
+  }
+}
+</script>
+</body>
+</html>

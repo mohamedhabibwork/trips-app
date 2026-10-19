@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Traveler · Privacy &amp; data</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="height: 100%; box-sizing: border-box; padding: 56px 16px 24px; display: flex; flex-direction: column; gap: 12px">
+
+<div style="display: flex; align-items: center; gap: 12px">
+<a href="TrvProfile.dc.html" aria-label="Back to profile" style="width: 44px; height: 44px; border-radius: 999px; background: #ffffff; color: #262a67; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a>
+<span style="display: flex; flex-direction: column"><h1 style="margin: 0; font-size: 22px; line-height: 28px; font-weight: 700">Privacy &amp; data</h1><span style="font-size: 13px; color: #5b5f86">Mariam Adel · mariam.adel@ ••• .com</span></span>
+</div>
+
+<sc-if value="{{deleted}}" hint-placeholder-val="{{false}}">
+<div role="status" style="padding: 14px 16px; border-radius: 16px; background: #fde8e6; color: #b42318; display: flex; flex-direction: column; gap: 4px; font-size: 14px; line-height: 20px">
+<strong style="font-size: 15px">Deletion requested · Sat 17 Oct</strong>
+<span>You’ll be signed out on this phone now. Sign in by Mon 16 Nov to keep your account. It is removed on Tue 17 Nov. We emailed you these dates.</span>
+</div>
+</sc-if>
+
+<section aria-labelledby="copy-h" style="padding: 14px 16px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 8px">
+<div style="display: flex; align-items: center; gap: 10px"><span style="width: 36px; height: 36px; border-radius: 10px; background: #e6e8f5; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12M7 11l5 5 5-5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"></path></svg></span><h2 id="copy-h" style="margin: 0; font-size: 17px; font-weight: 600">Get a copy of your data</h2></div>
+<p style="margin: 0; font-size: 14px; line-height: 20px; color: #5b5f86">Your profile, family members, bookings, receipts and settings in one file. We send it within 30 days of your request.</p>
+<sc-if value="{{copyOpen}}" hint-placeholder-val="{{true}}"><button type="button" onClick="{{requestCopy}}" style="height: 48px; border-radius: 12px; background: #ffffff; border: 1px solid #7b7fa6; color: #262a67; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Request a copy</button></sc-if>
+<sc-if value="{{copyDone}}" hint-placeholder-val="{{false}}"><div role="status" style="padding: 10px 12px; border-radius: 12px; background: #e3f3ea; color: #1f7a4d; font-size: 14px; line-height: 19px; display: flex; gap: 8px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M5 12.5l4.5 4.5L19 7"></path></svg><span><strong>Requested Sat 17 Oct</strong> · ready by Mon 16 Nov. We email you a download link.</span></div></sc-if>
+</section>
+
+<section aria-labelledby="del-h" style="padding: 14px 16px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 8px">
+<div style="display: flex; align-items: center; gap: 10px"><span style="width: 36px; height: 36px; border-radius: 10px; background: #fde8e6; color: #b42318; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"></path></svg></span><h2 id="del-h" style="margin: 0; font-size: 17px; font-weight: 600">Delete your account</h2></div>
+<ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; font-size: 14px; line-height: 19px">
+<sc-for list="{{facts}}" as="f" hint-placeholder-count="5"><li style="display: flex; gap: 8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5b5f86" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 2px"><path d="{{f.d}}"></path></svg><span>{{f.t}}</span></li></sc-for>
+</ul>
+<a href="#" style="align-self: flex-start; font-size: 13px; font-weight: 600; min-height: 24px; display: flex; align-items: center">More about account deletion</a>
+</section>
+
+<sc-if value="{{notDeleted}}" hint-placeholder-val="{{true}}">
+<button type="button" onClick="{{openSheet}}" style="margin-top: auto; height: 52px; flex-shrink: 0; border: 0; border-radius: 12px; background: #b42318; color: #ffffff; font: inherit; font-weight: 700; font-size: 16px; cursor: pointer">Request deletion</button>
+</sc-if>
+<sc-if value="{{deleted}}" hint-placeholder-val="{{false}}">
+<a href="TrvHome.dc.html" style="margin-top: auto; height: 52px; flex-shrink: 0; border-radius: 12px; background: #262a67; color: #f6f3e4; font-weight: 700; font-size: 16px; text-decoration: none; display: flex; align-items: center; justify-content: center">OK, sign me out</a>
+</sc-if>
+</div>
+
+<sc-if value="{{sheet}}" hint-placeholder-val="{{false}}">
+<div style="position: absolute; inset: 0; background: rgba(16,18,48,.45)"></div>
+<div role="dialog" aria-modal="true" aria-labelledby="sheet-h" style="position: absolute; left: 0; right: 0; bottom: 0; box-sizing: border-box; padding: 20px 16px 28px; border-radius: 20px 20px 0 0; background: #ffffff; display: flex; flex-direction: column; gap: 12px">
+<span aria-hidden="true" style="align-self: center; width: 40px; height: 5px; border-radius: 999px; background: #e3dfc9"></span>
+<h2 id="sheet-h" style="margin: 0; font-size: 20px; line-height: 26px; font-weight: 700">Delete your account?</h2>
+<p style="margin: 0; font-size: 15px; line-height: 21px; color: #5b5f86">Your upcoming Siwa Oasis Escape booking is cancelled and refunded if you don’t sign in by Mon 16 Nov. This phone signs out right away.</p>
+<button type="button" onClick="{{confirm}}" style="height: 52px; border: 0; border-radius: 12px; background: #b42318; color: #ffffff; font: inherit; font-weight: 700; font-size: 16px; cursor: pointer">Delete my account</button>
+<button type="button" onClick="{{closeSheet}}" style="height: 48px; border-radius: 12px; background: #ffffff; border: 1px solid #7b7fa6; color: #262a67; font: inherit; font-weight: 600; font-size: 15px; cursor: pointer">Keep my account</button>
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { copy: false, sheet: false, deleted: false }; }
+  renderVals() {
+    const CAL = 'M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zM4 10h16M8 3v4M16 3v4',
+      LOCK = 'M6 11h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1zM8 11V7a4 4 0 0 1 8 0v4',
+      TICKET = 'M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v2a2.5 2.5 0 0 0 0 5v3a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-3a2.5 2.5 0 0 0 0-5zM14 5v14',
+      FILE = 'M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zM14 3v5h5',
+      TRASH = 'M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13';
+    const facts = [
+      [CAL, '30 days to change your mind: signing in restores your account.'],
+      [LOCK, 'No new bookings or payments during those 30 days.'],
+      [TICKET, 'Future bookings are cancelled and refunded when the account is removed.'],
+      [FILE, 'Trip records are kept 5 years; bookings, payments and financial records 7 years.'],
+      [TRASH, 'Everything else is removed on day 31.']
+    ].map(([d, t]) => ({ d, t }));
+    const del = this.state.deleted;
+    return {
+      facts, deleted: del, notDeleted: !del,
+      copyOpen: !this.state.copy, copyDone: this.state.copy,
+      sheet: this.state.sheet,
+      requestCopy: () => this.setState({ copy: true }),
+      openSheet: () => this.setState({ sheet: true }),
+      closeSheet: () => this.setState({ sheet: false }),
+      confirm: () => this.setState({ sheet: false, deleted: true })
+    };
+  }
+}
+</script>
+</body>
+</html>

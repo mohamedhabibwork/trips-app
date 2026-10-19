@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Driver · Edit profile</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="height: 100%; box-sizing: border-box; padding: 56px 16px 24px; display: flex; flex-direction: column; gap: 10px">
+
+<div style="display: flex; align-items: center; gap: 12px">
+<a href="DrvProfile.dc.html" aria-label="Back" style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 999px; background: #ffffff; color: #262a67; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a>
+<h1 style="margin: 0; font-size: 22px; line-height: 28px; font-weight: 700">Edit profile &amp; rates</h1>
+</div>
+
+<div style="display: flex; align-items: center; gap: 12px">
+<img src="../assets/c311d0b40fa5c0d792261872e7c7b89d.svg" alt="" style="width: 64px; height: 64px; flex-shrink: 0; border-radius: 20px; object-fit: cover">
+<span style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column"><span style="font-size: 17px; line-height: 22px; font-weight: 700">Khalid Al-Harbi</span><span style="font-size: 13px; line-height: 18px; color: #5b5f86">Professional · Verified</span></span>
+<button type="button" style="height: 44px; padding: 0 12px; flex-shrink: 0; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8a2 2 0 0 1 2-2h2l2-2h4l2 2h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zM12 9.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7z"></path></svg>Change photo</button>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 4px">
+<div style="display: flex; justify-content: space-between; align-items: baseline"><label for="bio" style="font-size: 14px; line-height: 18px; font-weight: 600">Bio</label><span style="font-size: 12px; color: #5b5f86">118 / 300</span></div>
+<textarea id="bio" rows="2" style="height: 64px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; padding: 8px 14px; font: inherit; font-size: 15px; line-height: 22px; color: #262a67; resize: none; width: 100%">12 years driving coaches between Riyadh, AlUla and Jeddah. Calm, on time, and I know every Hegra parking bay.</textarea>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 4px">
+<span id="lang-l" style="font-size: 14px; line-height: 18px; font-weight: 600">Languages</span>
+<div role="group" aria-labelledby="lang-l" style="display: flex; gap: 6px; overflow-x: auto; margin-inline-end: -16px; padding-inline-end: 16px">
+<sc-for list="{{langs}}" as="l" hint-placeholder-count="5">
+<button type="button" aria-pressed="{{l.on}}" onClick="{{l.go}}" style="{{l.style}}">{{l.t}}</button>
+</sc-for>
+</div>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px">
+<div style="display: flex; flex-direction: column; gap: 4px"><label for="day" style="font-size: 14px; line-height: 18px; font-weight: 600">Day rate (SAR)</label><input id="day" type="text" inputmode="numeric" value="1,200" style="height: 52px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; padding: 0 14px; font: inherit; font-size: 16px; color: #262a67; width: 100%"></div>
+<div style="display: flex; flex-direction: column; gap: 4px"><label for="km" style="font-size: 14px; line-height: 18px; font-weight: 600">Per km over 250 (SAR)</label><input id="km" type="text" inputmode="decimal" value="4.5" style="height: 52px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; padding: 0 14px; font: inherit; font-size: 16px; color: #262a67; width: 100%"></div>
+<div style="display: flex; flex-direction: column; gap: 4px"><label for="minb" style="font-size: 14px; line-height: 18px; font-weight: 600">Minimum booking</label><select id="minb" style="height: 52px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; padding: 0 10px; font: inherit; font-size: 16px; color: #262a67; width: 100%"><option>Half day</option><option selected="">1 day</option><option>2 days</option></select></div>
+<div style="display: flex; flex-direction: column; gap: 4px"><label for="notice" style="font-size: 14px; line-height: 18px; font-weight: 600">Notice period</label><select id="notice" style="height: 52px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; padding: 0 10px; font: inherit; font-size: 16px; color: #262a67; width: 100%"><option>24 hours</option><option selected="">48 hours</option><option>72 hours</option><option>1 week</option></select></div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 4px">
+<span id="reg-l" style="font-size: 14px; line-height: 18px; font-weight: 600">Service regions</span>
+<div style="display: flex; gap: 8px; align-items: center">
+<div role="list" aria-labelledby="reg-l" style="flex-grow: 1; min-width: 0; display: flex; gap: 6px; overflow-x: auto">
+<sc-for list="{{regions}}" as="r" hint-placeholder-count="5">
+<span role="listitem" style="height: 40px; flex-shrink: 0; box-sizing: border-box; padding: 0 2px 0 12px; border-radius: 999px; background: #262a67; color: #f6f3e4; display: flex; align-items: center; gap: 2px; font-size: 14px; font-weight: 600; white-space: nowrap">{{r.t}}<button type="button" aria-label="{{r.al}}" onClick="{{r.rm}}" style="width: 36px; height: 36px; border: none; border-radius: 999px; background: transparent; color: #b8bad6; cursor: pointer; display: flex; align-items: center; justify-content: center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></button></span>
+</sc-for>
+</div>
+<button type="button" onClick="{{addRegion}}" style="height: 40px; padding: 0 12px; flex-shrink: 0; border-radius: 999px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 4px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#c93a00" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Add</button>
+</div>
+</div>
+
+<section aria-labelledby="prev-h" style="padding: 12px 14px; border-radius: 20px; background: #efecdc; display: flex; flex-direction: column; gap: 8px">
+<div style="display: flex; justify-content: space-between; align-items: center"><h2 id="prev-h" style="margin: 0; font-size: 14px; line-height: 18px; font-weight: 600">How companies see your listing</h2><span style="font-size: 12px; font-weight: 600; color: #5b5f86">Preview</span></div>
+<div style="padding: 10px 12px; border-radius: 12px; background: #ffffff; display: flex; align-items: center; gap: 10px">
+<img src="../assets/c311d0b40fa5c0d792261872e7c7b89d.svg" alt="" style="width: 40px; height: 40px; flex-shrink: 0; border-radius: 12px; object-fit: cover">
+<span style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column">
+<span style="display: flex; align-items: center; gap: 6px"><span style="font-size: 15px; line-height: 20px; font-weight: 700">Khalid Al-Harbi</span><span style="padding: 0 8px; border-radius: 999px; background: #f89e23; color: #262a67; font-size: 11px; line-height: 18px; font-weight: 700">Featured</span></span>
+<span style="font-size: 12px; line-height: 17px; color: #5b5f86">4.9 · Tourismo 49 seats · {{langLine}}</span>
+<span style="font-size: 12px; line-height: 17px; color: #5b5f86">from <strong style="color: #262a67">1,200 SAR</strong>/day · {{regLine}}</span>
+</span>
+</div>
+<span style="font-size: 12px; line-height: 17px; color: #5b5f86">Professional plan lists you as Featured. Premium puts you at the top. <a href="DrvPlanManage.dc.html" style="font-weight: 600">Plans</a></span>
+</section>
+
+<a href="DrvProfile.dc.html" style="margin-top: auto; height: 52px; flex-shrink: 0; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 17px; font-weight: 700; text-decoration: none; display: flex; align-items: center; justify-content: center">Save changes</a>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { langs: { Arabic: true, English: true, Urdu: true, Hindi: false, French: false }, regions: ['Riyadh', 'AlUla', 'Jeddah', 'Taif', 'Eastern Province'] }; }
+  renderVals() {
+    const LS = this.state.langs;
+    const langs = Object.keys(LS).map((t) => {
+      const on = LS[t];
+      return { t, on: on ? 'true' : 'false', go: () => this.setState({ langs: { ...LS, [t]: !on } }),
+        style: 'height: 40px; flex-shrink: 0; padding: 0 14px; border-radius: 999px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; ' + (on ? 'background: #262a67; color: #f6f3e4; border: 1px solid #262a67;' : 'background: #ffffff; color: #262a67; border: 1px solid #7b7fa6;') };
+    });
+    const R = this.state.regions;
+    const regions = R.map((t) => ({ t, al: 'Remove ' + t, rm: () => this.setState({ regions: R.filter((x) => x !== t) }) }));
+    const pool = ['Madinah', 'Tabuk', 'Abha', 'Makkah'];
+    const next = pool.find((x) => R.indexOf(x) < 0);
+    const on = Object.keys(LS).filter((k) => LS[k]);
+    return {
+      langs, regions,
+      addRegion: () => { if (next) this.setState({ regions: [...R, next] }); },
+      langLine: on.length + (on.length === 1 ? ' language' : ' languages'),
+      regLine: R.length ? (R.slice(0, 2).join(', ') + (R.length > 2 ? ' +' + (R.length - 2) : '')) : 'No regions'
+    };
+  }
+}
+</script>
+</body>
+</html>

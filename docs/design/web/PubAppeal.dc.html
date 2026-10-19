@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Web · Appeal a rejection</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+.te-foot a:focus-visible{outline-color:#f89e23}
+.te-nav:hover{color:#c93a00}
+</style>
+</helmet>
+<div style="min-height: 1000px; display: flex; flex-direction: column; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<header style="border-bottom: 1px solid #e3dfc9">
+<div style="max-width: 1200px; margin: 0 auto; box-sizing: border-box; padding: 14px 24px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 32px">
+<a href="WebHome.dc.html" aria-label="Trips Enjoy home" style="display: flex"><img src="../assets/1fbce194fcb16bf54904c32c189fca31.svg" alt="Trips Enjoy" style="height: 40px; width: auto"></a>
+<nav aria-label="Main" style="flex-grow: 1; display: flex; flex-wrap: wrap; gap: 4px 24px">
+<a href="WebExplore.dc.html" class="te-nav" style="padding: 10px 0; font-size: 15px; font-weight: 600; color: #262a67; text-decoration: none">Explore trips</a>
+<a href="WebBusiness.dc.html" class="te-nav" style="padding: 10px 0; font-size: 15px; font-weight: 600; color: #262a67; text-decoration: none">For organizers</a>
+<a href="WebBusiness.dc.html" class="te-nav" style="padding: 10px 0; font-size: 15px; font-weight: 600; color: #262a67; text-decoration: none">For drivers &amp; photographers</a>
+</nav>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px">
+<a href="WebHomeAr.dc.html" lang="ar" dir="rtl" style="height: 44px; padding: 0 12px; display: flex; align-items: center; font-family: Cairo, sans-serif; font-size: 15px; font-weight: 600; color: #262a67; text-decoration: none">العربية</a>
+<a href="WebHome.dc.html" style="height: 48px; box-sizing: border-box; padding: 0 20px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-size: 15px; font-weight: 600; display: flex; align-items: center; text-decoration: none">Sign out</a>
+</div>
+</div>
+</header>
+
+<main style="flex-grow: 1; width: 100%; max-width: 1200px; margin: 0 auto; box-sizing: border-box; padding: 40px 24px 56px; display: flex; flex-direction: column; gap: 24px">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<a href="WebBusiness.dc.html" style="display: inline-flex; align-items: center; gap: 4px; font-size: 14px; font-weight: 600; text-decoration: none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg>Application status</a>
+<h1 style="margin: 0; font-size: 32px; line-height: 40px; font-weight: 700">Appeal a rejection</h1>
+<span style="font-size: 15px; color: #5b5f86">Photographer application · Laila Fathy · APP-P-3071</span>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start">
+<div style="flex: 3 1 540px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+
+<section aria-labelledby="rs-h" style="background: #ffffff; border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: space-between; align-items: center"><h2 id="rs-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">Why the application was rejected</h2><span style="{{statusStyle}}">{{statusLabel}}</span></div>
+<div style="padding: 16px; border-radius: 12px; background: #fde8e6; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 16px; font-weight: 600; color: #b42318">Below portfolio minimum</span><span style="font-size: 15px; line-height: 22px">Photographer applications need at least 8 portfolio photos. Your application had 6.</span></div>
+<span style="font-size: 13px; color: #5b5f86">Decision sent Mon 6 Oct 2026, 13:20 Cairo time. This is the reason as recorded by the reviewer.</span>
+</section>
+
+<sc-if value="{{isOpen}}" hint-placeholder-val="{{true}}">
+<form aria-labelledby="ap-h" style="background: #ffffff; border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 16px">
+<h2 id="ap-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">Your appeal</h2>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="st" style="font-size: 14px; font-weight: 600">Appeal statement</label>
+<textarea id="st" rows="5" value="{{stmt}}" onInput="{{setStmt}}" aria-invalid="{{stmtBad}}" aria-describedby="st-msg" style="{{stmtStyle}}"></textarea>
+<sc-if value="{{stmtBad}}" hint-placeholder-val="{{false}}"><span id="st-msg" style="font-size: 13px; color: #b42318">Write a short statement explaining why the decision should be reviewed.</span></sc-if>
+<span style="font-size: 13px; color: #5b5f86">{{stmtCount}} / 2,000 characters</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px">
+<div style="display: flex; justify-content: space-between; align-items: baseline; gap: 8px"><span style="font-size: 14px; font-weight: 600">Supporting files</span><span style="font-size: 13px; color: #5b5f86">{{fileCount}} of 5 · PDF, JPG or PNG, 10 MB each</span></div>
+<sc-for list="{{files}}" as="f" hint-placeholder-count="2">
+<div style="display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 12px; border: 1px solid #e3dfc9">
+<sc-if value="{{f.isImg}}" hint-placeholder-val="{{true}}"><span style="position: relative; width: 40px; height: 40px; flex-shrink: 0; border-radius: 10px; overflow: hidden; background: #262a67"><img src="{{f.img}}" alt="{{f.alt}}" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover"></span></sc-if>
+<sc-if value="{{f.isDoc}}" hint-placeholder-val="{{false}}"><span style="width: 40px; height: 40px; flex-shrink: 0; border-radius: 10px; background: #262a67; color: #b8bad6; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{f.icon}}"></path></svg></span></sc-if>
+<span style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column"><span style="font-size: 15px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap">{{f.n}}</span><span style="font-size: 13px; color: #5b5f86">{{f.s}}</span></span>
+<button type="button" onClick="{{f.remove}}" aria-label="{{f.rl}}" style="width: 44px; height: 44px; border: 0; border-radius: 12px; background: transparent; color: #262a67; cursor: pointer; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"></path></svg></button>
+</div>
+</sc-for>
+<sc-if value="{{canAdd}}" hint-placeholder-val="{{true}}"><button type="button" onClick="{{addFile}}" style="height: 52px; border-radius: 12px; border: 1px dashed #7b7fa6; background: #f6f3e4; color: #262a67; font: inherit; font-size: 15px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"></path></svg>Add a file</button></sc-if>
+<sc-if value="{{full}}" hint-placeholder-val="{{false}}"><span role="status" style="font-size: 13px; color: #8a4b00">You've added the maximum of 5 files. Remove one to add another.</span></sc-if>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; padding-top: 12px; border-top: 1px solid #e3dfc9">
+<button type="button" onClick="{{submit}}" style="height: 48px; padding: 0 24px; border: 0; border-radius: 12px; background: #ff6c2e; color: #262a67; font: inherit; font-size: 15px; font-weight: 700; cursor: pointer">Submit appeal</button>
+<span style="font-size: 13px; line-height: 18px; color: #5b5f86; flex: 1 1 240px">You can appeal once for this rejection. After you submit, the statement and files can't be changed.</span>
+</div>
+</form>
+</sc-if>
+
+<sc-if value="{{isSubmitted}}" hint-placeholder-val="{{false}}">
+<section role="status" aria-labelledby="sb-h" style="background: #ffffff; border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 14px">
+<span style="width: 52px; height: 52px; border-radius: 999px; background: #e6e8f5; display: flex; align-items: center; justify-content: center"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7v5l3 2"></path></svg></span>
+<h2 id="sb-h" style="margin: 0; font-size: 24px; line-height: 30px; font-weight: 600">Appeal received</h2>
+<p style="margin: 0; font-size: 16px; line-height: 24px; color: #5b5f86">Your application status is now <strong style="color: #262a67">Appealed</strong>. A different reviewer will decide within 5 working days, by <strong style="color: #262a67">Thu 23 Oct 2026</strong>. We'll email and notify you either way.</p>
+<span style="font-size: 14px; color: #5b5f86">Submitted Thu 16 Oct 2026, 11:42 · statement and {{fileCount}} files</span>
+<a href="WebBusiness.dc.html" style="align-self: flex-start; height: 48px; padding: 0 20px; border-radius: 12px; background: #262a67; color: #f6f3e4; font-size: 15px; font-weight: 600; display: flex; align-items: center; text-decoration: none">Back to application status</a>
+</section>
+</sc-if>
+
+<sc-if value="{{isClosed}}" hint-placeholder-val="{{false}}">
+<section aria-labelledby="cl-h" style="background: #ffffff; border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 14px">
+<span style="width: 52px; height: 52px; border-radius: 999px; background: #f6f3e4; display: flex; align-items: center; justify-content: center"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 11h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1zM8 11V7a4 4 0 0 1 8 0v4"></path></svg></span>
+<h2 id="cl-h" style="margin: 0; font-size: 24px; line-height: 30px; font-weight: 600">The appeal window has closed</h2>
+<p style="margin: 0; font-size: 16px; line-height: 24px; color: #5b5f86">Appeals had to be sent within 14 days of the decision, by Mon 20 Oct 2026. You can send a new application from <strong style="color: #262a67">Wed 5 Nov 2026</strong>, 30 days after the rejection. Bring at least 8 portfolio photos.</p>
+<a href="WebBusiness.dc.html" style="align-self: flex-start; height: 48px; padding: 0 20px; border-radius: 12px; background: #262a67; color: #f6f3e4; font-size: 15px; font-weight: 600; display: flex; align-items: center; text-decoration: none">Back to application status</a>
+</section>
+</sc-if>
+
+<sc-if value="{{isDecided}}" hint-placeholder-val="{{false}}">
+<section aria-labelledby="dc-h" style="background: #ffffff; border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 14px">
+<span style="width: 52px; height: 52px; border-radius: 999px; background: #e3f3ea; color: #1f7a4d; display: flex; align-items: center; justify-content: center"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg></span>
+<h2 id="dc-h" style="margin: 0; font-size: 24px; line-height: 30px; font-weight: 600">Appeal approved. Welcome to Trips Enjoy, Laila.</h2>
+<p style="margin: 0; font-size: 16px; line-height: 24px; color: #5b5f86">Decided Tue 21 Oct 2026. The two extra photos you sent bring your portfolio to 8. You start on the Basic plan; set up your studio to receive offers.</p>
+<a href="PhoWebStudio.dc.html" style="align-self: flex-start; height: 48px; padding: 0 22px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 15px; font-weight: 700; display: flex; align-items: center; text-decoration: none">Open my studio</a>
+<span style="font-size: 13px; color: #5b5f86">If an appeal is rejected, that decision is final for this application and you can re-apply after 30 days.</span>
+</section>
+</sc-if>
+</div>
+
+<aside style="flex: 2 1 300px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+<section aria-labelledby="dl-h" style="background: #262a67; color: #f6f3e4; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 8px">
+<h2 id="dl-h" style="margin: 0; font-size: 14px; font-weight: 600; color: #b8bad6">Last day to appeal</h2>
+<span style="font-size: 26px; line-height: 32px; font-weight: 700">Mon 20 Oct 2026</span>
+<span style="font-size: 14px; color: #b8bad6">{{deadlineNote}}</span>
+</section>
+<section aria-labelledby="hw-h" style="background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 10px">
+<h2 id="hw-h" style="margin: 0; font-size: 18px; font-weight: 600">How appeals work</h2>
+<ul style="margin: 0; padding: 0 0 0 18px; display: flex; flex-direction: column; gap: 8px; font-size: 14px; line-height: 21px; color: #5b5f86">
+<li>One appeal per rejection, within 14 days of the decision.</li>
+<li>Up to 5 supporting files. For this reason, extra portfolio photos help most.</li>
+<li>Decided within 5 working days by a reviewer who didn't make the first decision.</li>
+<li>Your traveler account works as usual while you wait.</li>
+</ul>
+</section>
+</aside>
+</div>
+</main>
+
+<footer class="te-foot" style="background: #262a67; color: #b8bad6">
+<div style="max-width: 1200px; margin: 0 auto; box-sizing: border-box; padding: 20px 24px; display: flex; flex-wrap: wrap; gap: 12px 24px; justify-content: space-between; font-size: 14px">
+<span>© 2026 Trips Enjoy</span>
+<span style="display: flex; flex-wrap: wrap; gap: 20px"><a href="WebLegal.dc.html" style="color: #b8bad6">Terms</a><a href="WebLegal.dc.html" style="color: #b8bad6">Privacy</a></span>
+</div>
+</footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"state":{"editor":"enum","options":["open","submitted","closed","decided"],"default":"open"},"$preview":{"width":1440,"height":1160}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { sent: false, tried: false, stmt: 'I uploaded 6 photos because two of my best wedding-party shots were still processing in HEIC. I have attached them now as JPG, which brings my portfolio to 8. Both were taken on group trips to Siwa and Wadi El Rayan.', files: [0, 1] } }
+  renderVals() {
+    const S0 = this.state.sent ? 'submitted' : (this.props.state ?? 'open');
+    const S = ['open', 'submitted', 'closed', 'decided'].includes(S0) ? S0 : 'open';
+    const LIB = [
+      ['siwa-group-sunset.jpg', '4.8 MB · photo', 'img', '../assets/d86de248246e3c2af9ac141f04f94d0a.svg', 'Siwa Oasis at sunset'], ['wadi-el-rayan-falls.jpg', '6.1 MB · photo', 'img', '../assets/6c681277de59192cae4171833ad9e5e7.svg', 'Wadi El Rayan waterfall'], ['camera-receipt.pdf', '0.4 MB · document', 'doc', '', ''],
+      ['alexandria-corniche.jpg', '5.2 MB · photo', 'img', '../assets/f307c5f03eb23299e4b0e9acc1833c87.svg', 'Alexandria Corniche'], ['client-reference-letter.pdf', '0.3 MB · document', 'doc', '', ''], ['fayoum-picnic.png', '7.9 MB · photo', 'img', '../assets/8e86331acb7080e5e12facebe9aa4069.svg', 'Families picking fruit at a Fayoum farm']
+    ];
+    const IC = { img: 'M5 4h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1zM8.5 10a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM20 15l-5-5L5 20', doc: 'M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zM14 3v5h5' };
+    const fl = this.state.files;
+    const files = fl.map((k, i) => ({ n: LIB[k][0], s: LIB[k][1], icon: IC[LIB[k][2]], isImg: LIB[k][2] === 'img', isDoc: LIB[k][2] !== 'img', img: LIB[k][3], alt: LIB[k][4], rl: 'Remove ' + LIB[k][0],
+      remove: () => { const a = fl.slice(); a.splice(i, 1); this.setState({ files: a }); } }));
+    const stmtBad = this.state.tried && !String(this.state.stmt).trim();
+    const tone = { open: ['Rejected · appeal open', 'background: #fde8e6; color: #b42318;'], submitted: ['Appealed', 'background: #e6e8f5; color: #262a67;'], closed: ['Rejected · window closed', 'background: #f6f3e4; color: #5b5f86;'], decided: ['Approved on appeal', 'background: #e3f3ea; color: #1f7a4d;'] }[S];
+    return { isOpen: S === 'open', isSubmitted: S === 'submitted', isClosed: S === 'closed', isDecided: S === 'decided',
+      statusLabel: tone[0], statusStyle: 'display: inline-flex; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; ' + tone[1],
+      deadlineNote: S === 'closed' ? 'Passed. Re-apply from Wed 5 Nov 2026.' : S === 'open' ? '4 days left · 14 days from the decision on Mon 6 Oct' : 'Your appeal was sent in time.',
+      stmt: this.state.stmt, setStmt: (e) => this.setState({ stmt: e.target.value }), stmtBad, stmtCount: String(String(this.state.stmt).length),
+      stmtStyle: 'min-height: 128px; box-sizing: border-box; border-radius: 8px; background: #fff; padding: 12px 14px; font: inherit; font-size: 16px; line-height: 24px; color: #262a67; resize: vertical; ' + (stmtBad ? 'border: 2px solid #b42318;' : 'border: 1px solid #7b7fa6;'),
+      files, fileCount: String(fl.length), canAdd: fl.length < 5, full: fl.length >= 5,
+      addFile: () => { if (fl.length >= 5) return; const next = [0, 1, 2, 3, 4, 5].find((k) => !fl.includes(k)); this.setState({ files: fl.concat([next]) }); },
+      submit: () => { if (!String(this.state.stmt).trim()) { this.setState({ tried: true }); return; } this.setState({ sent: true }); } };
+  }
+}
+</script>
+</body>
+</html>

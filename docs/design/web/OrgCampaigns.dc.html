@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Organization · Campaigns</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+.te-row:hover{background:#f6f3e4}
+</style>
+</helmet>
+<div style="min-height: 1000px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="OrgNav" active="Campaigns" hint-size="248px,1000px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 20px">
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; color: #5b5f86">Email, SMS, WhatsApp and push to customers who opted in</span><h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Campaigns</h1></div>
+<a href="OrgCampaignNew.dc.html" style="height: 48px; padding: 0 20px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>New campaign</a>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px">
+<div style="padding: 18px 20px; border-radius: 20px; background: #262a67; color: #f6f3e4; display: flex; flex-direction: column; gap: 8px">
+<span style="font-size: 14px; color: #b8bad6">Messages this month</span>
+<span style="font-size: 28px; line-height: 34px; font-weight: 700">1,240 <span style="font-size: 15px; font-weight: 500; color: #b8bad6">/ 2,000</span></span>
+<div role="progressbar" aria-label="Monthly message quota" aria-valuenow="1240" aria-valuemin="0" aria-valuemax="2000" style="height: 8px; border-radius: 999px; background: #31367a; overflow: hidden"><div style="width: 62%; height: 100%; background: #f89e23"></div></div>
+<span style="font-size: 13px; color: #b8bad6">760 left · resets Sat 1 Nov · <a href="OrgBilling.dc.html" style="color: #ff8655; font-weight: 600">Enterprise is unlimited</a></span>
+</div>
+<sc-for list="{{kpis}}" as="k" hint-placeholder-count="3">
+<div style="padding: 18px 20px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 14px; color: #5b5f86">{{k.l}}</span>
+<span style="font-size: 28px; line-height: 34px; font-weight: 700">{{k.v}} <span style="font-size: 15px; font-weight: 500; color: #5b5f86">{{k.u}}</span></span>
+<span style="{{k.ds}}">{{k.d}}</span>
+</div>
+</sc-for>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 8px" role="group" aria-label="Filter by status">
+<sc-for list="{{chips}}" as="c" hint-placeholder-count="5">
+<button type="button" aria-pressed="{{c.pressed}}" onClick="{{c.on}}" style="{{c.style}}">{{c.l}} <span style="{{c.ns}}">{{c.n}}</span></button>
+</sc-for>
+</div>
+
+<section aria-labelledby="cm-h" style="background: #ffffff; border-radius: 20px; padding: 20px 0 8px">
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 0 20px 12px; gap: 12px; flex-wrap: wrap"><h2 id="cm-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">{{title}}</h2><span style="font-size: 13px; color: #5b5f86">Bookings and revenue are attributed within 7 days of a click</span></div>
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 1120px; border-collapse: collapse; font-size: 15px">
+<thead><tr style="color: #5b5f86; font-size: 13px"><th scope="col" style="text-align: start; padding: 10px 20px; font-weight: 600">Campaign</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Channel</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Segment</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Status</th><th scope="col" style="text-align: end; padding: 10px 12px; font-weight: 600">Sent</th><th scope="col" style="text-align: end; padding: 10px 12px; font-weight: 600">Open</th><th scope="col" style="text-align: end; padding: 10px 12px; font-weight: 600">Click</th><th scope="col" style="text-align: end; padding: 10px 12px; font-weight: 600">Bookings</th><th scope="col" style="text-align: end; padding: 10px 20px; font-weight: 600">Revenue</th></tr></thead>
+<tbody>
+<sc-for list="{{rows}}" as="r" hint-placeholder-count="8">
+<tr class="te-row" style="border-top: 1px solid #e3dfc9">
+<td style="padding: 12px 20px"><a href="OrgCampaignNew.dc.html" style="display: flex; flex-direction: column; color: #262a67; text-decoration: none"><span style="font-weight: 600">{{r.n}}</span><span style="font-size: 13px; color: #5b5f86">{{r.sub}}</span></a></td>
+<td style="padding: 12px"><span style="display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 600"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{r.icon}}"></path></svg>{{r.ch}}</span></td>
+<td style="padding: 12px; font-size: 14px">{{r.seg}}</td>
+<td style="padding: 12px"><span style="{{r.ss}}">{{r.s}}</span></td>
+<td style="padding: 12px; text-align: end">{{r.sent}}</td>
+<td style="padding: 12px; text-align: end">{{r.open}}</td>
+<td style="padding: 12px; text-align: end">{{r.click}}</td>
+<td style="padding: 12px; text-align: end; font-weight: 600">{{r.bk}}</td>
+<td style="padding: 12px 20px; text-align: end; font-weight: 600; white-space: nowrap">{{r.rev}}</td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+</section>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { f: 'All' }; }
+  renderVals() {
+    const tones = { Sent: 'background: #e3f3ea; color: #1f7a4d;', Sending: 'background: #ffe7dc; color: #c93a00;', Scheduled: 'background: #e6e8f5; color: #262a67;', Draft: 'background: #f6f3e4; color: #5b5f86; border: 1px solid #e3dfc9;' };
+    const pill = (s) => 'display: inline-flex; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; white-space: nowrap; ' + tones[s];
+    const I = { Email: 'M4 6h16v12H4zM4 7l8 6 8-6', SMS: 'M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2', WhatsApp: 'M4 5h16v11H9l-5 4z', Push: 'M6 16v-5a6 6 0 0 1 12 0v5l2 2H4zM10 21a2 2 0 0 0 4 0' };
+    const all = [
+      ['AlUla last family seats', 'Sent Sun 5 Oct 19:00 · FAMILY10 attached', 'WhatsApp', 'Families with children', 'Sent', '402', '78%', '21%', '22', '68,400 SAR'],
+      ['Edge of the World sunrise', 'Sending now · 210 of 640', 'WhatsApp', 'Repeat travellers', 'Sending', '210', '64%', '12%', '3', '1,650 SAR'],
+      ['Autumn sale · AUTUMN15', 'Sent Wed 1 Oct 10:00 · A/B subject, B won', 'Email', 'High spenders', 'Sent', '412', '46%', '9%', '17', '41,260 SAR'],
+      ['Taif Rose Farms early access', 'Sent Thu 2 Oct 18:00', 'Push', 'Explorer & VIP members', 'Sent', '130', '44%', '15%', '9', '7,560 SAR'],
+      ['Red Sea Snorkel Day', 'Sent Mon 6 Oct 12:00', 'SMS', 'Jeddah VIP', 'Sent', '86', 'n/a', '12%', '6', '4,180 SAR'],
+      ['We miss you', 'Sat 18 Oct 10:00 · 742 in segment, 498 opted in', 'Email', 'Lapsed 90+ days', 'Scheduled', '—', '—', '—', '—', '—'],
+      ['Jeddah Corniche Night', 'Edited by Mona Saleh · yesterday', 'WhatsApp', 'Jeddah VIP', 'Draft', '—', '—', '—', '—', '—'],
+      ['National Day weekend', 'Sent Tue 16 Sep · last month', 'Email', 'All opted-in customers', 'Sent', '1,980', '41%', '7%', '31', '59,350 SAR']
+    ].map(([n, sub, ch, seg, s, sent, open, click, bk, rev]) => ({ n, sub, ch, icon: I[ch], seg, s, ss: pill(s), sent, open, click, bk, rev }));
+    const f = this.state.f;
+    const counts = [['All', 8], ['Sent', 5], ['Sending', 1], ['Scheduled', 1], ['Draft', 1]];
+    const chips = counts.map(([l, n]) => { const on = l === f; return { l, n, pressed: on ? 'true' : 'false', on: () => this.setState({ f: l }),
+      style: 'height: 36px; padding: 0 14px; border-radius: 999px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; ' + (on ? 'background: #262a67; color: #f6f3e4; border: 1px solid #262a67;' : 'background: #ffffff; color: #262a67; border: 1px solid #e3dfc9;'),
+      ns: 'font-size: 12px; font-weight: 700; ' + (on ? 'color: #f89e23;' : 'color: #5b5f86;') }; });
+    const kpis = [
+      { l: 'Avg open rate', v: '58%', u: '', d: 'Email 46% · WhatsApp 74%', ds: 'font-size: 13px; color: #5b5f86' },
+      { l: 'Bookings from campaigns', v: '57', u: '', d: 'October so far', ds: 'font-size: 13px; color: #5b5f86' },
+      { l: 'Campaign revenue', v: '123,050', u: 'SAR', d: '▲ 21% vs September', ds: 'font-size: 13px; font-weight: 600; color: #1f7a4d' }
+    ];
+    return { kpis, chips, rows: all.filter((r) => f === 'All' || r.s === f), title: f === 'All' ? 'All campaigns' : f };
+  }
+}
+</script>
+</body>
+</html>

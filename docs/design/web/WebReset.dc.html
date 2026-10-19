@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Reset password — web</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif; display: flex; flex-direction: column; align-items: center; padding: 48px; gap: 40px">
+<img src="../assets/1fbce194fcb16bf54904c32c189fca31.svg" alt="Trips Enjoy — تريبس إنجوي" style="height: 52px; width: auto">
+<div style="width: 480px; box-sizing: border-box; background: #ffffff; border-radius: 20px; padding: 40px; display: flex; flex-direction: column; gap: 20px; box-shadow: 0 1px 2px rgba(38,42,103,.06), 0 6px 20px rgba(38,42,103,.08)">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Set a new password</h1>
+<p style="margin: 0; font-size: 16px; line-height: 24px; color: #5b5f86">Enter the code we sent to +966 55 ••• 4821, then choose a new password.</p>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 14px; font-weight: 600">Verification code</span>
+<dc-import name="OtpField" digits="481920" length="{{six}}" hint-size="100%,60px"></dc-import>
+</div>
+<dc-import name="PasswordField" label="New password" value="Bus3-Hurghada!" show-strength="{{yes}}" is-new="{{yes}}" field-id="wr-1" hint-size="100%,112px"></dc-import>
+<dc-import name="PasswordField" label="Confirm new password" value="Bus3-Hurghada!" is-new="{{yes}}" field-id="wr-2" hint-size="100%,82px"></dc-import>
+<label style="display: flex; gap: 10px; align-items: center; font-size: 14px"><input type="checkbox" checked="" style="width: 18px; height: 18px; margin: 0; accent-color: #262a67">Sign me out on all other devices</label>
+<a href="WebSignIn.dc.html" style="height: 52px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 16px; font-weight: 600; display: flex; align-items: center; justify-content: center; text-decoration: none">Update password</a>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+renderVals() { return { six: 6, yes: true }; }
+}
+</script>
+</body>
+</html>

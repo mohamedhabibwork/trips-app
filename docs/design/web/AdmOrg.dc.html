@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Admin · Organization detail</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="min-height: 1000px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="AdmNav" active="Organizations" hint-size="248px,1000px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 20px">
+
+<a href="AdmOrgs.dc.html" style="align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 600; text-decoration: none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg>All organizations</a>
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: center">
+<div style="display: flex; gap: 16px; align-items: center">
+<img src="../assets/697a49af6be5a077ae1851c1a8b9dfcd.svg" alt="" style="width: 64px; height: 64px; border-radius: 16px; object-fit: cover; flex-shrink: 0; border: 1px solid #e3dfc9">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Sunrise Tours Co.</h1>
+<div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-size: 14px; color: #5b5f86">
+<span style="display: inline-flex; align-items: center; gap: 4px; padding: 1px 8px; border-radius: 999px; font-size: 12px; font-weight: 600; background: #e3f3ea; color: #1f7a4d"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg>Active</span>
+<span>CR 1010734512 · Riyadh, Saudi Arabia · owner <a href="AdmUser.dc.html" style="font-weight: 600">Mona Saleh</a> · approved 10 Nov 2024</span>
+</div>
+</div>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 10px">
+<a href="AdminAppReview.dc.html" style="height: 44px; box-sizing: border-box; padding: 0 16px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-size: 14px; font-weight: 600; display: flex; align-items: center; text-decoration: none">Original application</a>
+<a href="OrgHome.dc.html" style="height: 44px; box-sizing: border-box; padding: 0 16px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-size: 14px; font-weight: 600; display: flex; align-items: center; text-decoration: none">View as tenant (read-only)</a>
+</div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px">
+<sc-for list="{{facts}}" as="f" hint-placeholder-count="6">
+<div style="padding: 14px 16px; border-radius: 16px; background: #ffffff; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 13px; color: #5b5f86">{{f.l}}</span><span style="font-size: 20px; font-weight: 700">{{f.v}}</span><span style="{{f.ds}}">{{f.d}}</span></div>
+</sc-for>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
+<div style="flex: 3 1 480px; min-width: 0; display: flex; flex-direction: column; gap: 20px">
+
+<section aria-labelledby="use-h" style="background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px"><h2 id="use-h" style="margin: 0; font-size: 18px; font-weight: 600">Plan &amp; usage · Company Growth</h2><span style="font-size: 13px; color: #5b5f86">1,490 SAR / month · renews Sat 1 Nov</span></div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px 24px">
+<sc-for list="{{usage}}" as="u" hint-placeholder-count="5">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<div style="display: flex; justify-content: space-between; font-size: 14px"><span style="font-weight: 600">{{u.l}}</span><span>{{u.v}}</span></div>
+<div style="height: 8px; border-radius: 999px; background: #f6f3e4; overflow: hidden" role="img" aria-label="{{u.aria}}"><div style="{{u.bar}}"></div></div>
+</div>
+</sc-for>
+</div>
+</section>
+
+<section aria-labelledby="rec-h" style="background: #ffffff; border-radius: 20px; padding: 8px 0">
+<div role="tablist" aria-label="Tenant records" style="display: flex; flex-wrap: wrap; gap: 4px; padding: 0 12px; border-bottom: 1px solid #e3dfc9">
+<h2 id="rec-h" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Tenant records</h2>
+<sc-for list="{{tabs}}" as="t" hint-placeholder-count="5"><button type="button" role="tab" aria-selected="{{t.sel}}" onClick="{{t.on}}" style="{{t.st}}">{{t.t}}</button></sc-for>
+</div>
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 600px; border-collapse: collapse; font-size: 15px">
+<thead><tr style="color: #5b5f86; font-size: 13px"><sc-for list="{{tHead}}" as="h" hint-placeholder-count="4"><th scope="col" style="text-align: start; padding: 10px 16px; font-weight: 600">{{h}}</th></sc-for></tr></thead>
+<tbody>
+<sc-for list="{{tRows}}" as="r" hint-placeholder-count="4">
+<tr style="border-top: 1px solid #e3dfc9"><td style="padding: 11px 16px; font-weight: 600"><a href="{{r.href}}" style="color: #262a67; text-decoration: none">{{r.a}}</a></td><td style="padding: 11px 16px">{{r.b}}</td><td style="padding: 11px 16px; color: #5b5f86">{{r.c}}</td><td style="padding: 11px 16px"><span style="{{r.ss}}">{{r.d}}</span></td></tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+</section>
+
+<section aria-labelledby="cmp-h" style="background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 10px">
+<h2 id="cmp-h" style="margin: 0; font-size: 18px; font-weight: 600">Compliance documents</h2>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px">
+<sc-for list="{{docs}}" as="d" hint-placeholder-count="3">
+<div style="padding: 12px 14px; border-radius: 12px; border: 1px solid #e3dfc9; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 15px; font-weight: 600">{{d.n}}</span><span style="font-size: 13px; color: #5b5f86">{{d.d}}</span><span style="{{d.ss}}">{{d.s}}</span></div>
+</sc-for>
+</div>
+</section>
+</div>
+
+<aside style="flex: 2 1 320px; min-width: 0; display: flex; flex-direction: column; gap: 20px">
+<section aria-labelledby="ov-h" style="background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+<h2 id="ov-h" style="margin: 0; font-size: 18px; font-weight: 600">Manual plan override</h2>
+<p style="margin: 0; font-size: 14px; color: #5b5f86; line-height: 20px">Applies immediately with no charge. Billing for Growth pauses and resumes when the override ends, unless the tenant upgrades.</p>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="ov-p" style="font-size: 14px; font-weight: 600">Grant plan</label><select id="ov-p" style="height: 48px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 12px; font: inherit; font-size: 15px; color: #262a67"><option>Company Enterprise</option><option>Company Growth</option><option>Company Starter</option></select></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="ov-u" style="font-size: 14px; font-weight: 600">Until</label><input id="ov-u" type="date" value="2027-03-31" style="height: 48px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 12px; font: inherit; font-size: 15px; color: #262a67"></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="ov-r" style="font-size: 14px; font-weight: 600">Reason (shown in audit log)</label><textarea id="ov-r" rows="2" style="border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 10px 14px; font: inherit; font-size: 15px; color: #262a67; resize: vertical">Strategic partner · AlUla season launch</textarea></div>
+<div style="padding: 10px 12px; border-radius: 12px; background: #e6e8f5; font-size: 13px; line-height: 18px">Unlocks unlimited trips (now 18 of 20), full analytics, priority support and custom branding.</div>
+<button type="button" style="height: 48px; border-radius: 12px; border: 0; background: #ff6c2e; color: #262a67; font: inherit; font-size: 15px; font-weight: 700; cursor: pointer">Grant Enterprise until 31 Mar 2027</button>
+</section>
+
+<section aria-labelledby="fin-h" style="background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 8px">
+<h2 id="fin-h" style="margin: 0 0 4px; font-size: 18px; font-weight: 600">Financials · October</h2>
+<sc-for list="{{fin}}" as="f" hint-placeholder-count="5">
+<div style="{{f.st}}"><span>{{f.l}}</span><span style="font-variant-numeric: tabular-nums">{{f.v}}</span></div>
+</sc-for>
+</section>
+
+<section aria-labelledby="dz-h" style="background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 10px; border: 1px solid #f3c7c2">
+<h2 id="dz-h" style="margin: 0; font-size: 18px; font-weight: 600; color: #b42318">Suspend tenant</h2>
+<p style="margin: 0; font-size: 14px; color: #5b5f86; line-height: 20px">Hides 18 active trips from travellers and signs out 14 employees. 1,284 confirmed bookings stay valid; you choose whether to refund them.</p>
+<button type="button" style="align-self: flex-start; height: 44px; padding: 0 16px; border-radius: 12px; border: 0; background: #b42318; color: #ffffff; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer">Suspend Sunrise Tours Co.…</button>
+</section>
+</aside>
+</div>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1280}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { tab: 'Trips' }; }
+  renderVals() {
+    const pill = (tone) => 'justify-self: start; align-self: flex-start; display: inline-flex; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; white-space: nowrap; ' + ({ ok: 'background: #e3f3ea; color: #1f7a4d;', warn: 'background: #fdf0d5; color: #8a4b00;', bad: 'background: #fde8e6; color: #b42318;', info: 'background: #e6e8f5; color: #262a67;', live: 'background: #ffe7dc; color: #c93a00;' })[tone];
+    const mut = 'font-size: 13px; color: #5b5f86';
+    const facts = [
+      { l: 'Active trips', v: '18 / 20', d: '2 left on Growth', ds: 'font-size: 13px; font-weight: 600; color: #8a4b00' },
+      { l: 'Staff', v: '14', d: '9 own drivers · 22 moderators', ds: mut },
+      { l: 'GMV (Oct)', v: '412,600 SAR', d: '▲ 8.2% vs September', ds: 'font-size: 13px; font-weight: 600; color: #1f7a4d' },
+      { l: 'Seats sold (Oct)', v: '1,284', d: '4.7 ★ average rating', ds: mut },
+      { l: 'Open disputes', v: '1', d: 'Refund claim · 2 days', ds: 'font-size: 13px; font-weight: 600; color: #b42318' },
+      { l: 'Customer since', v: '11 months', d: 'Starter → Growth Feb 2025', ds: mut }
+    ];
+    const u = (l, a, b) => { const p = Math.round(a / b * 100); return { l, v: a + ' of ' + b, aria: l + ' ' + a + ' of ' + b, bar: 'height: 100%; width: ' + p + '%; border-radius: 999px; background: ' + (p >= 90 ? '#f89e23' : '#262a67') + ';' }; };
+    const usage = [u('Active trips', 18, 20), u('Employees', 14, 20), u('Coupons', 12, 20), u('Vehicles on largest trip', 4, 10), u('Programs on largest trip', 7, 15)];
+    const names = ['Trips', 'Coupons', 'Disputes', 'Staff'];
+    const tab = this.state.tab;
+    const tabs = names.map((t) => ({ t, sel: t === tab ? 'true' : 'false', on: () => this.setState({ tab: t }),
+      st: 'height: 44px; padding: 0 14px; border: 0; background: transparent; font: inherit; font-size: 15px; cursor: pointer; color: #262a67; ' + (t === tab ? 'font-weight: 700; box-shadow: inset 0 -3px 0 #ff6c2e;' : 'font-weight: 500;') }));
+    const T = {
+      Trips: [['Trip', 'Dates', 'Seats', 'Status'], [
+        ['AlUla Heritage Weekend', 'Thu 16–Sat 18 Oct', '168 / 172', 'In progress', 'live', 'AdmTrips.dc.html'],
+        ['Jeddah Corniche Night', 'Fri 17 Oct', '120 / 150', 'Missing staff', 'bad', 'AdmTrips.dc.html'],
+        ['Red Sea Snorkel Day', 'Fri 24 Oct', '96 / 100', 'Negotiating', 'warn', 'AdmDeals.dc.html'],
+        ['Taif Rose Farms', 'Thu 30 Oct', '50 / 50', 'Sold out', 'ok', 'AdmTrips.dc.html']]],
+      Coupons: [['Code', 'Type', 'Used', 'Status'], [
+        ['AUTUMN15', '15% · all Sunrise trips', '184 / 200', 'Active', 'ok', 'AdmCoupons.dc.html'],
+        ['ALULAFAM', 'Free Old Town walk', '62 / 100', 'Active', 'ok', 'AdmCoupons.dc.html'],
+        ['SUMMER100', '100 SAR fixed', '300 / 300', 'Exhausted', 'info', 'AdmCoupons.dc.html']]],
+      Disputes: [['Case', 'Raised by', 'Opened', 'Status'], [
+        ['D-1042 · refund after deadline', 'Layla Haddad', 'Sun 12 Oct', 'Open', 'warn', 'AdmDispute.dc.html'],
+        ['D-0987 · late bus at pickup', 'Omar Bakr', '21 Sep', 'Resolved · 120 SAR', 'ok', 'AdmDispute.dc.html']]],
+      Staff: [['Name', 'Role', 'Last active', 'Status'], [
+        ['Mona Saleh', 'Owner · Manager', 'Today 08:40', 'Active', 'ok', 'AdmUser.dc.html'],
+        ['Hala Nasser', 'Finance', 'Today 08:02', 'Active', 'ok', 'AdmUser.dc.html'],
+        ['Yousef Amin', 'Operations', 'Today 06:12', 'Active', 'ok', 'AdmUser.dc.html'],
+        ['Rana Fadel', 'Support', 'Today 09:05', 'Active', 'ok', 'AdmUser.dc.html']]]
+    };
+    const cur = T[tab];
+    const tRows = cur[1].map((r) => ({ a: r[0], b: r[1], c: r[2], d: r[3], ss: pill(r[4]), href: r[5] }));
+    const docs = [
+      { n: 'Commercial Registration', d: 'CR 1010734512 · expires 3 Jun 2027', s: 'Valid', t: 'ok' },
+      { n: 'VAT certificate', d: '310 1234 5670 0003 · ZATCA', s: 'Valid', t: 'ok' },
+      { n: 'Tourism licence', d: 'Expires Thu 20 Nov 2026', s: 'Renew within 37 days', t: 'warn' }
+    ].map((x) => ({ ...x, ss: pill(x.t) }));
+    const row = 'display: flex; justify-content: space-between; font-size: 15px; padding: 4px 0;';
+    const fin = [
+      { l: 'Gross bookings', v: '412,600 SAR', st: row },
+      { l: 'Coupon cost (tenant-funded)', v: '−18,420 SAR', st: row + ' color: #5b5f86;' },
+      { l: 'Platform commission (6%)', v: '24,756 SAR', st: row },
+      { l: 'Platform driver & photographer deals', v: '31,900 SAR', st: row + ' color: #5b5f86;' },
+      { l: 'Subscription paid', v: '1,490 SAR', st: row + ' border-top: 1px solid #e3dfc9; padding-top: 10px; font-weight: 700;' }
+    ];
+    return { facts, usage, tabs, tHead: cur[0], tRows, docs, fin };
+  }
+}
+</script>
+</body>
+</html>

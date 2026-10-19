@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Assign seats · AlUla</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="min-height: 1000px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="OrgNav" active="Trips" hint-size="248px,1000px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 20px">
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<a href="OrgRoster.dc.html" style="font-size: 14px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px; text-decoration: none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg>Passenger roster</a>
+<h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Assign seats</h1>
+<span style="font-size: 15px; color: #5b5f86">AlUla Heritage Weekend · company-assigned seats · travelers see their seat in the app once you save</span>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center">
+<span style="font-size: 14px; color: #5b5f86">{{saveNote}}</span>
+<button type="button" onClick="{{auto}}" style="height: 48px; box-sizing: border-box; padding: 0 18px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM3 20a6 6 0 0 1 12 0M16 4.5a3.5 3.5 0 0 1 0 6.5M18 14.5a6 6 0 0 1 3 5.5"></path></svg>Auto-assign families together</button>
+<button type="button" onClick="{{save}}" style="height: 48px; padding: 0 22px; border-radius: 12px; border: 0; background: #ff6c2e; color: #262a67; font: inherit; font-size: 15px; font-weight: 700; cursor: pointer">Save seats</button>
+</div>
+</div>
+
+<div role="tablist" aria-label="Buses" style="display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{tabs}}" as="t" hint-placeholder-count="4">
+<button type="button" role="tab" aria-selected="{{t.sel}}" onClick="{{t.on}}" style="{{t.style}}">{{t.l}} <span style="{{t.bs}}">{{t.b}}</span></button>
+</sc-for>
+</div>
+
+<sc-if value="{{otherBus}}" hint-placeholder-val="{{false}}">
+<div style="padding: 24px; border-radius: 20px; background: #ffffff; display: flex; gap: 12px; align-items: center; font-size: 16px"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1f7a4d" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg>Everyone on {{otherName}} has a seat. Open Bus 4 to finish.</div>
+</sc-if>
+
+<sc-if value="{{isBus4}}" hint-placeholder-val="{{true}}">
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
+<section aria-labelledby="un-h" style="flex: 1 1 300px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 16px 0 8px">
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 0 16px 8px"><h2 id="un-h" style="margin: 0; font-size: 18px; font-weight: 600">Without a seat</h2><span style="{{leftPill}}">{{leftText}}</span></div>
+<sc-for list="{{groups}}" as="g" hint-placeholder-count="5">
+<div style="border-top: 1px solid #e3dfc9; padding: 8px 16px 10px">
+<div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; color: #5b5f86; padding: 4px 0 6px"><span>{{g.ref}}</span><span>{{g.size}}</span></div>
+<div style="display: flex; flex-direction: column; gap: 4px">
+<sc-for list="{{g.people}}" as="p" hint-placeholder-count="2">
+<button type="button" aria-pressed="{{p.pressed}}" onClick="{{p.pick}}" style="{{p.style}}"><span style="display: flex; flex-direction: column; align-items: flex-start"><span style="font-size: 15px; font-weight: 600">{{p.n}}</span><span style="font-size: 12px; color: #5b5f86">{{p.sub}}</span></span><span style="{{p.seatStyle}}">{{p.seatText}}</span></button>
+</sc-for>
+</div>
+</div>
+</sc-for>
+</section>
+
+<section aria-labelledby="map-h" style="flex: 2 1 460px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: space-between; align-items: center"><h2 id="map-h" style="margin: 0; font-size: 18px; font-weight: 600">Bus 4 · Mercedes Tourismo · ABC 4821</h2><span style="font-size: 14px; color: #5b5f86">{{freeText}}</span></div>
+<div role="status" style="padding: 10px 14px; border-radius: 12px; background: #e6e8f5; font-size: 14px; font-weight: 600">{{hint}}</div>
+<div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start">
+<div role="group" aria-label="Bus 4 seat map" style="padding: 14px 16px; border-radius: 28px; border: 2px solid #e3dfc9; display: flex; flex-direction: column; gap: 6px">
+<div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 6px; border-bottom: 1px dashed #e3dfc9; margin-bottom: 4px"><span style="font-size: 11px; font-weight: 700; color: #5b5f86">FRONT · DOOR</span><span style="font-size: 11px; font-weight: 700; color: #5b5f86">DRIVER</span></div>
+<sc-for list="{{rows}}" as="r" hint-placeholder-count="12">
+<div style="display: flex; gap: 6px">
+<sc-for list="{{r.cells}}" as="c" hint-placeholder-count="5">
+<sc-if value="{{c.isSeat}}" hint-placeholder-val="{{true}}"><button type="button" aria-label="{{c.al}}" onClick="{{c.on}}" disabled="{{c.dis}}" style="{{c.style}}">{{c.txt}}</button></sc-if>
+<sc-if value="{{c.isAisle}}" hint-placeholder-val="{{false}}"><span style="width: 18px"></span></sc-if>
+</sc-for>
+</div>
+</sc-for>
+</div>
+<div style="flex: 1 1 160px; display: flex; flex-direction: column; gap: 10px; font-size: 14px">
+<span style="font-size: 13px; font-weight: 700; color: #5b5f86">KEY</span>
+<span style="display: flex; align-items: center; gap: 10px"><span style="width: 26px; height: 26px; border-radius: 7px; background: #e6e8f5; border: 2px dashed #fb8030; box-sizing: border-box"></span>Free</span>
+<span style="display: flex; align-items: center; gap: 10px"><span style="width: 26px; height: 26px; border-radius: 7px; background: #ff6c2e; color: #262a67; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center">SA</span>Placed now (not saved)</span>
+<span style="display: flex; align-items: center; gap: 10px"><span style="width: 26px; height: 26px; border-radius: 7px; background: #262a67"></span>Already assigned</span>
+<span style="display: flex; align-items: center; gap: 10px"><span style="width: 26px; height: 26px; border-radius: 7px; background: #e3dfc9; color: #5b5f86; display: flex; align-items: center; justify-content: center"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></span>Staff · Omar Haddad</span>
+<p style="margin: 6px 0 0; padding-top: 10px; border-top: 1px solid #e3dfc9; font-size: 13px; line-height: 18px; color: #5b5f86">Select a passenger, then a free seat. Select a placed seat to free it again. Children under 12 should sit next to an adult from their booking.</p>
+<sc-if value="{{warn}}" hint-placeholder-val="{{false}}"><p role="alert" style="margin: 0; padding: 10px 12px; border-radius: 12px; background: #fdf0d5; color: #8a4b00; font-size: 13px; font-weight: 600">{{warn}}</p></sc-if>
+</div>
+</div>
+</section>
+</div>
+</sc-if>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1180}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { bus: 3, sel: 'p0', a: {}, saved: false }; }
+  renderVals() {
+    const G = [
+      { ref: 'TE-48281', ppl: [['Bader Al-Harbi', 'Adult · 27', false], ['Salma Al-Harbi', 'Child · 8', true]] },
+      { ref: 'TE-48290', ppl: [['Fahd Al-Rasheed', 'Adult · 40', false], ['Ghada Al-Rasheed', 'Adult · 37', false], ['Ali Al-Rasheed', 'Child · 10', true], ['Dana Al-Rasheed', 'Child · 5', true]] },
+      { ref: 'TE-48305', ppl: [['Hessa Al-Dossary', 'Adult · 44', false], ['Sultan Al-Dossary', 'Adult · 18', false], ['Faisal Al-Dossary', 'Child · 9', true], ['Mohammed Al-Dossary', 'Child · 7', true]] },
+      { ref: 'TE-48299', ppl: [['Lulwa Al-Shamsi', 'Adult · 26', false], ['Maha Al-Shamsi', 'Adult · 24', false]] },
+      { ref: 'TE-48295 · TE-48301', ppl: [['Nasser Al-Qahtani', 'Adult · 31', false], ['Ibrahim Al-Jaber', 'Adult · 58', false]] }
+    ];
+    let k = 0;
+    const P = [];
+    G.forEach((g, gi) => g.ppl.forEach(([n, sub, child]) => { P.push({ id: 'p' + k, n, sub, child, g: gi }); k++; }));
+    const A = this.state.a;
+    const sel = this.state.sel;
+    const seatOf = (id) => Object.keys(A).find((s) => A[s] === id);
+    const ini = (n) => n.split(' ').map((w) => w[0]).filter((c) => c && c === c.toUpperCase()).slice(0, 2).join('');
+    const nextUnassigned = (after) => { const left = P.filter((p) => !seatOf(p.id) && p.id !== after); return left.length ? left[0].id : null; };
+    const groups = G.map((g, gi) => ({ ref: g.ref, size: g.ppl.length + (g.ppl.length === 1 ? ' person' : ' people'), people: P.filter((p) => p.g === gi).map((p) => {
+      const s = seatOf(p.id); const on = p.id === sel;
+      return { n: p.n, sub: p.sub, pressed: on ? 'true' : 'false', pick: () => this.setState({ sel: p.id }), seatText: s ? 'Seat ' + s : 'No seat',
+        seatStyle: 'font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 999px; ' + (s ? 'background: #e3f3ea; color: #1f7a4d;' : 'background: #f6f3e4; color: #5b5f86;'),
+        style: 'display: flex; justify-content: space-between; align-items: center; gap: 8px; width: 100%; padding: 8px 10px; border-radius: 10px; font: inherit; color: #262a67; text-align: start; cursor: pointer; ' + (on ? 'background: #fffaf3; border: 2px solid #fb8030;' : 'background: #ffffff; border: 1px solid #e3dfc9;') };
+    }) }));
+    const taken = new Set();
+    for (let r = 1; r <= 8; r++) ['A', 'B', 'C', 'D'].forEach((c) => taken.add(r + c));
+    taken.delete('1A'); taken.add('9A');
+    const blocked = new Set(['1A']);
+    const free = [];
+    const cell = (id) => {
+      if (blocked.has(id)) return { isSeat: true, isAisle: false, txt: '', al: 'Seat ' + id + ', blocked for staff', dis: true, on: () => {}, style: 'width: 36px; height: 36px; padding: 0; border: 0; border-radius: 9px; background: #e3dfc9; color: #5b5f86; font: inherit; font-size: 10px; font-weight: 700;' };
+      if (taken.has(id)) return { isSeat: true, isAisle: false, txt: id, al: 'Seat ' + id + ', already assigned', dis: true, on: () => {}, style: 'width: 36px; height: 36px; padding: 0; border: 0; border-radius: 9px; background: #262a67; color: #b8bad6; font: inherit; font-size: 10px; font-weight: 700;' };
+      free.push(id);
+      const who = A[id];
+      if (who) { const p = P.find((x) => x.id === who); return { isSeat: true, isAisle: false, txt: ini(p.n), al: 'Seat ' + id + ', ' + p.n + '. Select to free it', dis: false,
+        on: () => { const n = { ...A }; delete n[id]; this.setState({ a: n, sel: who, saved: false }); },
+        style: 'width: 36px; height: 36px; padding: 0; border: 0; border-radius: 9px; background: #ff6c2e; color: #262a67; font: inherit; font-size: 11px; font-weight: 700; cursor: pointer;' }; }
+      return { isSeat: true, isAisle: false, txt: id, al: 'Seat ' + id + ', free' + (sel ? '. Assign selected passenger' : ''), dis: !sel,
+        on: () => { if (!sel) return; const n = { ...A }; Object.keys(n).forEach((s) => { if (n[s] === sel) delete n[s]; }); n[id] = sel; this.setState({ a: n, sel: nextUnassigned(sel), saved: false }); },
+        style: 'width: 36px; height: 36px; padding: 0; border-radius: 9px; background: #e6e8f5; color: #262a67; font: inherit; font-size: 10px; font-weight: 700; box-sizing: border-box; ' + (sel ? 'border: 2px dashed #fb8030; cursor: pointer;' : 'border: 0;') };
+    };
+    const rows = [];
+    for (let r = 1; r <= 11; r++) rows.push({ cells: ['A', 'B', '_', 'C', 'D'].map((c) => c === '_' ? { isSeat: false, isAisle: true } : cell(r + c)) });
+    rows.push({ cells: ['A', 'B', 'C', 'D', 'E'].map((c) => cell('12' + c)) });
+    const auto = () => { const n = {}; const order = free.slice(); P.forEach((p, i) => { if (order[i]) n[order[i]] = p.id; }); this.setState({ a: n, sel: null, saved: false }); };
+    const placed = Object.keys(A).length;
+    const left = P.length - placed;
+    const selP = P.find((p) => p.id === sel);
+    let warn = '';
+    G.forEach((g, gi) => { const kids = P.filter((p) => p.g === gi && p.child && seatOf(p.id)); kids.forEach((kd) => { const s = seatOf(kd.id); const row = s.replace(/[A-E]/, ''); const adults = P.filter((p) => p.g === gi && !p.child && seatOf(p.id) && seatOf(p.id).replace(/[A-E]/, '') === row); if (!adults.length && !warn) warn = kd.n + ' (' + s + ') is not in the same row as an adult from ' + g.ref + '.'; }); });
+    const bi = this.state.bus;
+    const tabs = [['Bus 1', 0], ['Bus 2', 0], ['Bus 3', 0], ['Bus 4', left]].map(([l, b], i) => ({ l, b: b ? b + ' to seat' : 'All seated', sel: i === bi ? 'true' : 'false', on: () => this.setState({ bus: i }),
+      style: 'height: 40px; padding: 0 14px; border-radius: 999px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; ' + (i === bi ? 'background: #262a67; color: #f6f3e4; border: 1px solid #262a67;' : 'background: #ffffff; color: #262a67; border: 1px solid #e3dfc9;'),
+      bs: 'font-size: 12px; font-weight: 700; ' + (b ? 'color: #f89e23;' : (i === bi ? 'color: #b8bad6;' : 'color: #1f7a4d;')) }));
+    return { tabs, isBus4: bi === 3, otherBus: bi !== 3, otherName: ['Bus 1', 'Bus 2', 'Bus 3', 'Bus 4'][bi], groups, rows, auto, warn,
+      leftText: left ? left + ' left' : 'All placed', leftPill: 'padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 700; ' + (left ? 'background: #fdf0d5; color: #8a4b00;' : 'background: #e3f3ea; color: #1f7a4d;'),
+      freeText: (16 - placed) + ' free · 32 already assigned · 1 staff',
+      hint: selP ? 'Placing ' + selP.n + ' (' + selP.sub + '). Choose a free seat.' : (left ? 'Select a passenger on the left.' : 'All 14 passengers have a seat. Save to notify them.'),
+      save: () => this.setState({ saved: true }),
+      saveNote: this.state.saved ? 'Saved · ' + placed + ' travelers notified' : (placed ? placed + ' unsaved changes' : 'No changes yet') };
+  }
+}
+</script>
+</body>
+</html>

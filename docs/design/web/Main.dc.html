@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Trips Enjoy — Screen map</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;family=Cairo:wght@500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+.te-sl{display:flex;gap:8px;align-items:baseline;padding:6px 8px;border-radius:8px;color:#262a67;text-decoration:none;font-size:14px;line-height:20px}
+.te-sl:hover{background:#f6f3e4;color:#c93a00}
+</style>
+</helmet>
+<div style="min-height: 100vh; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="max-width: 1360px; margin: 0 auto; padding: 48px 24px 64px; display: flex; flex-direction: column; gap: 32px">
+
+<header style="display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-end; justify-content: space-between">
+<div style="display: flex; flex-direction: column; gap: 12px; max-width: 760px">
+<img src="../assets/1fbce194fcb16bf54904c32c189fca31.svg" alt="Trips Enjoy — تريبس إنجوي" style="height: 48px; width: auto; align-self: flex-start">
+<h1 style="margin: 0; font-size: 40px; line-height: 48px; font-weight: 700">Every screen, grouped by role and flow</h1>
+<p style="margin: 0; font-size: 17px; line-height: 26px; color: #5b5f86">Every app end to end, from sign-in, registration, role applications, plans and lab tests to daily use, built from the BRD and the workflow document: traveler and parent apps, driver, moderator and photographer apps, the organization dashboard, the admin console, and shared states.</p>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px">
+<sc-for list="{{stats}}" as="s" hint-placeholder-count="4">
+<div style="min-width: 120px; padding: 14px 18px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 28px; line-height: 34px; font-weight: 700">{{s.v}}</span><span style="font-size: 13px; color: #5b5f86">{{s.l}}</span></div>
+</sc-for>
+</div>
+</header>
+
+<sc-for list="{{sections}}" as="sec" hint-placeholder-count="8">
+<section style="display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px">
+<span style="{{sec.badge}}">{{sec.role}}</span>
+<h2 style="margin: 0; font-size: 24px; line-height: 32px; font-weight: 600">{{sec.name}}</h2>
+<span style="font-size: 14px; color: #5b5f86">{{sec.meta}}</span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px">
+<sc-for list="{{sec.flows}}" as="fl" hint-placeholder-count="3">
+<div style="background: #ffffff; border-radius: 20px; padding: 16px; display: flex; flex-direction: column; gap: 6px">
+<div style="display: flex; justify-content: space-between; align-items: baseline; gap: 8px; padding: 0 8px 6px; border-bottom: 1px solid #e3dfc9"><h3 style="margin: 0; font-size: 16px; line-height: 22px; font-weight: 600">{{fl.t}}</h3><span style="font-size: 13px; color: #5b5f86; white-space: nowrap">{{fl.n}}</span></div>
+<sc-for list="{{fl.s}}" as="sc" hint-placeholder-count="5">
+<a class="te-sl" href="{{sc.f}}"><span style="min-width: 22px; font-size: 12px; font-weight: 700; color: #5b5f86">{{sc.i}}</span><span>{{sc.t}}</span></a>
+</sc-for>
+</div>
+</sc-for>
+</div>
+</section>
+</sc-for>
+
+<section style="display: flex; flex-direction: column; gap: 14px">
+<h2 style="margin: 0; font-size: 24px; line-height: 32px; font-weight: 600">BRD coverage</h2>
+<div style="background: #ffffff; border-radius: 20px; overflow-x: auto">
+<table style="width: 100%; min-width: 760px; border-collapse: collapse; font-size: 14px; line-height: 20px">
+<thead><tr style="text-align: start; color: #5b5f86"><th scope="col" style="text-align: start; padding: 12px 20px; border-bottom: 1px solid #e3dfc9; font-weight: 600; width: 34%">BRD module</th><th scope="col" style="text-align: start; padding: 12px 20px; border-bottom: 1px solid #e3dfc9; font-weight: 600">Screens</th></tr></thead>
+<tbody>
+<sc-for list="{{brd}}" as="m" hint-placeholder-count="15">
+<tr><td style="padding: 12px 20px; border-bottom: 1px solid #e3dfc9; font-weight: 600; vertical-align: top">{{m.m}}</td><td style="padding: 12px 20px; border-bottom: 1px solid #e3dfc9; color: #5b5f86">{{m.s}}</td></tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+</section>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":8000}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const S = [
+      { role: 'Traveler', bg: '#ff6c2e', fg: '#262a67', name: 'Traveler app & website', meta: 'Mobile 390 · Web 1440', flows: [
+        ['Welcome & sign in', [['AuthWelcome','Welcome'],['MobileSignIn','Sign in (password)'],['MobileOtpLogin','Sign in with code'],['MobileLoginVerify','Verify code'],['MobileSocialComplete','Apple / Google: complete profile']]],
+        ['Sign up as a traveler', [['MobileRole','1 Choose role'],['MobileSignUp','2 Create account'],['MobileOtp','3 Verify number'],['MobileReady','4 Account ready'],['MobileAddChild','Add child'],['TravPlan','Choose plan']]],
+        ['Recovery & account security', [['MobileForgot','Forgot password'],['MobileResetCode','Reset code'],['MobileNewPassword','New password'],['MobileResetDone','Password updated'],['MobileResetEmailSent','Reset by email'],['MobileAccount','Roles & security'],['MobileSignOut','Sign out'],['MobileDeleteAccount','Delete account']]],
+        ['Web · sign in & register', [['WebSignIn','Sign in'],['WebLoginVerify','Sign-in code'],['WebRegister','Choose account type'],['WebSignUp','Register as traveler'],['WebVerifyTraveler','Verify phone'],['WebReady','Account ready'],['WebSessionExpired','Session expired']]],
+        ['Web · password recovery', [['WebForgot','Forgot password'],['WebReset','Reset password'],['WebResetEmailSent','Reset link sent']]],
+        ['Discover', [['TrvHome','Home'],['TrvSearch','Search & filters'],['TrvResults','Search results'],['TrvTrip','Trip details'],['TrvCompany','Organizer profile & reviews']]],
+        ['Book a trip', [['TrvBookWho',"1 Who's travelling"],['TrvBookPrograms','2 Programs'],['TrvBookSeats','3 Seats'],['TrvBookSummary','4 Summary & coupon'],['TrvPay','5 Payment'],['TrvPayFailed','Payment declined'],['TrvBooked','Booking confirmed']]],
+        ['Programs', [['TrvProgramDetail','Program details & tiers'],['TrvProgramVip','VIP-only program'],['TrvAddPrograms','Add programs to booking'],['TrvAddProgramsPay','Pay for programs'],['TrvAddProgramsDone','Programs added'],['TrvProgramsSchedule','My programs schedule']]],
+        ['My trips & cancellation', [['TrvTrips','My trips'],['TrvTicket','Ticket & boarding pass'],['TrvModify','Change booking'],['TrvCancel','Cancel booking'],['TrvCancelled','Cancelled · refund status']]],
+        ['Trip day & after', [['TrvLive','Trip day · live'],['TrvAlbums','Trip albums'],['TrvAlbum','Album viewer'],['TrvRate','Rate the trip']]],
+        ['Account, family & plan', [['TrvNotifications','Notifications'],['TrvProfile','Profile'],['TrvFamily','Family members'],['TrvPlan','My plan & billing'],['TrvReceipts','Receipts & history'],['TrvSettings','Settings'],['TrvSupport','Help & support'],['TrvInvoice','Tax invoice (B2C)']]],
+        ['Messages, family & payment', [['TrvChat','Chat with organizer'],['TrvFamilyAdd','Add family member'],['TrvPayMethods','Payment methods'],['TrvAlbumLink','Open album by link']]],
+        ['Website', [['WebHome','Landing'],['WebExplore','Explore trips'],['WebTrip','Trip page'],['WebCheckout','Checkout'],['WebBookings','My bookings'],['WebOrganizer','Organizer page'],['WebBusiness','For business'],['WebAlbum','Shared album link'],['WebLegal','Terms & privacy']]]
+      ]},
+      { role: 'Parent', bg: '#262a67', fg: '#f6f3e4', name: 'Parent tracking', meta: 'Mobile · Explorer or VIP plan', flows: [
+        ['Follow my children', [['ParHome','Family today'],['ParLive','Live bus'],['ParChild',"Child's trip"],['ParNotBoarded','Not boarded alert'],['ParAlerts','Alerts history'],['ParLink','Link child to a trip'],['ParGate','Tracking needs a plan']]]
+      ]},
+      { role: 'Driver', bg: '#262a67', fg: '#f6f3e4', name: 'Driver app', meta: 'Platform & company drivers', flows: [
+        ['Register as a driver', [['DrvAccount','2 Create account'],['DrvOtp','3 Verify number'],['DrvDetails','4 Personal details'],['DrvVehicle','5 Licence & vehicle'],['MobileApply','6 Documents'],['DrvReview','7 Under review'],['DrvPlan','Approved → choose plan'],['MobileCheckout','Payment / trial']]],
+        ['Lab test before first trip', [['DrvLabBlocked','Lab test required'],['DrvLabBook','Book lab'],['DrvLabUpload','Upload result'],['DrvLabPending','Booked, still paused'],['DrvLabApproved','Cleared to drive']]],
+        ['Web · register as a driver', [['WebSignUpDriver','1 Create account'],['WebVerify','Verify phone'],['WebApply','2 Personal details'],['WebDrvVehicle','3 Licence & vehicle'],['WebDrvDocs','4 Documents & lab consent'],['WebReview','5 Under review'],['WebStatus','Changes needed'],['WebDrvLab','Lab test required']]],
+        ['Home & deal negotiation', [['DrvHome','Home'],['DrvOffers','Offers'],['DrvOffer','Offer details'],['DrvCounter','Counter offer'],['DrvDealLocked','Deal confirmed']]],
+        ['Trip execution', [['DrvTrips','My schedule'],['DrvTrip','Assigned trip'],['DrvPreTrip','Pre-trip check'],['DrvOnRoute','On route'],['DrvTripDone','Trip complete']]],
+        ['Business', [['DrvEarnings','Earnings & payouts'],['DrvCoupons','My coupons'],['DrvCouponNew','Create coupon'],['DrvPlanManage','My plan'],['DrvProfile','Profile & rates'],['DrvAvailability','Availability'],['DrvVehicles','My vehicles'],['DrvOwnHome','Company driver home']]],
+        ['Edit & report', [['DrvVehicleEdit','Add / edit vehicle'],['DrvProfileEdit','Edit profile & rates'],['DrvReport','Report problem or delay']]],
+        ['Plan required, statements & analytics', [['DrvPaywall','No active plan (locked)'],['DrvStatements','Statements & invoices'],['DrvAnalytics','Performance analytics']]]
+      ]},
+      { role: 'Moderator', bg: '#262a67', fg: '#f6f3e4', name: 'Vehicle moderator', meta: 'Mobile · scoped to one bus', flows: [
+        ['Join by invite', [['MobileStaffInvite','Company driver invite'],['ModInvite','Moderator invite'],['ModAssignment','Scoped assignment']]],
+        ['Boarding, trip & check-out', [['ModToday',"Today's bus"],['ModManifest','Manifest'],['ModScan','Scan ticket'],['ModWrongBus','Wrong bus'],['ModBoarded','Ready to depart'],['ModOnTrip','On trip'],['ModIncident','Report incident'],['ModCheckout','Check-out at stop'],['ModReport','Close trip report'],['ModOpsChat','Chat with company ops'],['StaffOrgSwitch','Switch company']]]
+      ]},
+      { role: 'Photographer', bg: '#1a1c4b', fg: '#f6f3e4', name: 'Photographer studio', meta: 'Mobile + web upload', flows: [
+        ['Register as a photographer', [['PhoAccount','2 Create account'],['PhoOtp','3 Verify number'],['PhoSignUpProfile','4 Profile'],['PhoSignUpPortfolio','5 Portfolio & ID'],['PhoReview','6 Under review'],['PhoPlan','Approved → choose plan']]],
+        ['Web · register as a photographer', [['WebSignUpPhotographer','1 Create account'],['WebVerifyPhotographer','Verify phone'],['WebPhoProfile','2 Profile'],['WebPhoPortfolio','3 Portfolio & ID'],['WebReviewPhotographer','4 Under review']]],
+        ['Home & deals', [['PhoHome','Home'],['PhoOffers','Offers'],['PhoOffer','Offer & counter'],['PhoBookings','Bookings']]],
+        ['Albums & privacy', [['PhoAlbums','Albums'],['PhoAlbumNew','Create & upload'],['PhoAlbumPrivacy','Album privacy'],['PhoAlbumUsers','Choose people'],['PhoAlbumLive','Album published'],['PhoWebStudio','Studio web · upload']]],
+        ['Business', [['PhoPortfolio','Portfolio'],['PhoEarnings','Earnings'],['PhoCoupons','Coupons'],['PhoPlanManage','My plan'],['PhoProfile','Public profile'],['PhoCouponNew','Create coupon'],['PhoProfileEdit','Edit profile']]],
+        ['Plan required, statements & analytics', [['PhoPaywall','No active plan (locked)'],['PhoStatements','Statements & invoices'],['PhoAnalytics','Performance analytics']]]
+      ]},
+      { role: 'Organization', bg: '#262a67', fg: '#f6f3e4', name: 'Organization dashboard', meta: 'business.trips-enjoy.com', flows: [
+        ['Register an organization', [['OrgRegister','1 Create account'],['OrgVerify','2 Verify phone'],['OrgBusiness','3 Business info'],['OrgDocs','4 Documents & payout'],['OrgPending','5 Under review'],['OrgPlan','Choose plan'],['OrgCheckout','Billing & trial']]],
+        ['Sign in & choose organization', [['OrgLogin','Sign in'],['Org2fa','Sign-in code'],['OrgWorkspace','Choose organization'],['OrgStaffInviteAccept','Accept staff invite'],['OrgForgot','Reset password'],['OrgAccountState','Changes needed'],['OrgRejected','Not approved']]],
+        ['Switch organization', [['OrgSwitcher','Switch organization'],['OrgSwitched','Switched to another organization'],['OrgAccess','My organizations']]],
+        ['Home & trips', [['OrgHome','Overview'],['OrgTrips','Trips'],['OrgTrip','Trip overview'],['OrgTripLive','Live operations'],['OrgTripEdit','Edit published trip'],['OrgTripCancel','Cancel trip & refund'],['OrgDispute','Respond to dispute'],['OrgSupport','Help & support']]],
+        ['Create a trip', [['OrgNew1','1 Basics'],['OrgNew2','2 Schedule & route'],['OrgNew3','3 Vehicles'],['OrgNew4','4 Driver & moderator'],['OrgNew5','5 Photographer'],['OrgNew6','6 Programs'],['OrgNew7','7 Seats'],['OrgNew8','8 Pricing & capacity'],['OrgNew9','9 Review & publish'],['OrgLimit','Plan limit reached']]],
+        ['Bookings & passengers', [['OrgBookings','Bookings'],['OrgBooking','Booking & refund'],['OrgRoster','Passenger roster'],['OrgSeatAssign','Assign seats'],['OrgPrograms','Program enrollment']]],
+        ['CRM', [['OrgCustomers','Customers'],['OrgCustomer','Customer 360'],['OrgSegments','Segments'],['OrgLeads','Leads pipeline'],['OrgLead','Lead & quote'],['OrgCampaigns','Campaigns'],['OrgCampaignNew','New campaign'],['OrgInbox','Inbox'],['OrgReviews','Reviews']]],
+        ['Staff, providers & deals', [['OrgMarket','Find drivers & photographers'],['OrgDeals','Deals'],['OrgDeal','Negotiation'],['OrgStaff','Team'],['OrgRoles','Roles & permissions'],['OrgInvite','Invite employee'],['OrgCrew','Own drivers, photographers, moderators']]],
+        ['Fleet', [['OrgFleet','Vehicles'],['OrgVehicleTypes','Vehicle types & seat layout']]],
+        ['Coupons & accounting', [['OrgCoupons','Coupons'],['OrgCouponNew','Create coupon'],['OrgAccounting','Accounting']]],
+        ['Invoices & settlement', [['OrgInvoices','Invoices (B2C & B2B)'],['OrgInvoice','B2B tax invoice'],['OrgInvoiceNew','New invoice / credit note'],['OrgSettlements','Settlements'],['OrgSettlement','Settlement statement']]],
+        ['Analytics', [['OrgAnalytics','Company'],['OrgTripAnalytics','Trip'],['OrgPageAnalytics','Pages & funnel'],['OrgCustomerAnalytics','Customers'],['OrgProviderAnalytics','Drivers & photographers']]],
+        ['Integrations', [['OrgWebhooks','Webhooks'],['OrgWebhookNew','Add endpoint'],['OrgWebhook','Endpoint & deliveries'],['OrgApiKeys','API keys']]],
+        ['Subscription, settings & access', [['OrgBilling','Subscription & usage'],['OrgPaywall','No active plan (locked)'],['OrgSettings','Company settings'],['OrgNotifications','Notifications'],['OrgEmployeeView','Employee · finance view'],['OrgForbidden','Employee · no access']]]
+      ]},
+      { role: 'Admin', bg: '#262a67', fg: '#f6f3e4', name: 'Admin console', meta: 'admin.trips-enjoy.com', flows: [
+        ['Admin sign in', [['DashLogin','Sign in'],['Dash2fa','Two-step verification'],['Dash2faSetup','Set up 2-step'],['DashForgot','Reset password'],['DashLocked','Account locked']]],
+        ['Applications & lab tests', [['AdminApplications','Applications queue'],['AdminAppReview','Review application'],['AdminLabRequest','Request lab test'],['AdminLabReview','Review lab result']]],
+        ['Overview & users', [['AdmHome','Overview'],['AdmUsers','All users'],['AdmUser','User detail'],['AdmOrgs','Organizations'],['AdmOrg','Organization detail'],['AdmProviders','Provider pool']]],
+        ['Plans, subscriptions & money', [['AdmPlans','Plan catalog'],['AdmPlanEdit','Edit plan'],['AdmSubs','Subscriptions & dunning'],['AdmRevenue','Revenue'],['AdmPayouts','Payouts']]],
+        ['Invoices & settlement', [['AdmInvoices','All invoices'],['AdmInvoice','Invoice detail'],['AdmSettlements','Settlement runs'],['AdmSettlement','Settlement run detail']]],
+        ['Analytics', [['AdmAnalytics','Platform'],['AdmCompanyAnalytics','Companies'],['AdmTripAnalytics','Trips'],['AdmPageAnalytics','Pages & app'],['AdmProviderAnalytics','Providers']]],
+        ['Marketplace oversight', [['AdmTrips','All trips'],['AdmDeals','Deal audit'],['AdmCoupons','Coupons & abuse flags'],['AdmCouponNew','Platform coupon'],['AdmDisputes','Disputes'],['AdmDispute','Dispute detail'],['AdmTrip','Trip detail'],['AdmModeration','Content moderation'],['AdmSupport','Support inbox']]],
+        ['System', [['AdmSettings','Platform settings'],['AdmTeam','Admin team & roles'],['AdmAudit','Audit log'],['AdmTemplates','Message templates'],['AdmAccessPolicy','Plan-required access'],['AdmWebhooks','Webhooks & events']]]
+      ]},
+      { role: 'العربية', bg: '#262a67', fg: '#f6f3e4', name: 'Arabic (RTL)', meta: 'Cairo font · mirrored layouts', flows: [
+        ['الدخول والتسجيل', [['MainAr','مرحبًا'],['MobileSignInAr','تسجيل الدخول'],['MobileRoleAr','اختيار الدور'],['MobileSignUpAr','إنشاء حساب'],['MobileOtpAr','تأكيد الرقم'],['MobileReadyAr','الحساب جاهز'],['MobileForgotAr','نسيت كلمة المرور'],['MobileResetCodeAr','رمز الاستعادة'],['MobileNewPasswordAr','كلمة مرور جديدة'],['MobileResetDoneAr','تم التحديث']]],
+        ['تسجيل السائق والمصوّر', [['DrvAccountAr','سائق · إنشاء حساب'],['DrvOtpAr','سائق · تأكيد'],['DrvDetailsAr','سائق · البيانات'],['DrvVehicleAr','سائق · الرخصة والمركبة'],['DrvDocsAr','سائق · المستندات'],['DrvReviewAr','سائق · قيد المراجعة'],['PhoAccountAr','مصوّر · إنشاء حساب'],['PhoOtpAr','مصوّر · تأكيد'],['PhoProfileAr','مصوّر · الملف'],['PhoPortfolioAr','مصوّر · الأعمال'],['PhoReviewAr','مصوّر · قيد المراجعة']]],
+        ['Mobile', [['TrvHomeAr','الرئيسية'],['TrvTripAr','تفاصيل الرحلة'],['TrvBookSummaryAr','ملخص الحجز'],['TrvTicketAr','التذكرة'],['ParLiveAr','تتبع الحافلة']]],
+        ['Web', [['WebHomeAr','الصفحة الرئيسية'],['OrgHomeAr','لوحة المنظمة']]]
+      ]},
+      { role: 'Docs v1.1', bg: '#ff6c2e', fg: '#262a67', name: 'Added from the docs (Egypt pilot, EGP)', meta: 'SCR / MSCR gaps closed', flows: [
+        ['Traveler mobile', [['TrvPayPending','Confirming payment'],['TrvFawryVoucher','Pay cash at Fawry'],['TrvBooking','Booking detail'],['TrvRemedy','Choose a remedy'],['TrvPrivacy','Privacy & data'],['TrvProviderHandoff','Apply as provider'],['ParSafetyReport','Child-safety report']]],
+        ['Traveler web', [['WebSeatPicker','Choose seats'],['WebPayStatus','Payment status'],['WebBooked','Booking confirmed'],['WebBooking','Booking detail'],['WebCancel','Cancel booking'],['WebTripDay','Trip day'],['WebReceipts','Receipts'],['WebAlbums','My albums'],['WebPlans','Plans'],['WebProfile','Profile'],['WebPrivacy','Privacy'],['WebBecomeProvider','Become a provider']]],
+        ['Photographer studio web', [['PhoWebHome','Home'],['PhoWebPortfolio','Portfolio'],['PhoWebProfile','Profile'],['PhoWebRates','Rates'],['PhoWebDeals','Deals'],['PhoWebBrief','Trip brief'],['PhoWebAlbums','Albums'],['PhoWebPrivacy','Privacy & watermark'],['PhoWebEarnings','Earnings'],['PhoWebCoupons','Coupons']]],
+        ['Driver, photographer & moderator mobile', [['DrvLabStatus','Lab tests'],['DrvSupport','Support'],['PhoTripBrief','Trip brief'],['PhoAvailability','Availability'],['PhoInvite','Organization invite'],['ModInstall','Install'],['ModSignIn','Sign in'],['ModSyncQueue','Offline queue'],['ModAccessEnded','Access ended']]],
+        ['Organization & admin', [['OrgStaffCodeSetup','Staff code set-up'],['OrgVehicleEdit','Edit vehicle'],['OrgCouponStats','Coupon analytics'],['OrgLedger','Ledger'],['OrgTripReports','Trip reports'],['OrgSafetyReports','Child-safety reports'],['AdmAppDecision','Request changes / reject'],['AdmAppeal','Appeal review'],['AdmPrivacyRequests','Data requests'],['AdmLabTests','Lab tests'],['AdmReconciliation','Reconciliation'],['AdmOpsHealth','Ops health'],['AdmCountries','Countries & markets']]],
+        ['Shared states', [['MShrCountry','Country & language'],['MShrSessionExpired','Session expired'],['MShrDeletionGrace','Deletion grace'],['MShrAppeal','Appeal'],['MShrNoAccess','No access'],['MShrMaintenance','Maintenance'],['MShrPermissionPrimer','Permission primer'],['MShrLinkFallback','Link fallback'],['MShrConfirmSheet','Confirm sheet'],['MShrLimitSheet','Plan limit'],['PubSuspended','Web suspended'],['PubDeletionGrace','Web deletion grace'],['PubAppeal','Web appeal'],['ShWebOffline','Offline banner'],['ShWebConfirm','Confirm dialog'],['PdfInvoiceEG','Egypt tax invoice PDF']]]
+      ]},
+      { role: 'PDF', bg: '#e3dfc9', fg: '#262a67', name: 'PDF documents', meta: 'A4 · printable', flows: [
+        ['Travelers', [['PdfTicket','E-ticket'],['PdfItinerary','Trip itinerary'],['PdfInvoiceB2C','Simplified tax invoice'],['PdfCreditNote','Credit note']]],
+        ['Business', [['PdfInvoiceB2B','B2B tax invoice'],['PdfPlanInvoice','Plan & commission invoice'],['PdfSettlement','Settlement statement'],['PdfProviderStatement','Driver statement'],['PdfManifest','Bus manifest']]]
+      ]},
+      { role: 'Shared', bg: '#e3dfc9', fg: '#262a67', name: 'States & components', meta: 'Errors, empty, update, nav', flows: [
+        ['Account states (mobile)', [['MobileAccountState','Changes needed'],['MobileRejected','Rejected'],['MobileSuspended','Suspended'],['MobilePaymentFailed','Payment failed']]],
+        ['Sign-up components', [['PhoneField','PhoneField'],['OtpField','OtpField'],['PasswordField','PasswordField'],['CountryField','CountryField'],['WebStepper','WebStepper'],['AdminNav','AdminNav'],['PlanPicker','Plan picker'],['MobileReview','Under review'],['MobileReviewAr','قيد المراجعة']]],
+        ['Mobile states', [['ShMobOffline','Offline'],['ShMobServer','Server error'],['ShMobNotFound','Not found'],['ShMobEmpty','Empty trips'],['ShMobUpdate','Update required'],['ShStaffLocked','Staff · company plan ended']]],
+        ['Web states', [['ShWebNotFound','404'],['ShWebServer','500'],['ShWebMaintenance','Maintenance']]],
+        ['Components', [['GfxLibrary','Brand graphics library'],['TabBar','TabBar'],['OrgNav','OrgNav'],['AdmNav','AdmNav']]]
+      ]}
+    ];
+    let total = 0;
+    const sections = S.map((s) => {
+      const flows = s.flows.map(([t, xs]) => { total += xs.length; return { t, n: xs.length + ' screens', s: xs.map(([f, tt], i) => ({ f: f + '.dc.html', t: tt, i: String(i + 1).padStart(2, '0') })) }; });
+      return { role: s.role, name: s.name, meta: s.meta, flows, badge: 'padding: 4px 12px; border-radius: 999px; font-size: 13px; font-weight: 600; background: ' + s.bg + '; color: ' + s.fg + ';' };
+    });
+    const brd = [
+      { m: '1 · Company onboarding & multi-tenancy', s: 'Org registration (sign-up flows) · Overview · Switch organization & My organizations (one email, many organizations) · Company settings · Team · Roles & permissions · Invite employee · Employee views' },
+      { m: '2 · Subscription plans (4 plan families)', s: 'Traveler My plan · Driver My plan · Photographer My plan · Org Subscription & usage · Plan limit reached · Parent tracking gate' },
+      { m: '3 · Coupon & discount system', s: 'Summary & coupon (valid / invalid) · Driver, photographer and org coupons + create · Admin coupons, abuse flags, platform coupon' },
+      { m: '4 · Subscription management (admin)', s: 'Plan catalog · Edit plan · Subscriptions & dunning · Revenue · Organization detail (manual override)' },
+      { m: '5 · Subscription lifecycle', s: 'Trial, renewal, grace period, downgrade and reactivation on every My plan screen · Payment failed (sign-up flows)' },
+      { m: '6 · Trip creation & management', s: 'Trips · New trip wizard 1–9 · Trip overview · All trips (admin)' },
+      { m: '7 · Programs & activities', s: 'New trip 6 Programs · Book 2 Programs (free, per person, quantity, group, tiered, VIP-only, required) · Program enrollment' },
+      { m: '8 · Multi-vehicle fleet', s: 'New trip 3 Vehicles · Vehicles · Vehicle types & seat layout · Live operations' },
+      { m: '9 · Driver dual-track & deals', s: 'New trip 4 · Find drivers & photographers · Deals · Negotiation · Driver offers, counter, deal confirmed · Company driver home · Deal audit' },
+      { m: '10 · Vehicle moderator', s: "Moderator today's bus → close trip report (9 screens) · Own moderators (org crew)" },
+      { m: '11 · Check-in / check-out & tracking', s: 'Scan ticket · Manifest · Wrong bus · Check-out at stop · Live operations · Trip day live · Parent live bus' },
+      { m: '12 · Seat selection', s: 'New trip 7 Seats · Book 3 Seats · Assign seats · Ticket (seat locked at check-in)' },
+      { m: '13 · Photographer & media', s: 'Photographer offers → album published · Studio web upload · Trip albums · Album viewer' },
+      { m: '14 · Family & child safety', s: 'Family today · Live bus · Child’s trip · Not boarded alert · Alerts history · Link child · Family members' },
+      { m: '15 · Accounting & operations', s: 'Org accounting · Driver & photographer earnings · Admin revenue · Payouts · Disputes' },
+      { m: '16 · CRM (organizations)', s: 'Customers · Customer 360 · Segments · Leads pipeline · Lead & quote · Campaigns · New campaign · Inbox · Reviews' },
+      { m: '17 · Webhooks & API', s: 'Org webhooks · Add endpoint · Endpoint & deliveries · API keys · Admin webhooks & event catalog' },
+      { m: '18 · Plan required to use the app', s: 'Org, driver and photographer paywalls · Staff locked (company plan ended) · Admin access policy · Traveler stays on Free' },
+      { m: '19 · Invoices B2C & B2B (ZATCA)', s: 'Traveler tax invoice · Org invoices, B2B invoice, credit notes · Driver & photographer statements · Admin invoices' },
+      { m: '20 · Settlement between all parties', s: 'Org settlements & statement · Provider statements · Admin settlement runs & run detail · Payouts' },
+      { m: '21 · Analytics', s: 'Org: company, trip, pages & funnel, customers, providers · Admin: platform, companies, trips, pages & app, providers · Driver & photographer performance' }
+    ];
+    const stats = [{ v: String(total), l: 'screens here' }, { v: '8', l: 'roles' }, { v: '21', l: 'modules covered' }];
+    return { sections, brd, stats };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="ar">
+<head>
+<meta charset="utf-8">
+<title>المسافر · الرئيسية</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;family=Cairo:wght@500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div dir="rtl" lang="ar" style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #f6f3e4; color: #262a67; font-family: Cairo, sans-serif; line-height: 1.6; text-align: start">
+<div style="height: 100%; box-sizing: border-box; padding: 56px 16px 120px; display: flex; flex-direction: column; gap: 16px">
+
+<div style="display: flex; align-items: center; gap: 12px">
+<img src="../assets/9bae6808275a736bdbdad8b4ffd6c82b.svg" alt="" style="width: 44px; height: 44px; border-radius: 999px; object-fit: cover; flex-shrink: 0">
+<div style="flex-grow: 1; display: flex; flex-direction: column"><span style="font-size: 13px; line-height: 20px; color: #5b5f86">مساء الخير</span><span style="font-size: 20px; line-height: 30px; font-weight: 700">سارة القحطاني</span></div>
+<a href="TrvNotifications.dc.html" aria-label="التنبيهات، 3 جديدة" style="position: relative; width: 44px; height: 44px; border-radius: 999px; background: #ffffff; color: #262a67; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 16v-5a6 6 0 0 1 12 0v5l2 2H4zM10 21a2 2 0 0 0 4 0"></path></svg><span style="position: absolute; top: 6px; inset-inline-end: 8px; width: 10px; height: 10px; border-radius: 999px; background: #f89e23; border: 2px solid #ffffff"></span></a>
+</div>
+
+<a href="TrvSearch.dc.html" style="height: 52px; box-sizing: border-box; padding: 0 16px; border-radius: 999px; background: #ffffff; border: 1px solid #7b7fa6; display: flex; align-items: center; gap: 10px; color: #5b5f86; font-size: 16px; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#262a67" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM20 20l-4-4"></path></svg>إلى أين تتجه مجموعتك؟</a>
+
+<a href="TrvTicketAr.dc.html" style="padding: 12px 16px; border-radius: 20px; background: #262a67; color: #f6f3e4; display: flex; align-items: center; gap: 12px; text-decoration: none">
+<span style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 12px; background: #31367a; color: #ff8655; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 4h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM4 11h16M8 18v2M16 18v2M8 14.5h.01M16 14.5h.01"></path></svg></span>
+<span style="flex-grow: 1; display: flex; flex-direction: column; gap: 0"><span style="font-size: 12px; line-height: 18px; font-weight: 600; color: #b8bad6">رحلتك القادمة · بعد 4 أيام</span><span style="font-size: 16px; line-height: 24px; font-weight: 700">عطلة العُلا التراثية</span><span style="font-size: 13px; line-height: 20px; color: #b8bad6">الخميس 16 أكتوبر · الحافلة 2 · المقعدان <span dir="ltr">3C</span> و<span dir="ltr">3D</span></span></span>
+<span style="font-size: 14px; font-weight: 600; color: #ff8655">التذكرة</span>
+</a>
+
+<div role="group" aria-label="أنواع الرحلات" style="display: flex; gap: 8px; overflow: hidden">
+<sc-for list="{{cats}}" as="c" hint-placeholder-count="5"><a href="TrvResults.dc.html" style="{{c.style}}">{{c.t}}</a></sc-for>
+</div>
+
+<div style="display: flex; justify-content: space-between; align-items: baseline"><h2 style="margin: 0; font-size: 20px; line-height: 30px; font-weight: 700">الأكثر طلبًا هذا الأسبوع</h2><a href="TrvResults.dc.html" style="font-size: 14px; font-weight: 600">عرض الكل</a></div>
+<div style="display: flex; gap: 12px; margin-inline-end: -16px">
+<sc-for list="{{trips}}" as="t" hint-placeholder-count="2">
+<a href="TrvTripAr.dc.html" style="width: 240px; flex-shrink: 0; border-radius: 20px; background: #ffffff; color: #262a67; text-decoration: none; overflow: hidden; display: flex; flex-direction: column">
+<span style="position: relative; height: 120px; display: flex; align-items: center; justify-content: center; background: #262a67; overflow: hidden">
+<sc-if value="{{t.hasImg}}" hint-placeholder-val="{{true}}"><img src="{{t.img}}" alt="{{t.alt}}" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover"></sc-if>
+<sc-if value="{{t.noImg}}" hint-placeholder-val="{{false}}"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#b8bad6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 4h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM4 11h16M8 18v2M16 18v2M8 14.5h.01M16 14.5h.01"></path></svg></sc-if>
+<sc-if value="{{t.hasBadge}}" hint-placeholder-val="{{false}}"><span style="position: absolute; top: 10px; inset-inline-start: 10px; padding: 0 10px; border-radius: 999px; background: #f89e23; color: #262a67; font-size: 12px; line-height: 22px; font-weight: 700">{{t.badge}}</span></sc-if>
+</span>
+<span style="padding: 10px 14px 12px; display: flex; flex-direction: column; gap: 0">
+<span style="font-size: 16px; line-height: 24px; font-weight: 700">{{t.title}}</span>
+<span style="font-size: 13px; line-height: 20px; color: #5b5f86">{{t.company}}</span>
+<span style="font-size: 13px; line-height: 20px; color: #5b5f86">{{t.meta}}</span>
+<span style="{{t.seatStyle}}">{{t.seats}}</span>
+<span style="font-size: 13px; line-height: 24px; color: #5b5f86">يبدأ من <strong style="font-family: Outfit, Cairo, sans-serif; font-size: 17px; color: #262a67">{{t.price}}</strong> ر.س</span>
+</span>
+</a>
+</sc-for>
+</div>
+
+<a href="TrvPlan.dc.html" style="padding: 10px 14px; border-radius: 12px; background: #ffffff; border: 1px solid #e3dfc9; display: flex; align-items: center; gap: 10px; color: #262a67; text-decoration: none">
+<span style="padding: 0 10px; border-radius: 999px; background: #f89e23; color: #262a67; font-size: 12px; line-height: 22px; font-weight: 700; flex-shrink: 0">المستكشف</span>
+<span style="flex-grow: 1; font-size: 13px; line-height: 20px">خصم 5% على البرامج، وأولوية في اختيار المقاعد، وتتبّع مباشر لأطفالك</span>
+<span style="font-size: 14px; font-weight: 600; color: #c93a00">عرض</span>
+</a>
+</div>
+<div style="position: absolute; left: 0; right: 0; bottom: 0; height: 120px">
+<dc-import name="TabBar" role="traveler" active="home" lang="ar" hint-size="390px,120px"></dc-import>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const cats = ['نهاية الأسبوع', 'عائلية', 'مدارس', 'صحراء', 'بحر'].map((t, i) => ({ t, style: 'flex-shrink: 0; height: 40px; padding: 0 16px; border-radius: 999px; display: flex; align-items: center; font-size: 14px; font-weight: 600; text-decoration: none; ' + (i === 0 ? 'background: #262a67; color: #f6f3e4;' : 'background: #ffffff; color: #262a67; border: 1px solid #7b7fa6;') }));
+    const T = [
+      { title: 'يوم الغوص في البحر الأحمر', company: 'شركة صن رايز للسياحة', meta: 'الجمعة 24 أكتوبر · من جدة', seats: 'تبقّى 4 مقاعد', low: true, price: '320', badge: 'قاربت على الاكتمال', img: '../assets/dc9df8d5382e0fc7d2bf084f5632c713.svg', alt: 'قارب على مياه فيروزية فوق شعاب البحر الأحمر المرجانية' },
+      { title: 'رحلة مشي حافة العالم', company: 'مغامرات نجد', meta: 'السبت 25 أكتوبر · من الرياض', seats: 'تبقّى 18 مقعدًا', low: false, price: '275', badge: '', img: '../assets/767dc865917d29911dbc19beb44053f6.svg', alt: 'متنزهون على منحدرات حافة العالم عند الشروق' }
+    ];
+    const trips = T.map((t) => ({ ...t, hasImg: !!t.img, noImg: !t.img, hasBadge: !!t.badge,
+      seatStyle: 'font-size: 13px; line-height: 20px; font-weight: 600; color: ' + (t.low ? '#b42318;' : '#1f7a4d;') }));
+    return { cats, trips };
+  }
+}
+</script>
+</body>
+</html>

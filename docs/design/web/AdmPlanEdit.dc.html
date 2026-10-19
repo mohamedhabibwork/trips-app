@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Admin · Edit plan</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="min-height: 1000px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="AdmNav" active="Plans" hint-size="248px,1000px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 20px">
+
+<a href="AdmPlans.dc.html" style="align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 600; text-decoration: none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg>Plan catalog</a>
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; color: #5b5f86">Last edited Mon 13 Oct 18:07 by Tariq Hassan</span><h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Company · Growth</h1></div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px">
+<a href="AdmPlans.dc.html" style="height: 48px; box-sizing: border-box; padding: 0 20px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-size: 15px; font-weight: 600; display: flex; align-items: center; text-decoration: none">Discard</a>
+<a href="AdmPlans.dc.html" style="height: 48px; padding: 0 22px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg>Save changes</a>
+</div>
+</div>
+
+<div role="note" style="display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border-radius: 12px; background: #fdf0d5; color: #8a4b00; font-size: 15px; line-height: 22px">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 1px"><path d="M12 3l9.5 17h-19zM12 10v4M12 17h.01"></path></svg>
+<span><strong>164 subscribers</strong> are on Growth. Limit increases and new features apply right away; limit decreases and price changes apply at each subscriber's next cycle. Everyone gets an email 14 days before a price change.</span>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
+<div style="flex: 1 1 380px; min-width: 0; display: flex; flex-direction: column; gap: 20px">
+<section aria-labelledby="pr-h" style="background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 14px">
+<h2 id="pr-h" style="margin: 0; font-size: 18px; font-weight: 600">Pricing</h2>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px">
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="p-m" style="font-size: 14px; font-weight: 600">Monthly price (SAR)</label><input id="p-m" inputmode="numeric" value="1,490" style="height: 48px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 14px; font: inherit; font-size: 16px; color: #262a67"></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="p-d" style="font-size: 14px; font-weight: 600">Annual discount (%)</label><input id="p-d" inputmode="numeric" value="17" style="height: 48px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 14px; font: inherit; font-size: 16px; color: #262a67"></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="p-t" style="font-size: 14px; font-weight: 600">Trial length (days)</label><input id="p-t" inputmode="numeric" value="14" style="height: 48px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 14px; font: inherit; font-size: 16px; color: #262a67"></div>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 8px 24px; padding: 12px 14px; border-radius: 12px; background: #f6f3e4; font-size: 14px"><span>Annual price <strong>14,840 SAR</strong></span><span>Effective monthly <strong>1,237 SAR</strong></span><span>VAT 15% added at checkout</span></div>
+</section>
+
+<section aria-labelledby="lim-h" style="background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 14px">
+<h2 id="lim-h" style="margin: 0; font-size: 18px; font-weight: 600">Limits</h2>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px">
+<sc-for list="{{limits}}" as="l" hint-placeholder-count="5">
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="{{l.id}}" style="font-size: 14px; font-weight: 600">{{l.k}}</label><input id="{{l.id}}" inputmode="numeric" value="{{l.v}}" aria-describedby="{{l.hid}}" style="height: 48px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 14px; font: inherit; font-size: 16px; color: #262a67"><span id="{{l.hid}}" style="font-size: 12px; color: #5b5f86">{{l.h}}</span></div>
+</sc-for>
+</div>
+</section>
+</div>
+
+<section aria-labelledby="ft-h" style="flex: 1 1 380px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 4px">
+<h2 id="ft-h" style="margin: 0 0 8px; font-size: 18px; font-weight: 600">Features</h2>
+<sc-for list="{{feats}}" as="f" hint-placeholder-count="5">
+<div style="display: flex; gap: 16px; align-items: center; justify-content: space-between; padding: 10px 0; border-top: 1px solid #e3dfc9">
+<span style="display: flex; flex-direction: column; gap: 2px"><span id="{{f.id}}" style="font-size: 15px; font-weight: 600">{{f.n}}</span><span style="font-size: 13px; color: #5b5f86">{{f.d}}</span></span>
+<button type="button" role="switch" aria-checked="{{f.on}}" aria-labelledby="{{f.id}}" onClick="{{f.toggle}}" style="{{f.track}}"><span style="{{f.knob}}"></span></button>
+</div>
+</sc-for>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; padding-top: 12px; border-top: 1px solid #e3dfc9">
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="f-acc" style="font-size: 14px; font-weight: 600">Accounting level</label><select id="f-acc" style="height: 48px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 12px; font: inherit; font-size: 15px; color: #262a67"><option>Basic</option><option selected="selected">Advanced</option><option>Full + export</option></select></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="f-an" style="font-size: 14px; font-weight: 600">Analytics level</label><select id="f-an" style="height: 48px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 12px; font: inherit; font-size: 15px; color: #262a67"><option>None</option><option selected="selected">Basic</option><option>Full</option></select></div>
+</div>
+</section>
+</div>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { on: { plat: true, seat: true, child: true, prio: false, brand: false } }; }
+  renderVals() {
+    const limits = [
+      ['lim-trips', 'Active trips / month', '20', 'Starter 5 · Enterprise unlimited'],
+      ['lim-emp', 'Employees', '20', '12 subscribers use 18+'],
+      ['lim-veh', 'Vehicles per trip', '10', 'Starter 2'],
+      ['lim-prog', 'Programs per trip', '15', 'Starter 3'],
+      ['lim-cpn', 'Active coupons', '20', 'Starter 5']
+    ].map((x) => ({ id: x[0], k: x[1], v: x[2], h: x[3], hid: x[0] + '-h' }));
+    const F = [
+      ['plat', 'Platform drivers & photographers', 'Hire from the provider pool through deals'],
+      ['seat', 'Seat self-selection', 'Travellers pick seats on a live map'],
+      ['child', 'Child tracking', 'Parents follow children on school trips'],
+      ['prio', 'Priority support', 'Enterprise only today'],
+      ['brand', 'Custom branding', 'Logo and colours on trip pages · Enterprise only today']
+    ];
+    const on = this.state.on;
+    const feats = F.map((f) => { const v = !!on[f[0]]; return { id: 'ft-' + f[0], n: f[1], d: f[2], on: v ? 'true' : 'false',
+      toggle: () => this.setState({ on: { ...this.state.on, [f[0]]: !this.state.on[f[0]] } }),
+      track: 'flex-shrink: 0; width: 52px; height: 32px; border-radius: 999px; border: 0; padding: 3px; cursor: pointer; display: flex; ' + (v ? 'background: #262a67; justify-content: flex-end;' : 'background: #7b7fa6; justify-content: flex-start;'),
+      knob: 'width: 26px; height: 26px; border-radius: 999px; background: #ffffff;' }; });
+    return { limits, feats };
+  }
+}
+</script>
+</body>
+</html>

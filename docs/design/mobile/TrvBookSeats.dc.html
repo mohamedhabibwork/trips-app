@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Book · 3 Seats</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="height: 100%; box-sizing: border-box; padding: 56px 16px 24px; display: flex; flex-direction: column; gap: 12px">
+
+<div style="display: flex; align-items: center; gap: 12px">
+<a href="TrvBookPrograms.dc.html" aria-label="Back to programs" style="width: 44px; height: 44px; border-radius: 999px; background: #ffffff; color: #262a67; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a>
+<div style="display: flex; flex-direction: column"><h1 style="margin: 0; font-size: 22px; line-height: 28px; font-weight: 700">Choose your seats</h1><span style="font-size: 13px; color: #5b5f86">Bus 2 · Mercedes Tourismo · 49 seats</span></div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 6px">
+<div role="progressbar" aria-label="Booking progress" aria-valuemin="1" aria-valuemax="5" aria-valuenow="3" aria-valuetext="Step 3 of 5, Seats" style="display: flex; gap: 4px">
+<span style="flex: 1 1 0; height: 6px; border-radius: 999px; background: #262a67"></span>
+<span style="flex: 1 1 0; height: 6px; border-radius: 999px; background: #262a67"></span>
+<span style="flex: 1 1 0; height: 6px; border-radius: 999px; background: #ff6c2e"></span>
+<span style="flex: 1 1 0; height: 6px; border-radius: 999px; background: #e3dfc9"></span>
+<span style="flex: 1 1 0; height: 6px; border-radius: 999px; background: #e3dfc9"></span>
+</div>
+<span style="font-size: 13px; font-weight: 600; color: #5b5f86">Step 3 of 5 · Next: summary</span>
+</div>
+
+<div style="display: flex; gap: 8px">
+<span role="timer" aria-label="Seats held for 14 minutes 32 seconds" style="flex-shrink: 0; height: 40px; padding: 0 12px; border-radius: 999px; background: #ffe7dc; color: #c93a00; font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 6px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7v5l3 2"></path></svg>Held 14:32</span>
+<span style="flex-grow: 1; min-height: 40px; padding: 4px 12px; box-sizing: border-box; border-radius: 12px; background: #e6e8f5; font-size: 12px; line-height: 16px; display: flex; align-items: center">Explorer priority window open until 18:00</span>
+</div>
+
+<div style="flex-grow: 1; min-height: 0; display: flex; gap: 12px">
+<div role="group" aria-label="Seat map, Bus 2, front of bus at top" style="width: 190px; flex-shrink: 0; box-sizing: border-box; padding: 10px 12px; align-self: flex-start; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 4px">
+<div style="height: 22px; display: flex; justify-content: space-between; align-items: center; font-size: 11px; font-weight: 600; color: #5b5f86"><span>Door</span><span>Front · Driver</span></div>
+<sc-for list="{{rows}}" as="r" hint-placeholder-count="12">
+<div style="display: flex; align-items: center; justify-content: center; gap: 4px">
+<sc-for list="{{r.left}}" as="s" hint-placeholder-count="2"><button type="button" onClick="{{s.click}}" aria-label="{{s.label}}" aria-pressed="{{s.pressed}}" aria-disabled="{{s.dis}}" style="{{s.style}}">{{s.text}}</button></sc-for>
+<sc-if value="{{r.hasMid}}" hint-placeholder-val="{{false}}"><button type="button" onClick="{{r.mid.click}}" aria-label="{{r.mid.label}}" aria-pressed="{{r.mid.pressed}}" aria-disabled="{{r.mid.dis}}" style="{{r.mid.style}}">{{r.mid.text}}</button></sc-if>
+<sc-if value="{{r.noMid}}" hint-placeholder-val="{{true}}"><span aria-hidden="true" style="width: 22px; text-align: center; font-size: 11px; font-weight: 600; color: #5b5f86">{{r.n}}</span></sc-if>
+<sc-for list="{{r.right}}" as="s" hint-placeholder-count="2"><button type="button" onClick="{{s.click}}" aria-label="{{s.label}}" aria-pressed="{{s.pressed}}" aria-disabled="{{s.dis}}" style="{{s.style}}">{{s.text}}</button></sc-for>
+</div>
+</sc-for>
+</div>
+
+<div style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column; gap: 8px">
+<span style="font-size: 14px; font-weight: 600">Your group</span>
+<ul aria-live="polite" style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px">
+<sc-for list="{{chips}}" as="c" hint-placeholder-count="4">
+<li style="{{c.style}}"><span style="font-size: 14px; font-weight: 600">{{c.name}}</span><span style="{{c.seatStyle}}">{{c.seat}}</span></li>
+</sc-for>
+</ul>
+<span style="font-size: 12px; line-height: 16px; color: #5b5f86">{{hint}}</span>
+
+<ul aria-label="Legend" style="margin: 4px 0 0; padding: 12px 0 0; border-top: 1px solid #e3dfc9; list-style: none; display: flex; flex-direction: column; gap: 8px; font-size: 13px">
+<li style="display: flex; align-items: center; gap: 8px"><span style="width: 20px; height: 20px; box-sizing: border-box; border-radius: 6px; background: #ffffff; border: 1px solid #7b7fa6"></span>Available</li>
+<li style="display: flex; align-items: center; gap: 8px"><span style="width: 20px; height: 20px; border-radius: 6px; background: #ff6c2e"></span>Your group</li>
+<li style="display: flex; align-items: center; gap: 8px"><span style="width: 20px; height: 20px; box-sizing: border-box; border-radius: 6px; background: #fdf0d5; border: 1px dashed #8a4b00"></span>Held by others</li>
+<li style="display: flex; align-items: center; gap: 8px"><span style="width: 20px; height: 20px; border-radius: 6px; background: #e3dfc9; color: #5b5f86; display: flex; align-items: center; justify-content: center"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></span>Taken</li>
+</ul>
+
+<a href="TrvBookSummary.dc.html" style="margin-top: auto; height: 52px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-weight: 700; font-size: 16px; display: flex; align-items: center; justify-content: center; text-decoration: none">Continue</a>
+</div>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { assign: ['3C', '3D', '4C', '4D'] }; }
+  renderVals() {
+    const names = ['Sara', 'Faisal', 'Omar', 'Lina'];
+    const assign = this.state.assign;
+    const taken = ['1A', '1B', '1C', '1D', '2A', '2B', '5A', '5B', '5C', '6D', '7A', '7B', '8C', '8D', '9A', '9B', '9C', '9D', '10A', '11C', '11D', '12A', '12B', '12E'];
+    const held = ['2C', '2D', '6A', '6B'];
+    const base = 'width: 30px; height: 30px; box-sizing: border-box; border-radius: 8px; padding: 0; font: inherit; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; ';
+    const seat = (id) => {
+      const who = assign.indexOf(id);
+      if (who >= 0) {
+        return { text: names[who].charAt(0), label: 'Seat ' + id + ', selected for ' + names[who] + '. Tap to free it', pressed: 'true', dis: 'false',
+          style: base + 'background: #ff6c2e; color: #262a67; border: 0; cursor: pointer;',
+          click: () => { const a = assign.slice(); a[who] = null; this.setState({ assign: a }); } };
+      }
+      if (taken.includes(id)) {
+        return { text: '×', label: 'Seat ' + id + ', taken', pressed: 'false', dis: 'true', style: base + 'background: #e3dfc9; color: #5b5f86; border: 0; font-size: 16px; cursor: not-allowed;', click: () => {} };
+      }
+      if (held.includes(id)) {
+        return { text: '', label: 'Seat ' + id + ', held by another traveller', pressed: 'false', dis: 'true', style: base + 'background: #fdf0d5; border: 1px dashed #8a4b00; cursor: not-allowed;', click: () => {} };
+      }
+      const slot = assign.indexOf(null);
+      return { text: id, label: 'Seat ' + id + ', available' + (slot >= 0 ? ', assign to ' + names[slot] : ''), pressed: 'false', dis: slot >= 0 ? 'false' : 'true',
+        style: base + 'background: #ffffff; color: #5b5f86; border: 1px solid #7b7fa6; cursor: pointer;',
+        click: () => { if (slot < 0) return; const a = assign.slice(); a[slot] = id; this.setState({ assign: a }); } };
+    };
+    const rows = [];
+    for (let n = 1; n <= 12; n++) {
+      const last = n === 12;
+      rows.push({ n: String(n), left: [seat(n + 'A'), seat(n + 'B')], right: [seat(n + 'C'), seat(n + 'D')], hasMid: last, noMid: !last, mid: last ? seat('12E') : {} });
+    }
+    const chips = names.map((name, i) => {
+      const id = assign[i];
+      return { name, seat: id || 'No seat', style: 'min-height: 44px; box-sizing: border-box; padding: 0 12px; border-radius: 12px; background: #ffffff; display: flex; align-items: center; justify-content: space-between; ' + (id ? 'border: 2px solid #fb8030;' : 'border: 1px dashed #7b7fa6;'),
+        seatStyle: 'font-size: 14px; font-weight: 700; ' + (id ? 'color: #262a67;' : 'color: #b42318;') };
+    });
+    const free = assign.filter((x) => !x).length;
+    const hint = free ? 'Tap an available seat for ' + names[assign.indexOf(null)] + '.' : 'All 4 seated together. Tap a seat to change it.';
+    return { rows, chips, hint };
+  }
+}
+</script>
+</body>
+</html>

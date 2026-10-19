@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Accept company invite</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif; display: flex; flex-direction: column; padding: 56px 16px 24px; gap: 16px">
+<img src="../assets/1fbce194fcb16bf54904c32c189fca31.svg" alt="Trips Enjoy" style="height: 40px; width: auto; align-self: flex-start">
+<div style="display: flex; align-items: center; gap: 12px; padding: 14px; border-radius: 20px; background: #262a67; color: #f6f3e4">
+<img src="../assets/697a49af6be5a077ae1851c1a8b9dfcd.svg" alt="" style="width: 48px; height: 48px; flex-shrink: 0; border-radius: 12px; object-fit: cover">
+<span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 16px; font-weight: 600">Sunrise Tours Co. invited you</span><span style="font-size: 13px; color: #b8bad6">{{roleLine}}</span></span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 4px">
+<h1 style="margin: 0; font-size: 26px; line-height: 34px; font-weight: 700">{{title}}</h1>
+<p style="margin: 0; font-size: 15px; line-height: 22px; color: #5b5f86">{{sub}}</p>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="si-n" style="font-size: 14px; font-weight: 600">Full name</label><input id="si-n" dir="auto" value="{{person}}" style="height: 52px; box-sizing: border-box; padding: 0 14px; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-family: inherit; font-size: 16px"></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><span style="font-size: 14px; font-weight: 600">Mobile number</span><span style="height: 52px; box-sizing: border-box; display: flex; align-items: center; justify-content: space-between; padding: 0 14px; border-radius: 8px; background: #e3dfc9; font-size: 16px"><span dir="ltr">+966 54 ••• 7713</span><span style="font-size: 13px; font-weight: 600; color: #1f7a4d">Verified by code</span></span></div>
+<dc-import name="PasswordField" label="Create a password" value="" show-strength="{{yes}}" is-new="{{yes}}" field-id="si-pw" hint-size="100%,112px"></dc-import>
+<div style="padding: 12px; border-radius: 12px; background: #ffffff; font-size: 13px; line-height: 18px; color: #5b5f86">{{scope}}</div>
+<a href="{{next}}" style="margin-top: auto; height: 52px; flex-shrink: 0; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 16px; font-weight: 600; display: flex; align-items: center; justify-content: center; text-decoration: none">Join Sunrise Tours</a>
+<a href="AuthWelcome.dc.html" style="text-align: center; font-size: 14px; font-weight: 600">This isn't me</a>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"role":{"editor":"enum","options":["driver","moderator"],"default":"driver"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() {
+const d = (this.props.role ?? 'driver') === 'driver';
+return d ? { roleLine: 'Role: Company driver', title: 'Set up your driver login', sub: 'You drive only for Sunrise Tours. No application or plan needed — trips they assign you are accepted automatically.', person: 'Majed Al-Anazi', scope: 'Only Sunrise Tours can see you and assign you. You won\'t appear in the public driver pool. You can still apply as a platform driver later.', next: 'DrvLabApproved.dc.html', yes: true }
+: { roleLine: 'Role: Vehicle moderator', title: 'Set up your moderator login', sub: 'You\'ll check passengers in and out on the bus you\'re assigned to.', person: 'Huda Al-Zahrani', scope: 'You\'ll only see the vehicle and trip you\'re assigned to — never other buses, payments or company settings.', next: 'ModAssignment.dc.html', yes: true };
+}
+}
+</script>
+</body>
+</html>

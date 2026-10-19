@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Booking TE-48217 · Refund</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="min-height: 1000px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="OrgNav" active="Bookings" hint-size="248px,1000px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 20px">
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<a href="OrgBookings.dc.html" style="font-size: 14px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px; text-decoration: none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg>Bookings</a>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px"><h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Booking TE-48217</h1><span style="{{statusStyle}}">{{status}}</span></div>
+<span style="font-size: 15px; color: #5b5f86"><a href="OrgTrip.dc.html" style="font-weight: 600">AlUla Heritage Weekend</a> · Thu 16 – Sat 18 Oct · booked Wed 1 Oct, 20:41 in the app</span>
+</div>
+<a href="../mobile/TrvSupport.dc.html" style="height: 48px; box-sizing: border-box; padding: 0 18px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16v12H4zM4 7l8 6 8-6"></path></svg>Message Sara</a>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
+<div style="flex: 3 1 520px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+
+<section aria-labelledby="tv-h" style="background: #ffffff; border-radius: 20px; padding: 16px 0 6px">
+<div style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: space-between; align-items: center; padding: 0 20px 8px"><h2 id="tv-h" style="margin: 0; font-size: 18px; font-weight: 600">Sara Al-Qahtani &amp; family</h2><span style="font-size: 14px; color: #5b5f86">+966 55 ••• 4821 · Explorer member · parent tracking on</span></div>
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 620px; border-collapse: collapse; font-size: 14px">
+<thead><tr style="color: #5b5f86; font-size: 13px"><th scope="col" style="text-align: start; padding: 8px 20px; font-weight: 600">Traveller</th><th scope="col" style="text-align: start; padding: 8px 12px; font-weight: 600">Seat</th><th scope="col" style="text-align: start; padding: 8px 12px; font-weight: 600">Programs</th><th scope="col" style="text-align: end; padding: 8px 20px; font-weight: 600">Subtotal</th></tr></thead>
+<tbody>
+<sc-for list="{{people}}" as="p" hint-placeholder-count="4">
+<tr style="{{p.row}}">
+<td style="padding: 10px 20px"><span style="display: flex; flex-direction: column"><span style="font-size: 15px; font-weight: 600">{{p.n}}</span><span style="font-size: 13px; color: #5b5f86">{{p.t}}</span></span></td>
+<td style="padding: 10px 12px; white-space: nowrap">{{p.seat}}</td>
+<td style="padding: 10px 12px; color: #5b5f86">{{p.prog}}</td>
+<td style="padding: 10px 20px; text-align: end; font-variant-numeric: tabular-nums; white-space: nowrap">{{p.sub}}</td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+<dl style="margin: 0; padding: 8px 20px 10px; border-top: 1px solid #e3dfc9; display: flex; flex-direction: column; gap: 6px; font-size: 14px">
+<div style="display: flex; justify-content: space-between"><dt style="color: #5b5f86">Subtotal · 4 travellers</dt><dd style="margin: 0; font-variant-numeric: tabular-nums">5,820 SAR</dd></div>
+<div style="display: flex; justify-content: space-between; align-items: center"><dt style="color: #5b5f86; display: flex; align-items: center; gap: 8px">Coupon <span style="padding: 1px 8px; border-radius: 6px; background: #f6f3e4; border: 1px dashed #7b7fa6; font-size: 12px; font-weight: 700; color: #262a67">AUTUMN15</span> 100 SAR off · min. spend 1,000 SAR</dt><dd style="margin: 0; color: #1f7a4d; font-weight: 600">− 100 SAR</dd></div>
+<div style="display: flex; justify-content: space-between; font-size: 16px; font-weight: 700"><dt>Paid</dt><dd style="margin: 0">5,720 SAR <span style="font-size: 13px; font-weight: 500; color: #5b5f86">incl. 746 SAR VAT</span></dd></div>
+</dl>
+</section>
+
+<section aria-labelledby="pt-h" style="background: #ffffff; border-radius: 20px; padding: 16px 20px; display: flex; flex-direction: column; gap: 10px">
+<h2 id="pt-h" style="margin: 0; font-size: 18px; font-weight: 600">Payment timeline</h2>
+<ol style="list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{timeline}}" as="t" hint-placeholder-count="5">
+<li style="{{t.style}}"><span style="font-size: 12px; font-weight: 700; color: #5b5f86">{{t.when}}</span><span style="font-size: 14px; font-weight: 600">{{t.t}}</span><span style="font-size: 13px; color: #5b5f86">{{t.d}}</span></li>
+</sc-for>
+</ol>
+</section>
+</div>
+
+<aside style="flex: 2 1 340px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+<section aria-labelledby="rf-h" style="background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 12px; border: 2px solid #fb8030">
+<h2 id="rf-h" style="margin: 0; font-size: 18px; font-weight: 600">Cancellation request</h2>
+<p style="margin: 0; font-size: 14px; line-height: 20px">Sara asked to cancel <strong>Faisal Al-Qahtani</strong> (seat 4A) on Sun 12 Oct, 21:14: “Faisal has a work trip that week. The children and I are still coming.”</p>
+<div style="padding: 12px; border-radius: 12px; background: #e3f3ea; color: #1f7a4d; font-size: 14px; font-weight: 600; display: flex; gap: 8px; align-items: flex-start"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 1px"><path d="M5 12.5l4.5 4.5L19 7"></path></svg><span>80% refund under the policy: requested 81 h before departure (48 h or more before departure).</span></div>
+<dl style="margin: 0; display: flex; flex-direction: column; gap: 6px; font-size: 14px">
+<div style="display: flex; justify-content: space-between"><dt style="color: #5b5f86">Adult ticket</dt><dd style="margin: 0">1,250 SAR</dd></div>
+<div style="display: flex; justify-content: space-between"><dt style="color: #5b5f86">Hegra tour · Dinner Standard</dt><dd style="margin: 0">330 SAR</dd></div>
+<div style="display: flex; justify-content: space-between"><dt style="color: #5b5f86">Travel insurance (required)</dt><dd style="margin: 0">25 SAR</dd></div>
+<div style="display: flex; justify-content: space-between"><dt style="color: #5b5f86">Coupon stays (still above min. spend)</dt><dd style="margin: 0">0 SAR</dd></div>
+<div style="display: flex; justify-content: space-between"><dt style="color: #5b5f86">Kept under policy (20%)</dt><dd style="margin: 0">−321 SAR</dd></div>
+<div style="display: flex; justify-content: space-between; font-weight: 700; padding-top: 6px; border-top: 1px solid #e3dfc9"><dt>Policy maximum</dt><dd style="margin: 0">1,284 SAR</dd></div>
+</dl>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="amt" style="font-size: 14px; font-weight: 600">Refund amount</label>
+<div style="position: relative"><input id="amt" inputmode="decimal" value="{{amt}}" onInput="{{setAmt}}" aria-invalid="{{amtInvalid}}" aria-describedby="amt-h" style="{{amtStyle}}"><span style="position: absolute; right: 14px; top: 15px; font-size: 14px; color: #5b5f86">SAR</span></div>
+<span id="amt-h" style="{{amtHelpStyle}}">{{amtHelp}}</span>
+</div>
+<span style="font-size: 13px; color: #5b5f86">Refund goes to Mada •••• 3390 in 3–5 working days. Seat 4A is released and Nadia Yusuf’s Bus 2 manifest updates.</span>
+<button type="button" onClick="{{approve}}" disabled="{{cantApprove}}" style="{{approveStyle}}">{{approveLabel}}</button>
+<button type="button" style="height: 44px; border-radius: 12px; border: 0; background: transparent; color: #b42318; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Decline with reason</button>
+</section>
+
+<section aria-labelledby="au-h" style="background: #ffffff; border-radius: 20px; padding: 16px 20px; display: flex; flex-direction: column; gap: 8px">
+<h2 id="au-h" style="margin: 0; font-size: 16px; font-weight: 600">Audit log</h2>
+<ol style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; font-size: 13px">
+<sc-for list="{{audit}}" as="a" hint-placeholder-count="4">
+<li style="display: grid; grid-template-columns: 96px 1fr; gap: 8px"><span style="color: #5b5f86; font-variant-numeric: tabular-nums">{{a.t}}</span><span>{{a.d}}</span></li>
+</sc-for>
+</ol>
+</section>
+</aside>
+</div>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1080}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { amt: '1,284', done: false }; }
+  renderVals() {
+    const done = this.state.done;
+    const n = parseFloat(String(this.state.amt).replace(/[^0-9.]/g, ''));
+    const valid = !isNaN(n) && n >= 0 && n <= 1284;
+    const people = [
+      { n: 'Faisal Al-Qahtani', t: 'Adult · cancellation requested', seat: 'Bus 2 · 4A', prog: 'Hegra tour, Dinner Standard, Insurance', sub: '1,605 SAR', hl: true },
+      { n: 'Sara Al-Qahtani', t: 'Adult · lead booker', seat: 'Bus 2 · 4B', prog: 'Hegra tour, Dinner Standard, Insurance', sub: '1,605 SAR' },
+      { n: 'Omar Al-Qahtani', t: 'Child · 9 · tracked by Sara', seat: 'Bus 2 · 4C', prog: 'Hegra tour, Dinner Standard, Insurance', sub: '1,305 SAR' },
+      { n: 'Lina Al-Qahtani', t: 'Child · 6 · tracked by Sara', seat: 'Bus 2 · 4D', prog: 'Hegra tour, Dinner Standard, Insurance', sub: '1,305 SAR' }
+    ].map((p) => ({ ...p, row: 'border-top: 1px solid #e3dfc9; ' + (p.hl ? (done ? 'background: #f6f3e4; text-decoration: line-through;' : 'background: #fdf0d5;') : '') }));
+    const box = (tone) => 'flex: 1 1 140px; padding: 10px 12px; border-radius: 12px; display: flex; flex-direction: column; gap: 2px; ' + ({ ok: 'background: #f6f3e4;', warn: 'background: #fdf0d5;', next: 'border: 1px dashed #7b7fa6;', done: 'background: #e3f3ea;' })[tone];
+    const timeline = [
+      { when: 'Wed 1 Oct 20:41', t: 'Seats held', d: '4 seats · 15 min hold', k: 'ok' },
+      { when: 'Wed 1 Oct 20:44', t: 'Paid 5,720 SAR', d: 'Mada •••• 3390 · Moyasar', k: 'ok' },
+      { when: 'Wed 1 Oct 20:44', t: 'Confirmed', d: 'Receipt R-2210-4821 sent', k: 'ok' },
+      { when: 'Sun 12 Oct 21:14', t: 'Cancel requested', d: '1 adult · Faisal', k: 'warn' },
+      { when: done ? 'Tue 14 Oct 10:31' : 'Next', t: done ? 'Refund approved' : 'Refund', d: done ? this.state.amt + ' SAR to Mada' : 'Waiting for your decision', k: done ? 'done' : 'next' }
+    ].map((t) => ({ ...t, style: box(t.k) }));
+    const audit = [
+      ...(done ? [{ t: 'Tue 14 · 10:31', d: 'Mona Saleh approved a ' + this.state.amt + ' SAR refund for Faisal Al-Qahtani' }] : []),
+      { t: 'Mon 13 · 09:12', d: 'Rana Fadel (Support) viewed the request' },
+      { t: 'Sun 12 · 21:14', d: 'Sara Al-Qahtani requested to cancel 1 traveller' },
+      { t: 'Wed 8 · 11:02', d: 'Yousef Amin assigned seats 4A–4D on Bus 2' },
+      { t: 'Wed 1 · 20:44', d: 'Booking confirmed · coupon AUTUMN15 applied' }
+    ];
+    const tone = done ? 'background: #e3f3ea; color: #1f7a4d;' : 'background: #fdf0d5; color: #8a4b00;';
+    return { people, timeline, audit, amt: this.state.amt,
+      status: done ? 'Partly refunded' : 'Refund requested',
+      statusStyle: 'display: inline-flex; align-items: center; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; ' + tone,
+      setAmt: (e) => this.setState({ amt: e.target.value }),
+      amtInvalid: valid ? 'false' : 'true',
+      amtStyle: 'width: 100%; height: 52px; box-sizing: border-box; border-radius: 8px; background: #fff; padding: 0 56px 0 14px; font: inherit; font-size: 18px; font-weight: 700; color: #262a67; ' + (valid ? 'border: 1px solid #7b7fa6;' : 'border: 2px solid #b42318;'),
+      amtHelp: valid ? 'Any amount from 0 to 1,284 SAR. Going lower than the policy needs a note to Sara.' : 'Enter an amount from 0 to 1,284 SAR. Your policy does not allow refunding more.',
+      amtHelpStyle: 'font-size: 13px; ' + (valid ? 'color: #5b5f86;' : 'color: #b42318;'),
+      cantApprove: !valid || done,
+      approve: () => { if (valid) this.setState({ done: true }); },
+      approveLabel: done ? 'Refund approved' : 'Approve refund · ' + (valid ? this.state.amt + ' SAR' : '—'),
+      approveStyle: 'height: 48px; border-radius: 12px; border: 0; font: inherit; font-size: 16px; font-weight: 700; cursor: pointer; ' + (done ? 'background: #e3f3ea; color: #1f7a4d;' : valid ? 'background: #ff6c2e; color: #262a67;' : 'background: #e3dfc9; color: #5b5f86;') };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Studio web · Portfolio</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+.te-nav:focus-visible{outline:2px solid #f89e23;outline-offset:2px}
+.te-tile:hover{border-color:#7b7fa6}
+</style>
+</helmet>
+<div style="min-height: 1000px; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif; display: flex; flex-direction: column">
+
+<header style="background: #1a1c4b; color: #f6f3e4">
+<div style="box-sizing: border-box; padding: 12px 40px; display: flex; flex-wrap: wrap; align-items: center; gap: 16px 28px">
+<a href="PhoWebHome.dc.html" class="te-nav" style="display: flex; align-items: center; gap: 10px; text-decoration: none"><img src="../assets/6ea846350ba3adc0e289d47fa0612c3b.svg" alt="Trips Enjoy" style="height: 36px; width: auto"><span style="padding: 2px 10px; border-radius: 999px; background: #f89e23; color: #1a1c4b; font-size: 12px; font-weight: 700">Studio</span></a>
+<nav aria-label="Studio" style="display: flex; flex-wrap: wrap; gap: 4px; flex-grow: 1">
+<sc-for list="{{nav}}" as="n" hint-placeholder-count="8"><a href="{{n.href}}" class="te-nav" aria-current="{{n.cur}}" style="{{n.style}}">{{n.label}}</a></sc-for>
+</nav>
+<a href="PhoWebProfile.dc.html" class="te-nav" style="display: flex; align-items: center; gap: 10px; color: #f6f3e4; text-decoration: none">
+<span style="display: flex; flex-direction: column; align-items: flex-end"><span style="font-size: 14px; font-weight: 600">Laila Fathy</span><span style="font-size: 12px; color: #b8bad6">Studio plan · Verified</span></span>
+<span style="width: 40px; height: 40px; border-radius: 999px; background: #31367a; color: #f89e23; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; overflow: hidden" aria-hidden="true"><img src="../assets/fa4aea3b99ab1c92ea071dc7fc9f9299.svg" alt="" style="width: 100%; height: 100%; object-fit: cover"></span>
+</a>
+</div>
+</header>
+
+<div style="box-sizing: border-box; width: 100%; max-width: 1440px; margin: 0 auto; padding: 24px 40px 40px; display: flex; flex-direction: column; gap: 20px">
+
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 700">Portfolio</h1>
+<span style="font-size: 14px; color: #5b5f86">Organizations see these photos, in this order, when they look for a photographer. Drag to reorder.</span>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center">
+<div role="group" aria-label="Preview allowance state" style="display: flex; padding: 4px; border-radius: 999px; background: #ffffff; border: 1px solid #e3dfc9">
+<sc-for list="{{modes}}" as="m" hint-placeholder-count="3"><button aria-pressed="{{m.on}}" onClick="{{m.go}}" style="{{m.style}}">{{m.label}}</button></sc-for>
+</div>
+<sc-if value="{{canUpload}}" hint-placeholder-val="{{true}}"><button style="height: 48px; padding: 0 20px; border: 0; border-radius: 12px; background: #ff6c2e; color: #262a67; font: inherit; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"></path></svg>Upload photos</button></sc-if>
+<sc-if value="{{full}}" hint-placeholder-val="{{false}}"><a href="../mobile/PhoPlanManage.dc.html" style="height: 48px; box-sizing: border-box; padding: 0 20px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 15px; font-weight: 700; display: flex; align-items: center; text-decoration: none">Upgrade to Pro</a></sc-if>
+</div>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: stretch">
+<div style="flex: 1 1 280px; padding: 18px 20px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 8px">
+<span style="display: flex; justify-content: space-between; font-size: 14px; color: #5b5f86"><span>Portfolio allowance · Studio</span><span style="font-weight: 600; color: #262a67">{{count}} of 50</span></span>
+<span role="progressbar" aria-label="Portfolio photos used" aria-valuenow="{{count}}" aria-valuemin="0" aria-valuemax="50" style="height: 8px; border-radius: 999px; background: #e3dfc9; display: flex; overflow: hidden"><span style="{{bar}}"></span></span>
+<span style="font-size: 13px; color: #5b5f86">Basic 10 · Studio 50 · Pro unlimited</span>
+</div>
+<sc-if value="{{low}}" hint-placeholder-val="{{false}}">
+<div role="status" style="flex: 2 1 420px; padding: 16px 20px; border-radius: 20px; background: #fdf0d5; color: #8a4b00; display: flex; gap: 12px; align-items: flex-start">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M12 3l9.5 17h-19zM12 10v4M12 17h.01"></path></svg>
+<span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 16px; font-weight: 700">Add 2 more photos</span><span style="font-size: 14px; line-height: 20px; color: #262a67">A portfolio needs at least 8 photos. Until then your profile is hidden from organizations and new albums stay locked.</span></span>
+</div>
+</sc-if>
+<sc-if value="{{full}}" hint-placeholder-val="{{false}}">
+<div role="status" style="flex: 2 1 420px; padding: 16px 20px; border-radius: 20px; background: #fde8e6; color: #b42318; display: flex; gap: 12px; align-items: flex-start">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M6 11h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1zM8 11V7a4 4 0 0 1 8 0v4"></path></svg>
+<span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 16px; font-weight: 700">Allowance reached · 50 of 50</span><span style="font-size: 14px; line-height: 20px; color: #262a67">Delete a photo to add a new one, or move to Pro for an unlimited portfolio. Uploads are paused.</span></span>
+</div>
+</sc-if>
+<sc-if value="{{normal}}" hint-placeholder-val="{{true}}">
+<label style="position: relative; flex: 2 1 420px; padding: 16px 20px; border-radius: 20px; border: 2px dashed #7b7fa6; background: #ffffff; display: flex; align-items: center; gap: 16px; cursor: pointer">
+<span style="width: 48px; height: 48px; flex-shrink: 0; border-radius: 999px; background: #e6e8f5; display: flex; align-items: center; justify-content: center"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"></path></svg></span>
+<span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 16px; font-weight: 600">Drop photos here or choose files</span><span style="font-size: 14px; color: #5b5f86">JPEG, PNG or HEIC · up to 25 MB each · location data is removed</span></span>
+<input type="file" multiple accept="image/jpeg,image/png,image/heic" aria-label="Choose portfolio photos" style="position: absolute; width: 1px; height: 1px; opacity: 0">
+</label>
+</sc-if>
+</div>
+
+<sc-if value="{{normal}}" hint-placeholder-val="{{true}}">
+<section aria-labelledby="q-h" style="padding: 16px 20px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 10px">
+<h2 id="q-h" style="margin: 0; font-size: 16px; font-weight: 600">Uploading 3 files</h2>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 6px"><span style="display: flex; justify-content: space-between; font-size: 14px"><span style="font-weight: 600">Siwa_salt_lake_04.jpg</span><span style="color: #5b5f86">72%</span></span><span role="progressbar" aria-label="Siwa_salt_lake_04.jpg upload" aria-valuenow="72" aria-valuemin="0" aria-valuemax="100" style="height: 6px; border-radius: 999px; background: #e3dfc9; display: flex; overflow: hidden"><span style="width: 72%; background: #262a67; border-radius: 999px"></span></span></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><span style="display: flex; justify-content: space-between; font-size: 14px"><span style="font-weight: 600">Fayoum_dunes_group.heic</span><span style="color: #5b5f86">18%</span></span><span role="progressbar" aria-label="Fayoum_dunes_group.heic upload" aria-valuenow="18" aria-valuemin="0" aria-valuemax="100" style="height: 6px; border-radius: 999px; background: #e3dfc9; display: flex; overflow: hidden"><span style="width: 18%; background: #262a67; border-radius: 999px"></span></span></div>
+<div style="display: flex; gap: 8px; align-items: flex-start; font-size: 14px; line-height: 20px; color: #b42318"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 1px"><path d="M12 3l9.5 17h-19zM12 10v4M12 17h.01"></path></svg><span><span style="font-weight: 600">Citadel_panorama.tiff not added.</span> TIFF isn't supported. Export it as JPEG or PNG and upload again.</span></div>
+</div>
+</section>
+</sc-if>
+
+<section aria-labelledby="g-h" style="padding: 20px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px">
+<h2 id="g-h" style="margin: 0; font-size: 20px; font-weight: 600">{{count}} photos</h2>
+<span style="font-size: 13px; color: #5b5f86">First photo is the cover on your public profile · order saved automatically</span>
+</div>
+<ol style="margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 14px">
+<sc-for list="{{tiles}}" as="p" hint-placeholder-count="12">
+<li class="te-tile" draggable="true" style="border: 1px solid #e3dfc9; border-radius: 20px; overflow: hidden; background: #ffffff; display: flex; flex-direction: column">
+<span style="position: relative; display: block; aspect-ratio: 4 / 3; background: #262a67">
+<sc-if value="{{p.hasImg}}" hint-placeholder-val="{{true}}"><img src="{{p.img}}" alt="{{p.alt}}" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: {{p.pos}}"></sc-if>
+<sc-if value="{{p.noImg}}" hint-placeholder-val="{{false}}"><span style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#b8bad6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1zM8.5 10a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM20 15l-5-5L5 20"></path></svg></span></sc-if>
+<span style="position: absolute; left: 8px; top: 8px; min-width: 24px; height: 24px; padding: 0 6px; box-sizing: border-box; border-radius: 999px; background: #ffffff; color: #262a67; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center">{{p.n}}</span>
+<sc-if value="{{p.cover}}" hint-placeholder-val="{{false}}"><span style="position: absolute; right: 8px; top: 8px; padding: 2px 8px; border-radius: 999px; background: #f89e23; color: #262a67; font-size: 11px; font-weight: 700">Cover</span></sc-if>
+</span>
+<span style="padding: 8px 6px 8px 12px; display: flex; align-items: center; gap: 4px">
+<span style="flex-grow: 1; min-width: 0; font-size: 13px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap">{{p.alt}}</span>
+<button aria-label="{{p.moveLabel}}" style="width: 36px; height: 36px; border: 0; border-radius: 8px; background: transparent; color: #262a67; cursor: grab; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5h.01M15 5h.01M9 12h.01M15 12h.01M9 19h.01M15 19h.01"></path></svg></button>
+<button aria-label="{{p.delLabel}}" onClick="{{p.del}}" style="width: 36px; height: 36px; border: 0; border-radius: 8px; background: transparent; color: #b42318; cursor: pointer; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"></path></svg></button>
+</span>
+</li>
+</sc-for>
+</ol>
+<sc-if value="{{more}}" hint-placeholder-val="{{true}}"><span style="font-size: 14px; color: #5b5f86">Showing 12 of {{count}} · <a href="#" style="font-weight: 600">Show all</a></span></sc-if>
+</section>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { mode: 'normal', removed: {} }; }
+  renderVals() {
+    const nav = [['Home', 'PhoWebHome'], ['Portfolio', 'PhoWebPortfolio'], ['Profile', 'PhoWebProfile'], ['Rates', 'PhoWebRates'], ['Deals', 'PhoWebDeals'], ['Albums', 'PhoWebAlbums'], ['Earnings', 'PhoWebEarnings'], ['Coupons', 'PhoWebCoupons']].map(([label, f]) => {
+      const on = label === 'Portfolio';
+      return { label, href: f + '.dc.html', cur: on ? 'page' : 'false',
+        style: 'height: 40px; padding: 0 14px; border-radius: 999px; display: flex; align-items: center; font-size: 15px; font-weight: 600; text-decoration: none; ' + (on ? 'background: #31367a; color: #f89e23;' : 'color: #f6f3e4;') };
+    });
+    const mode = this.state.mode;
+    const modes = [['normal', 'Uploading'], ['low', 'Below 8'], ['full', 'Allowance full']].map(([id, label]) => {
+      const on = mode === id;
+      return { label, on: on ? 'true' : 'false', go: () => this.setState({ mode: id }),
+        style: 'height: 36px; padding: 0 14px; border: 0; border-radius: 999px; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; ' + (on ? 'background: #262a67; color: #f6f3e4;' : 'background: transparent; color: #262a67;') };
+    });
+    const src = [
+      ['../assets/b2bcb63d43641eb25576376d35060477.png', 'Group cheer at Ain Sokhna', '50% 70%'], ['../assets/d86de248246e3c2af9ac141f04f94d0a.svg', 'Sunset over Siwa Oasis', '50% 50%'], ['../assets/6c681277de59192cae4171833ad9e5e7.svg', 'Waterfall at Wadi El Rayan', '50% 50%'], ['../assets/073b7fe9ddee4e94c5d8ddaa41cbb4f4.svg', 'Dune jump at sunset, Fayoum', '40% 50%'],
+      ['../assets/61261514261614e6b661d310c333264d.svg', 'Beach games at the waterline', '30% 60%'], ['../assets/3c9baf624f42e5a28246b4e6de48737d.svg', 'School group, Al Azhar Park', '50% 60%'], ['../assets/39057213b7b92ac9886e5089cdf16941.svg', 'Night camp in the White Desert', '50% 60%'], ['../assets/e0896ba1c1106bfc2b93677050629a1c.svg', 'Group photo at the pyramids', '50% 45%'],
+      ['../assets/79a6ce5310828e799852c7aef2cdc987.svg', 'Group selfie on the trip', '50% 35%'], ['../assets/f307c5f03eb23299e4b0e9acc1833c87.svg', 'Qaitbay citadel, Alexandria', '60% 50%'], ['../assets/cdab8dd228095fdedbd0b08ca38eb7bd.svg', 'Felucca on the Nile, Luxor', '40% 50%'], ['../assets/dd052dab07949cd087d95323479af226.svg', 'Campfire night, Bahariya', '50% 60%']
+    ];
+    const count = mode === 'low' ? 6 : mode === 'full' ? 50 : 34;
+    const list = src.slice(0, Math.min(count, 12)).filter((_, i) => !this.state.removed[i]);
+    const tiles = list.map(([img, alt, pos], i) => ({ n: String(i + 1), img, alt, pos, hasImg: !!img, noImg: !img, cover: i === 0,
+      moveLabel: 'Move photo ' + (i + 1) + ', ' + alt, delLabel: 'Delete ' + alt,
+      del: () => { const idx = src.findIndex((s) => s[1] === alt); this.setState({ removed: { ...this.state.removed, [idx]: true } }); } }));
+    const pct = Math.round(count / 50 * 100);
+    return { nav, modes, tiles, count: String(count),
+      bar: 'width: ' + pct + '%; border-radius: 999px; background: ' + (mode === 'full' ? '#b42318' : mode === 'low' ? '#8a4b00' : '#262a67'),
+      low: mode === 'low', full: mode === 'full', normal: mode === 'normal', canUpload: mode !== 'full', more: count > 12 };
+  }
+}
+</script>
+</body>
+</html>

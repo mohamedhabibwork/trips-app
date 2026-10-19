@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Moderator · Offline queue</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+
+<div aria-hidden="true" style="height: 100%; box-sizing: border-box; padding: 56px 16px 120px; display: flex; flex-direction: column; gap: 14px">
+<div style="height: 40px; border-radius: 999px; background: #262a67; color: #f6f3e4; display: flex; align-items: center; gap: 8px; padding: 0 14px; font-size: 14px; font-weight: 600">{{bannerText}}</div>
+<div style="height: 150px; border-radius: 20px; background: #262a67"></div>
+<div style="height: 200px; border-radius: 20px; background: #ffffff"></div>
+</div>
+<div style="position: absolute; left: 0; right: 0; bottom: 0; height: 120px">
+<dc-import name="TabBar" role="moderator" active="bus" hint-size="390px,120px"></dc-import>
+</div>
+
+<div style="position: absolute; inset: 0; background: rgba(16,18,48,.45)"></div>
+
+<div role="dialog" aria-modal="true" aria-labelledby="q-h" style="position: absolute; left: 0; right: 0; bottom: 0; top: 104px; box-sizing: border-box; padding: 10px 16px 24px; border-radius: 20px 20px 0 0; background: #ffffff; display: flex; flex-direction: column; gap: 12px">
+<span aria-hidden="true" style="align-self: center; width: 40px; height: 5px; border-radius: 999px; background: #e3dfc9"></span>
+<div style="display: flex; align-items: flex-start; gap: 12px">
+<div style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px">
+<h2 id="q-h" style="margin: 0; font-size: 22px; line-height: 28px; font-weight: 700">{{title}}</h2>
+<span style="font-size: 13px; color: #5b5f86">Bus 2 · AlUla Heritage Weekend · Riyadh time</span>
+</div>
+<a href="ModToday.dc.html" aria-label="Close" style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 999px; background: #f6f3e4; color: #262a67; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></a>
+</div>
+
+<div role="status" aria-live="polite" style="{{statusStyle}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="{{statusIcon}}"></path></svg><span>{{statusText}}</span></div>
+
+<dl style="margin: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; text-align: center">
+<div style="padding: 8px 4px; border-radius: 12px; background: #f6f3e4"><dt style="font-size: 12px; color: #5b5f86">Waiting</dt><dd style="margin: 0; font-size: 22px; font-weight: 700">{{count}}</dd></div>
+<div style="padding: 8px 4px; border-radius: 12px; background: #f6f3e4"><dt style="font-size: 12px; color: #5b5f86">Oldest event</dt><dd style="margin: 0; font-size: 22px; font-weight: 700">{{oldest}}</dd></div>
+<div style="padding: 8px 4px; border-radius: 12px; background: #f6f3e4"><dt style="font-size: 12px; color: #5b5f86">Newest event</dt><dd style="margin: 0; font-size: 22px; font-weight: 700">{{newest}}</dd></div>
+</dl>
+
+<sc-if value="{{nearLimit}}" hint-placeholder-val="{{false}}">
+<div role="alert" style="padding: 10px 12px; border-radius: 12px; background: #fdf0d5; color: #8a4b00; display: flex; gap: 8px; font-size: 13px; line-height: 18px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M12 3l9.5 17h-19zM12 10v4M12 17h.01"></path></svg><span><strong>812 of 1,000 events stored on this phone.</strong> Find a connection soon. At 1,000, new check-ins cannot be saved offline.</span></div>
+</sc-if>
+
+<sc-if value="{{hasList}}" hint-placeholder-val="{{true}}">
+<ul aria-label="Queued events, oldest first" style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; border-radius: 16px; border: 1px solid #e3dfc9; overflow: hidden">
+<sc-for list="{{events}}" as="e" hint-placeholder-count="5">
+<li style="padding: 8px 12px; border-bottom: 1px solid #e3dfc9; display: flex; gap: 10px; align-items: flex-start">
+<span style="{{e.iconWrap}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{e.icon}}"></path></svg></span>
+<span style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column">
+<span style="font-size: 14px; font-weight: 600">{{e.who}}</span>
+<span style="font-size: 12px; color: #5b5f86">{{e.kind}}</span>
+<sc-if value="{{e.failed}}" hint-placeholder-val="{{false}}"><span style="font-size: 12px; line-height: 16px; color: #b42318">{{e.reason}}</span></sc-if>
+</span>
+<span style="display: flex; flex-direction: column; align-items: flex-end"><span style="font-size: 14px; font-weight: 600">{{e.time}}</span><span style="{{e.stStyle}}">{{e.st}}</span></span>
+</li>
+</sc-for>
+</ul>
+</sc-if>
+
+<sc-if value="{{review}}" hint-placeholder-val="{{false}}">
+<section aria-labelledby="rv-h" style="padding: 10px 12px; border-radius: 12px; background: #e6e8f5; display: flex; flex-direction: column; gap: 2px; font-size: 13px; line-height: 18px">
+<h3 id="rv-h" style="margin: 0; font-size: 14px; font-weight: 700">In review · 3 events</h3>
+<span>From your earlier assignment on Bus 4, which operations replaced at 05:40. They go to operations for review and are not counted as check-ins.</span>
+</section>
+</sc-if>
+
+<sc-if value="{{done}}" hint-placeholder-val="{{false}}">
+<div style="padding: 20px; border-radius: 16px; background: #e3f3ea; color: #1f7a4d; display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg><span style="font-size: 16px; font-weight: 700">All 14 events sent in order</span><span style="font-size: 13px; color: #262a67">Parents saw the original check-in times. This sheet closes in a moment.</span></div>
+</sc-if>
+
+<div style="margin-top: auto; display: flex; flex-direction: column; gap: 6px">
+<sc-if value="{{canRetry}}" hint-placeholder-val="{{true}}"><button type="button" onClick="{{retry}}" style="height: 52px; border: 0; border-radius: 12px; background: #ff6c2e; color: #262a67; font: inherit; font-size: 16px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7"></path></svg>Retry now</button></sc-if>
+<sc-if value="{{done}}" hint-placeholder-val="{{false}}"><a href="ModToday.dc.html" style="height: 52px; border-radius: 12px; background: #262a67; color: #f6f3e4; font-size: 16px; font-weight: 600; text-decoration: none; display: flex; align-items: center; justify-content: center">Back to Bus 2</a></sc-if>
+<span style="font-size: 12px; line-height: 16px; color: #5b5f86; text-align: center">Events leave this phone only after the server confirms them. Sign-out waits until the queue is empty.</span>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"state":{"editor":"enum","options":["queued","syncing","synced","review","nearLimit"],"default":"queued"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { retried: false }; }
+  renderVals() {
+    let st = this.props.state || 'queued';
+    if (this.state.retried && (st === 'queued' || st === 'review' || st === 'nearLimit')) st = 'syncing';
+    const IN = 'M5 12.5l4.5 4.5L19 7', OUT = 'M5 12h14M13 6l6 6-6 6', AL = 'M12 3l9.5 17h-19zM12 10v4M12 17h.01';
+    const base = [
+      ['in', 'Faisal Al-Qahtani · 3D', 'Check-in', '06:02'],
+      ['in', 'Sara Al-Qahtani · 3C', 'Check-in', '06:03', 'Refused by server: already checked in at 05:51. Stays here until operations review it.'],
+      ['in', 'Omar Al-Qahtani · 4C · Child', 'Check-in', '06:04'],
+      ['in', 'Lina Al-Qahtani · 4D · Child', 'Check-in', '06:04'],
+      ['in', 'Huda Mansour · 5B', 'Check-in', '06:09']
+    ];
+    const syncing = st === 'syncing';
+    const events = base.map(([k, who, kind, time, reason], i) => {
+      const failed = !!reason && !syncing;
+      const sent = syncing && i < 2 && !reason;
+      const tone = failed ? ['#fde8e6', '#b42318'] : sent ? ['#e3f3ea', '#1f7a4d'] : ['#e6e8f5', '#262a67'];
+      return { who, kind: kind + ' · original time kept', time, failed, reason: reason || '',
+        icon: failed ? AL : (k === 'in' ? IN : OUT),
+        iconWrap: 'width: 28px; height: 28px; flex-shrink: 0; border-radius: 999px; background: ' + tone[0] + '; color: ' + tone[1] + '; display: flex; align-items: center; justify-content: center',
+        st: failed ? 'Failed' : sent ? 'Sent' : (syncing ? 'Sending' : 'Waiting'),
+        stStyle: 'font-size: 12px; font-weight: 600; color: ' + tone[1] };
+    });
+    const S = {
+      queued: ['Waiting to send', 'Offline · retrying every 30 s. Check-in keeps working.', ['#e6e8f5', '#262a67'], 'M3 3l18 18M8.5 16.5a5 5 0 0 1 7 0M5 13a10 10 0 0 1 4-2.6M12 20h.01M15 10.4A10 10 0 0 1 19 13M2 9.5a15 15 0 0 1 3.5-2.4M10.5 5.1A15 15 0 0 1 22 9.5', '14'],
+      syncing: ['Sending events', 'Back online · sending in original order, 9 of 14 left', ['#ffe7dc', '#c93a00'], 'M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7', '9'],
+      synced: ['Queue is empty', 'All events confirmed by the server at 06:12', ['#e3f3ea', '#1f7a4d'], 'M5 12.5l4.5 4.5L19 7', '0'],
+      review: ['Waiting to send', 'Offline · retrying every 30 s', ['#e6e8f5', '#262a67'], 'M3 3l18 18M8.5 16.5a5 5 0 0 1 7 0M5 13a10 10 0 0 1 4-2.6M12 20h.01M15 10.4A10 10 0 0 1 19 13M2 9.5a15 15 0 0 1 3.5-2.4M10.5 5.1A15 15 0 0 1 22 9.5', '14'],
+      nearLimit: ['Waiting to send', 'Offline since 05:12 · retrying every 30 s', ['#e6e8f5', '#262a67'], 'M3 3l18 18M8.5 16.5a5 5 0 0 1 7 0M5 13a10 10 0 0 1 4-2.6M12 20h.01M15 10.4A10 10 0 0 1 19 13M2 9.5a15 15 0 0 1 3.5-2.4M10.5 5.1A15 15 0 0 1 22 9.5', '812']
+    };
+    const s = S[st] || S.queued;
+    const done = st === 'synced';
+    return {
+      title: s[0], statusText: s[1], statusIcon: s[3], count: s[4],
+      statusStyle: 'min-height: 40px; padding: 8px 12px; box-sizing: border-box; border-radius: 12px; background: ' + s[2][0] + '; color: ' + s[2][1] + '; display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600',
+      oldest: done ? '–' : (st === 'nearLimit' ? '05:12' : '06:02'), newest: done ? '–' : '06:09',
+      bannerText: done ? 'Online · all events sent' : (syncing ? 'Back online · sending' : 'Offline · 14 events saved on this phone'),
+      events, hasList: !done, done, review: st === 'review', nearLimit: st === 'nearLimit',
+      canRetry: !done && !syncing,
+      retry: () => this.setState({ retried: true })
+    };
+  }
+}
+</script>
+</body>
+</html>

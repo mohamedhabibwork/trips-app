@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Organization dashboard · Choose workspace</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+.te-ws:hover{border-color:#262a67}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif; display: flex; flex-direction: column; align-items: center; padding: 48px; gap: 40px">
+<img src="../assets/1fbce194fcb16bf54904c32c189fca31.svg" alt="Trips Enjoy" style="height: 48px; width: auto">
+<div style="width: 520px; display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Choose an organization</h1>
+<p style="margin: 0; font-size: 15px; color: #5b5f86">You're a member of 3 organizations as fahad@sunrisetours.sa.</p>
+</div>
+<a href="OrgHome.dc.html" class="te-ws" style="display: flex; align-items: center; gap: 14px; padding: 16px; border-radius: 12px; background: #ffffff; border: 1px solid #e3dfc9; color: #262a67; text-decoration: none">
+<img src="../assets/697a49af6be5a077ae1851c1a8b9dfcd.svg" alt="" style="width: 44px; height: 44px; border-radius: 12px; object-fit: cover; flex-shrink: 0">
+<span style="flex-grow: 1; display: flex; flex-direction: column"><span style="font-size: 16px; font-weight: 600">Sunrise Tours Co.</span><span style="font-size: 13px; color: #5b5f86">Owner · 12 trips live</span></span>
+<span style="padding: 4px 10px; border-radius: 999px; background: #e3f3ea; color: #1f7a4d; font-size: 12px; font-weight: 600">Active</span>
+</a>
+<a href="OrgPlan.dc.html" class="te-ws" style="display: flex; align-items: center; gap: 14px; padding: 16px; border-radius: 12px; background: #ffffff; border: 1px solid #e3dfc9; color: #262a67; text-decoration: none">
+<img src="../assets/f622ae191805b644d9e8f7a2610bfe1b.svg" alt="" style="width: 44px; height: 44px; border-radius: 12px; object-fit: cover; flex-shrink: 0">
+<span style="flex-grow: 1; display: flex; flex-direction: column"><span style="font-size: 16px; font-weight: 600">Al-Noor International School</span><span style="font-size: 13px; color: #5b5f86">Owner · approved, choose a plan</span></span>
+<span style="padding: 4px 10px; border-radius: 999px; background: #e3f3ea; color: #1f7a4d; font-size: 12px; font-weight: 600">Approved</span>
+</a>
+<a href="OrgAccountState.dc.html" class="te-ws" style="display: flex; align-items: center; gap: 14px; padding: 16px; border-radius: 12px; background: #ffffff; border: 1px solid #e3dfc9; color: #262a67; text-decoration: none">
+<img src="../assets/472625e3fa0e959013f492568148458e.svg" alt="" style="width: 44px; height: 44px; border-radius: 12px; object-fit: cover; flex-shrink: 0">
+<span style="flex-grow: 1; display: flex; flex-direction: column"><span style="font-size: 16px; font-weight: 600">Desert Events LLC</span><span style="font-size: 13px; color: #5b5f86">Owner · changes needed</span></span>
+<span style="padding: 4px 10px; border-radius: 999px; background: #f89e23; color: #262a67; font-size: 12px; font-weight: 600">Action needed</span>
+</a>
+<p style="margin: 0; font-size: 14px; color: #5b5f86">Want to add another business? <a href="OrgRegister.dc.html" style="font-weight: 600">Register a new organization</a> · <a href="OrgLogin.dc.html" style="font-weight: 600">Sign out</a></p>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Cancel trip · Jeddah Corniche Night</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;family=Cairo:wght@400;600&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="position: relative; min-height: 1000px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="OrgNav" active="Trips" hint-size="248px,1000px"></dc-import></div>
+<main aria-hidden="true" style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 14px; font-weight: 600; color: #c93a00">All trips</span>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px"><span style="font-size: 28px; line-height: 36px; font-weight: 600">Jeddah Corniche Night</span><span style="padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; background: #e6e8f5">Filling up</span></div>
+<span style="font-size: 15px; color: #5b5f86">Fri 17 Oct · 18:00 from Al Hamra · Jeddah · 3 buses · Public</span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px">
+<sc-for list="{{bgKpis}}" as="k" hint-placeholder-count="4">
+<div style="padding: 18px 20px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 6px"><span style="font-size: 14px; color: #5b5f86">{{k.l}}</span><span style="font-size: 28px; font-weight: 700">{{k.v}}</span></div>
+</sc-for>
+</div>
+<div style="height: 280px; border-radius: 20px; background: #ffffff"></div>
+</main>
+
+<div style="position: absolute; inset: 0; background: rgba(16,18,48,.45); display: flex; justify-content: center; align-items: flex-start; padding: 40px 24px; box-sizing: border-box">
+<section role="dialog" aria-modal="true" aria-labelledby="cx-h" style="width: 100%; max-width: 920px; background: #ffffff; border-radius: 20px; padding: 28px 32px; box-sizing: border-box; display: flex; flex-direction: column; gap: 20px">
+
+<div style="display: flex; justify-content: space-between; gap: 16px; align-items: flex-start">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 14px; color: #5b5f86">Jeddah Corniche Night · Fri 17 Oct 18:00 · TRP-20477</span>
+<h1 id="cx-h" style="margin: 0; font-size: 26px; line-height: 32px; font-weight: 700">Cancel this trip for everyone?</h1>
+<span style="font-size: 15px; color: #5b5f86">120 travellers have seats. Cancelling refunds all of them in full and cannot be undone.</span>
+</div>
+<a href="OrgTrip.dc.html" aria-label="Close and keep the trip" style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 999px; background: #f6f3e4; color: #262a67; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></a>
+</div>
+
+<ol aria-label="Steps" style="list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{steps}}" as="s" hint-placeholder-count="3">
+<li style="{{s.style}}"><span style="{{s.num}}">{{s.n}}</span>{{s.l}}</li>
+</sc-for>
+</ol>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
+<div style="flex: 1 1 360px; min-width: 0; display: flex; flex-direction: column; gap: 14px">
+<h2 style="margin: 0; font-size: 18px; font-weight: 600">1 · Reason and message</h2>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="rsn" style="font-size: 14px; font-weight: 600">Reason</label>
+<select id="rsn" onChange="{{setReason}}" style="height: 52px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 14px; font: inherit; font-size: 16px; color: #262a67">
+<option value="weather">Weather warning on the Corniche</option>
+<option value="low">Not enough bookings</option>
+<option value="ops">Vehicle or staff unavailable</option>
+<option value="auth">Venue or permit cancelled</option>
+</select>
+<span style="font-size: 13px; color: #5b5f86">Shown to travellers and to Trips Enjoy. Admins can see every cancellation reason.</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="msg" style="font-size: 14px; font-weight: 600">Message to travellers</label>
+<textarea id="msg" rows="3" style="border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 10px 14px; font: inherit; font-size: 15px; line-height: 21px; color: #262a67; resize: vertical">{{msgEn}}</textarea>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px; padding: 14px; border-radius: 12px; background: #f6f3e4">
+<span style="font-size: 13px; font-weight: 600; color: #5b5f86">Preview · push, SMS and email in each traveller’s language</span>
+<span style="font-size: 14px; line-height: 20px"><strong>EN</strong> · {{msgEn}}</span>
+<span dir="rtl" lang="ar" style="font-family: Cairo, sans-serif; font-size: 14px; line-height: 22px; text-align: right">{{msgAr}}</span>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 10px; padding: 14px; border-radius: 12px; border: 1px solid #e3dfc9">
+<button type="button" role="switch" aria-checked="{{moveAc}}" onClick="{{toggleMove}}" style="display: flex; gap: 12px; align-items: center; text-align: start; font: inherit; color: #262a67; border: 0; background: transparent; padding: 0; cursor: pointer">
+<span style="{{sw}}"><span style="{{knob}}"></span></span>
+<span style="display: flex; flex-direction: column"><span style="font-size: 15px; font-weight: 600">Offer to move to another date</span><span style="font-size: 13px; color: #5b5f86">Travellers choose: move their booking, or take the refund.</span></span>
+</button>
+<sc-if value="{{move}}" hint-placeholder-val="{{true}}">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="alt" style="font-size: 14px; font-weight: 600">Move to</label>
+<select id="alt" style="height: 48px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 14px; font: inherit; font-size: 15px; color: #262a67">
+<option>Jeddah Corniche Night · Fri 31 Oct · 18:00 · 150 seats free</option>
+<option>Jeddah Corniche Night · Fri 7 Nov · 18:00 · 150 seats free</option>
+</select>
+<span style="font-size: 13px; color: #5b5f86">Seats are held for 48 h. Anyone who does not choose is refunded automatically.</span>
+</div>
+</sc-if>
+</div>
+</div>
+
+<div style="flex: 1 1 360px; min-width: 0; display: flex; flex-direction: column; gap: 12px">
+<h2 style="margin: 0; font-size: 18px; font-weight: 600">2 · What happens</h2>
+<div style="padding: 14px 16px; border-radius: 12px; background: #262a67; color: #f6f3e4; display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 13px; color: #b8bad6">Full refunds to original payment methods</span>
+<span style="font-size: 28px; font-weight: 700">61,200 SAR</span>
+<span style="font-size: 13px; color: #b8bad6">120 travellers in 38 bookings · Mada, Visa, Apple Pay · 3–5 working days</span>
+</div>
+<ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px">
+<sc-for list="{{impact}}" as="i" hint-placeholder-count="7">
+<li style="display: flex; gap: 10px; align-items: flex-start; font-size: 14px; line-height: 20px">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="{{i.ic}}"><path d="{{i.p}}"></path></svg>
+<span style="display: flex; flex-direction: column; flex: 1; min-width: 0"><span style="display: flex; justify-content: space-between; gap: 8px"><span style="font-weight: 600">{{i.t}}</span><span style="{{i.vs}}">{{i.v}}</span></span><span style="font-size: 13px; color: #5b5f86">{{i.d}}</span></span>
+</li>
+</sc-for>
+</ul>
+<div style="padding: 12px 14px; border-radius: 12px; background: #fdf0d5; color: #8a4b00; font-size: 14px; line-height: 20px; display: flex; gap: 10px">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 1px"><path d="M12 3l9.5 17h-19zM12 10v4M12 17h.01"></path></svg>
+<span><strong>725 SAR owed to Khalid Al-Harbi.</strong> His deal for Bus 2 says “50% fee when cancelled &lt; 72 h”. Today is Wed 15 Oct, 56 h before departure. Deducted from your next payout on Mon 20 Oct.</span>
+</div>
+</div>
+</div>
+
+<div style="border-top: 1px solid #e3dfc9; padding-top: 18px; display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-end; justify-content: space-between">
+<div style="flex: 1 1 320px; display: flex; flex-direction: column; gap: 6px">
+<h2 style="margin: 0 0 4px; font-size: 18px; font-weight: 600">3 · Confirm</h2>
+<label for="cf" style="font-size: 14px; font-weight: 600">Type CANCEL to confirm</label>
+<input id="cf" value="{{typed}}" onInput="{{setTyped}}" autocomplete="off" aria-describedby="cf-h" aria-invalid="{{cfInvalid}}" style="{{cfStyle}}">
+<span id="cf-h" style="{{cfHelpStyle}}">{{cfHelp}}</span>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center">
+<a href="OrgTrip.dc.html" style="height: 48px; box-sizing: border-box; padding: 0 20px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-size: 15px; font-weight: 600; display: flex; align-items: center; text-decoration: none">Keep trip</a>
+<sc-if value="{{ready}}" hint-placeholder-val="{{false}}">
+<a href="OrgTrips.dc.html" style="height: 48px; padding: 0 20px; border-radius: 12px; background: #b42318; color: #ffffff; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"></path></svg>Cancel trip and refund 120 travellers</a>
+</sc-if>
+<sc-if value="{{notReady}}" hint-placeholder-val="{{true}}">
+<button type="button" aria-disabled="true" style="height: 48px; padding: 0 20px; border-radius: 12px; border: 0; background: #fde8e6; color: #b42318; font: inherit; font-size: 15px; font-weight: 700; cursor: not-allowed">Cancel trip and refund 120 travellers</button>
+</sc-if>
+</div>
+</div>
+
+</section>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1240}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { reason: 'weather', move: true, typed: 'CANC' }; }
+  renderVals() {
+    const s = this.state;
+    const bgKpis = [{ l: 'Seats sold', v: '120 / 150' }, { l: 'Bookings', v: '38' }, { l: 'Revenue', v: '61,200 SAR' }, { l: 'Departs in', v: '2 days' }];
+    const ready = s.typed.trim() === 'CANCEL';
+    const steps = [['1', 'Reason and message'], ['2', 'Review impact'], ['3', 'Confirm']].map(([n, l], i) => {
+      const on = i < 2 || ready;
+      return { n, l, style: 'display: flex; align-items: center; gap: 8px; padding: 6px 12px 6px 6px; border-radius: 999px; font-size: 14px; font-weight: 600; ' + (i === 2 ? 'background: #fde8e6; color: #b42318;' : 'background: #e6e8f5; color: #262a67;'),
+        num: 'width: 24px; height: 24px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; ' + (on && i < 2 ? 'background: #262a67; color: #f6f3e4;' : 'background: #ffffff; color: #262a67;') };
+    });
+    const M = {
+      weather: ['A weather warning is in place for the Jeddah Corniche on Fri 17 Oct, so we have cancelled Jeddah Corniche Night. Your full payment is on its way back to you.', 'بسبب تحذير جوي على كورنيش جدة يوم الجمعة 17 أكتوبر، ألغينا رحلة ليلة كورنيش جدة. سيُعاد إليك المبلغ كاملاً.'],
+      low: ['Jeddah Corniche Night on Fri 17 Oct did not reach enough bookings to run, so we have cancelled it. Your full payment is on its way back to you.', 'لم تكتمل الحجوزات الكافية لرحلة ليلة كورنيش جدة يوم الجمعة 17 أكتوبر، لذلك ألغيناها. سيُعاد إليك المبلغ كاملاً.'],
+      ops: ['A vehicle for Jeddah Corniche Night on Fri 17 Oct is no longer available, so we have cancelled the trip. Your full payment is on its way back to you.', 'لم تعد إحدى الحافلات متاحة لرحلة ليلة كورنيش جدة يوم الجمعة 17 أكتوبر، لذلك ألغينا الرحلة. سيُعاد إليك المبلغ كاملاً.'],
+      auth: ['The venue permit for Jeddah Corniche Night on Fri 17 Oct was withdrawn, so we have cancelled the trip. Your full payment is on its way back to you.', 'سُحب تصريح الموقع لرحلة ليلة كورنيش جدة يوم الجمعة 17 أكتوبر، لذلك ألغينا الرحلة. سيُعاد إليك المبلغ كاملاً.']
+    };
+    const add = s.move ? [' You can also move to Fri 31 Oct at no extra cost.', ' ويمكنك أيضاً نقل حجزك إلى الجمعة 31 أكتوبر دون تكلفة إضافية.'] : ['', ''];
+    const msgEn = M[s.reason][0] + add[0];
+    const msgAr = M[s.reason][1] + add[1];
+    const ok = 'flex-shrink: 0; margin-top: 1px; color: #1f7a4d;';
+    const nv = 'flex-shrink: 0; margin-top: 1px; color: #262a67;';
+    const chk = 'M5 12.5l4.5 4.5L19 7';
+    const impact = [
+      { t: 'Bookings refunded in full', v: '38', d: 'Tickets 56,400 + programs 6,100 − coupons 1,300 SAR', p: chk, ic: ok },
+      { t: 'Coupons restored', v: '14 uses', d: 'AUTUMN15 and JEDDAHVIP go back to each traveller', p: chk, ic: ok },
+      { t: 'Program bookings refunded', v: '46', d: 'Seafood dinner, harbour boat ride, photo package', p: chk, ic: ok },
+      { t: 'Credit notes issued automatically', v: '38', d: 'CN-ST-2026-000040 to CN-ST-2026-000077 · reported to ZATCA', p: 'M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zM14 3v5h5', ic: nv },
+      { t: 'Photographer deal released', v: '0 SAR', d: 'Noura Al-Shehri · free release until 48 h before', p: 'M4 8a2 2 0 0 1 2-2h2l2-2h4l2 2h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zM12 9.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7z', ic: nv },
+      { t: '150 seats released', v: '3 buses', d: 'Saeed Mubarak and Bus 3 crew notified; moderators’ manifests closed', p: 'M7 4h7a2 2 0 0 1 2 2v7H7zM5 13h12a2 2 0 0 1 2 2v2H5zM7 17v3M17 17v3', ic: nv },
+      { t: 'Webhooks fired', v: '39 events', d: 'trip.status_changed × 1 · booking.refunded × 38 to your 2 endpoints', p: 'M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1', ic: nv }
+    ].map((i) => ({ ...i, vs: 'font-weight: 600; white-space: nowrap; font-variant-numeric: tabular-nums;' }));
+    const bad = s.typed.length > 0 && !ready;
+    return {
+      bgKpis, steps, msgEn, msgAr, impact, typed: s.typed, ready, notReady: !ready, move: s.move,
+      moveAc: s.move ? 'true' : 'false',
+      sw: 'width: 44px; height: 26px; flex-shrink: 0; border-radius: 999px; padding: 3px; box-sizing: border-box; display: flex; ' + (s.move ? 'background: #262a67; justify-content: flex-end;' : 'background: #7b7fa6; justify-content: flex-start;'),
+      knob: 'width: 20px; height: 20px; border-radius: 999px; background: #ffffff;',
+      setReason: (e) => this.setState({ reason: e.target.value }),
+      toggleMove: () => this.setState({ move: !s.move }),
+      setTyped: (e) => this.setState({ typed: e.target.value }),
+      cfInvalid: bad ? 'true' : 'false',
+      cfStyle: 'height: 52px; max-width: 320px; box-sizing: border-box; border-radius: 8px; padding: 0 14px; font: inherit; font-size: 16px; letter-spacing: 2px; color: #262a67; background: #fff; border: 1px solid ' + (bad ? '#b42318' : '#7b7fa6') + ';',
+      cfHelp: ready ? 'Confirmed. The button is now active.' : (bad ? 'Type CANCEL in capital letters to turn on the button.' : 'This protects against cancelling by mistake.'),
+      cfHelpStyle: 'font-size: 13px; ' + (bad ? 'color: #b42318;' : (ready ? 'color: #1f7a4d; font-weight: 600;' : 'color: #5b5f86;'))
+    };
+  }
+}
+</script>
+</body>
+</html>

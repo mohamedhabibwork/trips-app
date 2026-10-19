@@ -1,0 +1,5250 @@
+{
+  "v": 3,
+  "attachments": {},
+  "boards": {
+    "AdmAccessPolicy.dc.html": {
+      "expand": "fill",
+      "h": 1300,
+      "is_interactive": true,
+      "page": "admin",
+      "title": "Admin · Plan-required access",
+      "w": 1440,
+      "x": 6080,
+      "y": 13080
+    },
+    "AdmAnalytics.dc.html": {
+      "expand": "fill",
+      "h": 1440,
+      "is_interactive": true,
+      "page": "admin",
+      "title": "Analytics · Platform",
+      "w": 1440,
+      "x": 0,
+      "y": 11100
+    },
+    "AdmAppDecision.dc.html": {
+      "expand": "fill",
+      "h": 1040,
+      "is_interactive": true,
+      "page": "admin",
+      "title": "Admin · Request changes or reject",
+      "w": 1440,
+      "x": 0,
+      "y": 14840
+    },
+    "AdmAppeal.dc.html": {
+      "expand": "fill",
+      "h": 1020,
+      "is_interactive": true,
+      "page": "admin",
+      "title": "Admin · Appeal review",
+      "w": 1440,
+      "x": 1520,
+      "y": 14840
+    },
+    "AdmAudit.dc.html": {
+      "expand": "fill",
+      "h": 1080,
+      "is_interactive": true,
+      "page": "admin",
+      "title": "Admin · Audit log",
+      "w": 1440,
+      "x": 3040,
+      "y": 13080
+    },
+    "AdmCompanyAnalytics.dc.html": {
+      "expand": "fill",
+      "h": 1560,
+      "is_interactive": true,
+      "page": "admin",
+      "title": "Analytics · Companies",
+      "w": 1440,
+      "x": 1520,
+      "y": 11100
+    },
+    "AdmCountries.dc.html": {
+      "expand": "fill",
+      "h": 1460,
+      "is_interactive": true,
+      "page": "admin",
+      "title": "Admin · Countries and markets",
+      "w": 1440,
+      "x": 9120,
+      "y": 14840
+    },
+    "AdmCouponNew.dc.html": {
+      "expand": "fill",
+      "h": 1260,
+      "is_interactive": true,
+      "page": "admin",
+      "title": "Admin · Platform coupon",
+      "w": 1440,
+      "x": 4560,
+      "y": 7500
+    },
+    "AdmCoupons.dc.html": {
+      "expand": "fill",
+      "h": 1060,
+      "is_interactive": true,
+      "page": "admin",
+      "title": "Admin · Coupons & abuse flags",
+      "w": 1440,
+      "x": 3040,
+      "y": 7500
+    },
+    "AdmDeals.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "admin",
+      "title": "Admin · Deal audit",
+      "w": 1440,
+      "x": 1520,
+      "y": 7500
+    },
+    "AdmDispute.dc.html": {
+      "expand": "fill",
+      "h": 1180,
+      "is_interactive": true,
+      "page": "admin",
+      "title": "Admin · Dispute detail",
+      "w": 1440,
+      "x": 7600,
+      "y": 7500
+    },
+    "AdmDisputes.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "admin",
+      "title": "Admin · Disputes",
+      "w": 1440,
+      "x": 6080,
+      "y": 7500
+    },
+    "AdmHome.dc.html": {
+      "expand": "fill",
+      "h": 1240,
+      "is_interactive": true,
+      "page": "admin",
+      "title": "Admin · Overview",
+      "w": 1440,
+      "x": 0,
+      "y": 2560
+    },
+    "AdmInvoice.dc.html": {
+      "expand": "fill",
+      "h": 1260,
+      "is_interactive": true,
+      "page": "admin",
+      "title": "Admin · Invoice detail",
+      "w": 1440,
+      "x": 1520,
+      "y": 5820
+    },
+    "AdmInvoices.dc.html": {
+      "expand": "fill",
+      "h": 1240,
+      "is_interactive": true,
+      "page": "admin",
+      "title": "Admin · All invoices",
+      "w": 1440,
+      "x": 0,
+      "y": 5820
+    },
+    "AdmLabTests.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "admin",
+      "title": "Admin · Lab tests",
+      "w": 1440,
+      "x": 4560,
+      "y": 14840
+    },
+    "AdmModeration.dc.html": {
+      "expand": "fill",
+      "h": 1180,
+      "is_interactive": true,
+      "page": "admin",
+      "title": "Admin · Content moderation",
+      "w": 1440,
+      "x": 1520,
+      "y": 9140
+    },
+    "AdmNav.dc.html": {
+      "h": 1000,
+      "page": "shared",
+      "title": "Component · AdmNav",
+      "w": 248,
+      "x": 798,
+      "y": 12452
+    },
+    "AdmOpsHealth.dc.html": {
+      "expand": "fill",
+      "h": 1040,
+      "is_interactive": true,
+      "page": "admin",
+      "title": "Admin · Operations health",
+      "w": 1440,
+      "x": 7600,
+      "y": 14840
+    },
+    "AdmOrg.dc.html": {
+      "expand": "fill",
+      "h": 1280,
+      "is_interactive": true,
+      "page": "admin",
+      "title": "Admin · Organization detail",
+      "w": 1440,
+      "x": 6080,
+      "y": 2560
+    },
+    "AdmOrgs.dc.html": {
+      "expand": "fill",
+      "h": 1080,
+      "is_interactive": true,
+      "page": "admin",
+      "title": "Admin · Organizations",
+      "w": 1440,
+      "x": 4560,
+      "y": 2560
+    },
+    "AdmPageAnalytics.dc.html": {
+      "expand": "fill",
+      "h": 1600,
+      "is_interactive": true,
+      "page": "admin",
+      "title": "Analytics · Pages & app",
+      "w": 1440,
+      "x": 4560,
+      "y": 11100
+    },
+    "AdmPayouts.dc.html": {
+      "expand": "fill",
+      "h": 1020,
+      "is_interactive": true,
+      "page": "admin",
+      "title": "Admin · Payouts",
+      "w": 1440,
+      "x": 6080,
+      "y": 4220
+    },
+    "AdmPlanEdit.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "admin",
+      "title": "Admin · Edit plan",
+      "w": 1440,
+      "x": 1520,
+      "y": 4220
+    },
+    "AdmPlans.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "admin",
+      "title": "Admin · Plan catalog",
+      "w": 1440,
+      "x": 0,
+      "y": 4220
+    },
+    "AdmPrivacyRequests.dc.html": {
+      "expand": "fill",
+      "h": 1040,
+      "is_interactive": true,
+      "page": "admin",
+      "title": "Admin · Deletion and data requests",
+      "w": 1440,
+      "x": 3040,
+      "y": 14840
+    },
+    "AdmProviderAnalytics.dc.html": {
+      "expand": "fill",
+      "h": 1560,
+      "is_interactive": true,
+      "page": "admin",
+      "title": "Analytics · Providers",
+      "w": 1440,
+      "x": 6080,
+      "y": 11100
+    },
+    "AdmProviders.dc.html": {
+      "expand": "fill",
+      "h": 1060,
+      "is_interactive": true,
+      "page": "admin",
+      "title": "Admin · Provider pool",
+      "w": 1440,
+      "x": 7600,
+      "y": 2560
+    },
+    "AdmReconciliation.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "admin",
+      "title": "Admin · Reconciliation exceptions",
+      "w": 1440,
+      "x": 6080,
+      "y": 14840
+    },
+    "AdmRevenue.dc.html": {
+      "expand": "fill",
+      "h": 1220,
+      "is_interactive": true,
+      "page": "admin",
+      "title": "Admin · Revenue",
+      "w": 1440,
+      "x": 4560,
+      "y": 4220
+    },
+    "AdmSettings.dc.html": {
+      "expand": "fill",
+      "h": 1180,
+      "is_interactive": true,
+      "page": "admin",
+      "title": "Admin · Platform settings",
+      "w": 1440,
+      "x": 0,
+      "y": 13080
+    },
+    "AdmSettlement.dc.html": {
+      "expand": "fill",
+      "h": 1240,
+      "is_interactive": true,
+      "page": "admin",
+      "title": "Admin · Settlement run detail",
+      "w": 1440,
+      "x": 4560,
+      "y": 5820
+    },
+    "AdmSettlements.dc.html": {
+      "expand": "fill",
+      "h": 1300,
+      "is_interactive": true,
+      "page": "admin",
+      "title": "Admin · Settlement runs",
+      "w": 1440,
+      "x": 3040,
+      "y": 5820
+    },
+    "AdmSubs.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "admin",
+      "title": "Admin · Subscriptions & dunning",
+      "w": 1440,
+      "x": 3040,
+      "y": 4220
+    },
+    "AdmSupport.dc.html": {
+      "expand": "fill",
+      "h": 1240,
+      "is_interactive": true,
+      "page": "admin",
+      "title": "Admin · Support inbox",
+      "w": 1440,
+      "x": 3040,
+      "y": 9140
+    },
+    "AdmTeam.dc.html": {
+      "expand": "fill",
+      "h": 1380,
+      "is_interactive": true,
+      "page": "admin",
+      "title": "Admin · Admin team & roles",
+      "w": 1440,
+      "x": 1520,
+      "y": 13080
+    },
+    "AdmTemplates.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "admin",
+      "title": "Admin · Message templates",
+      "w": 1440,
+      "x": 4560,
+      "y": 13080
+    },
+    "AdmTrip.dc.html": {
+      "expand": "fill",
+      "h": 1580,
+      "is_interactive": true,
+      "page": "admin",
+      "title": "Admin · Trip detail",
+      "w": 1440,
+      "x": 0,
+      "y": 9140
+    },
+    "AdmTripAnalytics.dc.html": {
+      "expand": "fill",
+      "h": 1580,
+      "is_interactive": true,
+      "page": "admin",
+      "title": "Analytics · Trips",
+      "w": 1440,
+      "x": 3040,
+      "y": 11100
+    },
+    "AdmTrips.dc.html": {
+      "expand": "fill",
+      "h": 1080,
+      "is_interactive": true,
+      "page": "admin",
+      "title": "Admin · All trips",
+      "w": 1440,
+      "x": 0,
+      "y": 7500
+    },
+    "AdmUser.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "admin",
+      "title": "Admin · User detail",
+      "w": 1440,
+      "x": 3040,
+      "y": 2560
+    },
+    "AdmUsers.dc.html": {
+      "expand": "fill",
+      "h": 1160,
+      "is_interactive": true,
+      "page": "admin",
+      "title": "Admin · All users",
+      "w": 1440,
+      "x": 1520,
+      "y": 2560
+    },
+    "AdmWebhooks.dc.html": {
+      "expand": "fill",
+      "h": 1340,
+      "is_interactive": true,
+      "page": "admin",
+      "title": "Admin · Webhooks & events",
+      "w": 1440,
+      "x": 7600,
+      "y": 13080
+    },
+    "AdminAppReview.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "admin",
+      "title": "Admin · Review application",
+      "w": 1440,
+      "x": 1520,
+      "y": 1280
+    },
+    "AdminApplications.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "admin",
+      "title": "Admin · Applications queue",
+      "w": 1440,
+      "x": 0,
+      "y": 1280
+    },
+    "AdminLabRequest.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "admin",
+      "title": "Admin · Request lab test",
+      "w": 1440,
+      "x": 3040,
+      "y": 1280
+    },
+    "AdminLabReview.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "admin",
+      "title": "Admin · Review lab result",
+      "w": 1440,
+      "x": 4560,
+      "y": 1280
+    },
+    "AdminNav.dc.html": {
+      "h": 900,
+      "page": "shared",
+      "title": "Component · AdminNav (sign-up admin)",
+      "w": 248,
+      "x": 2072,
+      "y": 5804
+    },
+    "AuthWelcome.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Auth · Welcome",
+      "w": 390,
+      "x": 0,
+      "y": 0
+    },
+    "CountryField.dc.html": {
+      "h": 100,
+      "page": "shared",
+      "title": "Component · CountryField",
+      "w": 358,
+      "x": 1314,
+      "y": 5804
+    },
+    "Dash2fa.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "admin",
+      "title": "Admin · Two-step verification",
+      "w": 1440,
+      "x": 1520,
+      "y": 0
+    },
+    "Dash2faSetup.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "admin",
+      "title": "Admin · Set up 2-step (first sign-in)",
+      "w": 1440,
+      "x": 3040,
+      "y": 0
+    },
+    "DashForgot.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "admin",
+      "title": "Admin · Reset password",
+      "w": 1440,
+      "x": 4560,
+      "y": 0
+    },
+    "DashLocked.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "admin",
+      "title": "Admin · Account locked",
+      "w": 1440,
+      "x": 6080,
+      "y": 0
+    },
+    "DashLogin.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "admin",
+      "title": "Admin · Sign in",
+      "w": 1440,
+      "x": 0,
+      "y": 0
+    },
+    "DrvAccount.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "driver",
+      "title": "Driver sign-up · 2 Create account",
+      "w": 390,
+      "x": 0,
+      "y": 0
+    },
+    "DrvAccountAr.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "arabic",
+      "title": "عربي · Driver 2 Create account",
+      "w": 390,
+      "x": 0,
+      "y": 1224
+    },
+    "DrvAnalytics.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "driver",
+      "title": "Driver · Performance analytics",
+      "w": 390,
+      "x": 940,
+      "y": 8624
+    },
+    "DrvAvailability.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "driver",
+      "title": "Driver · Availability",
+      "w": 390,
+      "x": 2350,
+      "y": 6176
+    },
+    "DrvCounter.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "driver",
+      "title": "Driver · Counter offer",
+      "w": 390,
+      "x": 1410,
+      "y": 3728
+    },
+    "DrvCouponNew.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "driver",
+      "title": "Driver · Create coupon",
+      "w": 390,
+      "x": 940,
+      "y": 6176
+    },
+    "DrvCoupons.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "driver",
+      "title": "Driver · My coupons",
+      "w": 390,
+      "x": 470,
+      "y": 6176
+    },
+    "DrvDealLocked.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "driver",
+      "title": "Driver · Deal confirmed",
+      "w": 390,
+      "x": 1880,
+      "y": 3728
+    },
+    "DrvDetails.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "driver",
+      "title": "Driver sign-up · 4 Personal details",
+      "w": 390,
+      "x": 940,
+      "y": 0
+    },
+    "DrvDetailsAr.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "arabic",
+      "title": "عربي · Driver 4 Details",
+      "w": 390,
+      "x": 940,
+      "y": 1224
+    },
+    "DrvDocsAr.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "arabic",
+      "title": "عربي · Driver 6 Documents",
+      "w": 390,
+      "x": 1880,
+      "y": 1224
+    },
+    "DrvEarnings.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "driver",
+      "title": "Driver · Earnings & payouts",
+      "w": 390,
+      "x": 0,
+      "y": 6176
+    },
+    "DrvHome.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "driver",
+      "title": "Driver · Home",
+      "w": 390,
+      "x": 0,
+      "y": 3728
+    },
+    "DrvLabApproved.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "driver",
+      "title": "Driver · Cleared to drive",
+      "w": 390,
+      "x": 1880,
+      "y": 1224
+    },
+    "DrvLabBlocked.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "driver",
+      "title": "Driver · Lab test required (app blocked)",
+      "w": 390,
+      "x": 0,
+      "y": 1224
+    },
+    "DrvLabBook.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "driver",
+      "title": "Driver · Book lab",
+      "w": 390,
+      "x": 470,
+      "y": 1224
+    },
+    "DrvLabPending.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "driver",
+      "title": "Driver · Booked, still paused",
+      "w": 390,
+      "x": 1410,
+      "y": 1224
+    },
+    "DrvLabStatus.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "driver",
+      "title": "Driver · Lab tests",
+      "w": 390,
+      "x": 0,
+      "y": 9848
+    },
+    "DrvLabUpload.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "driver",
+      "title": "Driver · Upload result",
+      "w": 390,
+      "x": 940,
+      "y": 1224
+    },
+    "DrvOffer.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "driver",
+      "title": "Driver · Offer details",
+      "w": 390,
+      "x": 940,
+      "y": 3728
+    },
+    "DrvOffers.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "driver",
+      "title": "Driver · Offers",
+      "w": 390,
+      "x": 470,
+      "y": 3728
+    },
+    "DrvOnRoute.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "driver",
+      "title": "Driver · On route",
+      "w": 390,
+      "x": 1410,
+      "y": 4952
+    },
+    "DrvOtp.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "driver",
+      "title": "Driver sign-up · 3 Verify number",
+      "w": 390,
+      "x": 470,
+      "y": 0
+    },
+    "DrvOtpAr.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "arabic",
+      "title": "عربي · Driver 3 Verify",
+      "w": 390,
+      "x": 470,
+      "y": 1224
+    },
+    "DrvOwnHome.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "driver",
+      "title": "Company driver · Home",
+      "w": 390,
+      "x": 3290,
+      "y": 6176
+    },
+    "DrvPaywall.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "driver",
+      "title": "Driver · No active plan (locked)",
+      "w": 390,
+      "x": 0,
+      "y": 8624
+    },
+    "DrvPlan.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "driver",
+      "title": "Driver · Approved → choose plan",
+      "w": 390,
+      "x": 2820,
+      "y": 0
+    },
+    "DrvPlanManage.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "driver",
+      "title": "Driver · My plan",
+      "w": 390,
+      "x": 1410,
+      "y": 6176
+    },
+    "DrvPreTrip.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "driver",
+      "title": "Driver · Pre-trip check",
+      "w": 390,
+      "x": 940,
+      "y": 4952
+    },
+    "DrvProfile.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "driver",
+      "title": "Driver · Profile & rates",
+      "w": 390,
+      "x": 1880,
+      "y": 6176
+    },
+    "DrvProfileEdit.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "driver",
+      "title": "Driver · Edit profile & rates",
+      "w": 390,
+      "x": 470,
+      "y": 7400
+    },
+    "DrvReport.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "driver",
+      "title": "Driver · Report problem or delay",
+      "w": 390,
+      "x": 940,
+      "y": 7400
+    },
+    "DrvReview.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "driver",
+      "title": "Driver sign-up · 7 Under review",
+      "w": 390,
+      "x": 2350,
+      "y": 0
+    },
+    "DrvReviewAr.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "arabic",
+      "title": "عربي · Driver 7 Under review",
+      "w": 390,
+      "x": 2350,
+      "y": 1224
+    },
+    "DrvStatements.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "driver",
+      "title": "Driver · Statements & invoices",
+      "w": 390,
+      "x": 470,
+      "y": 8624
+    },
+    "DrvSupport.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "driver",
+      "title": "Driver · Contact support",
+      "w": 390,
+      "x": 470,
+      "y": 9848
+    },
+    "DrvTrip.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "driver",
+      "title": "Driver · Assigned trip",
+      "w": 390,
+      "x": 470,
+      "y": 4952
+    },
+    "DrvTripDone.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "driver",
+      "title": "Driver · Trip complete",
+      "w": 390,
+      "x": 1880,
+      "y": 4952
+    },
+    "DrvTrips.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "driver",
+      "title": "Driver · My schedule",
+      "w": 390,
+      "x": 0,
+      "y": 4952
+    },
+    "DrvVehicle.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "driver",
+      "title": "Driver sign-up · 5 Licence & vehicle",
+      "w": 390,
+      "x": 1410,
+      "y": 0
+    },
+    "DrvVehicleAr.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "arabic",
+      "title": "عربي · Driver 5 Licence & vehicle",
+      "w": 390,
+      "x": 1410,
+      "y": 1224
+    },
+    "DrvVehicleEdit.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "driver",
+      "title": "Driver · Add / edit vehicle",
+      "w": 390,
+      "x": 0,
+      "y": 7400
+    },
+    "DrvVehicles.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "driver",
+      "title": "Driver · My vehicles",
+      "w": 390,
+      "x": 2820,
+      "y": 6176
+    },
+    "GfxLibrary.dc.html": {
+      "expand": "fill",
+      "h": 4200,
+      "is_interactive": true,
+      "page": "shared",
+      "title": "Brand graphics library",
+      "w": 1440,
+      "x": 0,
+      "y": 0
+    },
+    "MShrAppeal.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "shared",
+      "title": "Mobile · Appeal a rejection",
+      "w": 390,
+      "x": 1410,
+      "y": 8308
+    },
+    "MShrConfirmSheet.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "shared",
+      "title": "Mobile · Confirmation sheet",
+      "w": 390,
+      "x": 3760,
+      "y": 8308
+    },
+    "MShrCountry.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "shared",
+      "title": "Mobile · Country and language",
+      "w": 390,
+      "x": 0,
+      "y": 8308
+    },
+    "MShrDeletionGrace.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "shared",
+      "title": "Mobile · Deletion grace period",
+      "w": 390,
+      "x": 940,
+      "y": 8308
+    },
+    "MShrLimitSheet.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "shared",
+      "title": "Mobile · Plan limit reached",
+      "w": 390,
+      "x": 4230,
+      "y": 8308
+    },
+    "MShrLinkFallback.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "shared",
+      "title": "Mobile · Link can't be opened",
+      "w": 390,
+      "x": 3290,
+      "y": 8308
+    },
+    "MShrMaintenance.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "shared",
+      "title": "Mobile · Planned maintenance",
+      "w": 390,
+      "x": 2350,
+      "y": 8308
+    },
+    "MShrNoAccess.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "shared",
+      "title": "Mobile · No access",
+      "w": 390,
+      "x": 1880,
+      "y": 8308
+    },
+    "MShrPermissionPrimer.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "shared",
+      "title": "Mobile · Permission primer",
+      "w": 390,
+      "x": 2820,
+      "y": 8308
+    },
+    "MShrSessionExpired.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "shared",
+      "title": "Mobile · Session expired",
+      "w": 390,
+      "x": 470,
+      "y": 8308
+    },
+    "Main.dc.html": {
+      "expand": "fill",
+      "h": 8000,
+      "is_interactive": true,
+      "page": "overview",
+      "title": "Screen map",
+      "w": 1440,
+      "x": 0,
+      "y": 0
+    },
+    "MainAr.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "arabic",
+      "title": "عربي · Welcome",
+      "w": 390,
+      "x": 0,
+      "y": 0
+    },
+    "MobileAccount.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Account · Roles & security",
+      "w": 390,
+      "x": 2350,
+      "y": 2448
+    },
+    "MobileAccountState.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "shared",
+      "title": "Account state · Changes needed",
+      "w": 390,
+      "x": 0,
+      "y": 4580
+    },
+    "MobileAddChild.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Parent · Add child",
+      "w": 390,
+      "x": 1880,
+      "y": 1224
+    },
+    "MobileApply.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "driver",
+      "title": "Driver sign-up · 6 Documents",
+      "w": 390,
+      "x": 1880,
+      "y": 0
+    },
+    "MobileCheckout.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "driver",
+      "title": "Driver · Subscribe: payment / trial",
+      "w": 390,
+      "x": 3290,
+      "y": 0
+    },
+    "MobileDeleteAccount.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Account · Delete account",
+      "w": 390,
+      "x": 3290,
+      "y": 2448
+    },
+    "MobileForgot.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Auth · Forgot password",
+      "w": 390,
+      "x": 0,
+      "y": 2448
+    },
+    "MobileForgotAr.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "arabic",
+      "title": "عربي · Forgot password",
+      "w": 390,
+      "x": 2820,
+      "y": 0
+    },
+    "MobileLoginVerify.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Auth · Verify code → app",
+      "w": 390,
+      "x": 1410,
+      "y": 0
+    },
+    "MobileNewPassword.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Auth · New password",
+      "w": 390,
+      "x": 940,
+      "y": 2448
+    },
+    "MobileNewPasswordAr.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "arabic",
+      "title": "عربي · New password",
+      "w": 390,
+      "x": 3760,
+      "y": 0
+    },
+    "MobileOtp.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Traveler · 3 Verify number",
+      "w": 390,
+      "x": 940,
+      "y": 1224
+    },
+    "MobileOtpAr.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "arabic",
+      "title": "عربي · Verify number",
+      "w": 390,
+      "x": 1880,
+      "y": 0
+    },
+    "MobileOtpLogin.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Auth · Sign in with code",
+      "w": 390,
+      "x": 940,
+      "y": 0
+    },
+    "MobilePaymentFailed.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "shared",
+      "title": "Account state · Payment failed (grace)",
+      "w": 390,
+      "x": 1410,
+      "y": 4580
+    },
+    "MobileReady.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Traveler · 4 Account ready",
+      "w": 390,
+      "x": 1410,
+      "y": 1224
+    },
+    "MobileReadyAr.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "arabic",
+      "title": "عربي · Account ready",
+      "w": 390,
+      "x": 2350,
+      "y": 0
+    },
+    "MobileRejected.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "shared",
+      "title": "Account state · Application rejected",
+      "w": 390,
+      "x": 470,
+      "y": 4580
+    },
+    "MobileResetCode.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Auth · Reset code (error)",
+      "w": 390,
+      "x": 470,
+      "y": 2448
+    },
+    "MobileResetCodeAr.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "arabic",
+      "title": "عربي · Reset code",
+      "w": 390,
+      "x": 3290,
+      "y": 0
+    },
+    "MobileResetDone.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Auth · Password updated",
+      "w": 390,
+      "x": 1410,
+      "y": 2448
+    },
+    "MobileResetDoneAr.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "arabic",
+      "title": "عربي · Password updated",
+      "w": 390,
+      "x": 4230,
+      "y": 0
+    },
+    "MobileResetEmailSent.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Auth · Reset by email",
+      "w": 390,
+      "x": 1880,
+      "y": 2448
+    },
+    "MobileReview.dc.html": {
+      "h": 844,
+      "page": "shared",
+      "title": "Template · Provider under review",
+      "w": 390,
+      "x": 2870,
+      "y": 5804
+    },
+    "MobileReviewAr.dc.html": {
+      "h": 844,
+      "page": "shared",
+      "title": "Template · قيد المراجعة",
+      "w": 390,
+      "x": 3340,
+      "y": 5804
+    },
+    "MobileRole.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Sign up · 1 Choose role",
+      "w": 390,
+      "x": 0,
+      "y": 1224
+    },
+    "MobileRoleAr.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "arabic",
+      "title": "عربي · Choose role",
+      "w": 390,
+      "x": 940,
+      "y": 0
+    },
+    "MobileSignIn.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Auth · Sign in (password)",
+      "w": 390,
+      "x": 470,
+      "y": 0
+    },
+    "MobileSignInAr.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "arabic",
+      "title": "عربي · Sign in",
+      "w": 390,
+      "x": 470,
+      "y": 0
+    },
+    "MobileSignOut.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Account · Sign out",
+      "w": 390,
+      "x": 2820,
+      "y": 2448
+    },
+    "MobileSignUp.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Traveler · 2 Create account",
+      "w": 390,
+      "x": 470,
+      "y": 1224
+    },
+    "MobileSignUpAr.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "arabic",
+      "title": "عربي · Create account",
+      "w": 390,
+      "x": 1410,
+      "y": 0
+    },
+    "MobileSocialComplete.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Auth · Apple / Google: complete profile",
+      "w": 390,
+      "x": 1880,
+      "y": 0
+    },
+    "MobileStaffInvite.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "moderator",
+      "title": "Company driver · Accept invite",
+      "w": 390,
+      "x": 0,
+      "y": 0
+    },
+    "MobileSuspended.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "shared",
+      "title": "Account state · Suspended",
+      "w": 390,
+      "x": 940,
+      "y": 4580
+    },
+    "ModAccessEnded.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "moderator",
+      "title": "Moderator · Access ended",
+      "w": 390,
+      "x": 1410,
+      "y": 1224
+    },
+    "ModAssignment.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "moderator",
+      "title": "Moderator · Scoped assignment",
+      "w": 390,
+      "x": 940,
+      "y": 0
+    },
+    "ModBoarded.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "moderator",
+      "title": "Moderator · Ready to depart",
+      "w": 390,
+      "x": 1880,
+      "y": 2448
+    },
+    "ModCheckout.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "moderator",
+      "title": "Moderator · Check-out at stop",
+      "w": 390,
+      "x": 3290,
+      "y": 2448
+    },
+    "ModIncident.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "moderator",
+      "title": "Moderator · Report incident",
+      "w": 390,
+      "x": 2820,
+      "y": 2448
+    },
+    "ModInstall.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "moderator",
+      "title": "Moderator · Install",
+      "w": 390,
+      "x": 0,
+      "y": 1224
+    },
+    "ModInvite.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "moderator",
+      "title": "Moderator · Accept invite",
+      "w": 390,
+      "x": 470,
+      "y": 0
+    },
+    "ModManifest.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "moderator",
+      "title": "Moderator · Manifest",
+      "w": 390,
+      "x": 470,
+      "y": 2448
+    },
+    "ModOnTrip.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "moderator",
+      "title": "Moderator · On trip",
+      "w": 390,
+      "x": 2350,
+      "y": 2448
+    },
+    "ModOpsChat.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "moderator",
+      "title": "Moderator · Chat with company ops",
+      "w": 390,
+      "x": 0,
+      "y": 3672
+    },
+    "ModReport.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "moderator",
+      "title": "Moderator · Close trip report",
+      "w": 390,
+      "x": 3760,
+      "y": 2448
+    },
+    "ModScan.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "moderator",
+      "title": "Moderator · Scan ticket",
+      "w": 390,
+      "x": 940,
+      "y": 2448
+    },
+    "ModSignIn.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "moderator",
+      "title": "Moderator · Sign in",
+      "w": 390,
+      "x": 470,
+      "y": 1224
+    },
+    "ModSyncQueue.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "moderator",
+      "title": "Moderator · Offline queue",
+      "w": 390,
+      "x": 940,
+      "y": 1224
+    },
+    "ModToday.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "moderator",
+      "title": "Moderator · Today's bus",
+      "w": 390,
+      "x": 0,
+      "y": 2448
+    },
+    "ModWrongBus.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "moderator",
+      "title": "Moderator · Wrong bus",
+      "w": 390,
+      "x": 1410,
+      "y": 2448
+    },
+    "Org2fa.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Org · Sign-in code",
+      "w": 1440,
+      "x": 1520,
+      "y": 1280
+    },
+    "OrgAccess.dc.html": {
+      "expand": "fill",
+      "h": 1100,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Org · My organizations",
+      "w": 1440,
+      "x": 3040,
+      "y": 5740
+    },
+    "OrgAccountState.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Org · Changes needed",
+      "w": 1440,
+      "x": 7600,
+      "y": 1280
+    },
+    "OrgAccounting.dc.html": {
+      "expand": "fill",
+      "h": 1200,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Org · Accounting",
+      "w": 1440,
+      "x": 3040,
+      "y": 15420
+    },
+    "OrgAnalytics.dc.html": {
+      "expand": "fill",
+      "h": 1500,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Analytics · Company",
+      "w": 1440,
+      "x": 0,
+      "y": 18980
+    },
+    "OrgApiKeys.dc.html": {
+      "expand": "fill",
+      "h": 1140,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Integrations · API keys",
+      "w": 1440,
+      "x": 4560,
+      "y": 20960
+    },
+    "OrgBilling.dc.html": {
+      "expand": "fill",
+      "h": 1600,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Org · Subscription & usage",
+      "w": 1440,
+      "x": 0,
+      "y": 22740
+    },
+    "OrgBooking.dc.html": {
+      "expand": "fill",
+      "h": 1080,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Org · Booking & refund",
+      "w": 1440,
+      "x": 1520,
+      "y": 8860
+    },
+    "OrgBookings.dc.html": {
+      "expand": "fill",
+      "h": 1140,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Org · Bookings",
+      "w": 1440,
+      "x": 0,
+      "y": 8860
+    },
+    "OrgBusiness.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Org sign-up · 3 Business info",
+      "w": 1440,
+      "x": 3040,
+      "y": 0
+    },
+    "OrgCampaignNew.dc.html": {
+      "expand": "fill",
+      "h": 1320,
+      "is_interactive": true,
+      "page": "org",
+      "title": "CRM · New campaign",
+      "w": 1440,
+      "x": 9120,
+      "y": 10640
+    },
+    "OrgCampaigns.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "org",
+      "title": "CRM · Campaigns",
+      "w": 1440,
+      "x": 7600,
+      "y": 10640
+    },
+    "OrgCheckout.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Org · Billing & trial",
+      "w": 1440,
+      "x": 9120,
+      "y": 0
+    },
+    "OrgCouponNew.dc.html": {
+      "expand": "fill",
+      "h": 1240,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Org · Create coupon",
+      "w": 1440,
+      "x": 1520,
+      "y": 15420
+    },
+    "OrgCouponStats.dc.html": {
+      "expand": "fill",
+      "h": 1100,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Org · Coupon analytics",
+      "w": 1440,
+      "x": 3040,
+      "y": 24720
+    },
+    "OrgCoupons.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Org · Coupons",
+      "w": 1440,
+      "x": 0,
+      "y": 15420
+    },
+    "OrgCrew.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Org · Own drivers, photographers, moderators",
+      "w": 1440,
+      "x": 9120,
+      "y": 12360
+    },
+    "OrgCustomer.dc.html": {
+      "expand": "fill",
+      "h": 1300,
+      "is_interactive": true,
+      "page": "org",
+      "title": "CRM · Customer 360",
+      "w": 1440,
+      "x": 1520,
+      "y": 10640
+    },
+    "OrgCustomerAnalytics.dc.html": {
+      "expand": "fill",
+      "h": 1550,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Analytics · Customers",
+      "w": 1440,
+      "x": 4560,
+      "y": 18980
+    },
+    "OrgCustomers.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "org",
+      "title": "CRM · Customers",
+      "w": 1440,
+      "x": 0,
+      "y": 10640
+    },
+    "OrgDeal.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Org · Negotiation",
+      "w": 1440,
+      "x": 3040,
+      "y": 12360
+    },
+    "OrgDeals.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Org · Deals",
+      "w": 1440,
+      "x": 1520,
+      "y": 12360
+    },
+    "OrgDispute.dc.html": {
+      "expand": "fill",
+      "h": 1320,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Org · Respond to dispute",
+      "w": 1440,
+      "x": 3040,
+      "y": 4040
+    },
+    "OrgDocs.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Org sign-up · 4 Documents & payout",
+      "w": 1440,
+      "x": 4560,
+      "y": 0
+    },
+    "OrgEmployeeView.dc.html": {
+      "expand": "fill",
+      "h": 1100,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Employee · Finance-scoped view",
+      "w": 1440,
+      "x": 6080,
+      "y": 22740
+    },
+    "OrgFleet.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Org · Vehicles",
+      "w": 1440,
+      "x": 0,
+      "y": 14040
+    },
+    "OrgForbidden.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Employee · No access",
+      "w": 1440,
+      "x": 7600,
+      "y": 22740
+    },
+    "OrgForgot.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Org · Reset password",
+      "w": 1440,
+      "x": 6080,
+      "y": 1280
+    },
+    "OrgHome.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Org · Overview",
+      "w": 1440,
+      "x": 0,
+      "y": 2560
+    },
+    "OrgHomeAr.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "arabic",
+      "title": "عربي · لوحة المنظمة",
+      "w": 1440,
+      "x": 1520,
+      "y": 3672
+    },
+    "OrgInbox.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "org",
+      "title": "CRM · Inbox",
+      "w": 1440,
+      "x": 10640,
+      "y": 10640
+    },
+    "OrgInvite.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Org · Invite employee",
+      "w": 1440,
+      "x": 7600,
+      "y": 12360
+    },
+    "OrgInvoice.dc.html": {
+      "expand": "fill",
+      "h": 1560,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Org · B2B tax invoice",
+      "w": 1440,
+      "x": 1520,
+      "y": 17040
+    },
+    "OrgInvoiceNew.dc.html": {
+      "expand": "fill",
+      "h": 1420,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Org · New invoice / credit note",
+      "w": 1440,
+      "x": 3040,
+      "y": 17040
+    },
+    "OrgInvoices.dc.html": {
+      "expand": "fill",
+      "h": 1040,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Org · Invoices",
+      "w": 1440,
+      "x": 0,
+      "y": 17040
+    },
+    "OrgLead.dc.html": {
+      "expand": "fill",
+      "h": 1300,
+      "is_interactive": true,
+      "page": "org",
+      "title": "CRM · Lead & quote",
+      "w": 1440,
+      "x": 6080,
+      "y": 10640
+    },
+    "OrgLeads.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "org",
+      "title": "CRM · Leads pipeline",
+      "w": 1440,
+      "x": 4560,
+      "y": 10640
+    },
+    "OrgLedger.dc.html": {
+      "expand": "fill",
+      "h": 1120,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Org · Ledger & exports",
+      "w": 1440,
+      "x": 4560,
+      "y": 24720
+    },
+    "OrgLimit.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Org · Plan limit reached",
+      "w": 1440,
+      "x": 13680,
+      "y": 7220
+    },
+    "OrgLogin.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Org · Sign in",
+      "w": 1440,
+      "x": 0,
+      "y": 1280
+    },
+    "OrgMarket.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Org · Find drivers & photographers",
+      "w": 1440,
+      "x": 0,
+      "y": 12360
+    },
+    "OrgNav.dc.html": {
+      "h": 1000,
+      "page": "shared",
+      "title": "Component · OrgNav",
+      "w": 248,
+      "x": 470,
+      "y": 12452
+    },
+    "OrgNew1.dc.html": {
+      "expand": "fill",
+      "h": 1120,
+      "is_interactive": true,
+      "page": "org",
+      "title": "New trip · 1 Basics",
+      "w": 1440,
+      "x": 0,
+      "y": 7220
+    },
+    "OrgNew2.dc.html": {
+      "expand": "fill",
+      "h": 1100,
+      "is_interactive": true,
+      "page": "org",
+      "title": "New trip · 2 Schedule & route",
+      "w": 1440,
+      "x": 1520,
+      "y": 7220
+    },
+    "OrgNew3.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "org",
+      "title": "New trip · 3 Vehicles",
+      "w": 1440,
+      "x": 3040,
+      "y": 7220
+    },
+    "OrgNew4.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "org",
+      "title": "New trip · 4 Driver & moderator",
+      "w": 1440,
+      "x": 4560,
+      "y": 7220
+    },
+    "OrgNew5.dc.html": {
+      "expand": "fill",
+      "h": 1080,
+      "is_interactive": true,
+      "page": "org",
+      "title": "New trip · 5 Photographer",
+      "w": 1440,
+      "x": 6080,
+      "y": 7220
+    },
+    "OrgNew6.dc.html": {
+      "expand": "fill",
+      "h": 1040,
+      "is_interactive": true,
+      "page": "org",
+      "title": "New trip · 6 Programs",
+      "w": 1440,
+      "x": 7600,
+      "y": 7220
+    },
+    "OrgNew7.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "org",
+      "title": "New trip · 7 Seats",
+      "w": 1440,
+      "x": 9120,
+      "y": 7220
+    },
+    "OrgNew8.dc.html": {
+      "expand": "fill",
+      "h": 1260,
+      "is_interactive": true,
+      "page": "org",
+      "title": "New trip · 8 Pricing & capacity",
+      "w": 1440,
+      "x": 10640,
+      "y": 7220
+    },
+    "OrgNew9.dc.html": {
+      "expand": "fill",
+      "h": 1060,
+      "is_interactive": true,
+      "page": "org",
+      "title": "New trip · 9 Review & publish",
+      "w": 1440,
+      "x": 12160,
+      "y": 7220
+    },
+    "OrgNotifications.dc.html": {
+      "expand": "fill",
+      "h": 1370,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Org · Notifications",
+      "w": 1440,
+      "x": 4560,
+      "y": 22740
+    },
+    "OrgPageAnalytics.dc.html": {
+      "expand": "fill",
+      "h": 1500,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Analytics · Pages & funnel",
+      "w": 1440,
+      "x": 3040,
+      "y": 18980
+    },
+    "OrgPaywall.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Org · No active plan (locked)",
+      "w": 1440,
+      "x": 1520,
+      "y": 22740
+    },
+    "OrgPending.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Org sign-up · 5 Under review",
+      "w": 1440,
+      "x": 6080,
+      "y": 0
+    },
+    "OrgPlan.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Org · Choose plan",
+      "w": 1440,
+      "x": 7600,
+      "y": 0
+    },
+    "OrgPrograms.dc.html": {
+      "expand": "fill",
+      "h": 1400,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Org · Program enrollment",
+      "w": 1440,
+      "x": 6080,
+      "y": 8860
+    },
+    "OrgProviderAnalytics.dc.html": {
+      "expand": "fill",
+      "h": 1600,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Analytics · Drivers & photographers",
+      "w": 1440,
+      "x": 6080,
+      "y": 18980
+    },
+    "OrgRegister.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Org sign-up · 1 /register/organization",
+      "w": 1440,
+      "x": 0,
+      "y": 0
+    },
+    "OrgRejected.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Org · Not approved",
+      "w": 1440,
+      "x": 9120,
+      "y": 1280
+    },
+    "OrgReviews.dc.html": {
+      "expand": "fill",
+      "h": 1340,
+      "is_interactive": true,
+      "page": "org",
+      "title": "CRM · Reviews",
+      "w": 1440,
+      "x": 12160,
+      "y": 10640
+    },
+    "OrgRoles.dc.html": {
+      "expand": "fill",
+      "h": 1300,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Org · Roles & permissions",
+      "w": 1440,
+      "x": 6080,
+      "y": 12360
+    },
+    "OrgRoster.dc.html": {
+      "expand": "fill",
+      "h": 1100,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Org · Passenger roster",
+      "w": 1440,
+      "x": 3040,
+      "y": 8860
+    },
+    "OrgSafetyReports.dc.html": {
+      "expand": "fill",
+      "h": 1040,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Org · Child-safety reports",
+      "w": 1440,
+      "x": 7600,
+      "y": 24720
+    },
+    "OrgSeatAssign.dc.html": {
+      "expand": "fill",
+      "h": 1180,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Org · Assign seats",
+      "w": 1440,
+      "x": 4560,
+      "y": 8860
+    },
+    "OrgSegments.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "org",
+      "title": "CRM · Segments",
+      "w": 1440,
+      "x": 3040,
+      "y": 10640
+    },
+    "OrgSettings.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Org · Company settings",
+      "w": 1440,
+      "x": 3040,
+      "y": 22740
+    },
+    "OrgSettlement.dc.html": {
+      "expand": "fill",
+      "h": 1340,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Org · Settlement statement",
+      "w": 1440,
+      "x": 6080,
+      "y": 17040
+    },
+    "OrgSettlements.dc.html": {
+      "expand": "fill",
+      "h": 1200,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Org · Settlements",
+      "w": 1440,
+      "x": 4560,
+      "y": 17040
+    },
+    "OrgStaff.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Org · Team",
+      "w": 1440,
+      "x": 4560,
+      "y": 12360
+    },
+    "OrgStaffCodeSetup.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Org staff · Set up sign-in code",
+      "w": 1440,
+      "x": 0,
+      "y": 24720
+    },
+    "OrgStaffInviteAccept.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Org · Accept staff invite",
+      "w": 1440,
+      "x": 4560,
+      "y": 1280
+    },
+    "OrgSupport.dc.html": {
+      "expand": "fill",
+      "h": 1240,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Org · Help & support",
+      "w": 1440,
+      "x": 4560,
+      "y": 4040
+    },
+    "OrgSwitched.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Org · Switched to another organization",
+      "w": 1440,
+      "x": 1520,
+      "y": 5740
+    },
+    "OrgSwitcher.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Org · Switch organization",
+      "w": 1440,
+      "x": 0,
+      "y": 5740
+    },
+    "OrgTrip.dc.html": {
+      "expand": "fill",
+      "h": 1100,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Org · Trip overview",
+      "w": 1440,
+      "x": 3040,
+      "y": 2560
+    },
+    "OrgTripAnalytics.dc.html": {
+      "expand": "fill",
+      "h": 1500,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Analytics · Trip",
+      "w": 1440,
+      "x": 1520,
+      "y": 18980
+    },
+    "OrgTripCancel.dc.html": {
+      "expand": "fill",
+      "h": 1240,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Org · Cancel trip & refund",
+      "w": 1440,
+      "x": 1520,
+      "y": 4040
+    },
+    "OrgTripEdit.dc.html": {
+      "expand": "fill",
+      "h": 1260,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Org · Edit published trip",
+      "w": 1440,
+      "x": 0,
+      "y": 4040
+    },
+    "OrgTripLive.dc.html": {
+      "expand": "fill",
+      "h": 1100,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Org · Live operations",
+      "w": 1440,
+      "x": 4560,
+      "y": 2560
+    },
+    "OrgTripReports.dc.html": {
+      "expand": "fill",
+      "h": 1300,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Org · Trip reports",
+      "w": 1440,
+      "x": 6080,
+      "y": 24720
+    },
+    "OrgTrips.dc.html": {
+      "expand": "fill",
+      "h": 1100,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Org · Trips",
+      "w": 1440,
+      "x": 1520,
+      "y": 2560
+    },
+    "OrgVehicleEdit.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Org · Edit vehicle",
+      "w": 1440,
+      "x": 1520,
+      "y": 24720
+    },
+    "OrgVehicleTypes.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Org · Vehicle types & seat layout",
+      "w": 1440,
+      "x": 1520,
+      "y": 14040
+    },
+    "OrgVerify.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Org sign-up · 2 Verify phone",
+      "w": 1440,
+      "x": 1520,
+      "y": 0
+    },
+    "OrgWebhook.dc.html": {
+      "expand": "fill",
+      "h": 1360,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Integrations · Endpoint & deliveries",
+      "w": 1440,
+      "x": 3040,
+      "y": 20960
+    },
+    "OrgWebhookNew.dc.html": {
+      "expand": "fill",
+      "h": 1400,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Integrations · Add endpoint",
+      "w": 1440,
+      "x": 1520,
+      "y": 20960
+    },
+    "OrgWebhooks.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Integrations · Webhooks",
+      "w": 1440,
+      "x": 0,
+      "y": 20960
+    },
+    "OrgWorkspace.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "org",
+      "title": "Org · Choose organization",
+      "w": 1440,
+      "x": 3040,
+      "y": 1280
+    },
+    "OtpField.dc.html": {
+      "h": 100,
+      "page": "shared",
+      "title": "Component · OtpField",
+      "w": 358,
+      "x": 438,
+      "y": 5804
+    },
+    "ParAlerts.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "parent",
+      "title": "Parent · Alerts history",
+      "w": 390,
+      "x": 1880,
+      "y": 0
+    },
+    "ParChild.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "parent",
+      "title": "Parent · Child's trip",
+      "w": 390,
+      "x": 940,
+      "y": 0
+    },
+    "ParGate.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "parent",
+      "title": "Parent · Tracking needs a plan",
+      "w": 390,
+      "x": 2820,
+      "y": 0
+    },
+    "ParHome.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "parent",
+      "title": "Parent · Family today",
+      "w": 390,
+      "x": 0,
+      "y": 0
+    },
+    "ParLink.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "parent",
+      "title": "Parent · Link child to a trip",
+      "w": 390,
+      "x": 2350,
+      "y": 0
+    },
+    "ParLive.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "parent",
+      "title": "Parent · Live bus",
+      "w": 390,
+      "x": 470,
+      "y": 0
+    },
+    "ParLiveAr.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "arabic",
+      "title": "عربي · تتبع الحافلة",
+      "w": 390,
+      "x": 1880,
+      "y": 2448
+    },
+    "ParNotBoarded.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "parent",
+      "title": "Parent · Not boarded alert",
+      "w": 390,
+      "x": 1410,
+      "y": 0
+    },
+    "ParSafetyReport.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "parent",
+      "title": "Parent · Child-safety report",
+      "w": 390,
+      "x": 3290,
+      "y": 0
+    },
+    "PasswordField.dc.html": {
+      "h": 120,
+      "page": "shared",
+      "title": "Component · PasswordField",
+      "w": 358,
+      "x": 876,
+      "y": 5804
+    },
+    "PdfCreditNote.dc.html": {
+      "h": 1123,
+      "page": "pdf",
+      "paper": "a4",
+      "title": "PDF · Credit note",
+      "w": 794,
+      "x": 3496,
+      "y": 0
+    },
+    "PdfInvoiceB2B.dc.html": {
+      "h": 1123,
+      "page": "pdf",
+      "paper": "a4",
+      "title": "PDF · B2B tax invoice",
+      "w": 794,
+      "x": 2622,
+      "y": 0
+    },
+    "PdfInvoiceB2C.dc.html": {
+      "h": 1123,
+      "page": "pdf",
+      "paper": "a4",
+      "title": "PDF · Simplified tax invoice",
+      "w": 794,
+      "x": 1748,
+      "y": 0
+    },
+    "PdfInvoiceEG.dc.html": {
+      "h": 1123,
+      "page": "pdf",
+      "paper": "a4",
+      "title": "PDF · Tax invoice (Egypt)",
+      "w": 794,
+      "x": 7866,
+      "y": 0
+    },
+    "PdfItinerary.dc.html": {
+      "h": 1123,
+      "page": "pdf",
+      "paper": "a4",
+      "title": "PDF · Trip itinerary",
+      "w": 794,
+      "x": 874,
+      "y": 0
+    },
+    "PdfManifest.dc.html": {
+      "h": 1123,
+      "page": "pdf",
+      "paper": "a4",
+      "title": "PDF · Bus manifest",
+      "w": 794,
+      "x": 6992,
+      "y": 0
+    },
+    "PdfPlanInvoice.dc.html": {
+      "h": 1123,
+      "page": "pdf",
+      "paper": "a4",
+      "title": "PDF · Plan & commission invoice",
+      "w": 794,
+      "x": 4370,
+      "y": 0
+    },
+    "PdfProviderStatement.dc.html": {
+      "h": 1123,
+      "page": "pdf",
+      "paper": "a4",
+      "title": "PDF · Driver statement",
+      "w": 794,
+      "x": 6118,
+      "y": 0
+    },
+    "PdfSettlement.dc.html": {
+      "h": 1123,
+      "page": "pdf",
+      "paper": "a4",
+      "title": "PDF · Settlement statement",
+      "w": 794,
+      "x": 5244,
+      "y": 0
+    },
+    "PdfTicket.dc.html": {
+      "h": 1123,
+      "page": "pdf",
+      "paper": "a4",
+      "title": "PDF · E-ticket",
+      "w": 794,
+      "x": 0,
+      "y": 0
+    },
+    "PhoAccount.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "photographer",
+      "title": "Photographer sign-up · 2 Create account",
+      "w": 390,
+      "x": 0,
+      "y": 0
+    },
+    "PhoAccountAr.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "arabic",
+      "title": "عربي · Photographer 2 Create account",
+      "w": 390,
+      "x": 2820,
+      "y": 1224
+    },
+    "PhoAlbumLive.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "photographer",
+      "title": "Photographer · Album published",
+      "w": 390,
+      "x": 1880,
+      "y": 3728
+    },
+    "PhoAlbumNew.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "photographer",
+      "title": "Photographer · Create & upload",
+      "w": 390,
+      "x": 470,
+      "y": 3728
+    },
+    "PhoAlbumPrivacy.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "photographer",
+      "title": "Photographer · Album privacy",
+      "w": 390,
+      "x": 940,
+      "y": 3728
+    },
+    "PhoAlbumUsers.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "photographer",
+      "title": "Photographer · Choose people",
+      "w": 390,
+      "x": 1410,
+      "y": 3728
+    },
+    "PhoAlbums.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "photographer",
+      "title": "Photographer · Albums",
+      "w": 390,
+      "x": 0,
+      "y": 3728
+    },
+    "PhoAnalytics.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "photographer",
+      "title": "Photographer · Performance analytics",
+      "w": 390,
+      "x": 940,
+      "y": 7400
+    },
+    "PhoAvailability.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "photographer",
+      "title": "Photographer · Rates & availability",
+      "w": 390,
+      "x": 470,
+      "y": 10004
+    },
+    "PhoBookings.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "photographer",
+      "title": "Photographer · Bookings",
+      "w": 390,
+      "x": 1410,
+      "y": 2504
+    },
+    "PhoCouponNew.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "photographer",
+      "title": "Photographer · Create coupon",
+      "w": 390,
+      "x": 0,
+      "y": 6176
+    },
+    "PhoCoupons.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "photographer",
+      "title": "Photographer · Coupons",
+      "w": 390,
+      "x": 940,
+      "y": 4952
+    },
+    "PhoEarnings.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "photographer",
+      "title": "Photographer · Earnings",
+      "w": 390,
+      "x": 470,
+      "y": 4952
+    },
+    "PhoHome.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "photographer",
+      "title": "Photographer · Home",
+      "w": 390,
+      "x": 0,
+      "y": 2504
+    },
+    "PhoInvite.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "photographer",
+      "title": "Photographer · Organization invite",
+      "w": 390,
+      "x": 940,
+      "y": 10004
+    },
+    "PhoOffer.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "photographer",
+      "title": "Photographer · Offer & counter",
+      "w": 390,
+      "x": 940,
+      "y": 2504
+    },
+    "PhoOffers.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "photographer",
+      "title": "Photographer · Offers",
+      "w": 390,
+      "x": 470,
+      "y": 2504
+    },
+    "PhoOtp.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "photographer",
+      "title": "Photographer sign-up · 3 Verify number",
+      "w": 390,
+      "x": 470,
+      "y": 0
+    },
+    "PhoOtpAr.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "arabic",
+      "title": "عربي · Photographer 3 Verify",
+      "w": 390,
+      "x": 3290,
+      "y": 1224
+    },
+    "PhoPaywall.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "photographer",
+      "title": "Photographer · No active plan (locked)",
+      "w": 390,
+      "x": 0,
+      "y": 7400
+    },
+    "PhoPlan.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "photographer",
+      "title": "Photographer · Approved → choose plan",
+      "w": 390,
+      "x": 2350,
+      "y": 0
+    },
+    "PhoPlanManage.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "photographer",
+      "title": "Photographer · My plan",
+      "w": 390,
+      "x": 1410,
+      "y": 4952
+    },
+    "PhoPortfolio.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "photographer",
+      "title": "Photographer · Portfolio",
+      "w": 390,
+      "x": 0,
+      "y": 4952
+    },
+    "PhoPortfolioAr.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "arabic",
+      "title": "عربي · Photographer 5 Portfolio",
+      "w": 390,
+      "x": 4230,
+      "y": 1224
+    },
+    "PhoProfile.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "photographer",
+      "title": "Photographer · Public profile",
+      "w": 390,
+      "x": 1880,
+      "y": 4952
+    },
+    "PhoProfileAr.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "arabic",
+      "title": "عربي · Photographer 4 Profile",
+      "w": 390,
+      "x": 3760,
+      "y": 1224
+    },
+    "PhoProfileEdit.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "photographer",
+      "title": "Photographer · Edit profile",
+      "w": 390,
+      "x": 470,
+      "y": 6176
+    },
+    "PhoReview.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "photographer",
+      "title": "Photographer sign-up · 6 Under review",
+      "w": 390,
+      "x": 1880,
+      "y": 0
+    },
+    "PhoReviewAr.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "arabic",
+      "title": "عربي · Photographer 6 Under review",
+      "w": 390,
+      "x": 4700,
+      "y": 1224
+    },
+    "PhoSignUpPortfolio.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "photographer",
+      "title": "Photographer sign-up · 5 Portfolio & ID",
+      "w": 390,
+      "x": 1410,
+      "y": 0
+    },
+    "PhoSignUpProfile.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "photographer",
+      "title": "Photographer sign-up · 4 Profile",
+      "w": 390,
+      "x": 940,
+      "y": 0
+    },
+    "PhoStatements.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "photographer",
+      "title": "Photographer · Statements & invoices",
+      "w": 390,
+      "x": 470,
+      "y": 7400
+    },
+    "PhoTripBrief.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "photographer",
+      "title": "Photographer · Trip brief",
+      "w": 390,
+      "x": 0,
+      "y": 10004
+    },
+    "PhoWebAlbums.dc.html": {
+      "expand": "fill",
+      "h": 1080,
+      "is_interactive": true,
+      "page": "photographer",
+      "title": "Studio web · Trip albums",
+      "w": 1440,
+      "x": 9120,
+      "y": 11228
+    },
+    "PhoWebBrief.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "photographer",
+      "title": "Studio web · Trip brief",
+      "w": 1440,
+      "x": 7600,
+      "y": 11228
+    },
+    "PhoWebCoupons.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "photographer",
+      "title": "Studio web · Coupons",
+      "w": 1440,
+      "x": 13680,
+      "y": 11228
+    },
+    "PhoWebDeals.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "photographer",
+      "title": "Studio web · Deal requests",
+      "w": 1440,
+      "x": 6080,
+      "y": 11228
+    },
+    "PhoWebEarnings.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "photographer",
+      "title": "Studio web · Earnings",
+      "w": 1440,
+      "x": 12160,
+      "y": 11228
+    },
+    "PhoWebHome.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "photographer",
+      "title": "Studio web · Home",
+      "w": 1440,
+      "x": 0,
+      "y": 11228
+    },
+    "PhoWebPortfolio.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "photographer",
+      "title": "Studio web · Portfolio",
+      "w": 1440,
+      "x": 1520,
+      "y": 11228
+    },
+    "PhoWebPrivacy.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "photographer",
+      "title": "Studio web · Album privacy",
+      "w": 1440,
+      "x": 10640,
+      "y": 11228
+    },
+    "PhoWebProfile.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "photographer",
+      "title": "Studio web · Profile",
+      "w": 1440,
+      "x": 3040,
+      "y": 11228
+    },
+    "PhoWebRates.dc.html": {
+      "expand": "fill",
+      "h": 1080,
+      "is_interactive": true,
+      "page": "photographer",
+      "title": "Studio web · Rates and availability",
+      "w": 1440,
+      "x": 4560,
+      "y": 11228
+    },
+    "PhoWebStudio.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "photographer",
+      "title": "Studio web · Album upload",
+      "w": 1440,
+      "x": 0,
+      "y": 8624
+    },
+    "PhoneField.dc.html": {
+      "h": 120,
+      "page": "shared",
+      "title": "Component · PhoneField",
+      "w": 358,
+      "x": 0,
+      "y": 5804
+    },
+    "PlanPicker.dc.html": {
+      "h": 844,
+      "page": "shared",
+      "title": "Template · Plan picker",
+      "w": 390,
+      "x": 2400,
+      "y": 5804
+    },
+    "PubAppeal.dc.html": {
+      "expand": "fill",
+      "h": 1160,
+      "is_interactive": true,
+      "page": "shared",
+      "title": "Web · Appeal a rejection",
+      "w": 1440,
+      "x": 3040,
+      "y": 10912
+    },
+    "PubDeletionGrace.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "shared",
+      "title": "Web · Deletion grace period",
+      "w": 1440,
+      "x": 1520,
+      "y": 10912
+    },
+    "PubSuspended.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "shared",
+      "title": "Web · Account suspended",
+      "w": 1440,
+      "x": 0,
+      "y": 10912
+    },
+    "ShMobEmpty.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "shared",
+      "title": "Mobile · Empty trips",
+      "w": 390,
+      "x": 1410,
+      "y": 7084
+    },
+    "ShMobNotFound.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "shared",
+      "title": "Mobile · Not found",
+      "w": 390,
+      "x": 940,
+      "y": 7084
+    },
+    "ShMobOffline.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "shared",
+      "title": "Mobile · Offline",
+      "w": 390,
+      "x": 0,
+      "y": 7084
+    },
+    "ShMobServer.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "shared",
+      "title": "Mobile · Server error",
+      "w": 390,
+      "x": 470,
+      "y": 7084
+    },
+    "ShMobUpdate.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "shared",
+      "title": "Mobile · Update required",
+      "w": 390,
+      "x": 1880,
+      "y": 7084
+    },
+    "ShStaffLocked.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "shared",
+      "title": "Staff · Company plan ended",
+      "w": 390,
+      "x": 2350,
+      "y": 7084
+    },
+    "ShWebConfirm.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "shared",
+      "title": "Web · Confirmation dialog",
+      "w": 1440,
+      "x": 6080,
+      "y": 10912
+    },
+    "ShWebMaintenance.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "shared",
+      "title": "Web · Maintenance",
+      "w": 1440,
+      "x": 3040,
+      "y": 9532
+    },
+    "ShWebNotFound.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "shared",
+      "title": "Web · 404",
+      "w": 1440,
+      "x": 0,
+      "y": 9532
+    },
+    "ShWebOffline.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "shared",
+      "title": "Web · Offline banner",
+      "w": 1440,
+      "x": 4560,
+      "y": 10912
+    },
+    "ShWebServer.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "shared",
+      "title": "Web · 500",
+      "w": 1440,
+      "x": 1520,
+      "y": 9532
+    },
+    "StaffOrgSwitch.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "moderator",
+      "title": "Staff · Switch company",
+      "w": 390,
+      "x": 470,
+      "y": 3672
+    },
+    "TabBar.dc.html": {
+      "h": 120,
+      "page": "shared",
+      "title": "Component · TabBar",
+      "w": 390,
+      "x": 0,
+      "y": 12452
+    },
+    "TravPlan.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Traveler · Choose plan (Free / Explorer / VIP)",
+      "w": 390,
+      "x": 2350,
+      "y": 1224
+    },
+    "TrvAddPrograms.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Add programs to booking",
+      "w": 390,
+      "x": 940,
+      "y": 9904
+    },
+    "TrvAddProgramsDone.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Programs added",
+      "w": 390,
+      "x": 1880,
+      "y": 9904
+    },
+    "TrvAddProgramsPay.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Pay for programs",
+      "w": 390,
+      "x": 1410,
+      "y": 9904
+    },
+    "TrvAlbum.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Album viewer",
+      "w": 390,
+      "x": 940,
+      "y": 12352
+    },
+    "TrvAlbumLink.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Open album by link",
+      "w": 390,
+      "x": 1410,
+      "y": 14800
+    },
+    "TrvAlbums.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Trip albums",
+      "w": 390,
+      "x": 470,
+      "y": 12352
+    },
+    "TrvBookPrograms.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Book · 2 Programs",
+      "w": 390,
+      "x": 470,
+      "y": 7456
+    },
+    "TrvBookSeats.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Book · 3 Seats",
+      "w": 390,
+      "x": 940,
+      "y": 7456
+    },
+    "TrvBookSummary.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Book · 4 Summary & coupon",
+      "w": 390,
+      "x": 1410,
+      "y": 7456
+    },
+    "TrvBookSummaryAr.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "arabic",
+      "title": "عربي · ملخص الحجز",
+      "w": 390,
+      "x": 940,
+      "y": 2448
+    },
+    "TrvBookWho.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Book · 1 Who's travelling",
+      "w": 390,
+      "x": 0,
+      "y": 7456
+    },
+    "TrvBooked.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Book · Confirmed",
+      "w": 390,
+      "x": 2820,
+      "y": 7456
+    },
+    "TrvBooking.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Traveler · Booking detail",
+      "w": 390,
+      "x": 940,
+      "y": 8680
+    },
+    "TrvCancel.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Cancel booking",
+      "w": 390,
+      "x": 1410,
+      "y": 11128
+    },
+    "TrvCancelled.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Cancelled · refund status",
+      "w": 390,
+      "x": 1880,
+      "y": 11128
+    },
+    "TrvChat.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Chat with organizer",
+      "w": 390,
+      "x": 0,
+      "y": 14800
+    },
+    "TrvCompany.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Traveler · Organizer profile & reviews",
+      "w": 390,
+      "x": 1880,
+      "y": 6232
+    },
+    "TrvFamily.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Family members",
+      "w": 390,
+      "x": 940,
+      "y": 13576
+    },
+    "TrvFamilyAdd.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Add family member",
+      "w": 390,
+      "x": 470,
+      "y": 14800
+    },
+    "TrvFawryVoucher.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Book · Pay cash at Fawry",
+      "w": 390,
+      "x": 470,
+      "y": 8680
+    },
+    "TrvHome.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Traveler · Home",
+      "w": 390,
+      "x": 0,
+      "y": 6232
+    },
+    "TrvHomeAr.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "arabic",
+      "title": "عربي · الرئيسية",
+      "w": 390,
+      "x": 0,
+      "y": 2448
+    },
+    "TrvInvoice.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Tax invoice (B2C)",
+      "w": 390,
+      "x": 3290,
+      "y": 13576
+    },
+    "TrvLive.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Trip day · live",
+      "w": 390,
+      "x": 0,
+      "y": 12352
+    },
+    "TrvModify.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Change booking",
+      "w": 390,
+      "x": 940,
+      "y": 11128
+    },
+    "TrvNotifications.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Notifications",
+      "w": 390,
+      "x": 0,
+      "y": 13576
+    },
+    "TrvPay.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Book · 5 Payment",
+      "w": 390,
+      "x": 1880,
+      "y": 7456
+    },
+    "TrvPayFailed.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Book · Payment declined",
+      "w": 390,
+      "x": 2350,
+      "y": 7456
+    },
+    "TrvPayMethods.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Payment methods",
+      "w": 390,
+      "x": 940,
+      "y": 14800
+    },
+    "TrvPayPending.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Book · Confirming payment",
+      "w": 390,
+      "x": 0,
+      "y": 8680
+    },
+    "TrvPlan.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "My plan & billing",
+      "w": 390,
+      "x": 1410,
+      "y": 13576
+    },
+    "TrvPrivacy.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Traveler · Privacy & data",
+      "w": 390,
+      "x": 1880,
+      "y": 8680
+    },
+    "TrvProfile.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Profile",
+      "w": 390,
+      "x": 470,
+      "y": 13576
+    },
+    "TrvProgramDetail.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Program details & tiers",
+      "w": 390,
+      "x": 0,
+      "y": 9904
+    },
+    "TrvProgramVip.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "VIP-only program",
+      "w": 390,
+      "x": 470,
+      "y": 9904
+    },
+    "TrvProgramsSchedule.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "My programs schedule",
+      "w": 390,
+      "x": 2350,
+      "y": 9904
+    },
+    "TrvProviderHandoff.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Traveler · Apply as provider",
+      "w": 390,
+      "x": 2350,
+      "y": 8680
+    },
+    "TrvRate.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Rate the trip",
+      "w": 390,
+      "x": 1410,
+      "y": 12352
+    },
+    "TrvReceipts.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Receipts & history",
+      "w": 390,
+      "x": 1880,
+      "y": 13576
+    },
+    "TrvRemedy.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Traveler · Choose a remedy",
+      "w": 390,
+      "x": 1410,
+      "y": 8680
+    },
+    "TrvResults.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Traveler · Search results",
+      "w": 390,
+      "x": 940,
+      "y": 6232
+    },
+    "TrvSearch.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Traveler · Search & filters",
+      "w": 390,
+      "x": 470,
+      "y": 6232
+    },
+    "TrvSettings.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Settings",
+      "w": 390,
+      "x": 2350,
+      "y": 13576
+    },
+    "TrvSupport.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Help & support",
+      "w": 390,
+      "x": 2820,
+      "y": 13576
+    },
+    "TrvTicket.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Ticket & boarding pass",
+      "w": 390,
+      "x": 470,
+      "y": 11128
+    },
+    "TrvTicketAr.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "arabic",
+      "title": "عربي · التذكرة",
+      "w": 390,
+      "x": 1410,
+      "y": 2448
+    },
+    "TrvTrip.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Traveler · Trip details",
+      "w": 390,
+      "x": 1410,
+      "y": 6232
+    },
+    "TrvTripAr.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "arabic",
+      "title": "عربي · تفاصيل الرحلة",
+      "w": 390,
+      "x": 470,
+      "y": 2448
+    },
+    "TrvTrips.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "My trips",
+      "w": 390,
+      "x": 0,
+      "y": 11128
+    },
+    "WebAlbum.dc.html": {
+      "expand": "fill",
+      "h": 1600,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Web · Shared album link",
+      "w": 1440,
+      "x": 3040,
+      "y": 19084
+    },
+    "WebAlbums.dc.html": {
+      "expand": "fill",
+      "h": 1040,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Web · My albums",
+      "w": 1440,
+      "x": 1520,
+      "y": 24644
+    },
+    "WebApply.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "driver",
+      "title": "Web · Driver 2 Personal details",
+      "w": 1440,
+      "x": 3040,
+      "y": 2448
+    },
+    "WebBecomeProvider.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Web · Become a provider",
+      "w": 1440,
+      "x": 7600,
+      "y": 24644
+    },
+    "WebBooked.dc.html": {
+      "expand": "fill",
+      "h": 1200,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Web · Booking confirmed",
+      "w": 1440,
+      "x": 3040,
+      "y": 22964
+    },
+    "WebBooking.dc.html": {
+      "expand": "fill",
+      "h": 1300,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Web · Booking detail",
+      "w": 1440,
+      "x": 4560,
+      "y": 22964
+    },
+    "WebBookings.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Web · My bookings",
+      "w": 1440,
+      "x": 6080,
+      "y": 16024
+    },
+    "WebBusiness.dc.html": {
+      "expand": "fill",
+      "h": 3500,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Web · For organizations, drivers & photographers",
+      "w": 1440,
+      "x": 1520,
+      "y": 19084
+    },
+    "WebCancel.dc.html": {
+      "expand": "fill",
+      "h": 1180,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Web · Cancel booking",
+      "w": 1440,
+      "x": 6080,
+      "y": 22964
+    },
+    "WebCheckout.dc.html": {
+      "expand": "fill",
+      "h": 1480,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Web · Checkout",
+      "w": 1440,
+      "x": 4560,
+      "y": 16024
+    },
+    "WebDrvDocs.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "driver",
+      "title": "Web · Driver 4 Documents & lab consent",
+      "w": 1440,
+      "x": 6080,
+      "y": 2448
+    },
+    "WebDrvLab.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "driver",
+      "title": "Web · Driver lab test required",
+      "w": 1440,
+      "x": 10640,
+      "y": 2448
+    },
+    "WebDrvVehicle.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "driver",
+      "title": "Web · Driver 3 Licence & vehicle",
+      "w": 1440,
+      "x": 4560,
+      "y": 2448
+    },
+    "WebExplore.dc.html": {
+      "expand": "fill",
+      "h": 1378,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Web · Explore trips",
+      "w": 1440,
+      "x": 1520,
+      "y": 16024
+    },
+    "WebForgot.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Web · Forgot password",
+      "w": 1440,
+      "x": 0,
+      "y": 4952
+    },
+    "WebHome.dc.html": {
+      "expand": "fill",
+      "h": 2783,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Web · Landing",
+      "w": 1440,
+      "x": 0,
+      "y": 16024
+    },
+    "WebHomeAr.dc.html": {
+      "expand": "fill",
+      "h": 2760,
+      "is_interactive": true,
+      "page": "arabic",
+      "title": "عربي · الصفحة الرئيسية",
+      "w": 1440,
+      "x": 0,
+      "y": 3672
+    },
+    "WebLegal.dc.html": {
+      "expand": "fill",
+      "h": 2460,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Web · Terms & privacy",
+      "w": 1440,
+      "x": 4560,
+      "y": 19084
+    },
+    "WebLoginVerify.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Web · Sign-in code",
+      "w": 1440,
+      "x": 1520,
+      "y": 3672
+    },
+    "WebOrganizer.dc.html": {
+      "expand": "fill",
+      "h": 3200,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Web · Organizer page",
+      "w": 1440,
+      "x": 0,
+      "y": 19084
+    },
+    "WebPayStatus.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Web · Payment status",
+      "w": 1440,
+      "x": 1520,
+      "y": 22964
+    },
+    "WebPhoPortfolio.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "photographer",
+      "title": "Web · Photographer 3 Portfolio & ID",
+      "w": 1440,
+      "x": 4560,
+      "y": 1224
+    },
+    "WebPhoProfile.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "photographer",
+      "title": "Web · Photographer 2 Profile",
+      "w": 1440,
+      "x": 3040,
+      "y": 1224
+    },
+    "WebPlans.dc.html": {
+      "expand": "fill",
+      "h": 1220,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Web · Traveler plans",
+      "w": 1440,
+      "x": 3040,
+      "y": 24644
+    },
+    "WebPrivacy.dc.html": {
+      "expand": "fill",
+      "h": 1060,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Web · Privacy",
+      "w": 1440,
+      "x": 6080,
+      "y": 24644
+    },
+    "WebProfile.dc.html": {
+      "expand": "fill",
+      "h": 1520,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Web · Profile and notifications",
+      "w": 1440,
+      "x": 4560,
+      "y": 24644
+    },
+    "WebReady.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Web · Traveler account ready",
+      "w": 1440,
+      "x": 7600,
+      "y": 3672
+    },
+    "WebReceipts.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Web · Receipts and invoices",
+      "w": 1440,
+      "x": 0,
+      "y": 24644
+    },
+    "WebRegister.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Web · /register — choose account type",
+      "w": 1440,
+      "x": 3040,
+      "y": 3672
+    },
+    "WebReset.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Web · Reset password",
+      "w": 1440,
+      "x": 1520,
+      "y": 4952
+    },
+    "WebResetEmailSent.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Web · Reset link sent",
+      "w": 1440,
+      "x": 3040,
+      "y": 4952
+    },
+    "WebReview.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "driver",
+      "title": "Web · Driver 5 Under review",
+      "w": 1440,
+      "x": 7600,
+      "y": 2448
+    },
+    "WebReviewPhotographer.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "photographer",
+      "title": "Web · Photographer 4 Under review",
+      "w": 1440,
+      "x": 6080,
+      "y": 1224
+    },
+    "WebSeatPicker.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Web · Choose seats",
+      "w": 1440,
+      "x": 0,
+      "y": 22964
+    },
+    "WebSessionExpired.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Web · Session expired",
+      "w": 1440,
+      "x": 9120,
+      "y": 3672
+    },
+    "WebSignIn.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Web · Sign in",
+      "w": 1440,
+      "x": 0,
+      "y": 3672
+    },
+    "WebSignUp.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Web · Traveler /register/traveler",
+      "w": 1440,
+      "x": 4560,
+      "y": 3672
+    },
+    "WebSignUpDriver.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "driver",
+      "title": "Web · Driver /register/driver",
+      "w": 1440,
+      "x": 0,
+      "y": 2448
+    },
+    "WebSignUpPhotographer.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "photographer",
+      "title": "Web · Photographer /register/photographer",
+      "w": 1440,
+      "x": 0,
+      "y": 1224
+    },
+    "WebStatus.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "driver",
+      "title": "Web · Driver changes needed",
+      "w": 1440,
+      "x": 9120,
+      "y": 2448
+    },
+    "WebStepper.dc.html": {
+      "h": 300,
+      "page": "shared",
+      "title": "Component · WebStepper",
+      "w": 240,
+      "x": 1752,
+      "y": 5804
+    },
+    "WebTrip.dc.html": {
+      "expand": "fill",
+      "h": 2270,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Web · Trip page",
+      "w": 1440,
+      "x": 3040,
+      "y": 16024
+    },
+    "WebTripDay.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Web · Trip day",
+      "w": 1440,
+      "x": 7600,
+      "y": 22964
+    },
+    "WebVerify.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "driver",
+      "title": "Web · Driver verify phone",
+      "w": 1440,
+      "x": 1520,
+      "y": 2448
+    },
+    "WebVerifyPhotographer.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "photographer",
+      "title": "Web · Photographer verify phone",
+      "w": 1440,
+      "x": 1520,
+      "y": 1224
+    },
+    "WebVerifyTraveler.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "traveler",
+      "title": "Web · Traveler verify phone",
+      "w": 1440,
+      "x": 6080,
+      "y": 3672
+    }
+  },
+  "createdOnFiles": {
+    "at": "2026-10-05T21:05:00Z",
+    "v": 1
+  },
+  "designSystems": [
+    {
+      "artifact": "https://claude.ai/code/artifact/0b7cf04c-b189-4940-93eb-ec9c29422a76",
+      "copiedAt": "2026-10-05T21:05:00Z",
+      "namespace": "trips-enjoy",
+      "title": "Trips Enjoy",
+      "version": "1791099355-4d59"
+    }
+  ],
+  "launch": {
+    "page": "overview",
+    "view": "canvas"
+  },
+  "notes": {
+    "admin_r0": {
+      "kind": "title1",
+      "maxW": 7520,
+      "page": "admin",
+      "text": "Admin sign in · 2-step, reset & lockout",
+      "w": 240,
+      "x": 0,
+      "y": -260
+    },
+    "admin_r1": {
+      "kind": "title1",
+      "maxW": 6000,
+      "page": "admin",
+      "text": "Admin · Applications queue, review & driver lab tests",
+      "w": 240,
+      "x": 0,
+      "y": 1020
+    },
+    "admin_r2": {
+      "kind": "title1",
+      "maxW": 8000,
+      "page": "admin",
+      "text": "Admin console · Overview & users",
+      "w": 240,
+      "x": 0,
+      "y": 2300
+    },
+    "admin_r3": {
+      "kind": "title1",
+      "maxW": 7520,
+      "page": "admin",
+      "text": "Admin console · Plans, subscriptions & money",
+      "w": 240,
+      "x": 0,
+      "y": 3960
+    },
+    "admin_r4": {
+      "kind": "title1",
+      "maxW": 6000,
+      "page": "admin",
+      "text": "Admin console · Invoices & settlement",
+      "w": 240,
+      "x": 0,
+      "y": 5560
+    },
+    "admin_r5": {
+      "kind": "title1",
+      "maxW": 8000,
+      "page": "admin",
+      "text": "Admin console · Marketplace oversight",
+      "w": 240,
+      "x": 0,
+      "y": 7240
+    },
+    "admin_r6": {
+      "kind": "title1",
+      "maxW": 4480,
+      "page": "admin",
+      "text": "Admin console · Trip detail, moderation & support",
+      "w": 240,
+      "x": 0,
+      "y": 8880
+    },
+    "admin_r7": {
+      "kind": "title1",
+      "maxW": 7520,
+      "page": "admin",
+      "text": "Admin console · Analytics",
+      "w": 240,
+      "x": 0,
+      "y": 10840
+    },
+    "admin_r8": {
+      "kind": "title1",
+      "maxW": 8000,
+      "page": "admin",
+      "text": "Admin console · System",
+      "w": 240,
+      "x": 0,
+      "y": 12820
+    },
+    "admin_r9": {
+      "kind": "title1",
+      "maxW": 8000,
+      "page": "admin",
+      "text": "Admin console · Applications, appeals, privacy, lab tests, reconciliation, ops health & countries",
+      "w": 240,
+      "x": 0,
+      "y": 14580
+    },
+    "arabic_r0": {
+      "kind": "title1",
+      "maxW": 4620,
+      "page": "arabic",
+      "text": "العربية · الدخول والتسجيل واستعادة كلمة المرور (RTL)",
+      "w": 240,
+      "x": 0,
+      "y": -260
+    },
+    "arabic_r1": {
+      "kind": "title1",
+      "maxW": 5090,
+      "page": "arabic",
+      "text": "العربية · تسجيل السائق والمصوّر (RTL)",
+      "w": 240,
+      "x": 0,
+      "y": 964
+    },
+    "arabic_r2": {
+      "kind": "title1",
+      "maxW": 2270,
+      "page": "arabic",
+      "text": "العربية · Traveler & parent (RTL)",
+      "w": 240,
+      "x": 0,
+      "y": 2188
+    },
+    "arabic_r3": {
+      "kind": "title1",
+      "maxW": 2960,
+      "page": "arabic",
+      "text": "العربية · Web & organization dashboard (RTL)",
+      "w": 240,
+      "x": 0,
+      "y": 3412
+    },
+    "driver_r0": {
+      "kind": "title1",
+      "maxW": 3680,
+      "page": "driver",
+      "text": "Driver registration · Account, details, vehicle, documents, review & plan",
+      "w": 240,
+      "x": 0,
+      "y": -260
+    },
+    "driver_r1": {
+      "kind": "title1",
+      "maxW": 2270,
+      "page": "driver",
+      "text": "Driver lab test · Blocked until cleared",
+      "w": 240,
+      "x": 0,
+      "y": 964
+    },
+    "driver_r2": {
+      "kind": "title1",
+      "maxW": 8000,
+      "page": "driver",
+      "text": "Driver registration · Web",
+      "w": 240,
+      "x": 0,
+      "y": 2188
+    },
+    "driver_r3": {
+      "kind": "title1",
+      "maxW": 2270,
+      "page": "driver",
+      "text": "Driver app · Home & deal negotiation",
+      "w": 240,
+      "x": 0,
+      "y": 3468
+    },
+    "driver_r4": {
+      "kind": "title1",
+      "maxW": 2270,
+      "page": "driver",
+      "text": "Driver app · Trip execution",
+      "w": 240,
+      "x": 0,
+      "y": 4692
+    },
+    "driver_r5": {
+      "kind": "title1",
+      "maxW": 3680,
+      "page": "driver",
+      "text": "Driver app · Business: earnings, coupons, plan, profile",
+      "w": 240,
+      "x": 0,
+      "y": 5916
+    },
+    "driver_r6": {
+      "kind": "title1",
+      "maxW": 1330,
+      "page": "driver",
+      "text": "Driver app · Edit vehicle, profile & report a problem",
+      "w": 240,
+      "x": 0,
+      "y": 7140
+    },
+    "driver_r7": {
+      "kind": "title1",
+      "maxW": 1330,
+      "page": "driver",
+      "text": "Driver app · Plan required, statements & analytics",
+      "w": 240,
+      "x": 0,
+      "y": 8364
+    },
+    "driver_r8": {
+      "kind": "title1",
+      "maxW": 860,
+      "page": "driver",
+      "text": "Driver app · Lab tests & support",
+      "w": 240,
+      "x": 0,
+      "y": 9588
+    },
+    "moderator_r0": {
+      "kind": "title1",
+      "maxW": 1330,
+      "page": "moderator",
+      "text": "Company staff · Accept invite & scoped assignment",
+      "w": 240,
+      "x": 0,
+      "y": -260
+    },
+    "moderator_r1": {
+      "kind": "title1",
+      "maxW": 1800,
+      "page": "moderator",
+      "text": "Moderator · Install, sign in, offline queue & access ended",
+      "w": 240,
+      "x": 0,
+      "y": 964
+    },
+    "moderator_r2": {
+      "kind": "title1",
+      "maxW": 4150,
+      "page": "moderator",
+      "text": "Vehicle moderator · Boarding, trip & check-out",
+      "w": 240,
+      "x": 0,
+      "y": 2188
+    },
+    "moderator_r3": {
+      "kind": "title1",
+      "maxW": 860,
+      "page": "moderator",
+      "text": "Company staff · Ops chat & switch company",
+      "w": 240,
+      "x": 0,
+      "y": 3412
+    },
+    "org_r0": {
+      "kind": "title1",
+      "maxW": 8000,
+      "page": "org",
+      "text": "Organization registration · Business, documents, review, plan & billing",
+      "w": 240,
+      "x": 0,
+      "y": -260
+    },
+    "org_r1": {
+      "kind": "title1",
+      "maxW": 8000,
+      "page": "org",
+      "text": "Organization sign in · Code, choose organization, staff invite & account states",
+      "w": 240,
+      "x": 0,
+      "y": 1020
+    },
+    "org_r10": {
+      "kind": "title1",
+      "maxW": 4480,
+      "page": "org",
+      "text": "Organization dashboard · Coupons & accounting",
+      "w": 240,
+      "x": 0,
+      "y": 15160
+    },
+    "org_r11": {
+      "kind": "title1",
+      "maxW": 7520,
+      "page": "org",
+      "text": "Organization dashboard · Invoices (B2C & B2B) & settlement",
+      "w": 240,
+      "x": 0,
+      "y": 16780
+    },
+    "org_r12": {
+      "kind": "title1",
+      "maxW": 7520,
+      "page": "org",
+      "text": "Organization dashboard · Analytics",
+      "w": 240,
+      "x": 0,
+      "y": 18720
+    },
+    "org_r13": {
+      "kind": "title1",
+      "maxW": 6000,
+      "page": "org",
+      "text": "Organization dashboard · Integrations: webhooks & API",
+      "w": 240,
+      "x": 0,
+      "y": 20700
+    },
+    "org_r14": {
+      "kind": "title1",
+      "maxW": 8000,
+      "page": "org",
+      "text": "Organization dashboard · Subscription, settings & scoped access",
+      "w": 240,
+      "x": 0,
+      "y": 22480
+    },
+    "org_r15": {
+      "kind": "title1",
+      "maxW": 8000,
+      "page": "org",
+      "text": "Organization dashboard · Staff code, vehicles, coupon stats, ledger, trip & safety reports",
+      "w": 240,
+      "x": 0,
+      "y": 24460
+    },
+    "org_r2": {
+      "kind": "title1",
+      "maxW": 6000,
+      "page": "org",
+      "text": "Organization dashboard · Home & trips",
+      "w": 240,
+      "x": 0,
+      "y": 2300
+    },
+    "org_r3": {
+      "kind": "title1",
+      "maxW": 6000,
+      "page": "org",
+      "text": "Organization dashboard · Edit or cancel a live trip, disputes & support",
+      "w": 240,
+      "x": 0,
+      "y": 3780
+    },
+    "org_r4": {
+      "kind": "title1",
+      "maxW": 4480,
+      "page": "org",
+      "text": "Organization dashboard · Switch organization (access by email)",
+      "w": 240,
+      "x": 0,
+      "y": 5480
+    },
+    "org_r5": {
+      "kind": "title1",
+      "maxW": 8000,
+      "page": "org",
+      "text": "Organization dashboard · Create a trip (wizard)",
+      "w": 240,
+      "x": 0,
+      "y": 6960
+    },
+    "org_r6": {
+      "kind": "title1",
+      "maxW": 7520,
+      "page": "org",
+      "text": "Organization dashboard · Bookings & passengers",
+      "w": 240,
+      "x": 0,
+      "y": 8600
+    },
+    "org_r7": {
+      "kind": "title1",
+      "maxW": 8000,
+      "page": "org",
+      "text": "Organization dashboard · CRM",
+      "w": 240,
+      "x": 0,
+      "y": 10380
+    },
+    "org_r8": {
+      "kind": "title1",
+      "maxW": 8000,
+      "page": "org",
+      "text": "Organization dashboard · Staff, providers & deals",
+      "w": 240,
+      "x": 0,
+      "y": 12100
+    },
+    "org_r9": {
+      "kind": "title1",
+      "maxW": 2960,
+      "page": "org",
+      "text": "Organization dashboard · Fleet",
+      "w": 240,
+      "x": 0,
+      "y": 13780
+    },
+    "overview_r0": {
+      "kind": "title1",
+      "maxW": 1440,
+      "page": "overview",
+      "text": "Screen map — every role, flow and screen",
+      "w": 240,
+      "x": 0,
+      "y": -260
+    },
+    "parent_r0": {
+      "kind": "title1",
+      "maxW": 3680,
+      "page": "parent",
+      "text": "Parent · Follow my children",
+      "w": 240,
+      "x": 0,
+      "y": -260
+    },
+    "pdf_r0": {
+      "kind": "title1",
+      "maxW": 8000,
+      "page": "pdf",
+      "text": "PDF documents (A4)",
+      "w": 240,
+      "x": 0,
+      "y": -260
+    },
+    "photographer_r0": {
+      "kind": "title1",
+      "maxW": 2740,
+      "page": "photographer",
+      "text": "Photographer registration · Account, profile, portfolio, review & plan",
+      "w": 240,
+      "x": 0,
+      "y": -260
+    },
+    "photographer_r1": {
+      "kind": "title1",
+      "maxW": 7520,
+      "page": "photographer",
+      "text": "Photographer registration · Web",
+      "w": 240,
+      "x": 0,
+      "y": 964
+    },
+    "photographer_r2": {
+      "kind": "title1",
+      "maxW": 1800,
+      "page": "photographer",
+      "text": "Photographer · Home & deals",
+      "w": 240,
+      "x": 0,
+      "y": 2244
+    },
+    "photographer_r3": {
+      "kind": "title1",
+      "maxW": 2270,
+      "page": "photographer",
+      "text": "Photographer · Albums & privacy",
+      "w": 240,
+      "x": 0,
+      "y": 3468
+    },
+    "photographer_r4": {
+      "kind": "title1",
+      "maxW": 2270,
+      "page": "photographer",
+      "text": "Photographer · Portfolio, earnings, coupons, plan",
+      "w": 240,
+      "x": 0,
+      "y": 4692
+    },
+    "photographer_r5": {
+      "kind": "title1",
+      "maxW": 860,
+      "page": "photographer",
+      "text": "Photographer · Create coupon & edit profile",
+      "w": 240,
+      "x": 0,
+      "y": 5916
+    },
+    "photographer_r6": {
+      "kind": "title1",
+      "maxW": 1330,
+      "page": "photographer",
+      "text": "Photographer · Plan required, statements & analytics",
+      "w": 240,
+      "x": 0,
+      "y": 7140
+    },
+    "photographer_r7": {
+      "kind": "title1",
+      "maxW": 1440,
+      "page": "photographer",
+      "text": "Photographer Studio · Web",
+      "w": 240,
+      "x": 0,
+      "y": 8364
+    },
+    "photographer_r8": {
+      "kind": "title1",
+      "maxW": 1330,
+      "page": "photographer",
+      "text": "Photographer · Trip brief, availability & organization invite",
+      "w": 240,
+      "x": 0,
+      "y": 9744
+    },
+    "photographer_r9": {
+      "kind": "title1",
+      "maxW": 8000,
+      "page": "photographer",
+      "text": "Photographer Studio web · all pages",
+      "w": 240,
+      "x": 0,
+      "y": 10968
+    },
+    "shared_r0": {
+      "kind": "title1",
+      "maxW": 1440,
+      "page": "shared",
+      "text": "Brand graphics library · logos, scenes, people, organizations, states",
+      "w": 240,
+      "x": 0,
+      "y": -260
+    },
+    "shared_r1": {
+      "kind": "title1",
+      "maxW": 1800,
+      "page": "shared",
+      "text": "Account states · Changes needed, rejected, suspended, payment failed",
+      "w": 240,
+      "x": 0,
+      "y": 4320
+    },
+    "shared_r2": {
+      "kind": "title1",
+      "maxW": 3730,
+      "page": "shared",
+      "text": "Sign-up components & templates",
+      "w": 240,
+      "x": 0,
+      "y": 5544
+    },
+    "shared_r3": {
+      "kind": "title1",
+      "maxW": 2740,
+      "page": "shared",
+      "text": "Shared states · Mobile",
+      "w": 240,
+      "x": 0,
+      "y": 6824
+    },
+    "shared_r4": {
+      "kind": "title1",
+      "maxW": 4620,
+      "page": "shared",
+      "text": "Shared states · Mobile account, permissions, country & sheets",
+      "w": 240,
+      "x": 0,
+      "y": 8048
+    },
+    "shared_r5": {
+      "kind": "title1",
+      "maxW": 4480,
+      "page": "shared",
+      "text": "Shared states · Web",
+      "w": 240,
+      "x": 0,
+      "y": 9272
+    },
+    "shared_r6": {
+      "kind": "title1",
+      "maxW": 7520,
+      "page": "shared",
+      "text": "Shared states · Web account states & patterns",
+      "w": 240,
+      "x": 0,
+      "y": 10652
+    },
+    "shared_r7": {
+      "kind": "title1",
+      "maxW": 1046,
+      "page": "shared",
+      "text": "Shared components",
+      "w": 240,
+      "x": 0,
+      "y": 12192
+    },
+    "traveler_r0": {
+      "kind": "title1",
+      "maxW": 2270,
+      "page": "traveler",
+      "text": "Sign in & sign up · Welcome, sign in, social sign-in",
+      "w": 240,
+      "x": 0,
+      "y": -260
+    },
+    "traveler_r1": {
+      "kind": "title1",
+      "maxW": 2740,
+      "page": "traveler",
+      "text": "Sign up · Traveler registration, family & plan",
+      "w": 240,
+      "x": 0,
+      "y": 964
+    },
+    "traveler_r10": {
+      "kind": "title1",
+      "maxW": 1800,
+      "page": "traveler",
+      "text": "Traveler app · Trip day & after the trip",
+      "w": 240,
+      "x": 0,
+      "y": 12092
+    },
+    "traveler_r11": {
+      "kind": "title1",
+      "maxW": 3680,
+      "page": "traveler",
+      "text": "Traveler app · Account, family & plan",
+      "w": 240,
+      "x": 0,
+      "y": 13316
+    },
+    "traveler_r12": {
+      "kind": "title1",
+      "maxW": 1800,
+      "page": "traveler",
+      "text": "Traveler app · Messages, family, payment methods & shared albums",
+      "w": 240,
+      "x": 0,
+      "y": 14540
+    },
+    "traveler_r13": {
+      "kind": "title1",
+      "maxW": 7520,
+      "page": "traveler",
+      "text": "Web · trips-enjoy.com (traveler)",
+      "w": 240,
+      "x": 0,
+      "y": 15764
+    },
+    "traveler_r14": {
+      "kind": "title1",
+      "maxW": 6000,
+      "page": "traveler",
+      "text": "Web · Organizer page, for business, shared album & legal",
+      "w": 240,
+      "x": 0,
+      "y": 18824
+    },
+    "traveler_r15": {
+      "kind": "title1",
+      "maxW": 8000,
+      "page": "traveler",
+      "text": "Web · Book, pay & manage (Egypt pilot, EGP)",
+      "w": 240,
+      "x": 0,
+      "y": 22704
+    },
+    "traveler_r16": {
+      "kind": "title1",
+      "maxW": 8000,
+      "page": "traveler",
+      "text": "Web · Account: receipts, albums, plans, profile, privacy, become a provider",
+      "w": 240,
+      "x": 0,
+      "y": 24384
+    },
+    "traveler_r2": {
+      "kind": "title1",
+      "maxW": 3680,
+      "page": "traveler",
+      "text": "Account · Password recovery, security & delete account",
+      "w": 240,
+      "x": 0,
+      "y": 2188
+    },
+    "traveler_r3": {
+      "kind": "title1",
+      "maxW": 8000,
+      "page": "traveler",
+      "text": "Web · Sign in, register as traveler & session",
+      "w": 240,
+      "x": 0,
+      "y": 3412
+    },
+    "traveler_r4": {
+      "kind": "title1",
+      "maxW": 4480,
+      "page": "traveler",
+      "text": "Web · Password recovery",
+      "w": 240,
+      "x": 0,
+      "y": 4692
+    },
+    "traveler_r5": {
+      "kind": "title1",
+      "maxW": 2270,
+      "page": "traveler",
+      "text": "Traveler app · Discover",
+      "w": 240,
+      "x": 0,
+      "y": 5972
+    },
+    "traveler_r6": {
+      "kind": "title1",
+      "maxW": 3210,
+      "page": "traveler",
+      "text": "Traveler app · Book a trip",
+      "w": 240,
+      "x": 0,
+      "y": 7196
+    },
+    "traveler_r7": {
+      "kind": "title1",
+      "maxW": 2740,
+      "page": "traveler",
+      "text": "Traveler app · Payment (Egypt: Paymob & Fawry), booking detail & remedies",
+      "w": 240,
+      "x": 0,
+      "y": 8420
+    },
+    "traveler_r8": {
+      "kind": "title1",
+      "maxW": 2740,
+      "page": "traveler",
+      "text": "Traveler app · Programs: details, VIP, add to booking & pay",
+      "w": 240,
+      "x": 0,
+      "y": 9644
+    },
+    "traveler_r9": {
+      "kind": "title1",
+      "maxW": 2270,
+      "page": "traveler",
+      "text": "Traveler app · My trips, changes & cancellation",
+      "w": 240,
+      "x": 0,
+      "y": 10868
+    }
+  },
+  "order": [
+    "Main.dc.html",
+    "ParHome.dc.html",
+    "ParLive.dc.html",
+    "ParChild.dc.html",
+    "ParNotBoarded.dc.html",
+    "ParAlerts.dc.html",
+    "ParLink.dc.html",
+    "ParGate.dc.html",
+    "ParSafetyReport.dc.html",
+    "DrvAccount.dc.html",
+    "DrvOtp.dc.html",
+    "DrvDetails.dc.html",
+    "DrvVehicle.dc.html",
+    "MobileApply.dc.html",
+    "DrvReview.dc.html",
+    "DrvPlan.dc.html",
+    "MobileCheckout.dc.html",
+    "DrvLabBlocked.dc.html",
+    "DrvLabBook.dc.html",
+    "DrvLabUpload.dc.html",
+    "DrvLabPending.dc.html",
+    "DrvLabApproved.dc.html",
+    "WebSignUpDriver.dc.html",
+    "WebVerify.dc.html",
+    "WebApply.dc.html",
+    "WebDrvVehicle.dc.html",
+    "WebDrvDocs.dc.html",
+    "WebReview.dc.html",
+    "WebStatus.dc.html",
+    "WebDrvLab.dc.html",
+    "DrvHome.dc.html",
+    "DrvOffers.dc.html",
+    "DrvOffer.dc.html",
+    "DrvCounter.dc.html",
+    "DrvDealLocked.dc.html",
+    "DrvTrips.dc.html",
+    "DrvTrip.dc.html",
+    "DrvPreTrip.dc.html",
+    "DrvOnRoute.dc.html",
+    "DrvTripDone.dc.html",
+    "DrvEarnings.dc.html",
+    "DrvCoupons.dc.html",
+    "DrvCouponNew.dc.html",
+    "DrvPlanManage.dc.html",
+    "DrvProfile.dc.html",
+    "DrvAvailability.dc.html",
+    "DrvVehicles.dc.html",
+    "DrvOwnHome.dc.html",
+    "DrvVehicleEdit.dc.html",
+    "DrvProfileEdit.dc.html",
+    "DrvReport.dc.html",
+    "DrvPaywall.dc.html",
+    "DrvStatements.dc.html",
+    "DrvAnalytics.dc.html",
+    "DrvLabStatus.dc.html",
+    "DrvSupport.dc.html",
+    "MobileStaffInvite.dc.html",
+    "ModInvite.dc.html",
+    "ModAssignment.dc.html",
+    "ModInstall.dc.html",
+    "ModSignIn.dc.html",
+    "ModSyncQueue.dc.html",
+    "ModAccessEnded.dc.html",
+    "ModToday.dc.html",
+    "ModManifest.dc.html",
+    "ModScan.dc.html",
+    "ModWrongBus.dc.html",
+    "ModBoarded.dc.html",
+    "ModOnTrip.dc.html",
+    "ModIncident.dc.html",
+    "ModCheckout.dc.html",
+    "ModReport.dc.html",
+    "ModOpsChat.dc.html",
+    "StaffOrgSwitch.dc.html",
+    "PhoAccount.dc.html",
+    "PhoOtp.dc.html",
+    "PhoSignUpProfile.dc.html",
+    "PhoSignUpPortfolio.dc.html",
+    "PhoReview.dc.html",
+    "PhoPlan.dc.html",
+    "WebSignUpPhotographer.dc.html",
+    "WebVerifyPhotographer.dc.html",
+    "WebPhoProfile.dc.html",
+    "WebPhoPortfolio.dc.html",
+    "WebReviewPhotographer.dc.html",
+    "PhoHome.dc.html",
+    "PhoOffers.dc.html",
+    "PhoOffer.dc.html",
+    "PhoBookings.dc.html",
+    "PhoAlbums.dc.html",
+    "PhoAlbumNew.dc.html",
+    "PhoAlbumPrivacy.dc.html",
+    "PhoAlbumUsers.dc.html",
+    "PhoAlbumLive.dc.html",
+    "PhoPortfolio.dc.html",
+    "PhoEarnings.dc.html",
+    "PhoCoupons.dc.html",
+    "PhoPlanManage.dc.html",
+    "PhoProfile.dc.html",
+    "PhoCouponNew.dc.html",
+    "PhoProfileEdit.dc.html",
+    "PhoPaywall.dc.html",
+    "PhoStatements.dc.html",
+    "PhoAnalytics.dc.html",
+    "PhoWebStudio.dc.html",
+    "PhoTripBrief.dc.html",
+    "PhoAvailability.dc.html",
+    "PhoInvite.dc.html",
+    "PhoWebHome.dc.html",
+    "PhoWebPortfolio.dc.html",
+    "PhoWebProfile.dc.html",
+    "PhoWebRates.dc.html",
+    "PhoWebDeals.dc.html",
+    "PhoWebBrief.dc.html",
+    "PhoWebAlbums.dc.html",
+    "PhoWebPrivacy.dc.html",
+    "PhoWebEarnings.dc.html",
+    "PhoWebCoupons.dc.html",
+    "OrgRegister.dc.html",
+    "OrgVerify.dc.html",
+    "OrgBusiness.dc.html",
+    "OrgDocs.dc.html",
+    "OrgPending.dc.html",
+    "OrgPlan.dc.html",
+    "OrgCheckout.dc.html",
+    "OrgLogin.dc.html",
+    "Org2fa.dc.html",
+    "OrgWorkspace.dc.html",
+    "OrgStaffInviteAccept.dc.html",
+    "OrgForgot.dc.html",
+    "OrgAccountState.dc.html",
+    "OrgRejected.dc.html",
+    "OrgHome.dc.html",
+    "OrgTrips.dc.html",
+    "OrgTrip.dc.html",
+    "OrgTripLive.dc.html",
+    "OrgTripEdit.dc.html",
+    "OrgTripCancel.dc.html",
+    "OrgDispute.dc.html",
+    "OrgSupport.dc.html",
+    "OrgSwitcher.dc.html",
+    "OrgSwitched.dc.html",
+    "OrgAccess.dc.html",
+    "OrgNew1.dc.html",
+    "OrgNew2.dc.html",
+    "OrgNew3.dc.html",
+    "OrgNew4.dc.html",
+    "OrgNew5.dc.html",
+    "OrgNew6.dc.html",
+    "OrgNew7.dc.html",
+    "OrgNew8.dc.html",
+    "OrgNew9.dc.html",
+    "OrgLimit.dc.html",
+    "OrgBookings.dc.html",
+    "OrgBooking.dc.html",
+    "OrgRoster.dc.html",
+    "OrgSeatAssign.dc.html",
+    "OrgPrograms.dc.html",
+    "OrgCustomers.dc.html",
+    "OrgCustomer.dc.html",
+    "OrgSegments.dc.html",
+    "OrgLeads.dc.html",
+    "OrgLead.dc.html",
+    "OrgCampaigns.dc.html",
+    "OrgCampaignNew.dc.html",
+    "OrgInbox.dc.html",
+    "OrgReviews.dc.html",
+    "OrgMarket.dc.html",
+    "OrgDeals.dc.html",
+    "OrgDeal.dc.html",
+    "OrgStaff.dc.html",
+    "OrgRoles.dc.html",
+    "OrgInvite.dc.html",
+    "OrgCrew.dc.html",
+    "OrgFleet.dc.html",
+    "OrgVehicleTypes.dc.html",
+    "OrgCoupons.dc.html",
+    "OrgCouponNew.dc.html",
+    "OrgAccounting.dc.html",
+    "OrgInvoices.dc.html",
+    "OrgInvoice.dc.html",
+    "OrgInvoiceNew.dc.html",
+    "OrgSettlements.dc.html",
+    "OrgSettlement.dc.html",
+    "OrgAnalytics.dc.html",
+    "OrgTripAnalytics.dc.html",
+    "OrgPageAnalytics.dc.html",
+    "OrgCustomerAnalytics.dc.html",
+    "OrgProviderAnalytics.dc.html",
+    "OrgWebhooks.dc.html",
+    "OrgWebhookNew.dc.html",
+    "OrgWebhook.dc.html",
+    "OrgApiKeys.dc.html",
+    "OrgBilling.dc.html",
+    "OrgPaywall.dc.html",
+    "OrgSettings.dc.html",
+    "OrgNotifications.dc.html",
+    "OrgEmployeeView.dc.html",
+    "OrgForbidden.dc.html",
+    "OrgStaffCodeSetup.dc.html",
+    "OrgVehicleEdit.dc.html",
+    "OrgCouponStats.dc.html",
+    "OrgLedger.dc.html",
+    "OrgTripReports.dc.html",
+    "OrgSafetyReports.dc.html",
+    "DashLogin.dc.html",
+    "Dash2fa.dc.html",
+    "Dash2faSetup.dc.html",
+    "DashForgot.dc.html",
+    "DashLocked.dc.html",
+    "AdminApplications.dc.html",
+    "AdminAppReview.dc.html",
+    "AdminLabRequest.dc.html",
+    "AdminLabReview.dc.html",
+    "AdmHome.dc.html",
+    "AdmUsers.dc.html",
+    "AdmUser.dc.html",
+    "AdmOrgs.dc.html",
+    "AdmOrg.dc.html",
+    "AdmProviders.dc.html",
+    "AdmPlans.dc.html",
+    "AdmPlanEdit.dc.html",
+    "AdmSubs.dc.html",
+    "AdmRevenue.dc.html",
+    "AdmPayouts.dc.html",
+    "AdmInvoices.dc.html",
+    "AdmInvoice.dc.html",
+    "AdmSettlements.dc.html",
+    "AdmSettlement.dc.html",
+    "AdmTrips.dc.html",
+    "AdmDeals.dc.html",
+    "AdmCoupons.dc.html",
+    "AdmCouponNew.dc.html",
+    "AdmDisputes.dc.html",
+    "AdmDispute.dc.html",
+    "AdmTrip.dc.html",
+    "AdmModeration.dc.html",
+    "AdmSupport.dc.html",
+    "AdmAnalytics.dc.html",
+    "AdmCompanyAnalytics.dc.html",
+    "AdmTripAnalytics.dc.html",
+    "AdmPageAnalytics.dc.html",
+    "AdmProviderAnalytics.dc.html",
+    "AdmSettings.dc.html",
+    "AdmTeam.dc.html",
+    "AdmAudit.dc.html",
+    "AdmTemplates.dc.html",
+    "AdmAccessPolicy.dc.html",
+    "AdmWebhooks.dc.html",
+    "AdmAppDecision.dc.html",
+    "AdmAppeal.dc.html",
+    "AdmPrivacyRequests.dc.html",
+    "AdmLabTests.dc.html",
+    "AdmReconciliation.dc.html",
+    "AdmOpsHealth.dc.html",
+    "AdmCountries.dc.html",
+    "MainAr.dc.html",
+    "MobileSignInAr.dc.html",
+    "MobileRoleAr.dc.html",
+    "MobileSignUpAr.dc.html",
+    "MobileOtpAr.dc.html",
+    "MobileReadyAr.dc.html",
+    "MobileForgotAr.dc.html",
+    "MobileResetCodeAr.dc.html",
+    "MobileNewPasswordAr.dc.html",
+    "MobileResetDoneAr.dc.html",
+    "DrvAccountAr.dc.html",
+    "DrvOtpAr.dc.html",
+    "DrvDetailsAr.dc.html",
+    "DrvVehicleAr.dc.html",
+    "DrvDocsAr.dc.html",
+    "DrvReviewAr.dc.html",
+    "PhoAccountAr.dc.html",
+    "PhoOtpAr.dc.html",
+    "PhoProfileAr.dc.html",
+    "PhoPortfolioAr.dc.html",
+    "PhoReviewAr.dc.html",
+    "TrvHomeAr.dc.html",
+    "TrvTripAr.dc.html",
+    "TrvBookSummaryAr.dc.html",
+    "TrvTicketAr.dc.html",
+    "ParLiveAr.dc.html",
+    "WebHomeAr.dc.html",
+    "OrgHomeAr.dc.html",
+    "PdfTicket.dc.html",
+    "PdfItinerary.dc.html",
+    "PdfInvoiceB2C.dc.html",
+    "PdfInvoiceB2B.dc.html",
+    "PdfCreditNote.dc.html",
+    "PdfPlanInvoice.dc.html",
+    "PdfSettlement.dc.html",
+    "PdfProviderStatement.dc.html",
+    "PdfManifest.dc.html",
+    "PdfInvoiceEG.dc.html",
+    "GfxLibrary.dc.html",
+    "MobileAccountState.dc.html",
+    "MobileRejected.dc.html",
+    "MobileSuspended.dc.html",
+    "MobilePaymentFailed.dc.html",
+    "PhoneField.dc.html",
+    "OtpField.dc.html",
+    "PasswordField.dc.html",
+    "CountryField.dc.html",
+    "WebStepper.dc.html",
+    "AdminNav.dc.html",
+    "PlanPicker.dc.html",
+    "MobileReview.dc.html",
+    "MobileReviewAr.dc.html",
+    "ShMobOffline.dc.html",
+    "ShMobServer.dc.html",
+    "ShMobNotFound.dc.html",
+    "ShMobEmpty.dc.html",
+    "ShMobUpdate.dc.html",
+    "ShStaffLocked.dc.html",
+    "MShrCountry.dc.html",
+    "MShrSessionExpired.dc.html",
+    "MShrDeletionGrace.dc.html",
+    "MShrAppeal.dc.html",
+    "MShrNoAccess.dc.html",
+    "MShrMaintenance.dc.html",
+    "MShrPermissionPrimer.dc.html",
+    "MShrLinkFallback.dc.html",
+    "MShrConfirmSheet.dc.html",
+    "MShrLimitSheet.dc.html",
+    "ShWebNotFound.dc.html",
+    "ShWebServer.dc.html",
+    "ShWebMaintenance.dc.html",
+    "PubSuspended.dc.html",
+    "PubDeletionGrace.dc.html",
+    "PubAppeal.dc.html",
+    "ShWebOffline.dc.html",
+    "ShWebConfirm.dc.html",
+    "TabBar.dc.html",
+    "OrgNav.dc.html",
+    "AdmNav.dc.html",
+    "AuthWelcome.dc.html",
+    "MobileSignIn.dc.html",
+    "MobileOtpLogin.dc.html",
+    "MobileLoginVerify.dc.html",
+    "MobileSocialComplete.dc.html",
+    "MobileRole.dc.html",
+    "MobileSignUp.dc.html",
+    "MobileOtp.dc.html",
+    "MobileReady.dc.html",
+    "MobileAddChild.dc.html",
+    "TravPlan.dc.html",
+    "MobileForgot.dc.html",
+    "MobileResetCode.dc.html",
+    "MobileNewPassword.dc.html",
+    "MobileResetDone.dc.html",
+    "MobileResetEmailSent.dc.html",
+    "MobileAccount.dc.html",
+    "MobileSignOut.dc.html",
+    "MobileDeleteAccount.dc.html",
+    "WebSignIn.dc.html",
+    "WebLoginVerify.dc.html",
+    "WebRegister.dc.html",
+    "WebSignUp.dc.html",
+    "WebVerifyTraveler.dc.html",
+    "WebReady.dc.html",
+    "WebSessionExpired.dc.html",
+    "WebForgot.dc.html",
+    "WebReset.dc.html",
+    "WebResetEmailSent.dc.html",
+    "TrvHome.dc.html",
+    "TrvSearch.dc.html",
+    "TrvResults.dc.html",
+    "TrvTrip.dc.html",
+    "TrvCompany.dc.html",
+    "TrvBookWho.dc.html",
+    "TrvBookPrograms.dc.html",
+    "TrvBookSeats.dc.html",
+    "TrvBookSummary.dc.html",
+    "TrvPay.dc.html",
+    "TrvPayFailed.dc.html",
+    "TrvBooked.dc.html",
+    "TrvPayPending.dc.html",
+    "TrvFawryVoucher.dc.html",
+    "TrvBooking.dc.html",
+    "TrvRemedy.dc.html",
+    "TrvPrivacy.dc.html",
+    "TrvProviderHandoff.dc.html",
+    "TrvProgramDetail.dc.html",
+    "TrvProgramVip.dc.html",
+    "TrvAddPrograms.dc.html",
+    "TrvAddProgramsPay.dc.html",
+    "TrvAddProgramsDone.dc.html",
+    "TrvProgramsSchedule.dc.html",
+    "TrvTrips.dc.html",
+    "TrvTicket.dc.html",
+    "TrvModify.dc.html",
+    "TrvCancel.dc.html",
+    "TrvCancelled.dc.html",
+    "TrvLive.dc.html",
+    "TrvAlbums.dc.html",
+    "TrvAlbum.dc.html",
+    "TrvRate.dc.html",
+    "TrvNotifications.dc.html",
+    "TrvProfile.dc.html",
+    "TrvFamily.dc.html",
+    "TrvPlan.dc.html",
+    "TrvReceipts.dc.html",
+    "TrvSettings.dc.html",
+    "TrvSupport.dc.html",
+    "TrvInvoice.dc.html",
+    "TrvChat.dc.html",
+    "TrvFamilyAdd.dc.html",
+    "TrvPayMethods.dc.html",
+    "TrvAlbumLink.dc.html",
+    "WebHome.dc.html",
+    "WebExplore.dc.html",
+    "WebTrip.dc.html",
+    "WebCheckout.dc.html",
+    "WebBookings.dc.html",
+    "WebOrganizer.dc.html",
+    "WebBusiness.dc.html",
+    "WebAlbum.dc.html",
+    "WebLegal.dc.html",
+    "WebSeatPicker.dc.html",
+    "WebPayStatus.dc.html",
+    "WebBooked.dc.html",
+    "WebBooking.dc.html",
+    "WebCancel.dc.html",
+    "WebTripDay.dc.html",
+    "WebReceipts.dc.html",
+    "WebAlbums.dc.html",
+    "WebPlans.dc.html",
+    "WebProfile.dc.html",
+    "WebPrivacy.dc.html",
+    "WebBecomeProvider.dc.html"
+  ],
+  "pages": [
+    {
+      "id": "overview",
+      "name": "00 · Screen map"
+    },
+    {
+      "id": "traveler",
+      "name": "01 · Traveler"
+    },
+    {
+      "id": "parent",
+      "name": "02 · Parent"
+    },
+    {
+      "id": "driver",
+      "name": "03 · Driver"
+    },
+    {
+      "id": "moderator",
+      "name": "04 · Moderator"
+    },
+    {
+      "id": "photographer",
+      "name": "05 · Photographer"
+    },
+    {
+      "id": "org",
+      "name": "06 · Organization"
+    },
+    {
+      "id": "admin",
+      "name": "07 · Admin"
+    },
+    {
+      "id": "arabic",
+      "name": "08 · العربية (RTL)"
+    },
+    {
+      "id": "pdf",
+      "name": "09 · PDF documents"
+    },
+    {
+      "id": "shared",
+      "name": "10 · States & components"
+    }
+  ],
+  "title": "Trips Enjoy — All Screens"
+}

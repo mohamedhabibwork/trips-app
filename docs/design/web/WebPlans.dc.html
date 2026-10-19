@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Web · Traveler plans</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+footer a:focus-visible{outline-color:#f89e23}
+.te-nav:hover{color:#c93a00}
+.te-side:hover{background:#f6f3e4}
+</style>
+</helmet>
+<div style="min-height: 1000px; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif; display: flex; flex-direction: column">
+
+<header style="border-bottom: 1px solid #e3dfc9">
+<div style="max-width: 1200px; margin: 0 auto; box-sizing: border-box; padding: 14px 24px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 32px">
+<a href="WebHome.dc.html" aria-label="Trips Enjoy home" style="display: flex"><img src="../assets/1fbce194fcb16bf54904c32c189fca31.svg" alt="Trips Enjoy" style="height: 40px; width: auto"></a>
+<nav aria-label="Main" style="flex-grow: 1; display: flex; flex-wrap: wrap; gap: 4px 24px">
+<a href="WebExplore.dc.html" class="te-nav" style="padding: 10px 0; font-size: 15px; font-weight: 600; color: #262a67; text-decoration: none">Explore trips</a>
+<a href="WebBookings.dc.html" class="te-nav" style="padding: 10px 0; font-size: 15px; font-weight: 600; color: #262a67; text-decoration: none">My bookings</a>
+<a href="WebAlbums.dc.html" class="te-nav" style="padding: 10px 0; font-size: 15px; font-weight: 600; color: #262a67; text-decoration: none">Albums</a>
+</nav>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px">
+<a href="WebHomeAr.dc.html" lang="ar" dir="rtl" style="height: 44px; padding: 0 12px; display: flex; align-items: center; font-family: Cairo, sans-serif; font-size: 15px; font-weight: 600; color: #262a67; text-decoration: none">العربية</a>
+<a href="WebProfile.dc.html" style="height: 48px; box-sizing: border-box; padding: 0 14px 0 4px; border-radius: 999px; background: #ffffff; display: flex; align-items: center; gap: 10px; color: #262a67; font-size: 15px; font-weight: 600; text-decoration: none"><img src="../assets/6c1d1b4ec8611e67e7f6f2ac68edcb50.svg" alt="" style="width: 40px; height: 40px; border-radius: 999px; object-fit: cover; display: block">Mariam<span style="padding: 2px 8px; border-radius: 999px; background: #f89e23; font-size: 12px; font-weight: 700">Explorer</span></a>
+</div>
+</div>
+</header>
+
+<main style="flex-grow: 1; width: 100%; max-width: 1200px; margin: 0 auto; box-sizing: border-box; padding: 32px 24px 48px; display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start">
+<nav aria-label="Account" style="flex: 1 1 220px; max-width: 280px; box-sizing: border-box; padding: 12px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 4px">
+<a href="WebProfile.dc.html" class="te-side" style="min-height: 44px; padding: 0 12px; border-radius: 12px; display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 600; color: #262a67; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0"></path></svg>Profile and notifications</a>
+<a href="WebPlans.dc.html" aria-current="page" style="min-height: 44px; padding: 0 12px; border-radius: 12px; background: #ffe7dc; display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 700; color: #c93a00; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"></path></svg>Plan</a>
+<a href="WebReceipts.dc.html" class="te-side" style="min-height: 44px; padding: 0 12px; border-radius: 12px; display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 600; color: #262a67; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zM14 3v5h5"></path></svg>Receipts and invoices</a>
+<a href="WebPrivacy.dc.html" class="te-side" style="min-height: 44px; padding: 0 12px; border-radius: 12px; display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 600; color: #262a67; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5.5c0 4.4-3 8-7 9.5-4-1.5-7-5.1-7-9.5V6zM9 12l2 2 4-4"></path></svg>Privacy</a>
+<a href="WebBecomeProvider.dc.html" class="te-side" style="min-height: 44px; padding: 0 12px; border-radius: 12px; display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 600; color: #262a67; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Become a provider</a>
+</nav>
+
+<div style="flex: 999 1 600px; min-width: 0; display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 2px"><h1 style="margin: 0; font-size: 32px; line-height: 40px; font-weight: 700">Plans</h1><span style="font-size: 15px; color: #5b5f86">You're on Explorer · renews Sat 1 Nov · card via Paymob</span></div>
+<div role="radiogroup" aria-label="Billing" style="display: flex; padding: 4px; border-radius: 999px; background: #ffffff">
+<sc-for list="{{cycles}}" as="c" hint-placeholder-count="2"><button type="button" role="radio" aria-checked="{{c.sel}}" onClick="{{c.pick}}" style="{{c.style}}">{{c.t}}</button></sc-for>
+</div>
+</div>
+
+<sc-if value="{{hasBanner}}" hint-placeholder-val="{{false}}">
+<div role="status" style="{{bannerStyle}}">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="{{bannerIcon}}"></path></svg>
+<span style="flex: 1 1 360px; font-size: 15px; line-height: 22px"><strong>{{bannerTitle}}</strong> {{bannerText}}</span>
+<sc-if value="{{bannerIsButton}}" hint-placeholder-val="{{false}}"><button type="button" onClick="{{bannerAct}}" style="height: 44px; padding: 0 16px; border-radius: 12px; border: 1px solid currentColor; background: #ffffff; color: inherit; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer">{{bannerCta}}</button></sc-if>
+<sc-if value="{{bannerIsLink}}" hint-placeholder-val="{{false}}"><a href="WebPayStatus.dc.html" style="height: 44px; box-sizing: border-box; padding: 0 16px; border-radius: 12px; border: 1px solid currentColor; background: #ffffff; color: inherit; font-size: 15px; font-weight: 600; display: flex; align-items: center; text-decoration: none">{{bannerCta}}</a></sc-if>
+</div>
+</sc-if>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px">
+<sc-for list="{{plans}}" as="p" hint-placeholder-count="3">
+<section aria-label="{{p.name}} plan" style="{{p.card}}">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 8px"><h2 style="margin: 0; font-size: 22px; font-weight: 700">{{p.name}}</h2><sc-if value="{{p.hasTag}}" hint-placeholder-val="{{false}}"><span style="{{p.tagStyle}}">{{p.tag}}</span></sc-if></div>
+<span style="font-size: 26px; font-weight: 700">{{p.price}} <span style="font-size: 14px; font-weight: 500; color: #5b5f86">{{p.per}}</span></span>
+<span style="font-size: 13px; line-height: 18px; color: #5b5f86">{{p.priceNote}}</span>
+<ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; font-size: 14px; line-height: 20px">
+<sc-for list="{{p.feats}}" as="f" hint-placeholder-count="4"><li style="display: flex; gap: 8px; align-items: flex-start"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1f7a4d" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 2px"><path d="M5 12.5l4.5 4.5L19 7"></path></svg>{{f}}</li></sc-for>
+</ul>
+<div style="margin-top: auto; display: flex; flex-direction: column; gap: 6px">
+<sc-if value="{{p.isCurrent}}" hint-placeholder-val="{{false}}"><span style="height: 48px; border-radius: 12px; background: #f6f3e4; font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center">Your plan</span></sc-if>
+<sc-if value="{{p.hasAct}}" hint-placeholder-val="{{true}}"><button type="button" onClick="{{p.act}}" style="{{p.btn}}">{{p.cta}}</button></sc-if>
+<span style="font-size: 12px; line-height: 16px; color: #5b5f86">{{p.actNote}}</span>
+</div>
+</section>
+</sc-for>
+</div>
+
+<section aria-labelledby="cmp-h" style="border-radius: 20px; background: #ffffff; overflow-x: auto">
+<h2 id="cmp-h" style="margin: 0; padding: 18px 20px 6px; font-size: 20px; font-weight: 600">Compare plans</h2>
+<table style="width: 100%; min-width: 640px; border-collapse: collapse; font-size: 14px">
+<thead><tr><th scope="col" style="padding: 10px 20px; text-align: start; font-size: 13px; color: #5b5f86; font-weight: 600">Feature</th><th scope="col" style="padding: 10px 12px; text-align: start; font-weight: 700">Free</th><th scope="col" style="padding: 10px 12px; text-align: start; font-weight: 700; color: #c93a00">Explorer</th><th scope="col" style="padding: 10px 20px 10px 12px; text-align: start; font-weight: 700">VIP</th></tr></thead>
+<tbody>
+<sc-for list="{{rows}}" as="r" hint-placeholder-count="8">
+<tr style="border-top: 1px solid #e3dfc9"><th scope="row" style="padding: 10px 20px; text-align: start; font-weight: 600">{{r.f}}</th><td style="padding: 10px 12px; color: #5b5f86">{{r.a}}</td><td style="padding: 10px 12px; background: #fff7f2">{{r.b}}</td><td style="padding: 10px 20px 10px 12px">{{r.c}}</td></tr>
+</sc-for>
+</tbody>
+</table>
+<p style="margin: 0; padding: 10px 20px 18px; font-size: 13px; line-height: 18px; color: #5b5f86">Plan discounts apply to programs only, not the base trip price. Prices come from the Trips Enjoy plan catalog and are shown as placeholders here.</p>
+</section>
+</div>
+</main>
+
+<footer style="background: #262a67; color: #f6f3e4">
+<div style="max-width: 1200px; margin: 0 auto; box-sizing: border-box; padding: 24px; display: flex; flex-wrap: wrap; gap: 16px 32px; align-items: center; justify-content: space-between; font-size: 13px; color: #b8bad6">
+<img src="../assets/6ea846350ba3adc0e289d47fa0612c3b.svg" alt="Trips Enjoy" style="height: 32px; width: auto">
+<span>© 2026 Trips Enjoy · Cairo, Egypt</span>
+<nav aria-label="Footer" style="display: flex; flex-wrap: wrap; gap: 20px"><a href="WebLegal.dc.html" style="color: #b8bad6">Privacy</a><a href="WebLegal.dc.html" style="color: #b8bad6">Terms</a><a href="WebBecomeProvider.dc.html" style="color: #b8bad6">Become a provider</a><a href="WebHomeAr.dc.html" lang="ar" dir="rtl" style="color: #b8bad6; font-family: Cairo, sans-serif">العربية</a></nav>
+</div>
+</footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1220},"state":{"editor":"enum","options":["active","awaitingPayment","downgradeScheduled","paymentFailed"],"default":"active"}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { annual: false, local: '' }; }
+  renderVals() {
+    const s = this.state;
+    const m = s.local || this.props.state || 'active';
+    const cycles = [[false, 'Monthly'], [true, 'Annual · 15% off']].map(([v, t]) => {
+      const on = s.annual === v;
+      return { t, sel: on ? 'true' : 'false', pick: () => this.setState({ annual: v }),
+        style: 'min-height: 40px; padding: 0 16px; border: 0; border-radius: 999px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; ' + (on ? 'background: #262a67; color: #f6f3e4;' : 'background: transparent; color: #262a67;') };
+    });
+    const per = s.annual ? 'EGP / year' : 'EGP / month';
+    const pn = s.annual ? 'Annual price is 15% off 12 monthly payments (placeholder until Finance sets it).' : 'Billed monthly. Cancel or change any time.';
+    const btn = (kind) => 'height: 48px; border-radius: 12px; font: inherit; font-size: 15px; cursor: pointer; ' + (kind === 'primary' ? 'border: 0; background: #ff6c2e; color: #262a67; font-weight: 700;' : 'border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-weight: 600;');
+    const card = (cur) => 'padding: 20px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 12px; ' + (cur ? 'border: 2px solid #fb8030;' : 'border: 1px solid #e3dfc9;');
+    const awaiting = m === 'awaitingPayment';
+    const down = m === 'downgradeScheduled';
+    const plans = [
+      { name: 'Free', price: '0', per: per, priceNote: 'Always free.', tag: '', feats: ['Book trips and programs', 'Basic receipts, 12 months of history', 'Standard support'],
+        cur: false, hasAct: !down, cta: 'Switch to Free', kind: 'outline', act: () => this.setState({ local: 'downgradeScheduled' }), actNote: down ? 'Scheduled for Sat 1 Nov.' : 'Starts at the end of this cycle, Sat 1 Nov. No refund for the rest of the cycle.' },
+      { name: 'Explorer', price: '[price]', per: per, priceNote: pn, tag: 'Current', feats: ['5% off programs', 'Priority seat choice', 'Child tracking for parents', 'Full receipts and history', 'Priority support · ad-free'],
+        cur: true, hasAct: false, cta: '', kind: '', act: null, actNote: 'Renews Sat 1 Nov.' },
+      { name: 'VIP', price: '[price]', per: per, priceNote: pn, tag: 'Most perks', feats: ['10% off programs', 'Early access to new trips', 'VIP-only programs', 'Receipts export (CSV, PDF)', 'Dedicated support · ad-free'],
+        cur: false, hasAct: !awaiting, cta: 'Upgrade to VIP', kind: 'primary', act: () => this.setState({ local: 'awaitingPayment' }), actNote: awaiting ? 'Waiting for payment.' : 'Starts now. Today you pay only the difference for the rest of this cycle.' }
+    ].map((p) => ({ ...p, isCurrent: p.cur, hasTag: !!p.tag, card: card(p.cur), btn: btn(p.kind),
+      tagStyle: 'padding: 2px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; ' + (p.cur ? 'background: #ffe7dc; color: #c93a00;' : 'background: #f89e23; color: #262a67;') }));
+    const rows = [
+      ['Program discount', 'None', '5%', '10%'], ['Early access to new trips', 'No', 'No', 'Yes'], ['Priority seat choice', 'No', 'Yes', 'Yes'],
+      ['Child tracking for parents', 'No', 'Yes', 'Yes'], ['Receipts and history', 'Basic · 12 months', 'Full', 'Full + export'],
+      ['VIP-only programs', 'No', 'No', 'Yes'], ['Support', 'Standard', 'Priority', 'Dedicated'], ['Ad-free', 'No', 'Yes', 'Yes']
+    ].map(([f, a, b, c]) => ({ f, a, b, c }));
+    const tone = { warn: 'background: #fdf0d5; color: #8a4b00;', bad: 'background: #fde8e6; color: #b42318;', info: 'background: #e6e8f5; color: #262a67;' };
+    const B = {
+      awaitingPayment: ['info', 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7v5l3 2', 'VIP upgrade is waiting for payment.', 'Finish on Paymob’s page. You stay on Explorer until the payment is confirmed.', 'Check payment', 'link'],
+      downgradeScheduled: ['warn', 'M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zM4 10h16M8 3v4M16 3v4', 'You move to Free on Sat 1 Nov.', 'Explorer perks stay until then. Changed your mind?', 'Keep Explorer', 'button'],
+      paymentFailed: ['bad', 'M12 3l9.5 17h-19zM12 10v4M12 17h.01', 'We couldn’t renew Explorer.', 'Your perks continue for 7 days while we retry on days 1, 3, 5 and 7. After Sat 8 Nov you move to Free. Update your payment to keep Explorer.', 'Update payment', 'link']
+    }[m];
+    return { cycles, plans, rows,
+      hasBanner: !!B, bannerTitle: B ? B[2] : '', bannerText: B ? B[3] : '', bannerIcon: B ? B[1] : '', bannerCta: B ? B[4] : '',
+      bannerIsButton: !!B && B[5] === 'button', bannerIsLink: !!B && B[5] === 'link',
+      bannerAct: () => this.setState({ local: 'active' }),
+      bannerStyle: 'padding: 14px 18px; border-radius: 12px; display: flex; flex-wrap: wrap; gap: 12px 16px; align-items: center; ' + (B ? tone[B[0]] : '') };
+  }
+}
+</script>
+</body>
+</html>

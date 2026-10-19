@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Choose a plan</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif; display: flex; flex-direction: column; padding: 48px 16px 24px; gap: 14px">
+<div style="display: flex; align-items: center; justify-content: space-between">
+<a href="{{back}}" aria-label="Back" style="width: 44px; height: 44px; border-radius: 999px; background: #ffffff; display: flex; align-items: center; justify-content: center; color: #262a67"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg></a>
+<sc-if value="{{approved}}" hint-placeholder-val="{{false}}"><span style="display: flex; gap: 6px; align-items: center; padding: 4px 12px; border-radius: 999px; background: #e3f3ea; color: #1f7a4d; font-size: 13px; font-weight: 600"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"></path></svg>Application approved</span></sc-if>
+</div>
+<div style="display: flex; flex-direction: column; gap: 4px">
+<h1 style="margin: 0; font-size: 26px; line-height: 34px; font-weight: 700">{{title}}</h1>
+<p style="margin: 0; font-size: 15px; line-height: 22px; color: #5b5f86">{{sub}}</p>
+</div>
+<div role="radiogroup" aria-label="Billing period" style="display: flex; padding: 4px; border-radius: 999px; background: #e3dfc9; gap: 4px">
+<button role="radio" aria-checked="{{mSel}}" onClick="{{toM}}" style="{{mStyle}}">Monthly</button>
+<button role="radio" aria-checked="{{ySel}}" onClick="{{toY}}" style="{{yStyle}}">Yearly · save 20%</button>
+</div>
+<div role="radiogroup" aria-label="Plan" style="display: flex; flex-direction: column; gap: 10px">
+<sc-for list="{{plans}}" as="p" hint-placeholder-count="3">
+<button role="radio" aria-checked="{{p.sel}}" onClick="{{p.pick}}" style="{{p.style}}">
+<span style="display: flex; justify-content: space-between; align-items: baseline; width: 100%">
+<span style="display: flex; gap: 8px; align-items: center"><span style="font-size: 17px; font-weight: 700">{{p.name}}</span><sc-if value="{{p.tag}}" hint-placeholder-val="{{false}}"><span style="padding: 2px 8px; border-radius: 999px; background: #f89e23; font-size: 11px; font-weight: 700">{{p.tag}}</span></sc-if></span>
+<span style="font-size: 15px; font-weight: 700">{{p.price}}</span>
+</span>
+<span style="font-size: 13px; line-height: 19px; color: #5b5f86; text-align: start">{{p.feat}}</span>
+</button>
+</sc-for>
+</div>
+<p style="margin: 0; font-size: 13px; line-height: 18px; color: #5b5f86">{{note}}</p>
+<a href="{{next}}" style="margin-top: auto; height: 52px; flex-shrink: 0; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 16px; font-weight: 600; display: flex; align-items: center; justify-content: center; text-decoration: none">{{cta}}</a>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"role":{"editor":"enum","options":["traveler","driver","photographer"],"default":"traveler"},"back":{"editor":"text","default":"MobileReady.dc.html"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+constructor(p) { super(p); this.state = { pick: null, yearly: false }; }
+renderVals() {
+const role = this.props.role ?? 'traveler';
+const R = {
+traveler: { title: 'Pick your traveler plan', sub: 'Booking trips is free on every plan. Upgrade for discounts, priority seats and child tracking.', def: 0, note: 'Change or cancel any time from Account. Paid plans renew automatically.', plans: [
+{ name: 'Free', m: 0, feat: 'Unlimited bookings · coupons · basic receipts' },
+{ name: 'Explorer', m: 19, tag: 'Popular', feat: '5% off programs · priority seat choice · live child tracking · no ads' },
+{ name: 'VIP', m: 49, feat: '10% off programs · early access & VIP programs · dedicated support' }] },
+driver: { title: 'Choose your driver plan', sub: 'Your plan sets how many bookings you can take and where you appear for companies.', def: 1, note: '14-day free trial on paid plans. You can take bookings as soon as a plan is active.', plans: [
+{ name: 'Basic', m: 0, feat: '3 bookings/month · standard listing · deal negotiation' },
+{ name: 'Professional', m: 79, tag: 'Popular', feat: '10 bookings/month · featured listing · verified badge · priority in search' },
+{ name: 'Premium', m: 149, feat: 'Unlimited bookings · top placement · full reports & export' }] },
+photographer: { title: 'Choose your photographer plan', sub: 'Plans set your bookings, portfolio size and album privacy options.', def: 1, note: '14-day free trial on paid plans. Basic albums can only be public.', plans: [
+{ name: 'Basic', m: 0, feat: '3 bookings/month · 10 portfolio photos · public albums' },
+{ name: 'Studio', m: 69, tag: 'Popular', feat: '10 bookings · 50 photos · link-only albums · watermarking · verified badge' },
+{ name: 'Pro', m: 139, feat: 'Unlimited bookings & photos · private albums for selected users' }] }
+}[role] || null;
+const d = R;
+const pick = this.state.pick ?? d.def;
+const y = this.state.yearly;
+const t = (on) => 'flex-grow: 1; height: 40px; border-radius: 999px; border: none; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; ' + (on ? 'background: #ffffff; color: #262a67;' : 'background: transparent; color: #5b5f86;');
+const price = (m) => m === 0 ? 'Free' : 'SAR ' + (y ? Math.round(m * 12 * 0.8) + '/yr' : m + '/mo');
+const sel = d.plans[pick];
+return {
+title: d.title, sub: d.sub, note: d.note, approved: role !== 'traveler', back: this.props.back ?? 'MobileReady.dc.html',
+mSel: y ? 'false' : 'true', ySel: y ? 'true' : 'false', mStyle: t(!y), yStyle: t(y),
+toM: () => this.setState({ yearly: false }), toY: () => this.setState({ yearly: true }),
+plans: d.plans.map((p, i) => ({ name: p.name, tag: p.tag || '', feat: p.feat, price: price(p.m), sel: i === pick ? 'true' : 'false', pick: () => this.setState({ pick: i }),
+style: 'display: flex; flex-direction: column; align-items: flex-start; gap: 4px; padding: 14px; border-radius: 12px; background: #ffffff; color: #262a67; font-family: inherit; cursor: pointer; ' + (i === pick ? 'border: 2px solid #fb8030;' : 'border: 1px solid #e3dfc9;') })),
+next: sel.m === 0 ? (role === 'traveler' ? 'TrvHome.dc.html' : role === 'photographer' ? 'PhoHome.dc.html' : 'DrvLabApproved.dc.html') : 'MobileCheckout.dc.html',
+cta: sel.m === 0 ? 'Continue with ' + sel.name : (role === 'traveler' ? 'Continue to payment' : 'Start 14-day free trial')
+};
+}
+}
+</script>
+</body>
+</html>

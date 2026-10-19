@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>New trip · 5 Photographer</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="min-height: 1000px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="OrgNav" active="Trips" hint-size="248px,1000px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 20px">
+
+<div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 2px">
+<span style="font-size: 14px; color: #5b5f86"><a href="OrgTrips.dc.html" style="font-weight: 600; text-decoration: none">Trips</a> / AlUla Heritage Weekend · Step 5 of 9</span>
+<h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Photographer</h1>
+</div>
+<span style="font-size: 14px; color: #5b5f86">Optional · one photographer covers the whole trip</span>
+</div>
+
+<nav aria-label="Trip builder steps">
+<ol style="list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{steps}}" as="s" hint-placeholder-count="9">
+<li style="flex: 1 1 100px; min-width: 0"><a href="{{s.href}}" aria-current="{{s.cur}}" style="display: flex; flex-direction: column; gap: 8px; text-decoration: none; color: #262a67"><span style="{{s.bar}}"></span><span style="display: flex; align-items: center; gap: 8px"><span style="{{s.dot}}"><sc-if value="{{s.done}}" hint-placeholder-val="{{false}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg></sc-if><sc-if value="{{s.notDone}}" hint-placeholder-val="{{true}}">{{s.n}}</sc-if></span><span style="{{s.lab}}">{{s.l}}</span></span></a></li>
+</sc-for>
+</ol>
+</nav>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
+<form style="flex: 3 1 540px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+
+<section style="background: #ffffff; border-radius: 20px; padding: 20px 24px; display: flex; flex-direction: column; gap: 14px">
+<fieldset style="border: 0; margin: 0; padding: 0">
+<legend style="font-size: 18px; font-weight: 600; padding: 0; margin-bottom: 12px">Who takes the photos?</legend>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px">
+<sc-for list="{{modes}}" as="m" hint-placeholder-count="3">
+<label style="{{m.style}}"><input type="radio" name="mode" checked="{{m.checked}}" onChange="{{m.on}}" style="width: 20px; height: 20px; margin: 2px 0 0; accent-color: #262a67"><span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 15px; font-weight: 600">{{m.t}}</span><span style="font-size: 13px; color: #5b5f86">{{m.d}}</span></span></label>
+</sc-for>
+</div>
+</fieldset>
+
+<sc-if value="{{isOwn}}" hint-placeholder-val="{{false}}">
+<div style="display: flex; flex-direction: column; gap: 6px; max-width: 420px"><label for="own" style="font-size: 14px; font-weight: 600">Own photographer</label><select id="own" style="height: 52px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 12px; font: inherit; font-size: 16px; color: #262a67"><option>Yazan Kamal · free Thu 16 – Sat 18 Oct</option><option>Dana Al-Harthi · busy Sat 18 Oct</option></select><span style="font-size: 13px; color: #1f7a4d; font-weight: 600">Own staff are confirmed automatically. No deal needed.</span></div>
+</sc-if>
+
+<sc-if value="{{isPlatform}}" hint-placeholder-val="{{true}}">
+<div style="display: flex; flex-direction: column; gap: 14px; padding: 16px; border-radius: 16px; border: 1px solid #e3dfc9">
+<div style="display: flex; flex-wrap: wrap; gap: 14px; align-items: center">
+<img src="../assets/380d7985babc06d16544f4085cdec2d7.svg" alt="" style="width: 56px; height: 56px; border-radius: 999px; object-fit: cover">
+<span style="flex: 1 1 200px; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 17px; font-weight: 700">Noura Al-Shehri</span><span style="font-size: 14px; color: #5b5f86">Studio plan · Verified · 4.8 from 63 trips · Riyadh, AlUla, Jeddah</span></span>
+<span style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 999px; background: #fdf0d5; color: #8a4b00; font-size: 13px; font-weight: 700"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7v5l3 2"></path></svg>Your reply needed</span>
+</div>
+<ol style="list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px">
+<li style="flex: 1 1 150px; padding: 10px 12px; border-radius: 12px; background: #f6f3e4; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 12px; font-weight: 700; color: #1f7a4d">DONE · Mon 6 Oct 09:40</span><span style="font-size: 14px; font-weight: 600">You invited Noura</span><span style="font-size: 13px; color: #5b5f86">3 days · AlUla</span></li>
+<li style="flex: 1 1 150px; padding: 10px 12px; border-radius: 12px; background: #fdf0d5; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 12px; font-weight: 700; color: #8a4b00">NOW · Mon 6 Oct 13:15</span><span style="font-size: 14px; font-weight: 600">Noura proposed 2,200 SAR</span><span style="font-size: 13px; color: #5b5f86">Includes 60-sec reel</span></li>
+<li style="flex: 1 1 150px; padding: 10px 12px; border-radius: 12px; border: 1px dashed #7b7fa6; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 12px; font-weight: 700; color: #5b5f86">NEXT</span><span style="font-size: 14px; font-weight: 600">Both approve → assigned</span><span style="font-size: 13px; color: #5b5f86">Accept, counter or reject</span></li>
+</ol>
+<div style="display: flex; flex-wrap: wrap; gap: 10px">
+<a href="OrgDeal.dc.html" style="height: 44px; box-sizing: border-box; padding: 0 16px; border-radius: 12px; background: #262a67; color: #f6f3e4; font-size: 15px; font-weight: 600; display: inline-flex; align-items: center; text-decoration: none">Open deal · accept or counter</a>
+<a href="OrgMarket.dc.html" style="height: 44px; box-sizing: border-box; padding: 0 16px; border-radius: 12px; border: 1px solid #7b7fa6; background: #fff; color: #262a67; font-size: 15px; font-weight: 600; display: inline-flex; align-items: center; text-decoration: none">Browse other photographers</a>
+</div>
+</div>
+</sc-if>
+</section>
+
+<section style="background: #ffffff; border-radius: 20px; padding: 20px 24px; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px">
+<fieldset style="border: 0; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px">
+<legend style="font-size: 16px; font-weight: 600; padding: 0; margin-bottom: 8px">Deliverables</legend>
+<sc-for list="{{deliv}}" as="d" hint-placeholder-count="5">
+<label style="display: flex; gap: 10px; align-items: center; font-size: 15px; min-height: 32px; cursor: pointer"><input type="checkbox" checked="{{d.on}}" style="width: 20px; height: 20px; margin: 0; accent-color: #262a67">{{d.t}}</label>
+</sc-for>
+</fieldset>
+<fieldset style="border: 0; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px">
+<legend style="font-size: 16px; font-weight: 600; padding: 0; margin-bottom: 8px">Album privacy default</legend>
+<sc-for list="{{priv}}" as="p" hint-placeholder-count="3">
+<label style="{{p.style}}"><input type="radio" name="priv" checked="{{p.checked}}" disabled="{{p.disabled}}" onChange="{{p.on}}" style="width: 20px; height: 20px; margin: 2px 0 0; accent-color: #262a67"><span style="display: flex; flex-direction: column"><span style="font-size: 15px; font-weight: 600">{{p.t}}</span><span style="font-size: 13px; color: #5b5f86">{{p.d}}</span></span></label>
+</sc-for>
+</fieldset>
+</section>
+</form>
+
+<aside aria-labelledby="sum-h" style="flex: 1 1 280px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+<h2 id="sum-h" style="margin: 0; font-size: 18px; font-weight: 600">Trip summary</h2>
+<dl style="margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 8px 12px; font-size: 14px">
+<dt style="color: #5b5f86">Dates</dt><dd style="margin: 0; font-weight: 600">Thu 16 – Sat 18 Oct</dd>
+<dt style="color: #5b5f86">Buses</dt><dd style="margin: 0; font-weight: 600">4 · 177 seats</dd>
+<dt style="color: #5b5f86">Staff</dt><dd style="margin: 0; font-weight: 600">3 drivers set · 1 deal pending</dd>
+<dt style="color: #5b5f86">Photos</dt><dd style="margin: 0; font-weight: 600">{{photoLine}}</dd>
+<dt style="color: #5b5f86">Albums</dt><dd style="margin: 0; font-weight: 600">{{privLine}}</dd>
+</dl>
+<div style="padding-top: 12px; border-top: 1px solid #e3dfc9; display: flex; justify-content: space-between; font-size: 15px"><span>Provider costs so far</span><strong>{{cost}}</strong></div>
+<span style="font-size: 13px; color: #5b5f86">Costs are deducted in Accounting after the trip. Travelers never see them.</span>
+</aside>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; align-items: center; padding-top: 16px; border-top: 1px solid #e3dfc9">
+<a href="OrgNew4.dc.html" style="height: 48px; box-sizing: border-box; padding: 0 20px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 6px; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg>Back</a>
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center">
+<span style="font-size: 13px; color: #5b5f86">Draft saved 10:15</span>
+<button type="button" style="height: 48px; padding: 0 16px; border-radius: 12px; border: 0; background: transparent; color: #262a67; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Save draft</button>
+<a href="OrgNew6.dc.html" style="height: 48px; padding: 0 22px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; text-decoration: none">Continue to programs<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+</div>
+</div>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1080}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { mode: 'platform', priv: 'link' }; }
+  renderVals() {
+    const names = ['Basics', 'Schedule', 'Vehicles', 'Staff', 'Photographer', 'Programs', 'Seats', 'Pricing', 'Publish'];
+    const cur = 4;
+    const steps = names.map((l, i) => {
+      const st = i < cur ? 'done' : i === cur ? 'cur' : 'todo';
+      return { l, n: String(i + 1), done: st === 'done', notDone: st !== 'done', href: 'OrgNew' + (i + 1) + '.dc.html', cur: st === 'cur' ? 'step' : 'false',
+        bar: 'display: block; height: 4px; border-radius: 999px; background: ' + (st === 'done' ? '#262a67' : st === 'cur' ? '#ff6c2e' : '#e3dfc9'),
+        dot: 'width: 24px; height: 24px; flex-shrink: 0; box-sizing: border-box; border-radius: 999px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; ' + (st === 'done' ? 'background: #262a67; color: #f6f3e4;' : st === 'cur' ? 'background: #ff6c2e; color: #262a67;' : 'background: #ffffff; color: #5b5f86; border: 1px solid #7b7fa6;'),
+        lab: 'font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; ' + (st === 'todo' ? 'font-weight: 500; color: #5b5f86;' : 'font-weight: 600; color: #262a67;') };
+    });
+    const mode = this.state.mode;
+    const card = (on) => 'display: flex; gap: 12px; align-items: flex-start; padding: 14px; border-radius: 12px; cursor: pointer; ' + (on ? 'border: 2px solid #fb8030; background: #fffaf3;' : 'border: 1px solid #e3dfc9; background: #ffffff;');
+    const modes = [
+      { k: 'own', t: 'Own photographer', d: 'Someone on your team. Confirmed straight away.' },
+      { k: 'platform', t: 'Platform photographer', d: 'Hire a verified pro. Agree a price in a deal.' },
+      { k: 'none', t: 'No photographer', d: 'Travelers can still share their own photos.' }
+    ].map((m) => ({ ...m, checked: mode === m.k, on: () => this.setState({ mode: m.k }), style: card(mode === m.k) }));
+    const deliv = [
+      { t: 'At least 300 edited photos', on: true },
+      { t: 'Group photo at Elephant Rock', on: true },
+      { t: '60-second highlight reel', on: true },
+      { t: 'Drone shots (permit required in AlUla)', on: false },
+      { t: 'Album live within 5 days of return', on: true }
+    ];
+    const pv = this.state.priv;
+    const priv = [
+      { k: 'public', t: 'Public to trip participants', d: 'Everyone on the trip roster can view.', dis: false },
+      { k: 'link', t: 'Shared link', d: 'Anyone with the link. Needs Studio or Pro.', dis: false },
+      { k: 'users', t: 'Selected travelers only', d: 'Needs a photographer on Pro. Noura is on Studio.', dis: true }
+    ].map((p) => ({ ...p, checked: pv === p.k, disabled: p.dis, on: () => this.setState({ priv: p.k }),
+      style: 'display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border-radius: 12px; ' + (p.dis ? 'opacity: 0.6; border: 1px dashed #e3dfc9;' : pv === p.k ? 'border: 2px solid #fb8030; cursor: pointer;' : 'border: 1px solid #e3dfc9; cursor: pointer;') }));
+    const privName = { public: 'Public to participants', link: 'Shared link · watermarked', users: 'Selected travelers' }[pv];
+    return { steps, modes, isOwn: mode === 'own', isPlatform: mode === 'platform', deliv, priv,
+      photoLine: mode === 'platform' ? 'Noura Al-Shehri · 2,200 SAR proposed' : mode === 'own' ? 'Yazan Kamal · own staff' : 'None',
+      privLine: privName, cost: mode === 'platform' ? '3,650 SAR' : '1,450 SAR' };
+  }
+}
+</script>
+</body>
+</html>

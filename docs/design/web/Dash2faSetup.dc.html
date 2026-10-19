@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Set up two-step verification</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; background: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24px">
+<img src="../assets/6ea846350ba3adc0e289d47fa0612c3b.svg" alt="Trips Enjoy" style="height: 48px; width: auto">
+<div style="width: 760px; box-sizing: border-box; background: #ffffff; color: #262a67; border-radius: 20px; padding: 32px; display: flex; flex-direction: column; gap: 24px; box-shadow: 0 8px 30px rgba(0,0,0,.4)">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 13px; font-weight: 600; color: #5b5f86">FIRST SIGN-IN · REQUIRED FOR ALL CONSOLE ACCOUNTS</span>
+<h1 style="margin: 0; font-size: 24px; line-height: 32px; font-weight: 600">Set up two-step verification</h1>
+</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px">
+<div style="display: flex; flex-direction: column; gap: 12px">
+<span style="font-size: 15px; font-weight: 600">1. Scan with your authenticator app</span>
+<img src="../assets/820ae1ed630eb3e04ea4d7ce91f50535.png" alt="QR code for your authenticator app" style="width: 180px; height: 180px; border-radius: 12px; border: 1px solid #e3dfc9">
+<span style="font-size: 13px; color: #5b5f86">Can't scan? Enter this key: <span style="font-weight: 600; color: #262a67; letter-spacing: 1px">JBSW Y3DP EHPK 3PXP</span></span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 12px">
+<span style="font-size: 15px; font-weight: 600">2. Enter the 6-digit code</span>
+<dc-import name="OtpField" digits="" length="{{six}}" hint-size="100%,60px"></dc-import>
+<span style="font-size: 15px; font-weight: 600; margin-top: 8px">3. Save your recovery codes</span>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; padding: 12px; border-radius: 12px; background: #f6f3e4; font-size: 14px; font-weight: 600; letter-spacing: 1px">
+<span>8F2K-QM7A</span><span>T9WD-3LXP</span><span>V4HN-62RB</span><span>C7ZE-PY81</span>
+</div>
+<button style="align-self: flex-start; height: 44px; padding: 0 16px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-family: inherit; font-size: 14px; font-weight: 600">Download codes</button>
+</div>
+</div>
+<div style="display: flex; justify-content: flex-end">
+<a href="Dash2fa.dc.html" style="height: 48px; padding: 0 28px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 16px; font-weight: 600; display: flex; align-items: center; text-decoration: none">Turn on and continue</a>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+renderVals() { return { six: 6 }; }
+}
+</script>
+</body>
+</html>

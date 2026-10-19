@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>My programs</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="height: 100%; box-sizing: border-box; padding: 56px 16px 24px; display: flex; flex-direction: column; gap: 12px">
+
+<div style="display: flex; align-items: center; gap: 12px">
+<a href="TrvTicket.dc.html" aria-label="Back to ticket" style="width: 44px; height: 44px; border-radius: 999px; background: #ffffff; color: #262a67; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a>
+<div style="display: flex; flex-direction: column"><h1 style="margin: 0; font-size: 22px; line-height: 28px; font-weight: 700">My programs</h1><span style="font-size: 13px; color: #5b5f86">AlUla Heritage Weekend · TE-48213</span></div>
+</div>
+
+<div role="tablist" aria-label="Trip day" style="display: flex; gap: 4px; padding: 3px; border-radius: 12px; background: #ffffff">
+<sc-for list="{{days}}" as="d" hint-placeholder-count="3"><button type="button" role="tab" aria-selected="{{d.on}}" onClick="{{d.pick}}" style="{{d.style}}">{{d.label}}</button></sc-for>
+</div>
+
+<div role="tabpanel" style="display: flex; flex-direction: column; gap: 10px">
+<sc-for list="{{items}}" as="p" hint-placeholder-count="3">
+<div style="border-radius: 20px; background: #ffffff; padding: 12px 14px; display: flex; gap: 12px; align-items: center">
+<img src="../assets/820ae1ed630eb3e04ea4d7ce91f50535.png" alt="{{p.qrAlt}}" style="width: 80px; height: 80px; flex-shrink: 0; border-radius: 8px">
+<div style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px">
+<span style="font-size: 13px; font-weight: 700; color: #c93a00">{{p.time}}</span>
+<span style="font-size: 16px; font-weight: 600; line-height: 20px">{{p.name}}</span>
+<span style="font-size: 13px; color: #5b5f86; display: flex; gap: 4px; align-items: center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.1-7-11.5A7 7 0 0 1 19 9.5C19 14.9 12 21 12 21zM12 7a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z"></path></svg>{{p.meet}}</span>
+<span style="font-size: 13px; color: #5b5f86; display: flex; gap: 4px; align-items: center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM3 20a6 6 0 0 1 12 0M16 4.5a3.5 3.5 0 0 1 0 6.5M18 14.5a6 6 0 0 1 3 5.5"></path></svg>{{p.who}}</span>
+</div>
+</div>
+</sc-for>
+</div>
+
+<div style="padding: 10px 12px; border-radius: 12px; background: #e6e8f5; display: flex; gap: 10px; font-size: 13px; line-height: 18px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 11v5M12 8h.01"></path></svg><span>Show each program's code to the host at the meeting point. Codes work offline.</span></div>
+
+<a href="TrvAddPrograms.dc.html" style="margin-top: auto; height: 52px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-weight: 700; font-size: 16px; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Add more programs</a>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { day: 'thu' }; }
+  renderVals() {
+    const D = {
+      thu: [
+        { time: '18:10 – 19:00', name: 'Old Town walk', meet: 'Old Town gate', who: 'Sara, Faisal, Omar, Lina' },
+        { time: '19:30 – 22:00', name: 'Elephant Rock dinner', meet: 'Hotel lobby at 19:00', who: 'Sara, Faisal (Standard) · Omar, Lina (Basic)' },
+        { time: 'From 16:00', name: 'Desert camp kit × 2', meet: 'Bus 2 · ask Nadia Yusuf', who: 'Collected by Sara' }
+      ],
+      fri: [
+        { time: '08:00 – 11:30', name: 'Hegra guided tour', meet: 'Hegra visitor centre', who: 'Sara, Faisal, Omar, Lina' },
+        { time: '20:00 – 21:30', name: 'Hegra by night', meet: 'Hegra visitor centre', who: 'Sara, Faisal' }
+      ],
+      sat: [
+        { time: '09:00 – 09:45', name: 'Group photo package', meet: 'Hotel garden · Noura Al-Shehri', who: 'Whole group' }
+      ]
+    };
+    const L = { thu: 'Thu 16 Oct', fri: 'Fri 17 Oct', sat: 'Sat 18 Oct' };
+    const days = Object.keys(L).map((k) => {
+      const on = this.state.day === k;
+      return { label: L[k], on: on ? 'true' : 'false', pick: () => this.setState({ day: k }),
+        style: 'flex: 1 1 0; height: 44px; border-radius: 10px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; color: ' + (on ? '#f6f3e4; background: #262a67; border: 0;' : '#262a67; background: transparent; border: 0;') };
+    });
+    const items = D[this.state.day].map((p) => Object.assign({}, p, { qrAlt: 'Entry code for ' + p.name }));
+    return { days, items };
+  }
+}
+</script>
+</body>
+</html>

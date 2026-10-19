@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Web · Cancel booking</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+footer a:focus-visible{outline-color:#f89e23}
+.te-nav:hover{color:#c93a00}
+</style>
+</helmet>
+<div style="min-height: 1000px; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif; display: flex; flex-direction: column">
+
+<header style="border-bottom: 1px solid #e3dfc9">
+<div style="max-width: 1200px; margin: 0 auto; box-sizing: border-box; padding: 14px 24px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 32px">
+<a href="WebHome.dc.html" aria-label="Trips Enjoy home" style="display: flex"><img src="../assets/1fbce194fcb16bf54904c32c189fca31.svg" alt="Trips Enjoy" style="height: 40px; width: auto"></a>
+<nav aria-label="Main" style="flex-grow: 1; display: flex; flex-wrap: wrap; gap: 4px 24px">
+<a href="WebExplore.dc.html" class="te-nav" style="padding: 10px 0; font-size: 15px; font-weight: 600; color: #262a67; text-decoration: none">Explore trips</a>
+<a href="WebBookings.dc.html" aria-current="page" class="te-nav" style="padding: 10px 0; font-size: 15px; font-weight: 700; color: #c93a00; text-decoration: none; border-bottom: 2px solid #fb8030">My bookings</a>
+<a href="WebAlbums.dc.html" class="te-nav" style="padding: 10px 0; font-size: 15px; font-weight: 600; color: #262a67; text-decoration: none">Albums</a>
+</nav>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px">
+<a href="WebHomeAr.dc.html" lang="ar" dir="rtl" style="height: 44px; padding: 0 12px; display: flex; align-items: center; font-family: Cairo, sans-serif; font-size: 15px; font-weight: 600; color: #262a67; text-decoration: none">العربية</a>
+<a href="WebProfile.dc.html" style="height: 48px; box-sizing: border-box; padding: 0 14px 0 4px; border-radius: 999px; background: #ffffff; display: flex; align-items: center; gap: 10px; color: #262a67; font-size: 15px; font-weight: 600; text-decoration: none"><img src="../assets/6c1d1b4ec8611e67e7f6f2ac68edcb50.svg" alt="" style="width: 40px; height: 40px; border-radius: 999px; object-fit: cover; display: block">Mariam<span style="padding: 2px 8px; border-radius: 999px; background: #f89e23; font-size: 12px; font-weight: 700">Explorer</span></a>
+</div>
+</div>
+</header>
+
+<main style="flex-grow: 1; width: 100%; max-width: 1200px; margin: 0 auto; box-sizing: border-box; padding: 28px 24px 48px; display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; gap: 12px; align-items: center">
+<a href="WebBooking.dc.html" aria-label="Back to booking" style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 999px; background: #ffffff; color: #262a67; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a>
+<div style="display: flex; flex-direction: column"><h1 style="margin: 0; font-size: 30px; line-height: 38px; font-weight: 700">{{title}}</h1><span style="font-size: 15px; color: #5b5f86">Siwa Oasis Escape · booking TE-50217 · 4 travelers</span></div>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start">
+<div style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+
+<sc-if value="{{isDecision}}" hint-placeholder-val="{{true}}">
+<section aria-labelledby="tm-h" style="padding: 24px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: center">
+<span style="width: 52px; height: 52px; flex-shrink: 0; border-radius: 16px; background: #e6e8f5; display: flex; align-items: center; justify-content: center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7v5l3 2"></path></svg></span>
+<div style="flex: 1 1 300px; display: flex; flex-direction: column"><span id="tm-h" style="font-size: 14px; font-weight: 600; color: #5b5f86">Time to departure</span><span style="font-size: 24px; font-weight: 700">{{timeLeft}}</span><span style="font-size: 14px; color: #5b5f86">Departs Thu 30 Oct, 05:30 (Cairo time)</span></div>
+</div>
+<ol aria-label="Cancellation policy" style="margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px">
+<sc-for list="{{tiers}}" as="r" hint-placeholder-count="3">
+<li aria-current="{{r.cur}}" style="{{r.style}}"><span style="display: flex; justify-content: space-between; gap: 8px; align-items: center"><strong style="font-size: 16px">{{r.t}}</strong><sc-if value="{{r.now}}" hint-placeholder-val="{{false}}"><span style="padding: 2px 8px; border-radius: 999px; background: #262a67; color: #f6f3e4; font-size: 12px; font-weight: 700; white-space: nowrap">Applies now</span></sc-if></span><span style="font-size: 13px; line-height: 18px">{{r.d}}</span></li>
+</sc-for>
+</ol>
+<span style="font-size: 13px; color: #5b5f86">Policy tiers are placeholders until Operations confirms them.</span>
+</section>
+
+<section aria-labelledby="rf-h" style="padding: 24px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 10px">
+<h2 id="rf-h" style="margin: 0 0 4px; font-size: 20px; font-weight: 600">Your refund</h2>
+<sc-for list="{{lines}}" as="l" hint-placeholder-count="4"><span style="display: flex; justify-content: space-between; gap: 12px; font-size: 15px"><span style="color: #5b5f86">{{l.t}}</span><span>{{l.v}}</span></span></sc-for>
+<div style="padding-top: 12px; border-top: 1px solid #e3dfc9; display: flex; justify-content: space-between; align-items: baseline"><span style="font-size: 17px; font-weight: 700">Refund</span><span style="font-size: 30px; font-weight: 700">{{refund}} <span style="font-size: 15px; font-weight: 500; color: #5b5f86">EGP</span></span></div>
+<div style="display: flex; flex-direction: column; gap: 8px; font-size: 14px; line-height: 20px">
+<span style="display: flex; gap: 10px; align-items: flex-start"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 1px"><path d="M4 7a2 2 0 0 1 2-2h12v4M4 7v11a2 2 0 0 0 2 2h14V9H6a2 2 0 0 1-2-2zM16 14.5h.01"></path></svg><span><strong>Refund method:</strong> back to card •• 7731 through Paymob, sent within 2 working days. Paid cash at Fawry? We'd ask for a bank account or mobile wallet instead.</span></span>
+<span style="display: flex; gap: 10px; align-items: flex-start"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 1px"><path d="M3 12V4a1 1 0 0 1 1-1h8l9 9-9 9zM7.5 7.5h.01"></path></svg><span><strong>Coupon:</strong> SIWA500 is given back to you and can be used again while it's still valid.</span></span>
+</div>
+</section>
+
+<section aria-labelledby="go-h" style="padding: 24px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 14px">
+<h2 id="go-h" style="margin: 0; font-size: 20px; font-weight: 600">{{goTitle}}</h2>
+<sc-if value="{{isRequest}}" hint-placeholder-val="{{false}}">
+<p style="margin: 0; padding: 12px 14px; border-radius: 12px; background: #fdf0d5; color: #8a4b00; font-size: 15px; line-height: 22px">Under 24 hours the policy gives no refund. You can still ask Nile Horizon Tours to cancel and refund; they decide within 2 working days. If you disagree with their answer, our team reviews it.</p>
+</sc-if>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="rs" style="font-size: 14px; font-weight: 600">Reason <span style="font-weight: 400; color: #5b5f86">(optional)</span></label>
+<select id="rs" style="height: 52px; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; padding: 0 12px; font: inherit; font-size: 16px; color: #262a67"><option>Plans changed</option><option>Someone in the group is unwell</option><option>Found another trip</option><option>Other</option></select>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px">
+<a href="ShWebConfirm.dc.html" style="flex: 1 1 220px; height: 48px; border-radius: 12px; background: #b42318; color: #ffffff; font-size: 16px; font-weight: 600; display: flex; align-items: center; justify-content: center; text-decoration: none">{{confirmCta}}</a>
+<a href="WebBooking.dc.html" style="flex: 1 1 220px; height: 48px; box-sizing: border-box; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-size: 16px; font-weight: 600; display: flex; align-items: center; justify-content: center; text-decoration: none">Keep booking</a>
+</div>
+<span style="font-size: 13px; line-height: 18px; color: #5b5f86">{{confirmNote}}</span>
+</section>
+</sc-if>
+
+<sc-if value="{{isDone}}" hint-placeholder-val="{{false}}">
+<section aria-labelledby="dn-h" style="padding: 32px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 16px">
+<span style="width: 64px; height: 64px; border-radius: 999px; background: #e3f3ea; color: #1f7a4d; display: flex; align-items: center; justify-content: center"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg></span>
+<h2 id="dn-h" style="margin: 0; font-size: 24px; font-weight: 700">Booking cancelled. Refund in progress.</h2>
+<p style="margin: 0; font-size: 16px; line-height: 24px; color: #5b5f86">20,228 EGP goes back to card •• 7731. We send it to Paymob within 2 working days and tell you when Paymob confirms it; your bank may take a few more days to show it. Seats 4A to 4D are released and coupon SIWA500 is back in your account.</p>
+<ol style="margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 8px">
+<li style="padding: 6px 12px; border-radius: 999px; background: #e3f3ea; color: #1f7a4d; font-size: 14px; font-weight: 600">Cancelled · Fri 17 Oct, 11:02</li>
+<li style="padding: 6px 12px; border-radius: 999px; background: #fdf0d5; color: #8a4b00; font-size: 14px; font-weight: 600">Refund pending</li>
+<li style="padding: 6px 12px; border-radius: 999px; background: #f6f3e4; color: #5b5f86; font-size: 14px; font-weight: 600">Refunded</li>
+</ol>
+<div style="display: flex; flex-wrap: wrap; gap: 12px">
+<a href="WebBooking.dc.html" style="flex: 1 1 200px; height: 48px; border-radius: 12px; background: #262a67; color: #f6f3e4; font-size: 15px; font-weight: 600; display: flex; align-items: center; justify-content: center; text-decoration: none">Back to booking</a>
+<a href="WebBookings.dc.html" style="flex: 1 1 200px; height: 48px; box-sizing: border-box; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-size: 15px; font-weight: 600; display: flex; align-items: center; justify-content: center; text-decoration: none">My bookings</a>
+</div>
+</section>
+</sc-if>
+
+<sc-if value="{{isBlocked}}" hint-placeholder-val="{{false}}">
+<section aria-labelledby="bl-h" style="padding: 32px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 16px">
+<span style="width: 64px; height: 64px; border-radius: 999px; background: #fde8e6; color: #b42318; display: flex; align-items: center; justify-content: center"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 11h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1zM8 11V7a4 4 0 0 1 8 0v4"></path></svg></span>
+<h2 id="bl-h" style="margin: 0; font-size: 24px; font-weight: 700">This booking can't be cancelled now</h2>
+<p style="margin: 0; font-size: 16px; line-height: 24px; color: #5b5f86">Your group checked in on Bus 2 at 05:12 and the trip has departed. Cancellation closes at check-in. If something went wrong, open a dispute: we acknowledge it within 2 working days and resolve it within 10.</p>
+<div style="display: flex; flex-wrap: wrap; gap: 12px">
+<a href="../mobile/TrvSupport.dc.html" style="flex: 1 1 200px; height: 48px; border-radius: 12px; background: #262a67; color: #f6f3e4; font-size: 15px; font-weight: 600; display: flex; align-items: center; justify-content: center; text-decoration: none">Open a dispute</a>
+<a href="WebTripDay.dc.html" style="flex: 1 1 200px; height: 48px; box-sizing: border-box; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-size: 15px; font-weight: 600; display: flex; align-items: center; justify-content: center; text-decoration: none">Trip day</a>
+</div>
+</section>
+</sc-if>
+</div>
+
+<aside aria-labelledby="sm-h" style="flex: 1 1 320px; min-width: 0; padding: 24px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 12px">
+<img src="../assets/d86de248246e3c2af9ac141f04f94d0a.svg" alt="Sunset over Siwa Oasis" style="width: 100%; height: 140px; object-fit: cover; border-radius: 12px">
+<h2 id="sm-h" style="margin: 0; font-size: 18px; font-weight: 600">Siwa Oasis Escape</h2>
+<div style="display: flex; flex-direction: column; gap: 8px; font-size: 14px">
+<span style="display: flex; justify-content: space-between; gap: 8px"><span style="color: #5b5f86">Dates</span><span>Thu 30 Oct – Sat 1 Nov</span></span>
+<span style="display: flex; justify-content: space-between; gap: 8px"><span style="color: #5b5f86">Travelers</span><span>4 · seats 4A–4D</span></span>
+<span style="display: flex; justify-content: space-between; gap: 8px"><span style="color: #5b5f86">Programs</span><span>5 booked</span></span>
+<span style="display: flex; justify-content: space-between; gap: 8px"><span style="color: #5b5f86">Paid</span><span>25,285 EGP</span></span>
+<span style="display: flex; justify-content: space-between; gap: 8px"><span style="color: #5b5f86">Organizer</span><a href="WebOrganizer.dc.html">Nile Horizon Tours</a></span>
+</div>
+<span style="padding-top: 10px; border-top: 1px solid #e3dfc9; font-size: 13px; line-height: 18px; color: #5b5f86">If Nile Horizon Tours cancels the trip instead, you get everything back, including programs.</span>
+</aside>
+</div>
+</main>
+
+<footer style="background: #262a67; color: #f6f3e4">
+<div style="max-width: 1200px; margin: 0 auto; box-sizing: border-box; padding: 24px; display: flex; flex-wrap: wrap; gap: 16px 32px; align-items: center; justify-content: space-between; font-size: 13px; color: #b8bad6">
+<img src="../assets/6ea846350ba3adc0e289d47fa0612c3b.svg" alt="Trips Enjoy" style="height: 32px; width: auto">
+<span>© 2026 Trips Enjoy · Cairo, Egypt</span>
+<nav aria-label="Footer" style="display: flex; flex-wrap: wrap; gap: 20px"><a href="WebLegal.dc.html" style="color: #b8bad6">Privacy</a><a href="WebLegal.dc.html" style="color: #b8bad6">Terms</a><a href="WebBecomeProvider.dc.html" style="color: #b8bad6">Become a provider</a><a href="WebHomeAr.dc.html" lang="ar" dir="rtl" style="color: #b8bad6; font-family: Cairo, sans-serif">العربية</a></nav>
+</div>
+</footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1180},"state":{"editor":"enum","options":["preview","midTier","under24h","refundInProgress","notAllowed"],"default":"preview"}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const m = this.props.state || 'preview';
+    const tier = m === 'midTier' ? 1 : m === 'under24h' ? 2 : 0;
+    const tone = ['background: #e3f3ea; color: #1f7a4d;', 'background: #fdf0d5; color: #8a4b00;', 'background: #fde8e6; color: #b42318;'];
+    const tiers = [['80% refund', '48 h or more before departure · until Tue 28 Oct, 05:30'], ['50% refund', '24 to under 48 h before · until Wed 29 Oct, 05:30'], ['No refund', 'Under 24 h before · request goes to the organizer']].map(([t, d], i) => ({ t, d, now: i === tier, cur: i === tier ? 'true' : 'false',
+      style: 'padding: 12px 14px; border-radius: 12px; display: flex; flex-direction: column; gap: 4px; ' + tone[i] + (i === tier ? ' box-shadow: inset 0 0 0 2px #262a67;' : ' opacity: 0.85;') }));
+    const rate = [80, 50, 0][tier];
+    const refund = ['20,228', '12,643', '0'][tier];
+    const lines = [
+      { t: 'You paid', v: '25,285 EGP' },
+      { t: 'Policy row applied', v: rate + '% refund' },
+      { t: 'Non-refundable fees', v: 'None (not set by Finance)' }
+    ];
+    const decision = m === 'preview' || m === 'midTier' || m === 'under24h';
+    const request = m === 'under24h';
+    return { tiers, lines, refund,
+      timeLeft: ['12 days 18 h', '1 day 20 h', '18 h 40 min'][tier],
+      title: m === 'refundInProgress' ? 'Booking cancelled' : m === 'notAllowed' ? 'Cancel booking' : 'Cancel your booking?',
+      isDecision: decision, isDone: m === 'refundInProgress', isBlocked: m === 'notAllowed', isRequest: request,
+      goTitle: request ? 'Ask the organizer to cancel' : 'Confirm cancellation',
+      confirmCta: request ? 'Send cancellation request' : 'Confirm cancellation · refund ' + refund + ' EGP',
+      confirmNote: request ? 'Your booking stays active until Nile Horizon Tours decides. We’ll email you their answer.' : 'This cancels the whole booking for all 4 travelers and releases your seats. It can’t be undone.' };
+  }
+}
+</script>
+</body>
+</html>

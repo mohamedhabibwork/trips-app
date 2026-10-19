@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Moderator · On the trip</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+.nv:focus-visible{outline-color:#f89e23}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="height: 100%; box-sizing: border-box; padding: 56px 16px 120px; display: flex; flex-direction: column; gap: 14px">
+
+<div style="display: flex; align-items: center; gap: 12px">
+<div style="flex-grow: 1; display: flex; flex-direction: column"><span style="font-size: 13px; color: #5b5f86">Bus 2 · AlUla Heritage Weekend · Day 2</span><h1 style="margin: 0; font-size: 24px; line-height: 30px; font-weight: 700">On the trip</h1></div>
+<span style="padding: 4px 12px; border-radius: 999px; background: #ffe7dc; color: #c93a00; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 999px; background: #c93a00"></span>Live · On route</span>
+</div>
+
+<section aria-labelledby="next-h" style="padding: 16px; border-radius: 20px; background: #262a67; color: #f6f3e4; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; align-items: flex-end; justify-content: space-between">
+<div style="display: flex; flex-direction: column"><span style="font-size: 12px; font-weight: 600; color: #b8bad6">NEXT STOP</span><h2 id="next-h" style="margin: 0; font-size: 24px; line-height: 30px; font-weight: 700">Hegra</h2><span style="font-size: 13px; color: #b8bad6">22 km · Hegra guided tour 10:45</span></div>
+<span style="font-size: 32px; line-height: 36px; font-weight: 700; color: #ff8655">10:30</span>
+</div>
+<ol aria-label="Route" style="margin: 0; padding: 0; list-style: none; display: flex">
+<sc-for list="{{stops}}" as="s" hint-placeholder-count="4">
+<li style="flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 6px">
+<span style="{{s.bar}}"></span>
+<span style="font-size: 12px; line-height: 15px; font-weight: 600">{{s.t}}</span>
+<span style="font-size: 12px; line-height: 15px; color: #b8bad6">{{s.time}}</span>
+</li>
+</sc-for>
+</ol>
+</section>
+
+<section aria-labelledby="occ-h" style="padding: 14px 16px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 8px">
+<div style="display: flex; justify-content: space-between; align-items: baseline"><h2 id="occ-h" style="margin: 0; font-size: 16px; font-weight: 600">Occupancy</h2><span style="font-size: 20px; font-weight: 700">41 / 49</span></div>
+<div role="progressbar" aria-label="Seats occupied" aria-valuenow="41" aria-valuemin="0" aria-valuemax="49" style="height: 8px; border-radius: 999px; background: #e3dfc9; overflow: hidden"><span style="display: block; width: 83.7%; height: 100%; background: #262a67"></span></div>
+<span style="font-size: 13px; color: #5b5f86">8 empty seats · all 41 re-boarded at camp 09:42</span>
+</section>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px">
+<a href="ModIncident.dc.html" style="padding: 14px; border-radius: 16px; background: #ffffff; color: #262a67; text-decoration: none; display: flex; flex-direction: column; gap: 8px"><span style="width: 40px; height: 40px; border-radius: 12px; background: #fde8e6; color: #b42318; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9.5 17h-19zM12 10v4M12 17h.01"></path></svg></span><span style="font-size: 15px; font-weight: 600">Report incident</span></a>
+<a href="ModCheckout.dc.html" style="padding: 14px; border-radius: 16px; background: #ffffff; color: #262a67; text-decoration: none; display: flex; flex-direction: column; gap: 8px"><span style="width: 40px; height: 40px; border-radius: 12px; background: #ffe7dc; color: #c93a00; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span><span style="font-size: 15px; font-weight: 600">Check-out at stop</span></a>
+<a href="ModOpsChat.dc.html" style="padding: 14px; border-radius: 16px; background: #ffffff; color: #262a67; text-decoration: none; display: flex; flex-direction: column; gap: 8px"><span style="width: 40px; height: 40px; border-radius: 12px; background: #e6e8f5; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"></path></svg></span><span style="font-size: 15px; font-weight: 600">Contact ops</span></a>
+<a href="ModReport.dc.html" style="padding: 14px; border-radius: 16px; background: #ffffff; color: #262a67; text-decoration: none; display: flex; flex-direction: column; gap: 8px"><span style="width: 40px; height: 40px; border-radius: 12px; background: #e6e8f5; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zM14 3v5h5"></path></svg></span><span style="font-size: 15px; font-weight: 600">Trip report</span></a>
+</div>
+
+<p style="margin: 0; display: flex; gap: 8px; align-items: center; font-size: 13px; line-height: 18px; color: #5b5f86"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#262a67" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M12 21s-7-6.1-7-11.5A7 7 0 0 1 19 9.5C19 14.9 12 21 12 21zM12 7a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z"></path></svg>Location shared with Sunrise Tours ops and guardians · updated 10:02</p>
+</div>
+<div style="position: absolute; left: 0; right: 0; bottom: 0; height: 120px">
+<dc-import name="TabBar" role="moderator" active="bus" hint-size="390px,120px"></dc-import>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const S = [['Desert camp', '09:45', 'done'], ['Hegra', '10:30', 'next'], ['Elephant Rock', '17:30', 'later'], ['Camp', '21:00', 'later']];
+    const stops = S.map(([t, time, st]) => ({ t, time,
+      bar: 'height: 6px; margin-inline-end: 4px; border-radius: 999px; background: ' + (st === 'done' ? '#f6f3e4;' : st === 'next' ? '#ff6c2e;' : '#31367a;') }));
+    return { stops };
+  }
+}
+</script>
+</body>
+</html>

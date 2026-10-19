@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Org staff · Set up sign-in code</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="min-height: 1000px; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif; display: flex; flex-direction: column">
+<header style="border-bottom: 1px solid #e3dfc9">
+<div style="max-width: 1200px; margin: 0 auto; box-sizing: border-box; padding: 14px 24px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; justify-content: space-between">
+<img src="../assets/1fbce194fcb16bf54904c32c189fca31.svg" alt="Trips Enjoy" style="height: 40px; width: auto">
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 16px">
+<span style="display: flex; align-items: center; gap: 10px; font-size: 14px"><img src="../assets/697a49af6be5a077ae1851c1a8b9dfcd.svg" alt="" style="width: 32px; height: 32px; border-radius: 10px; object-fit: cover; flex-shrink: 0"><span style="display: flex; flex-direction: column"><span style="font-weight: 600">Sunrise Tours Co.</span><span style="font-size: 12px; color: #5b5f86">rana.fadel@sunrisetours.sa</span></span></span>
+<a href="WebHome.dc.html" style="height: 44px; box-sizing: border-box; padding: 0 16px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-size: 15px; font-weight: 600; display: flex; align-items: center; text-decoration: none">Sign out</a>
+</div>
+</div>
+</header>
+
+<main style="flex-grow: 1; width: 100%; max-width: 1200px; margin: 0 auto; box-sizing: border-box; padding: 40px 24px 48px; display: flex; flex-wrap: wrap; gap: 32px; align-items: flex-start">
+
+<section aria-labelledby="sc-h" style="flex: 3 1 520px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 32px; display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 14px; font-weight: 600; color: #c93a00">Step 2 of 2 · before your workspace opens</span>
+<h1 id="sc-h" style="margin: 0; font-size: 30px; line-height: 38px; font-weight: 700">{{title}}</h1>
+<p style="margin: 0; font-size: 16px; line-height: 24px; color: #5b5f86">{{lead}}</p>
+</div>
+
+<sc-if value="{{isChoose}}" hint-placeholder-val="{{true}}">
+<fieldset style="margin: 0; padding: 0; border: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px">
+<legend style="padding: 0 0 10px; font-size: 14px; font-weight: 600">How do you want to get your code?</legend>
+<sc-for list="{{methods}}" as="m" hint-placeholder-count="2">
+<label style="{{m.style}}">
+<span style="display: flex; justify-content: space-between; align-items: center; width: 100%"><span style="width: 44px; height: 44px; border-radius: 12px; background: #e6e8f5; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{m.icon}}"></path></svg></span><input type="radio" name="method" checked="{{m.on}}" onChange="{{m.pick}}" style="width: 20px; height: 20px; margin: 0; accent-color: #262a67"></span>
+<span style="font-size: 17px; font-weight: 600">{{m.t}}</span>
+<span style="font-size: 14px; line-height: 20px; color: #5b5f86">{{m.d}}</span>
+</label>
+</sc-for>
+</fieldset>
+<button type="button" onClick="{{toVerify}}" style="height: 52px; border: 0; border-radius: 12px; background: #ff6c2e; color: #262a67; font: inherit; font-size: 16px; font-weight: 700; cursor: pointer">Continue</button>
+</sc-if>
+
+<sc-if value="{{isApp}}" hint-placeholder-val="{{false}}">
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: center; padding: 16px; border-radius: 16px; background: #f6f3e4">
+<img src="../assets/820ae1ed630eb3e04ea4d7ce91f50535.png" alt="QR code to add Trips Enjoy to your authenticator app" style="width: 140px; height: 140px; border-radius: 12px; background: #fff; padding: 8px; box-sizing: border-box">
+<div style="flex: 1 1 240px; display: flex; flex-direction: column; gap: 6px"><span style="font-size: 15px; font-weight: 600">Scan with Google Authenticator, Microsoft Authenticator or similar</span><span style="font-size: 14px; color: #5b5f86">Can't scan? Enter this key:</span><span style="font-family: ui-monospace, Menlo, monospace; font-size: 16px; font-weight: 600; letter-spacing: 1px">JBSW Y3DP EHPK 3PXP</span><button type="button" style="align-self: flex-start; height: 36px; padding: 0 12px; border-radius: 10px; border: 1px solid #7b7fa6; background: #fff; color: #262a67; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer">Copy key</button></div>
+</div>
+</sc-if>
+
+<sc-if value="{{isCode}}" hint-placeholder-val="{{false}}">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<label for="code" style="font-size: 14px; font-weight: 600">6-digit code</label>
+<input id="code" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" value="{{code}}" onInput="{{setCode}}" disabled="{{paused}}" aria-invalid="{{codeBad}}" aria-describedby="code-msg" style="{{codeStyle}}">
+<sc-if value="{{showMsg}}" hint-placeholder-val="{{false}}"><span id="code-msg" role="alert" style="{{msgStyle}}">{{msg}}</span></sc-if>
+<span style="font-size: 13px; color: #5b5f86">{{hint}}</span>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center">
+<button type="button" onClick="{{verify}}" disabled="{{paused}}" style="{{verifyStyle}}">Verify and open workspace</button>
+<sc-if value="{{isSms}}" hint-placeholder-val="{{true}}"><button type="button" onClick="{{resend}}" disabled="{{paused}}" style="height: 52px; padding: 0 18px; border-radius: 12px; border: 1px solid #7b7fa6; background: #fff; color: #262a67; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Send a new code</button></sc-if>
+<button type="button" onClick="{{back}}" style="height: 52px; padding: 0 12px; border: 0; background: transparent; color: #262a67; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Use a different method</button>
+</div>
+</sc-if>
+
+<sc-if value="{{isDone}}" hint-placeholder-val="{{false}}">
+<div role="status" style="display: flex; gap: 12px; padding: 16px; border-radius: 12px; background: #e3f3ea; color: #1f7a4d"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M5 12.5l4.5 4.5L19 7"></path></svg><span style="font-size: 15px; line-height: 22px; color: #262a67"><strong style="color: #1f7a4d">{{doneMethod}}</strong> From now on you sign in with your email and password, then a code from {{doneVia}}, every time.</span></div>
+<a href="OrgHome.dc.html" style="height: 52px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none">Open Sunrise Tours workspace<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+</sc-if>
+</section>
+
+<aside style="flex: 2 1 320px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+<section aria-labelledby="st-h" style="background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+<h2 id="st-h" style="margin: 0; font-size: 18px; font-weight: 600">Joining Sunrise Tours Co.</h2>
+<ol style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px">
+<sc-for list="{{steps}}" as="s" hint-placeholder-count="3"><li style="display: flex; gap: 10px; align-items: center; font-size: 15px"><span style="{{s.dot}}">{{s.n}}</span><span style="display: flex; flex-direction: column"><span style="font-weight: 600">{{s.t}}</span><span style="font-size: 13px; color: #5b5f86">{{s.d}}</span></span></li></sc-for>
+</ol>
+</section>
+<section aria-labelledby="why-h" style="background: #262a67; color: #f6f3e4; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 8px">
+<h2 id="why-h" style="margin: 0; font-size: 18px; font-weight: 600">Why a code every time?</h2>
+<p style="margin: 0; font-size: 14px; line-height: 21px; color: #b8bad6">Staff accounts can see travelers, children on school trips and company money. Every sign-in needs your password and a fresh code, so a leaked password alone can't open the workspace.</p>
+<p style="margin: 0; font-size: 14px; line-height: 21px; color: #b8bad6">Codes expire after 5 minutes. After 5 wrong codes, sign-in pauses for 15 minutes.</p>
+</section>
+</aside>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"state":{"editor":"enum","options":["choose","verify","wrong","expired","paused","success"],"default":"choose"},"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { step: null, method: 0, code: '', fails: 0, err: '' }; }
+  renderVals() {
+    const P = this.props.state ?? 'choose';
+    const preset = { choose: ['choose', 0, '', ''], verify: ['verify', 0, '', ''], wrong: ['verify', 2, '482910', 'wrong'], expired: ['verify', 0, '736201', 'expired'], paused: ['verify', 5, '', 'paused'], success: ['done', 0, '', ''] }[P] || ['choose', 0, '', ''];
+    const step = this.state.step ?? preset[0];
+    const fails = this.state.step === null ? preset[1] : this.state.fails;
+    const err = this.state.step === null ? preset[3] : this.state.err;
+    const code = this.state.step === null ? preset[2] : this.state.code;
+    const sms = this.state.method === 0;
+    const methods = [
+      { t: 'Text message (SMS)', d: 'We send a code to +966 55 ••• 6612 each time you sign in.', icon: 'M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2' },
+      { t: 'Authenticator app', d: 'Works offline. Scan a QR code once, then read the code from the app.', icon: 'M6 11h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1zM8 11V7a4 4 0 0 1 8 0v4' }
+    ].map((m, i) => ({ ...m, on: i === this.state.method, pick: () => this.setState({ method: i }),
+      style: 'display: flex; flex-direction: column; gap: 8px; padding: 16px; border-radius: 16px; cursor: pointer; ' + (i === this.state.method ? 'border: 2px solid #fb8030; background: #fff7f2;' : 'border: 1px solid #e3dfc9; background: #fff;') }));
+    const paused = err === 'paused';
+    const isVerify = step === 'verify';
+    const left = 5 - fails;
+    const msgs = {
+      wrong: 'That code didn’t match. Check the latest code and try again. ' + left + ' tries left before a 15-minute pause.',
+      expired: 'This code has expired (codes last 5 minutes). ' + (sms ? 'Send a new code and enter it.' : 'Enter the code showing in your app now.'),
+      paused: 'Too many wrong codes. Sign-in is paused for 15 minutes, until 10:47. You can try again then; sending a new code won’t reset the count.'
+    };
+    const tone = paused ? 'color: #b42318;' : 'color: #b42318;';
+    const codeBad = err === 'wrong' || err === 'expired';
+    const title = step === 'choose' ? 'Set up your sign-in code' : step === 'done' ? 'You’re all set, Rana' : (sms ? 'Enter the code we texted you' : 'Add Trips Enjoy to your authenticator app');
+    const lead = step === 'choose' ? 'Sunrise Tours staff sign in with email and password, then a one-time code. Choose where your code comes from.' : step === 'done' ? 'Your sign-in code is set up and your workspace is ready.' : (sms ? 'Sent to +966 55 ••• 6612 at 10:31. It is valid for 5 minutes.' : 'Scan the QR code, then type the 6-digit code the app shows.');
+    const done = step === 'done';
+    const steps = [
+      { n: '1', t: 'Accept invitation', d: 'Invited by Mona Saleh · Support role', st: 'done' },
+      { n: '2', t: 'Set up sign-in code', d: done ? 'Done' : 'Required to continue', st: done ? 'done' : 'cur' },
+      { n: '3', t: 'Open workspace', d: 'Trips, bookings, inbox', st: done ? 'cur' : 'todo' }
+    ].map((s) => ({ ...s, n: s.st === 'done' ? '✓' : s.n, dot: 'width: 28px; height: 28px; flex-shrink: 0; border-radius: 999px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; ' + (s.st === 'done' ? 'background: #262a67; color: #f6f3e4;' : s.st === 'cur' ? 'background: #ff6c2e; color: #262a67;' : 'background: #fff; color: #5b5f86; border: 1px solid #7b7fa6; box-sizing: border-box;') }));
+    return { title, lead, methods, steps,
+      isChoose: step === 'choose', isApp: isVerify && !sms, isCode: isVerify, isSms: sms, isDone: done,
+      code, paused, codeBad, showMsg: !!err, msg: msgs[err] || '', msgStyle: 'font-size: 13px; line-height: 18px; ' + tone,
+      hint: sms ? 'Didn’t get it? You can send a new code after 45 seconds.' : 'The code changes every 30 seconds.',
+      codeStyle: 'height: 60px; max-width: 280px; box-sizing: border-box; border-radius: 8px; background: ' + (paused ? '#f6f3e4' : '#fff') + '; padding: 0 16px; font: inherit; font-size: 26px; font-weight: 600; letter-spacing: 10px; color: #262a67; ' + (codeBad ? 'border: 2px solid #b42318;' : 'border: 1px solid #7b7fa6;'),
+      verifyStyle: 'height: 52px; padding: 0 22px; border: 0; border-radius: 12px; font: inherit; font-size: 16px; font-weight: 700; cursor: pointer; ' + (paused ? 'background: #e3dfc9; color: #5b5f86;' : 'background: #ff6c2e; color: #262a67;'),
+      doneMethod: sms ? 'Text message codes are on.' : 'Authenticator app linked.', doneVia: sms ? 'a text to +966 55 ••• 6612' : 'your authenticator app',
+      setCode: (e) => this.setState({ step, fails, code: e.target.value.replace(/[^0-9]/g, '').slice(0, 6), err: paused ? 'paused' : '' }),
+      toVerify: () => this.setState({ step: 'verify', fails: 0, code: '', err: '' }),
+      back: () => this.setState({ step: 'choose', fails, code: '', err: paused ? 'paused' : '' }),
+      resend: () => this.setState({ step: 'verify', fails, code: '', err: '' }),
+      verify: () => { if (paused) return; if (code === '482913') { this.setState({ step: 'done', fails, code, err: '' }); return; } const f = fails + 1; this.setState({ step: 'verify', fails: f, code, err: f >= 5 ? 'paused' : 'wrong' }); } };
+  }
+}
+</script>
+</body>
+</html>

@@ -56,6 +56,20 @@ const getBooking = bookingAuthenticatedProcedure
     );
   });
 
+const refundPreview = bookingAuthenticatedProcedure
+  .input(getBookingSchema)
+  .handler(async ({ context, input }) => {
+    const svc = createBookingService({ db: context.db });
+    return await svc.refundPreview(
+      {
+        accountId: context.auth.accountId,
+        tenantId: context.auth.activeTenantId,
+        role: context.auth.activeRole,
+      },
+      input.bookingId,
+    );
+  });
+
 const listMyBookings = bookingAuthenticatedProcedure
   .output(bookingDtoSchema.array())
   .handler(async ({ context }) => {
@@ -76,6 +90,7 @@ export const routes = {
   createBooking,
   cancelBooking,
   getBooking,
+  refundPreview,
   listMyBookings,
   listOrganizationBookings,
 };

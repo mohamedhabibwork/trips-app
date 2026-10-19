@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Driver · Licence and vehicle — web</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif; display: flex; flex-direction: column">
+<div style="height: 72px; padding: 0 48px; display: flex; align-items: center; justify-content: space-between; background: #ffffff; border-bottom: 1px solid #e3dfc9">
+<img src="../assets/1fbce194fcb16bf54904c32c189fca31.svg" alt="Trips Enjoy" style="height: 40px; width: auto">
+<span style="font-size: 14px; color: #5b5f86">trips-enjoy.com/register/driver · Saved as draft · <a href="#" style="font-weight: 600">Save and exit</a></span>
+</div>
+<div style="flex-grow: 1; display: flex; justify-content: center; padding: 40px 48px; gap: 48px">
+<dc-import name="WebStepper" role="driver" active="{{three}}" hint-size="240px,300px"></dc-import>
+<div style="width: 640px; background: #ffffff; border-radius: 20px; padding: 32px; display: flex; flex-direction: column; gap: 18px; box-shadow: 0 1px 2px rgba(38,42,103,.06), 0 6px 20px rgba(38,42,103,.08)">
+<h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Licence and vehicle</h1>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px">
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="v-lic" style="font-size: 14px; font-weight: 600">Licence number</label><input id="v-lic" value="DL-55271" style="height: 48px; min-width: 0; padding: 0 14px; border-radius: 8px; border: 1px solid #7b7fa6; font-family: inherit; font-size: 16px; color: #262a67"></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="v-exp" style="font-size: 14px; font-weight: 600">Expiry date</label><input id="v-exp" value="12/08/2029" style="height: 48px; min-width: 0; padding: 0 14px; border-radius: 8px; border: 1px solid #7b7fa6; font-family: inherit; font-size: 16px; color: #262a67"></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="v-cls" style="font-size: 14px; font-weight: 600">Licence class</label><select id="v-cls" style="height: 48px; min-width: 0; padding: 0 10px; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; font-family: inherit; font-size: 16px; color: #262a67"><option>Public bus</option><option>Private</option><option>Heavy</option></select></div>
+</div>
+<fieldset style="margin: 0; padding: 0; border: none">
+<legend style="padding: 0; margin-bottom: 8px; font-size: 14px; font-weight: 600">Which vehicle will you drive?</legend>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
+<label style="display: flex; gap: 10px; align-items: center; padding: 14px; border-radius: 12px; border: 2px solid #fb8030; font-size: 15px; font-weight: 600"><input type="radio" name="veh" checked="" style="width: 18px; height: 18px; accent-color: #262a67">My own vehicle</label>
+<label style="display: flex; gap: 10px; align-items: center; padding: 14px; border-radius: 12px; border: 1px solid #7b7fa6; font-size: 15px; font-weight: 600"><input type="radio" name="veh" style="width: 18px; height: 18px; accent-color: #262a67">Organization's vehicles only</label>
+</div>
+</fieldset>
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px">
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="v-pl" style="font-size: 14px; font-weight: 600">Plate number</label><input id="v-pl" dir="auto" value="ر س ط 4821" style="height: 48px; min-width: 0; padding: 0 14px; border-radius: 8px; border: 1px solid #7b7fa6; font-family: inherit; font-size: 16px; color: #262a67"></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="v-mk" style="font-size: 14px; font-weight: 600">Make and model</label><input id="v-mk" value="Toyota Coaster" style="height: 48px; min-width: 0; padding: 0 14px; border-radius: 8px; border: 1px solid #7b7fa6; font-family: inherit; font-size: 16px; color: #262a67"></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="v-yr" style="font-size: 14px; font-weight: 600">Year</label><input id="v-yr" value="2021" style="height: 48px; min-width: 0; padding: 0 14px; border-radius: 8px; border: 1px solid #7b7fa6; font-family: inherit; font-size: 16px; color: #262a67"></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="v-st" style="font-size: 14px; font-weight: 600">Seats</label><input id="v-st" value="30" style="height: 48px; min-width: 0; padding: 0 14px; border-radius: 8px; border: 1px solid #7b7fa6; font-family: inherit; font-size: 16px; color: #262a67"></div>
+</div>
+<div style="display: flex; justify-content: space-between; margin-top: auto">
+<a href="WebApply.dc.html" style="height: 48px; padding: 0 24px; box-sizing: border-box; border-radius: 12px; border: 1px solid #7b7fa6; color: #262a67; font-size: 16px; font-weight: 600; display: flex; align-items: center; text-decoration: none">Back</a>
+<a href="WebDrvDocs.dc.html" style="height: 48px; padding: 0 28px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 16px; font-weight: 600; display: flex; align-items: center; text-decoration: none">Continue</a>
+</div>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+renderVals() { return { three: 3 }; }
+}
+</script>
+</body>
+</html>

@@ -2,6 +2,10 @@ import { publicProcedure } from "../index";
 import type { AppRouter, AppRouterClient } from "../types";
 import { lookupsRouter } from "./lookups";
 import { serviceRouters } from "./services";
+import { travelerAccountRouter } from "./traveler-account";
+import { travelerAlbumsRouter } from "./traveler-media";
+import { travelerReceiptsRouter } from "./traveler-receipts";
+import { travelerTripDayRouter } from "./traveler-trip-day";
 
 export type { AppRouter, AppRouterClient };
 
@@ -20,6 +24,14 @@ export const appRouter = {
     }),
   lookups: lookupsRouter,
   ...serviceRouters,
+  traveler: {
+    // Profile/notification/plan-overview/privacy surface from the traveler service.
+    ...serviceRouters.traveler,
+    tripDay: travelerTripDayRouter,
+    albums: travelerAlbumsRouter,
+    receipts: travelerReceiptsRouter,
+    account: travelerAccountRouter,
+  },
   organization: {
     ...serviceRouters.organization,
     employees: {

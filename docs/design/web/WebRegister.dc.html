@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Register — choose account type</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+.te-rc:hover{box-shadow:0 2px 4px rgba(38,42,103,.08),0 12px 32px rgba(38,42,103,.14)}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif; display: flex; flex-direction: column">
+<div style="height: 72px; padding: 0 48px; display: flex; align-items: center; justify-content: space-between; background: #ffffff; border-bottom: 1px solid #e3dfc9">
+<img src="../assets/1fbce194fcb16bf54904c32c189fca31.svg" alt="Trips Enjoy" style="height: 40px; width: auto">
+<span style="font-size: 14px; color: #5b5f86">Already have an account? <a href="WebSignIn.dc.html" style="font-weight: 600">Sign in</a></span>
+</div>
+<div style="flex-grow: 1; display: flex; flex-direction: column; align-items: center; padding: 48px; gap: 32px">
+<div style="display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center">
+<span style="font-size: 13px; font-weight: 600; color: #5b5f86">trips-enjoy.com/register</span>
+<h1 style="margin: 0; font-size: 40px; line-height: 48px; font-weight: 700">How will you use Trips Enjoy?</h1>
+<p style="margin: 0; font-size: 16px; color: #5b5f86">Each account type has its own sign-up. You can add another role later from your profile.</p>
+</div>
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; width: 100%; max-width: 1240px">
+<sc-for list="{{roles}}" as="r" hint-placeholder-count="4">
+<a href="{{r.href}}" class="te-rc" style="display: flex; flex-direction: column; border-radius: 20px; background: #ffffff; overflow: hidden; color: #262a67; text-decoration: none; box-shadow: 0 1px 2px rgba(38,42,103,.06), 0 6px 20px rgba(38,42,103,.08)">
+<img src="{{r.img}}" alt="" style="width: 100%; height: 200px; object-fit: cover; object-position: {{r.pos}}">
+<span style="padding: 20px; display: flex; flex-direction: column; gap: 8px; flex-grow: 1">
+<span style="display: flex; justify-content: space-between; align-items: center"><span style="font-size: 20px; font-weight: 600">{{r.t}}</span><sc-if value="{{r.review}}" hint-placeholder-val="{{false}}"><span style="padding: 2px 10px; border-radius: 999px; background: #f89e23; font-size: 12px; font-weight: 600">Reviewed</span></sc-if></span>
+<span style="font-size: 15px; line-height: 22px; color: #5b5f86">{{r.d}}</span>
+<span style="margin-top: auto; padding-top: 12px; font-size: 13px; font-weight: 600; color: #5b5f86">{{r.url}}</span>
+<span style="font-size: 15px; font-weight: 600; color: #c93a00">{{r.cta}}</span>
+</span>
+</a>
+</sc-for>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+renderVals() {
+return { roles: [
+{ t: 'Traveler', d: 'Book trips and seats for you, your family or your group.', href: 'WebSignUp.dc.html', url: '/register/traveler', cta: 'Sign up as a traveler', img: '../assets/7af26845f1899d68ac8358f14ccdccea.png', pos: 'center', review: false },
+{ t: 'Driver', d: 'Drive group buses and accept trip assignments.', href: 'WebSignUpDriver.dc.html', url: '/register/driver', cta: 'Apply as a driver', img: '../assets/92f31a1e8051b0122485e134ddb4f444.svg', pos: 'center', review: true },
+{ t: 'Photographer', d: 'Offer trip photography and deliver galleries.', href: 'WebSignUpPhotographer.dc.html', url: '/register/photographer', cta: 'Apply as a photographer', img: '../assets/8285215df674a3dee0a35b58d0d931e6.svg', pos: 'center', review: true },
+{ t: 'Organization', d: 'Sell trips, events and group bookings as a business or school.', href: 'OrgRegister.dc.html', url: '/register/organization', cta: 'Register your organization', img: '../assets/e15e301529dfca735deed42db0d8dd3c.png', pos: 'center 80%', review: true }
+] };
+}
+}
+</script>
+</body>
+</html>

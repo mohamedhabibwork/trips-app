@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Phone field</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;family=Cairo:wght@500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+.te-pf-box:focus-within{outline:2px solid #262a67;outline-offset:2px}
+.te-pf-btn:focus-visible,.te-pf-opt:focus-visible,.te-pf-q:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+.te-pf-in:focus{outline:none}
+.te-pf-opt:hover{background:#f6f3e4}
+</style>
+</helmet>
+<div dir="{{dir}}" style="{{rootStyle}}">
+<label for="{{fieldId}}" style="font-size: 14px; line-height: 20px; font-weight: 600">{{label}}</label>
+<div dir="ltr" style="position: relative">
+<div class="te-pf-box" style="{{boxStyle}}">
+<button class="te-pf-btn" onClick="{{toggle}}" aria-haspopup="listbox" aria-expanded="{{openStr}}" aria-label="{{countryAria}}" style="height: 100%; display: flex; align-items: center; gap: 6px; padding: 0 10px 0 12px; border: none; border-right: 1px solid #e3dfc9; border-radius: 8px 0 0 8px; background: transparent; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif; cursor: pointer">
+<span style="position: relative; width: 26px; height: 18px; border-radius: 3px; overflow: hidden; flex-shrink: 0; box-shadow: 0 0 0 1px rgba(38,42,103,.15)">
+<sc-for list="{{c.flag}}" as="f" hint-placeholder-count="3"><span style="{{f}}"></span></sc-for>
+</span>
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"></path></svg>
+</button>
+<span style="padding-left: 12px; font-size: 17px; font-weight: 500; color: #5b5f86">{{c.dial}}</span>
+<input class="te-pf-in" id="{{fieldId}}" type="tel" inputmode="tel" autocomplete="tel-national" value="{{val}}" onChange="{{onInput}}" placeholder="{{c.ph}}" aria-invalid="{{invalidStr}}" aria-describedby="{{descId}}" style="flex-grow: 1; min-width: 0; height: 100%; box-sizing: border-box; padding: 0 14px 0 8px; border: none; border-radius: 0 8px 8px 0; background: transparent; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif; font-size: 17px; letter-spacing: .5px">
+</div>
+<sc-if value="{{open}}" hint-placeholder-val="{{false}}">
+<div style="position: absolute; top: 58px; left: 0; z-index: 5; width: 300px; background: #ffffff; border-radius: 12px; border: 1px solid #e3dfc9; box-shadow: 0 8px 30px rgba(38,42,103,.16); padding: 8px; display: flex; flex-direction: column; gap: 6px">
+<input class="te-pf-q" aria-label="Search countries" placeholder="{{searchPh}}" value="{{q}}" onChange="{{onQ}}" style="height: 44px; box-sizing: border-box; padding: 0 12px; border-radius: 8px; border: 1px solid #7b7fa6; font-family: inherit; font-size: 15px; color: #262a67">
+<div role="listbox" aria-label="Country" style="max-height: 260px; overflow: auto; display: flex; flex-direction: column">
+<sc-for list="{{list}}" as="o" hint-placeholder-count="6">
+<button class="te-pf-opt" role="option" aria-selected="{{o.sel}}" onClick="{{o.pick}}" style="{{o.style}}">
+<span style="position: relative; width: 26px; height: 18px; border-radius: 3px; overflow: hidden; flex-shrink: 0; box-shadow: 0 0 0 1px rgba(38,42,103,.15)">
+<sc-for list="{{o.flag}}" as="f" hint-placeholder-count="3"><span style="{{f}}"></span></sc-for>
+</span>
+<span style="flex-grow: 1; text-align: start; font-size: 15px">{{o.nm}}</span>
+<span style="font-size: 15px; font-weight: 600; color: #5b5f86">{{o.dial}}</span>
+</button>
+</sc-for>
+</div>
+</div>
+</sc-if>
+</div>
+<sc-if value="{{hasError}}" hint-placeholder-val="{{false}}">
+<span id="{{descId}}" style="display: flex; gap: 6px; align-items: center; font-size: 13px; line-height: 18px; font-weight: 500; color: #b42318"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v5M12 16.5v.01"></path></svg>{{error}}</span>
+</sc-if>
+<sc-if value="{{hasHelper}}" hint-placeholder-val="{{false}}">
+<span id="{{descId}}" style="font-size: 13px; line-height: 18px; font-weight: 500; color: #5b5f86">{{helper}}</span>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"label":{"editor":"text","default":"Mobile number"},"value":{"editor":"text","default":""},"country":{"editor":"enum","options":["SA","AE","EG","KW","QA","BH","OM","JO"],"default":"SA"},"error":{"editor":"text","default":""},"helper":{"editor":"text","default":""},"dir":{"editor":"enum","options":["ltr","rtl"],"default":"ltr"},"fieldId":{"editor":"text","default":"phone"},"$preview":{"width":358,"height":96}}'>
+class Component extends DCLogic {
+constructor(p) { super(p); this.state = { open: false, iso: null, val: null, q: '' }; }
+renderVals() {
+const A = 'position: absolute; ';
+const r = (l, t, w, h, c, extra) => A + 'left: ' + l + '%; top: ' + t + '%; width: ' + w + '%; height: ' + h + '%; background: ' + c + ';' + (extra || '');
+const F = {
+SA: [r(0, 0, 100, 100, '#006c35'), r(22, 28, 56, 16, '#ffffff', 'border-radius: 2px;'), r(22, 62, 56, 6, '#ffffff')],
+AE: [r(0, 0, 100, 34, '#00732f'), r(0, 33, 100, 34, '#ffffff'), r(0, 66, 100, 34, '#111111'), r(0, 0, 27, 100, '#ff0000')],
+EG: [r(0, 0, 100, 34, '#ce1126'), r(0, 33, 100, 34, '#ffffff'), r(0, 66, 100, 34, '#111111'), r(44, 40, 12, 20, '#c09300', 'border-radius: 2px;')],
+KW: [r(0, 0, 100, 34, '#007a3d'), r(0, 33, 100, 34, '#ffffff'), r(0, 66, 100, 34, '#ce1126'), r(0, 0, 32, 100, '#111111', 'clip-path: polygon(0 0, 100% 33%, 100% 67%, 0 100%);')],
+QA: [r(0, 0, 100, 100, '#8a1538'), r(0, 0, 34, 100, '#ffffff', 'clip-path: polygon(0 0, 70% 0, 100% 11%, 70% 22%, 100% 33%, 70% 44%, 100% 55%, 70% 66%, 100% 77%, 70% 88%, 100% 100%, 0 100%);')],
+BH: [r(0, 0, 100, 100, '#ce1126'), r(0, 0, 34, 100, '#ffffff', 'clip-path: polygon(0 0, 70% 0, 100% 20%, 70% 40%, 100% 60%, 70% 80%, 100% 100%, 0 100%);')],
+OM: [r(0, 0, 100, 100, '#db161b'), r(30, 0, 70, 34, '#ffffff'), r(30, 66, 70, 34, '#008000')],
+JO: [r(0, 0, 100, 34, '#111111'), r(0, 33, 100, 34, '#ffffff'), r(0, 66, 100, 34, '#007a3d'), r(0, 0, 50, 100, '#ce1126', 'clip-path: polygon(0 0, 100% 50%, 0 100%);')]
+};
+const C = [
+{ iso: 'SA', nm: 'Saudi Arabia', ar: 'السعودية', dial: '+966', ph: '5X XXX XXXX', g: [2, 3, 4] },
+{ iso: 'AE', nm: 'United Arab Emirates', ar: 'الإمارات', dial: '+971', ph: '5X XXX XXXX', g: [2, 3, 4] },
+{ iso: 'EG', nm: 'Egypt', ar: 'مصر', dial: '+20', ph: '1X XXXX XXXX', g: [2, 4, 4] },
+{ iso: 'KW', nm: 'Kuwait', ar: 'الكويت', dial: '+965', ph: 'XXXX XXXX', g: [4, 4] },
+{ iso: 'QA', nm: 'Qatar', ar: 'قطر', dial: '+974', ph: 'XXXX XXXX', g: [4, 4] },
+{ iso: 'BH', nm: 'Bahrain', ar: 'البحرين', dial: '+973', ph: 'XXXX XXXX', g: [4, 4] },
+{ iso: 'OM', nm: 'Oman', ar: 'عُمان', dial: '+968', ph: 'XXXX XXXX', g: [4, 4] },
+{ iso: 'JO', nm: 'Jordan', ar: 'الأردن', dial: '+962', ph: '7 XXXX XXXX', g: [1, 4, 4] }
+];
+const rtl = (this.props.dir ?? 'ltr') === 'rtl';
+const iso = this.state.iso ?? this.props.country ?? 'SA';
+const c0 = C.find(x => x.iso === iso) || C[0];
+const c = { ...c0, flag: F[c0.iso] };
+const fmt = (s) => { const d = String(s).replace(/\D/g, '').slice(0, c.g.reduce((a, b) => a + b, 0)); const out = []; let i = 0; for (const n of c.g) { if (i >= d.length) break; out.push(d.slice(i, i + n)); i += n; } return out.join(' '); };
+const val = this.state.val ?? fmt(this.props.value ?? '');
+const error = this.props.error ?? '';
+const helper = this.props.helper ?? '';
+const fid = this.props.fieldId ?? 'phone';
+const q = this.state.q.trim().toLowerCase();
+return {
+dir: rtl ? 'rtl' : 'ltr', label: this.props.label ?? 'Mobile number', fieldId: fid, descId: fid + '-desc',
+rootStyle: 'display: flex; flex-direction: column; gap: 6px; color: #262a67; font-family: ' + (rtl ? "Cairo, 'Readex Pro', Tahoma, sans-serif" : 'Outfit, Nunito, system-ui, sans-serif') + ';',
+boxStyle: 'height: 52px; box-sizing: border-box; display: flex; align-items: center; border-radius: 8px; background: #ffffff; border: ' + (error ? '1.5px solid #b42318' : '1px solid #7b7fa6') + ';',
+c, val, q: this.state.q, open: this.state.open, openStr: this.state.open ? 'true' : 'false',
+searchPh: rtl ? 'ابحث عن دولة' : 'Search country',
+countryAria: 'Country: ' + c.nm + ' ' + c.dial + '. Change country',
+invalidStr: error ? 'true' : 'false', error, helper, hasError: !!error, hasHelper: !!helper && !error,
+toggle: () => this.setState({ open: !this.state.open, q: '' }),
+onInput: (e) => this.setState({ val: fmt(e.target.value) }),
+onQ: (e) => this.setState({ q: e.target.value }),
+list: C.filter(x => !q || x.nm.toLowerCase().includes(q) || x.ar.includes(q) || x.dial.includes(q)).map(x => ({
+nm: rtl ? x.ar : x.nm, dial: x.dial, flag: F[x.iso], sel: x.iso === iso ? 'true' : 'false',
+style: 'display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 10px; border: none; border-radius: 8px; color: #262a67; font-family: inherit; cursor: pointer; background: ' + (x.iso === iso ? '#f6f3e4' : '#ffffff') + ';',
+pick: () => this.setState({ iso: x.iso, open: false, val: '' }) }))
+};
+}
+}
+</script>
+</body>
+</html>

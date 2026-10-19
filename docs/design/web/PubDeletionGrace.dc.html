@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Web · Deletion grace period</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+.te-foot a:focus-visible{outline-color:#f89e23}
+.te-nav:hover{color:#c93a00}
+</style>
+</helmet>
+<div style="min-height: 1000px; display: flex; flex-direction: column; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<header style="border-bottom: 1px solid #e3dfc9">
+<div style="max-width: 1200px; margin: 0 auto; box-sizing: border-box; padding: 14px 24px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 32px">
+<a href="WebHome.dc.html" aria-label="Trips Enjoy home" style="display: flex"><img src="../assets/1fbce194fcb16bf54904c32c189fca31.svg" alt="Trips Enjoy" style="height: 40px; width: auto"></a>
+<nav aria-label="Main" style="flex-grow: 1; display: flex; flex-wrap: wrap; gap: 4px 24px">
+<a href="WebExplore.dc.html" class="te-nav" style="padding: 10px 0; font-size: 15px; font-weight: 600; color: #262a67; text-decoration: none">Explore trips</a>
+<a href="WebBusiness.dc.html" class="te-nav" style="padding: 10px 0; font-size: 15px; font-weight: 600; color: #262a67; text-decoration: none">For organizers</a>
+<a href="WebBusiness.dc.html" class="te-nav" style="padding: 10px 0; font-size: 15px; font-weight: 600; color: #262a67; text-decoration: none">For drivers &amp; photographers</a>
+</nav>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px">
+<a href="WebHomeAr.dc.html" lang="ar" dir="rtl" style="height: 44px; padding: 0 12px; display: flex; align-items: center; font-family: Cairo, sans-serif; font-size: 15px; font-weight: 600; color: #262a67; text-decoration: none">العربية</a>
+</div>
+</div>
+</header>
+
+<main style="flex-grow: 1; width: 100%; max-width: 1200px; margin: 0 auto; box-sizing: border-box; padding: 56px 24px; display: flex; justify-content: center">
+
+<sc-if value="{{isActive}}" hint-placeholder-val="{{true}}">
+<section aria-labelledby="g-h" style="width: 100%; max-width: 760px; background: #ffffff; border-radius: 20px; padding: 40px; box-sizing: border-box; display: flex; flex-direction: column; gap: 24px">
+<span style="align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 999px; background: #fdf0d5; color: #8a4b00; font-size: 13px; font-weight: 700"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7v5l3 2"></path></svg>Deletion scheduled · 16 days left</span>
+<div style="display: flex; flex-direction: column; gap: 10px">
+<h1 id="g-h" style="margin: 0; font-size: 34px; line-height: 42px; font-weight: 700">Welcome back, Mariam. Your account is set to be deleted.</h1>
+<p style="margin: 0; font-size: 17px; line-height: 26px; color: #5b5f86">You asked us to delete this account on Thu 2 Oct 2026. Continuing now cancels that request and restores everything as it was.</p>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px">
+<div style="padding: 16px 18px; border-radius: 16px; background: #f6f3e4; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 13px; color: #5b5f86">Grace period ends</span><span style="font-size: 18px; font-weight: 700">Fri 31 Oct 2026, 23:59</span><span style="font-size: 13px; color: #5b5f86">Cairo time · day 30</span></div>
+<div style="padding: 16px 18px; border-radius: 16px; background: #fde8e6; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 13px; color: #b42318; font-weight: 600">Deleted for good</span><span style="font-size: 18px; font-weight: 700">Sat 1 Nov 2026</span><span style="font-size: 13px; color: #5b5f86">Day 31 · can't be undone</span></div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 10px">
+<h2 style="margin: 0; font-size: 18px; font-weight: 600">While deletion is scheduled</h2>
+<ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; font-size: 15px; line-height: 22px">
+<li style="display: flex; gap: 10px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#b42318" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 2px"><path d="M6 6l12 12M18 6L6 18"></path></svg><span>You can't book trips, pay, or create trips. You can look around and restore the account.</span></li>
+<li style="display: flex; gap: 10px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1f7a4d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 2px"><path d="M5 12.5l4.5 4.5L19 7"></path></svg><span>Your upcoming booking, Alexandria by the Sea on Fri 24 Oct (2 seats, 1,780 EGP), stays on if you restore.</span></li>
+<li style="display: flex; gap: 10px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8a4b00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 2px"><path d="M12 3l9.5 17h-19zM12 10v4M12 17h.01"></path></svg><span>If deletion completes, future bookings are cancelled and refunded in full. Trip records are kept 5 years and payment records 7 years, as the law requires.</span></li>
+</ul>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 12px; padding-top: 8px; border-top: 1px solid #e3dfc9">
+<button type="button" onClick="{{restore}}" style="flex: 2 1 260px; height: 48px; border: 0; border-radius: 12px; background: #ff6c2e; color: #262a67; font: inherit; font-size: 15px; font-weight: 700; cursor: pointer">Restore and continue</button>
+<a href="WebHome.dc.html" style="flex: 1 1 160px; height: 48px; box-sizing: border-box; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-size: 15px; font-weight: 600; display: flex; align-items: center; justify-content: center; text-decoration: none">Sign out, keep deletion</a>
+</div>
+</section>
+</sc-if>
+
+<sc-if value="{{isRestored}}" hint-placeholder-val="{{false}}">
+<section aria-labelledby="r-h" role="status" style="width: 100%; max-width: 640px; background: #ffffff; border-radius: 20px; padding: 40px; box-sizing: border-box; display: flex; flex-direction: column; gap: 20px">
+<span style="width: 64px; height: 64px; border-radius: 999px; background: #e3f3ea; color: #1f7a4d; display: flex; align-items: center; justify-content: center"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg></span>
+<h1 id="r-h" style="margin: 0; font-size: 32px; line-height: 40px; font-weight: 700">Your account is restored</h1>
+<p style="margin: 0; font-size: 17px; line-height: 26px; color: #5b5f86">The deletion request is cancelled. Your bookings, family members and receipts are all here, and you can book and pay again. We've emailed a confirmation to m••••@gmail.com.</p>
+<div style="display: flex; gap: 12px; padding: 14px 16px; border-radius: 12px; background: #f6f3e4; font-size: 15px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v2a2.5 2.5 0 0 0 0 5v3a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-3a2.5 2.5 0 0 0 0-5zM14 5v14"></path></svg><span>Next up: <strong>Alexandria by the Sea</strong> · Fri 24 Oct · 2 seats</span></div>
+<a href="WebBookings.dc.html" style="height: 48px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center; text-decoration: none">Go to my bookings</a>
+<span style="font-size: 13px; color: #5b5f86">Organization owners land on their workspace instead. <a href="OrgHome.dc.html" style="font-weight: 600">Open workspace</a></span>
+</section>
+</sc-if>
+
+<sc-if value="{{isPassed}}" hint-placeholder-val="{{false}}">
+<section aria-labelledby="p-h" style="width: 100%; max-width: 640px; background: #ffffff; border-radius: 20px; padding: 40px; box-sizing: border-box; display: flex; flex-direction: column; gap: 20px">
+<span style="width: 64px; height: 64px; border-radius: 999px; background: #fde8e6; color: #b42318; display: flex; align-items: center; justify-content: center"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"></path></svg></span>
+<h1 id="p-h" style="margin: 0; font-size: 32px; line-height: 40px; font-weight: 700">This account no longer exists</h1>
+<p style="margin: 0; font-size: 17px; line-height: 26px; color: #5b5f86">The 30-day grace period ended on Fri 31 Oct 2026 and the account was deleted on Sat 1 Nov. It can't be signed in to or restored.</p>
+<p style="margin: 0; font-size: 15px; line-height: 23px; color: #5b5f86">Upcoming bookings were cancelled and refunded in full. Records the law requires us to keep (trips for 5 years, payments for 7 years) are held separately and aren't linked to a usable account.</p>
+<div style="display: flex; flex-wrap: wrap; gap: 12px">
+<a href="WebExplore.dc.html" style="flex: 1 1 200px; height: 48px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center; text-decoration: none">Create a new account</a>
+<a href="mailto:support@trips-enjoy.com" style="flex: 1 1 160px; height: 48px; box-sizing: border-box; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-size: 15px; font-weight: 600; display: flex; align-items: center; justify-content: center; text-decoration: none">Contact support</a>
+</div>
+</section>
+</sc-if>
+</main>
+
+<footer class="te-foot" style="background: #262a67; color: #b8bad6">
+<div style="max-width: 1200px; margin: 0 auto; box-sizing: border-box; padding: 20px 24px; display: flex; flex-wrap: wrap; gap: 12px 24px; justify-content: space-between; font-size: 14px">
+<span>© 2026 Trips Enjoy</span>
+<span style="display: flex; flex-wrap: wrap; gap: 20px"><a href="WebLegal.dc.html" style="color: #b8bad6">Terms</a><a href="WebLegal.dc.html" style="color: #b8bad6">Privacy</a></span>
+</div>
+</footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"state":{"editor":"enum","options":["active","restored","passed"],"default":"active"},"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { restored: false }; }
+  renderVals() {
+    const s = this.state.restored ? 'restored' : (this.props.state ?? 'active');
+    return { isActive: s === 'active', isRestored: s === 'restored', isPassed: s === 'passed', restore: () => this.setState({ restored: true }) };
+  }
+}
+</script>
+</body>
+</html>

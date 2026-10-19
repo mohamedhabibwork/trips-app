@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Moderator · Install</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="height: 100%; box-sizing: border-box; padding: 56px 16px 24px; display: flex; flex-direction: column; gap: 14px">
+
+<div style="display: flex; align-items: center; gap: 10px">
+<img src="../assets/1fbce194fcb16bf54904c32c189fca31.svg" alt="Trips Enjoy" style="height: 32px; width: auto">
+<span style="margin-inline-start: auto; padding: 4px 10px; border-radius: 999px; background: #262a67; color: #f6f3e4; font-size: 12px; font-weight: 700">Moderator</span>
+</div>
+
+<div style="height: 168px; flex-shrink: 0; border-radius: 20px; overflow: hidden; position: relative; background: #262a67">
+<img src="../assets/e15e301529dfca735deed42db0d8dd3c.png" alt="A trip supervisor with a clipboard beside a bus and a group of travelers" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 45%">
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 4px">
+<h1 style="margin: 0; font-size: 26px; line-height: 32px; font-weight: 700">{{title}}</h1>
+<p style="margin: 0; font-size: 15px; line-height: 21px; color: #5b5f86">{{lead}}</p>
+</div>
+
+<sc-if value="{{showSteps}}" hint-placeholder-val="{{true}}">
+<section aria-labelledby="st-h" style="padding: 14px 16px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 8px"><h2 id="st-h" style="margin: 0; font-size: 16px; font-weight: 600">{{stepsTitle}}</h2><button type="button" onClick="{{swap}}" style="min-height: 44px; border: none; background: none; padding: 0; font: inherit; font-size: 14px; font-weight: 600; color: #c93a00; cursor: pointer; text-decoration: underline">{{swapLabel}}</button></div>
+<ol style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px">
+<sc-for list="{{steps}}" as="s" hint-placeholder-count="3">
+<li style="display: flex; align-items: center; gap: 12px; font-size: 15px; line-height: 20px">
+<span aria-hidden="true" style="width: 28px; height: 28px; flex-shrink: 0; border-radius: 999px; background: #262a67; color: #f6f3e4; font-size: 14px; font-weight: 700; display: flex; align-items: center; justify-content: center">{{s.n}}</span>
+<span style="flex-grow: 1">{{s.t}}</span>
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5b5f86" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="{{s.icon}}"></path></svg>
+</li>
+</sc-for>
+</ol>
+</section>
+</sc-if>
+
+<div style="{{noteStyle}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 1px"><path d="{{noteIcon}}"></path></svg><span>{{note}}</span></div>
+
+<div style="margin-top: auto; display: flex; flex-direction: column; gap: 6px">
+<a href="{{primaryHref}}" style="height: 52px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 16px; font-weight: 700; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px">{{primary}}<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+<span style="font-size: 12px; color: #5b5f86; text-align: center">Installing is optional. Everything works in the browser too.</span>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"state":{"editor":"enum","options":["notInstalled","installed","unsupported","noVehicle"],"default":"notInstalled"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { android: false }; }
+  renderVals() {
+    const st = this.props.state || 'notInstalled';
+    const SHARE = 'M12 4v12M7 9l5-5 5 5M5 14v5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-5', PLUS = 'M12 5v14M5 12h14', CHECK = 'M5 12.5l4.5 4.5L19 7', MORE = 'M5 12h.01M12 12h.01M19 12h.01', HOME = 'M4 11l8-7 8 7v8a1 1 0 0 1-1 1h-5v-6h-4v6H5a1 1 0 0 1-1-1z';
+    const and = this.state.android;
+    const steps = (and
+      ? [['Tap the menu (three dots) in Chrome', MORE], ['Choose Install app or Add to Home screen', PLUS], ['Open Trips Enjoy Moderator from your home screen', HOME]]
+      : [['Tap the Share button in Safari', SHARE], ['Choose Add to Home Screen', PLUS], ['Tap Add, then open it from your home screen', HOME]]
+    ).map(([t, icon], i) => ({ n: String(i + 1), t, icon }));
+    const info = 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 11v5M12 8h.01';
+    const S = {
+      notInstalled: ['Add the moderator app to your phone', 'One quick step before your trip. It opens straight to your vehicle and keeps working when the signal drops.', 'ios', 'On iPhone, notices such as a vehicle change only arrive once the app is on your home screen.', 'info', 'Continue in browser', 'ModSignIn.dc.html'],
+      installed: ['You are all set', 'Trips Enjoy Moderator is on your home screen. Sign in once and it opens to your vehicle.', 'none', 'Installed on this phone. Notifications are asked for later, from the screen that needs them.', 'ok', 'Sign in', 'ModSignIn.dc.html'],
+      unsupported: ['This browser cannot install apps', 'You can still do everything here: check-in, manifest, incidents and the trip report.', 'ios', 'Open this link in Safari on iPhone or Chrome on Android to install. The steps are below.', 'warn', 'Continue in browser', 'ModSignIn.dc.html'],
+      noVehicle: ['No vehicle assigned yet', 'You are signed in, but operations have not assigned you to a vehicle. Nothing is shown until they do.', 'none', 'You will get a notice when Sunrise Tours Co. assigns you. Ask operations if your trip is today.', 'info', 'Contact operations', 'ModOpsChat.dc.html']
+    };
+    const s = S[st] || S.notInstalled;
+    const T = { info: ['#e6e8f5', '#262a67', info], ok: ['#e3f3ea', '#1f7a4d', CHECK], warn: ['#fdf0d5', '#8a4b00', 'M12 3l9.5 17h-19zM12 10v4M12 17h.01'] }[s[4]];
+    return {
+      title: s[0], lead: s[1], showSteps: s[2] !== 'none', steps,
+      stepsTitle: and ? 'On Android' : 'On iPhone (detected)',
+      swapLabel: and ? 'iPhone steps' : 'Android steps',
+      swap: () => this.setState({ android: !and }),
+      note: s[3], noteIcon: T[2],
+      noteStyle: 'padding: 10px 12px; border-radius: 12px; background: ' + T[0] + '; color: ' + T[1] + '; display: flex; gap: 8px; font-size: 13px; line-height: 18px',
+      primary: s[5], primaryHref: s[6]
+    };
+  }
+}
+</script>
+</body>
+</html>

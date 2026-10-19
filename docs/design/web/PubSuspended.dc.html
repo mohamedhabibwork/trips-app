@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Web · Account suspended</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+.te-foot a:focus-visible{outline-color:#f89e23}
+.te-nav:hover{color:#c93a00}
+</style>
+</helmet>
+<div style="min-height: 1000px; display: flex; flex-direction: column; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<header style="border-bottom: 1px solid #e3dfc9">
+<div style="max-width: 1200px; margin: 0 auto; box-sizing: border-box; padding: 14px 24px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 32px">
+<a href="WebHome.dc.html" aria-label="Trips Enjoy home" style="display: flex"><img src="../assets/1fbce194fcb16bf54904c32c189fca31.svg" alt="Trips Enjoy" style="height: 40px; width: auto"></a>
+<nav aria-label="Main" style="flex-grow: 1; display: flex; flex-wrap: wrap; gap: 4px 24px">
+<a href="WebExplore.dc.html" class="te-nav" style="padding: 10px 0; font-size: 15px; font-weight: 600; color: #262a67; text-decoration: none">Explore trips</a>
+<a href="WebBusiness.dc.html" class="te-nav" style="padding: 10px 0; font-size: 15px; font-weight: 600; color: #262a67; text-decoration: none">For organizers</a>
+<a href="WebBusiness.dc.html" class="te-nav" style="padding: 10px 0; font-size: 15px; font-weight: 600; color: #262a67; text-decoration: none">For drivers &amp; photographers</a>
+</nav>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px">
+<a href="WebHomeAr.dc.html" lang="ar" dir="rtl" style="height: 44px; padding: 0 12px; display: flex; align-items: center; font-family: Cairo, sans-serif; font-size: 15px; font-weight: 600; color: #262a67; text-decoration: none">العربية</a>
+</div>
+</div>
+</header>
+
+<main style="flex-grow: 1; width: 100%; max-width: 1200px; margin: 0 auto; box-sizing: border-box; padding: 56px 24px; display: flex; justify-content: center">
+<section aria-labelledby="sp-h" style="width: 100%; max-width: 720px; background: #ffffff; border-radius: 20px; padding: 40px; box-sizing: border-box; display: flex; flex-direction: column; gap: 24px">
+<span style="width: 64px; height: 64px; border-radius: 999px; background: #fde8e6; color: #b42318; display: flex; align-items: center; justify-content: center"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 11h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1zM8 11V7a4 4 0 0 1 8 0v4"></path></svg></span>
+<div style="display: flex; flex-direction: column; gap: 10px">
+<h1 id="sp-h" style="margin: 0; font-size: 34px; line-height: 42px; font-weight: 700">Your account is suspended</h1>
+<p style="margin: 0; font-size: 17px; line-height: 26px; color: #5b5f86">Trips Enjoy has stopped access to this account, so you can't sign in right now. This isn't something you can fix by signing in again.</p>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 18px 20px; border-radius: 16px; background: #f6f3e4">
+<span style="font-size: 13px; font-weight: 600; color: #5b5f86">Reason</span>
+<span style="font-size: 18px; font-weight: 600">{{reason}}</span>
+<span style="font-size: 15px; line-height: 22px; color: #5b5f86">{{note}}</span>
+<span style="font-size: 13px; color: #5b5f86">Suspended on Wed 15 Oct 2026 · reference SUS-20418</span>
+</div>
+
+<div style="display: flex; gap: 12px; padding: 16px 18px; border-radius: 12px; background: #e6e8f5">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 2px"><path d="M12 3l7 3v5.5c0 4.4-3 8-7 9.5-4-1.5-7-5.1-7-9.5V6zM9 12l2 2 4-4"></path></svg>
+<span style="font-size: 15px; line-height: 22px"><strong>Nothing has been deleted.</strong> Your profile, bookings, invoices and messages are kept exactly as they were. If the suspension is lifted, everything is there when you sign back in.</span>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 8px">
+<h2 style="margin: 0; font-size: 20px; font-weight: 600">What you can do</h2>
+<p style="margin: 0; font-size: 15px; line-height: 23px; color: #5b5f86">Contact our support team and quote reference SUS-20418. They can explain the decision and tell you what is needed to review it.</p>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 12px; padding-top: 8px; border-top: 1px solid #e3dfc9">
+<a href="mailto:support@trips-enjoy.com?subject=SUS-20418" style="flex: 1 1 220px; height: 48px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16v12H4zM4 7l8 6 8-6"></path></svg>Contact support</a>
+<a href="WebHome.dc.html" style="flex: 1 1 160px; height: 48px; box-sizing: border-box; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-size: 15px; font-weight: 600; display: flex; align-items: center; justify-content: center; text-decoration: none">Sign out</a>
+</div>
+<span style="font-size: 13px; color: #5b5f86">Support replies by email within 2 working days. <a href="WebLegal.dc.html" style="font-weight: 600">Read our terms of use</a></span>
+</section>
+</main>
+
+<footer class="te-foot" style="background: #262a67; color: #b8bad6">
+<div style="max-width: 1200px; margin: 0 auto; box-sizing: border-box; padding: 20px 24px; display: flex; flex-wrap: wrap; gap: 12px 24px; justify-content: space-between; font-size: 14px">
+<span>© 2026 Trips Enjoy</span>
+<span style="display: flex; flex-wrap: wrap; gap: 20px"><a href="WebLegal.dc.html" style="color: #b8bad6">Terms</a><a href="WebLegal.dc.html" style="color: #b8bad6">Privacy</a></span>
+</div>
+</footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"reason":{"editor":"enum","options":["Safety","Fraud or abuse","Document issue","Policy breach","Non-payment","Other"],"default":"Document issue"},"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const R = {
+      'Safety': 'A safety concern was reported on a recent trip and is under review.',
+      'Fraud or abuse': 'We found activity on this account that looks like payment fraud or misuse of coupons.',
+      'Document issue': 'A required document on file has expired or could not be verified. Support will tell you which one to send again.',
+      'Policy breach': 'Activity on this account broke the Trips Enjoy terms of use.',
+      'Non-payment': 'An amount owed to Trips Enjoy is overdue after all payment retries.',
+      'Other': 'Note from the reviewer: the account details don’t match the verified identity. Please contact support.'
+    };
+    const r = this.props.reason ?? 'Document issue';
+    return { reason: r, note: R[r] || R['Document issue'] };
+  }
+}
+</script>
+</body>
+</html>

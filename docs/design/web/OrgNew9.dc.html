@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>New trip · 9 Review &amp; publish</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="min-height: 1000px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="OrgNav" active="Trips" hint-size="248px,1000px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 20px">
+
+<div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 2px">
+<span style="font-size: 14px; color: #5b5f86"><a href="OrgTrips.dc.html" style="font-weight: 600; text-decoration: none">Trips</a> / AlUla Heritage Weekend · Step 9 of 9</span>
+<h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Review &amp; publish</h1>
+</div>
+<span style="font-size: 14px; color: #5b5f86">Publishing uses 1 active trip · 19 of 20 on Growth</span>
+</div>
+
+<nav aria-label="Trip builder steps">
+<ol style="list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{steps}}" as="s" hint-placeholder-count="9">
+<li style="flex: 1 1 100px; min-width: 0"><a href="{{s.href}}" aria-current="{{s.cur}}" style="display: flex; flex-direction: column; gap: 8px; text-decoration: none; color: #262a67"><span style="{{s.bar}}"></span><span style="display: flex; align-items: center; gap: 8px"><span style="{{s.dot}}"><sc-if value="{{s.done}}" hint-placeholder-val="{{false}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg></sc-if><sc-if value="{{s.notDone}}" hint-placeholder-val="{{true}}">{{s.n}}</sc-if></span><span style="{{s.lab}}">{{s.l}}</span></span></a></li>
+</sc-for>
+</ol>
+</nav>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
+<div style="flex: 3 1 520px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+
+<section aria-labelledby="ck-h" style="background: #ffffff; border-radius: 20px; padding: 18px 20px; display: flex; flex-direction: column; gap: 8px">
+<h2 id="ck-h" style="margin: 0 0 4px; font-size: 18px; font-weight: 600">Checks</h2>
+<sc-for list="{{checks}}" as="c" hint-placeholder-count="5">
+<div style="display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border-radius: 12px; background: {{c.bg}}">
+<span style="{{c.ic}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{c.path}}"></path></svg></span>
+<span style="flex: 1; display: flex; flex-direction: column"><span style="font-size: 15px; font-weight: 600">{{c.t}}</span><span style="font-size: 13px; color: #5b5f86">{{c.d}}</span></span>
+<sc-if value="{{c.hasLink}}" hint-placeholder-val="{{false}}"><a href="{{c.href}}" style="font-size: 14px; font-weight: 600; white-space: nowrap">{{c.link}}</a></sc-if>
+</div>
+</sc-for>
+</section>
+
+<section aria-labelledby="sm-h" style="background: #ffffff; border-radius: 20px; padding: 18px 0 6px">
+<h2 id="sm-h" style="margin: 0; padding: 0 20px 8px; font-size: 18px; font-weight: 600">Summary</h2>
+<dl style="margin: 0">
+<sc-for list="{{summary}}" as="r" hint-placeholder-count="8">
+<div style="display: grid; grid-template-columns: 130px minmax(0, 1fr) auto; gap: 12px; align-items: baseline; padding: 9px 20px; border-top: 1px solid #e3dfc9; font-size: 14px">
+<dt style="font-weight: 600">{{r.l}}</dt><dd style="margin: 0; color: #262a67">{{r.v}}</dd><a href="{{r.href}}" aria-label="{{r.al}}" style="font-weight: 600">Edit</a>
+</div>
+</sc-for>
+</dl>
+</section>
+</div>
+
+<aside style="flex: 2 1 340px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+<section aria-labelledby="pub-h" style="background: #ffffff; border-radius: 20px; padding: 18px 20px; display: flex; flex-direction: column; gap: 10px">
+<h2 id="pub-h" style="margin: 0; font-size: 18px; font-weight: 600">Publish as</h2>
+<div role="radiogroup" aria-labelledby="pub-h" style="display: flex; flex-direction: column; gap: 8px">
+<sc-for list="{{opts}}" as="o" hint-placeholder-count="3">
+<label style="{{o.style}}"><input type="radio" name="pub" checked="{{o.checked}}" onChange="{{o.on}}" style="width: 20px; height: 20px; margin: 2px 0 0; accent-color: #262a67"><span style="display: flex; flex-direction: column"><span style="font-size: 15px; font-weight: 600">{{o.t}}</span><span style="font-size: 13px; color: #5b5f86">{{o.d}}</span></span></label>
+</sc-for>
+</div>
+<sc-if value="{{isTargeted}}" hint-placeholder-val="{{false}}">
+<div style="display: flex; flex-direction: column; gap: 10px; padding: 12px; border-radius: 12px; background: #f6f3e4">
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="lnk" style="font-size: 14px; font-weight: 600">Invite link</label><div style="display: flex; gap: 8px"><input id="lnk" readonly="readonly" value="trips-enjoy.com/t/alula-sunrise-7Q4K" style="flex: 1; min-width: 0; height: 44px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 10px; font: inherit; font-size: 14px; color: #262a67"><button type="button" style="height: 44px; padding: 0 12px; border-radius: 10px; border: 1px solid #7b7fa6; background: #fff; color: #262a67; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer">Copy</button></div></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="sc" style="font-size: 14px; font-weight: 600">School or company code</label><input id="sc" value="NOOR-G4-2026" style="height: 44px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 10px; font: inherit; font-size: 15px; color: #262a67"><span style="font-size: 13px; color: #5b5f86">Parents use this code to link children for tracking.</span></div>
+</div>
+</sc-if>
+</section>
+
+<section aria-labelledby="pv-h" style="background: #ffffff; border-radius: 20px; padding: 16px; display: flex; flex-direction: column; gap: 10px">
+<h2 id="pv-h" style="margin: 0; font-size: 16px; font-weight: 600">Preview · as travelers see it</h2>
+<div style="border-radius: 20px; border: 1px solid #e3dfc9; overflow: hidden">
+<div style="position: relative"><img src="../assets/44a218548719fe367b614a0dd5151345.svg" alt="AlUla sandstone rocks under a night sky" style="display: block; width: 100%; aspect-ratio: 16 / 8; object-fit: cover"><span style="position: absolute; left: 12px; top: 12px; padding: 2px 10px; border-radius: 999px; background: #f89e23; color: #262a67; font-size: 12px; font-weight: 700">Almost full · 4 left</span></div>
+<div style="padding: 12px 14px; display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 17px; font-weight: 700">AlUla Heritage Weekend</span>
+<span style="font-size: 13px; color: #5b5f86">Thu 16 – Sat 18 Oct · From Riyadh · Sunrise Tours Co.</span>
+<div style="display: flex; justify-content: space-between; align-items: baseline; margin-top: 4px"><span style="font-size: 13px; color: #5b5f86">Seat assigned before departure</span><span style="font-size: 15px"><span style="font-size: 13px; color: #5b5f86">from</span> <strong>1,250 SAR</strong></span></div>
+</div>
+</div>
+<a href="WebTrip.dc.html" style="font-size: 14px; font-weight: 600">Open full trip page preview</a>
+</section>
+</aside>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; align-items: center; padding-top: 16px; border-top: 1px solid #e3dfc9">
+<a href="OrgNew8.dc.html" style="height: 48px; box-sizing: border-box; padding: 0 20px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 6px; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg>Back</a>
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center">
+<span style="font-size: 13px; color: #5b5f86">{{footNote}}</span>
+<a href="OrgTrip.dc.html" style="height: 48px; padding: 0 24px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg>{{cta}}</a>
+</div>
+</div>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1060}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { pub: 'public' }; }
+  renderVals() {
+    const names = ['Basics', 'Schedule', 'Vehicles', 'Staff', 'Photographer', 'Programs', 'Seats', 'Pricing', 'Publish'];
+    const cur = 8;
+    const steps = names.map((l, i) => {
+      const st = i < cur ? 'done' : i === cur ? 'cur' : 'todo';
+      return { l, n: String(i + 1), done: st === 'done', notDone: st !== 'done', href: 'OrgNew' + (i + 1) + '.dc.html', cur: st === 'cur' ? 'step' : 'false',
+        bar: 'display: block; height: 4px; border-radius: 999px; background: ' + (st === 'done' ? '#262a67' : st === 'cur' ? '#ff6c2e' : '#e3dfc9'),
+        dot: 'width: 24px; height: 24px; flex-shrink: 0; box-sizing: border-box; border-radius: 999px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; ' + (st === 'done' ? 'background: #262a67; color: #f6f3e4;' : st === 'cur' ? 'background: #ff6c2e; color: #262a67;' : 'background: #ffffff; color: #5b5f86; border: 1px solid #7b7fa6;'),
+        lab: 'font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; ' + (st === 'todo' ? 'font-weight: 500; color: #5b5f86;' : 'font-weight: 600; color: #262a67;') };
+    });
+    const OK = 'M5 12.5l4.5 4.5L19 7', WARN = 'M12 7v6M12 17h.01';
+    const ic = (t) => 'width: 24px; height: 24px; flex-shrink: 0; border-radius: 999px; display: flex; align-items: center; justify-content: center; ' + (t === 'ok' ? 'background: #1f7a4d; color: #ffffff;' : 'background: #f89e23; color: #262a67;');
+    const checks = [
+      { t: 'Basics, schedule and route complete', d: '3 pickup points · 3 stops · return included', k: 'ok' },
+      { t: 'All 4 buses have a driver and moderator', d: '3 own drivers confirmed · Layla Al-Mutairi now on Bus 3', k: 'ok' },
+      { t: '1 deal pending → trip will publish as "Negotiating"', d: 'Bus 4 · Khalid Al-Harbi countered 1,450 SAR. Bookings stay open; the trip becomes Ready when the deal is finalized.', k: 'warn', link: 'Reply now', href: 'OrgDeal.dc.html' },
+      { t: 'Photographer confirmed', d: 'Noura Al-Shehri · 2,200 SAR · deal finalized Mon 6 Oct', k: 'ok' },
+      { t: 'Within plan limits', d: '4 of 10 buses · 7 of 15 programs · trip 19 of 20 this month', k: 'ok' }
+    ].map((c) => ({ ...c, ic: ic(c.k), path: c.k === 'ok' ? OK : WARN, bg: c.k === 'ok' ? '#f6f3e4' : '#fdf0d5', hasLink: !!c.link }));
+    const summary = [
+      ['Basics', 'AlUla Heritage Weekend · Heritage & culture · Arabic and English guide', 1],
+      ['Schedule', 'Thu 16 Oct 06:30 → Sat 18 Oct 23:30 · bookings close Tue 14 Oct 23:59', 2],
+      ['Vehicles', '3 × Mercedes Tourismo 49 · 1 × Toyota Coaster 30 · 177 seats', 3],
+      ['Staff', '4 drivers (1 deal pending) · 4 moderators', 4],
+      ['Photographer', 'Noura Al-Shehri · shared-link albums, watermarked', 5],
+      ['Programs', '7 programs · 1 required · 1 VIP-only', 6],
+      ['Seats', 'Company-assigned · 5 seats blocked for staff', 7],
+      ['Pricing', 'Adult 1,250 SAR · child 950 SAR · early-bird 10% · 80% refund until 48 h, 50% until 24 h', 8]
+    ].map(([l, v, n]) => ({ l, v, href: 'OrgNew' + n + '.dc.html', al: 'Edit ' + l }));
+    const p = this.state.pub;
+    const card = (on) => 'display: flex; gap: 10px; align-items: flex-start; padding: 12px; border-radius: 12px; cursor: pointer; ' + (on ? 'border: 2px solid #fb8030; background: #fffaf3;' : 'border: 1px solid #e3dfc9;');
+    const opts = [
+      { k: 'draft', t: 'Draft', d: 'Only your team can see it. Does not count toward your plan.' },
+      { k: 'public', t: 'Public', d: 'Listed on Trips Enjoy search and your organizer page.' },
+      { k: 'targeted', t: 'Targeted', d: 'Hidden from search. Booked with an invite link or code.' }
+    ].map((o) => ({ ...o, checked: p === o.k, on: () => this.setState({ pub: o.k }), style: card(p === o.k) }));
+    return { steps, checks, summary, opts, isTargeted: p === 'targeted',
+      cta: p === 'draft' ? 'Save as draft' : 'Publish trip',
+      footNote: p === 'draft' ? 'You can publish later from Trips' : 'Will publish as Negotiating · travelers can book now' };
+  }
+}
+</script>
+</body>
+</html>

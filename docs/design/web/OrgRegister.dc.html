@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Organization · Register</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); font-family: Outfit, Nunito, system-ui, sans-serif; color: #262a67; background: #f6f3e4">
+<div style="background: #262a67; color: #f6f3e4; padding: 48px; display: flex; flex-direction: column; gap: 32px">
+<img src="../assets/6ea846350ba3adc0e289d47fa0612c3b.svg" alt="Trips Enjoy — تريبس إنجوي" style="height: 56px; width: auto; align-self: flex-start">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<span style="font-size: 13px; font-weight: 600; color: #f89e23; letter-spacing: 1px">FOR ORGANIZATIONS</span>
+<h2 style="margin: 0; font-size: 40px; line-height: 48px; font-weight: 700">Sell your trips to groups across the Gulf.</h2>
+</div>
+<ol style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 16px; font-size: 16px; line-height: 24px">
+<li style="display: flex; gap: 12px"><span style="width: 28px; height: 28px; flex-shrink: 0; border-radius: 999px; background: #ff6c2e; color: #262a67; font-weight: 700; display: flex; align-items: center; justify-content: center">1</span>Account owner details</li>
+<li style="display: flex; gap: 12px; color: #b8bad6"><span style="width: 28px; height: 28px; flex-shrink: 0; box-sizing: border-box; border-radius: 999px; border: 2px solid #b8bad6; display: flex; align-items: center; justify-content: center">2</span>Verify phone</li>
+<li style="display: flex; gap: 12px; color: #b8bad6"><span style="width: 28px; height: 28px; flex-shrink: 0; box-sizing: border-box; border-radius: 999px; border: 2px solid #b8bad6; display: flex; align-items: center; justify-content: center">3</span>Business information</li>
+<li style="display: flex; gap: 12px; color: #b8bad6"><span style="width: 28px; height: 28px; flex-shrink: 0; box-sizing: border-box; border-radius: 999px; border: 2px solid #b8bad6; display: flex; align-items: center; justify-content: center">4</span>Documents and payout</li>
+<li style="display: flex; gap: 12px; color: #b8bad6"><span style="width: 28px; height: 28px; flex-shrink: 0; box-sizing: border-box; border-radius: 999px; border: 2px solid #b8bad6; display: flex; align-items: center; justify-content: center">5</span>Admin review</li>
+</ol>
+</div>
+<div style="display: flex; align-items: center; justify-content: center; padding: 40px 48px">
+<div style="width: 460px; display: flex; flex-direction: column; gap: 12px">
+<span style="align-self: flex-start; padding: 4px 12px; border-radius: 999px; background: #ffffff; border: 1px solid #e3dfc9; font-size: 13px; font-weight: 600; color: #5b5f86">trips-enjoy.com/register/organization</span>
+<div style="display: flex; flex-direction: column; gap: 4px">
+<h1 style="margin: 0; font-size: 32px; line-height: 40px; font-weight: 700">Register your organization</h1>
+<p style="margin: 0; font-size: 15px; color: #5b5f86">You'll be the account owner and can invite your team later. Already registered? <a href="OrgLogin.dc.html" style="font-weight: 600">Sign in</a></p>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="or-n" style="font-size: 14px; font-weight: 600">Your full name</label><input id="or-n" dir="auto" autocomplete="name" value="Fahad Al-Otaibi" style="height: 48px; padding: 0 14px; border-radius: 8px; border: 1px solid #7b7fa6; font-family: inherit; font-size: 16px; color: #262a67"></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="or-e" style="font-size: 14px; font-weight: 600">Work email</label><input id="or-e" type="email" autocomplete="email" value="fahad@sunrisetours.sa" style="height: 48px; padding: 0 14px; border-radius: 8px; border: 1px solid #7b7fa6; font-family: inherit; font-size: 16px; color: #262a67"></div>
+<dc-import name="CountryField" label="Country of registration" country="SA" helper="Where your Commercial Registration is issued." field-id="or-country" hint-size="100%,100px"></dc-import>
+<dc-import name="PhoneField" label="Mobile number" value="501119022" country="SA" field-id="or-phone" hint-size="100%,78px"></dc-import>
+<dc-import name="PasswordField" label="Password" value="Sunrise-2026!" show-strength="{{yes}}" is-new="{{yes}}" field-id="or-pass" hint-size="100%,112px"></dc-import>
+<label style="display: flex; gap: 10px; align-items: center; font-size: 14px"><input type="checkbox" checked style="width: 18px; height: 18px; margin: 0; accent-color: #262a67">I accept the <a href="#">Organization terms</a> and <a href="#">Privacy Policy</a>.</label>
+<a href="OrgVerify.dc.html" style="height: 52px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 16px; font-weight: 600; display: flex; align-items: center; justify-content: center; text-decoration: none">Continue</a>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+renderVals() { return { yes: true }; }
+}
+</script>
+</body>
+</html>

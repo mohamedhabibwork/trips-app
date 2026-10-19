@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Org · Roles &amp; permissions</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="min-height: 1000px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="OrgNav" active="Team" hint-size="248px,1000px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 24px">
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 2px"><a href="OrgStaff.dc.html" style="display: inline-flex; align-items: center; gap: 4px; font-size: 14px; font-weight: 600; text-decoration: none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg>Team</a><h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Roles &amp; permissions</h1><span style="font-size: 15px; color: #5b5f86">Nine permission areas, each set to View or Manage. Changes apply the next time an employee loads a page and are logged below.</span></div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center"><span style="font-size: 13px; color: #5b5f86">Invite links are valid for 7 days</span><a href="OrgStaff.dc.html" style="height: 48px; box-sizing: border-box; padding: 0 18px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16v12H4zM4 7l8 6 8-6"></path></svg>Invite employee</a><button type="button" style="height: 48px; box-sizing: border-box; padding: 0 20px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font: inherit; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>New custom role</button></div>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start">
+<section aria-labelledby="mx-h" style="flex: 3 1 520px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px 0 12px">
+<div style="padding: 0 20px 12px; display: flex; flex-direction: column; gap: 2px"><h2 id="mx-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">Access by role</h2><span style="font-size: 13px; color: #5b5f86">Templates are locked. Duplicate one to change it. Manage includes View.</span></div>
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 640px; border-collapse: collapse; font-size: 15px">
+<thead><tr style="font-size: 13px">
+<th scope="col" style="text-align: start; padding: 10px 20px; font-weight: 600; color: #5b5f86">Permission area</th>
+<sc-for list="{{roles}}" as="ro" hint-placeholder-count="5"><th scope="col" style="{{ro.th}}"><span style="display: flex; flex-direction: column; align-items: center; gap: 2px"><span>{{ro.n}}</span><span style="font-size: 12px; font-weight: 500; color: #5b5f86">{{ro.sub}}</span></span></th></sc-for>
+</tr></thead>
+<tbody>
+<sc-for list="{{matrix}}" as="m" hint-placeholder-count="8">
+<tr style="border-top: 1px solid #e3dfc9">
+<th scope="row" style="text-align: start; padding: 12px 20px; font-weight: 600"><span style="display: flex; flex-direction: column"><span>{{m.g}}</span><span style="font-size: 13px; font-weight: 400; color: #5b5f86">{{m.d}}</span></span></th>
+<sc-for list="{{m.cells}}" as="c" hint-placeholder-count="5">
+<td style="{{c.td}}"><sc-if value="{{c.locked}}" hint-placeholder-val="{{true}}"><span style="{{c.ps}}">{{c.t}}</span></sc-if><sc-if value="{{c.custom}}" hint-placeholder-val="{{false}}"><select aria-label="{{c.label}}" onChange="{{c.change}}" style="height: 36px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 6px; font: inherit; font-size: 14px; color: #262a67"><sc-for list="{{c.opts}}" as="o" hint-placeholder-count="3"><option value="{{o.v}}" selected="{{o.sel}}">{{o.v}}</option></sc-for></select></sc-if></td>
+</sc-for>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+</section>
+
+<section aria-labelledby="ed-h" style="flex: 2 1 340px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 14px; border: 2px solid #fb8030">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 8px"><h2 id="ed-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">Edit custom role</h2><span style="display: inline-flex; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; background: #e6e8f5">1 employee</span></div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px">
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">Role name<input type="text" value="Weekend ops" style="height: 52px; min-width: 0; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 14px; font: inherit; font-size: 16px; font-weight: 400; color: #262a67"></label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">Based on<select style="height: 52px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 12px; font: inherit; font-size: 16px; font-weight: 400; color: #262a67"><option>Operations</option><option>Support</option></select></label>
+</div>
+<div style="display: flex; flex-direction: column; gap: 10px">
+<span style="font-size: 14px; font-weight: 600">Fine-grained permissions</span>
+<sc-for list="{{detail}}" as="d" hint-placeholder-count="4">
+<fieldset style="margin: 0; border: 1px solid #e3dfc9; border-radius: 12px; padding: 10px 14px 12px; display: flex; flex-wrap: wrap; gap: 8px 16px">
+<legend style="padding: 0 6px; font-size: 13px; font-weight: 700">{{d.g}}</legend>
+<sc-for list="{{d.items}}" as="it" hint-placeholder-count="3"><label style="display: flex; align-items: center; gap: 8px; font-size: 14px; min-height: 28px"><input type="checkbox" checked="{{it.on}}" style="width: 18px; height: 18px; accent-color: #262a67">{{it.t}}</label></sc-for>
+</fieldset>
+</sc-for>
+</div>
+<span style="font-size: 13px; color: #5b5f86">Dana Al-Rashid uses this role. Refunds above 500 SAR still need a Manager. Saving writes an entry to the change history.</span>
+<div style="display: flex; gap: 12px; flex-wrap: wrap">
+<button type="button" style="flex: 1 1 100px; height: 48px; border-radius: 12px; border: 1px solid #7b7fa6; background: #fff; color: #262a67; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Discard</button>
+<a href="OrgStaff.dc.html" style="flex: 2 1 160px; height: 48px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center; text-decoration: none">Save role</a>
+</div>
+</section>
+</div>
+
+<section aria-labelledby="hi-h" style="background: #ffffff; border-radius: 20px; padding: 20px 0 8px">
+<div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; align-items: center; padding: 0 20px 12px">
+<div style="display: flex; flex-direction: column; gap: 2px"><h2 id="hi-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">Change history</h2><span style="font-size: 13px; color: #5b5f86">Read only. Every change to a role or an employee's access is kept for 7 years.</span></div>
+<label style="display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600">Show<select onChange="{{setHist}}" style="height: 40px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 10px; font: inherit; font-size: 14px; font-weight: 500; color: #262a67"><option value="all">All roles and employees</option><option value="Weekend ops">Weekend ops</option><option value="Dana Al-Rashid">Dana Al-Rashid</option><option value="Hala Nasser">Hala Nasser</option></select></label>
+</div>
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 760px; border-collapse: collapse; font-size: 15px">
+<thead><tr style="color: #5b5f86; font-size: 13px"><th scope="col" style="text-align: start; padding: 10px 20px; font-weight: 600">When</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Changed by</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Role or employee</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Area</th><th scope="col" style="text-align: start; padding: 10px 20px; font-weight: 600">Before → after</th></tr></thead>
+<tbody>
+<sc-for list="{{hist}}" as="h" hint-placeholder-count="5">
+<tr style="border-top: 1px solid #e3dfc9"><td style="padding: 12px 20px; font-size: 14px; color: #5b5f86; white-space: nowrap">{{h.when}}</td><td style="padding: 12px; font-weight: 600">{{h.who}}</td><td style="padding: 12px">{{h.target}}</td><td style="padding: 12px">{{h.area}}</td><td style="padding: 12px 20px"><span style="display: inline-flex; flex-wrap: wrap; align-items: center; gap: 6px"><span style="{{h.bs}}">{{h.before}}</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="changed to"><path d="M5 12h14M13 6l6 6-6 6"></path></svg><span style="{{h.as}}">{{h.after}}</span></span></td></tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+</section>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1300}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { custom: ['Manage', 'Manage', 'None', 'None', 'None', 'None', 'None', 'Manage', 'None'], hist: 'all' }; }
+  renderVals() {
+    const roles = [
+      { n: 'Operations', sub: '2 people' }, { n: 'Finance', sub: '2 people' }, { n: 'Support', sub: '3 people' }, { n: 'Manager', sub: '1 person' }, { n: 'Weekend ops', sub: 'Custom' }
+    ].map((r, i) => ({ ...r, th: 'padding: 10px 8px; font-weight: 700; text-align: center;' + (i === 4 ? ' background: #ffe7dc; color: #c93a00;' : '') }));
+    const groups = [
+      ['Trips', 'Create, edit, publish, reports'], ['Bookings', 'Roster, seats, refunds'], ['Accounting', 'Ledger, invoices, settlements'], ['Coupons', 'Create, pause, revoke, analytics'],
+      ['Employees', 'Invite, suspend, roles'], ['Fleet', 'Vehicles, types, documents'], ['Subscription', 'Plan and billing'], ['Tracking', 'Live map, check-ins, safety reports'], ['Settings', 'Company, payouts, CRM, webhooks']
+    ];
+    const M = 'Manage', W = 'View', X = 'None';
+    const T = [
+      [M, W, W, M], [M, W, M, M], [X, M, X, M], [W, M, W, M], [X, X, X, M], [M, X, X, M], [X, W, X, M], [M, X, W, M], [X, X, X, M]
+    ];
+    const ps = (v) => 'display: inline-flex; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; ' + (v === M ? 'background: #262a67; color: #f6f3e4;' : v === W ? 'background: #e6e8f5; color: #262a67;' : 'background: transparent; color: #5b5f86;');
+    const matrix = groups.map((g, gi) => ({ g: g[0], d: g[1], cells: [0, 1, 2, 3, 4].map((ri) => {
+      const custom = ri === 4;
+      const v = custom ? this.state.custom[gi] : T[gi][ri];
+      return { t: v === X ? '\u2014' : v, ps: ps(v), locked: !custom, custom, label: roles[ri].n + ': ' + g[0] + ' access',
+        opts: [X, W, M].map((o) => ({ v: o, sel: o === v })),
+        td: 'text-align: center; padding: 12px 8px;' + (custom ? ' background: #fff7f2;' : ''),
+        change: (e) => { const c = this.state.custom.slice(); c[gi] = e.target.value; this.setState({ custom: c }); } };
+    }) }));
+    const H = [
+      ['Thu 16 Oct · 09:14', 'Mona Saleh', 'Weekend ops', 'Tracking', 'View', 'Manage'],
+      ['Thu 16 Oct · 09:14', 'Mona Saleh', 'Weekend ops', 'Bookings', 'None', 'Manage'],
+      ['Tue 14 Oct · 17:02', 'Mona Saleh', 'Dana Al-Rashid', 'Role', 'Support', 'Weekend ops'],
+      ['Mon 13 Oct · 11:40', 'Yousef Amin', 'Weekend ops', 'Fleet', 'View', 'None'],
+      ['Wed 1 Oct · 10:05', 'Mona Saleh', 'Hala Nasser', 'Subscription', 'None', 'View']
+    ];
+    const tone = (v) => 'display: inline-flex; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; ' + (v === 'Manage' ? 'background: #262a67; color: #f6f3e4;' : v === 'View' ? 'background: #e6e8f5; color: #262a67;' : 'background: #f6f3e4; color: #262a67;');
+    const hist = H.filter((h) => this.state.hist === 'all' || h[2] === this.state.hist).map((h) => ({ when: h[0], who: h[1], target: h[2], area: h[3], before: h[4], after: h[5], bs: tone(h[4]), as: tone(h[5]) }));
+    const detail = [
+      { g: 'Trips', items: [{ t: 'View trips', on: true }, { t: 'Edit trip details', on: true }, { t: 'Publish or cancel trips', on: false }] },
+      { g: 'Tracking', items: [{ t: 'Live map', on: true }, { t: 'Check-in log', on: true }, { t: 'Message moderators', on: true }] },
+      { g: 'Bookings & refunds', items: [{ t: 'View roster', on: true }, { t: 'Move passengers between buses', on: true }, { t: 'Refunds up to 500 SAR', on: true }] },
+      { g: 'Coupons', items: [{ t: 'View coupons', on: false }, { t: 'Pause coupons', on: false }] }
+    ];
+    return { roles, matrix, detail, hist, setHist: (e) => this.setState({ hist: e.target.value }) };
+  }
+}
+</script>
+</body>
+</html>

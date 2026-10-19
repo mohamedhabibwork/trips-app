@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="ar">
+<head>
+<meta charset="utf-8">
+<title>الجهة المنظِّمة · نظرة عامة</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;family=Cairo:wght@500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+.te-row:hover{background:#f6f3e4}
+</style>
+</helmet>
+<div dir="rtl" lang="ar" style="min-height: 1000px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Cairo, sans-serif; line-height: 1.6; text-align: start">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="OrgNav" active="Overview" lang="ar" hint-size="248px,1000px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 28px 40px 40px; display: flex; flex-direction: column; gap: 20px">
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 0"><span style="font-size: 14px; color: #5b5f86">الثلاثاء 14 أكتوبر</span><h1 style="margin: 0; font-size: 28px; line-height: 42px; font-weight: 700">صباح الخير يا منى</h1></div>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px">
+<a href="OrgHome.dc.html" lang="en" dir="ltr" style="height: 44px; padding: 0 12px; display: flex; align-items: center; font-family: Outfit, Nunito, system-ui, sans-serif; font-size: 15px; font-weight: 600; color: #262a67; text-decoration: none">English</a>
+<a href="OrgTripLive.dc.html" style="height: 48px; box-sizing: border-box; padding: 0 20px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px; text-decoration: none"><span style="width: 8px; height: 8px; border-radius: 999px; background: #c93a00"></span>التشغيل المباشر</a>
+<a href="OrgNew1.dc.html" style="height: 48px; padding: 0 20px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>رحلة جديدة</a>
+</div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px">
+<sc-for list="{{kpis}}" as="k" hint-placeholder-count="4">
+<div style="padding: 16px 20px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 14px; color: #5b5f86">{{k.l}}</span>
+<span style="font-size: 28px; line-height: 38px; font-weight: 700"><span style="font-family: Outfit, Cairo, sans-serif">{{k.v}}</span> <span style="font-size: 15px; font-weight: 500; color: #5b5f86">{{k.u}}</span></span>
+<span style="{{k.ds}}">{{k.d}}</span>
+</div>
+</sc-for>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start">
+<section aria-labelledby="live-h" style="flex: 3 1 480px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 18px 0 6px; display: flex; flex-direction: column">
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 0 20px 10px"><h2 id="live-h" style="margin: 0; font-size: 20px; line-height: 30px; font-weight: 700">رحلات اليوم</h2><a href="OrgTripLive.dc.html" style="font-size: 14px; font-weight: 600">فتح الخريطة المباشرة</a></div>
+<sc-for list="{{today}}" as="t" hint-placeholder-count="3">
+<a href="OrgTrip.dc.html" class="te-row" style="display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr) 120px; gap: 12px; align-items: center; padding: 12px 20px; border-top: 1px solid #e3dfc9; color: #262a67; text-decoration: none; font-size: 15px">
+<span style="display: flex; flex-direction: column; min-width: 0"><span style="font-weight: 600">{{t.n}}</span><span style="font-size: 13px; line-height: 20px; color: #5b5f86">{{t.sub}}</span></span>
+<span style="font-size: 14px">{{t.buses}}</span>
+<span style="font-size: 14px">{{t.chk}}</span>
+<span style="{{t.ss}}">{{t.s}}</span>
+</a>
+</sc-for>
+</section>
+
+<section aria-labelledby="att-h" style="flex: 2 1 320px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 18px 20px; display: flex; flex-direction: column; gap: 10px">
+<h2 id="att-h" style="margin: 0; font-size: 20px; line-height: 30px; font-weight: 700">يحتاج إلى متابعتك</h2>
+<sc-for list="{{attention}}" as="a" hint-placeholder-count="4">
+<a href="{{a.href}}" style="display: flex; gap: 12px; padding: 10px 12px; border-radius: 12px; background: {{a.bg}}; color: #262a67; text-decoration: none">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 3px"><path d="{{a.icon}}"></path></svg>
+<span style="display: flex; flex-direction: column; gap: 0"><span style="font-size: 15px; line-height: 24px; font-weight: 600">{{a.t}}</span><span style="font-size: 13px; line-height: 21px; color: #5b5f86">{{a.d}}</span></span>
+</a>
+</sc-for>
+</section>
+</div>
+
+<section aria-labelledby="up-h" style="background: #ffffff; border-radius: 20px; padding: 18px 0 6px">
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 0 20px 10px"><h2 id="up-h" style="margin: 0; font-size: 20px; line-height: 30px; font-weight: 700">الرحلات القادمة</h2><a href="OrgTrips.dc.html" style="font-size: 14px; font-weight: 600">كل الرحلات</a></div>
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 720px; border-collapse: collapse; font-size: 15px">
+<thead><tr style="color: #5b5f86; font-size: 13px"><th scope="col" style="text-align: start; padding: 8px 20px; font-weight: 600">الرحلة</th><th scope="col" style="text-align: start; padding: 8px 12px; font-weight: 600">الانطلاق</th><th scope="col" style="text-align: start; padding: 8px 12px; font-weight: 600">المقاعد المباعة</th><th scope="col" style="text-align: start; padding: 8px 12px; font-weight: 600">الطاقم</th><th scope="col" style="text-align: start; padding: 8px 20px; font-weight: 600">الحالة</th></tr></thead>
+<tbody>
+<sc-for list="{{upcoming}}" as="u" hint-placeholder-count="4">
+<tr style="border-top: 1px solid #e3dfc9"><td style="padding: 10px 20px; font-weight: 600"><a href="OrgTrip.dc.html" style="color: #262a67; text-decoration: none">{{u.n}}</a></td><td style="padding: 10px 12px">{{u.d}}</td><td style="padding: 10px 12px"><span dir="ltr">{{u.sold}}</span></td><td style="padding: 10px 12px; color: #5b5f86">{{u.staff}}</td><td style="padding: 10px 20px"><span style="{{u.ss}}">{{u.s}}</span></td></tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+</section>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const pill = (tone) => 'justify-self: start; display: inline-flex; padding: 0 10px; border-radius: 999px; font-size: 13px; line-height: 24px; font-weight: 600; ' + ({ ok: 'background: #e3f3ea; color: #1f7a4d;', warn: 'background: #fdf0d5; color: #8a4b00;', bad: 'background: #fde8e6; color: #b42318;', info: 'background: #e6e8f5; color: #262a67;', live: 'background: #ffe7dc; color: #c93a00;' })[tone];
+    const kpis = [
+      { l: 'الرحلات النشطة', v: '18', u: 'من 20', d: 'حد باقة النمو · تبقّت رحلتان', ds: 'font-size: 13px; font-weight: 600; color: #8a4b00' },
+      { l: 'المقاعد المباعة هذا الشهر', v: '1,284', u: '', d: '▲ 12.4% مقارنة بسبتمبر', ds: 'font-size: 13px; font-weight: 600; color: #1f7a4d' },
+      { l: 'صافي الإيرادات هذا الشهر', v: '412,600', u: 'ر.س', d: '▲ 8.2% مقارنة بسبتمبر', ds: 'font-size: 13px; font-weight: 600; color: #1f7a4d' },
+      { l: 'سجّلوا الصعود اليوم', v: '186', u: 'من 204', d: '18 لم يصعدوا بعد', ds: 'font-size: 13px; font-weight: 600; color: #5b5f86' }
+    ];
+    const today = [
+      { n: 'عطلة العُلا التراثية', sub: 'الرياض ← العُلا · انطلقت 06:30', buses: '4 حافلات', chk: '168 / 172 على متنها', s: 'في الطريق', t: 'live' },
+      { n: 'مدرسة النور · الصف الرابع', sub: 'رحلة يومية إلى حديقة حيوان الرياض · الصعود 08:00', buses: 'حافلة واحدة', chk: '18 / 32 صعدوا', s: 'جارٍ الصعود', t: 'warn' },
+      { n: 'جولة الدرعية المسائية', sub: 'تنطلق 17:00 من العليا', buses: '0 / 0 سُجّلوا', chk: 'يبدأ التسجيل 16:15', s: 'جاهزة', t: 'ok' }
+    ].map((x) => ({ ...x, ss: pill(x.t) }));
+    const attention = [
+      { t: '3 صفقات بانتظار ردك', d: 'قدّم خالد الحربي عرضًا مقابلًا بقيمة 1,450 ر.س للحافلة 2 في يوم الغوص في البحر الأحمر.', href: 'OrgDeals.dc.html', bg: '#fdf0d5', icon: 'M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zM14 3v5h5' },
+      { t: 'الحافلة 3 بلا مشرف', d: 'ليلة كورنيش جدة · الجمعة 17 أكتوبر. عيّن مشرفًا قبل إغلاق الحجوزات.', href: 'OrgNew4.dc.html', bg: '#fde8e6', icon: 'M12 3l9.5 17h-19zM12 10v4M12 17h.01' },
+      { t: 'تبقّت رحلتان نشطتان في باقة النمو', d: 'رقِّ إلى باقة المؤسسات لرحلات غير محدودة وتحليلات كاملة.', href: 'OrgBilling.dc.html', bg: '#f6f3e4', icon: 'M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z' },
+      { t: 'استُخدمت القسيمة AUTUMN15 بنسبة 92%', d: '184 من 200 استخدام. ارفع الحد أو اتركها حتى تنتهي.', href: 'OrgCoupons.dc.html', bg: '#f6f3e4', icon: 'M3 12V4a1 1 0 0 1 1-1h8l9 9-9 9zM7.5 7.5h.01' }
+    ];
+    const upcoming = [
+      { n: 'يوم الغوص في البحر الأحمر', d: 'الجمعة 24 أكتوبر · 05:30', sold: '96 / 100', staff: 'حافلتان · صفقة واحدة معلّقة', s: 'قيد التفاوض', t: 'warn' },
+      { n: 'ليلة كورنيش جدة', d: 'الجمعة 17 أكتوبر · 18:00', sold: '120 / 150', staff: 'الحافلة 3 بلا مشرف', s: 'نقص في الطاقم', t: 'bad' },
+      { n: 'رحلة مشي حافة العالم', d: 'السبت 25 أكتوبر · 04:00', sold: '32 / 50', staff: 'حافلة واحدة · جاهزة', s: 'تمتلئ', t: 'info' },
+      { n: 'مزارع الورد في الطائف', d: 'الخميس 30 أكتوبر · 07:00', sold: '50 / 50', staff: 'حافلة واحدة · جاهزة', s: 'نفدت المقاعد', t: 'ok' }
+    ].map((x) => ({ ...x, ss: pill(x.t) }));
+    return { kpis, today, attention, upcoming };
+  }
+}
+</script>
+</body>
+</html>

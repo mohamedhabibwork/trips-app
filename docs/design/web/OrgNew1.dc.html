@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>New trip · 1 Basics</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="min-height: 1000px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="OrgNav" active="Trips" hint-size="248px,1000px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 20px">
+
+<div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 2px">
+<span style="font-size: 14px; color: #5b5f86"><a href="OrgTrips.dc.html" style="font-weight: 600; text-decoration: none">Trips</a> / New trip · Step 1 of 9</span>
+<h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Trip basics</h1>
+</div>
+<span style="font-size: 14px; color: #5b5f86">Growth plan · 18 of 20 active trips used · this will be trip 19</span>
+</div>
+
+<nav aria-label="Trip builder steps">
+<ol style="list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{steps}}" as="s" hint-placeholder-count="9">
+<li style="flex: 1 1 100px; min-width: 0"><a href="{{s.href}}" aria-current="{{s.cur}}" style="display: flex; flex-direction: column; gap: 8px; text-decoration: none; color: #262a67"><span style="{{s.bar}}"></span><span style="display: flex; align-items: center; gap: 8px"><span style="{{s.dot}}"><sc-if value="{{s.done}}" hint-placeholder-val="{{false}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg></sc-if><sc-if value="{{s.notDone}}" hint-placeholder-val="{{true}}">{{s.n}}</sc-if></span><span style="{{s.lab}}">{{s.l}}</span></span></a></li>
+</sc-for>
+</ol>
+</nav>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
+<form style="flex: 3 1 520px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 20px">
+
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="tn" style="font-size: 14px; font-weight: 600">Trip name</label>
+<input id="tn" value="AlUla Heritage Weekend" style="height: 52px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 14px; font: inherit; font-size: 16px; color: #262a67">
+<span style="font-size: 13px; color: #5b5f86">Travelers see this on search results and tickets. 22 / 60 characters.</span>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="cat" style="font-size: 14px; font-weight: 600">Category</label>
+<select id="cat" style="height: 52px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 12px; font: inherit; font-size: 16px; color: #262a67"><option>Heritage &amp; culture</option><option>Nature &amp; outdoors</option><option>Sea &amp; beach</option><option>Adventure &amp; hiking</option><option>School trip</option><option>Corporate outing</option></select>
+</div>
+<fieldset style="border: 0; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px">
+<legend style="font-size: 14px; font-weight: 600; padding: 0; margin-bottom: 6px">Guide languages</legend>
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{langs}}" as="l" hint-placeholder-count="4">
+<button type="button" aria-pressed="{{l.pressed}}" onClick="{{l.on}}" style="{{l.style}}">{{l.n}}</button>
+</sc-for>
+</div>
+</fieldset>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="desc" style="font-size: 14px; font-weight: 600">Description</label>
+<textarea id="desc" rows="4" style="border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 12px 14px; font: inherit; font-size: 16px; line-height: 1.45; color: #262a67; resize: vertical">Three days among the tombs of Hegra, the old mud-brick town and the sandstone giants of AlUla. Your group travels together by coach from Riyadh with a stop in Buraidah, stays two nights at Shaden Resort and has a Sunrise guide on every bus.</textarea>
+<span style="font-size: 13px; color: #5b5f86">248 / 1,200 characters</span>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 8px">
+<span id="ban-l" style="font-size: 14px; font-weight: 600">Banner image</span>
+<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center; padding: 12px; border-radius: 12px; border: 1px dashed #7b7fa6">
+<img src="../assets/44a218548719fe367b614a0dd5151345.svg" alt="Banner: AlUla sandstone rock formations under a night sky" style="width: 200px; max-width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 12px">
+<div style="flex: 1 1 200px; display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 15px; font-weight: 600">alula-heritage-night.jpg</span>
+<span style="font-size: 13px; color: #5b5f86">1920 × 1440 · 1.8 MB · JPG or PNG, at least 1600 px wide, up to 10 MB</span>
+<div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px">
+<button type="button" aria-describedby="ban-l" style="height: 40px; padding: 0 14px; border-radius: 10px; border: 1px solid #7b7fa6; background: #fff; color: #262a67; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"></path></svg>Replace</button>
+<button type="button" style="height: 40px; padding: 0 14px; border-radius: 10px; border: 0; background: transparent; color: #b42318; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer">Remove</button>
+</div>
+</div>
+</div>
+</div>
+
+<fieldset style="border: 0; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px">
+<legend style="font-size: 14px; font-weight: 600; padding: 0; margin-bottom: 8px">Who can book</legend>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px">
+<sc-for list="{{aud}}" as="a" hint-placeholder-count="2">
+<label style="{{a.style}}"><input type="radio" name="aud" checked="{{a.checked}}" onChange="{{a.on}}" style="width: 20px; height: 20px; margin: 2px 0 0; accent-color: #262a67"><span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 15px; font-weight: 600">{{a.t}}</span><span style="font-size: 13px; color: #5b5f86">{{a.d}}</span></span></label>
+</sc-for>
+</div>
+<sc-if value="{{targeted}}" hint-placeholder-val="{{false}}">
+<div style="display: flex; flex-wrap: wrap; gap: 8px; padding: 12px; border-radius: 12px; background: #f6f3e4">
+<span style="font-size: 14px; font-weight: 600; width: 100%">Targeted at</span>
+<span style="padding: 6px 12px; border-radius: 999px; background: #262a67; color: #f6f3e4; font-size: 14px; font-weight: 600">School · code required</span>
+<span style="padding: 6px 12px; border-radius: 999px; background: #ffffff; border: 1px solid #e3dfc9; font-size: 14px; font-weight: 600">Company · invite link</span>
+</div>
+</sc-if>
+</fieldset>
+</form>
+
+<aside aria-labelledby="sum-h" style="flex: 1 1 280px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+<section style="background: #ffffff; border-radius: 20px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
+<h2 id="sum-h" style="margin: 0; font-size: 18px; font-weight: 600">How travelers will see it</h2>
+<img src="../assets/44a218548719fe367b614a0dd5151345.svg" alt="AlUla sandstone rocks under a night sky" style="width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 16px">
+<span style="font-size: 13px; font-weight: 600; color: #c93a00">HERITAGE &amp; CULTURE</span>
+<span style="font-size: 18px; font-weight: 700; line-height: 24px">AlUla Heritage Weekend</span>
+<span style="font-size: 14px; color: #5b5f86">By Sunrise Tours Co. · {{langLine}}</span>
+<span style="font-size: 14px; color: #5b5f86">Dates, price and seats appear after the next steps.</span>
+</section>
+<section style="background: #e6e8f5; border-radius: 20px; padding: 16px; font-size: 14px; line-height: 20px">You can come back to any step before publishing. Drafts do not count toward your 20 active trips.</section>
+</aside>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; align-items: center; padding-top: 16px; border-top: 1px solid #e3dfc9">
+<a href="OrgTrips.dc.html" style="height: 48px; box-sizing: border-box; padding: 0 20px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-size: 15px; font-weight: 600; display: flex; align-items: center; text-decoration: none">Exit builder</a>
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center">
+<span style="font-size: 13px; color: #5b5f86">Draft saved 10:02</span>
+<button type="button" style="height: 48px; padding: 0 16px; border-radius: 12px; border: 0; background: transparent; color: #262a67; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Save draft</button>
+<a href="OrgNew2.dc.html" style="height: 48px; padding: 0 22px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; text-decoration: none">Continue to schedule<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+</div>
+</div>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1120}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { aud: 'public', langs: { Arabic: true, English: true, Urdu: false, French: false } }; }
+  renderVals() {
+    const names = ['Basics', 'Schedule', 'Vehicles', 'Staff', 'Photographer', 'Programs', 'Seats', 'Pricing', 'Publish'];
+    const cur = 0;
+    const steps = names.map((l, i) => {
+      const st = i < cur ? 'done' : i === cur ? 'cur' : 'todo';
+      return { l, n: String(i + 1), done: st === 'done', notDone: st !== 'done', href: 'OrgNew' + (i + 1) + '.dc.html', cur: st === 'cur' ? 'step' : 'false',
+        bar: 'display: block; height: 4px; border-radius: 999px; background: ' + (st === 'done' ? '#262a67' : st === 'cur' ? '#ff6c2e' : '#e3dfc9'),
+        dot: 'width: 24px; height: 24px; flex-shrink: 0; box-sizing: border-box; border-radius: 999px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; ' + (st === 'done' ? 'background: #262a67; color: #f6f3e4;' : st === 'cur' ? 'background: #ff6c2e; color: #262a67;' : 'background: #ffffff; color: #5b5f86; border: 1px solid #7b7fa6;'),
+        lab: 'font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; ' + (st === 'todo' ? 'font-weight: 500; color: #5b5f86;' : 'font-weight: 600; color: #262a67;') };
+    });
+    const L = this.state.langs;
+    const langs = Object.keys(L).map((n) => ({ n, pressed: L[n] ? 'true' : 'false', on: () => this.setState({ langs: { ...L, [n]: !L[n] } }),
+      style: 'height: 40px; padding: 0 14px; border-radius: 999px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; ' + (L[n] ? 'background: #262a67; color: #f6f3e4; border: 1px solid #262a67;' : 'background: #ffffff; color: #262a67; border: 1px solid #7b7fa6;') }));
+    const a = this.state.aud;
+    const aud = [
+      { k: 'public', t: 'Public', d: 'Anyone can find and book it on Trips Enjoy.' },
+      { k: 'targeted', t: 'Targeted', d: 'Only people with your school code or company invite link.' }
+    ].map((x) => ({ ...x, checked: a === x.k, on: () => this.setState({ aud: x.k }),
+      style: 'display: flex; gap: 12px; align-items: flex-start; padding: 14px; border-radius: 12px; cursor: pointer; ' + (a === x.k ? 'border: 2px solid #fb8030; background: #fffaf3;' : 'border: 1px solid #e3dfc9; background: #ffffff;') }));
+    const langLine = Object.keys(L).filter((n) => L[n]).join(' and ') + ' guide';
+    return { steps, langs, aud, targeted: a === 'targeted', langLine };
+  }
+}
+</script>
+</body>
+</html>

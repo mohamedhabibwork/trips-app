@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>PDF · E-ticket TE-48213</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;family=Cairo:wght@400;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#ffffff}
+</style>
+</helmet>
+<div style="width: 794px; height: 1123px; box-sizing: border-box; padding: 48px; background: #ffffff; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif; font-size: 15px; line-height: 1.45; display: flex; flex-direction: column; gap: 18px">
+<header style="display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; padding-bottom: 16px; border-bottom: 2px solid #262a67">
+<img src="../assets/1fbce194fcb16bf54904c32c189fca31.svg" alt="Trips Enjoy" style="height: 40px; width: auto; display: block">
+<div style="text-align: right">
+<div style="font-size: 24px; font-weight: 700; line-height: 1.15">E-ticket &amp; boarding pass</div>
+<div style="font-family: Cairo, sans-serif; font-size: 16px; font-weight: 600" dir="rtl" lang="ar">تذكرة إلكترونية وبطاقة صعود</div>
+<div style="font-size: 14px; color: #5b5f86">Booking TE-48213 · Issued Mon 6 Oct 2026, 11:40</div>
+</div>
+</header>
+<section style="display: flex; justify-content: space-between; align-items: flex-end; gap: 16px">
+<div>
+<div style="font-size: 28px; font-weight: 700; line-height: 1.15">AlUla Heritage Weekend</div>
+<div style="font-size: 16px">Thu 16 – Sat 18 Oct 2026 · Riyadh → AlUla · organised by Sunrise Tours Co.</div>
+</div>
+<div style="text-align: right; font-size: 14px; color: #5b5f86">Booking owner<br><span style="font-size: 16px; font-weight: 600; color: #262a67">Sara Al-Qahtani</span></div>
+</section>
+<section style="display: grid; grid-template-columns: 1fr 1fr 1fr; border: 1px solid #e3dfc9; border-radius: 8px">
+<div style="padding: 12px 14px; border-right: 1px solid #e3dfc9">
+<div style="font-size: 13px; font-weight: 600; color: #5b5f86; letter-spacing: .04em">VEHICLE</div>
+<div style="font-size: 20px; font-weight: 700">Bus 2</div>
+<div>Plate ABC 4821</div>
+<div style="font-size: 14px; color: #5b5f86">Mercedes Tourismo · driver Khalid Al-Harbi</div>
+</div>
+<div style="padding: 12px 14px; border-right: 1px solid #e3dfc9">
+<div style="font-size: 13px; font-weight: 600; color: #5b5f86; letter-spacing: .04em">PICKUP</div>
+<div style="font-size: 20px; font-weight: 700">Olaya · 06:15</div>
+<div>Thu 16 Oct 2026</div>
+<div style="font-size: 14px; color: #5b5f86">Bus 2 departs 06:30 sharp</div>
+</div>
+<div style="padding: 12px 14px">
+<div style="font-size: 13px; font-weight: 600; color: #5b5f86; letter-spacing: .04em">MODERATOR</div>
+<div style="font-size: 20px; font-weight: 700">Nadia Yusuf</div>
+<div>+966 50 ••• 3307</div>
+<div style="font-size: 14px; color: #5b5f86">Checks everyone in on Bus 2</div>
+</div>
+</section>
+<section style="display: flex; gap: 20px; align-items: center; border: 1px solid #e3dfc9; border-radius: 8px; padding: 14px">
+<img src="../assets/820ae1ed630eb3e04ea4d7ce91f50535.png" alt="Booking QR code TE-48213" style="width: 132px; height: 132px; display: block">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<div style="font-size: 13px; font-weight: 600; color: #5b5f86; letter-spacing: .04em">BOOKING QR · TE-48213 · 4 TRAVELLERS</div>
+<div style="font-size: 18px; font-weight: 700">Show this code at the door of Bus 2.</div>
+<div>Nadia scans it once for your whole group, or each traveller's own code below.</div>
+<div style="font-weight: 600">Seat locks at check-in. After that, seat changes go through your moderator.</div>
+</div>
+</section>
+<table style="width: 100%; border-collapse: collapse; font-size: 15px">
+<thead>
+<tr style="text-align: left; font-size: 13px; color: #5b5f86; border-bottom: 1px solid #262a67">
+<th style="padding: 6px 8px 6px 0; font-weight: 600">Traveller</th>
+<th style="padding: 6px 8px; font-weight: 600">Seat</th>
+<th style="padding: 6px 8px; font-weight: 600">Programs booked</th>
+<th style="padding: 6px 0 6px 8px; font-weight: 600; text-align: right">Code</th>
+</tr>
+</thead>
+<tbody>
+<sc-for list="{{pax}}" as="p" hint-placeholder-count="4">
+<tr style="border-bottom: 1px solid #e3dfc9">
+<td style="padding: 8px 8px 8px 0; vertical-align: middle"><div style="font-weight: 600">{{p.full}}</div><div style="font-size: 13px; color: #5b5f86">{{p.kind}}</div></td>
+<td style="padding: 8px; font-size: 20px; font-weight: 700; vertical-align: middle">{{p.seat}}</td>
+<td style="padding: 8px; vertical-align: middle">{{p.programs}}</td>
+<td style="padding: 8px 0 8px 8px; text-align: right; vertical-align: middle"><img src="../assets/820ae1ed630eb3e04ea4d7ce91f50535.png" alt="{{p.qrAlt}}" style="width: 52px; height: 52px; display: inline-block"></td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+<section style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; font-size: 14px">
+<div><div style="font-weight: 700; font-size: 15px">Cancellation policy</div>80% refund if cancelled 48 h or more before departure (until Tue 14 Oct 2026, 06:30); 50% from 24 to 48 h; no refund under 24 h (requests go to the organizer); insurance is non-refundable. Cancel in the app under Trips.</div>
+<div><div style="font-weight: 700; font-size: 15px">On the day</div>Arrive at Olaya by 06:15 with ID for every adult. Children's check-in and check-out are shared with Sara in real time.</div>
+</section>
+<footer style="margin-top: auto; padding-top: 12px; border-top: 1px solid #e3dfc9; display: flex; justify-content: space-between; gap: 16px; font-size: 13px; color: #5b5f86">
+<span>Trips Enjoy Co. · CR 1010998877 · VAT 311098765400003 · Prince Turki St, Al Aqiq, Riyadh 13511</span>
+<span style="white-space: nowrap">support@trips-enjoy.com · Page 1 / 1</span>
+</footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":794,"height":1123}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const P = [
+      ['Sara Al-Qahtani', 'Adult · booking owner', '3C', 'Hegra guided tour · Elephant Rock dinner (Standard) · Travel insurance'],
+      ['Faisal Al-Qahtani', 'Adult', '3D', 'Hegra guided tour · Elephant Rock dinner (Standard) · Travel insurance'],
+      ['Omar Al-Qahtani', 'Child · 9 · tracking on', '4C', 'Hegra guided tour · Old Town walk · Travel insurance'],
+      ['Lina Al-Qahtani', 'Child · 6 · tracking on', '4D', 'Hegra guided tour · Old Town walk · Travel insurance']
+    ];
+    return { pax: P.map(([full, kind, seat, programs]) => ({ full, kind, seat, programs, qrAlt: 'Boarding QR for ' + full + ', seat ' + seat })) };
+  }
+}
+</script>
+</body>
+</html>

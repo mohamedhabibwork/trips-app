@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Admin · Request changes or reject</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;family=Cairo:wght@400;600&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="min-height: 1000px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="AdmNav" active="Applications" hint-size="248px,1000px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 20px">
+
+<a href="AdminAppReview.dc.html" style="align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 600; text-decoration: none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg>Back to application</a>
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center"><img src="../assets/f1b41fb1b201b088e5114338fbe087be.svg" alt="" style="width: 44px; height: 44px; border-radius: 999px; object-fit: cover; flex-shrink: 0"><h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Mahmoud Saeed</h1><span style="display: inline-flex; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; background: #e6e8f5; color: #262a67">Platform driver</span><span style="display: inline-flex; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; background: #fdf0d5; color: #8a4b00">Pending review · day 2 of 2</span></div>
+<span style="font-size: 15px; color: #5b5f86">APP-EG-0412 · Cairo, Egypt · submitted Sun 12 Oct · prefers Arabic · +20 10 ••• 2210</span>
+</div>
+<span style="font-size: 14px; color: #5b5f86">Approve is blocked: one check failed</span>
+</div>
+
+<section aria-labelledby="chk-h" style="background: #ffffff; border-radius: 20px; padding: 16px 20px; display: flex; flex-direction: column; gap: 10px">
+<h2 id="chk-h" style="margin: 0; font-size: 16px; font-weight: 600">Checks on this application</h2>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px">
+<sc-for list="{{checks}}" as="c" hint-placeholder-count="5">
+<div style="{{c.box}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 1px"><path d="{{c.i}}"></path></svg><span style="display: flex; flex-direction: column"><span style="font-size: 14px; font-weight: 600">{{c.t}}</span><span style="font-size: 13px; line-height: 18px">{{c.d}}</span></span></div>
+</sc-for>
+</div>
+</section>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: stretch">
+
+<section aria-labelledby="rc-h" style="flex: 1 1 440px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; flex-direction: column; gap: 2px"><h2 id="rc-h" style="margin: 0; font-size: 20px; font-weight: 600">Request changes</h2><span style="font-size: 14px; color: #5b5f86">The application moves to Changes Requested.</span></div>
+<fieldset style="margin: 0; padding: 0; border: 0; display: flex; flex-direction: column; gap: 8px">
+<legend style="padding: 0 0 6px; font-size: 14px; font-weight: 600">Items to fix (at least one)</legend>
+<sc-for list="{{items}}" as="it" hint-placeholder-count="4">
+<button type="button" role="checkbox" aria-checked="{{it.ch}}" onClick="{{it.on}}" style="{{it.st}}"><span style="{{it.box}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg></span><span style="display: flex; flex-direction: column; text-align: start"><span style="font-size: 15px; font-weight: 600">{{it.t}}</span><span style="font-size: 13px; color: #5b5f86; line-height: 18px">{{it.d}}</span></span><sc-if value="{{it.hasImg}}" hint-placeholder-val="{{true}}"><img src="{{it.img}}" alt="{{it.alt}}" style="{{it.imgSt}}"></sc-if></button>
+</sc-for>
+<sc-if value="{{noItems}}" hint-placeholder-val="{{false}}"><span role="alert" style="font-size: 13px; color: #b42318">Pick at least one item. The request cannot be sent empty.</span></sc-if>
+</fieldset>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="rc-msg" style="font-size: 14px; font-weight: 600">Message to Mahmoud · Arabic (his language)</label><textarea id="rc-msg" dir="rtl" lang="ar" rows="3" style="border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 10px 14px; font-family: Cairo, sans-serif; font-size: 15px; line-height: 24px; color: #262a67; resize: vertical">أهلاً محمود، نحتاج وثيقة تأمين سارية حتى 16 يناير على الأقل وصورة واضحة لرخصة المركبة.</textarea></div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px; padding: 12px 14px; border-radius: 12px; background: #f6f3e4; font-size: 14px; line-height: 20px">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 1px"><path d="M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zM4 10h16M8 3v4M16 3v4"></path></svg>
+<span style="flex: 1 1 260px"><strong>Deadline Tue 28 Oct</strong> (14 days). Reminder on day 7, Tue 21 Oct. Mahmoud can ask once for 7 more days. With no reply by the deadline the application closes and counts as rejected for re-applying.</span>
+</div>
+<div style="margin-top: auto; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between">
+<span style="font-size: 13px; color: #5b5f86">Saved to the audit log with your name.</span>
+<button type="button" aria-disabled="{{rcDisabled}}" style="{{rcBtn}}">Send request · {{nItems}}</button>
+</div>
+</section>
+
+<section aria-labelledby="rj-h" style="flex: 1 1 440px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 14px; border: 1px solid #f3c7c2">
+<div style="display: flex; flex-direction: column; gap: 2px"><h2 id="rj-h" style="margin: 0; font-size: 20px; font-weight: 600; color: #b42318">Reject application</h2><span style="font-size: 14px; color: #5b5f86">The reason is shown to the applicant. Internal notes are not.</span></div>
+<fieldset aria-invalid="{{rjInvalid}}" aria-describedby="rj-err" style="margin: 0; padding: 0; border: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 8px">
+<legend style="padding: 0 0 6px; font-size: 14px; font-weight: 600">Reason (required)</legend>
+<sc-for list="{{reasons}}" as="r" hint-placeholder-count="6">
+<button type="button" role="radio" aria-checked="{{r.ch}}" onClick="{{r.on}}" style="{{r.st}}"><span style="{{r.dot}}"></span>{{r.t}}</button>
+</sc-for>
+</fieldset>
+<sc-if value="{{noReason}}" hint-placeholder-val="{{true}}"><span id="rj-err" role="alert" style="font-size: 13px; color: #b42318; margin-top: -6px">Choose a reason. Reject stays off until one is picked.</span></sc-if>
+<sc-if value="{{isOther}}" hint-placeholder-val="{{false}}"><div style="display: flex; flex-direction: column; gap: 6px"><label for="rj-other" style="font-size: 14px; font-weight: 600">Explain "Other" (required)</label><input id="rj-other" type="text" style="height: 48px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 14px; font: inherit; font-size: 15px; color: #262a67"></div></sc-if>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="rj-note" style="font-size: 14px; font-weight: 600">Internal note (staff only)</label><textarea id="rj-note" rows="2" style="border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 10px 14px; font: inherit; font-size: 15px; color: #262a67; resize: vertical"></textarea></div>
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 12px 14px; border-radius: 12px; background: #e6e8f5; font-size: 14px; line-height: 20px">
+<span style="font-weight: 600">Mahmoud will be told</span>
+<span>He can re-apply from Thu 13 Nov (30 days) with new documents.</span>
+<span>He can appeal once, within 14 days, until Tue 28 Oct, with up to 5 files.</span>
+</div>
+<div style="margin-top: auto; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between">
+<span style="font-size: 13px; color: #5b5f86">Saved to the audit log with your name.</span>
+<button type="button" aria-disabled="{{rjDisabled}}" style="{{rjBtn}}">Reject application</button>
+</div>
+</section>
+</div>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1040}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { sel: { ins: true, reg: true, photo: false, other: false }, reason: null }; }
+  renderVals() {
+    const T = { ok: ['#e3f3ea', '#1f7a4d', 'M5 12.5l4.5 4.5L19 7'], bad: ['#fde8e6', '#b42318', 'M6 6l12 12M18 6L6 18'], warn: ['#fdf0d5', '#8a4b00', 'M12 3l9.5 17h-19zM12 10v4M12 17h.01'] };
+    const checks = [
+      ['Identity', 'National ID matches the name', 'ok'],
+      ['Driving licence', 'Professional licence valid to 2028', 'ok'],
+      ['Vehicle insurance', 'Ends Sun 30 Nov: under 3 months', 'bad'],
+      ['Initial lab result', 'Dated Thu 2 Oct: within 30 days', 'ok'],
+      ['Vehicle registration', 'Photo cropped: plate unreadable', 'warn']
+    ].map(([t, d, k]) => ({ t, d, i: T[k][2], box: 'display: flex; gap: 10px; padding: 10px 12px; border-radius: 12px; background: ' + T[k][0] + '; color: ' + T[k][1] + ';' }));
+    const sel = this.state.sel;
+    const I = [
+      ['ins', 'Vehicle insurance', 'Upload a policy valid until at least Fri 16 Jan.'],
+      ['reg', 'Vehicle registration', 'Upload a clear photo showing all four corners and the plate.'],
+      ['photo', 'Profile photo', 'Face fully visible, no sunglasses.'],
+      ['other', 'Other item', 'Describe it in the message.']
+    ];
+    const IM = { ins: ['../assets/5d1598097ad2c90e309e91f94f4c905d.svg', 'Current insurance upload', '30% 50%', '8px'], reg: ['../assets/5d1598097ad2c90e309e91f94f4c905d.svg', 'Current registration photo, cropped', '75% 40%', '8px'], photo: ['../assets/f1b41fb1b201b088e5114338fbe087be.svg', 'Current profile photo', '50% 50%', '999px'] };
+    const items = I.map(([k, t, d]) => { const on = !!sel[k]; const im = IM[k]; return { t, d, ch: on ? 'true' : 'false', hasImg: !!im, img: im ? im[0] : '', alt: im ? im[1] : '',
+      imgSt: im ? 'margin-inline-start: auto; width: ' + (im[3] === '999px' ? '40px' : '56px') + '; height: ' + (im[3] === '999px' ? '40px' : '42px') + '; flex-shrink: 0; border-radius: ' + im[3] + '; object-fit: cover; object-position: ' + im[2] + ';' : '',
+      on: () => this.setState({ sel: { ...sel, [k]: !on } }),
+      st: 'display: flex; gap: 12px; align-items: flex-start; padding: 10px 12px; border-radius: 12px; font: inherit; color: #262a67; cursor: pointer; ' + (on ? 'background: #fff8f3; border: 1px solid #fb8030;' : 'background: #ffffff; border: 1px solid #e3dfc9;'),
+      box: 'width: 22px; height: 22px; flex-shrink: 0; border-radius: 6px; display: flex; align-items: center; justify-content: center; margin-top: 1px; ' + (on ? 'background: #262a67; color: #ffffff; border: 2px solid #262a67;' : 'background: #ffffff; color: #ffffff; border: 2px solid #7b7fa6;') }; });
+    const n = Object.values(sel).filter(Boolean).length;
+    const btn = (enabled, bg, fg) => 'height: 48px; padding: 0 20px; border-radius: 12px; border: 0; font: inherit; font-size: 15px; font-weight: 700; ' + (enabled ? 'cursor: pointer; background: ' + bg + '; color: ' + fg + ';' : 'cursor: not-allowed; background: #e3dfc9; color: #5b5f86;');
+    const reason = this.state.reason;
+    const reasons = ['Missing document', 'Unreadable document', 'Below portfolio minimum', 'Expired insurance or licence', 'Information mismatch', 'Other'].map((t) => { const on = t === reason; return { t, ch: on ? 'true' : 'false', on: () => this.setState({ reason: t }),
+      st: 'display: flex; gap: 10px; align-items: center; min-height: 44px; padding: 0 12px; border-radius: 12px; font: inherit; font-size: 14px; font-weight: 500; color: #262a67; text-align: start; cursor: pointer; ' + (on ? 'background: #fff8f3; border: 1px solid #fb8030;' : 'background: #ffffff; border: 1px solid ' + (reason ? '#e3dfc9' : '#f3c7c2') + ';'),
+      dot: 'width: 18px; height: 18px; flex-shrink: 0; box-sizing: border-box; border-radius: 999px; ' + (on ? 'border: 6px solid #262a67;' : 'border: 2px solid #7b7fa6;') }; });
+    return { checks, items, noItems: n === 0, nItems: n + (n === 1 ? ' item' : ' items'), rcDisabled: n === 0 ? 'true' : 'false', rcBtn: btn(n > 0, '#ff6c2e', '#262a67'),
+      reasons, noReason: !reason, rjInvalid: reason ? 'false' : 'true', isOther: reason === 'Other', rjDisabled: reason ? 'false' : 'true', rjBtn: btn(!!reason, '#b42318', '#ffffff') };
+  }
+}
+</script>
+</body>
+</html>

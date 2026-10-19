@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Organization · Lead &amp; quote</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="min-height: 1000px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="OrgNav" active="Leads" hint-size="248px,1000px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 20px">
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 4px; min-width: 0">
+<a href="OrgLeads.dc.html" style="font-size: 14px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg>Leads</a>
+<h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Al Noor International School</h1>
+<span style="font-size: 15px; color: #5b5f86">Grade 6 trip to Jeddah · lead LD-0412 · owner Mona Saleh · source: website form</span>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 10px">
+<a href="OrgNew1.dc.html" style="height: 48px; box-sizing: border-box; padding: 0 16px; border-radius: 12px; border: 1px solid #7b7fa6; background: #fff; color: #262a67; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM18 9a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM6 15V9a4 4 0 0 1 8 0v6a4 4 0 0 0 4 4M18 9v2"></path></svg>Convert to private trip</a>
+<a href="OrgInvoiceNew.dc.html" style="height: 48px; box-sizing: border-box; padding: 0 16px; border-radius: 12px; border: 1px solid #7b7fa6; background: #fff; color: #262a67; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2zM9 8h6M9 12h6"></path></svg>Create B2B invoice</a>
+</div>
+</div>
+
+<ol aria-label="Lead stage" style="list-style: none; margin: 0; padding: 6px; display: flex; flex-wrap: wrap; gap: 4px; background: #ffffff; border-radius: 999px">
+<sc-for list="{{stages}}" as="s" hint-placeholder-count="6"><li aria-current="{{s.cur}}" style="{{s.st}}">{{s.n}}</li></sc-for>
+</ol>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
+
+<div style="flex: 1 1 340px; min-width: 0; display: flex; flex-direction: column; gap: 20px">
+<section aria-labelledby="ct-h" style="background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+<h2 id="ct-h" style="margin: 0; font-size: 18px; line-height: 26px; font-weight: 600">Contact</h2>
+<div style="display: flex; gap: 12px; align-items: center"><img src="../assets/6c8d11c7c22cf2debc4ba323f8a3daea.svg" alt="" style="width: 44px; height: 44px; border-radius: 999px; object-fit: cover; flex-shrink: 0"><span style="display: flex; flex-direction: column"><span style="font-weight: 600">Huda Al-Otaibi</span><span style="font-size: 13px; color: #5b5f86">Activities coordinator</span></span></div>
+<div style="display: flex; flex-direction: column; gap: 6px; font-size: 14px">
+<span style="display: flex; gap: 8px; align-items: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"></path></svg>+966 11 ••• 7720</span>
+<span style="display: flex; gap: 8px; align-items: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16v12H4zM4 7l8 6 8-6"></path></svg>activities@alnoor-school.sa</span>
+<span style="color: #5b5f86">VAT 300512345600003 · CR 1010298741 · Al Malqa, Riyadh</span>
+</div>
+<a href="OrgCustomer.dc.html" style="font-size: 14px; font-weight: 600">Existing customer · 6 trips · 128,400 SAR</a>
+</section>
+
+<section aria-labelledby="rq-h" style="background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 10px">
+<h2 id="rq-h" style="margin: 0; font-size: 18px; line-height: 26px; font-weight: 600">Requirements</h2>
+<sc-for list="{{reqs}}" as="r" hint-placeholder-count="6">
+<div style="display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: 10px; font-size: 14px; padding-bottom: 8px; border-bottom: 1px solid #e3dfc9"><span style="color: #5b5f86">{{r.k}}</span><span style="font-weight: 500">{{r.v}}</span></div>
+</sc-for>
+<span style="display: inline-flex; align-self: flex-start; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; background: #e3f3ea; color: #1f7a4d; font-size: 13px; font-weight: 600"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5.5c0 4.4-3 8-7 9.5-4-1.5-7-5.1-7-9.5V6zM9 12l2 2 4-4"></path></svg>Child tracking required · included on Growth</span>
+</section>
+
+<section aria-labelledby="ac-h" style="background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 4px">
+<h2 id="ac-h" style="margin: 0 0 8px; font-size: 18px; line-height: 26px; font-weight: 600">Activity</h2>
+<sc-for list="{{activity}}" as="a" hint-placeholder-count="5">
+<div style="display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 10px; padding: 8px 0">
+<span style="width: 28px; height: 28px; border-radius: 999px; background: #f6f3e4; display: flex; align-items: center; justify-content: center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{a.icon}}"></path></svg></span>
+<span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; font-weight: 600">{{a.t}}</span><span style="font-size: 13px; line-height: 18px; color: #5b5f86">{{a.d}}</span></span>
+</div>
+</sc-for>
+</section>
+</div>
+
+<section aria-labelledby="qb-h" style="flex: 1.5 1 480px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 18px">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap"><h2 id="qb-h" style="margin: 0; font-size: 22px; line-height: 30px; font-weight: 600">Quote v3</h2><span style="font-size: 13px; color: #5b5f86">v2 sent Tue 7 Oct · 101,844 SAR incl. VAT</span></div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px">
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">Trip template<select style="height: 52px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 12px; font: inherit; font-size: 16px; color: #262a67"><option>Jeddah Heritage &amp; Sea · 2 days</option><option>Jeddah Corniche Night</option><option>Red Sea Snorkel Day</option></select></label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">Dates<input value="Wed 12 – Thu 13 Nov" style="height: 52px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 14px; font: inherit; font-size: 16px; color: #262a67"></label>
+<div style="display: flex; flex-direction: column; gap: 6px"><span id="bus-l" style="font-size: 14px; font-weight: 600">Buses · 49 seats each</span>
+<div role="group" aria-labelledby="bus-l" style="display: flex; align-items: center; gap: 8px; height: 52px">
+<button type="button" aria-label="One bus fewer" onClick="{{busDown}}" style="width: 44px; height: 44px; border-radius: 12px; border: 1px solid #7b7fa6; background: #fff; color: #262a67; display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14"></path></svg></button>
+<span aria-live="polite" style="min-width: 32px; text-align: center; font-size: 20px; font-weight: 700">{{buses}}</span>
+<button type="button" aria-label="One bus more" onClick="{{busUp}}" style="width: 44px; height: 44px; border-radius: 12px; border: 1px solid #7b7fa6; background: #fff; color: #262a67; display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg></button>
+<span style="font-size: 13px; color: {{seatColor}}; font-weight: 600">{{seatNote}}</span>
+</div></div>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">Price per student (SAR)<input type="number" inputmode="numeric" value="{{perHead}}" onInput="{{onPrice}}" style="height: 52px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 14px; font: inherit; font-size: 16px; color: #262a67"><span style="font-size: 13px; font-weight: 400; color: #5b5f86">Hotel, guide and meals included · 12 teachers free</span></label>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 8px">
+<span style="font-size: 14px; font-weight: 600">Programs</span>
+<sc-for list="{{progs}}" as="p" hint-placeholder-count="4">
+<button type="button" role="checkbox" aria-checked="{{p.chk}}" aria-disabled="{{p.req}}" onClick="{{p.toggle}}" style="display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 12px; border: 1px solid #e3dfc9; background: #fff; color: #262a67; font: inherit; text-align: start; cursor: pointer">
+<span style="{{p.box}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg></span>
+<span style="flex-grow: 1; display: flex; flex-direction: column"><span style="font-size: 15px; font-weight: 600">{{p.n}}</span><span style="font-size: 13px; color: #5b5f86">{{p.d}}</span></span>
+<span style="font-weight: 600; white-space: nowrap">{{p.amt}}</span>
+</button>
+</sc-for>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 8px; padding: 16px; border-radius: 12px; background: #f6f3e4; font-size: 15px">
+<sc-for list="{{lines}}" as="l" hint-placeholder-count="4"><div style="display: flex; justify-content: space-between; gap: 12px"><span style="color: #5b5f86">{{l.k}}</span><span style="font-weight: 600">{{l.v}}</span></div></sc-for>
+<div style="display: flex; justify-content: space-between; gap: 12px; padding-top: 10px; border-top: 1px solid #e3dfc9; font-size: 20px; font-weight: 700"><span>Total incl. VAT</span><span>{{total}}</span></div>
+<span style="font-size: 13px; color: #5b5f86">{{perStudent}}</span>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px">
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">Payment terms<select style="height: 52px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 12px; font: inherit; font-size: 16px; color: #262a67"><option>Net 30</option><option>Net 15</option><option>50% deposit, rest Net 30</option><option>Due on receipt</option></select></label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">PO number<input value="PO-ANS-2026-118" style="height: 52px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 14px; font: inherit; font-size: 16px; color: #262a67"></label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">Quote valid until<input value="Mon 20 Oct" style="height: 52px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 14px; font: inherit; font-size: 16px; color: #262a67"></label>
+</div>
+
+<sc-if value="{{sent}}" hint-placeholder-val="{{false}}"><div role="status" style="display: flex; gap: 10px; align-items: center; padding: 12px 14px; border-radius: 12px; background: #e3f3ea; color: #1f7a4d; font-size: 14px; font-weight: 600"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg>Quote v3 sent to activities@alnoor-school.sa as a bilingual PDF. Lead moved to Negotiating when Huda replies.</div></sc-if>
+
+<div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: flex-end; align-items: center">
+<span style="font-size: 13px; color: #5b5f86; margin-inline-end: auto">Sent as Arabic + English PDF with Sunrise Tours VAT details</span>
+<button type="button" style="height: 48px; padding: 0 16px; border-radius: 12px; border: 1px solid #7b7fa6; background: #fff; color: #262a67; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Preview PDF</button>
+<button type="button" onClick="{{send}}" style="height: 48px; padding: 0 22px; border-radius: 12px; border: 0; background: #ff6c2e; color: #262a67; font: inherit; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 3L10 14M21 3l-7 18-4-7-7-4z"></path></svg>Send quote</button>
+</div>
+</section>
+</div>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1300}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { buses: 3, perHead: 560, sent: false, off: {} }; }
+  renderVals() {
+    const fmt = (n) => Math.round(n).toLocaleString('en-US') + ' SAR';
+    const { buses, perHead } = this.state;
+    const travellers = 132, students = 120;
+    const P = [
+      ['aq', 'Red Sea aquarium visit', 'Per person · 45 SAR × 132', 45 * travellers, false],
+      ['lunch', 'Lunch boxes · both days', 'Per person · 50 SAR × 132', 50 * travellers, false],
+      ['balad', 'Al-Balad heritage walk', 'Free · guided', 0, false],
+      ['ins', 'Travel insurance', 'Required · 25 SAR × 132', 25 * travellers, true]
+    ];
+    const off = this.state.off;
+    const progs = P.map(([k, n, d, amt, req]) => { const on = req || !off[k]; return { n, d, amt: amt ? fmt(amt) : 'Free', chk: on ? 'true' : 'false', req: req ? 'true' : 'false',
+      toggle: () => { if (req) return; this.setState({ off: { ...off, [k]: !off[k] } }); },
+      box: 'width: 22px; height: 22px; flex-shrink: 0; border-radius: 6px; display: flex; align-items: center; justify-content: center; ' + (on ? 'background: #262a67; color: #f6f3e4; border: 1px solid #262a67;' : 'background: #fff; color: transparent; border: 1px solid #7b7fa6;') + (req ? ' opacity: .7;' : '') }; });
+    const progSum = P.reduce((s, [k, , , amt, req]) => s + ((req || !off[k]) ? amt : 0), 0);
+    const pkg = students * perHead;
+    const coach = buses * 3400;
+    const sub = pkg + coach + progSum;
+    const vat = sub * 0.15;
+    const seats = buses * 49;
+    const short = seats < travellers;
+    const stageNames = ['New', 'Contacted', 'Quote sent', 'Negotiating', 'Won', 'Lost'];
+    const curI = 2;
+    const stages = stageNames.map((n, i) => ({ n, cur: i === curI ? 'step' : 'false',
+      st: 'flex: 1 1 100px; text-align: center; padding: 8px 12px; border-radius: 999px; font-size: 14px; font-weight: 600; ' + (i === curI ? 'background: #262a67; color: #f6f3e4;' : i < curI ? 'background: #e3f3ea; color: #1f7a4d;' : 'background: transparent; color: #5b5f86;') }));
+    const reqs = [
+      { k: 'Dates', v: 'Wed 12 – Thu 13 Nov · 1 night in Jeddah' },
+      { k: 'Group', v: '120 students (age 11–12) + 12 teachers' },
+      { k: 'Transport', v: '3 buses from school gate, Al Malqa · 06:00' },
+      { k: 'Programs', v: 'Aquarium, Al-Balad walk, lunch both days' },
+      { k: 'Staff', v: 'One female moderator per bus' },
+      { k: 'Budget', v: 'Around 800 SAR per student incl. VAT' }
+    ];
+    const I = { eye: 'M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12zM12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6z', mail: 'M4 6h16v12H4zM4 7l8 6 8-6', file: 'M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zM14 3v5h5', phone: 'M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2', flag: 'M5 21V4M5 4h11l-2 4 2 4H5' };
+    const activity = [
+      { icon: I.eye, t: 'Huda opened quote v2', d: 'Today 08:14 · viewed 3 times' },
+      { icon: I.mail, t: 'Huda: "Please add insurance and a female moderator per bus"', d: 'Tue 7 Oct 10:05 · email' },
+      { icon: I.file, t: 'Mona sent quote v2 · 101,844 SAR', d: 'Tue 7 Oct 13:20 · added insurance and lunch boxes' },
+      { icon: I.phone, t: 'Call with Huda · 22 min', d: 'Sun 5 Oct · Mona Saleh' },
+      { icon: I.flag, t: 'Inquiry received from website form', d: 'Thu 2 Oct 21:40 · assigned to Mona' }
+    ];
+    return {
+      stages, reqs, activity, progs, buses: String(buses), perHead: String(perHead),
+      seatNote: seats + ' seats for 132' + (short ? ' · not enough' : ''), seatColor: short ? '#b42318' : '#1f7a4d',
+      busDown: () => this.setState({ buses: Math.max(1, buses - 1) }), busUp: () => this.setState({ buses: Math.min(6, buses + 1) }),
+      onPrice: (e) => { const v = parseInt(e && e.target ? e.target.value : '', 10); if (!isNaN(v)) this.setState({ perHead: v }); },
+      lines: [
+        { k: 'Trip package · 120 × ' + perHead + ' SAR', v: fmt(pkg) },
+        { k: 'Coaches · ' + buses + ' × 3,400 SAR (2 days)', v: fmt(coach) },
+        { k: 'Programs', v: fmt(progSum) },
+        { k: 'Subtotal excl. VAT', v: fmt(sub) },
+        { k: 'VAT 15%', v: fmt(vat) }
+      ],
+      total: fmt(sub + vat), perStudent: 'About ' + fmt((sub + vat) / students) + ' per student · buyer VAT 300512345600003',
+      sent: this.state.sent, send: () => this.setState({ sent: true })
+    };
+  }
+}
+</script>
+</body>
+</html>

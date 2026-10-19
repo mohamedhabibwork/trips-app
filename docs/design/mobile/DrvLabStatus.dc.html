@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Driver · Lab tests</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="height: 100%; box-sizing: border-box; padding: 56px 16px 24px; display: flex; flex-direction: column; gap: 12px">
+
+<div style="display: flex; align-items: center; gap: 12px">
+<a href="DrvProfile.dc.html" aria-label="Back" style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 999px; background: #ffffff; color: #262a67; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a>
+<div style="flex-grow: 1; display: flex; flex-direction: column"><h1 style="margin: 0; font-size: 22px; line-height: 28px; font-weight: 700">Lab tests</h1><span style="font-size: 13px; color: #5b5f86">Khalid Al-Harbi · status and history</span></div>
+</div>
+
+<section aria-labelledby="cur-h" style="padding: 16px; border-radius: 20px; background: #262a67; color: #f6f3e4; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; align-items: center; gap: 8px"><span style="font-size: 12px; font-weight: 600; color: #b8bad6">CURRENT TEST</span><span style="{{pillStyle}}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{pillIcon}}"></path></svg>{{stateLabel}}</span></div>
+<h2 id="cur-h" style="margin: 0; font-size: 20px; line-height: 26px; font-weight: 700">{{headline}}</h2>
+<p style="margin: 0; font-size: 14px; line-height: 20px; color: #b8bad6">{{detail}}</p>
+<sc-if value="{{hasDeadline}}" hint-placeholder-val="{{false}}">
+<div style="padding: 10px 12px; border-radius: 12px; background: #31367a; display: flex; align-items: center; gap: 10px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ff8655" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7v5l3 2"></path></svg><span style="display: flex; flex-direction: column"><span style="font-size: 12px; color: #b8bad6">{{deadlineLabel}}</span><span style="font-size: 16px; font-weight: 700">{{deadline}}</span></span></div>
+</sc-if>
+<sc-if value="{{hasActions}}" hint-placeholder-val="{{false}}">
+<div style="display: flex; gap: 8px">
+<a href="#" style="flex: 1 1 0; height: 44px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 15px; font-weight: 700; text-decoration: none; display: flex; align-items: center; justify-content: center">{{actA}}</a>
+<a href="#" style="flex: 1 1 0; height: 44px; border-radius: 12px; background: #31367a; color: #f6f3e4; font-size: 15px; font-weight: 600; text-decoration: none; display: flex; align-items: center; justify-content: center">{{actB}}</a>
+</div>
+</sc-if>
+</section>
+
+<dl style="margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 8px">
+<sc-for list="{{facts}}" as="f" hint-placeholder-count="2">
+<div style="padding: 10px 12px; border-radius: 12px; background: #ffffff"><dt style="font-size: 12px; color: #5b5f86">{{f.k}}</dt><dd style="margin: 0; font-size: 15px; font-weight: 600">{{f.v}}</dd></div>
+</sc-for>
+</dl>
+
+<section aria-labelledby="hi-h" style="border-radius: 20px; background: #ffffff; display: flex; flex-direction: column">
+<h2 id="hi-h" style="margin: 0; padding: 12px 16px 4px; font-size: 15px; font-weight: 600">History</h2>
+<sc-if value="{{noHistory}}" hint-placeholder-val="{{false}}"><p style="margin: 0; padding: 8px 16px 14px; font-size: 14px; color: #5b5f86">No lab tests yet. You will get a notice when admin requests one.</p></sc-if>
+<ul style="margin: 0; padding: 0; list-style: none">
+<sc-for list="{{history}}" as="h" hint-placeholder-count="3">
+<li style="{{h.row}}">
+<span style="flex-grow: 1; display: flex; flex-direction: column"><span style="font-size: 14px; font-weight: 600">{{h.when}}</span><span style="font-size: 12px; color: #5b5f86">{{h.lab}}</span></span>
+<span style="{{h.pill}}">{{h.s}}</span>
+</li>
+</sc-for>
+</ul>
+</section>
+
+<p style="margin: 0; display: flex; gap: 8px; font-size: 13px; line-height: 18px; color: #5b5f86"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#262a67" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 1px"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 11v5M12 8h.01"></path></svg><span>{{note}}</span></p>
+
+<div style="margin-top: auto; display: flex; gap: 8px; align-items: center">
+<a href="DrvSupport.dc.html" style="flex-grow: 1; height: 52px; box-sizing: border-box; border-radius: 12px; background: #ffffff; border: 1px solid #7b7fa6; color: #262a67; font-size: 16px; font-weight: 600; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"></path></svg>Contact support</a>
+</div>
+<span style="margin-top: -6px; font-size: 12px; color: #5b5f86; text-align: center">Last synced 07:40 · read only on this screen</span>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"state":{"editor":"enum","options":["passed","pending","uploaded","failed","missed","closed","none"],"default":"passed"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const st = this.props.state || 'passed';
+    const CK = 'M5 12.5l4.5 4.5L19 7', CL = 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7v5l3 2', X = 'M6 6l12 12M18 6L6 18', AL = 'M12 3l9.5 17h-19zM12 10v4M12 17h.01', UP = 'M12 16V4M7 9l5-5 5 5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3', MI = 'M5 12h14';
+    const P = { ok: ['#e3f3ea', '#1f7a4d'], warn: ['#fdf0d5', '#8a4b00'], bad: ['#fde8e6', '#b42318'], info: ['#e6e8f5', '#262a67'] };
+    const S = {
+      passed: ['Passed', 'ok', CK, 'No test open', 'Your last result was accepted on Thu 2 Oct 2025. You are fully active.', '', '', false, '', ''],
+      pending: ['Pending', 'warn', CL, 'Lab test requested', 'Admin requested a random test on Tue 14 Oct. You are paused until a result is accepted; your upcoming trips went back to the organizers.', 'Deadline', 'Fri 17 Oct 2025, 23:59 · 1 day 16 h left', true, 'Book lab test', 'Upload result'],
+      uploaded: ['Result uploaded', 'info', UP, 'Waiting for the admin decision', 'You uploaded a result from Al Borg Lab on Wed 15 Oct. Admin decides within 2 working days. You stay paused until then.', 'Uploaded', 'Wed 15 Oct 2025, 18:22', false, '', ''],
+      failed: ['Failed', 'bad', X, 'Result not accepted · case open', 'Admin opened a case on Thu 16 Oct and will tell you the next step. You stay paused. A second failed test within 12 months closes the account.', 'Case opened', 'Thu 16 Oct 2025, 11:05', false, '', ''],
+      missed: ['Missed', 'bad', AL, 'Deadline missed · suspended', 'Suspended since Sat 18 Oct 2025. You can still upload a result; a late pass is reviewed within 2 working days.', 'Suspended since', 'Sat 18 Oct 2025, 00:00', true, 'Upload late result', 'Book lab test'],
+      closed: ['Account closed', 'bad', X, 'Suspended over 30 days', 'The suspension passed 30 days on Mon 17 Nov 2025, so the account was closed. Contact support for a copy of your records.', 'Closed on', 'Mon 17 Nov 2025', false, '', ''],
+      none: ['No test', 'info', MI, 'No lab test yet', 'Approved drivers may be asked for a random test at any time. You will get a push notice with the deadline.', '', '', false, '', '']
+    };
+    const s = S[st] || S.passed;
+    const [bg, fg] = P[s[1]];
+    const H = st === 'none' ? [] : [
+      st === 'passed' ? null : ['Requested Tue 14 Oct 2025', st === 'pending' ? 'Not booked yet · deadline Fri 17 Oct' : 'Al Borg Lab, Olaya', s[0], s[1]],
+      ['Thu 2 Oct 2025', 'Al Borg Lab, Olaya · requested 30 Sep', 'Passed', 'ok'],
+      ['Wed 11 Jun 2025', 'Al Mokhtabar Lab, Malaz · requested 9 Jun', 'Passed', 'ok']
+    ].filter(Boolean);
+    const history = H.map(([when, lab, label, tone], i) => ({ when, lab, s: label,
+      row: 'min-height: 48px; padding: 4px 16px; display: flex; align-items: center; gap: 10px; ' + (i ? 'border-top: 1px solid #e3dfc9;' : ''),
+      pill: 'padding: 2px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; background: ' + P[tone][0] + '; color: ' + P[tone][1] }));
+    const facts = [
+      ['Last result date', st === 'none' ? 'None yet' : 'Thu 2 Oct 2025'],
+      ['Consent recorded', 'Mon 3 Mar 2025']
+    ].map(([k, v]) => ({ k, v }));
+    const notes = {
+      passed: 'Tests are free at partner labs. A new request pauses you at once until a result is accepted.',
+      pending: 'This screen is read only. Use Book lab test or Upload result; they are the only actions open while you are paused.',
+      uploaded: 'No action is needed now. You will get a notice with the decision.',
+      failed: 'Support can explain the case but cannot lift the pause. Only admin can, after review.',
+      missed: 'Over 30 days suspended closes the account. Upload a result as soon as you have one.',
+      closed: 'Sign-in will be refused after you leave this screen.',
+      none: 'Tests are free at partner labs. You have 3 days from a request unless admin sets another deadline.'
+    };
+    return {
+      stateLabel: s[0], pillIcon: s[2], headline: s[3], detail: s[4],
+      pillStyle: 'padding: 2px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 4px; background: ' + bg + '; color: ' + fg,
+      hasDeadline: !!s[5], deadlineLabel: s[5], deadline: s[6],
+      hasActions: s[7], actA: s[8], actB: s[9],
+      facts, history, noHistory: history.length === 0, note: notes[st] || notes.passed
+    };
+  }
+}
+</script>
+</body>
+</html>

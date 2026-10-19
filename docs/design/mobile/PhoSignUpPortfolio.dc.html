@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Photographer · Portfolio</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif; display: flex; flex-direction: column; padding: 56px 16px 32px; gap: 16px">
+<div style="display: flex; align-items: center; justify-content: space-between">
+<a href="PhoSignUpProfile.dc.html" aria-label="Back" style="width: 44px; height: 44px; border-radius: 999px; background: #ffffff; display: flex; align-items: center; justify-content: center; color: #262a67"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg></a>
+<span style="font-size: 13px; font-weight: 500; color: #5b5f86">Step 5 of 6</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 4px">
+<h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 700">Portfolio and ID</h1>
+<p style="margin: 0; font-size: 15px; line-height: 22px; color: #5b5f86">Add at least 8 of your best photos. Group and outdoor shots help most.</p>
+</div>
+<div style="display: flex; justify-content: space-between; align-items: center"><span style="font-size: 14px; font-weight: 600">Portfolio</span><span style="font-size: 13px; font-weight: 600; color: #5b5f86">5 of 8 minimum</span></div>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
+<img src="../assets/79a6ce5310828e799852c7aef2cdc987.svg" alt="Friends taking a group selfie on a trip" style="aspect-ratio: 1; width: 100%; border-radius: 12px; object-fit: cover; object-position: center 40%">
+<img src="../assets/073b7fe9ddee4e94c5d8ddaa41cbb4f4.svg" alt="Group silhouettes jumping on a dune at sunset" style="aspect-ratio: 1; width: 100%; border-radius: 12px; object-fit: cover; object-position: 60% center">
+<img src="../assets/44a218548719fe367b614a0dd5151345.svg" alt="AlUla rock formations under a night sky" style="aspect-ratio: 1; width: 100%; border-radius: 12px; object-fit: cover; object-position: 30% center">
+<img src="../assets/61261514261614e6b661d310c333264d.svg" alt="Group playing ball on the beach" style="aspect-ratio: 1; width: 100%; border-radius: 12px; object-fit: cover; object-position: center 70%">
+<img src="../assets/dd052dab07949cd087d95323479af226.svg" alt="Group around a desert campfire at night" style="aspect-ratio: 1; width: 100%; border-radius: 12px; object-fit: cover; object-position: 45% 60%">
+<button aria-label="Add photos" style="aspect-ratio: 1; border-radius: 12px; border: 1px dashed #7b7fa6; background: #ffffff; color: #262a67; display: flex; align-items: center; justify-content: center"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg></button>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="pf-link" style="font-size: 14px; font-weight: 600">Instagram or website <span style="font-weight: 500; color: #5b5f86">(optional)</span></label><input id="pf-link" value="instagram.com/nourashots" style="height: 52px; box-sizing: border-box; padding: 0 14px; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-family: inherit; font-size: 16px"></div>
+<div style="display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 12px; background: #ffffff; border: 1px solid #e3dfc9">
+<span style="width: 40px; height: 40px; border-radius: 8px; background: #e3f3ea; color: #1f7a4d; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"></path></svg></span>
+<span style="flex-grow: 1; display: flex; flex-direction: column"><span style="font-size: 15px; font-weight: 600">ID card</span><span style="font-size: 13px; color: #1f7a4d; font-weight: 500">Uploaded · front and back</span></span>
+</div>
+<a href="PhoReview.dc.html" style="margin-top: auto; height: 52px; flex-shrink: 0; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 16px; font-weight: 600; display: flex; align-items: center; justify-content: center; text-decoration: none">Submit for review</a>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Admin navigation</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>body{margin:0} .te-an:focus-visible{outline:2px solid #f89e23;outline-offset:2px} .te-an:hover{background:#31367a}</style>
+</helmet>
+<nav aria-label="Admin" style="width: 100%; min-height: 1000px; height: 100%; box-sizing: border-box; background: #262a67; color: #f6f3e4; font-family: Outfit, Nunito, system-ui, sans-serif; padding: 20px 16px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<img src="../assets/6ea846350ba3adc0e289d47fa0612c3b.svg" alt="Trips Enjoy" style="height: 36px; width: auto; align-self: flex-start">
+<span style="align-self: flex-start; padding: 2px 10px; border-radius: 999px; background: #31367a; color: #b8bad6; font-size: 12px; font-weight: 600">Admin console</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 0">
+<sc-for list="{{items}}" as="i" hint-placeholder-count="30">
+<sc-if value="{{i.isHead}}" hint-placeholder-val="{{false}}"><span style="padding: 6px 12px 2px; font-size: 11px; font-weight: 700; letter-spacing: .6px; color: #b8bad6">{{i.t}}</span></sc-if>
+<sc-if value="{{i.isLink}}" hint-placeholder-val="{{true}}">
+<a href="{{i.href}}" class="te-an" aria-current="{{i.cur}}" style="{{i.style}}"><span style="flex-grow: 1">{{i.t}}</span><sc-if value="{{i.hasN}}" hint-placeholder-val="{{false}}"><span style="padding: 0 8px; border-radius: 999px; background: #f89e23; color: #262a67; font-size: 12px; font-weight: 700; line-height: 20px">{{i.n}}</span></sc-if></a>
+</sc-if>
+</sc-for>
+</div>
+<div style="margin-top: auto; display: flex; align-items: center; gap: 10px; font-size: 14px; padding-top: 12px; border-top: 1px solid #31367a"><img src="../assets/a2107042fb2903c5e36101018e509bf2.svg" alt="" style="width: 36px; height: 36px; flex-shrink: 0; border-radius: 999px; object-fit: cover"><span style="display: flex; flex-direction: column"><span style="font-weight: 600">Reem Othman</span><span style="font-size: 12px; color: #b8bad6">Super admin</span></span></div>
+</nav>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"active":{"editor":"enum","options":["Overview","Applications","Lab tests","Users","Organizations","Provider pool","Trips","Deals","Coupons","Disputes","Support","Moderation","Analytics","Plans","Subscriptions","Revenue","Invoices","Settlements","Payouts","Settings","Countries","Access policy","Webhooks","Admin team","Audit log","Templates"],"default":"Overview"},"$preview":{"width":248,"height":1000}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const A = [
+      ['h', 'REVIEW'],
+      ['Overview', 'AdmHome.dc.html', 0],
+      ['Applications', 'AdminApplications.dc.html', 14],
+      ['Lab tests', 'AdmLabTests.dc.html', 3],
+      ['Users', 'AdmUsers.dc.html', 0],
+      ['Organizations', 'AdmOrgs.dc.html', 0],
+      ['Provider pool', 'AdmProviders.dc.html', 0],
+      ['h', 'MARKETPLACE'],
+      ['Trips', 'AdmTrips.dc.html', 0],
+      ['Deals', 'AdmDeals.dc.html', 0],
+      ['Coupons', 'AdmCoupons.dc.html', 2],
+      ['Disputes', 'AdmDisputes.dc.html', 4],
+      ['Support', 'AdmSupport.dc.html', 12],
+      ['Moderation', 'AdmModeration.dc.html', 5],
+      ['Analytics', 'AdmAnalytics.dc.html', 0],
+      ['h', 'MONEY'],
+      ['Plans', 'AdmPlans.dc.html', 0],
+      ['Subscriptions', 'AdmSubs.dc.html', 0],
+      ['Revenue', 'AdmRevenue.dc.html', 0],
+      ['Invoices', 'AdmInvoices.dc.html', 3],
+      ['Settlements', 'AdmSettlements.dc.html', 0],
+      ['Payouts', 'AdmPayouts.dc.html', 0],
+      ['h', 'SYSTEM'],
+      ['Settings', 'AdmSettings.dc.html', 0],
+      ['Countries', 'AdmCountries.dc.html', 0],
+      ['Access policy', 'AdmAccessPolicy.dc.html', 0],
+      ['Webhooks', 'AdmWebhooks.dc.html', 0],
+      ['Admin team', 'AdmTeam.dc.html', 0],
+      ['Audit log', 'AdmAudit.dc.html', 0],
+      ['Templates', 'AdmTemplates.dc.html', 0]
+    ];
+    const a = this.props.active ?? 'Overview';
+    return { items: A.map((r) => r[0] === 'h' ? { isHead: true, isLink: false, t: r[1] } : ({ isHead: false, isLink: true, t: r[0], href: r[1], n: r[2], hasN: r[2] > 0, cur: r[0] === a ? 'page' : 'false',
+      style: 'display: flex; align-items: center; gap: 8px; height: 28px; padding: 0 12px; border-radius: 12px; color: #f6f3e4; text-decoration: none; font-size: 14px; font-weight: ' + (r[0] === a ? '600; background: #31367a; box-shadow: inset 3px 0 0 #ff6c2e;' : '500;') })) };
+  }
+}
+</script>
+</body>
+</html>

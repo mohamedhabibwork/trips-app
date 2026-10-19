@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>PDF · Plan &amp; commission invoice</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;family=Cairo:wght@400;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#ffffff}
+</style>
+</helmet>
+<div style="width: 794px; height: 1123px; box-sizing: border-box; padding: 48px; background: #ffffff; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif; font-size: 15px; line-height: 1.45; display: flex; flex-direction: column; gap: 20px">
+<header style="display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; padding-bottom: 16px; border-bottom: 2px solid #262a67">
+<img src="../assets/1fbce194fcb16bf54904c32c189fca31.svg" alt="Trips Enjoy" style="height: 40px; width: auto; display: block">
+<div style="text-align: right">
+<div style="font-size: 24px; font-weight: 700; line-height: 1.15">Tax Invoice</div>
+<div style="font-family: Cairo, sans-serif; font-size: 18px; font-weight: 700" dir="rtl" lang="ar">فاتورة ضريبية</div>
+<div style="font-size: 16px; font-weight: 600">INV-TE-2026-000981</div>
+</div>
+</header>
+<section style="display: grid; grid-template-columns: repeat(4, 1fr); border: 1px solid #e3dfc9; border-radius: 8px">
+<sc-for list="{{meta}}" as="m" hint-placeholder-count="4">
+<div style="padding: 10px 12px"><div style="font-size: 13px; color: #5b5f86">{{m.en}} · <span style="font-family: Cairo, sans-serif">{{m.ar}}</span></div><div style="font-weight: 600">{{m.v}}</div></div>
+</sc-for>
+</section>
+<section style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px">
+<sc-for list="{{parties}}" as="p" hint-placeholder-count="2">
+<div><div style="display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: #5b5f86"><img src="{{p.logo}}" alt="" style="width: 32px; height: 32px; border-radius: 10px; object-fit: contain; flex-shrink: 0; display: block"><span>{{p.en}} · <span style="font-family: Cairo, sans-serif">{{p.ar}}</span></span></div><div style="font-size: 17px; font-weight: 700">{{p.name}}</div><div style="font-family: Cairo, sans-serif; font-weight: 600" dir="rtl" lang="ar">{{p.nameAr}}</div><div style="font-size: 14px">{{p.addr}}</div><div style="font-size: 14px; font-family: Cairo, sans-serif" dir="rtl" lang="ar">{{p.addrAr}}</div><div style="font-size: 14px">VAT {{p.vat}} · CR {{p.cr}}</div></div>
+</sc-for>
+</section>
+<table style="width: 100%; border-collapse: collapse">
+<thead>
+<tr style="font-size: 13px; color: #5b5f86; border-bottom: 1px solid #262a67; text-align: right">
+<th style="padding: 6px 8px 6px 0; text-align: left; font-weight: 600">Description · <span style="font-family: Cairo, sans-serif">الوصف</span></th>
+<th style="padding: 6px 8px; font-weight: 600">Qty</th>
+<th style="padding: 6px 8px; font-weight: 600">Unit price</th>
+<th style="padding: 6px 8px; font-weight: 600">VAT 15%</th>
+<th style="padding: 6px 0 6px 8px; font-weight: 600">Total</th>
+</tr>
+</thead>
+<tbody>
+<sc-for list="{{lines}}" as="l" hint-placeholder-count="2">
+<tr style="border-bottom: 1px solid #e3dfc9; text-align: right; vertical-align: top">
+<td style="padding: 10px 8px 10px 0; text-align: left"><div style="font-weight: 600">{{l.d}}</div><div style="font-family: Cairo, sans-serif; color: #5b5f86" lang="ar">{{l.ar}}</div><div style="font-size: 13px; color: #5b5f86">{{l.note}}</div></td>
+<td style="padding: 10px 8px">{{l.q}}</td>
+<td style="padding: 10px 8px; white-space: nowrap">{{l.u}}</td>
+<td style="padding: 10px 8px; white-space: nowrap">{{l.v}}</td>
+<td style="padding: 10px 0 10px 8px; white-space: nowrap; font-weight: 600">{{l.t}}</td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+<section style="display: flex; justify-content: space-between; gap: 24px; align-items: flex-start">
+<div style="font-size: 14px; display: flex; flex-direction: column; gap: 6px; max-width: 330px">
+<div><b>Payment</b></div>
+<div>Plan fee 1,713.50 SAR · charged to mada •• 7713 · Sat 1 Nov 2026, 00:05</div>
+<div>Commission 43,594.20 SAR · withheld from settlement STL-2026-10</div>
+<div style="color: #5b5f86">Balance due: 0.00 SAR · Paid</div>
+</div>
+<div style="flex: 0 1 330px">
+<div style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #e3dfc9"><span>Total excl. VAT <span style="font-family: Cairo, sans-serif; color: #5b5f86">غير شامل الضريبة</span></span><span>39,398.00</span></div>
+<div style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #e3dfc9"><span>VAT 15% <span style="font-family: Cairo, sans-serif; color: #5b5f86">الضريبة</span></span><span>5,909.70</span></div>
+<div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 2px solid #262a67; font-size: 18px; font-weight: 700"><span>Total incl. VAT</span><span>45,307.70 SAR</span></div>
+</div>
+</section>
+<section style="display: flex; gap: 16px; align-items: center; border: 1px solid #e3dfc9; border-radius: 8px; padding: 12px">
+<img src="../assets/820ae1ed630eb3e04ea4d7ce91f50535.png" alt="ZATCA QR code for invoice INV-TE-2026-000981" style="width: 110px; height: 110px; display: block">
+<div style="font-size: 13px; display: flex; flex-direction: column; gap: 2px; min-width: 0">
+<div style="font-size: 15px; font-weight: 700">Cleared by ZATCA · Fri 31 Oct 2026, 23:10 <span style="font-family: Cairo, sans-serif; font-weight: 600">معتمدة</span></div>
+<div>UUID 6f1c2b7e-4a9d-4e03-9b8a-2c5d7e91a4f3</div>
+<div style="word-break: break-all">Hash (SHA-256) kJ3v9QmZ1xT8wR2aYp6cLs0NfHd4Ub7Ei5Ko+Ag1Mn8=</div>
+<div>ICV 981 · PIH linked to INV-TE-2026-000980</div>
+<div style="color: #5b5f86">Issued electronically under ZATCA e-invoicing Phase 2.</div>
+</div>
+</section>
+<footer style="margin-top: auto; padding-top: 12px; border-top: 1px solid #e3dfc9; display: flex; justify-content: space-between; gap: 16px; font-size: 13px; color: #5b5f86">
+<span>Trips Enjoy Co. · CR 1010998877 · VAT 311098765400003 · Prince Turki St, Al Aqiq, Riyadh 13511</span>
+<span style="white-space: nowrap">billing@trips-enjoy.com · Page 1 / 1</span>
+</footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":794,"height":1123}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const meta = [
+      { en: 'Invoice no.', ar: 'رقم الفاتورة', v: 'INV-TE-2026-000981' },
+      { en: 'Issue date', ar: 'تاريخ الإصدار', v: 'Fri 31 Oct 2026' },
+      { en: 'Supply period', ar: 'فترة التوريد', v: '1 – 31 Oct 2026' },
+      { en: 'Due', ar: 'الاستحقاق', v: 'On receipt' }
+    ];
+    const parties = [
+      { en: 'SELLER', ar: 'البائع', logo: '../assets/d8314577d8376991a72b92ec8ec2dadb.svg', name: 'Trips Enjoy Co.', nameAr: 'شركة تريبس إنجوي', addr: 'Prince Turki St, Al Aqiq, Riyadh 13511, Saudi Arabia', addrAr: 'شارع الأمير تركي، العقيق، الرياض 13511', vat: '311098765400003', cr: '1010998877' },
+      { en: 'BUYER', ar: 'المشتري', logo: '../assets/697a49af6be5a077ae1851c1a8b9dfcd.svg', name: 'Sunrise Tours Co.', nameAr: 'شركة صن رايز للسياحة', addr: 'King Fahd Rd, Al Olaya, Riyadh 12214, Saudi Arabia', addrAr: 'طريق الملك فهد، العليا، الرياض 12214', vat: '310457821900003', cr: '1010734512' }
+    ];
+    const lines = [
+      { d: 'Growth plan subscription · October 2026', ar: 'اشتراك باقة النمو · أكتوبر 2026', note: 'Monthly · 1 – 31 Oct', q: '1', u: '1,490.00', v: '223.50', t: '1,713.50' },
+      { d: 'Booking commission 8%', ar: 'عمولة الحجوزات 8%', note: 'On net bookings of 473,850.00 SAR (486,250.00 gross − 12,400.00 refunds)', q: '1', u: '37,908.00', v: '5,686.20', t: '43,594.20' }
+    ];
+    return { meta, parties, lines };
+  }
+}
+</script>
+</body>
+</html>

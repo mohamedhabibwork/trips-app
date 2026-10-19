@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Admin · Settlements</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+.te-nv a:focus-visible{outline-color:#f89e23}
+.te-tr:hover{background:#fbf9f0}
+</style>
+</helmet>
+<div style="min-height: 1000px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="AdmNav" active="Settlements" hint-size="248px,1000px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 20px">
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; color: #5b5f86">Weekly · every Monday 06:00 · no minimum · a settlement closes when payouts are done and no dispute is open</span><h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Settlements</h1></div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px">
+<a href="AdmPayouts.dc.html" style="height: 48px; box-sizing: border-box; padding: 0 20px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-size: 15px; font-weight: 600; display: flex; align-items: center; text-decoration: none">Provider payouts</a>
+<a href="AdmSettlement.dc.html" style="height: 48px; box-sizing: border-box; padding: 0 20px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; text-decoration: none">Review week 42 run<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+</div>
+</div>
+
+<section aria-labelledby="next-h" class="te-nv" style="background: #262a67; color: #f6f3e4; border-radius: 20px; padding: 20px 24px; display: flex; flex-wrap: wrap; gap: 20px 32px; align-items: center">
+<div style="display: flex; flex-direction: column; gap: 2px; flex: 1 1 220px"><span style="font-size: 13px; color: #b8bad6">Next run · STL-2026-W42</span><h2 id="next-h" style="margin: 0; font-size: 24px; font-weight: 700">Mon 20 Oct · Week 42</h2><span style="font-size: 14px; color: #b8bad6">Trips completed Mon 13 – Sun 19 Oct</span></div>
+<ol aria-label="Run progress" style="flex: 3 1 480px; margin: 0; padding: 0; list-style: none; display: flex; align-items: center; gap: 8px">
+<sc-for list="{{steps}}" as="s" hint-placeholder-count="4">
+<li aria-current="{{s.cur}}" style="flex: 1 1 0; display: flex; flex-direction: column; gap: 6px; min-width: 0">
+<span style="{{s.bar}}"></span>
+<span style="display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 600; color: {{s.c}}"><span style="{{s.dot}}">{{s.n}}</span>{{s.t}}</span>
+<span style="font-size: 12px; color: #b8bad6">{{s.d}}</span>
+</li>
+</sc-for>
+</ol>
+</section>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px">
+<sc-for list="{{parties}}" as="k" hint-placeholder-count="4">
+<div style="padding: 16px 18px; border-radius: 16px; background: {{k.bg}}; display: flex; flex-direction: column; gap: 2px">
+<span style="font-size: 13px; color: #5b5f86">{{k.l}}</span>
+<span style="font-size: 24px; line-height: 30px; font-weight: 700; font-variant-numeric: tabular-nums">{{k.v}} <span style="font-size: 14px; font-weight: 500; color: #5b5f86">SAR</span></span>
+<span style="font-size: 13px; color: #5b5f86">{{k.d}}</span>
+</div>
+</sc-for>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
+<section aria-labelledby="exc-h" style="flex: 3 1 520px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap"><h2 id="exc-h" style="margin: 0; font-size: 18px; font-weight: 600">Exceptions · 54 parties · 276,580 SAR held</h2><a href="AdmSettlement.dc.html" style="font-size: 14px; font-weight: 600">Open in run</a></div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 10px">
+<sc-for list="{{exceptions}}" as="e" hint-placeholder-count="4">
+<a href="{{e.href}}" style="display: flex; gap: 12px; padding: 12px; border-radius: 12px; background: {{e.bg}}; color: #262a67; text-decoration: none">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 2px"><path d="{{e.icon}}"></path></svg>
+<span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 15px; font-weight: 600">{{e.t}}</span><span style="font-size: 13px; line-height: 18px; color: #5b5f86">{{e.d}}</span></span>
+</a>
+</sc-for>
+</div>
+</section>
+
+<aside style="flex: 2 1 300px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+<section aria-labelledby="held-h" style="background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 8px">
+<h2 id="held-h" style="margin: 0; font-size: 18px; font-weight: 600">Funds held (not in this run)</h2>
+<span style="font-size: 26px; font-weight: 700; font-variant-numeric: tabular-nums">14,380,900 <span style="font-size: 14px; font-weight: 500; color: #5b5f86">SAR</span></span>
+<div style="display: flex; justify-content: space-between; font-size: 14px"><span style="color: #5b5f86">Trips not completed yet · 386 trips</span><span style="font-weight: 600">13,912,400</span></div>
+<div style="display: flex; justify-content: space-between; font-size: 14px"><span style="color: #5b5f86">Completed after the Sun 19 Oct cut-off · 41 trips</span><span style="font-weight: 600">468,500</span></div>
+</section>
+<section aria-labelledby="rec-h" style="background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; justify-content: space-between; align-items: center"><h2 id="rec-h" style="margin: 0; font-size: 18px; font-weight: 600">Reconciliation</h2><span style="display: inline-flex; padding: 2px 10px; border-radius: 999px; background: #fdf0d5; color: #8a4b00; font-size: 13px; font-weight: 600">3 unmatched</span></div>
+<div role="img" aria-label="99.8% of transactions matched" style="height: 10px; border-radius: 999px; background: #fde8e6; overflow: hidden"><div style="width: 99.8%; height: 100%; background: #1f7a4d"></div></div>
+<div style="display: flex; justify-content: space-between; font-size: 14px"><span>Gateway (HyperPay) vs ledger</span><span style="font-weight: 600; color: #1f7a4d">99.9% matched</span></div>
+<div style="display: flex; justify-content: space-between; font-size: 14px"><span>Bank (Al Rajhi) vs payouts</span><span style="font-weight: 600; color: #1f7a4d">99.8% matched</span></div>
+<p style="margin: 0; font-size: 13px; color: #5b5f86; line-height: 18px">Unmatched: 2 gateway captures without a booking (1,840 SAR), 1 bank return for IBAN SA44 •• 0921 (2,610 SAR).</p>
+<button type="button" style="align-self: flex-start; height: 40px; padding: 0 14px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer">Match manually</button>
+</section>
+</aside>
+</div>
+
+<section aria-labelledby="runs-h" style="background: #ffffff; border-radius: 20px; padding: 20px 0 8px">
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 0 20px 12px"><h2 id="runs-h" style="margin: 0; font-size: 18px; font-weight: 600">Settlement runs</h2><span style="font-size: 13px; color: #5b5f86">Amounts in SAR</span></div>
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 1000px; border-collapse: collapse; font-size: 14px">
+<thead><tr style="color: #5b5f86; font-size: 13px"><th scope="col" style="text-align: start; padding: 10px 20px; font-weight: 600">Period</th><th scope="col" style="text-align: end; padding: 10px; font-weight: 600">Parties</th><th scope="col" style="text-align: end; padding: 10px; font-weight: 600">Gross collected</th><th scope="col" style="text-align: end; padding: 10px; font-weight: 600">Commissions</th><th scope="col" style="text-align: end; padding: 10px; font-weight: 600">Gateway fees</th><th scope="col" style="text-align: end; padding: 10px; font-weight: 600">Refunds</th><th scope="col" style="text-align: end; padding: 10px; font-weight: 600">Payouts</th><th scope="col" style="text-align: start; padding: 10px 20px; font-weight: 600">Status</th></tr></thead>
+<tbody>
+<sc-for list="{{runs}}" as="r" hint-placeholder-count="5">
+<tr class="te-tr" style="border-top: 1px solid #e3dfc9; font-variant-numeric: tabular-nums">
+<td style="padding: 10px 20px"><a href="AdmSettlement.dc.html" style="display: flex; flex-direction: column; text-decoration: none"><span style="font-weight: 600">{{r.p}}</span><span style="font-size: 12px; color: #5b5f86">{{r.id}}</span></a></td>
+<td style="padding: 10px; text-align: end">{{r.n}}</td>
+<td style="padding: 10px; text-align: end">{{r.g}}</td>
+<td style="padding: 10px; text-align: end; color: #5b5f86">{{r.c}}</td>
+<td style="padding: 10px; text-align: end; color: #5b5f86">{{r.f}}</td>
+<td style="padding: 10px; text-align: end; color: #5b5f86">{{r.r}}</td>
+<td style="padding: 10px; text-align: end; font-weight: 700">{{r.o}}</td>
+<td style="padding: 10px 20px"><span style="{{r.ss}}">{{r.s}}</span></td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+</section>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1300}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const pill = (tone) => 'display: inline-flex; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; white-space: nowrap; ' + ({ ok: 'background: #e3f3ea; color: #1f7a4d;', warn: 'background: #fdf0d5; color: #8a4b00;', info: 'background: #e6e8f5; color: #262a67;', live: 'background: #ffe7dc; color: #c93a00;' })[tone];
+    const S = [['Draft', 'Built Mon 20 Oct 00:30', 'done'], ['Reviewed', 'Tariq Mansour, Finance lead', 'cur'], ['Approved', 'Finance lead + Super admin', 'todo'], ['Paid', 'SARIE file to Al Rajhi', 'todo']];
+    const steps = S.map((s, i) => ({ n: String(i + 1), t: s[0], d: s[2] === 'cur' ? 'In review · ' + s[1] : s[1], cur: s[2] === 'cur' ? 'step' : 'false', c: s[2] === 'todo' ? '#b8bad6' : '#f6f3e4',
+      bar: 'display: block; height: 6px; border-radius: 999px; background: ' + (s[2] === 'done' ? '#ff6c2e' : s[2] === 'cur' ? '#f89e23' : '#31367a') + ';',
+      dot: 'width: 22px; height: 22px; border-radius: 999px; font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; ' + (s[2] === 'todo' ? 'background: #31367a; color: #b8bad6;' : 'background: #ff6c2e; color: #262a67;') }));
+    const parties = [
+      { l: 'Organizations · 212', v: '5,223,733', d: 'After 8% commission, 2.2% fees, deal costs', bg: '#ffffff' },
+      { l: 'Platform drivers · 731', v: '2,500,326', d: '2,778,140 deals − 10% commission', bg: '#ffffff' },
+      { l: 'Photographers · 311', v: '440,154', d: '500,175 deals − 12% commission', bg: '#ffffff' },
+      { l: 'Commissions retained', v: '1,095,547', d: 'Platform revenue this run', bg: '#e6e8f5' }
+    ];
+    const exceptions = [
+      { t: 'Missing IBAN · 24', d: '48,950 SAR · 21 providers, 3 organizations. Emailed to add a bank account.', bg: '#fdf0d5', icon: 'M12 3l9.5 17h-19zM12 10v4M12 17h.01', href: 'AdmSettlement.dc.html' },
+      { t: 'Open dispute hold · 14', d: '151,310 SAR · held until each dispute is resolved.', bg: '#fde8e6', icon: 'M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zM14 3v5h5', href: 'AdmDisputes.dc.html' },
+      { t: 'Negative balance carried · 6', d: '−18,240 SAR · refunds after last payout, recovered from this run.', bg: '#f6f3e4', icon: 'M5 12h14', href: 'AdmSettlement.dc.html' },
+      { t: 'KYC failed · 10', d: '58,080 SAR · ID or IBAN name mismatch. Paid once verified.', bg: '#f6f3e4', icon: 'M12 3l7 3v5.5c0 4.4-3 8-7 9.5-4-1.5-7-5.1-7-9.5V6zM9 12l2 2 4-4', href: 'AdmUsers.dc.html' }
+    ];
+    const tone = { Reviewed: 'warn', Paid: 'ok', Draft: 'info' };
+    const runs = [
+      ['Week 42 · 13–19 Oct', 'STL-2026-W42 · weekly', '1,254', '9,620,000', '1,095,547', '211,640', '148,600', '8,164,213', 'Reviewed'],
+      ['Week 41 · 6–12 Oct', 'STL-2026-W41 · weekly', '38', '1,284,500', '139,812', '28,259', '21,300', '1,095,129', 'Paid'],
+      ['Week 40 · 29 Sep–5 Oct', 'STL-2026-W40 · weekly', '36', '1,190,200', '128,904', '26,184', '18,450', '1,016,662', 'Paid'],
+      ['Week 39 · 22–28 Sep', 'STL-2026-W39 · weekly', '1,198', '8,904,300', '1,011,206', '195,895', '162,040', '7,535,159', 'Paid'],
+      ['Week 38 · 15–21 Sep', 'STL-2026-W38 · weekly', '1,121', '10,412,750', '1,184,330', '229,081', '201,600', '8,797,739', 'Paid']
+    ].map((r) => ({ p: r[0], id: r[1], n: r[2], g: r[3], c: r[4], f: r[5], r: r[6], o: r[7], s: r[8] === 'Reviewed' ? 'In review' : r[8], ss: pill(tone[r[8]]) }));
+    return { steps, parties, exceptions, runs };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Org · Settlement statement</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+.te-row:hover{background:#fbfaf3}
+.te-act:hover{background:#f6f3e4}
+</style>
+</helmet>
+<div style="position: relative; min-height: 1340px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="OrgNav" active="Settlements" hint-size="248px,1340px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 24px">
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center">
+<a href="OrgSettlements.dc.html" aria-label="Back to settlements" style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 999px; background: #ffffff; color: #262a67; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a>
+<div style="display: flex; flex-direction: column; gap: 2px; flex: 1 1 300px"><span style="font-size: 14px; color: #5b5f86">Settlements · Sunrise Tours Co. · 1–30 Sep 2026</span><h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Statement · September 2026</h1></div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px">
+<button type="button" onClick="{{openFirst}}" class="te-act" style="height: 48px; padding: 0 16px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font: inherit; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V4M5 4h11l-2 4 2 4H5"></path></svg>Dispute a line</button>
+<button type="button" class="te-act" style="height: 48px; padding: 0 16px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font: inherit; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12M7 11l5 5 5-5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"></path></svg>CSV</button>
+<a href="../pdf/PdfSettlement.dc.html" style="height: 48px; padding: 0 20px; border: 0; border-radius: 12px; background: #ff6c2e; color: #262a67; font: inherit; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; cursor: pointer; text-decoration: none; box-sizing: border-box"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12M7 11l5 5 5-5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"></path></svg>Download PDF</a>
+</div>
+</div>
+
+<sc-if value="{{sent}}" hint-placeholder-val="{{false}}">
+<div role="status" style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding: 12px 16px; border-radius: 12px; background: #e3f3ea; color: #1f7a4d; font-size: 14px; font-weight: 600"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg><span style="flex: 1 1 300px">{{sentMsg}}</span></div>
+</sc-if>
+
+<section aria-labelledby="lg-h" style="background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; align-items: center"><h2 id="lg-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">Balance</h2><span style="display: inline-flex; align-items: center; gap: 6px; padding: 2px 10px; border-radius: 999px; background: #e3f3ea; color: #1f7a4d; font-size: 13px; font-weight: 600"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg>Paid in Monday runs · last Mon 29 Sep · TE-PO-2026-10-0418</span></div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px">
+<sc-for list="{{ledger}}" as="g" hint-placeholder-count="6">
+<div style="{{g.box}}"><span style="font-size: 13px; line-height: 17px; color: {{g.lc}}">{{g.l}}</span><span style="font-size: 20px; line-height: 26px; font-weight: 700">{{g.v}}</span><span style="font-size: 12px; line-height: 16px; color: {{g.lc}}">{{g.d}}</span></div>
+</sc-for>
+</div>
+</section>
+
+<section aria-labelledby="tr-h" style="background: #ffffff; border-radius: 20px; padding: 20px 0 8px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; padding: 0 20px 12px"><h2 id="tr-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">Completed trips</h2><span style="font-size: 13px; color: #5b5f86">SAR · each trip paid in the first Monday run after it is completed</span></div>
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 1060px; border-collapse: collapse; font-size: 14px">
+<thead><tr style="color: #5b5f86; font-size: 12px; line-height: 16px">
+<th scope="col" style="text-align: start; padding: 10px 12px 10px 20px; font-weight: 600">Trip</th>
+<th scope="col" style="text-align: end; padding: 10px 8px; font-weight: 600">Gross paid</th>
+<th scope="col" style="text-align: end; padding: 10px 8px; font-weight: 600">Refunds</th>
+<th scope="col" style="text-align: end; padding: 10px 8px; font-weight: 600">Commission 8%</th>
+<th scope="col" style="text-align: end; padding: 10px 8px; font-weight: 600">Gateway 2.2%</th>
+<th scope="col" style="text-align: end; padding: 10px 8px; font-weight: 600">VAT on fees</th>
+<th scope="col" style="text-align: end; padding: 10px 8px; font-weight: 600">Provider deals paid for you</th>
+<th scope="col" style="text-align: end; padding: 10px 8px; font-weight: 600">Net</th>
+<th scope="col" style="padding: 10px 20px 10px 8px"><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Actions</span></th>
+</tr></thead>
+<tbody>
+<sc-for list="{{trips}}" as="t" hint-placeholder-count="6">
+<tr class="te-row" style="border-top: 1px solid #e3dfc9; vertical-align: top">
+<td style="padding: 12px 12px 12px 20px"><a href="OrgTrip.dc.html" style="display: flex; flex-direction: column; color: #262a67; text-decoration: none"><span style="font-weight: 600">{{t.n}}</span><span style="font-size: 12px; color: #5b5f86">{{t.d}}</span></a></td>
+<td style="padding: 12px 8px; text-align: end; white-space: nowrap">{{t.g}}</td>
+<td style="padding: 12px 8px; text-align: end; white-space: nowrap; color: #b42318">{{t.r}}</td>
+<td style="padding: 12px 8px; text-align: end; white-space: nowrap; color: #b42318">{{t.c}}</td>
+<td style="padding: 12px 8px; text-align: end; white-space: nowrap; color: #b42318">{{t.f}}</td>
+<td style="padding: 12px 8px; text-align: end; white-space: nowrap; color: #b42318">{{t.v}}</td>
+<td style="padding: 12px 8px; text-align: end"><span style="display: flex; flex-direction: column; align-items: flex-end"><span style="white-space: nowrap; color: {{t.dlc}}">{{t.dl}}</span><span style="font-size: 12px; color: #5b5f86; white-space: nowrap">{{t.who}}</span></span></td>
+<td style="padding: 12px 8px; text-align: end; white-space: nowrap; font-weight: 700">{{t.net}}</td>
+<td style="padding: 6px 20px 6px 8px; text-align: end"><button type="button" onClick="{{t.dispute}}" aria-label="{{t.dLabel}}" class="te-act" style="height: 36px; padding: 0 10px; border: 0; border-radius: 8px; background: transparent; color: #c93a00; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer">Dispute</button></td>
+</tr>
+</sc-for>
+<tr style="border-top: 2px solid #262a67; font-weight: 700">
+<td style="padding: 12px 12px 12px 20px">Total · 6 trips</td>
+<td style="padding: 12px 8px; text-align: end; white-space: nowrap">291,655.00</td>
+<td style="padding: 12px 8px; text-align: end; white-space: nowrap; color: #b42318">−6,265.00</td>
+<td style="padding: 12px 8px; text-align: end; white-space: nowrap; color: #b42318">−22,831.20</td>
+<td style="padding: 12px 8px; text-align: end; white-space: nowrap; color: #b42318">−6,416.41</td>
+<td style="padding: 12px 8px; text-align: end; white-space: nowrap; color: #b42318">−4,387.13</td>
+<td style="padding: 12px 8px; text-align: end; white-space: nowrap; color: #b42318">−2,357.50</td>
+<td style="padding: 12px 8px; text-align: end; white-space: nowrap">249,397.76</td>
+<td style="padding: 12px 20px 12px 8px"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p style="margin: 0; padding: 12px 20px 8px; border-top: 1px solid #e3dfc9; display: flex; gap: 8px; align-items: flex-start; font-size: 13px; line-height: 18px; color: #5b5f86"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 1px"><path d="M3 12V4a1 1 0 0 1 1-1h8l9 9-9 9zM7.5 7.5h.01"></path></svg><span><strong style="color: #262a67">Coupons reduce gross.</strong> NATDAY96 and SUMMEREND10 gave travelers 9,840.00 SAR off across 214 bookings. Gross is what travelers actually paid after coupons, and commission is charged on that lower amount. Your coupons are funded by you, so there is no separate coupon line.</span></p>
+</section>
+
+<div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start">
+<section aria-labelledby="aj-h" style="flex: 1 1 360px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+<h2 id="aj-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">Adjustments &amp; holds</h2>
+<div style="display: flex; gap: 12px; padding: 12px; border-radius: 12px; background: #f6f3e4">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 2px"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7"></path></svg>
+<span style="flex: 1; display: flex; flex-direction: column; gap: 2px"><span style="display: flex; justify-content: space-between; gap: 12px; font-size: 15px; font-weight: 600"><span>Refund after payout, recovered</span><span style="color: #b42318; white-space: nowrap">−550.00</span></span><span style="font-size: 13px; line-height: 18px; color: #5b5f86">Edge of the World Hike, Sat 22 Aug. 2 seats refunded on Thu 3 Sep, after that trip was paid out. Credit note CN-ST-2026-000019.</span></span>
+</div>
+<div style="display: flex; gap: 12px; padding: 12px; border-radius: 12px; background: #fdf0d5">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8a4b00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 2px"><path d="M12 3l9.5 17h-19zM12 10v4M12 17h.01"></path></svg>
+<span style="flex: 1; display: flex; flex-direction: column; gap: 2px"><span style="display: flex; justify-content: space-between; gap: 12px; font-size: 15px; font-weight: 600"><span>Held for open dispute</span><span style="color: #8a4b00; white-space: nowrap">−640.00</span></span><span style="font-size: 13px; line-height: 18px; color: #5b5f86">DSP-2026-0192 · Red Sea Snorkel Day, Fri 4 Sep. A traveler says the boat left before 2 booked seats boarded. Released to your next payout if it closes in your favour.</span><a href="OrgBooking.dc.html" style="font-size: 13px; font-weight: 600">View booking and evidence</a></span>
+</div>
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; padding-top: 8px; border-top: 1px solid #e3dfc9; font-size: 14px"><span style="color: #5b5f86">Paid to Al Rajhi Bank SA•• •• 2207 · SARIE · Monday runs 8, 15, 22 and 29 Sep</span><span style="font-weight: 700">248,207.76 SAR</span></div>
+</section>
+
+<section aria-labelledby="li-h" style="flex: 1 1 360px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px 0 8px; display: flex; flex-direction: column">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 0 20px 8px"><h2 id="li-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">Linked invoices</h2><a href="OrgInvoices.dc.html" style="font-size: 14px; font-weight: 600">All invoices</a></div>
+<sc-for list="{{invoices}}" as="i" hint-placeholder-count="5">
+<a href="{{i.href}}" class="te-row" style="display: grid; grid-template-columns: 20px minmax(0, 1fr) auto; gap: 12px; align-items: start; padding: 12px 20px; border-top: 1px solid #e3dfc9; color: #262a67; text-decoration: none">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="margin-top: 2px"><path d="M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zM14 3v5h5"></path></svg>
+<span style="display: flex; flex-direction: column; gap: 2px; min-width: 0"><span style="font-size: 14px; font-weight: 600">{{i.t}}</span><span style="font-size: 12px; line-height: 16px; color: #5b5f86">{{i.d}}</span></span>
+<span style="display: flex; flex-direction: column; align-items: flex-end; gap: 2px"><span style="font-size: 14px; font-weight: 700; white-space: nowrap">{{i.v}}</span><span style="font-size: 12px; color: #5b5f86; white-space: nowrap">{{i.s}}</span></span>
+</a>
+</sc-for>
+</section>
+</div>
+
+</main>
+
+<sc-if value="{{open}}" hint-placeholder-val="{{false}}">
+<div style="position: absolute; inset: 0; background: rgba(16,18,48,.45); display: flex; justify-content: center; align-items: flex-start; padding: 200px 16px 16px; box-sizing: border-box">
+<div role="dialog" aria-modal="true" aria-labelledby="dp-h" style="width: 100%; max-width: 520px; background: #ffffff; border-radius: 20px; padding: 24px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px; box-shadow: 0 20px 50px rgba(16,18,48,0.25)">
+<div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px"><span style="display: flex; flex-direction: column; gap: 2px"><h2 id="dp-h" style="margin: 0; font-size: 22px; line-height: 28px; font-weight: 600">Dispute a line</h2><span style="font-size: 14px; color: #5b5f86">{{sel.n}} · {{sel.d}}</span></span><button type="button" onClick="{{close}}" aria-label="Close" class="te-act" style="width: 44px; height: 44px; flex-shrink: 0; border: 0; border-radius: 999px; background: transparent; color: #262a67; display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></button></div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 8px; padding: 12px 14px; border-radius: 12px; background: #f6f3e4; font-size: 13px">
+<span style="display: flex; flex-direction: column"><span style="color: #5b5f86">Gross</span><span style="font-weight: 700">{{sel.g}}</span></span>
+<span style="display: flex; flex-direction: column"><span style="color: #5b5f86">Deductions</span><span style="font-weight: 700">{{sel.ded}}</span></span>
+<span style="display: flex; flex-direction: column"><span style="color: #5b5f86">Net</span><span style="font-weight: 700">{{sel.net}}</span></span>
+</div>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">What looks wrong?<select style="height: 52px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 12px; font: inherit; font-size: 16px; font-weight: 500; color: #262a67"><option>A refund should not have been deducted</option><option>Commission or gateway fee amount</option><option>Provider deal amount</option><option>Bookings missing from gross</option><option>Something else</option></select></label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">Details for Trips Enjoy finance<textarea rows="3" placeholder="Booking references, amounts you expected, and why" style="border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 12px 14px; font: inherit; font-size: 16px; font-weight: 400; color: #262a67; resize: vertical"></textarea></label>
+<p style="margin: 0; font-size: 13px; line-height: 18px; color: #5b5f86">Finance replies within 2 working days. Only this line is reviewed; the rest of the statement stays as paid. Any correction arrives as a debit or credit note on your next statement.</p>
+<div style="display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px">
+<button type="button" onClick="{{close}}" style="height: 48px; padding: 0 18px; border: 0; border-radius: 12px; background: transparent; color: #262a67; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Cancel</button>
+<button type="button" onClick="{{submit}}" style="height: 48px; padding: 0 20px; border: 0; border-radius: 12px; background: #ff6c2e; color: #262a67; font: inherit; font-size: 15px; font-weight: 700; cursor: pointer">Send dispute</button>
+</div>
+</div>
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1340},"showDispute":{"editor":"boolean","default":false}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { row: undefined, sentFor: null }; }
+  renderVals() {
+    const T = [
+      ['AlUla Heritage Weekend', 'Thu 10–Sat 12 Sep · 4 buses · own drivers', '153,000.00', '−3,750.00', '−11,940.00', '−3,366.00', '−2,295.90', '0.00', '', '131,648.10', '−21,351.90'],
+      ['Red Sea Snorkel Day', 'Fri 4 Sep · 2 buses', '30,080.00', '−640.00', '−2,355.20', '−661.76', '−452.54', '0.00', '', '25,970.50', '−4,109.50'],
+      ['Edge of the World Hike', 'Sat 5 Sep · 1 bus', '12,925.00', '−275.00', '−1,012.00', '−284.35', '−194.45', '0.00', '', '11,159.20', '−1,765.80'],
+      ['Jeddah Corniche Night', 'Thu 17 Sep · 3 buses', '47,250.00', '−1,050.00', '−3,696.00', '−1,039.50', '−710.32', '−1,495.00', 'Khalid Al-Harbi · Bus 3 · 1,300 + VAT', '39,259.18', '−7,990.82'],
+      ['National Day Diriyah Evening', 'Wed 23 Sep · 2 buses', '26,400.00', '0.00', '−2,112.00', '−580.80', '−403.92', '−862.50', 'Noura Al-Shehri · photos · 750 + VAT', '22,440.78', '−3,959.22'],
+      ['Taif Rose Farms', 'Fri 25 Sep · 1 bus', '22,000.00', '−550.00', '−1,716.00', '−484.00', '−330.00', '0.00', '', '18,920.00', '−3,080.00']
+    ];
+    const trips = T.map((a, i) => ({ n: a[0], d: a[1], g: a[2], r: a[3], c: a[4], f: a[5], v: a[6], dl: a[7], who: a[8], net: a[9], ded: a[10],
+      dlc: a[7] === '0.00' ? '#262a67' : '#b42318', dLabel: 'Dispute ' + a[0],
+      dispute: () => this.setState({ row: i }) }));
+    const box = 'padding: 12px 14px; border-radius: 12px; display: flex; flex-direction: column; gap: 2px; ';
+    const ledger = [
+      { l: 'Opening balance', v: '0.00', d: '1 Sep · August paid in full', box: box + 'background: #f6f3e4;', lc: '#5b5f86' },
+      { l: 'Net from 6 trips', v: '+249,397.76', d: 'Table below', box: box + 'background: #f6f3e4;', lc: '#5b5f86' },
+      { l: 'Adjustments', v: '−550.00', d: 'Refund after payout', box: box + 'background: #f6f3e4;', lc: '#5b5f86' },
+      { l: 'Held', v: '−640.00', d: 'Open dispute', box: box + 'background: #fdf0d5;', lc: '#8a4b00' },
+      { l: 'Net payout', v: '248,207.76', d: '4 Monday runs · SA•• •• 2207', box: box + 'background: #262a67; color: #f6f3e4;', lc: '#b8bad6' },
+      { l: 'Closing balance', v: '640.00', d: 'Held · open dispute, settlement stays open', box: box + 'background: #f6f3e4;', lc: '#5b5f86' }
+    ];
+    const invoices = [
+      { t: 'INV-TE-2026-000944 · Trips Enjoy Co.', d: 'Commission 8% and payment fees · VAT 311098765400003 · 29,247.61 + VAT 4,387.13', v: '33,634.74', s: 'Deducted', href: 'OrgInvoices.dc.html' },
+      { t: 'SB-KH-2026-000137 · Khalid Al-Harbi', d: 'Self-billed by Trips Enjoy · Jeddah Corniche Night, Bus 3 · 1,300.00 + VAT 195.00', v: '1,495.00', s: 'Paid to driver', href: 'OrgInvoices.dc.html' },
+      { t: 'SB-NS-2026-000079 · Noura Al-Shehri', d: 'Self-billed by Trips Enjoy · National Day Diriyah Evening · 750.00 + VAT 112.50', v: '862.50', s: 'Paid to photographer', href: 'OrgInvoices.dc.html' },
+      { t: '14 credit notes to travelers', d: 'CN-ST-2026-000007 to 000020 · includes CN-ST-2026-000019 recovered from this payout', v: '6,815.00', s: '6,265 + 550', href: 'OrgInvoices.dc.html' },
+      { t: '1,112 simplified invoices', d: 'Bookings on these 6 trips · reported to ZATCA', v: '291,655.00', s: 'Gross paid', href: 'OrgInvoices.dc.html' }
+    ];
+    const idx = this.state.row !== undefined ? this.state.row : (this.props.showDispute ? 3 : null);
+    const sel = trips[idx === null ? 0 : idx];
+    return {
+      trips, ledger, invoices, sel,
+      open: idx !== null,
+      sent: this.state.sentFor !== null,
+      sentMsg: this.state.sentFor !== null ? 'Dispute DSP-2026-0207 sent for ' + this.state.sentFor + '. Trips Enjoy finance will reply by Wed 14 Oct.' : '',
+      openFirst: () => this.setState({ row: 0 }),
+      close: () => this.setState({ row: null }),
+      submit: () => this.setState({ row: null, sentFor: sel.n })
+    };
+  }
+}
+</script>
+</body>
+</html>

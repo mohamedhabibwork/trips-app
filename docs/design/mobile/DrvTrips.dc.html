@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Driver · My schedule</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="height: 100%; box-sizing: border-box; padding: 56px 16px 120px; display: flex; flex-direction: column; gap: 14px">
+
+<div style="display: flex; align-items: flex-end; justify-content: space-between">
+<div style="display: flex; flex-direction: column; gap: 2px"><h1 style="margin: 0; font-size: 28px; line-height: 34px; font-weight: 700">Schedule</h1><span style="font-size: 14px; color: #5b5f86">October · 5 trip days</span></div>
+<a href="DrvAvailability.dc.html" style="height: 40px; padding: 0 14px; border-radius: 999px; background: #ffffff; border: 1px solid #7b7fa6; color: #262a67; display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 600; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zM4 10h16M8 3v4M16 3v4"></path></svg>Availability</a>
+</div>
+
+<div role="group" aria-label="Pick a day" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px">
+<sc-for list="{{days}}" as="d" hint-placeholder-count="7">
+<button type="button" onClick="{{d.go}}" aria-pressed="{{d.sel}}" aria-label="{{d.aria}}" style="{{d.style}}"><span style="font-size: 11px; font-weight: 600">{{d.wd}}</span><span style="font-size: 18px; font-weight: 700">{{d.n}}</span><span style="{{d.markStyle}}"></span></button>
+</sc-for>
+</div>
+<div style="display: flex; gap: 14px; font-size: 12px; color: #5b5f86">
+<span style="display: flex; align-items: center; gap: 6px"><span style="width: 8px; height: 8px; border-radius: 999px; background: #ff6c2e"></span>Trip</span>
+<span style="display: flex; align-items: center; gap: 6px"><span style="width: 8px; height: 8px; border-radius: 999px; border: 2px solid #c93a00; box-sizing: border-box"></span>Deal pending</span>
+<span style="display: flex; align-items: center; gap: 6px"><span style="width: 10px; height: 3px; background: #5b5f86"></span>Blocked</span>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 10px">
+<sc-for list="{{trips}}" as="t" hint-placeholder-count="4">
+<a href="{{t.href}}" style="{{t.cardStyle}}">
+<span style="width: 52px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center"><span style="font-size: 12px; font-weight: 600; color: #5b5f86">{{t.wd}}</span><span style="font-size: 22px; line-height: 26px; font-weight: 700">{{t.n}}</span></span>
+<span style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 16px; font-weight: 600">{{t.title}}</span><span style="font-size: 13px; color: #5b5f86">{{t.meta}}</span></span>
+<span style="{{t.pillStyle}}">{{t.status}}</span>
+</a>
+</sc-for>
+</div>
+
+<div style="padding: 12px 14px; border-radius: 12px; border: 1px dashed #7b7fa6; display: flex; align-items: center; gap: 10px">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5b5f86" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 11h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1zM8 11V7a4 4 0 0 1 8 0v4"></path></svg>
+<span style="flex-grow: 1; font-size: 14px"><strong>Blocked Sun 19 – Mon 20 Oct</strong><br><span style="color: #5b5f86">No offers for these days</span></span>
+<a href="DrvAvailability.dc.html" style="font-size: 14px; font-weight: 600">Edit</a>
+</div>
+</div>
+<div style="position: absolute; left: 0; right: 0; bottom: 0; height: 120px">
+<dc-import name="TabBar" role="driver" active="schedule" hint-size="390px,120px"></dc-import>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { day: 17 }; }
+  renderVals() {
+    const W = [['Thu', 16, 'trip'], ['Fri', 17, 'trip'], ['Sat', 18, 'trip'], ['Sun', 19, 'blocked'], ['Mon', 20, 'blocked'], ['Tue', 21, ''], ['Wed', 22, '']];
+    const days = W.map(([wd, n, k]) => {
+      const sel = this.state.day === n;
+      const today = n === 17;
+      let mark = 'width: 8px; height: 8px; border-radius: 999px; ';
+      if (k === 'trip') mark += 'background: ' + (sel ? '#ff8655' : '#ff6c2e') + ';';
+      else if (k === 'blocked') mark = 'width: 12px; height: 3px; border-radius: 2px; background: ' + (sel ? '#b8bad6' : '#5b5f86') + ';';
+      else mark += 'background: transparent;';
+      return { wd: today ? 'Today' : wd, n: String(n), sel: sel ? 'true' : 'false', go: () => this.setState({ day: n }),
+        aria: wd + ' ' + n + ' Oct' + (k === 'trip' ? ', trip' : k === 'blocked' ? ', blocked' : ', free'),
+        markStyle: mark,
+        style: 'height: 72px; border-radius: 12px; font: inherit; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; padding: 0; ' + (sel ? 'background: #262a67; color: #f6f3e4; border: none;' : (k === 'blocked' ? 'background: #efecdc; color: #5b5f86; border: 1px solid #e3dfc9;' : 'background: #ffffff; color: #262a67; border: 1px solid #e3dfc9;')) };
+    });
+    const pill = { live: 'background: #ffe7dc; color: #c93a00;', ok: 'background: #e3f3ea; color: #1f7a4d;', wait: 'background: #fdf0d5; color: #8a4b00;' };
+    const T = [
+      { wd: 'Today', n: '17', title: 'AlUla Heritage Weekend', meta: 'Day 2 · Bus 2 · depart 08:00 Shaden Resort', status: 'Today', k: 'live', href: 'DrvTrip.dc.html', hi: true },
+      { wd: 'Sat', n: '18', title: 'AlUla → Riyadh return', meta: 'Day 3 · Bus 2 · depart 07:00', status: 'Confirmed', k: 'ok', href: 'DrvTrip.dc.html' },
+      { wd: 'Fri', n: '24', title: 'Red Sea Snorkel Day', meta: 'Sunrise Tours Co. · Bus 2 · 06:30', status: 'Confirmed', k: 'ok', href: 'DrvDealLocked.dc.html' },
+      { wd: 'Sat', n: '25', title: 'Edge of the World Hike', meta: 'Najd Adventures · deal not final', status: 'Pending', k: 'wait', href: 'DrvOffer.dc.html' }
+    ];
+    const trips = T.map((t) => ({ ...t,
+      pillStyle: 'flex-shrink: 0; padding: 2px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; ' + pill[t.k],
+      cardStyle: 'padding: 12px 14px 12px 8px; border-radius: 20px; background: #ffffff; color: #262a67; text-decoration: none; display: flex; align-items: center; gap: 10px; ' + (t.hi ? 'border: 2px solid #fb8030;' : 'border: 1px solid #e3dfc9;') }));
+    return { days, trips };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Driver · Statements &amp; invoices</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="height: 100%; box-sizing: border-box; padding: 56px 16px 120px; display: flex; flex-direction: column; gap: 12px">
+
+<div style="display: flex; align-items: center; gap: 12px">
+<a href="DrvEarnings.dc.html" aria-label="Back to earnings" style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 999px; background: #ffffff; color: #262a67; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a>
+<h1 style="margin: 0; font-size: 22px; line-height: 28px; font-weight: 700">Statements &amp; invoices</h1>
+</div>
+
+<div role="group" aria-label="Statement month" style="display: flex; gap: 8px; margin-inline-end: -16px; overflow: hidden">
+<sc-for list="{{months}}" as="m" hint-placeholder-count="4">
+<button type="button" aria-pressed="{{m.sel}}" onClick="{{m.go}}" style="{{m.style}}"><span style="font-size: 13px; font-weight: 600">{{m.t}}</span><span style="font-size: 15px; font-weight: 700">{{m.net}}</span></button>
+</sc-for>
+</div>
+
+<section aria-labelledby="st-h" style="padding: 14px 16px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 2px; font-size: 14px; line-height: 20px">
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px">
+<h2 id="st-h" style="margin: 0; font-size: 16px; font-weight: 700">{{st.title}}</h2>
+<span style="{{st.pill}}">{{st.status}}</span>
+</div>
+<div style="display: flex; justify-content: space-between"><span style="color: #5b5f86">{{st.dealsLabel}}</span><span style="font-weight: 600">{{st.gross}}</span></div>
+<div style="display: flex; justify-content: space-between"><span style="color: #5b5f86">Platform commission</span><span style="font-weight: 600">{{st.comm}}</span></div>
+<sc-if value="{{st.hasAdj}}" hint-placeholder-val="{{true}}"><div style="display: flex; justify-content: space-between"><span style="color: #5b5f86">{{st.adjLabel}}</span><span style="font-weight: 600">{{st.adj}}</span></div></sc-if>
+<div style="margin-top: 2px; padding-top: 6px; border-top: 1px solid #e3dfc9; display: flex; justify-content: space-between; align-items: baseline"><span style="font-weight: 700">Net payout</span><span style="font-size: 20px; font-weight: 700">{{st.net}} SAR</span></div>
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 13px; color: #5b5f86"><span>{{st.payout}} · IBAN ••2207</span><a href="../pdf/PdfProviderStatement.dc.html" style="font-weight: 600; min-height: 32px; display: flex; align-items: center; gap: 4px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12M7 11l5 5 5-5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"></path></svg>PDF</a></div>
+</section>
+
+<section aria-labelledby="inv-h" style="border-radius: 20px; background: #ffffff; padding: 4px 8px 4px 16px; display: flex; flex-direction: column">
+<h2 id="inv-h" style="margin: 0; padding: 8px 0 2px; font-size: 12px; line-height: 16px; font-weight: 600; color: #5b5f86">OCT INVOICES TO ORGANIZATIONS · ISSUED BY TRIPS ENJOY ON YOUR BEHALF</h2>
+<sc-for list="{{selfBilled}}" as="r" hint-placeholder-count="3">
+<div style="{{r.row}}">
+<span style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column"><span style="font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.t}}</span><span style="font-size: 12px; color: #5b5f86">{{r.meta}}</span></span>
+<span style="font-size: 14px; font-weight: 700; white-space: nowrap">{{r.amt}}</span>
+<sc-if value="{{r.pending}}" hint-placeholder-val="{{false}}"><button type="button" onClick="{{r.approve}}" style="height: 36px; padding: 0 12px; border-radius: 12px; border: 0; background: #262a67; color: #f6f3e4; font: inherit; font-size: 13px; font-weight: 700; cursor: pointer">Approve</button></sc-if>
+<sc-if value="{{r.done}}" hint-placeholder-val="{{true}}"><a href="../pdf/PdfProviderStatement.dc.html" aria-label="{{r.dl}}" style="width: 36px; height: 44px; flex-shrink: 0; color: #262a67; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12M7 11l5 5 5-5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"></path></svg></a></sc-if>
+</div>
+</sc-for>
+<h2 style="margin: 0; padding: 10px 0 2px; border-top: 1px solid #e3dfc9; font-size: 13px; line-height: 17px; font-weight: 600; color: #5b5f86">FROM TRIPS ENJOY TO YOU</h2>
+<sc-for list="{{fromTe}}" as="r" hint-placeholder-count="2">
+<div style="{{r.row}}">
+<span style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column"><span style="font-size: 14px; font-weight: 600">{{r.t}}</span><span style="font-size: 12px; color: #5b5f86">{{r.meta}}</span></span>
+<span style="font-size: 14px; font-weight: 700; white-space: nowrap">{{r.amt}}</span>
+<a href="../pdf/PdfProviderStatement.dc.html" aria-label="{{r.dl}}" style="width: 36px; height: 44px; flex-shrink: 0; color: #262a67; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12M7 11l5 5 5-5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"></path></svg></a>
+</div>
+</sc-for>
+</section>
+</div>
+<div style="position: absolute; left: 0; right: 0; bottom: 0; height: 120px">
+<dc-import name="TabBar" role="driver" active="earnings" hint-size="390px,120px"></dc-import>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { month: 'oct', approved: false }; }
+  renderVals() {
+    const M = {
+      oct: { t: 'Oct', title: 'October statement', status: 'Scheduled', k: 'sch', deals: 3, gross: '4,400', comm: '−440', adj: '−80', adjLabel: 'Refund carried from Sep', net: '3,880', payout: 'Paid weekly · next Mon 20 Oct 06:00' },
+      sep: { t: 'Sep', title: 'September statement', status: 'Paid', k: 'paid', deals: 4, gross: '4,580', comm: '−458', adj: '', adjLabel: '', net: '4,122', payout: 'Paid weekly on Mondays' },
+      aug: { t: 'Aug', title: 'August statement', status: 'Paid', k: 'paid', deals: 3, gross: '3,600', comm: '−360', adj: '', adjLabel: '', net: '3,240', payout: 'Paid weekly on Mondays' },
+      jul: { t: 'Jul', title: 'July statement', status: 'Paid', k: 'paid', deals: 2, gross: '2,900', comm: '−290', adj: '', adjLabel: '', net: '2,610', payout: 'Paid weekly on Mondays' }
+    };
+    const PILL = { paid: 'background: #e3f3ea; color: #1f7a4d;', sch: 'background: #e6e8f5; color: #262a67;' };
+    const cur = this.state.month;
+    const months = Object.keys(M).map((id) => {
+      const on = id === cur;
+      return { t: M[id].t + ' 2026', net: M[id].net + ' SAR', sel: on ? 'true' : 'false', go: () => this.setState({ month: id }),
+        style: 'flex-shrink: 0; min-width: 96px; height: 56px; padding: 0 14px; border-radius: 12px; font: inherit; cursor: pointer; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; ' + (on ? 'background: #262a67; color: #f6f3e4; border: 1px solid #262a67;' : 'background: #ffffff; color: #262a67; border: 1px solid #e3dfc9;') };
+    });
+    const m = M[cur];
+    const st = { ...m, dealsLabel: m.deals + ' deals · gross', hasAdj: !!m.adj, pill: 'padding: 2px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; ' + PILL[m.k] };
+    const ap = this.state.approved;
+    const SB = [
+      { t: 'Sunrise Tours Co. · AlUla Heritage Weekend', meta: ap ? 'SB-KH-2026-0031 · Approved' : 'SB-KH-2026-0031 · Needs your approval', amt: '3,000', pending: !ap },
+      { t: 'Sunrise Tours Co. · Jeddah Corniche Night', meta: 'SB-KH-2026-0029 · Cleared by ZATCA', amt: '700', pending: false },
+      { t: 'Desert Rose Travel · Taif Rose Farms', meta: 'SB-KH-2026-0027 · Cleared by ZATCA', amt: '700', pending: false }
+    ];
+    const rowS = (i) => 'min-height: 48px; display: flex; align-items: center; gap: 8px;' + (i ? ' border-top: 1px solid #e3dfc9;' : '');
+    const selfBilled = SB.map((r, i) => ({ ...r, done: !r.pending, row: rowS(i), dl: 'Download PDF ' + r.meta.split(' · ')[0], approve: () => this.setState({ approved: true }) }));
+    const fromTe = [
+      { t: 'Professional plan · Oct', meta: '149 + 22.35 VAT · charged to card', amt: '171.35' },
+      { t: 'Commission · Oct', meta: 'INV-TE-2026-118204 · from payout', amt: '440' }
+    ].map((r, i) => ({ ...r, row: rowS(i), dl: 'Download PDF ' + r.t }));
+    return { months, st, selfBilled, fromTe };
+  }
+}
+</script>
+</body>
+</html>

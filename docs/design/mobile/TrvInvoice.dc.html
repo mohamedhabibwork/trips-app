@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Traveler · Tax invoice</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;family=Cairo:wght@600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="height: 100%; box-sizing: border-box; padding: 56px 16px 24px; display: flex; flex-direction: column; gap: 10px">
+
+<div style="display: flex; align-items: center; gap: 12px">
+<a href="TrvReceipts.dc.html" aria-label="Back" style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 999px; background: #ffffff; color: #262a67; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a>
+<h1 style="margin: 0; flex-grow: 1; font-size: 22px; line-height: 28px; font-weight: 700">Tax invoice</h1>
+<span style="{{pill}}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{pillIcon}}"></path></svg>{{status}}</span>
+</div>
+
+<section aria-labelledby="inv-title" style="padding: 14px 16px; border-radius: 20px; background: #ffffff; display: flex; gap: 12px; align-items: flex-start">
+<div style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px">
+<h2 id="inv-title" style="margin: 0; font-size: 15px; line-height: 20px; font-weight: 700">Simplified Tax Invoice · <span lang="ar" dir="rtl" style="font-family: Cairo, sans-serif; font-weight: 700">فاتورة ضريبية مبسطة</span></h2>
+<span style="font-size: 14px; font-weight: 600">INV-ST-2026-004812</span>
+<span style="font-size: 12px; line-height: 16px; color: #5b5f86">Issued 6 Oct 2026 · Supply 16 Oct 2026</span>
+<span style="margin-top: 4px; align-self: flex-start; padding: 2px 8px; border-radius: 999px; background: #e6e8f5; color: #262a67; font-size: 11px; font-weight: 700; display: flex; align-items: center; gap: 4px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5.5c0 4.4-3 8-7 9.5-4-1.5-7-5.1-7-9.5V6zM9 12l2 2 4-4"></path></svg>Reported to ZATCA · Mon 6 Oct, 11:40</span>
+</div>
+<img src="../assets/820ae1ed630eb3e04ea4d7ce91f50535.png" alt="ZATCA QR code for invoice INV-ST-2026-004812" style="width: 84px; height: 84px; flex-shrink: 0; border-radius: 8px; border: 1px solid #e3dfc9">
+</section>
+
+<section aria-label="Seller and buyer" style="padding: 12px 16px; border-radius: 20px; background: #ffffff; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 12px; line-height: 16px">
+<div style="display: flex; flex-direction: column; gap: 2px">
+<span style="font-weight: 600; color: #5b5f86">SELLER</span>
+<span style="font-size: 14px; font-weight: 700">Sunrise Tours Co.</span>
+<span>VAT 310245678900003 · CR 1010734512</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 2px">
+<span style="font-weight: 600; color: #5b5f86">BUYER</span>
+<span style="font-size: 14px; font-weight: 700">Sara Al-Qahtani</span>
+<span>Booking TE-48213 · AlUla Heritage Weekend</span>
+</div>
+<span style="grid-column: 1 / -1; padding-top: 8px; border-top: 1px solid #e3dfc9; color: #5b5f86">Issued by Trips Enjoy on behalf of the seller.</span>
+</section>
+
+<section aria-label="Invoice lines" style="padding: 12px 16px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 3px; font-size: 13px; line-height: 18px">
+<div style="display: flex; justify-content: space-between; font-size: 11px; font-weight: 700; color: #5b5f86; padding-bottom: 2px"><span>ITEM · QTY × UNIT</span><span>SAR incl. VAT</span></div>
+<sc-for list="{{lines}}" as="l" hint-placeholder-count="7"><div style="display: flex; justify-content: space-between; gap: 8px"><span>{{l.t}}</span><span style="{{l.style}}">{{l.a}}</span></div></sc-for>
+<div style="margin-top: 4px; padding-top: 6px; border-top: 1px solid #e3dfc9; display: flex; justify-content: space-between"><span style="color: #5b5f86">Total excl. VAT</span><span style="font-weight: 600">3,993.04</span></div>
+<div style="display: flex; justify-content: space-between"><span style="color: #5b5f86">VAT 15%</span><span style="font-weight: 600">598.96</span></div>
+<div style="margin-top: 2px; padding-top: 6px; border-top: 1px solid #e3dfc9; display: flex; justify-content: space-between; align-items: baseline"><span style="font-size: 15px; font-weight: 700">Total incl. VAT</span><span style="font-size: 20px; font-weight: 700">4,592.00 SAR</span></div>
+<div style="display: flex; justify-content: space-between; color: #5b5f86; font-size: 12px"><span>Paid by Visa •• 4421 · Mon 6 Oct</span><span>Ref PAY-88213041</span></div>
+</section>
+
+<div style="border-radius: 20px; background: #ffffff; padding: 0 16px">
+<sc-if value="{{refunded}}" hint-placeholder-val="{{false}}">
+<a href="TrvCancelled.dc.html" style="min-height: 52px; display: flex; align-items: center; gap: 10px; color: #262a67; text-decoration: none; border-bottom: 1px solid #e3dfc9"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#1f7a4d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7"></path></svg><span style="flex-grow: 1; display: flex; flex-direction: column"><span style="font-size: 14px; font-weight: 600">Credit note CN-ST-2026-000913</span><span style="font-size: 12px; color: #5b5f86">Refund 3,674.00 SAR (80%) · references this invoice</span></span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg></a>
+</sc-if>
+<a href="TrvPlan.dc.html" style="min-height: 52px; display: flex; align-items: center; gap: 10px; color: #262a67; text-decoration: none"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#c93a00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zM14 3v5h5"></path></svg><span style="flex-grow: 1; display: flex; flex-direction: column"><span style="font-size: 14px; font-weight: 600">Explorer plan · 19 SAR</span><span style="font-size: 12px; color: #5b5f86">Separate invoice from Trips Enjoy · INV-TE-2026-221570</span></span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg></a>
+</div>
+
+<div style="margin-top: auto; display: flex; gap: 10px">
+<a href="../pdf/PdfInvoiceB2C.dc.html" style="flex-grow: 1; height: 52px; border-radius: 12px; background: #ff6c2e; color: #262a67; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 16px; font-weight: 700; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12M7 11l5 5 5-5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"></path></svg>Download PDF</a>
+<button type="button" onClick="{{share}}" style="width: 120px; height: 52px; border-radius: 12px; background: #ffffff; border: 1px solid #7b7fa6; color: #262a67; font: inherit; font-size: 16px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12M7 9l5-5 5 5M5 14v5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-5"></path></svg>{{shareLabel}}</button>
+</div>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"refunded":{"editor":"boolean","default":false},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { shared: false }; }
+  renderVals() {
+    const L = [
+      ['Seats · adults · 2 × 1,250', '2,500.00'],
+      ['Seats · children · 2 × 990', '1,980.00'],
+      ['Travel insurance · 4 × 25', '100.00'],
+      ['Hegra guided tour · 4 × 180', '720.00'],
+      ['Coupon AUTUMN15 · 15% off seats', '−672.00', true],
+      ['Explorer 5% off programs', '−36.00', true]
+    ];
+    const lines = L.map(([t, a, disc]) => ({ t, a, style: 'white-space: nowrap; font-weight: 600; ' + (disc ? 'color: #1f7a4d;' : '') }));
+    const s = this.state.shared;
+    const r = !!this.props.refunded;
+    return { lines, refunded: r, status: r ? 'Refunded' : 'Paid', pillIcon: r ? 'M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7' : 'M5 12.5l4.5 4.5L19 7',
+      pill: 'padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 4px; ' + (r ? 'background: #e6e8f5; color: #262a67;' : 'background: #e3f3ea; color: #1f7a4d;'), shareLabel: s ? 'Copied' : 'Share', share: () => this.setState({ shared: true }) };
+  }
+}
+</script>
+</body>
+</html>

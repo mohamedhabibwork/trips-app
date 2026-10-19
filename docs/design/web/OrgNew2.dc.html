@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>New trip · 2 Schedule &amp; route</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="min-height: 1000px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="OrgNav" active="Trips" hint-size="248px,1000px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 20px">
+
+<div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 2px">
+<span style="font-size: 14px; color: #5b5f86"><a href="OrgTrips.dc.html" style="font-weight: 600; text-decoration: none">Trips</a> / AlUla Heritage Weekend · Step 2 of 9</span>
+<h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Schedule &amp; route</h1>
+</div>
+<span style="font-size: 14px; color: #5b5f86">All times are Riyadh time (AST, UTC+3)</span>
+</div>
+
+<nav aria-label="Trip builder steps">
+<ol style="list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{steps}}" as="s" hint-placeholder-count="9">
+<li style="flex: 1 1 100px; min-width: 0"><a href="{{s.href}}" aria-current="{{s.cur}}" style="display: flex; flex-direction: column; gap: 8px; text-decoration: none; color: #262a67"><span style="{{s.bar}}"></span><span style="display: flex; align-items: center; gap: 8px"><span style="{{s.dot}}"><sc-if value="{{s.done}}" hint-placeholder-val="{{false}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg></sc-if><sc-if value="{{s.notDone}}" hint-placeholder-val="{{true}}">{{s.n}}</sc-if></span><span style="{{s.lab}}">{{s.l}}</span></span></a></li>
+</sc-for>
+</ol>
+</nav>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
+<form style="flex: 3 1 520px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+
+<section style="background: #ffffff; border-radius: 20px; padding: 20px 24px; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px">
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="dep" style="font-size: 14px; font-weight: 600">Departure</label><input id="dep" type="datetime-local" value="2026-10-16T06:30" style="height: 52px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 12px; font: inherit; font-size: 16px; color: #262a67"></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="end" style="font-size: 14px; font-weight: 600">Back in Riyadh</label><input id="end" type="datetime-local" value="2026-10-18T23:30" style="height: 52px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 12px; font: inherit; font-size: 16px; color: #262a67"></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="close" style="font-size: 14px; font-weight: 600">Bookings close</label><input id="close" type="datetime-local" value="2026-10-14T23:59" style="height: 52px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 12px; font: inherit; font-size: 16px; color: #262a67"><span style="font-size: 13px; color: #5b5f86">At least 24 h before departure</span></div>
+</section>
+
+<section aria-labelledby="pu-h" style="background: #ffffff; border-radius: 20px; padding: 20px 24px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px"><h2 id="pu-h" style="margin: 0; font-size: 18px; font-weight: 600">Pickup points</h2><span style="font-size: 13px; color: #5b5f86">Travelers choose one when they book</span></div>
+<sc-for list="{{pickups}}" as="p" hint-placeholder-count="3">
+<div style="display: grid; grid-template-columns: 28px minmax(0, 1fr) 130px 44px; gap: 10px; align-items: center">
+<span style="width: 28px; height: 28px; border-radius: 999px; background: #e6e8f5; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center">{{p.i}}</span>
+<input aria-label="{{p.nl}}" value="{{p.n}}" style="height: 48px; min-width: 0; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 12px; font: inherit; font-size: 15px; color: #262a67">
+<input type="time" aria-label="{{p.tl}}" value="{{p.t}}" style="height: 48px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 10px; font: inherit; font-size: 15px; color: #262a67">
+<button type="button" aria-label="{{p.rl}}" onClick="{{p.rm}}" style="width: 44px; height: 44px; border-radius: 10px; border: 0; background: transparent; color: #b42318; cursor: pointer; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"></path></svg></button>
+</div>
+</sc-for>
+<button type="button" onClick="{{add}}" style="align-self: flex-start; height: 40px; padding: 0 14px; border-radius: 10px; border: 1px dashed #7b7fa6; background: #fff; color: #262a67; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Add pickup point</button>
+</section>
+
+<section aria-labelledby="rt-h" style="background: #ffffff; border-radius: 20px; padding: 20px 24px; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px"><h2 id="rt-h" style="margin: 0; font-size: 18px; font-weight: 600">Route stops</h2><span style="font-size: 13px; color: #5b5f86">Moderators check passengers out and back in at each stop</span></div>
+<ol style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px">
+<sc-for list="{{stops}}" as="r" hint-placeholder-count="3">
+<li style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; padding: 12px; border-radius: 12px; border: 1px solid #e3dfc9">
+<span style="width: 28px; height: 28px; border-radius: 999px; background: #262a67; color: #f6f3e4; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center">{{r.i}}</span>
+<span style="flex: 1 1 200px; display: flex; flex-direction: column"><span style="font-size: 15px; font-weight: 600">{{r.n}}</span><span style="font-size: 13px; color: #5b5f86">{{r.d}}</span></span>
+<span style="font-size: 14px; font-weight: 600; font-variant-numeric: tabular-nums">{{r.t}}</span>
+<span style="display: flex; gap: 4px">
+<button type="button" aria-label="{{r.up}}" onClick="{{r.mu}}" style="width: 40px; height: 40px; border-radius: 10px; border: 1px solid #e3dfc9; background: #fff; color: #262a67; cursor: pointer; display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6-6 6 6"></path></svg></button>
+<button type="button" aria-label="{{r.down}}" onClick="{{r.md}}" style="width: 40px; height: 40px; border-radius: 10px; border: 1px solid #e3dfc9; background: #fff; color: #262a67; cursor: pointer; display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg></button>
+</span>
+</li>
+</sc-for>
+</ol>
+<label style="display: flex; gap: 12px; align-items: flex-start; padding: 12px; border-radius: 12px; background: #f6f3e4; cursor: pointer">
+<input type="checkbox" checked="{{ret}}" onChange="{{toggleRet}}" style="width: 20px; height: 20px; margin: 2px 0 0; accent-color: #262a67">
+<span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 15px; font-weight: 600">Include return trip</span><span style="font-size: 13px; color: #5b5f86">{{retLine}}</span></span>
+</label>
+</section>
+</form>
+
+<aside aria-labelledby="sum-h" style="flex: 1 1 280px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+<h2 id="sum-h" style="margin: 0; font-size: 18px; font-weight: 600">Trip summary</h2>
+<div role="img" aria-label="Route from Riyadh via Buraidah rest stop to AlUla" style="position: relative; height: 140px; border-radius: 16px; background: #e9e6d3; overflow: hidden">
+<svg viewBox="0 0 300 140" width="100%" height="100%" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; inset: 0"><path d="M260 115 C 210 100, 180 80, 150 70 S 80 40, 40 25" fill="none" stroke="#262a67" stroke-width="3" stroke-dasharray="7 6" stroke-linecap="round"></path><circle cx="260" cy="115" r="6" fill="#ff6c2e"></circle><circle cx="150" cy="70" r="5" fill="#ffffff" stroke="#262a67" stroke-width="2"></circle><circle cx="40" cy="25" r="6" fill="#262a67"></circle></svg>
+</div>
+<dl style="margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 8px 12px; font-size: 14px">
+<dt style="color: #5b5f86">Trip</dt><dd style="margin: 0; font-weight: 600">AlUla Heritage Weekend</dd>
+<dt style="color: #5b5f86">Departs</dt><dd style="margin: 0; font-weight: 600">Thu 16 Oct · 06:30</dd>
+<dt style="color: #5b5f86">Returns</dt><dd style="margin: 0; font-weight: 600">{{retShort}}</dd>
+<dt style="color: #5b5f86">Length</dt><dd style="margin: 0; font-weight: 600">3 days · 2 nights</dd>
+<dt style="color: #5b5f86">Pickups</dt><dd style="margin: 0; font-weight: 600">{{pickupCount}}</dd>
+<dt style="color: #5b5f86">Stops</dt><dd style="margin: 0; font-weight: 600">{{routeLine}}</dd>
+<dt style="color: #5b5f86">Booking</dt><dd style="margin: 0; font-weight: 600">Closes Tue 14 Oct · 23:59</dd>
+</dl>
+</aside>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; align-items: center; padding-top: 16px; border-top: 1px solid #e3dfc9">
+<a href="OrgNew1.dc.html" style="height: 48px; box-sizing: border-box; padding: 0 20px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 6px; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg>Back</a>
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center">
+<span style="font-size: 13px; color: #5b5f86">Draft saved 10:06</span>
+<button type="button" style="height: 48px; padding: 0 16px; border-radius: 12px; border: 0; background: transparent; color: #262a67; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Save draft</button>
+<a href="OrgNew3.dc.html" style="height: 48px; padding: 0 22px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; text-decoration: none">Continue to vehicles<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+</div>
+</div>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1100}}'>
+class Component extends DCLogic {
+  constructor(p) {
+    super(p);
+    this.state = {
+      ret: true,
+      pickups: [
+        { n: 'Olaya · Kingdom Centre, Gate 3', t: '06:30' },
+        { n: 'Al Nakheel Mall · north parking', t: '06:50' },
+        { n: 'Al Yasmin park and ride · Exit 5', t: '07:10' }
+      ],
+      stops: [
+        { n: 'Riyadh', d: 'Last pickup 07:10', t: 'Dep 07:15' },
+        { n: 'Buraidah rest stop', d: '20 min break · restrooms and prayer', t: 'Arr 10:30' },
+        { n: 'AlUla · Shaden Resort', d: 'Overnight · 2 nights', t: 'Arr 17:40' }
+      ]
+    };
+  }
+  renderVals() {
+    const names = ['Basics', 'Schedule', 'Vehicles', 'Staff', 'Photographer', 'Programs', 'Seats', 'Pricing', 'Publish'];
+    const cur = 1;
+    const steps = names.map((l, i) => {
+      const st = i < cur ? 'done' : i === cur ? 'cur' : 'todo';
+      return { l, n: String(i + 1), done: st === 'done', notDone: st !== 'done', href: 'OrgNew' + (i + 1) + '.dc.html', cur: st === 'cur' ? 'step' : 'false',
+        bar: 'display: block; height: 4px; border-radius: 999px; background: ' + (st === 'done' ? '#262a67' : st === 'cur' ? '#ff6c2e' : '#e3dfc9'),
+        dot: 'width: 24px; height: 24px; flex-shrink: 0; box-sizing: border-box; border-radius: 999px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; ' + (st === 'done' ? 'background: #262a67; color: #f6f3e4;' : st === 'cur' ? 'background: #ff6c2e; color: #262a67;' : 'background: #ffffff; color: #5b5f86; border: 1px solid #7b7fa6;'),
+        lab: 'font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; ' + (st === 'todo' ? 'font-weight: 500; color: #5b5f86;' : 'font-weight: 600; color: #262a67;') };
+    });
+    const P = this.state.pickups;
+    const pickups = P.map((p, i) => ({ ...p, i: String(i + 1), nl: 'Pickup point ' + (i + 1) + ' name', tl: 'Pickup point ' + (i + 1) + ' time', rl: 'Remove pickup point ' + (i + 1),
+      rm: () => this.setState({ pickups: P.filter((_, j) => j !== i) }) }));
+    const add = () => this.setState({ pickups: [...P, { n: '', t: '07:20' }] });
+    const S = this.state.stops;
+    const move = (i, d) => { const j = i + d; if (j < 0 || j >= S.length) return; const n = S.slice(); const t = n[i]; n[i] = n[j]; n[j] = t; this.setState({ stops: n }); };
+    const stops = S.map((r, i) => ({ ...r, i: String(i + 1), up: 'Move ' + r.n + ' up', down: 'Move ' + r.n + ' down', mu: () => move(i, -1), md: () => move(i, 1) }));
+    const ret = this.state.ret;
+    return { steps, pickups, add, stops, ret, toggleRet: () => this.setState({ ret: !ret }),
+      retLine: ret ? 'Leaves AlUla Sat 18 Oct at 14:00, same stops in reverse, drops off at every pickup point.' : 'One way only. Travelers will see "Return not included".',
+      retShort: ret ? 'Sat 18 Oct · 23:30' : 'One way',
+      pickupCount: P.length + (P.length === 1 ? ' point' : ' points') + ' in Riyadh',
+      routeLine: S.map((s) => s.n.split(' ·')[0]).join(' → ') };
+  }
+}
+</script>
+</body>
+</html>

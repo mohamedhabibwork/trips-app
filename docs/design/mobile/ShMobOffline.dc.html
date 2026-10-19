@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Shared · Offline</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="height: 100%; box-sizing: border-box; padding: 56px 16px 24px; display: flex; flex-direction: column; gap: 16px">
+
+<div role="status" style="align-self: center; padding: 6px 14px; border-radius: 999px; background: #262a67; color: #f6f3e4; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px"><span style="width: 8px; height: 8px; border-radius: 999px; background: #f89e23"></span>No connection</div>
+
+<div style="flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; text-align: center; padding: 0 8px">
+<img src="../assets/54740ee0b7f851c5569e7bd53689f03c.svg" alt="" style="width: 160px; height: 160px; object-fit: contain; flex-shrink: 0">
+<h1 style="margin: 4px 0 0; font-size: 26px; line-height: 32px; font-weight: 700">You're offline</h1>
+<p style="margin: 0; font-size: 16px; line-height: 23px; color: #5b5f86">Check your Wi-Fi or mobile data. Your tickets are saved on this phone, so you can still show your QR and board.</p>
+
+<a href="TrvTicket.dc.html" style="margin-top: 12px; align-self: stretch; padding: 14px 16px; border-radius: 20px; background: #ffffff; display: flex; align-items: center; gap: 12px; color: #262a67; text-decoration: none; text-align: start">
+<span style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 12px; background: #ffe7dc; color: #c93a00; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v2a2.5 2.5 0 0 0 0 5v3a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-3a2.5 2.5 0 0 0 0-5zM14 5v14"></path></svg></span>
+<span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 16px; font-weight: 600">AlUla Heritage Weekend</span><span style="font-size: 13px; color: #5b5f86">Bus 2 · seats 3A–3D · saved 07:05</span></span>
+<span style="font-size: 14px; font-weight: 600; color: #c93a00">Show ticket</span>
+</a>
+<span style="font-size: 14px; line-height: 20px; color: #5b5f86">Live bus tracking and new bookings come back when you reconnect.</span>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 10px">
+<sc-if value="{{checking}}" hint-placeholder-val="{{false}}"><span role="status" style="text-align: center; font-size: 14px; color: #5b5f86">Still offline. We'll reconnect on our own when the signal is back.</span></sc-if>
+<button type="button" onClick="{{retry}}" style="height: 52px; border: 0; border-radius: 12px; background: #ff6c2e; color: #262a67; font: inherit; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7"></path></svg>Try again</button>
+<a href="TrvTicket.dc.html" style="height: 52px; box-sizing: border-box; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-size: 16px; font-weight: 600; display: flex; align-items: center; justify-content: center; text-decoration: none">Open saved tickets</a>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { tried: false }; }
+  renderVals() {
+    return { checking: this.state.tried, retry: () => this.setState({ tried: true }) };
+  }
+}
+</script>
+</body>
+</html>

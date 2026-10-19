@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Admin · Revenue</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="min-height: 1000px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="AdmNav" active="Revenue" hint-size="248px,1000px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 20px">
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; color: #5b5f86">Subscriptions, commission and coupon cost · trends below are the Saudi Arabia (phase 5) view in SAR, net of tax</span><h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Revenue</h1></div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center">
+<label for="r-range" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Date range</label>
+<select id="r-range" style="height: 48px; border-radius: 12px; border: 1px solid #7b7fa6; background: #fff; padding: 0 14px; font: inherit; font-size: 15px; font-weight: 600; color: #262a67"><option>Last 12 months · Nov 2025 – Oct 2026</option><option>This quarter</option><option>Year to date</option><option>Custom range…</option></select>
+<button type="button" style="height: 48px; padding: 0 20px; border-radius: 12px; border: 0; background: #ff6c2e; color: #262a67; font: inherit; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12M7 11l5 5 5-5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"></path></svg>Export report</button>
+</div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px">
+<sc-for list="{{kpis}}" as="k" hint-placeholder-count="6">
+<div style="padding: 14px 18px; border-radius: 16px; background: #ffffff; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 13px; color: #5b5f86">{{k.l}}</span><span style="font-size: 24px; font-weight: 700">{{k.v}} <span style="font-size: 14px; font-weight: 500; color: #5b5f86">{{k.u}}</span></span><span style="{{k.ds}}">{{k.d}}</span></div>
+</sc-for>
+</div>
+
+<section aria-labelledby="fv-h" style="background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; align-items: center">
+<div style="display: flex; flex-direction: column; gap: 2px"><h2 id="fv-h" style="margin: 0; font-size: 18px; font-weight: 600">Platform financial view · Wed 1 – Tue 14 Oct</h2><span style="font-size: 13px; color: #5b5f86">Each market in its own currency; amounts are never converted or added across currencies.</span></div>
+<div role="tablist" aria-label="Market" style="display: flex; padding: 4px; border-radius: 12px; background: #f6f3e4">
+<sc-for list="{{mkts}}" as="m" hint-placeholder-count="3"><button type="button" role="tab" aria-selected="{{m.sel}}" onClick="{{m.on}}" style="{{m.st}}">{{m.t}}</button></sc-for>
+</div>
+</div>
+<sc-if value="{{hasFv}}" hint-placeholder-val="{{true}}">
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px">
+<sc-for list="{{fv}}" as="a" hint-placeholder-count="6">
+<a href="{{a.href}}" style="display: flex; flex-direction: column; gap: 4px; padding: 14px 16px; border-radius: 16px; border: 1px solid #e3dfc9; color: #262a67; text-decoration: none">
+<span style="display: flex; justify-content: space-between; gap: 8px; font-size: 13px; color: #5b5f86"><span style="font-weight: 600">{{a.l}}</span><span style="color: #c93a00; font-weight: 600">{{a.go}}</span></span>
+<span style="font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums">{{a.v}} <span style="font-size: 14px; font-weight: 600; color: #5b5f86">{{a.cur}}</span></span>
+<span style="font-size: 13px; line-height: 18px; color: #5b5f86">{{a.d}}</span>
+</a>
+</sc-for>
+</div>
+</sc-if>
+<sc-if value="{{noFv}}" hint-placeholder-val="{{false}}"><p style="margin: 0; padding: 24px 0; font-size: 15px; color: #5b5f86; text-align: center">No data for this period. The UAE market is in draft and has no transactions yet.</p></sc-if>
+<div style="display: flex; flex-wrap: wrap; gap: 16px; font-size: 14px; font-weight: 600"><a href="AdmPayouts.dc.html">Payout runs</a><a href="AdmReconciliation.dc.html">Reconciliation exceptions · 7 open</a><a href="AdmSettlements.dc.html">Settlements tracker</a><a href="AdmCountries.dc.html">Market settings</a></div>
+</section>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: stretch">
+<section aria-labelledby="mrr-h" style="flex: 3 1 520px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px"><h2 id="mrr-h" style="margin: 0; font-size: 18px; font-weight: 600">MRR trend</h2><span style="font-size: 13px; color: #5b5f86">Thousands of SAR · ▲ 61% in 12 months</span></div>
+<div role="img" aria-label="MRR grew every month from 882 thousand SAR in November 2025 to 1.42 million SAR in October 2026" style="display: flex; gap: 8px; align-items: flex-end; height: 220px; padding-bottom: 4px; border-bottom: 1px solid #e3dfc9">
+<sc-for list="{{mrr}}" as="m" hint-placeholder-count="12">
+<div style="flex: 1 1 0; min-width: 0; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 4px"><span style="font-size: 11px; color: #5b5f86; white-space: nowrap">{{m.v}}</span><div style="{{m.bar}}"></div></div>
+</sc-for>
+</div>
+<div aria-hidden="true" style="display: flex; gap: 8px; margin-top: -8px">
+<sc-for list="{{mrr}}" as="m" hint-placeholder-count="12"><span style="flex: 1 1 0; min-width: 0; text-align: center; font-size: 12px; color: #5b5f86">{{m.m}}</span></sc-for>
+</div>
+</section>
+
+<section aria-labelledby="mv-h" style="flex: 2 1 300px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+<h2 id="mv-h" style="margin: 0; font-size: 18px; font-weight: 600">Plan movement · October</h2>
+<sc-for list="{{moves}}" as="m" hint-placeholder-count="4">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<div style="display: flex; justify-content: space-between; font-size: 14px"><span style="font-weight: 600">{{m.l}}</span><span>{{m.v}}</span></div>
+<div style="height: 10px; border-radius: 999px; background: #f6f3e4; overflow: hidden"><div style="{{m.bar}}"></div></div>
+</div>
+</sc-for>
+<p style="margin: 4px 0 0; font-size: 13px; color: #5b5f86; line-height: 18px">Net expansion +38,900 SAR MRR. Most upgrades: Driver Basic to Professional after hitting the 3-booking limit.</p>
+</section>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: stretch">
+<section aria-labelledby="dist-h" style="flex: 1 1 420px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px"><h2 id="dist-h" style="margin: 0; font-size: 18px; font-weight: 600">Plan distribution per role</h2>
+<span style="display: flex; gap: 12px; font-size: 12px; color: #5b5f86"><span style="display: inline-flex; align-items: center; gap: 4px"><span style="width: 10px; height: 10px; border-radius: 3px; background: #b8bad6"></span>Entry</span><span style="display: inline-flex; align-items: center; gap: 4px"><span style="width: 10px; height: 10px; border-radius: 3px; background: #ff6c2e"></span>Middle</span><span style="display: inline-flex; align-items: center; gap: 4px"><span style="width: 10px; height: 10px; border-radius: 3px; background: #262a67"></span>Top</span></span></div>
+<sc-for list="{{dist}}" as="d" hint-placeholder-count="4">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<div style="display: flex; justify-content: space-between; font-size: 14px"><span style="font-weight: 600">{{d.r}}</span><span style="color: #5b5f86">{{d.txt}}</span></div>
+<div role="img" aria-label="{{d.aria}}" style="display: flex; height: 14px; border-radius: 999px; overflow: hidden; gap: 2px"><div style="{{d.a}}"></div><div style="{{d.b}}"></div><div style="{{d.c}}"></div></div>
+</div>
+</sc-for>
+</section>
+
+<section aria-labelledby="com-h" style="flex: 1 1 420px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 8px 0">
+<h2 id="com-h" style="margin: 0; padding: 12px 20px 8px; font-size: 18px; font-weight: 600">Marketplace income · October to date</h2>
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 420px; border-collapse: collapse; font-size: 15px">
+<thead><tr style="color: #5b5f86; font-size: 13px"><th scope="col" style="text-align: start; padding: 8px 20px; font-weight: 600">Source</th><th scope="col" style="text-align: start; padding: 8px 12px; font-weight: 600">Rate</th><th scope="col" style="text-align: end; padding: 8px 20px; font-weight: 600">Amount</th></tr></thead>
+<tbody>
+<sc-for list="{{comm}}" as="c" hint-placeholder-count="5">
+<tr style="{{c.st}}"><td style="padding: 10px 20px">{{c.s}}</td><td style="padding: 10px 12px; color: #5b5f86">{{c.r}}</td><td style="padding: 10px 20px; text-align: end; font-variant-numeric: tabular-nums">{{c.a}}</td></tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+</section>
+</div>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1220}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { mk: 'EG' }; }
+  renderVals() {
+    const good = 'font-size: 13px; font-weight: 600; color: #1f7a4d';
+    const mut = 'font-size: 13px; color: #5b5f86';
+    const kpis = [
+      { l: 'MRR', v: '1.42M', u: 'SAR', d: '▲ 6.8% vs September', ds: good },
+      { l: 'ARR run rate', v: '17.0M', u: 'SAR', d: 'MRR × 12', ds: mut },
+      { l: 'Churn', v: '2.1%', u: '', d: '▼ 0.3 pts · 241 cancellations', ds: good },
+      { l: 'GMV (Oct to date)', v: '18.6M', u: 'SAR', d: '▲ 14% vs Sep same day', ds: good },
+      { l: 'Commission (Oct)', v: '1.18M', u: 'SAR', d: 'Trips + provider deals', ds: mut },
+      { l: 'Coupon cost (platform)', v: '96,300', u: 'SAR', d: '0.5% of GMV', ds: mut }
+    ];
+    const V = [882, 921, 968, 1004, 1047, 1092, 1131, 1178, 1224, 1282, 1330, 1420];
+    const M = ['Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'];
+    const mrr = V.map((v, i) => ({ m: M[i], v: String(v), bar: 'width: 100%; max-width: 44px; border-radius: 6px 6px 0 0; height: ' + Math.round(v / 1420 * 190) + 'px; background: ' + (i === 11 ? '#ff6c2e' : '#262a67') + ';' }));
+    const mv = (l, v, p, c) => ({ l, v, bar: 'height: 100%; width: ' + p + '%; border-radius: 999px; background: ' + c + ';' });
+    const moves = [
+      mv('New subscriptions', '+612 · 71,400 SAR', 100, '#262a67'),
+      mv('Upgrades', '+284 · 52,100 SAR', 73, '#1f7a4d'),
+      mv('Downgrades', '−97 · 13,200 SAR', 18, '#f89e23'),
+      mv('Cancellations', '−241 · 30,200 SAR', 42, '#b42318')
+    ];
+    const seg = (p, c) => 'width: ' + p + '%; background: ' + c + ';';
+    const D = [
+      ['Organizations', 'Starter', 'Growth', 'Enterprise', 95, 164, 38],
+      ['Drivers', 'Basic', 'Professional', 'Premium', 292, 448, 164],
+      ['Photographers', 'Basic', 'Studio', 'Pro', 67, 198, 73],
+      ['Users (paid)', '—', 'Explorer', 'VIP', 0, 7640, 2240]
+    ];
+    const dist = D.map((d) => { const t = d[4] + d[5] + d[6]; const p = (x) => Math.round(x / t * 100);
+      const txt = (d[4] ? d[1] + ' ' + p(d[4]) + '% · ' : '') + d[2] + ' ' + p(d[5]) + '% · ' + d[3] + ' ' + p(d[6]) + '%';
+      return { r: d[0], txt, aria: d[0] + ': ' + txt, a: seg(p(d[4]), '#b8bad6'), b: seg(p(d[5]), '#ff6c2e'), c: seg(p(d[6]), '#262a67') }; });
+    const row = 'border-top: 1px solid #e3dfc9;';
+    const comm = [
+      { s: 'Trip bookings', r: '10% of base trip price · placeholder', a: '948,000 SAR', st: row },
+      { s: 'Platform driver deals', r: 'Rate per deal type · Finance to set', a: '162,400 SAR', st: row },
+      { s: 'Platform photographer deals', r: 'Rate per deal type · Finance to set', a: '69,800 SAR', st: row },
+      { s: 'Platform coupons', r: 'Funded by Trips Enjoy', a: '−96,300 SAR', st: row + ' color: #b42318;' },
+      { s: 'Net marketplace income', r: '', a: '1,083,900 SAR', st: 'border-top: 2px solid #262a67; font-weight: 700;' }
+    ];
+    const mk = this.state.mk;
+    const mkts = [['EG', 'Egypt · EGP'], ['SA', 'Saudi Arabia · SAR'], ['AE', 'UAE · AED']].map(([k, t]) => ({ t, sel: k === mk ? 'true' : 'false', on: () => this.setState({ mk: k }),
+      st: 'height: 36px; padding: 0 14px; border: 0; border-radius: 8px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; ' + (k === mk ? 'background: #262a67; color: #f6f3e4;' : 'background: transparent; color: #262a67;') }));
+    const FV = {
+      EG: [['412,600', '1,284 active subscriptions · 61 upgrades'], ['286,450', '10% of base trip price (placeholder) on 2,864,500 EGP of trips'], ['1,962,000', 'Deal cost · 148 deals finalized · 31 open · 2 flagged for review'], ['−118,300', '1,906 redemptions · 41,200 EGP funded by the platform'], ['38,750', '23 open · 9 resolved · refunded through the original gateway'], ['2,114,800', '2 weekly runs on Monday 06:00 · next Mon 20 Oct']],
+      SA: [['1,420,000', '3,920 active subscriptions · 284 upgrades'], ['1,180,200', '10% of base trip price (placeholder) on 11,802,000 SAR of trips'], ['1,610,000', 'Deal cost · 412 deals finalized · 57 open · 4 flagged'], ['−96,300', '3,210 redemptions · platform coupons only'], ['61,200', '41 open · 18 resolved'], ['4,880,000', '2 weekly runs on Monday 06:00 · next Mon 20 Oct']]
+    };
+    const L = [['Subscription revenue', 'AdmSubs.dc.html', 'Subscriptions'], ['Commission', 'AdmSettlements.dc.html', 'Settlements'], ['Deal audit', 'AdmDeals.dc.html', 'Deals'], ['Coupon redemptions', 'AdmCoupons.dc.html', 'Coupons'], ['Disputes', 'AdmDisputes.dc.html', 'Disputes'], ['Payouts', 'AdmPayouts.dc.html', 'Payout runs']];
+    const cur = { EG: 'EGP', SA: 'SAR', AE: 'AED' }[mk];
+    const fv = (FV[mk] || []).map((x, i) => ({ l: L[i][0], href: L[i][1], go: L[i][2], v: x[0], d: x[1], cur }));
+    return { kpis, mrr, moves, dist, comm, mkts, fv, hasFv: fv.length > 0, noFv: fv.length === 0 };
+  }
+}
+</script>
+</body>
+</html>

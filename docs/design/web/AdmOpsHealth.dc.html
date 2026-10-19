@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Admin · Operations health</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="min-height: 1000px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="AdmNav" active="Overview" hint-size="248px,1000px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 20px">
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 2px"><a href="AdmHome.dc.html" style="align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 600; text-decoration: none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg>Overview</a><h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Operations health</h1><span style="font-size: 14px; color: #5b5f86">Data as of Tue 14 Oct 09:40 Cairo · critical alerts go to the on-call admin by push and email, SEV-1 also by SMS</span></div>
+<div role="tablist" aria-label="Time range" style="display: flex; padding: 4px; border-radius: 12px; background: #ffffff; border: 1px solid #e3dfc9">
+<sc-for list="{{ranges}}" as="r" hint-placeholder-count="3"><button type="button" role="tab" aria-selected="{{r.sel}}" onClick="{{r.on}}" style="{{r.st}}">{{r.t}}</button></sc-for>
+</div>
+</div>
+
+<div role="alert" style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding: 12px 16px; border-radius: 12px; background: #fdf0d5; color: #8a4b00; font-size: 14px; line-height: 20px">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9.5 17h-19zM12 10v4M12 17h.01"></path></svg>
+<span style="flex: 1 1 400px"><strong>Job metrics are 29 hours old.</strong> The daily metrics job (02:00 UTC) did not finish on Tue 14 Oct, so the job panel shows Mon 13 Oct 02:00 UTC data. Other panels are live.</span>
+<a href="AdmAudit.dc.html" style="color: #8a4b00; font-weight: 700">See job log</a>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px">
+<sc-for list="{{kpis}}" as="k" hint-placeholder-count="4">
+<div style="padding: 14px 18px; border-radius: 16px; background: #ffffff; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 13px; color: #5b5f86">{{k.l}}</span><span style="font-size: 24px; font-weight: 700">{{k.v}}</span><span style="{{k.ds}}">{{k.d}}</span></div>
+</sc-for>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: stretch">
+<section aria-labelledby="pay-h" style="flex: 1 1 420px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px"><h2 id="pay-h" style="margin: 0; font-size: 18px; font-weight: 600">Payments by gateway</h2><a href="AdmReconciliation.dc.html" style="font-size: 14px; font-weight: 600">Reconciliation</a></div>
+<sc-for list="{{pay}}" as="p" hint-placeholder-count="4">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<div style="display: flex; justify-content: space-between; gap: 8px; font-size: 14px"><span style="font-weight: 600">{{p.g}}</span><span><strong>{{p.ok}}</strong> <span style="color: #5b5f86">success · {{p.f}}</span></span></div>
+<div role="img" aria-label="{{p.aria}}" style="display: flex; height: 12px; border-radius: 999px; overflow: hidden; gap: 2px; background: #f6f3e4"><div style="{{p.a}}"></div><div style="{{p.b}}"></div><div style="{{p.c}}"></div></div>
+</div>
+</sc-for>
+<div style="display: flex; flex-wrap: wrap; gap: 14px; font-size: 12px; color: #5b5f86"><span style="display: inline-flex; align-items: center; gap: 4px"><span style="width: 10px; height: 10px; border-radius: 3px; background: #1f7a4d"></span>Succeeded</span><span style="display: inline-flex; align-items: center; gap: 4px"><span style="width: 10px; height: 10px; border-radius: 3px; background: #f89e23"></span>Pending over 15 min</span><span style="display: inline-flex; align-items: center; gap: 4px"><span style="width: 10px; height: 10px; border-radius: 3px; background: #b42318"></span>Failed</span></div>
+</section>
+
+<section aria-labelledby="ntf-h" style="flex: 1 1 420px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px"><h2 id="ntf-h" style="margin: 0; font-size: 18px; font-weight: 600">Notification delivery</h2><a href="AdmTemplates.dc.html" style="font-size: 14px; font-weight: 600">Templates</a></div>
+<div role="img" aria-label="{{ntfAria}}" style="display: flex; gap: 20px; align-items: flex-end; height: 170px; padding: 0 8px; border-bottom: 1px solid #e3dfc9">
+<sc-for list="{{ntf}}" as="n" hint-placeholder-count="4">
+<div style="flex: 1 1 0; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 4px"><span style="font-size: 13px; font-weight: 700">{{n.pct}}</span><div style="{{n.bar}}"></div></div>
+</sc-for>
+</div>
+<div aria-hidden="true" style="display: flex; gap: 20px; padding: 0 8px; margin-top: -6px">
+<sc-for list="{{ntf}}" as="n" hint-placeholder-count="4"><span style="flex: 1 1 0; display: flex; flex-direction: column; align-items: center; text-align: center"><span style="font-size: 13px; font-weight: 600">{{n.c}}</span><span style="font-size: 12px; color: #5b5f86">{{n.sub}}</span></span></sc-for>
+</div>
+</section>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: stretch">
+<section aria-labelledby="chk-h" style="flex: 3 1 480px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px"><h2 id="chk-h" style="margin: 0; font-size: 18px; font-weight: 600">Live trips and check-in events</h2><span style="font-size: 13px; color: #5b5f86">{{chkCaption}}</span></div>
+<div role="img" aria-label="{{chkAria}}" style="display: flex; gap: 3px; align-items: flex-end; height: 150px; border-bottom: 1px solid #e3dfc9">
+<sc-for list="{{chk}}" as="c" hint-placeholder-count="24"><div style="{{c.bar}}"></div></sc-for>
+</div>
+<div aria-hidden="true" style="display: flex; justify-content: space-between; font-size: 12px; color: #5b5f86"><span>{{axisA}}</span><span>{{axisB}}</span><span>{{axisC}}</span></div>
+</section>
+
+<section aria-labelledby="job-h" style="flex: 2 1 360px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 4px">
+<div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; padding-bottom: 6px"><h2 id="job-h" style="margin: 0; font-size: 18px; font-weight: 600">Scheduled jobs</h2><span style="display: inline-flex; padding: 2px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; background: #fdf0d5; color: #8a4b00">Stale · 29 h</span></div>
+<sc-for list="{{jobs}}" as="j" hint-placeholder-count="6">
+<div style="display: flex; gap: 10px; align-items: center; padding: 7px 0; border-top: 1px solid #e3dfc9; font-size: 14px"><span style="flex: 1; display: flex; flex-direction: column"><span style="font-weight: 600">{{j.n}}</span><span style="font-size: 12px; color: #5b5f86">{{j.d}}</span></span><span style="{{j.ss}}">{{j.s}}</span></div>
+</sc-for>
+</section>
+</div>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1040}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { r: '24 h' }; }
+  renderVals() {
+    const tone = { ok: 'background: #e3f3ea; color: #1f7a4d;', warn: 'background: #fdf0d5; color: #8a4b00;', bad: 'background: #fde8e6; color: #b42318;' };
+    const pill = (t) => 'display: inline-flex; white-space: nowrap; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; ' + tone[t];
+    const r = this.state.r;
+    const ranges = ['24 h', '7 days', '30 days'].map((t) => ({ t, sel: t === r ? 'true' : 'false', on: () => this.setState({ r: t }),
+      st: 'height: 36px; padding: 0 14px; border: 0; border-radius: 8px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; ' + (t === r ? 'background: #262a67; color: #f6f3e4;' : 'background: transparent; color: #262a67;') }));
+    const mult = { '24 h': 1, '7 days': 7, '30 days': 30 }[r];
+    const fmt = (n) => Math.round(n).toLocaleString('en-US');
+    const kpis = [
+      { l: 'Payment success', v: '97.6%', d: fmt(1840 * mult) + ' attempts', ds: 'font-size: 13px; color: #5b5f86' },
+      { l: 'Escalated payments', v: String(2 * mult > 30 ? 31 : 2 * mult), d: 'Pending past 15 min', ds: 'font-size: 13px; font-weight: 600; color: #8a4b00' },
+      { l: 'Live trips now', v: '6', d: '11 vehicles · 2 countries', ds: 'font-size: 13px; color: #5b5f86' },
+      { l: 'Open critical alerts', v: '1', d: 'Fawry webhook delay · on-call Reem Othman', ds: 'font-size: 13px; font-weight: 600; color: #b42318' }
+    ];
+    const P = [['Paymob · cards and wallets', 97.8, 0.6, 1.6], ['Fawry · cash vouchers', 92.4, 3.9, 3.7], ['Tap · cards', 98.4, 0.3, 1.3], ['Stripe · international cards', 96.9, 0.4, 2.7]];
+    const pay = P.map(([g, a, b, c]) => ({ g, ok: a + '%', f: c + '% failed', aria: g + ': ' + a + '% succeeded, ' + b + '% pending over 15 minutes, ' + c + '% failed',
+      a: 'width: ' + a + '%; background: #1f7a4d;', b: 'width: ' + b + '%; background: #f89e23;', c: 'width: ' + c + '%; background: #b42318;' }));
+    const N = [['Push', 99.1, 'quiet hours deferred 412'], ['SMS', 97.4, '3 failed deliveries → email'], ['WhatsApp', 98.2, 'templates approved'], ['Email', 99.6, '0.2% bounced']];
+    const ntf = N.map(([c, p, sub]) => ({ c, sub, pct: p + '%', bar: 'width: 100%; max-width: 56px; border-radius: 8px 8px 0 0; background: ' + (p < 98 ? '#f89e23' : '#262a67') + '; height: ' + Math.round((p - 90) / 10 * 130) + 'px;' }));
+    const ntfAria = 'Delivered: ' + N.map((n) => n[0] + ' ' + n[1] + '%').join(', ') + '. Axis starts at 90%.';
+    const H24 = [0, 0, 0, 0, 2, 38, 164, 212, 96, 40, 22, 18, 30, 26, 20, 34, 58, 120, 88, 46, 24, 10, 4, 0];
+    const D7 = [880, 1240, 760, 1410, 2210, 1980, 1120];
+    const D30 = Array.from({ length: 30 }, (_, i) => [900, 1200, 800, 1400, 2200, 2000, 1100][i % 7] + ((i * 37) % 180));
+    const data = r === '24 h' ? H24 : r === '7 days' ? D7 : D30;
+    const mx = Math.max.apply(null, data);
+    const chk = data.map((v) => ({ bar: 'flex: 1 1 0; min-width: 0; border-radius: 4px 4px 0 0; background: ' + (v === mx ? '#ff6c2e' : '#262a67') + '; height: ' + Math.max(2, Math.round(v / mx * 140)) + 'px;' }));
+    const total = data.reduce((a, b) => a + b, 0);
+    const chkCaption = fmt(total) + ' check-in events · peak ' + fmt(mx) + (r === '24 h' ? ' per hour' : ' per day');
+    const chkAria = r === '24 h' ? 'Check-in events per hour today, peaking at 212 at 07:00 when morning trips board.' : 'Check-in events per day over ' + r + ', peaking at ' + fmt(mx) + ' on Thursdays.';
+    const axis = { '24 h': ['00:00', '12:00', '23:00'], '7 days': ['Wed 8 Oct', 'Sat 11 Oct', 'Tue 14 Oct'], '30 days': ['Mon 15 Sep', 'Tue 30 Sep', 'Tue 14 Oct'] }[r];
+    const jobs = [
+      { n: 'Gateway reconciliation', d: 'Daily · ran Mon 13 Oct 03:10 Cairo', s: 'OK', t: 'ok' },
+      { n: 'Lab deadline checks', d: 'Hourly · 24 of 24 runs', s: 'OK', t: 'ok' },
+      { n: 'Weekly payout run', d: 'Mon 13 Oct 06:00 · 214 suppliers', s: 'OK', t: 'ok' },
+      { n: 'Invoice numbering retries', d: '1 booking sent to finance review', s: '1 failed', t: 'warn' },
+      { n: 'Deletion purge', d: 'Daily · 2 purges deferred', s: 'OK', t: 'ok' },
+      { n: 'Metrics roll-up', d: 'Daily 02:00 UTC · did not finish Tue 14 Oct', s: 'Failed', t: 'bad' }
+    ].map((j) => ({ ...j, ss: pill(j.t) }));
+    return { ranges, kpis, pay, ntf, ntfAria, chk, chkCaption, chkAria, axisA: axis[0], axisB: axis[1], axisC: axis[2], jobs };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>New trip · 7 Seats</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="min-height: 1000px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="OrgNav" active="Trips" hint-size="248px,1000px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 20px">
+
+<div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 2px">
+<span style="font-size: 14px; color: #5b5f86"><a href="OrgTrips.dc.html" style="font-weight: 600; text-decoration: none">Trips</a> / AlUla Heritage Weekend · Step 7 of 9</span>
+<h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Seats</h1>
+</div>
+<span style="font-size: 14px; color: #5b5f86">Default from Settings: Company-assigned</span>
+</div>
+
+<nav aria-label="Trip builder steps">
+<ol style="list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{steps}}" as="s" hint-placeholder-count="9">
+<li style="flex: 1 1 100px; min-width: 0"><a href="{{s.href}}" aria-current="{{s.cur}}" style="display: flex; flex-direction: column; gap: 8px; text-decoration: none; color: #262a67"><span style="{{s.bar}}"></span><span style="display: flex; align-items: center; gap: 8px"><span style="{{s.dot}}"><sc-if value="{{s.done}}" hint-placeholder-val="{{false}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg></sc-if><sc-if value="{{s.notDone}}" hint-placeholder-val="{{true}}">{{s.n}}</sc-if></span><span style="{{s.lab}}">{{s.l}}</span></span></a></li>
+</sc-for>
+</ol>
+</nav>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
+<form style="flex: 3 1 480px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+<section style="background: #ffffff; border-radius: 20px; padding: 20px 24px">
+<fieldset style="border: 0; margin: 0; padding: 0">
+<legend style="font-size: 18px; font-weight: 600; padding: 0; margin-bottom: 12px">How are seats chosen?</legend>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px">
+<sc-for list="{{modes}}" as="m" hint-placeholder-count="2">
+<label style="{{m.style}}"><input type="radio" name="mode" checked="{{m.checked}}" onChange="{{m.on}}" style="width: 20px; height: 20px; margin: 2px 0 0; accent-color: #262a67"><span style="display: flex; flex-direction: column; gap: 4px"><span style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center"><span style="font-size: 15px; font-weight: 600">{{m.t}}</span><sc-if value="{{m.badge}}" hint-placeholder-val="{{false}}"><span style="display: inline-flex; align-items: center; gap: 4px; padding: 1px 8px; border-radius: 999px; background: #e3f3ea; color: #1f7a4d; font-size: 12px; font-weight: 700"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg>Unlocked on Growth</span></sc-if></span><span style="font-size: 13px; color: #5b5f86">{{m.d}}</span></span></label>
+</sc-for>
+</div>
+</fieldset>
+</section>
+
+<section aria-labelledby="ss-h" style="{{selfStyle}}">
+<div style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: space-between; align-items: center"><h2 id="ss-h" style="margin: 0; font-size: 18px; font-weight: 600">Self-select rules</h2><span style="font-size: 13px; color: #5b5f86">{{selfNote}}</span></div>
+<fieldset disabled="{{selfOff}}" style="border: 0; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px">
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="pw" style="font-size: 14px; font-weight: 600">Priority window</label><select id="pw" style="height: 52px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 12px; font: inherit; font-size: 16px; color: #262a67"><option>24 hours before general</option><option>12 hours before general</option><option>48 hours before general</option><option>No priority window</option></select><span style="font-size: 13px; color: #5b5f86">Explorer and VIP members pick first. General picking opens Fri 10 Oct, 12:00.</span></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="ht" style="font-size: 14px; font-weight: 600">Hold time at checkout</label><select id="ht" style="height: 52px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 12px; font: inherit; font-size: 16px; color: #262a67"><option>15 minutes</option><option>10 minutes</option><option>20 minutes</option></select><span style="font-size: 13px; color: #5b5f86">Unpaid seats go back on the map after this.</span></div>
+</fieldset>
+<label style="display: flex; gap: 10px; align-items: flex-start"><input type="checkbox" checked="checked" disabled="{{selfOff}}" style="width: 20px; height: 20px; margin: 2px 0 0; accent-color: #262a67"><span style="display: flex; flex-direction: column"><span style="font-size: 15px; font-weight: 600">Keep families together</span><span style="font-size: 13px; color: #5b5f86">Children under 12 must sit next to an adult on their booking.</span></span></label>
+</section>
+
+<section style="background: #e6e8f5; border-radius: 20px; padding: 16px 20px; display: flex; gap: 12px; align-items: flex-start; font-size: 14px; line-height: 20px">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 1px"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 11v5M12 8h.01"></path></svg>
+<span>{{modeHelp}}</span>
+</section>
+</form>
+
+<aside aria-labelledby="bl-h" style="flex: 2 1 340px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+<h2 id="bl-h" style="margin: 0; font-size: 18px; font-weight: 600">Blocked seats for staff</h2>
+<div role="tablist" aria-label="Choose bus" style="display: flex; gap: 6px; flex-wrap: wrap">
+<sc-for list="{{busTabs}}" as="b" hint-placeholder-count="4">
+<button type="button" role="tab" aria-selected="{{b.sel}}" onClick="{{b.on}}" style="{{b.style}}">{{b.l}}</button>
+</sc-for>
+</div>
+<span style="font-size: 13px; color: #5b5f86">Select a seat to block or release it. {{busInfo}}</span>
+<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start">
+<div role="group" aria-label="{{mapLabel}}" style="padding: 12px 14px; border-radius: 24px; border: 2px solid #e3dfc9; display: flex; flex-direction: column; gap: 5px">
+<div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 5px; border-bottom: 1px dashed #e3dfc9; margin-bottom: 3px"><span style="font-size: 11px; font-weight: 700; color: #5b5f86">FRONT</span><span style="font-size: 11px; font-weight: 700; color: #5b5f86">DRIVER</span></div>
+<sc-for list="{{rows}}" as="r" hint-placeholder-count="12">
+<div style="display: flex; gap: 5px">
+<sc-for list="{{r.cells}}" as="c" hint-placeholder-count="5">
+<sc-if value="{{c.isSeat}}" hint-placeholder-val="{{true}}"><button type="button" aria-pressed="{{c.pressed}}" aria-label="{{c.al}}" onClick="{{c.on}}" style="{{c.style}}">{{c.id}}</button></sc-if>
+<sc-if value="{{c.isAisle}}" hint-placeholder-val="{{false}}"><span style="width: 14px"></span></sc-if>
+</sc-for>
+</div>
+</sc-for>
+</div>
+<div style="flex: 1 1 120px; display: flex; flex-direction: column; gap: 10px; font-size: 13px">
+<span style="display: flex; align-items: center; gap: 8px"><span style="width: 22px; height: 22px; border-radius: 6px; background: #e6e8f5"></span>Available</span>
+<span style="display: flex; align-items: center; gap: 8px"><span style="width: 22px; height: 22px; border-radius: 6px; background: #262a67; color: #f6f3e4; display: flex; align-items: center; justify-content: center"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></span>Blocked for staff</span>
+<div style="padding-top: 10px; border-top: 1px solid #e3dfc9; display: flex; flex-direction: column; gap: 4px; font-size: 14px">
+<span>Blocked on this bus: <strong>{{blockedHere}}</strong></span>
+<span>Blocked on trip: <strong>{{blockedAll}}</strong></span>
+<span>Seats for sale: <strong>{{forSale}}</strong></span>
+</div>
+</div>
+</div>
+</aside>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; align-items: center; padding-top: 16px; border-top: 1px solid #e3dfc9">
+<a href="OrgNew6.dc.html" style="height: 48px; box-sizing: border-box; padding: 0 20px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 6px; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg>Back</a>
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center">
+<span style="font-size: 13px; color: #5b5f86">Draft saved 10:24</span>
+<button type="button" style="height: 48px; padding: 0 16px; border-radius: 12px; border: 0; background: transparent; color: #262a67; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Save draft</button>
+<a href="OrgNew8.dc.html" style="height: 48px; padding: 0 22px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; text-decoration: none">Continue to pricing<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+</div>
+</div>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  constructor(p) {
+    super(p);
+    this.state = { mode: 'company', bus: 0, blocked: [['1A', '1B'], ['1A'], ['1A'], ['1A']] };
+  }
+  renderVals() {
+    const names = ['Basics', 'Schedule', 'Vehicles', 'Staff', 'Photographer', 'Programs', 'Seats', 'Pricing', 'Publish'];
+    const cur = 6;
+    const steps = names.map((l, i) => {
+      const st = i < cur ? 'done' : i === cur ? 'cur' : 'todo';
+      return { l, n: String(i + 1), done: st === 'done', notDone: st !== 'done', href: 'OrgNew' + (i + 1) + '.dc.html', cur: st === 'cur' ? 'step' : 'false',
+        bar: 'display: block; height: 4px; border-radius: 999px; background: ' + (st === 'done' ? '#262a67' : st === 'cur' ? '#ff6c2e' : '#e3dfc9'),
+        dot: 'width: 24px; height: 24px; flex-shrink: 0; box-sizing: border-box; border-radius: 999px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; ' + (st === 'done' ? 'background: #262a67; color: #f6f3e4;' : st === 'cur' ? 'background: #ff6c2e; color: #262a67;' : 'background: #ffffff; color: #5b5f86; border: 1px solid #7b7fa6;'),
+        lab: 'font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; ' + (st === 'todo' ? 'font-weight: 500; color: #5b5f86;' : 'font-weight: 600; color: #262a67;') };
+    });
+    const mode = this.state.mode;
+    const card = (on) => 'display: flex; gap: 12px; align-items: flex-start; padding: 14px; border-radius: 12px; cursor: pointer; ' + (on ? 'border: 2px solid #fb8030; background: #fffaf3;' : 'border: 1px solid #e3dfc9; background: #ffffff;');
+    const modes = [
+      { k: 'company', t: 'Company-assigned', d: 'Your team assigns seats before departure. Travelers see "Seat assigned before departure".', badge: false },
+      { k: 'self', t: 'Passengers pick their seats', d: 'Live seat map at checkout. Taken seats update in real time.', badge: true }
+    ].map((m) => ({ ...m, checked: mode === m.k, on: () => this.setState({ mode: m.k }), style: card(mode === m.k) }));
+    const selfOff = mode !== 'self';
+    const BUSES = [{ n: 'Bus 1', t: 'T49' }, { n: 'Bus 2', t: 'T49' }, { n: 'Bus 3', t: 'C30' }, { n: 'Bus 4', t: 'T49' }];
+    const CAP = { T49: 49, C30: 30 };
+    const bi = this.state.bus;
+    const BL = this.state.blocked;
+    const busTabs = BUSES.map((b, i) => ({ l: b.n, sel: i === bi ? 'true' : 'false', on: () => this.setState({ bus: i }),
+      style: 'height: 36px; padding: 0 14px; border-radius: 999px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; ' + (i === bi ? 'background: #262a67; color: #f6f3e4; border: 1px solid #262a67;' : 'background: #fff; color: #262a67; border: 1px solid #7b7fa6;') }));
+    const t = BUSES[bi].t;
+    const pat = t === 'T49' ? ['A', 'B', '_', 'C', 'D'] : ['A', 'B', '_', 'C'];
+    const nRows = t === 'T49' ? 11 : 10;
+    const mine = BL[bi];
+    const toggle = (id) => { const n = BL.map((x) => x.slice()); n[bi] = mine.includes(id) ? mine.filter((s) => s !== id) : [...mine, id]; this.setState({ blocked: n }); };
+    const seat = (id) => {
+      const b = mine.includes(id);
+      return { isSeat: true, isAisle: false, id, pressed: b ? 'true' : 'false', al: 'Seat ' + id + (b ? ', blocked for staff' : ', available'), on: () => toggle(id),
+        style: 'width: 28px; height: 28px; padding: 0; border-radius: 7px; border: 0; font: inherit; font-size: 10px; font-weight: 700; cursor: pointer; ' + (b ? 'background: #262a67; color: #f6f3e4;' : 'background: #e6e8f5; color: #262a67;') };
+    };
+    const rows = [];
+    for (let r = 1; r <= nRows; r++) rows.push({ cells: pat.map((c) => c === '_' ? { isSeat: false, isAisle: true } : seat(r + c)) });
+    if (t === 'T49') rows.push({ cells: ['A', 'B', 'C', 'D', 'E'].map((c) => seat('12' + c)) });
+    const blockedAll = BL.reduce((s, x) => s + x.length, 0);
+    const total = BUSES.reduce((s, b) => s + CAP[b.t], 0);
+    return { steps, modes, selfOff,
+      selfStyle: 'background: #ffffff; border-radius: 20px; padding: 20px 24px; display: flex; flex-direction: column; gap: 14px; ' + (selfOff ? 'opacity: 0.55;' : ''),
+      selfNote: selfOff ? 'Turn on "Passengers pick their seats" to use these' : 'Applies to this trip only',
+      modeHelp: selfOff ? 'After bookings close, assign seats on the Seat assignment screen. Families are seated together automatically when you use Auto-assign.' : 'Seat states: Available → Held 15 min while paying → Reserved → Checked-in at boarding. Cancellations release the seat straight away.',
+      busTabs, rows, busInfo: BUSES[bi].n + ' · ' + (t === 'T49' ? 'Mercedes Tourismo · 49' : 'Toyota Coaster · 30'),
+      mapLabel: 'Seat map for ' + BUSES[bi].n, blockedHere: mine.length ? mine.join(', ') : 'none',
+      blockedAll: String(blockedAll), forSale: (total - blockedAll) + ' of ' + total };
+  }
+}
+</script>
+</body>
+</html>

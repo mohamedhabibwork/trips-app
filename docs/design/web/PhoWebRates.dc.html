@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Studio web · Rates and availability</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+.te-nav:focus-visible{outline:2px solid #f89e23;outline-offset:2px}
+</style>
+</helmet>
+<div style="min-height: 1000px; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif; display: flex; flex-direction: column">
+
+<header style="background: #1a1c4b; color: #f6f3e4">
+<div style="box-sizing: border-box; padding: 12px 40px; display: flex; flex-wrap: wrap; align-items: center; gap: 16px 28px">
+<a href="PhoWebHome.dc.html" class="te-nav" style="display: flex; align-items: center; gap: 10px; text-decoration: none"><img src="../assets/6ea846350ba3adc0e289d47fa0612c3b.svg" alt="Trips Enjoy" style="height: 36px; width: auto"><span style="padding: 2px 10px; border-radius: 999px; background: #f89e23; color: #1a1c4b; font-size: 12px; font-weight: 700">Studio</span></a>
+<nav aria-label="Studio" style="display: flex; flex-wrap: wrap; gap: 4px; flex-grow: 1">
+<sc-for list="{{nav}}" as="n" hint-placeholder-count="8"><a href="{{n.href}}" class="te-nav" aria-current="{{n.cur}}" style="{{n.style}}">{{n.label}}</a></sc-for>
+</nav>
+<a href="PhoWebProfile.dc.html" class="te-nav" style="display: flex; align-items: center; gap: 10px; color: #f6f3e4; text-decoration: none">
+<span style="display: flex; flex-direction: column; align-items: flex-end"><span style="font-size: 14px; font-weight: 600">Laila Fathy</span><span style="font-size: 12px; color: #b8bad6">Studio plan · Verified</span></span>
+<span style="width: 40px; height: 40px; border-radius: 999px; background: #31367a; color: #f89e23; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; overflow: hidden" aria-hidden="true"><img src="../assets/fa4aea3b99ab1c92ea071dc7fc9f9299.svg" alt="" style="width: 100%; height: 100%; object-fit: cover"></span>
+</a>
+</div>
+</header>
+
+<div style="box-sizing: border-box; width: 100%; max-width: 1440px; margin: 0 auto; padding: 24px 40px 40px; display: flex; flex-direction: column; gap: 20px">
+
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 700">Rates and availability</h1>
+<span style="font-size: 14px; color: #5b5f86">Mark single dates or ranges you can't work. Organizations can't send deal requests for those dates.</span>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center">
+<sc-if value="{{saved}}" hint-placeholder-val="{{false}}"><span role="status" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px; background: #e3f3ea; color: #1f7a4d; font-size: 14px; font-weight: 600"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg>Saved 09:42</span></sc-if>
+<button onClick="{{save}}" style="height: 48px; padding: 0 24px; border: 0; border-radius: 12px; background: #ff6c2e; color: #262a67; font: inherit; font-size: 15px; font-weight: 700; cursor: pointer">Save changes</button>
+</div>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start">
+
+<section aria-labelledby="cal-h" style="flex: 3 1 600px; min-width: 0; padding: 20px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px">
+<button aria-label="Previous month" style="width: 44px; height: 44px; border-radius: 999px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; cursor: pointer; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></button>
+<h2 id="cal-h" style="margin: 0; font-size: 20px; font-weight: 600">October 2026</h2>
+<button aria-label="Next month" style="width: 44px; height: 44px; border-radius: 999px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; cursor: pointer; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg></button>
+<span style="flex-grow: 1"></span>
+<span style="font-size: 13px; color: #5b5f86">Select a date to mark it unavailable · Africa/Cairo</span>
+</div>
+<div role="grid" aria-labelledby="cal-h" style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px">
+<sc-for list="{{dow}}" as="w" hint-placeholder-count="7"><span role="columnheader" style="padding: 4px 0; text-align: center; font-size: 13px; font-weight: 600; color: #5b5f86">{{w}}</span></sc-for>
+<sc-for list="{{cells}}" as="c" hint-placeholder-count="35">
+<button role="gridcell" aria-label="{{c.aria}}" aria-pressed="{{c.pressed}}" disabled="{{c.dis}}" onClick="{{c.go}}" style="{{c.style}}"><span style="font-size: 15px; font-weight: 600">{{c.d}}</span><span style="{{c.ts}}">{{c.tag}}</span></button>
+</sc-for>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 16px; font-size: 13px; color: #5b5f86">
+<span style="display: inline-flex; align-items: center; gap: 6px"><span style="width: 14px; height: 14px; border-radius: 4px; background: #262a67"></span>Unavailable (you)</span>
+<span style="display: inline-flex; align-items: center; gap: 6px"><span style="width: 14px; height: 14px; border-radius: 4px; background: #e6e8f5; border: 1px solid #262a67"></span>Assigned trip</span>
+<span style="display: inline-flex; align-items: center; gap: 6px"><span style="width: 14px; height: 14px; border-radius: 4px; background: #fdf0d5; border: 1px solid #8a4b00"></span>Deal request</span>
+<span style="display: inline-flex; align-items: center; gap: 6px"><span style="width: 14px; height: 14px; border-radius: 4px; background: #fde8e6; border: 1px solid #b42318"></span>Request refused</span>
+</div>
+</section>
+
+<aside style="flex: 2 1 360px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+
+<section aria-labelledby="rg-h" style="padding: 20px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 12px">
+<h2 id="rg-h" style="margin: 0; font-size: 18px; font-weight: 600">Mark a range unavailable</h2>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="from" style="font-size: 14px; font-weight: 600">From</label><input id="from" type="date" value="2026-11-12" style="height: 52px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; padding: 0 12px; font: inherit; font-size: 16px; color: #262a67"></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="to" style="font-size: 14px; font-weight: 600">To</label><input id="to" type="date" value="2026-11-15" style="height: 52px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; padding: 0 12px; font: inherit; font-size: 16px; color: #262a67"></div>
+</div>
+<button style="height: 48px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Mark 4 days unavailable</button>
+<span style="font-size: 13px; line-height: 18px; color: #5b5f86">Dates and ranges only. There are no weekly repeating rules.</span>
+</section>
+
+<div role="alert" style="padding: 14px 16px; border-radius: 20px; background: #fde8e6; color: #b42318; display: flex; gap: 10px; align-items: flex-start">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 1px"><path d="M12 3l9.5 17h-19zM12 10v4M12 17h.01"></path></svg>
+<span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 15px; font-weight: 700">Request for Tue 27 Oct was refused</span><span style="font-size: 14px; line-height: 20px; color: #262a67">Cairo Weekenders asked for "Fayoum Desert Camp Night". You marked that date unavailable, so they were told to pick another photographer. To take it, clear the date first.</span></span>
+</div>
+
+<section aria-labelledby="rt-h" style="padding: 20px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 14px">
+<h2 id="rt-h" style="margin: 0; font-size: 18px; font-weight: 600">Rates per service</h2>
+<span style="font-size: 13px; line-height: 18px; color: #5b5f86">Shown to organizations as your starting rate. Every deal is still agreed per trip.</span>
+<sc-for list="{{rates}}" as="r" hint-placeholder-count="3">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="{{r.id}}" style="font-size: 14px; font-weight: 600">{{r.l}}</label>
+<span style="display: flex; align-items: center; height: 52px; box-sizing: border-box; border-radius: 8px; border: 1px solid {{r.bc}}; background: #ffffff; overflow: hidden">
+<input id="{{r.id}}" inputmode="numeric" value="{{r.v}}" aria-invalid="{{r.inv}}" aria-describedby="{{r.hid}}" style="flex-grow: 1; min-width: 0; height: 100%; border: 0; background: transparent; padding: 0 14px; font: inherit; font-size: 16px; color: #262a67">
+<span style="padding: 0 14px; height: 100%; display: flex; align-items: center; background: #f6f3e4; border-left: 1px solid #e3dfc9; font-size: 14px; font-weight: 600">EGP</span>
+</span>
+<span id="{{r.hid}}" style="{{r.hs}}">{{r.h}}</span>
+</div>
+</sc-for>
+</section>
+
+</aside>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1080}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { off: { 6: true, 27: true, 28: true }, saved: false }; }
+  renderVals() {
+    const nav = [['Home', 'PhoWebHome'], ['Portfolio', 'PhoWebPortfolio'], ['Profile', 'PhoWebProfile'], ['Rates', 'PhoWebRates'], ['Deals', 'PhoWebDeals'], ['Albums', 'PhoWebAlbums'], ['Earnings', 'PhoWebEarnings'], ['Coupons', 'PhoWebCoupons']].map(([label, f]) => {
+      const on = label === 'Rates';
+      return { label, href: f + '.dc.html', cur: on ? 'page' : 'false',
+        style: 'height: 40px; padding: 0 14px; border-radius: 999px; display: flex; align-items: center; font-size: 15px; font-weight: 600; text-decoration: none; ' + (on ? 'background: #31367a; color: #f89e23;' : 'color: #f6f3e4;') };
+    });
+    const dow = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const names = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const assigned = { 10: 'Wadi El Rayan', 22: 'Siwa', 23: 'Siwa', 24: 'Siwa' };
+    const request = { 30: 'Request' };
+    const refused = { 27: 'Refused' };
+    const off = this.state.off;
+    const cells = [];
+    for (let i = 0; i < 4; i++) cells.push({ d: '', tag: '', blank: true });
+    for (let d = 1; d <= 31; d++) cells.push({ d });
+    const base = 'min-height: 64px; padding: 6px 8px; border-radius: 12px; font: inherit; color: #262a67; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-between; gap: 2px; text-align: start; ';
+    const out = cells.map((c) => {
+      if (c.blank) return { d: '', tag: '', aria: 'No date', pressed: 'false', dis: true, go: () => {}, style: base + 'border: 0; background: transparent;', ts: 'display: none' };
+      const d = c.d, past = d < 17, dn = names[(d + 3) % 7] + ' ' + d + ' Oct';
+      let tag = '', style = base, ts = 'font-size: 11px; font-weight: 700; ', dis = past;
+      if (assigned[d]) { tag = assigned[d]; style += 'border: 1px solid #262a67; background: #e6e8f5; cursor: default;'; dis = true; ts += 'color: #262a67'; }
+      else if (refused[d] && off[d]) { tag = 'Unavailable · request refused'; style += 'border: 1px solid #b42318; background: #262a67; color: #f6f3e4; cursor: pointer;'; ts += 'color: #ffb4ab'; }
+      else if (off[d]) { tag = 'Unavailable'; style += 'border: 1px solid #262a67; background: #262a67; color: #f6f3e4; cursor: ' + (past ? 'default;' : 'pointer;'); ts += 'color: #b8bad6'; }
+      else if (request[d]) { tag = 'Deal request'; style += 'border: 1px solid #8a4b00; background: #fdf0d5; cursor: pointer;'; ts += 'color: #8a4b00'; }
+      else if (d === 17) { tag = 'Today'; style += 'border: 2px solid #fb8030; background: #ffffff; cursor: pointer;'; ts += 'color: #c93a00'; }
+      else { style += 'border: 1px solid #e3dfc9; background: ' + (past ? '#f6f3e4; cursor: default;' : '#ffffff; cursor: pointer;'); ts = 'display: none'; }
+      if (past && !assigned[d] && !off[d]) style += ' color: #5b5f86;';
+      return { d: String(d), tag, style, ts, dis, pressed: off[d] ? 'true' : 'false',
+        aria: dn + (tag ? ', ' + tag : ', available'),
+        go: () => this.setState({ saved: false, off: { ...this.state.off, [d]: !this.state.off[d] } }) };
+    });
+    const rates = [
+      { id: 'r1', l: 'Day trip coverage (up to 10 hours)', v: '3,200', h: 'Includes an edited album of 150+ photos', ok: true },
+      { id: 'r2', l: 'Multi-day trip, per day', v: '3,000', h: 'Travel and stay are agreed with the organization', ok: true },
+      { id: 'r3', l: 'Half-day event (up to 5 hours)', v: '0', h: 'Enter a rate above 0 EGP, or leave it empty to hide this service.', ok: false }
+    ].map((r) => ({ ...r, hid: r.id + '-h', inv: r.ok ? 'false' : 'true', bc: r.ok ? '#7b7fa6' : '#b42318',
+      hs: 'font-size: 13px; line-height: 18px; color: ' + (r.ok ? '#5b5f86' : '#b42318') }));
+    return { nav, dow, cells: out, rates, saved: this.state.saved, save: () => this.setState({ saved: true }) };
+  }
+}
+</script>
+</body>
+</html>

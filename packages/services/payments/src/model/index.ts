@@ -15,6 +15,8 @@ export type {
 };
 
 export const FAWRY_EXPIRY_HOURS = 48;
+/** D-30: a gateway callback is expected within 30 seconds of handoff. */
+export const PAYMENT_CONFIRM_TIMEOUT_SECONDS = 30;
 export const DEFAULT_PLATFORM_COMMISSION_BPS = 1000; // 10%
 
 export function generateProviderReference(gateway: PaymentGatewayCode): string {
@@ -28,4 +30,66 @@ export function generateFawryReferenceCode(): string {
   const bytes = new Uint8Array(10);
   crypto.getRandomValues(bytes);
   return Array.from(bytes, (b) => (b % 10).toString()).join("");
+}
+
+export interface MockGatewayHandoff {
+  gateway: PaymentGatewayCode;
+  providerReference: string;
+  redirectUrl: string;
+  method: "GET";
+  mock: true;
+}
+
+/**
+ * Dry-run gateway adapter (NFR-SEC-12): builds the redirect the traveler app would open.
+ * No card data ever reaches the server and no network request is made — the URL is only
+ * ever handed to the client. Markets: Stripe / Paymob / Tap / Fawry (sandbox endpoints).
+ */
+export function buildMockGatewayHandoff(
+  gateway: PaymentGatewayCode,
+  providerReference: string,
+): MockGatewayHandoff {
+  const hosts: Record<PaymentGatewayCode, string> = {
+    stripe: "https://checkout.stripe.com/c/pay",
+    paymob: "https://accept.paymob.com/api/acceptance/iframes",
+    tap: "https://checkout.tap.company/v2/checkout",
+    fawry: "https://atfawry.fawrystaging.com/ECommerceWeb/Fawry/payments/chargewithToken",
+    stub: "/mock-gateway/pay",
+  };
+  return {
+    gateway,
+    providerReference,
+    redirectUrl: `${hosts[gateway]}?ref=${encodeURIComponent(providerReference)}`,
+    method: "GET",
+    mock: true,
+  };
+}
+
+export type GatewayCallbackAction =
+  | { action: "already_processed" }
+  | { action: "apply_success" }
+  | { action: "apply_failure" };
+
+/**
+ * Idempotency decision for a gateway callback (FR-PAY-02): once a transaction is settled
+ * (succeeded / failed / refunded / disputed) any further delivery is a no-op.
+ */
+export function resolveGatewayCallbackAction(
+  currentStatus: PaymentTransactionStatus,
+  outcome: "succeeded" | "failed",
+): GatewayCallbackAction {
+  if (
+    currentStatus === "succeeded" ||
+    currentStatus === "failed" ||
+    currentStatus === "refunded" ||
+    currentStatus === "disputed"
+  ) {
+    return { action: "already_processed" };
+  }
+  return outcome === "succeeded" ? { action: "apply_success" } : { action: "apply_failure" };
+}
+
+/** D-30 helper kept next to the gateway adapter for testability. */
+export function paymentConfirmDeadlineSafe(createdAt: Date): Date {
+  return new Date(createdAt.getTime() + PAYMENT_CONFIRM_TIMEOUT_SECONDS * 1000);
 }

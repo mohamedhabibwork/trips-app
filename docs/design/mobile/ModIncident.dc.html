@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Moderator · Report incident</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="height: 100%; box-sizing: border-box; padding: 56px 16px 120px; display: flex; flex-direction: column; gap: 12px">
+
+<div style="display: flex; align-items: center; gap: 12px">
+<a href="ModOnTrip.dc.html" aria-label="Back" style="width: 44px; height: 44px; border-radius: 999px; background: #ffffff; color: #262a67; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a>
+<div style="flex-grow: 1; display: flex; flex-direction: column"><h1 style="margin: 0; font-size: 22px; line-height: 28px; font-weight: 700">Report incident</h1><span style="font-size: 13px; color: #5b5f86">Bus 2 · AlUla Heritage Weekend</span></div>
+<a href="ModOnTrip.dc.html" style="height: 44px; padding: 0 6px; display: flex; align-items: center; font-size: 15px; font-weight: 600; color: #262a67; text-decoration: none">Cancel</a>
+</div>
+
+<sc-if value="{{showForm}}" hint-placeholder-val="{{true}}">
+<div style="display: flex; flex-direction: column; gap: 12px">
+<fieldset style="margin: 0; padding: 0; border: 0">
+<legend style="padding: 0; margin-bottom: 6px; font-size: 14px; font-weight: 600">Category <span style="font-weight: 400; color: #5b5f86">(required)</span></legend>
+<div role="radiogroup" aria-label="Incident category" style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px">
+<sc-for list="{{cats}}" as="c" hint-placeholder-count="6"><button type="button" role="radio" aria-checked="{{c.checked}}" onClick="{{c.on}}" style="{{c.style}}"><span style="font-size: 14px; font-weight: 700">{{c.t}}</span><span style="font-size: 12px; line-height: 15px; color: {{c.sub}}">{{c.d}}</span></button></sc-for>
+</div>
+</fieldset>
+
+<sc-if value="{{childNote}}" hint-placeholder-val="{{false}}">
+<div style="padding: 8px 12px; border-radius: 12px; background: #fde8e6; color: #b42318; font-size: 13px; line-height: 18px; display: flex; gap: 8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 1px"><path d="M12 3l7 3v5.5c0 4.4-3 8-7 9.5-4-1.5-7-5.1-7-9.5V6zM9 12l2 2 4-4"></path></svg><span>Child-safety concern: call operations now as well. Escalation contact: [set by Operations, D-68].</span></div>
+</sc-if>
+
+<div style="display: flex; flex-direction: column; gap: 4px">
+<label for="pax" style="font-size: 14px; font-weight: 600">Traveler <span style="font-weight: 400; color: #5b5f86">(optional)</span></label>
+<select id="pax" style="height: 48px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; padding: 0 14px; font: inherit; font-size: 16px; color: #262a67">
+<option>Huda Mansour · Seat 5B</option>
+<option>No specific traveler</option>
+<option>Omar Al-Qahtani · Seat 4C · Child</option>
+<option>Lina Al-Qahtani · Seat 4D · Child</option>
+</select>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 4px">
+<label for="desc" style="font-size: 14px; font-weight: 600">What happened <span style="font-weight: 400; color: #5b5f86">(required)</span></label>
+<textarea id="desc" rows="2" onInput="{{setNote}}" aria-invalid="{{noteInvalid}}" aria-describedby="desc-h" style="{{noteStyle}}">{{note}}</textarea>
+<sc-if value="{{noteMissing}}" hint-placeholder-val="{{false}}"><span id="desc-h" style="font-size: 13px; color: #b42318">Add a short note so operations know what to do.</span></sc-if>
+</div>
+
+<div style="display: flex; gap: 8px; align-items: stretch">
+<div style="flex: 1 1 0; min-height: 48px; padding: 4px 10px; box-sizing: border-box; border-radius: 12px; background: #ffffff; display: flex; flex-direction: column; justify-content: center"><span style="font-size: 12px; color: #5b5f86">Time · automatic</span><span style="font-size: 14px; font-weight: 600">11:20 Sat 18 Oct</span></div>
+<div style="flex: 1 1 0; min-height: 48px; padding: 4px 10px; box-sizing: border-box; border-radius: 12px; background: #ffffff; display: flex; flex-direction: column; justify-content: center"><span style="font-size: 12px; color: #5b5f86">Location</span><span style="font-size: 14px; font-weight: 600">Near Hegra</span></div>
+<button type="button" style="flex-shrink: 0; min-height: 48px; padding: 0 12px; border-radius: 12px; border: 1px dashed #7b7fa6; background: #ffffff; font: inherit; font-size: 14px; font-weight: 600; color: #262a67; cursor: pointer; display: flex; align-items: center; gap: 6px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8a2 2 0 0 1 2-2h2l2-2h4l2 2h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zM12 9.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7z"></path></svg>Photo<span style="font-weight: 400; color: #5b5f86">optional</span></button>
+</div>
+
+<button type="button" onClick="{{send}}" aria-disabled="{{sendDis}}" style="{{sendStyle}}">{{sendLabel}}</button>
+<span style="margin-top: -6px; font-size: 12px; color: #5b5f86; text-align: center">{{sendHint}}</span>
+</div>
+</sc-if>
+
+<sc-if value="{{sent}}" hint-placeholder-val="{{false}}">
+<div role="status" style="padding: 18px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 12px">
+<span style="{{pillStyle}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{pillIcon}}"></path></svg>{{pillText}}</span>
+<h2 style="margin: 0; font-size: 20px; line-height: 26px; font-weight: 700">{{doneTitle}}</h2>
+<p style="margin: 0; font-size: 15px; line-height: 21px; color: #5b5f86">{{summary}}</p>
+<sc-if value="{{queued}}" hint-placeholder-val="{{false}}"><a href="ModSyncQueue.dc.html" style="font-size: 14px; font-weight: 600">See the offline queue</a></sc-if>
+<a href="ModOnTrip.dc.html" style="height: 52px; border-radius: 12px; background: #262a67; color: #f6f3e4; font-weight: 600; font-size: 16px; text-decoration: none; display: flex; align-items: center; justify-content: center">Back to the trip</a>
+</div>
+</sc-if>
+</div>
+<div style="position: absolute; left: 0; right: 0; bottom: 0; height: 120px">
+<dc-import name="TabBar" role="moderator" active="report" hint-size="390px,120px"></dc-import>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"offline":{"editor":"boolean","default":false},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { cat: 'medical', note: 'Felt dizzy after the walk at Hegra. Seated near the front door, given water.', touched: false, sent: false }; }
+  renderVals() {
+    const { cat, note, sent, touched } = this.state;
+    const C = [
+      ['safety', 'Safety', 'Danger to people on board'],
+      ['medical', 'Medical', 'Illness or injury'],
+      ['vehicle', 'Vehicle fault', 'Breakdown, AC, doors'],
+      ['lost', 'Lost traveler', 'Missing at a stop'],
+      ['conduct', 'Conduct', 'Behaviour on the trip'],
+      ['other', 'Other', 'Anything else to report']
+    ];
+    const cats = C.map(([id, t, d]) => {
+      const on = cat === id;
+      return { t, d, checked: on ? 'true' : 'false', on: () => this.setState({ cat: id }), sub: on ? '#b8bad6' : '#5b5f86',
+        style: 'min-height: 52px; padding: 6px 12px; box-sizing: border-box; border-radius: 12px; font: inherit; text-align: start; cursor: pointer; display: flex; flex-direction: column; justify-content: center; gap: 1px; ' + (on ? 'background: #262a67; color: #f6f3e4; border: 2px solid #262a67;' : 'background: #ffffff; color: #262a67; border: 1px solid #7b7fa6;') };
+    });
+    const hasNote = String(note).trim().length > 0;
+    const ok = !!cat && hasNote;
+    const offline = !!this.props.offline;
+    const missing = touched && !hasNote;
+    const label = C.find((c) => c[0] === cat);
+    return {
+      cats, note, showForm: !sent, sent, queued: sent && offline,
+      childNote: cat === 'safety' || cat === 'lost',
+      setNote: (e) => this.setState({ note: e.target.value, touched: true }),
+      noteMissing: missing, noteInvalid: missing ? 'true' : 'false',
+      noteStyle: 'box-sizing: border-box; border-radius: 8px; border: 1px solid ' + (missing ? '#b42318' : '#7b7fa6') + '; background: #ffffff; padding: 10px 14px; font: inherit; font-size: 16px; line-height: 22px; color: #262a67; resize: none',
+      sendDis: ok ? 'false' : 'true',
+      send: () => { if (ok) this.setState({ sent: true }); else this.setState({ touched: true }); },
+      sendLabel: offline ? 'Save and send when online' : 'Send to operations',
+      sendHint: ok ? (offline ? 'You are offline. It will send in order with the original time.' : 'Operations are notified at once. Logged with time and location.') : 'Choose a category and add a note to send.',
+      sendStyle: 'height: 52px; border: 0; border-radius: 12px; font: inherit; font-weight: 700; font-size: 16px; ' + (ok ? 'background: #ff6c2e; color: #262a67; cursor: pointer;' : 'background: #e3dfc9; color: #5b5f86; cursor: not-allowed;'),
+      pillStyle: 'align-self: flex-start; padding: 4px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 4px; ' + (offline ? 'background: #e6e8f5; color: #262a67;' : 'background: #e3f3ea; color: #1f7a4d;'),
+      pillIcon: offline ? 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7v5l3 2' : 'M5 12.5l4.5 4.5L19 7',
+      pillText: offline ? 'Saved on this device · 11:20' : 'Sent 11:21',
+      doneTitle: offline ? 'Incident saved, waiting to send' : 'Incident INC-0417 is with Sunrise Tours operations',
+      summary: (label ? label[1] : '') + ' · Huda Mansour, Seat 5B. ' + (offline ? 'Operations will be notified when it reaches the server, with the original time 11:20. The photo uploads separately.' : 'Yousef Amin will call you if they need more. It also appears in your trip report.')
+    };
+  }
+}
+</script>
+</body>
+</html>

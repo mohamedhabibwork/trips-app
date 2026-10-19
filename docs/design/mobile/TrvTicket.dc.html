@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Traveler · Ticket</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="height: 100%; box-sizing: border-box; padding: 56px 16px 24px; display: flex; flex-direction: column; gap: 12px">
+
+<div style="display: flex; align-items: center; gap: 12px">
+<a href="TrvTrips.dc.html" aria-label="Back" style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 999px; background: #ffffff; color: #262a67; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a>
+<div style="flex-grow: 1; display: flex; flex-direction: column"><h1 style="margin: 0; font-size: 22px; line-height: 28px; font-weight: 700">AlUla Heritage Weekend</h1><span style="font-size: 13px; color: #5b5f86">Thu 16 – Sat 18 Oct · Ref TE-48213</span></div>
+</div>
+
+<div role="group" aria-label="Choose traveller" style="display: flex; gap: 6px">
+<sc-for list="{{people}}" as="p" hint-placeholder-count="4"><button type="button" aria-pressed="{{p.sel}}" onClick="{{p.on}}" style="{{p.style}}">{{p.name}}</button></sc-for>
+</div>
+
+<div style="border-radius: 20px; background: #ffffff; padding: 16px; display: flex; gap: 14px; align-items: center">
+<img src="../assets/820ae1ed630eb3e04ea4d7ce91f50535.png" alt="{{qrAlt}}" style="width: 132px; height: 132px; flex-shrink: 0; border-radius: 8px">
+<div style="flex-grow: 1; display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 12px; font-weight: 600; color: #5b5f86; letter-spacing: 0.04em">BOARDING PASS</span>
+<span style="font-size: 20px; line-height: 24px; font-weight: 700">{{cur.full}}</span>
+<span style="font-size: 13px; color: #5b5f86">{{cur.kind}}</span>
+<div style="display: flex; gap: 14px; margin-top: 4px">
+<div style="display: flex; flex-direction: column"><span style="font-size: 12px; color: #5b5f86">Seat</span><span style="font-size: 22px; font-weight: 700">{{cur.seat}}</span></div>
+<div style="display: flex; flex-direction: column"><span style="font-size: 12px; color: #5b5f86">Bus</span><span style="font-size: 22px; font-weight: 700">2</span></div>
+</div>
+</div>
+</div>
+
+<div style="padding: 10px 12px; border-radius: 12px; background: #e6e8f5; display: flex; gap: 10px; align-items: center; font-size: 14px; line-height: 19px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M6 11h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1zM8 11V7a4 4 0 0 1 8 0v4"></path></svg><span>Seat locks when Nadia checks you in. Show this code at the door of Bus 2.</span></div>
+
+<div style="border-radius: 20px; background: #ffffff; padding: 4px 16px">
+<div style="display: flex; gap: 12px; align-items: center; padding: 10px 0; border-bottom: 1px solid #e3dfc9"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.1-7-11.5A7 7 0 0 1 19 9.5C19 14.9 12 21 12 21zM12 7a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z"></path></svg><span style="flex-grow: 1; display: flex; flex-direction: column"><span style="font-size: 15px; font-weight: 600">Pickup Olaya · 06:15</span><span style="font-size: 13px; color: #5b5f86">Thu 16 Oct · Bus 2 departs 06:30</span></span></div>
+<div style="display: flex; gap: 12px; align-items: center; padding: 10px 0; border-bottom: 1px solid #e3dfc9"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 4h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM4 11h16M8 18v2M16 18v2M8 14.5h.01M16 14.5h.01"></path></svg><span style="flex-grow: 1; display: flex; flex-direction: column"><span style="font-size: 15px; font-weight: 600">Bus 2 · Plate ABC 4821</span><span style="font-size: 13px; color: #5b5f86">Mercedes Tourismo · driver Khalid Al-Harbi</span></span></div>
+<div style="display: flex; gap: 12px; align-items: center; padding: 8px 0; border-bottom: 1px solid #e3dfc9"><span style="width: 32px; height: 32px; border-radius: 999px; background: #e6e8f5; overflow: hidden; flex-shrink: 0; display: block"><img src="../assets/28ad7d346304ae503024b63430b79f78.svg" alt="" style="width: 100%; height: 100%; border-radius: 999px; object-fit: cover; display: block"></span><span style="flex-grow: 1; display: flex; flex-direction: column"><span style="font-size: 15px; font-weight: 600">Nadia Yusuf</span><span style="font-size: 13px; color: #5b5f86">Your moderator on Bus 2</span></span><a href="#" aria-label="Call Nadia Yusuf" style="width: 44px; height: 44px; border-radius: 999px; background: #e6e8f5; color: #262a67; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"></path></svg></a></div>
+<div style="display: flex; gap: 12px; align-items: flex-start; padding: 10px 0"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zM4 10h16M8 3v4M16 3v4"></path></svg><span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px"><span style="display: flex; justify-content: space-between; gap: 8px"><a href="TrvProgramsSchedule.dc.html" style="font-size: 15px; font-weight: 600; color: #262a67">Programs for {{cur.name}}</a><a href="TrvAddPrograms.dc.html" style="font-size: 14px; font-weight: 600">Add programs</a></span><span style="font-size: 13px; line-height: 18px; color: #5b5f86">{{cur.programs}}</span></span></div>
+</div>
+
+<div style="display: flex; gap: 8px">
+<a href="#" style="flex: 1 1 0; height: 48px; border-radius: 12px; background: #262a67; color: #f6f3e4; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 15px; font-weight: 600; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7a2 2 0 0 1 2-2h12v4M4 7v11a2 2 0 0 0 2 2h14V9H6a2 2 0 0 1-2-2zM16 14.5h.01"></path></svg>Add to Wallet</a>
+<a href="../pdf/PdfTicket.dc.html" style="flex: 1 1 0; height: 48px; border-radius: 12px; background: #ffffff; border: 1px solid #7b7fa6; box-sizing: border-box; color: #262a67; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 15px; font-weight: 600; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12M7 11l5 5 5-5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"></path></svg>Receipt</a>
+</div>
+<div style="display: flex; gap: 8px; margin-top: auto">
+<a href="TrvModify.dc.html" style="flex: 1 1 0; height: 44px; border-radius: 12px; color: #262a67; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 15px; font-weight: 600; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16zM14 6l4 4"></path></svg>Change booking</a>
+<a href="TrvCancel.dc.html" style="flex: 1 1 0; height: 44px; border-radius: 12px; color: #b42318; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 15px; font-weight: 600; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>Cancel booking</a>
+</div>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { i: 0 }; }
+  renderVals() {
+    const P = [
+      { name: 'Sara', full: 'Sara Al-Qahtani', kind: 'Adult · booking owner', seat: '3C', programs: 'Hegra guided tour · Elephant Rock dinner (Standard) · Travel insurance' },
+      { name: 'Faisal', full: 'Faisal Al-Qahtani', kind: 'Adult', seat: '3D', programs: 'Hegra guided tour · Elephant Rock dinner (Standard) · Travel insurance' },
+      { name: 'Omar', full: 'Omar Al-Qahtani', kind: 'Child · 9 · tracking on', seat: '4C', programs: 'Hegra guided tour · Old Town walk · Travel insurance' },
+      { name: 'Lina', full: 'Lina Al-Qahtani', kind: 'Child · 6 · tracking on', seat: '4D', programs: 'Hegra guided tour · Old Town walk · Travel insurance' }
+    ];
+    const i = this.state.i;
+    const people = P.map((p, k) => ({ name: p.name, sel: k === i ? 'true' : 'false', on: () => this.setState({ i: k }),
+      style: 'flex: 1 1 0; height: 44px; border-radius: 999px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; ' + (k === i ? 'background: #262a67; color: #f6f3e4; border: 1px solid #262a67;' : 'background: #ffffff; color: #262a67; border: 1px solid #7b7fa6;') }));
+    const cur = P[i];
+    return { people, cur, qrAlt: 'Boarding QR code for ' + cur.full + ', seat ' + cur.seat };
+  }
+}
+</script>
+</body>
+</html>

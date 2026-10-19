@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Book · Confirming payment</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="height: 100%; box-sizing: border-box; padding: 56px 16px 24px; display: flex; flex-direction: column; gap: 12px">
+
+<div style="display: flex; align-items: center; gap: 12px">
+<a href="TrvTrips.dc.html" aria-label="Back to my trips" style="width: 44px; height: 44px; border-radius: 999px; background: #ffffff; color: #262a67; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a>
+<h1 style="margin: 0; font-size: 22px; line-height: 28px; font-weight: 700">Payment</h1>
+</div>
+
+<div role="status" aria-live="polite" style="padding: 16px; border-radius: 20px; background: #262a67; color: #f6f3e4; display: flex; flex-direction: column; gap: 8px">
+<span style="display: flex; align-items: center; gap: 12px"><span style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 999px; background: #31367a; color: #ff8655; display: flex; align-items: center; justify-content: center"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7v5l3 2"></path></svg></span>
+<span style="font-size: 20px; line-height: 26px; font-weight: 700">{{heroTitle}}</span></span>
+<span style="font-size: 14px; line-height: 20px; color: #b8bad6">{{heroText}}</span>
+</div>
+
+<div style="padding: 14px 16px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 6px">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 8px">
+<span style="font-size: 13px; color: #5b5f86">Booking <strong style="color: #262a67; letter-spacing: 0.04em">TE-51907</strong></span>
+<span style="padding: 3px 10px; border-radius: 999px; background: #fdf0d5; color: #8a4b00; font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 4px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7v5l3 2"></path></svg>Payment pending</span>
+</div>
+<span style="font-size: 17px; font-weight: 600">Siwa Oasis Escape</span>
+<span style="font-size: 13px; color: #5b5f86">Thu 29 – Sat 31 Oct · Nile Horizon Tours · Mariam, Karim</span>
+<div style="display: flex; justify-content: space-between; padding-top: 8px; border-top: 1px solid #e3dfc9; font-size: 14px"><span style="color: #5b5f86">Card or wallet via Paymob</span><strong style="font-size: 16px">10,425 EGP</strong></div>
+</div>
+
+<section aria-labelledby="chk-h" style="padding: 12px 16px; border-radius: 20px; background: #ffffff">
+<h2 id="chk-h" style="margin: 0 0 4px; font-size: 15px; font-weight: 600">What happens next</h2>
+<ol style="margin: 0; padding: 0; list-style: none">
+<sc-for list="{{checks}}" as="c" hint-placeholder-count="4">
+<li style="{{c.row}}"><span style="{{c.dot}}"></span><span style="flex-grow: 1; font-size: 14px; line-height: 19px">{{c.t}}</span><span style="font-size: 13px; font-weight: 600; color: #5b5f86">{{c.time}}</span></li>
+</sc-for>
+</ol>
+</section>
+
+<p style="margin: 0; padding: 10px 12px; border-radius: 12px; background: #e6e8f5; font-size: 13px; line-height: 18px; display: flex; gap: 8px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 11v5M12 8h.01"></path></svg><span>Please don’t pay again. If your bank already took the money, a second payment would charge you twice. Your 2 seats stay held until 14:47.</span></p>
+
+<div style="margin-top: auto; display: flex; flex-direction: column; gap: 8px">
+<span role="status" style="font-size: 13px; color: #5b5f86; text-align: center">{{lastCheck}}</span>
+<button type="button" onClick="{{check}}" style="height: 52px; border: 0; border-radius: 12px; background: #ff6c2e; color: #262a67; font: inherit; font-weight: 700; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7"></path></svg>Check status</button>
+<div style="display: flex; justify-content: center; gap: 20px">
+<a href="TrvBooked.dc.html" style="min-height: 32px; display: flex; align-items: center; font-size: 13px; font-weight: 600">Confirmed example</a>
+<a href="TrvPayFailed.dc.html" style="min-height: 32px; display: flex; align-items: center; font-size: 13px; font-weight: 600">Failed example</a>
+</div>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"escalated":{"editor":"boolean","default":false},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { checked: false }; }
+  renderVals() {
+    const esc = !!this.props.escalated;
+    const C = esc ? [
+      ['Paymob didn’t answer within 30 seconds', '14:32', 'done'],
+      ['Checked after 1, 5 and 10 minutes', '14:42', 'done'],
+      ['Passed to the Trips Enjoy payments team', '14:47', 'now'],
+      ['We tell you the result by push and email', 'Soon', 'later']
+    ] : [
+      ['Paymob didn’t answer within 30 seconds', '14:32', 'done'],
+      ['We checked after 1 and 5 minutes', '14:37', 'done'],
+      ['Next automatic check at 10 minutes', '14:42', 'now'],
+      ['Still unclear at 15 minutes: our team takes over', '14:47', 'later']
+    ];
+    const checks = C.map(([t, time, st], i) => ({ t, time,
+      row: 'min-height: 36px; display: flex; align-items: center; gap: 12px;' + (i < C.length - 1 ? ' border-bottom: 1px solid #e3dfc9;' : ''),
+      dot: 'width: 12px; height: 12px; flex-shrink: 0; box-sizing: border-box; border-radius: 999px; ' + (st === 'done' ? 'background: #1f7a4d;' : st === 'now' ? 'background: #ff6c2e; border: 2px solid #262a67;' : 'border: 2px solid #7b7fa6;') }));
+    return {
+      checks,
+      heroTitle: esc ? 'Our team is checking it' : 'Confirming your payment',
+      heroText: esc ? 'Paymob hasn’t confirmed yet, so a person on our payments team is checking it now. Your booking stays pending until we know.' : 'Paymob is taking longer than usual to answer. We keep checking for you, so you can leave this screen.',
+      lastCheck: this.state.checked ? 'Checked just now · still confirming' : 'Last checked 14:37',
+      check: () => this.setState({ checked: true })
+    };
+  }
+}
+</script>
+</body>
+</html>

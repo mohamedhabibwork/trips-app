@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Org · Plan ended</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="position: relative; min-height: 1000px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="OrgNav" active="Overview" hint-size="248px,1000px"></dc-import></div>
+<main style="position: relative; flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 24px">
+
+<div aria-hidden="true" style="display: flex; flex-direction: column; gap: 24px; opacity: .5; filter: grayscale(.6)">
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; color: #5b5f86">Sunday 9 November</span><span style="font-size: 28px; line-height: 36px; font-weight: 600">Good morning, Mona</span></div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px">
+<div style="height: 110px; border-radius: 20px; background: #ffffff"></div><div style="height: 110px; border-radius: 20px; background: #ffffff"></div><div style="height: 110px; border-radius: 20px; background: #ffffff"></div><div style="height: 110px; border-radius: 20px; background: #ffffff"></div>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 24px"><div style="flex: 3 1 480px; height: 300px; border-radius: 20px; background: #ffffff"></div><div style="flex: 2 1 320px; height: 300px; border-radius: 20px; background: #ffffff"></div></div>
+<div style="height: 280px; border-radius: 20px; background: #ffffff"></div>
+</div>
+
+<div style="position: absolute; inset: 0; background: rgba(16,18,48,.45); display: flex; justify-content: center; align-items: flex-start; padding: 40px 32px; box-sizing: border-box">
+<section role="dialog" aria-modal="true" aria-labelledby="pw-h" aria-describedby="pw-d" style="width: 100%; max-width: 920px; box-sizing: border-box; background: #ffffff; border-radius: 20px; padding: 28px 32px; display: flex; flex-direction: column; gap: 20px; box-shadow: 0 20px 60px rgba(16,18,48,.3)">
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: flex-start">
+<div style="display: flex; flex-direction: column; gap: 6px; flex: 1 1 420px">
+<span style="align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; padding: 3px 12px; border-radius: 999px; background: #fdf0d5; color: #8a4b00; font-size: 13px; font-weight: 600"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 11h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1zM8 11V7a4 4 0 0 1 8 0v4"></path></svg>Dashboard locked</span>
+<h1 id="pw-h" style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 700">Your Growth plan ended on 1 Nov. Choose a plan to keep running trips.</h1>
+<p id="pw-d" style="margin: 0; font-size: 15px; line-height: 22px; color: #5b5f86">The 1 Nov renewal on mada •• 4417 was declined, and the 7-day grace period ended on Sat 8 Nov. Your data, trips and settings are kept. Pick a plan and everything opens again right away.</p>
+</div>
+<div role="radiogroup" aria-label="Billing cycle" style="display: inline-flex; padding: 4px; border-radius: 999px; background: #f6f3e4; gap: 4px">
+<button type="button" role="radio" aria-checked="{{mAria}}" onClick="{{setMonthly}}" style="{{mStyle}}">Monthly</button>
+<button type="button" role="radio" aria-checked="{{aAria}}" onClick="{{setAnnual}}" style="{{aStyle}}">Annual <span style="padding: 0 6px; border-radius: 999px; background: #f89e23; color: #262a67; font-size: 12px; font-weight: 700">save 17%</span></button>
+</div>
+</div>
+
+<div role="radiogroup" aria-label="Plans" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px">
+<sc-for list="{{plans}}" as="p" hint-placeholder-count="3">
+<button type="button" role="radio" aria-checked="{{p.aria}}" onClick="{{p.pick}}" style="{{p.style}}">
+<span style="display: flex; justify-content: space-between; align-items: center; gap: 8px; min-height: 24px"><span style="font-size: 18px; font-weight: 700">{{p.name}}</span><sc-if value="{{p.rec}}" hint-placeholder-val="{{false}}"><span style="padding: 2px 10px; border-radius: 999px; background: #fb8030; color: #262a67; font-size: 12px; font-weight: 700">Recommended · current</span></sc-if></span>
+<span><strong style="font-size: 26px">{{p.price}}</strong> <span style="font-size: 14px; color: #5b5f86">{{p.unit}}</span></span>
+<span style="font-size: 13px; color: #5b5f86; min-height: 18px">{{p.sub}}</span>
+<span style="display: flex; flex-direction: column; gap: 4px; padding-top: 8px; border-top: 1px solid #e3dfc9">
+<sc-for list="{{p.feats}}" as="f" hint-placeholder-count="4">
+<span style="display: flex; gap: 6px; font-size: 14px; line-height: 20px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1f7a4d" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 2px"><path d="M5 12.5l4.5 4.5L19 7"></path></svg>{{f.t}}</span>
+</sc-for>
+</span>
+</button>
+</sc-for>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px">
+<div style="padding: 16px; border-radius: 12px; background: #e3f3ea; display: flex; flex-direction: column; gap: 8px">
+<span style="font-size: 14px; font-weight: 700; color: #1f7a4d">Still available</span>
+<sc-for list="{{available}}" as="a" hint-placeholder-count="4">
+<span style="display: flex; gap: 8px; font-size: 14px; line-height: 20px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1f7a4d" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 2px"><path d="M5 12.5l4.5 4.5L19 7"></path></svg><span>{{a.t}}</span></span>
+</sc-for>
+</div>
+<div style="padding: 16px; border-radius: 12px; background: #f6f3e4; display: flex; flex-direction: column; gap: 8px">
+<span style="font-size: 14px; font-weight: 700">Locked until you choose a plan</span>
+<sc-for list="{{locked}}" as="l" hint-placeholder-count="4">
+<span style="display: flex; gap: 8px; font-size: 14px; line-height: 20px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5b5f86" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 2px"><path d="M6 11h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1zM8 11V7a4 4 0 0 1 8 0v4"></path></svg><span>{{l.t}}</span></span>
+</sc-for>
+</div>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center">
+<a href="OrgHome.dc.html" style="height: 48px; padding: 0 24px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 15px; font-weight: 700; display: flex; align-items: center; text-decoration: none">{{cta}}</a>
+<a href="OrgBilling.dc.html" style="height: 48px; box-sizing: border-box; padding: 0 20px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7a2 2 0 0 1 2-2h12v4M4 7v11a2 2 0 0 0 2 2h14V9H6a2 2 0 0 1-2-2zM16 14.5h.01"></path></svg>Update payment method</a>
+<a href="OrgSupport.dc.html" style="height: 48px; padding: 0 12px; color: #262a67; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 6px; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16v12H4zM4 7l8 6 8-6"></path></svg>Contact sales</a>
+<span style="flex: 1 1 200px; text-align: end; font-size: 13px; color: #5b5f86">{{chargeNote}}</span>
+</div>
+
+</section>
+</div>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { cycle: 'monthly', plan: 'Growth' }; }
+  renderVals() {
+    const annual = this.state.cycle === 'annual';
+    const seg = (on) => 'height: 36px; padding: 0 16px; border: 0; border-radius: 999px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; ' + (on ? 'background: #262a67; color: #f6f3e4;' : 'background: transparent; color: #262a67;');
+    const P = [
+      { name: 'Starter', m: '590', y: '5,880', ym: '490', feats: ['5 active trips a month', '5 employees · 2 buses per trip', 'Own drivers & photographers', 'Customers, inbox & reviews'] },
+      { name: 'Growth', m: '1,490', y: '14,840', ym: '1,237', rec: true, feats: ['20 active trips · 10 buses per trip', 'Platform drivers & photographers', 'Seat selection & child tracking', 'Campaigns, 3 webhooks, read-only API'] },
+      { name: 'Enterprise', m: '3,990', y: '39,740', ym: '3,312', feats: ['Unlimited trips, staff & buses', 'Full analytics with export', 'Unlimited webhooks, read & write API', 'Custom branding · priority support'] }
+    ];
+    const plans = P.map((p) => {
+      const on = this.state.plan === p.name;
+      return {
+        name: p.name, rec: !!p.rec, aria: on ? 'true' : 'false', pick: () => this.setState({ plan: p.name }),
+        price: (annual ? p.y : p.m) + ' SAR', unit: annual ? 'per year' : 'per month',
+        sub: annual ? p.ym + ' SAR a month, billed yearly' : 'excl. VAT · cancel any time',
+        feats: p.feats.map((t) => ({ t })),
+        style: 'text-align: start; font: inherit; color: #262a67; cursor: pointer; padding: 16px; border-radius: 20px; display: flex; flex-direction: column; gap: 6px; ' + (on ? 'border: 2px solid #fb8030; background: #fff7f2;' : 'border: 1px solid #e3dfc9; background: #ffffff;')
+      };
+    });
+    const available = [
+      'Trips already sold still run. 3 upcoming trips and 248 travellers keep their seats.',
+      'Settlements, statements and invoices stay readable and downloadable.',
+      'Pending payouts are still paid: 48,320 SAR in the Mon 10 Nov 06:00 run.',
+      'Subscription, payment method, support and sign out.'
+    ].map((t) => ({ t }));
+    const locked = [
+      'Creating or publishing trips and selling new seats',
+      'Staff apps are paused. Employees, own drivers and moderators see "ask Mona Saleh (Owner) to renew".',
+      'Customers, campaigns, deals and analytics',
+      'Webhooks and API keys stop until you renew'
+    ].map((t) => ({ t }));
+    const pl = P.find((p) => p.name === this.state.plan);
+    const amount = annual ? pl.y : pl.m;
+    return {
+      plans, available, locked,
+      mAria: annual ? 'false' : 'true', aAria: annual ? 'true' : 'false', mStyle: seg(!annual), aStyle: seg(annual),
+      setMonthly: () => this.setState({ cycle: 'monthly' }), setAnnual: () => this.setState({ cycle: 'annual' }),
+      cta: this.state.plan === 'Growth' ? 'Reactivate Growth' : 'Choose ' + this.state.plan,
+      chargeNote: 'You pay ' + amount + ' SAR + VAT today' + (annual ? ' for 12 months.' : ', then on the 9th each month.')
+    };
+  }
+}
+</script>
+</body>
+</html>

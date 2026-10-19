@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Traveler · My plan &amp; billing</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="height: 100%; box-sizing: border-box; padding: 56px 16px 24px; display: flex; flex-direction: column; gap: 8px">
+
+<div style="display: flex; align-items: center; gap: 12px">
+<a href="TrvProfile.dc.html" aria-label="Back" style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 999px; background: #ffffff; color: #262a67; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a>
+<h1 style="margin: 0; font-size: 22px; line-height: 28px; font-weight: 700">My plan &amp; billing</h1>
+</div>
+
+<sc-if value="{{grace}}" hint-placeholder-val="{{false}}">
+<div role="alert" style="padding: 10px 12px; border-radius: 12px; background: #fdf0d5; color: #8a4b00; display: flex; gap: 10px; font-size: 14px; line-height: 19px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M12 3l9.5 17h-19zM12 10v4M12 17h.01"></path></svg><span><strong>Payment didn’t go through.</strong> Explorer stays active until Sat 8 Nov. <a href="TrvPayMethods.dc.html" style="font-weight: 600; color: #8a4b00">Update card</a></span></div>
+</sc-if>
+
+<div style="border-radius: 20px; background: #262a67; color: #f6f3e4; padding: 16px 18px; display: flex; align-items: center; gap: 12px">
+<span style="flex-grow: 1; display: flex; flex-direction: column; gap: 4px">
+<span style="align-self: flex-start; padding: 2px 10px; border-radius: 999px; background: #f89e23; color: #262a67; font-size: 12px; font-weight: 700">Current · Explorer</span>
+<span style="font-size: 26px; line-height: 32px; font-weight: 700">19 SAR <span style="font-size: 15px; font-weight: 500; color: #b8bad6">/ month</span></span>
+<span style="font-size: 13px; color: #b8bad6">Renews Sat 1 Nov · Visa ending 4421</span>
+</span>
+<a href="TrvPayMethods.dc.html" style="height: 44px; padding: 0 14px; border-radius: 12px; background: #31367a; color: #f6f3e4; display: flex; align-items: center; font-size: 14px; font-weight: 600; text-decoration: none">Change billing</a>
+</div>
+
+<div role="group" aria-label="Billing period" style="display: flex; gap: 4px; padding: 4px; border-radius: 999px; background: #ffffff; border: 1px solid #e3dfc9">
+<sc-for list="{{periods}}" as="p" hint-placeholder-count="2"><button type="button" aria-pressed="{{p.sel}}" onClick="{{p.on}}" style="{{p.style}}">{{p.t}}</button></sc-for>
+</div>
+
+<div style="border-radius: 20px; background: #ffffff; overflow: hidden">
+<div role="table" aria-label="Compare Free, Explorer and VIP" style="font-size: 13px">
+<div role="row" style="display: grid; grid-template-columns: 1fr 64px 76px 70px">
+<span role="columnheader" style="padding: 12px 8px 8px 14px; color: #5b5f86; font-weight: 600">Plan</span>
+<span role="columnheader" style="padding: 12px 4px 8px; text-align: center; font-weight: 600; display: flex; flex-direction: column">Free<span style="font-weight: 500; color: #5b5f86">0</span></span>
+<span role="columnheader" style="padding: 12px 4px 8px; text-align: center; font-weight: 700; background: #e6e8f5; display: flex; flex-direction: column">Explorer<span style="font-weight: 500; color: #5b5f86">{{px.ex}}</span></span>
+<span role="columnheader" style="padding: 12px 10px 8px 4px; text-align: center; font-weight: 700; color: #c93a00; display: flex; flex-direction: column">VIP<span style="font-weight: 500; color: #5b5f86">{{px.vip}}</span></span>
+</div>
+<sc-for list="{{rows}}" as="r" hint-placeholder-count="6">
+<div role="row" style="display: grid; grid-template-columns: 1fr 64px 76px 70px; border-top: 1px solid #e3dfc9">
+<span role="rowheader" style="padding: 5px 8px 5px 14px; font-weight: 500">{{r.t}}</span>
+<span role="cell" style="text-align: center; padding: 5px 4px; color: #5b5f86">{{r.a}}</span>
+<span role="cell" style="text-align: center; padding: 5px 4px; font-weight: 600; background: #e6e8f5">{{r.b}}</span>
+<span role="cell" style="text-align: center; padding: 5px 10px 5px 4px; font-weight: 600">{{r.c}}</span>
+</div>
+</sc-for>
+</div>
+</div>
+
+<p style="margin: 0; font-size: 13px; line-height: 18px; color: #5b5f86; text-align: center"><strong style="color: #262a67">Free forever</strong> — Explorer and VIP add features. You can always book on Free.</p>
+
+<a href="TrvPay.dc.html" style="height: 52px; border-radius: 12px; background: #ff6c2e; color: #262a67; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700; text-decoration: none">{{upgrade}}</a>
+
+<div style="border-radius: 20px; background: #ffffff; padding: 0 16px">
+<a href="TrvPayMethods.dc.html" style="min-height: 44px; display: flex; align-items: center; gap: 12px; color: #262a67; text-decoration: none; border-bottom: 1px solid #e3dfc9"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7a2 2 0 0 1 2-2h12v4M4 7v11a2 2 0 0 0 2 2h14V9H6a2 2 0 0 1-2-2zM16 14.5h.01"></path></svg><span style="flex-grow: 1; font-size: 15px; font-weight: 600">Payment method</span><span style="font-size: 13px; color: #5b5f86">Visa •• 4421</span></a>
+<a href="TrvReceipts.dc.html" style="min-height: 44px; display: flex; align-items: center; gap: 12px; color: #262a67; text-decoration: none"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zM14 3v5h5"></path></svg><span style="flex-grow: 1; font-size: 15px; font-weight: 600">Billing history &amp; tax invoices</span><span style="font-size: 13px; color: #5b5f86">8 payments</span></a>
+</div>
+
+<sc-if value="{{noGrace}}" hint-placeholder-val="{{true}}"><button type="button" style="height: 44px; border: 0; background: transparent; font: inherit; font-size: 14px; font-weight: 600; color: #b42318; cursor: pointer">Cancel plan · keep Explorer until Fri 31 Oct</button></sc-if>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"paymentFailed":{"editor":"boolean","default":false},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { annual: false }; }
+  renderVals() {
+    const annual = this.state.annual;
+    const periods = [[false, 'Monthly'], [true, 'Annual · save 17%']].map(([v, t]) => ({ t, sel: annual === v ? 'true' : 'false', on: () => this.setState({ annual: v }),
+      style: 'flex: 1 1 0; height: 40px; border: 0; border-radius: 999px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; ' + (annual === v ? 'background: #262a67; color: #f6f3e4;' : 'background: transparent; color: #262a67;') }));
+    const rows = [
+      { t: 'Program discount', a: '—', b: '5%', c: '10%' },
+      { t: 'Priority seat choice', a: '—', b: 'Yes', c: 'Yes' },
+      { t: 'Child live tracking', a: '—', b: 'Yes', c: 'Yes' },
+      { t: 'Receipts', a: 'Basic', b: 'Full', c: '+ Export' },
+      { t: 'VIP-only programs', a: '—', b: '—', c: 'Yes' },
+      { t: 'Support', a: 'Standard', b: 'Priority', c: 'Dedicated' }
+    ];
+    return {
+      grace: !!this.props.paymentFailed, noGrace: !this.props.paymentFailed, periods, rows,
+      px: annual ? { ex: '190/yr', vip: '490/yr' } : { ex: '19/mo', vip: '49/mo' },
+      upgrade: annual ? 'Upgrade to VIP · 490 SAR / year' : 'Upgrade to VIP · 49 SAR / month'
+    };
+  }
+}
+</script>
+</body>
+</html>

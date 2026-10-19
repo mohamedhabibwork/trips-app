@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Org · Subscription &amp; usage</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="min-height: 1600px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="OrgNav" active="Subscription" hint-size="248px,1600px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 24px">
+
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; color: #5b5f86">Plan, limits and invoices</span><h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Subscription</h1></div>
+
+<sc-if value="{{dunning}}" hint-placeholder-val="{{false}}">
+<div role="alert" style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; padding: 14px 16px; border-radius: 12px; background: #fde8e6; color: #b42318; font-size: 15px">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M12 3l9.5 17h-19zM12 10v4M12 17h.01"></path></svg>
+<span style="flex: 1 1 360px"><strong>Your 1 Oct payment didn't go through.</strong> mada •• 4417 was declined. You keep Growth during a 7-day grace period until Wed 8 Oct, then the dashboard locks until a plan is active. Trips already sold still run. Update the card to retry now.</span>
+<button type="button" style="height: 44px; padding: 0 16px; border: 0; border-radius: 12px; background: #b42318; color: #ffffff; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Update payment method</button>
+</div>
+</sc-if>
+
+<div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: stretch">
+<section aria-labelledby="cur-h" style="flex: 2 1 420px; min-width: 0; background: #262a67; color: #f6f3e4; border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; align-items: flex-start">
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 13px; color: #b8bad6; font-weight: 600">CURRENT PLAN</span><h2 id="cur-h" style="margin: 0; font-size: 32px; line-height: 40px; font-weight: 700">Growth</h2></div>
+<span style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 999px; background: #e3f3ea; color: #1f7a4d; font-size: 13px; font-weight: 600"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg>Active</span>
+</div>
+<span style="font-size: 18px"><strong style="font-size: 26px">{{price}}</strong> <span style="color: #b8bad6">{{priceUnit}}</span></span>
+<span style="font-size: 15px; color: #b8bad6">{{renewLine}}</span>
+<span style="display: flex; gap: 8px; font-size: 14px; line-height: 20px; color: #f6f3e4"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f89e23" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 2px"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 11v5M12 8h.01"></path></svg><span>A plan is required to use the dashboard. If it lapses, the dashboard locks after a 7-day grace period. <a href="OrgPaywall.dc.html" style="color: #ff8655; font-weight: 600">See what stays available</a></span></span>
+<div role="radiogroup" aria-label="Billing cycle" style="display: inline-flex; align-self: flex-start; padding: 4px; border-radius: 999px; background: #31367a; gap: 4px">
+<button type="button" role="radio" aria-checked="{{mAria}}" onClick="{{setMonthly}}" style="{{mStyle}}">Monthly</button>
+<button type="button" role="radio" aria-checked="{{aAria}}" onClick="{{setAnnual}}" style="{{aStyle}}">Annual <span style="padding: 0 6px; border-radius: 999px; background: #f89e23; color: #262a67; font-size: 12px; font-weight: 700">−17%</span></button>
+</div>
+<span style="font-size: 13px; color: #b8bad6">{{cycleNote}}</span>
+</section>
+<section aria-labelledby="use-h" style="flex: 3 1 440px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap"><h2 id="use-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">Usage this cycle</h2><span style="font-size: 14px; color: #5b5f86">Resets on Sat 1 Nov</span></div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px 24px">
+<sc-for list="{{meters}}" as="m" hint-placeholder-count="5">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<span style="display: flex; justify-content: space-between; gap: 8px; font-size: 14px"><span style="font-weight: 600">{{m.l}}</span><span style="font-weight: 700">{{m.v}}</span></span>
+<div role="progressbar" aria-label="{{m.l}}" aria-valuenow="{{m.n}}" aria-valuemin="0" aria-valuemax="{{m.max}}" style="height: 10px; border-radius: 999px; background: #e3dfc9; overflow: hidden"><div style="height: 100%; width: {{m.w}}; background: {{m.c}}; border-radius: 999px"></div></div>
+<span style="font-size: 13px; {{m.ns}}">{{m.note}}</span>
+</div>
+</sc-for>
+</div>
+</section>
+
+</div>
+
+
+<section aria-labelledby="cmp-h" style="background: #ffffff; border-radius: 20px; padding: 20px 0 16px">
+<h2 id="cmp-h" style="margin: 0; padding: 0 20px 12px; font-size: 20px; line-height: 28px; font-weight: 600">Compare plans</h2>
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 760px; border-collapse: collapse; font-size: 15px">
+<thead><tr>
+<th scope="col" style="text-align: start; padding: 12px 20px; font-size: 13px; color: #5b5f86; font-weight: 600">Feature</th>
+<th scope="col" style="text-align: start; padding: 12px; width: 22%"><span style="display: flex; flex-direction: column"><span style="font-size: 17px">Starter</span><span style="font-size: 13px; font-weight: 500; color: #5b5f86">{{starterPrice}}</span></span></th>
+<th scope="col" style="text-align: start; padding: 12px; width: 22%; background: #fff7f2; border-top: 3px solid #fb8030"><span style="display: flex; flex-direction: column"><span style="font-size: 17px">Growth · current</span><span style="font-size: 13px; font-weight: 500; color: #5b5f86">{{growthPrice}}</span></span></th>
+<th scope="col" style="text-align: start; padding: 12px 20px 12px 12px; width: 22%"><span style="display: flex; flex-direction: column"><span style="font-size: 17px">Enterprise</span><span style="font-size: 13px; font-weight: 500; color: #5b5f86">{{entPrice}}</span></span></th>
+</tr></thead>
+<tbody>
+<sc-for list="{{compare}}" as="r" hint-placeholder-count="15">
+<tr style="border-top: 1px solid #e3dfc9"><th scope="row" style="text-align: start; padding: 8px 20px; font-weight: 500">{{r.f}}</th><td style="padding: 8px 12px; color: #5b5f86">{{r.s}}</td><td style="padding: 8px 12px; font-weight: 600; background: #fff7f2">{{r.g}}</td><td style="padding: 8px 20px 8px 12px">{{r.e}}</td></tr>
+</sc-for>
+<tr style="border-top: 1px solid #e3dfc9"><td style="padding: 16px 20px 0"></td>
+<td style="padding: 16px 12px 0; vertical-align: top"><span style="display: flex; flex-direction: column; gap: 6px"><button type="button" style="height: 44px; border-radius: 12px; border: 1px solid #7b7fa6; background: #fff; color: #262a67; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer">Downgrade</button><span style="font-size: 12px; line-height: 16px; color: #5b5f86">Takes effect at the next cycle, Sat 1 Nov. Trips already published stay until they finish; new ones are capped at 5.</span></span></td>
+<td style="padding: 16px 12px 0; vertical-align: top; background: #fff7f2"><span style="font-size: 13px; color: #5b5f86">Your plan</span></td>
+<td style="padding: 16px 20px 0 12px; vertical-align: top"><span style="display: flex; flex-direction: column; gap: 6px"><button type="button" style="height: 48px; border: 0; border-radius: 12px; background: #ff6c2e; color: #262a67; font: inherit; font-size: 15px; font-weight: 700; cursor: pointer">Upgrade to Enterprise</button><span style="font-size: 12px; line-height: 16px; color: #5b5f86">Starts today. You pay {{prorate}} now for the rest of this cycle (prorated).</span></span></td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: stretch">
+<section aria-labelledby="pay-h" style="flex: 1 1 280px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 12px">
+<h2 id="pay-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">Payment method</h2>
+<div style="display: flex; align-items: center; gap: 12px; padding: 14px; border-radius: 12px; border: 1px solid #e3dfc9">
+<span style="width: 48px; height: 32px; flex-shrink: 0; border-radius: 6px; background: #262a67; color: #f6f3e4; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center">mada</span>
+<span style="display: flex; flex-direction: column; font-size: 14px"><strong style="font-size: 15px">mada •• 4417</strong><span style="color: #5b5f86">Expires 09/28 · Al Rajhi Bank</span></span>
+</div>
+<span style="font-size: 14px; color: #5b5f86">Invoices go to finance@sunrisetours.sa · VAT 310 4521 8870 0003</span>
+<button type="button" style="margin-top: auto; height: 44px; border-radius: 12px; border: 1px solid #7b7fa6; background: #fff; color: #262a67; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Change payment method</button>
+</section>
+<section aria-labelledby="inv-h" style="flex: 2 1 480px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px 0 8px">
+<h2 id="inv-h" style="margin: 0; padding: 0 20px 12px; font-size: 20px; line-height: 28px; font-weight: 600">Invoices</h2>
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 640px; border-collapse: collapse; font-size: 15px">
+<thead><tr style="color: #5b5f86; font-size: 13px"><th scope="col" style="text-align: start; padding: 10px 20px; font-weight: 600">Invoice</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Date</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Description</th><th scope="col" style="text-align: end; padding: 10px 12px; font-weight: 600">Amount incl. VAT</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Status</th><th scope="col" style="text-align: end; padding: 10px 20px; font-weight: 600"><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Download</span></th></tr></thead>
+<tbody>
+<sc-for list="{{invoices}}" as="i" hint-placeholder-count="4">
+<tr style="border-top: 1px solid #e3dfc9"><td style="padding: 10px 20px; font-weight: 600">{{i.n}}</td><td style="padding: 10px 12px">{{i.d}}</td><td style="padding: 10px 12px; color: #5b5f86">{{i.t}}</td><td style="padding: 10px 12px; text-align: end; font-weight: 600">{{i.a}}</td><td style="padding: 10px 12px"><span style="{{i.ss}}">{{i.s}}</span></td><td style="padding: 10px 20px; text-align: end"><a href="../pdf/PdfPlanInvoice.dc.html" aria-label="{{i.dl}}" style="display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 600"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12M7 11l5 5 5-5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"></path></svg>PDF</a></td></tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+</section>
+</div>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"showDunning":{"editor":"boolean","default":false},"$preview":{"width":1440,"height":1600}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { cycle: 'monthly' }; }
+  renderVals() {
+    const pill = (tone) => 'display: inline-flex; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; ' + ({ ok: 'background: #e3f3ea; color: #1f7a4d;', warn: 'background: #fdf0d5; color: #8a4b00;', info: 'background: #e6e8f5; color: #262a67;' })[tone];
+    const annual = this.state.cycle === 'annual';
+    const seg = (on) => 'height: 36px; padding: 0 16px; border: 0; border-radius: 999px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; ' + (on ? 'background: #f6f3e4; color: #262a67;' : 'background: transparent; color: #f6f3e4;');
+    const meter = (l, n, max, note, warn) => {
+      const p = n / max;
+      return { l, n, max, v: n + ' of ' + max, w: Math.round(p * 100) + '%', c: p >= 0.9 ? '#f89e23' : '#262a67', note, ns: warn ? 'color: #8a4b00; font-weight: 600;' : 'color: #5b5f86;' };
+    };
+    const meters = [
+      meter('Active trips this month', 18, 20, '2 left · new trips are blocked at 20', true),
+      meter('Employees', 9, 20, '7 active, 2 invited', false),
+      meter('Coupons', 6, 20, 'Drafts and exhausted coupons count', false),
+      meter('Vehicles per trip (max)', 4, 10, 'Largest: AlUla Heritage Weekend, 4 buses', false),
+      meter('Programs per trip (max)', 7, 15, 'Largest: AlUla Heritage Weekend, 7 programs', false)
+    ];
+    const compare = [
+      { f: 'Active trips per month', s: '5', g: '20', e: 'Unlimited' },
+      { f: 'Employees', s: '5', g: '20', e: 'Unlimited' },
+      { f: 'Vehicles per trip', s: '2', g: '10', e: 'Unlimited' },
+      { f: 'Programs per trip', s: '3', g: '15', e: 'Unlimited' },
+      { f: 'Drivers & photographers', s: 'Own only', g: 'Own + platform', e: 'Own + platform' },
+      { f: 'Seat self-selection', s: '—', g: 'Included', e: 'Included' },
+      { f: 'Child tracking for parents', s: '—', g: 'Included', e: 'Included' },
+      { f: 'Coupons', s: '5', g: '20', e: 'Unlimited' },
+      { f: 'Accounting', s: 'Basic', g: 'Advanced · CSV, PDF', e: 'Full + Excel export' },
+      { f: 'CRM', s: 'Customers & inbox', g: '+ Segments, leads, campaigns · 2,000 msgs / month', e: 'Unlimited' },
+      { f: 'Webhooks', s: 'None', g: '3 endpoints', e: 'Unlimited' },
+      { f: 'API', s: 'None', g: 'Read-only', e: 'Read & write' },
+      { f: 'Analytics', s: 'None', g: 'Basic', e: 'Full + export' },
+      { f: 'Custom branding', s: '—', g: '—', e: 'Included' },
+      { f: 'Support', s: 'Standard', g: 'Standard', e: 'Priority' }
+    ];
+    const invoices = [
+      { n: 'INV-2026-1001', d: 'Wed 1 Oct', t: 'Growth · monthly · Oct', a: '1,713.50 SAR', s: 'Paid', t2: 'ok' },
+      { n: 'INV-2026-0901', d: 'Mon 1 Sep', t: 'Growth · monthly · Sep', a: '1,713.50 SAR', s: 'Paid', t2: 'ok' },
+      { n: 'INV-2026-0814', d: 'Thu 14 Aug', t: 'Upgrade Starter → Growth · prorated', a: '483.00 SAR', s: 'Paid', t2: 'ok' },
+      { n: 'INV-2026-0801', d: 'Fri 1 Aug', t: 'Starter · monthly · Aug', a: '678.50 SAR', s: 'Paid', t2: 'ok' }
+    ].map((i) => ({ ...i, ss: pill(i.t2), dl: 'Download ' + i.n + ' as PDF' }));
+    return {
+      dunning: this.props.showDunning ?? false,
+      price: annual ? '14,840 SAR' : '1,490 SAR', priceUnit: annual ? 'per year · 1,237 SAR / month' : 'per month · excl. VAT',
+      renewLine: annual ? 'Switches to annual at your next renewal, Sat 1 Nov' : 'Renews Sat 1 Nov · mada •• 4417',
+      cycleNote: annual ? 'You save 3,040 SAR a year compared with monthly.' : 'Pay annually and save 17% — 14,840 SAR a year.',
+      mAria: annual ? 'false' : 'true', aAria: annual ? 'true' : 'false', mStyle: seg(!annual), aStyle: seg(annual),
+      setMonthly: () => this.setState({ cycle: 'monthly' }), setAnnual: () => this.setState({ cycle: 'annual' }),
+      starterPrice: annual ? '5,880 SAR / year' : '590 SAR / month', growthPrice: annual ? '14,840 SAR / year' : '1,490 SAR / month', entPrice: annual ? '39,740 SAR / year' : '3,990 SAR / month',
+      prorate: '2,097 SAR', meters, compare, invoices
+    };
+  }
+}
+</script>
+</body>
+</html>

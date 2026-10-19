@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Book · 1 Who's travelling</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="height: 100%; box-sizing: border-box; padding: 56px 16px 24px; display: flex; flex-direction: column; gap: 14px">
+
+<div style="display: flex; align-items: center; gap: 12px">
+<a href="TrvTrip.dc.html" aria-label="Back to trip details" style="width: 44px; height: 44px; border-radius: 999px; background: #ffffff; color: #262a67; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a>
+<div style="display: flex; flex-direction: column"><h1 style="margin: 0; font-size: 22px; line-height: 28px; font-weight: 700">Who's travelling</h1><span style="font-size: 13px; color: #5b5f86">AlUla Heritage Weekend · Thu 16 Oct</span></div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 6px">
+<div role="progressbar" aria-label="Booking progress" aria-valuemin="1" aria-valuemax="5" aria-valuenow="1" aria-valuetext="Step 1 of 5, Who's travelling" style="display: flex; gap: 4px">
+<span style="flex: 1 1 0; height: 6px; border-radius: 999px; background: #ff6c2e"></span>
+<span style="flex: 1 1 0; height: 6px; border-radius: 999px; background: #e3dfc9"></span>
+<span style="flex: 1 1 0; height: 6px; border-radius: 999px; background: #e3dfc9"></span>
+<span style="flex: 1 1 0; height: 6px; border-radius: 999px; background: #e3dfc9"></span>
+<span style="flex: 1 1 0; height: 6px; border-radius: 999px; background: #e3dfc9"></span>
+</div>
+<span style="font-size: 13px; font-weight: 600; color: #5b5f86">Step 1 of 5 · Next: programs</span>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 8px">
+<span id="who-l" style="font-size: 14px; font-weight: 600">Select everyone in your group</span>
+<div role="group" aria-labelledby="who-l" style="display: flex; flex-direction: column; gap: 8px">
+<sc-for list="{{people}}" as="p" hint-placeholder-count="4">
+<button type="button" role="checkbox" aria-checked="{{p.checked}}" onClick="{{p.toggle}}" style="{{p.cardStyle}}">
+<span style="{{p.boxStyle}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="{{p.tick}}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg></span>
+<span style="flex-grow: 1; display: flex; flex-direction: column; line-height: 19px; text-align: left"><span style="font-size: 16px; font-weight: 600">{{p.name}}</span><span style="font-size: 13px; color: #5b5f86">{{p.sub}}</span></span>
+<span style="font-size: 14px; font-weight: 600">{{p.price}} SAR</span>
+</button>
+</sc-for>
+</div>
+<a href="TrvFamily.dc.html" style="min-height: 44px; display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 600; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Add family member</a>
+</div>
+
+<div role="radiogroup" aria-labelledby="pick-l" style="display: flex; flex-direction: column; gap: 8px">
+<span id="pick-l" style="font-size: 14px; font-weight: 600">Pickup point for your group</span>
+<sc-for list="{{pickups}}" as="k" hint-placeholder-count="2">
+<button type="button" role="radio" aria-checked="{{k.checked}}" onClick="{{k.pick}}" style="{{k.style}}">
+<span style="{{k.ring}}"><span style="{{k.dot}}"></span></span>
+<span style="flex-grow: 1; text-align: left; font-size: 15px; font-weight: 600">{{k.name}}</span>
+<span style="font-size: 14px; color: #5b5f86">{{k.time}}</span>
+</button>
+</sc-for>
+</div>
+
+<div style="margin-top: auto; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; justify-content: space-between; align-items: baseline">
+<span style="font-size: 14px; color: #5b5f86">{{countLabel}} · incl. insurance {{insurance}} SAR</span>
+<span aria-live="polite" style="font-size: 20px; font-weight: 700">{{total}} SAR</span>
+</div>
+<a href="TrvBookPrograms.dc.html" style="height: 52px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-weight: 700; font-size: 16px; display: flex; align-items: center; justify-content: center; text-decoration: none">Continue to programs</a>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { sel: ['sara', 'faisal', 'omar', 'lina'], pickup: 'olaya' }; }
+  renderVals() {
+    const s = this.state;
+    const P = [
+      { id: 'sara', name: 'Sara Al-Qahtani (you)', sub: 'Adult · Explorer plan', fare: 1250 },
+      { id: 'faisal', name: 'Faisal Al-Qahtani', sub: 'Adult', fare: 1250 },
+      { id: 'omar', name: 'Omar', sub: 'Child, 9 · live tracking on', fare: 1000 },
+      { id: 'lina', name: 'Lina', sub: 'Child, 6 · live tracking on', fare: 1000 }
+    ];
+    const fmt = (n) => n.toLocaleString('en-US');
+    const people = P.map((p) => {
+      const on = s.sel.includes(p.id);
+      return { name: p.name, sub: p.sub, price: fmt(p.fare), checked: on ? 'true' : 'false',
+        toggle: () => this.setState({ sel: on ? s.sel.filter((x) => x !== p.id) : s.sel.concat([p.id]) }),
+        cardStyle: 'width: 100%; min-height: 64px; box-sizing: border-box; padding: 10px 14px; border-radius: 12px; background: #ffffff; display: flex; align-items: center; gap: 12px; font: inherit; color: #262a67; cursor: pointer; ' + (on ? 'border: 2px solid #fb8030;' : 'border: 1px solid #e3dfc9;'),
+        boxStyle: 'width: 24px; height: 24px; flex-shrink: 0; box-sizing: border-box; border-radius: 6px; display: flex; align-items: center; justify-content: center; ' + (on ? 'background: #262a67;' : 'background: #ffffff; border: 2px solid #7b7fa6;'),
+        tick: on ? '#f6f3e4' : 'none' };
+    });
+    const pickups = [{ id: 'olaya', name: 'Riyadh – Olaya', time: '06:30' }, { id: 'kafd', name: 'Riyadh – KAFD', time: '06:50' }].map((k) => {
+      const on = s.pickup === k.id;
+      return { ...k, checked: on ? 'true' : 'false', pick: () => this.setState({ pickup: k.id }),
+        style: 'width: 100%; height: 52px; box-sizing: border-box; padding: 0 14px; border-radius: 12px; background: #ffffff; display: flex; align-items: center; gap: 12px; font: inherit; color: #262a67; cursor: pointer; ' + (on ? 'border: 2px solid #fb8030;' : 'border: 1px solid #e3dfc9;'),
+        ring: 'width: 22px; height: 22px; box-sizing: border-box; border-radius: 999px; border: 2px solid ' + (on ? '#262a67' : '#7b7fa6') + '; display: flex; align-items: center; justify-content: center',
+        dot: 'width: 10px; height: 10px; border-radius: 999px; background: ' + (on ? '#262a67' : 'transparent') };
+    });
+    const chosen = P.filter((p) => s.sel.includes(p.id));
+    const insurance = chosen.length * 25;
+    const total = chosen.reduce((a, p) => a + p.fare, 0) + insurance;
+    return { people, pickups, insurance: fmt(insurance), total: fmt(total), countLabel: chosen.length + (chosen.length === 1 ? ' traveller' : ' travellers') };
+  }
+}
+</script>
+</body>
+</html>

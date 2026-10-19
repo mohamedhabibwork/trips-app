@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Traveler · Trip day</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+
+<div style="height: 100%; box-sizing: border-box; padding: 56px 16px 120px; display: flex; flex-direction: column; gap: 10px">
+
+<div style="display: flex; align-items: center; gap: 12px">
+<span style="flex-grow: 1; display: flex; flex-direction: column"><h1 style="margin: 0; font-size: 24px; line-height: 30px; font-weight: 700">Trip day</h1><span style="font-size: 13px; color: #5b5f86">AlUla Heritage Weekend · Day 1 · Thu 16 Oct</span></span>
+<a href="TrvTicket.dc.html" aria-label="Open ticket" style="width: 44px; height: 44px; border-radius: 999px; background: #ffffff; color: #262a67; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v2a2.5 2.5 0 0 0 0 5v3a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-3a2.5 2.5 0 0 0 0-5zM14 5v14"></path></svg></a>
+</div>
+
+<div style="border-radius: 20px; background: #ffffff; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px">
+<span role="status" style="{{pillStyle}}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{pillIcon}}"></path></svg>{{pill}}</span>
+<div style="display: flex; align-items: center; gap: 8px">
+<span style="flex-grow: 1; display: flex; flex-direction: column"><span style="font-size: 16px; font-weight: 600">Bus 2 · ABC 4821 · Seat 3C</span><span style="font-size: 13px; color: #5b5f86">{{latest}}</span></span>
+<span style="padding: 3px 10px; border-radius: 999px; background: #e6e8f5; font-size: 13px; font-weight: 600; flex-shrink: 0">{{vehicle}}</span>
+</div>
+<sc-if value="{{isOut}}" hint-placeholder-val="{{false}}"><p style="margin: 0; padding: 8px 10px; border-radius: 12px; background: #fdf0d5; color: #8a4b00; font-size: 13px; line-height: 18px">Check in again with Nadia before Bus 2 leaves the rest stop at 09:15.</p></sc-if>
+</div>
+
+<section aria-labelledby="stops-h" style="border-radius: 20px; background: #ffffff; padding: 12px 16px">
+<div style="display: flex; justify-content: space-between; align-items: baseline"><h2 id="stops-h" style="margin: 0 0 4px; font-size: 15px; font-weight: 600">Stops today</h2><span style="font-size: 12px; color: #5b5f86">Scheduled times</span></div>
+<ol style="margin: 0; padding: 0; list-style: none">
+<sc-for list="{{stops}}" as="s" hint-placeholder-count="4">
+<li style="{{s.row}}"><span style="{{s.dot}}"></span><span style="flex-grow: 1; display: flex; flex-direction: column"><span style="font-size: 15px; font-weight: 600">{{s.name}}</span><span style="font-size: 12px; color: #5b5f86">{{s.note}}</span></span><span style="font-size: 15px; font-weight: 700">{{s.time}}</span></li>
+</sc-for>
+</ol>
+<p style="margin: 4px 0 0; font-size: 12px; line-height: 16px; color: #5b5f86">Updates come from your moderator, not live location.</p>
+</section>
+
+<div style="border-radius: 20px; background: #ffffff; padding: 12px 16px">
+<h2 style="margin: 0 0 4px; font-size: 15px; font-weight: 600">Today’s programs</h2>
+<div style="display: flex; align-items: center; gap: 12px; min-height: 44px; border-bottom: 1px solid #e3dfc9"><span style="width: 48px; font-size: 15px; font-weight: 700">10:30</span><span style="flex-grow: 1; font-size: 15px">Hegra guided tour</span><span style="font-size: 12px; font-weight: 600; color: #5b5f86">4 of you</span></div>
+<div style="display: flex; align-items: center; gap: 12px; min-height: 44px"><span style="width: 48px; font-size: 15px; font-weight: 700">19:00</span><span style="flex-grow: 1; font-size: 15px">Elephant Rock dinner</span><span style="font-size: 12px; font-weight: 600; color: #5b5f86">Standard · 2</span></div>
+</div>
+
+<div style="border-radius: 20px; background: #ffffff; padding: 8px 8px 8px 16px; display: flex; align-items: center; gap: 12px">
+<span style="width: 36px; height: 36px; border-radius: 999px; background: #e6e8f5; overflow: hidden; flex-shrink: 0; display: block"><img src="../assets/28ad7d346304ae503024b63430b79f78.svg" alt="" style="width: 100%; height: 100%; border-radius: 999px; object-fit: cover; display: block"></span>
+<span style="flex-grow: 1; display: flex; flex-direction: column"><span style="font-size: 15px; font-weight: 600">Nadia Yusuf</span><span style="font-size: 13px; color: #5b5f86">Moderator · Bus 2</span></span>
+<a href="#" aria-label="Message Nadia" style="width: 44px; height: 44px; border-radius: 999px; background: #e6e8f5; color: #262a67; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16v12H4zM4 7l8 6 8-6"></path></svg></a>
+<a href="#" aria-label="Call Nadia" style="width: 44px; height: 44px; border-radius: 999px; background: #262a67; color: #f6f3e4; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"></path></svg></a>
+</div>
+
+</div>
+
+<div style="position: absolute; left: 0; right: 0; bottom: 0; height: 120px">
+<dc-import name="TabBar" role="traveler" active="trips" hint-size="390px,120px"></dc-import>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"boarding":{"editor":"enum","options":["checkedIn","outAtStop","inAgain"],"default":"checkedIn"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const b = this.props.boarding ?? 'checkedIn';
+    const CHECK = 'M5 12.5l4.5 4.5L19 7', OUT = 'M5 12h14M13 6l6 6-6 6';
+    const S = {
+      checkedIn: ['You checked in at 06:22 · Seat 3C', CHECK, 'ok', 'On the way', 'Rest stop reached 08:52'],
+      outAtStop: ['You checked out at the rest stop · 08:55', OUT, 'info', 'At a stop', 'Leaves 09:15'],
+      inAgain: ['Checked in again at 09:12 · Seat 3C', CHECK, 'ok', 'On the way', 'Left rest stop 09:16']
+    }[b] || [];
+    const tone = S[2] === 'ok' ? 'background: #e3f3ea; color: #1f7a4d;' : 'background: #e6e8f5; color: #262a67;';
+    const atStop = b === 'outAtStop';
+    const St = [
+      ['Olaya pickup', 'Departed 06:41', '06:30', 'done'],
+      ['Rest stop · Route 15', atStop ? 'Reached 08:52 · bus waiting' : 'Reached 08:52', '08:45', atStop ? 'now' : 'done'],
+      ['Hegra visitor centre', atStop ? 'After the rest stop' : 'Next stop', '10:15', atStop ? 'later' : 'now'],
+      ['Shaden Resort, AlUla', 'Overnight stay', '18:00', 'later']
+    ];
+    const stops = St.map(([name, note, time, st], i) => ({ name, note, time,
+      row: 'min-height: 36px; display: flex; align-items: center; gap: 12px;' + (i < St.length - 1 ? ' border-bottom: 1px solid #e3dfc9;' : ''),
+      dot: 'width: 12px; height: 12px; flex-shrink: 0; box-sizing: border-box; border-radius: 999px; ' + (st === 'done' ? 'background: #1f7a4d;' : st === 'now' ? 'background: #ff6c2e; border: 2px solid #262a67;' : 'border: 2px solid #7b7fa6;') }));
+    return { stops, pill: S[0], pillIcon: S[1], vehicle: S[3], latest: S[4], isOut: atStop,
+      pillStyle: 'align-self: flex-start; min-height: 28px; padding: 0 10px; border-radius: 999px; display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; ' + tone };
+  }
+}
+</script>
+</body>
+</html>

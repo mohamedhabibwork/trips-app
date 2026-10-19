@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Company driver · Home</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="height: 100%; box-sizing: border-box; padding: 56px 16px 120px; display: flex; flex-direction: column; gap: 14px">
+
+<div style="display: flex; align-items: center; gap: 12px">
+<img src="../assets/c961e95bb720fceb6475e0c84bef99d2.svg" alt="" style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 999px; object-fit: cover">
+<div style="flex-grow: 1; display: flex; flex-direction: column"><span style="font-size: 13px; color: #5b5f86">Good afternoon</span><span style="font-size: 20px; line-height: 26px; font-weight: 700">Saeed Mubarak</span></div>
+<span style="height: 28px; padding: 0 10px; border-radius: 999px; background: #e6e8f5; color: #262a67; display: flex; align-items: center; font-size: 12px; font-weight: 700">Company driver</span>
+</div>
+
+<p style="margin: 0; padding: 12px 14px; border-radius: 12px; background: #e6e8f5; display: flex; gap: 10px; font-size: 14px; line-height: 19px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 11v5M12 8h.01"></path></svg><span><strong>You drive only for Sunrise Tours Co.</strong> Trips are assigned by the company and paid through their payroll, so there are no offers, plans or coupons here.</span></p>
+
+<a href="DrvTrip.dc.html" style="padding: 16px; border-radius: 20px; background: #262a67; color: #f6f3e4; display: flex; flex-direction: column; gap: 10px; text-decoration: none">
+<span style="display: flex; align-items: center; gap: 8px"><span style="padding: 2px 10px; border-radius: 999px; background: #ffe7dc; color: #c93a00; font-size: 12px; font-weight: 700">Today</span><span style="font-size: 12px; font-weight: 600; color: #b8bad6">AUTO-ASSIGNED BY SUNRISE OPS</span></span>
+<span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 20px; font-weight: 600">Jeddah Corniche Night</span><span style="font-size: 14px; color: #b8bad6">Bus 1 · Volvo 9700 · KSA 2290 · 44 passengers</span><span style="font-size: 14px; color: #b8bad6">Depart 17:30 from Al Hamra · back 23:00</span></span>
+<span style="height: 44px; border-radius: 12px; background: #31367a; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 15px; font-weight: 600; color: #ff8655">Open trip &amp; pre-trip check<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span>
+</a>
+
+<section aria-labelledby="up-h" style="border-radius: 20px; background: #ffffff; display: flex; flex-direction: column">
+<h2 id="up-h" style="margin: 0; padding: 12px 16px 2px; font-size: 15px; font-weight: 600">Upcoming assignments</h2>
+<sc-for list="{{rows}}" as="r" hint-placeholder-count="3">
+<a href="DrvTrip.dc.html" style="{{r.rowStyle}}">
+<span style="width: 44px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center"><span style="font-size: 11px; font-weight: 600; color: #5b5f86">{{r.wd}}</span><span style="font-size: 18px; font-weight: 700">{{r.n}}</span></span>
+<span style="flex-grow: 1; display: flex; flex-direction: column"><span style="font-size: 15px; font-weight: 600">{{r.t}}</span><span style="font-size: 13px; color: #5b5f86">{{r.m}}</span></span>
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#c93a00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
+</a>
+</sc-for>
+</section>
+
+<div style="padding: 10px 16px; border-radius: 20px; background: #ffffff; display: flex; align-items: center; gap: 12px">
+<img src="../assets/752b7ab031f2f70a93ff8107886b5b7e.svg" alt="" style="width: 40px; height: 40px; flex-shrink: 0; border-radius: 999px; object-fit: cover">
+<span style="flex-grow: 1; display: flex; flex-direction: column"><span style="font-size: 15px; font-weight: 600">Yousef Amin</span><span style="font-size: 13px; color: #5b5f86">Operations · Sunrise Tours Co.</span></span>
+<a href="ModOpsChat.dc.html" aria-label="Call Yousef Amin" style="width: 44px; height: 44px; border-radius: 999px; background: #ff6c2e; color: #262a67; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"></path></svg></a>
+</div>
+</div>
+
+<div style="position: absolute; left: 0; right: 0; bottom: 0; height: 120px; box-sizing: border-box; padding: 0 16px 24px; display: flex; align-items: flex-end">
+<nav aria-label="Main" style="flex-grow: 1; height: 68px; box-sizing: border-box; padding: 6px; border-radius: 999px; background: rgba(255,255,255,0.78); backdrop-filter: blur(24px) saturate(1.8); -webkit-backdrop-filter: blur(24px) saturate(1.8); border: 1px solid rgba(255,255,255,0.7); box-shadow: 0 10px 30px rgba(38,42,103,0.18); display: flex; gap: 2px">
+<sc-for list="{{tabs}}" as="t" hint-placeholder-count="3">
+<a href="{{t.href}}" aria-current="{{t.cur}}" style="{{t.style}}"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{t.d}}"></path></svg><span style="font-size: 11px; line-height: 14px">{{t.label}}</span></a>
+</sc-for>
+</nav>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const rows = [
+      ['Fri', '24', 'Red Sea Snorkel Day', 'Bus 1 · depart 06:30 Al Hamra'],
+      ['Sat', '25', 'Edge of the World Hike', 'Bus 1 · depart 05:00 Riyadh'],
+      ['Thu', '30', 'Taif Rose Farms', 'Bus 2 · depart 07:00 Riyadh']
+    ].map(([wd, n, t, m], i) => ({ wd, n, t, m,
+      rowStyle: 'min-height: 56px; padding: 6px 16px 6px 8px; display: flex; align-items: center; gap: 10px; color: #262a67; text-decoration: none; ' + (i ? 'border-top: 1px solid #e3dfc9;' : '') }));
+    const tabs = [
+      ['Home', 'DrvOwnHome', 'M4 11l8-7 8 7v8a1 1 0 0 1-1 1h-5v-6h-4v6H5a1 1 0 0 1-1-1z', true],
+      ['Assignments', 'DrvTrips', 'M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zM4 10h16M8 3v4M16 3v4', false],
+      ['Profile', 'DrvProfile', 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0', false]
+    ].map(([label, f, d, on]) => ({ label, d, href: f + '.dc.html', cur: on ? 'page' : 'false',
+      style: 'flex: 1 1 0; min-width: 0; height: 56px; border-radius: 999px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; text-decoration: none; ' + (on ? 'background: rgba(255,108,46,0.16); color: #c93a00; font-weight: 700;' : 'color: #262a67; font-weight: 500;') }));
+    return { rows, tabs };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Org · Add webhook endpoint</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="min-height: 1400px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="OrgNav" active="Integrations" hint-size="248px,1400px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 24px">
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; gap: 14px; align-items: center">
+<a href="OrgWebhooks.dc.html" aria-label="Back to integrations" style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 999px; background: #ffffff; color: #262a67; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a>
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; color: #5b5f86">Integrations · Webhooks · 2 of 3 endpoints on Growth</span><h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Add endpoint</h1></div>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px">
+<button type="button" onClick="{{sendTest}}" style="height: 48px; padding: 0 20px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font: inherit; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>Send test event</button>
+<a href="OrgWebhook.dc.html" style="height: 48px; padding: 0 22px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; text-decoration: none">Create endpoint</a>
+</div>
+</div>
+
+<sc-if value="{{tested}}" hint-placeholder-val="{{false}}">
+<div role="status" style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding: 12px 16px; border-radius: 12px; background: #e3f3ea; color: #1f7a4d; font-size: 15px">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg>
+<span><strong>Test delivered.</strong> booking.confirmed (evt_test_7Hq2) got HTTP 200 from erp.sunrisetours.sa in 312 ms.</span>
+</div>
+</sc-if>
+
+<div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start">
+
+<div style="flex: 3 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 24px">
+
+<section aria-labelledby="ep-h" style="background: #ffffff; border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 16px">
+<h2 id="ep-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">Endpoint</h2>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">Endpoint URL
+<input type="url" required pattern="https://.*" value="https://erp.sunrisetours.sa/hooks/trips-enjoy" aria-describedby="url-help" style="height: 52px; min-width: 0; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 14px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 15px; font-weight: 400; color: #262a67">
+<span id="url-help" style="font-size: 13px; font-weight: 400; color: #5b5f86">Must start with https:// and be reachable from the internet. We send a POST with a JSON body and wait up to 10 seconds.</span>
+</label>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px">
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">Description
+<input type="text" value="Odoo ERP · bookings, payments and invoices" style="height: 52px; min-width: 0; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 14px; font: inherit; font-size: 16px; font-weight: 400; color: #262a67">
+</label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">API version
+<select style="height: 52px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 12px; font: inherit; font-size: 16px; font-weight: 400; color: #262a67"><option>2026-09-01 (latest)</option><option>2026-03-01</option></select>
+</label>
+</div>
+</section>
+
+<section aria-labelledby="ev-h" style="background: #ffffff; border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap"><h2 id="ev-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">Events to send</h2><span role="status" style="font-size: 14px; font-weight: 600; color: #c93a00">{{selCount}}</span></div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px">
+<sc-for list="{{groups}}" as="g" hint-placeholder-count="9">
+<fieldset style="margin: 0; min-width: 0; padding: 12px 14px; border-radius: 12px; border: 1px solid {{g.border}}; background: {{g.bg}}; display: flex; flex-direction: column; gap: 6px">
+<legend style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">{{g.name}}</legend>
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 8px; padding-bottom: 6px; border-bottom: 1px solid #e3dfc9">
+<span style="font-size: 15px; font-weight: 700">{{g.name}}</span>
+<span style="font-size: 12px; color: #5b5f86">{{g.count}}</span>
+</div>
+<label style="display: flex; align-items: center; gap: 8px; min-height: 30px; font-size: 13px; font-weight: 600; color: #5b5f86; cursor: pointer"><input type="checkbox" checked="{{g.all}}" onClick="{{g.toggleAll}}" style="width: 18px; height: 18px; margin: 0; accent-color: #262a67">Select all</label>
+<sc-for list="{{g.events}}" as="e" hint-placeholder-count="3">
+<label style="display: flex; align-items: center; gap: 8px; min-height: 30px; cursor: pointer"><input type="checkbox" checked="{{e.on}}" onClick="{{e.toggle}}" style="width: 18px; height: 18px; margin: 0; flex-shrink: 0; accent-color: #262a67"><code style="font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; color: #262a67; overflow-wrap: anywhere">{{e.n}}</code></label>
+</sc-for>
+</fieldset>
+</sc-for>
+</div>
+</section>
+
+<section aria-labelledby="hd-h" style="background: #ffffff; border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 2px"><h2 id="hd-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">Custom headers <span style="font-size: 14px; font-weight: 500; color: #5b5f86">optional</span></h2><span style="font-size: 14px; color: #5b5f86">Sent with every delivery, for example to route events inside your ERP.</span></div>
+<sc-for list="{{headers}}" as="h" hint-placeholder-count="2">
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end">
+<label style="flex: 1 1 200px; display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">Header name<input type="text" value="{{h.k}}" placeholder="X-Example" style="height: 52px; min-width: 0; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 14px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 15px; font-weight: 400; color: #262a67"></label>
+<label style="flex: 2 1 260px; display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">Value<input type="text" value="{{h.v}}" style="height: 52px; min-width: 0; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 14px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 15px; font-weight: 400; color: #262a67"></label>
+<button type="button" onClick="{{h.remove}}" aria-label="{{h.aria}}" style="width: 52px; height: 52px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"></path></svg></button>
+</div>
+</sc-for>
+<button type="button" onClick="{{addHeader}}" style="align-self: flex-start; height: 44px; padding: 0 4px; border: 0; background: transparent; color: #c93a00; font: inherit; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 6px; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Add header</button>
+</section>
+
+</div>
+
+<div style="flex: 2 1 360px; min-width: 0; display: flex; flex-direction: column; gap: 24px">
+
+<section aria-labelledby="sec-h" style="background: #262a67; color: #f6f3e4; border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 12px">
+<h2 id="sec-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">Signing secret</h2>
+<span style="font-size: 14px; line-height: 20px; color: #b8bad6">Use it to verify the <strong style="color: #f6f3e4">X-TE-Signature</strong> header (HMAC-SHA256 of timestamp + body).</span>
+<div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap; padding: 12px; border-radius: 12px; background: #31367a">
+<code style="flex: 1 1 200px; min-width: 0; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 14px; overflow-wrap: anywhere">whsec_8Kq2fT7vXn4LpR9mZc1sYe6Hd3Ab0Wu5</code>
+<button type="button" onClick="{{copy}}" style="height: 40px; padding: 0 14px; border: 0; border-radius: 12px; background: #f6f3e4; color: #262a67; font: inherit; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 6px; cursor: pointer"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{copyIcon}}"></path></svg>{{copyLabel}}</button>
+</div>
+<span style="display: flex; gap: 8px; font-size: 14px; line-height: 20px; color: #f6f3e4"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f89e23" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 1px"><path d="M12 3l9.5 17h-19zM12 10v4M12 17h.01"></path></svg><span>Shown once. Copy it into your ERP now; after you leave this page you can only rotate it.</span></span>
+</section>
+
+<section aria-labelledby="rt-h" style="background: #ffffff; border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 12px">
+<h2 id="rt-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">Retries</h2>
+<span style="font-size: 14px; line-height: 20px; color: #5b5f86">If your server doesn't answer with 2xx within 10 seconds, we retry up to <strong style="color: #262a67">8 attempts over 24 hours</strong>, waiting longer each time (exponential backoff).</span>
+<ol aria-label="Retry schedule" style="margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 6px">
+<sc-for list="{{retries}}" as="r" hint-placeholder-count="8">
+<li style="display: flex; flex-direction: column; align-items: center; min-width: 52px; padding: 6px 8px; border-radius: 12px; background: #f6f3e4; font-size: 12px; color: #5b5f86"><strong style="font-size: 14px; color: #262a67">{{r.n}}</strong>{{r.t}}</li>
+</sc-for>
+</ol>
+<span style="font-size: 14px; line-height: 20px; color: #5b5f86">Events stay in order per booking. After 3 days of failures the endpoint is disabled and Mona Saleh is emailed. You can resend any delivery from the log.</span>
+</section>
+
+<section aria-labelledby="pl-h" style="background: #ffffff; border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; justify-content: space-between; align-items: baseline; gap: 8px; flex-wrap: wrap"><h2 id="pl-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">Sample payload</h2><code style="font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; font-weight: 600; color: #c93a00">booking.confirmed</code></div>
+<pre aria-label="Sample JSON payload for booking.confirmed" style="margin: 0; padding: 16px; border-radius: 12px; background: #262a67; color: #f6f3e4; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12.5px; line-height: 19px; overflow-x: auto; white-space: pre">{
+  "id": "evt_01JB7Q4M2X9R",
+  "type": "booking.confirmed",
+  "api_version": "2026-09-01",
+  "created": "2026-10-14T07:32:10Z",
+  "data": {
+    "booking_id": "BK-48213",
+    "trip": {
+      "id": "trp_alula_1610",
+      "name": "AlUla Heritage Weekend",
+      "departs": "2026-10-16T06:30:00+03:00"
+    },
+    "vehicle": "Bus 2",
+    "passengers": 4,
+    "seats": ["3C", "3D", "4C", "4D"],
+    "programs": ["hegra_tour", "insurance"],
+    "total": {
+      "amount": 5960.00,
+      "vat": 777.39,
+      "currency": "SAR"
+    },
+    "customer": {
+      "id": "cus_7Rk2Pq",
+      "name": "Sara Al-Qahtani"
+    }
+  }
+}</pre>
+</section>
+
+</div>
+</div>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1400}}'>
+class Component extends DCLogic {
+  constructor(p) {
+    super(p);
+    this.state = {
+      sel: { 'booking.created': true, 'booking.confirmed': true, 'booking.cancelled': true, 'payment.succeeded': true, 'invoice.issued': true, 'invoice.paid': true },
+      copied: false, tested: false,
+      headers: [ { k: 'X-Source-System', v: 'trips-enjoy' }, { k: 'X-Company-Code', v: 'SUNRISE-RUH' } ]
+    };
+  }
+  renderVals() {
+    const G = [
+      ['Bookings', ['booking.created', 'booking.confirmed', 'booking.cancelled', 'booking.refunded']],
+      ['Payments', ['payment.succeeded', 'payment.failed']],
+      ['Trips', ['trip.published', 'trip.updated', 'trip.status_changed', 'trip.completed']],
+      ['Check-in', ['passenger.checked_in', 'passenger.checked_out']],
+      ['Deals', ['deal.proposed', 'deal.countered', 'deal.finalized']],
+      ['Invoices & settlement', ['invoice.issued', 'invoice.paid', 'credit_note.issued', 'settlement.paid']],
+      ['Coupons', ['coupon.redeemed']],
+      ['Customers & leads', ['customer.created', 'customer.updated', 'lead.created', 'lead.status_changed']],
+      ['Reviews', ['review.posted']]
+    ];
+    const sel = this.state.sel;
+    const setSel = (next) => this.setState({ sel: next });
+    let total = 0;
+    const groups = G.map(([name, list]) => {
+      const n = list.filter((x) => sel[x]).length;
+      total += n;
+      const all = n === list.length;
+      return {
+        name, all, count: n + ' of ' + list.length,
+        border: n > 0 ? '#fb8030' : '#e3dfc9', bg: n > 0 ? '#fff7f2' : '#ffffff',
+        toggleAll: () => { const next = Object.assign({}, sel); list.forEach((x) => { next[x] = !all; }); setSel(next); },
+        events: list.map((x) => ({ n: x, on: !!sel[x], toggle: () => { const next = Object.assign({}, sel); next[x] = !sel[x]; setSel(next); } }))
+      };
+    });
+    const headers = this.state.headers.map((h, i) => ({ k: h.k, v: h.v, aria: 'Remove header ' + (h.k || (i + 1)),
+      remove: () => this.setState({ headers: this.state.headers.filter((_, j) => j !== i) }) }));
+    const retries = [['1', 'now'], ['2', '1 min'], ['3', '5 min'], ['4', '30 min'], ['5', '2 h'], ['6', '5 h'], ['7', '10 h'], ['8', '24 h']].map((r) => ({ n: r[0], t: r[1] }));
+    const copied = this.state.copied;
+    return {
+      groups, headers, retries,
+      selCount: total === 1 ? '1 event selected' : total + ' events selected',
+      addHeader: () => this.setState({ headers: this.state.headers.concat([ { k: '', v: '' } ]) }),
+      copy: () => this.setState({ copied: true }), copyLabel: copied ? 'Copied' : 'Copy',
+      copyIcon: copied ? 'M5 12.5l4.5 4.5L19 7' : 'M8 8h11v12H8zM5 16V4h11',
+      tested: this.state.tested, sendTest: () => this.setState({ tested: true })
+    };
+  }
+}
+</script>
+</body>
+</html>

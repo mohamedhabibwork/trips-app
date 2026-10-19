@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Web · Checkout</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+input[type=radio]{accent-color:#262a67;width:20px;height:20px;margin:0}
+</style>
+</helmet>
+<div style="min-height: 1000px; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+
+<header style="border-bottom: 1px solid #e3dfc9">
+<div style="max-width: 1200px; margin: 0 auto; box-sizing: border-box; padding: 14px 24px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px">
+<a href="WebHome.dc.html" aria-label="Trips Enjoy home" style="display: flex"><img src="../assets/1fbce194fcb16bf54904c32c189fca31.svg" alt="Trips Enjoy" style="height: 40px; width: auto"></a>
+<span style="flex-grow: 1; display: flex; align-items: center; gap: 6px; font-size: 15px; font-weight: 600; color: #5b5f86"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 11h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1zM8 11V7a4 4 0 0 1 8 0v4"></path></svg>Secure checkout</span>
+<span role="timer" aria-label="{{timerAria}}" style="{{timerStyle}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7v5l3 2"></path></svg>{{timerText}}</span>
+<a href="WebHomeAr.dc.html" lang="ar" dir="rtl" style="height: 44px; padding: 0 8px; display: flex; align-items: center; font-family: Cairo, sans-serif; font-size: 15px; font-weight: 600; color: #262a67; text-decoration: none">العربية</a>
+</div>
+</header>
+
+<main style="max-width: 1200px; margin: 0 auto; box-sizing: border-box; padding: 24px 24px 56px; display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: center">
+<div style="display: flex; align-items: center; gap: 12px">
+<a href="WebSeatPicker.dc.html" aria-label="Back to seats" style="width: 44px; height: 44px; border-radius: 999px; background: #ffffff; color: #262a67; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a>
+<div style="display: flex; flex-direction: column"><h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 700">Review and pay</h1><span style="font-size: 14px; color: #5b5f86">Siwa Oasis Escape · Thu 30 Oct – Sat 1 Nov · Nile Horizon Tours</span></div>
+</div>
+<ol aria-label="Checkout steps" style="margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; align-items: center; gap: 8px">
+<sc-for list="{{steps}}" as="s" hint-placeholder-count="4">
+<li aria-current="{{s.cur}}" style="{{s.style}}"><span style="{{s.dot}}">{{s.n}}</span>{{s.t}}</li>
+</sc-for>
+</ol>
+</div>
+
+<sc-if value="{{hasBanner}}" hint-placeholder-val="{{false}}">
+<div role="alert" style="{{bannerStyle}}">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="{{bannerIcon}}"></path></svg>
+<span style="flex: 1 1 360px; font-size: 15px; line-height: 22px"><strong>{{bannerTitle}}</strong> {{bannerText}}</span>
+<sc-if value="{{bannerHasLink}}" hint-placeholder-val="{{false}}"><a href="WebSeatPicker.dc.html" style="height: 44px; box-sizing: border-box; padding: 0 16px; border-radius: 12px; border: 1px solid currentColor; background: #ffffff; color: inherit; font-size: 15px; font-weight: 600; display: flex; align-items: center; text-decoration: none">Check seats again</a></sc-if>
+</div>
+</sc-if>
+
+<div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start">
+<div style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+
+<section aria-labelledby="tv-h" style="padding: 20px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; justify-content: space-between; align-items: center"><h2 id="tv-h" style="margin: 0; font-size: 20px; font-weight: 600">1 · Travelers <span style="font-weight: 400; color: #5b5f86">· 4</span></h2><a href="WebTrip.dc.html" style="font-size: 14px; font-weight: 600">Edit</a></div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px">
+<sc-for list="{{travellers}}" as="t" hint-placeholder-count="4">
+<div style="padding: 12px 14px; border-radius: 12px; border: 1px solid #e3dfc9; display: flex; align-items: center; gap: 12px">
+<span style="width: 36px; height: 36px; flex-shrink: 0; border-radius: 999px; background: #e6e8f5; overflow: hidden; display: block"><img src="{{t.av}}" alt="" style="width: 100%; height: 100%; border-radius: 999px; object-fit: cover; display: block"></span>
+<span style="flex-grow: 1; display: flex; flex-direction: column"><span style="font-size: 15px; font-weight: 600">{{t.n}}</span><span style="font-size: 13px; color: #5b5f86">{{t.d}}</span></span>
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1f7a4d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="Details complete" role="img"><path d="M5 12.5l4.5 4.5L19 7"></path></svg>
+</div>
+</sc-for>
+</div>
+</section>
+
+<section aria-labelledby="pg-h" style="padding: 20px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 4px">
+<div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 6px"><h2 id="pg-h" style="margin: 0; font-size: 20px; font-weight: 600">2 · Programs</h2><a href="WebTrip.dc.html" style="font-size: 14px; font-weight: 600">Change programs</a></div>
+<sc-for list="{{programs}}" as="p" hint-placeholder-count="5">
+<div style="padding: 10px 0; border-top: 1px solid #e3dfc9; display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: center">
+<span style="flex: 1 1 240px; display: flex; flex-direction: column"><span style="font-size: 15px; font-weight: 600">{{p.n}}</span><span style="font-size: 13px; color: #5b5f86">{{p.d}}</span></span>
+<sc-if value="{{p.hasTag}}" hint-placeholder-val="{{false}}"><span style="padding: 2px 10px; border-radius: 999px; background: #e6e8f5; font-size: 12px; font-weight: 600">{{p.tag}}</span></sc-if>
+<span style="min-width: 90px; text-align: end; font-size: 15px; font-weight: 600">{{p.p}} EGP</span>
+</div>
+</sc-for>
+</section>
+
+<section aria-labelledby="se-h" style="padding: 20px; border-radius: 20px; background: #ffffff; display: flex; flex-wrap: wrap; gap: 20px; align-items: center">
+<div style="flex: 1 1 260px; display: flex; flex-direction: column; gap: 8px">
+<div style="display: flex; justify-content: space-between; align-items: center"><h2 id="se-h" style="margin: 0; font-size: 20px; font-weight: 600">3 · Seats</h2><a href="WebSeatPicker.dc.html" style="font-size: 14px; font-weight: 600">Change seats</a></div>
+<span style="font-size: 16px; font-weight: 600">Bus 2 · 49-seat coach · seats 4A, 4B, 4C, 4D</span>
+<span style="font-size: 14px; line-height: 20px; color: #5b5f86">Your group sits together in row 4. Seats stay held until the timer runs out, then they go back on sale.</span>
+</div>
+<div role="img" aria-label="Seat map of Bus 2, rows 1 to 6. Your seats 4A, 4B, 4C and 4D are selected." style="flex: 0 1 auto; padding: 12px 16px; border-radius: 12px; background: #f6f3e4; display: flex; flex-direction: column; gap: 6px">
+<sc-for list="{{rows}}" as="r" hint-placeholder-count="6">
+<div style="display: flex; gap: 6px; align-items: center"><span style="width: 14px; font-size: 11px; color: #5b5f86">{{r.n}}</span><sc-for list="{{r.left}}" as="c" hint-placeholder-count="2"><span style="{{c}}"></span></sc-for><span style="width: 14px"></span><sc-for list="{{r.right}}" as="c" hint-placeholder-count="2"><span style="{{c}}"></span></sc-for></div>
+</sc-for>
+</div>
+</section>
+
+<section aria-labelledby="py-h" style="padding: 20px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px"><h2 id="py-h" style="margin: 0; font-size: 20px; font-weight: 600">4 · Pay</h2><span style="font-size: 13px; color: #5b5f86">{{attemptText}}</span></div>
+<span id="pm-l" style="font-size: 14px; font-weight: 600">How would you like to pay?</span>
+<div role="radiogroup" aria-labelledby="pm-l" style="display: flex; flex-direction: column; gap: 10px">
+<sc-for list="{{methods}}" as="m" hint-placeholder-count="3">
+<button type="button" role="radio" aria-checked="{{m.checked}}" onClick="{{m.pick}}" style="{{m.style}}"><span style="{{m.dot}}"></span><span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px"><span>{{m.t}}</span><span style="font-size: 13px; font-weight: 500; color: #5b5f86">{{m.d}}</span></span><span style="padding: 2px 10px; border-radius: 999px; background: #e6e8f5; font-size: 12px; font-weight: 600; white-space: nowrap">{{m.via}}</span></button>
+</sc-for>
+</div>
+<div style="padding: 14px 16px; border-radius: 12px; background: #e6e8f5; display: flex; gap: 12px; align-items: flex-start">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 2px"><path d="{{handoffIcon}}"></path></svg>
+<span style="display: flex; flex-direction: column; gap: 4px; font-size: 14px; line-height: 20px"><strong style="font-size: 15px">{{handoffTitle}}</strong><span>{{handoffText}}</span></span>
+</div>
+<sc-if value="{{fawryIssued}}" hint-placeholder-val="{{false}}">
+<div role="status" aria-labelledby="fw-h" style="padding: 16px; border-radius: 12px; border: 2px dashed #7b7fa6; display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: center">
+<div style="flex: 1 1 220px; display: flex; flex-direction: column; gap: 2px"><span id="fw-h" style="font-size: 13px; font-weight: 600; color: #5b5f86">Fawry reference</span><span style="font-size: 28px; font-weight: 700; letter-spacing: 2px; font-variant-numeric: tabular-nums">7731 4402 918</span></div>
+<div style="flex: 1 1 220px; display: flex; flex-direction: column; gap: 2px; font-size: 14px; line-height: 20px"><span><strong>Pay 25,285 EGP</strong> at any Fawry outlet or in the myFawry app</span><span style="color: #8a4b00; font-weight: 600">Valid until Sun 19 Oct, 10:29 (48 h)</span></div>
+<span style="flex-basis: 100%; font-size: 13px; line-height: 18px; color: #5b5f86">Your seats stay held for the whole 48 hours. The booking shows Payment pending until Fawry confirms; if the reference expires, the seats go back on sale.</span>
+<a href="WebPayStatus.dc.html" style="font-size: 14px; font-weight: 600">I've paid, check status</a>
+</div>
+</sc-if>
+</section>
+</div>
+
+<aside aria-labelledby="sm-h" style="flex: 1 1 360px; min-width: 0; position: sticky; top: 24px; padding: 24px; border-radius: 20px; background: #ffffff; box-shadow: 0 10px 30px rgba(38,42,103,0.10); display: flex; flex-direction: column; gap: 14px">
+<h2 id="sm-h" style="margin: 0; font-size: 20px; font-weight: 600">Order summary</h2>
+<div style="display: flex; flex-direction: column; gap: 8px; font-size: 15px">
+<sc-for list="{{lines}}" as="l" hint-placeholder-count="6"><span style="display: flex; justify-content: space-between; gap: 12px"><span style="color: #5b5f86">{{l.t}}</span><span>{{l.v}}</span></span></sc-for>
+</div>
+
+<div style="padding-top: 14px; border-top: 1px solid #e3dfc9; display: flex; flex-direction: column; gap: 8px">
+<sc-if value="{{couponOn}}" hint-placeholder-val="{{true}}">
+<div style="padding: 10px 12px; border-radius: 12px; background: #e3f3ea; color: #1f7a4d; display: flex; align-items: center; gap: 10px">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12V4a1 1 0 0 1 1-1h8l9 9-9 9zM7.5 7.5h.01"></path></svg>
+<span style="flex-grow: 1; display: flex; flex-direction: column"><strong style="font-size: 15px">SIWA500 applied</strong><span style="font-size: 13px">Nile Horizon Tours coupon · −500 EGP</span></span>
+<button type="button" onClick="{{removeCoupon}}" style="min-height: 44px; padding: 0 8px; border: 0; background: transparent; color: #262a67; font: inherit; font-size: 14px; font-weight: 600; text-decoration: underline; cursor: pointer">Remove</button>
+</div>
+</sc-if>
+<sc-if value="{{couponOff}}" hint-placeholder-val="{{false}}">
+<label for="cp" style="font-size: 14px; font-weight: 600">Coupon code</label>
+<div style="display: flex; gap: 8px">
+<input id="cp" type="text" value="MAHMOUD10" aria-invalid="true" aria-describedby="cp-err" style="flex-grow: 1; min-width: 0; height: 48px; box-sizing: border-box; border-radius: 8px; border: 1px solid #b42318; background: #ffffff; padding: 0 14px; font: inherit; font-size: 16px; color: #262a67; text-transform: uppercase">
+<button type="button" onClick="{{applyCoupon}}" style="height: 48px; padding: 0 16px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Apply</button>
+</div>
+<span id="cp-err" style="font-size: 13px; line-height: 18px; color: #b42318">This code is not applicable to this booking. Check the code, or try another one. One coupon per booking.</span>
+</sc-if>
+<span style="display: flex; justify-content: space-between; font-size: 15px; color: #1f7a4d"><span>Explorer plan · 5% off programs</span><span>−315 EGP</span></span>
+<span style="display: flex; justify-content: space-between; gap: 12px; font-size: 15px"><span style="color: #5b5f86">Tax (Egypt rate · [rate]%)</span><span>Included</span></span>
+</div>
+
+<div style="padding-top: 14px; border-top: 1px solid #e3dfc9; display: flex; flex-direction: column; gap: 6px">
+<label for="tx" style="font-size: 14px; font-weight: 600">Tax number <span style="font-weight: 400; color: #5b5f86">(optional, for a business invoice)</span></label>
+<input id="tx" type="text" inputmode="numeric" placeholder="e.g. 512-874-330" aria-describedby="tx-h" style="height: 48px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; padding: 0 14px; font: inherit; font-size: 16px; color: #262a67">
+<span id="tx-h" style="font-size: 13px; line-height: 18px; color: #5b5f86">Add it to get an invoice in your company's name. Leave it empty for a personal invoice.</span>
+</div>
+
+<div style="padding-top: 14px; border-top: 1px solid #e3dfc9; display: flex; justify-content: space-between; align-items: baseline">
+<span style="font-size: 17px; font-weight: 700">Total</span>
+<span style="font-size: 28px; font-weight: 700">{{total}} <span style="font-size: 15px; font-weight: 500; color: #5b5f86">EGP</span></span>
+</div>
+<span style="margin-top: -8px; font-size: 13px; line-height: 18px; color: #5b5f86">Cancel 48 h or more before departure for an 80% refund (policy placeholder).</span>
+<sc-if value="{{payEnabled}}" hint-placeholder-val="{{true}}">
+<sc-if value="{{isFawry}}" hint-placeholder-val="{{false}}">
+<button type="button" onClick="{{issueFawry}}" style="height: 52px; border: 0; border-radius: 12px; background: #ff6c2e; color: #262a67; font: inherit; font-size: 16px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v2a2.5 2.5 0 0 0 0 5v3a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-3a2.5 2.5 0 0 0 0-5zM14 5v14"></path></svg>{{fawryCta}}</button>
+</sc-if>
+<sc-if value="{{isGateway}}" hint-placeholder-val="{{true}}">
+<a href="WebBooked.dc.html" style="height: 52px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 11h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1zM8 11V7a4 4 0 0 1 8 0v4"></path></svg>{{payCta}}</a>
+<span style="font-size: 13px; line-height: 18px; color: #5b5f86">Opens {{gatewayName}}'s secure page in this tab. If {{gatewayName}} is slow to answer, you'll see <a href="WebPayStatus.dc.html">payment pending</a>; if it fails, you can retry while seats are held.</span>
+</sc-if>
+</sc-if>
+<sc-if value="{{payDisabled}}" hint-placeholder-val="{{false}}">
+<span role="button" aria-disabled="true" style="height: 52px; border-radius: 12px; background: #e3dfc9; color: #5b5f86; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px">Pay is paused</span>
+<span style="font-size: 13px; line-height: 18px; color: #5b5f86">Check your seats again to start a new 15-minute hold. Your cart is kept.</span>
+</sc-if>
+<span style="font-size: 13px; line-height: 18px; color: #5b5f86">By paying you accept the trip terms and Nile Horizon Tours' cancellation policy. Trips Enjoy never sees your card number.</span>
+</aside>
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1480},"state":{"editor":"enum","options":["ready","holdExpired","handoffFailed","lastAttempt"],"default":"ready"}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { coupon: true, method: 'paymob', fawry: false }; }
+  renderVals() {
+    const s = this.state;
+    const mode = this.props.state || 'ready';
+    const S = ['Travelers & programs', 'Seats', 'Review & pay'];
+    const steps = S.map((t, i) => {
+      const done = i < 2, cur = i === 2;
+      return { t, n: done ? '✓' : String(i + 1), cur: cur ? 'step' : 'false',
+        style: 'display: flex; align-items: center; gap: 8px; padding: 6px 14px 6px 6px; border-radius: 999px; font-size: 14px; font-weight: 600; ' + (cur ? 'background: #262a67; color: #f6f3e4;' : 'background: #ffffff; color: #262a67;'),
+        dot: 'width: 26px; height: 26px; border-radius: 999px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; ' + (cur ? 'background: #ff6c2e; color: #262a67;' : 'background: #e3f3ea; color: #1f7a4d;') };
+    });
+    const travellers = [
+      { i: 'MA', av: '../assets/6c1d1b4ec8611e67e7f6f2ac68edcb50.svg', n: 'Mariam Adel', d: 'Adult · lead traveler' }, { i: 'KH', av: '../assets/efa256a2f8e91a9b7c53c0666efed019.svg', n: 'Karim Hassan', d: 'Adult' },
+      { i: 'YK', av: '../assets/f265ad96f0a4653d686827dc8cddfe31.svg', n: 'Youssef Karim', d: 'Child · 8 years' }, { i: 'SK', av: '../assets/dfa2765c8a511633e1838be374d89602.svg', n: 'Salma Karim', d: 'Child · 5 years' }
+    ];
+    const programs = [
+      { n: 'Travel insurance', d: '4 × 150 EGP', p: '600', tag: 'Required' },
+      { n: 'Great Sand Sea safari', d: '4 people × 650 EGP', p: '2,600', tag: '' },
+      { n: 'Cleopatra Spring dinner · Standard', d: '4 × 450 EGP', p: '1,800', tag: 'Tiered' },
+      { n: 'Sandboarding session', d: '2 boards × 200 EGP', p: '400', tag: '' },
+      { n: 'Group photo package', d: 'One price for your group', p: '900', tag: 'Per group' },
+      { n: 'Shali fortress walk', d: 'Everyone', p: '0', tag: 'Free' }
+    ].map((p) => ({ ...p, hasTag: !!p.tag }));
+    const seat = (state) => 'width: 22px; height: 20px; border-radius: 5px; box-sizing: border-box; ' + ({ free: 'background: #ffffff; border: 1px solid #7b7fa6;', taken: 'background: #e3dfc9;', mine: 'background: #ff6c2e;' })[state];
+    const layout = [['taken', 'taken', 'taken', 'free'], ['free', 'taken', 'taken', 'taken'], ['free', 'free', 'taken', 'taken'], ['mine', 'mine', 'mine', 'mine'], ['taken', 'taken', 'taken', 'free'], ['free', 'free', 'taken', 'taken']];
+    const rows = layout.map((r, i) => ({ n: String(i + 1), left: r.slice(0, 2).map(seat), right: r.slice(2).map(seat) }));
+    const M = [
+      ['paymob', 'Card (Visa, Mastercard, Meeza)', 'Enter card details on Paymob’s secure page', 'Paymob'],
+      ['stripe', 'International card, Apple Pay or Google Pay', 'For cards issued outside Egypt', 'Stripe'],
+      ['fawry', 'Cash at Fawry', 'Get a reference code and pay at any Fawry outlet within 48 h', 'Fawry']
+    ];
+    const methods = M.map(([id, t, d, via]) => {
+      const on = s.method === id;
+      return { t, d, via, checked: on ? 'true' : 'false', pick: () => this.setState({ method: id, fawry: false }),
+        dot: 'width: 20px; height: 20px; flex-shrink: 0; box-sizing: border-box; border-radius: 999px; ' + (on ? 'border: 6px solid #262a67; background: #ffffff;' : 'border: 2px solid #7b7fa6; background: #ffffff;'),
+        style: 'min-height: 64px; box-sizing: border-box; padding: 10px 14px; border-radius: 12px; display: flex; align-items: center; gap: 12px; font: inherit; font-size: 15px; font-weight: 600; color: #262a67; text-align: start; cursor: pointer; ' + (on ? 'border: 2px solid #fb8030; background: #fff7f2;' : 'border: 1px solid #7b7fa6; background: #ffffff;') };
+    });
+    const isFawry = s.method === 'fawry';
+    const gatewayName = s.method === 'stripe' ? 'Stripe' : 'Paymob';
+    const lines = [
+      { t: '4 seats × 4,950 EGP', v: '19,800 EGP' }, { t: 'Travel insurance', v: '600 EGP' }, { t: 'Great Sand Sea safari', v: '2,600 EGP' },
+      { t: 'Cleopatra Spring dinner', v: '1,800 EGP' }, { t: 'Sandboarding × 2', v: '400 EGP' }, { t: 'Group photo package', v: '900 EGP' }
+    ];
+    const sub = 26100, prog = 315, coup = s.coupon ? 500 : 0;
+    const total = (sub - prog - coup).toLocaleString('en-US');
+    const B = {
+      holdExpired: { t: 'Your seat hold ended at 10:42.', x: 'Pay is turned off while we check your seats again. If they are still free, a new 15-minute hold starts and your cart stays as it is.', tone: 'bad', link: true, icon: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7v5l3 2' },
+      handoffFailed: { t: 'We couldn’t open ' + gatewayName + '’s payment page.', x: 'Nothing was charged. Try again, or choose another way to pay. Your seats stay held for 12:41.', tone: 'bad', link: false, icon: 'M12 3l9.5 17h-19zM12 10v4M12 17h.01' },
+      lastAttempt: { t: 'This is your last payment attempt for this hold.', x: 'Two attempts did not go through. If this one fails too, the booking stays Payment failed until the hold ends at 10:42.', tone: 'warn', link: false, icon: 'M12 3l9.5 17h-19zM12 10v4M12 17h.01' }
+    }[mode];
+    const tones = { bad: 'background: #fde8e6; color: #b42318;', warn: 'background: #fdf0d5; color: #8a4b00;' };
+    const expired = mode === 'holdExpired';
+    const handoff = isFawry
+      ? { t: 'You’ll get a Fawry reference code', x: 'Pay in cash at any Fawry outlet or in the myFawry app within 48 hours. Your seats are held until then.', icon: 'M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v2a2.5 2.5 0 0 0 0 5v3a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-3a2.5 2.5 0 0 0 0-5zM14 5v14' }
+      : { t: 'You’ll pay on ' + gatewayName + '’s secure page', x: 'Card details are entered only on ' + gatewayName + '’s page, never on Trips Enjoy. You come back here when the payment is done.', icon: 'M6 11h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1zM8 11V7a4 4 0 0 1 8 0v4' };
+    return { steps, travellers, programs, rows, methods, lines, total,
+      couponOn: s.coupon, couponOff: !s.coupon,
+      removeCoupon: () => this.setState({ coupon: false }), applyCoupon: () => this.setState({ coupon: true }),
+      hasBanner: !!B, bannerTitle: B ? B.t : '', bannerText: B ? B.x : '', bannerHasLink: !!B && B.link, bannerIcon: B ? B.icon : '',
+      bannerStyle: 'padding: 14px 18px; border-radius: 12px; display: flex; flex-wrap: wrap; gap: 12px 16px; align-items: center; ' + (B ? tones[B.tone] : ''),
+      timerText: expired ? 'Hold ended' : isFawry && s.fawry ? 'Seats held · 48 h' : 'Seats held · 12:41',
+      timerAria: expired ? 'Your seat hold has ended' : 'Your 4 seats are held for 12 minutes 41 seconds',
+      timerStyle: 'padding: 8px 14px; border-radius: 999px; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px; font-variant-numeric: tabular-nums; ' + (expired ? 'background: #fde8e6; color: #b42318;' : 'background: #fdf0d5; color: #8a4b00;'),
+      attemptText: mode === 'lastAttempt' ? 'Attempt 3 of 3' : mode === 'handoffFailed' ? 'Attempt 2 of 3' : 'Attempt 1 of 3',
+      handoffTitle: handoff.t, handoffText: handoff.x, handoffIcon: handoff.icon,
+      payEnabled: !expired, payDisabled: expired, isFawry, isGateway: !isFawry, gatewayName,
+      payCta: 'Pay ' + total + ' EGP on ' + gatewayName,
+      fawryCta: s.fawry ? 'Reference issued' : 'Get Fawry reference',
+      fawryIssued: isFawry && s.fawry && !expired,
+      issueFawry: () => this.setState({ fawry: true }) };
+  }
+}
+</script>
+</body>
+</html>

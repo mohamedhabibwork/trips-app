@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Web · Privacy</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+footer a:focus-visible{outline-color:#f89e23}
+.te-nav:hover{color:#c93a00}
+.te-side:hover{background:#f6f3e4}
+input[type=checkbox]{accent-color:#262a67;width:20px;height:20px;margin:0}
+</style>
+</helmet>
+<div style="min-height: 1000px; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif; display: flex; flex-direction: column">
+
+<header style="border-bottom: 1px solid #e3dfc9">
+<div style="max-width: 1200px; margin: 0 auto; box-sizing: border-box; padding: 14px 24px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 32px">
+<a href="WebHome.dc.html" aria-label="Trips Enjoy home" style="display: flex"><img src="../assets/1fbce194fcb16bf54904c32c189fca31.svg" alt="Trips Enjoy" style="height: 40px; width: auto"></a>
+<nav aria-label="Main" style="flex-grow: 1; display: flex; flex-wrap: wrap; gap: 4px 24px">
+<a href="WebExplore.dc.html" class="te-nav" style="padding: 10px 0; font-size: 15px; font-weight: 600; color: #262a67; text-decoration: none">Explore trips</a>
+<a href="WebBookings.dc.html" class="te-nav" style="padding: 10px 0; font-size: 15px; font-weight: 600; color: #262a67; text-decoration: none">My bookings</a>
+<a href="WebAlbums.dc.html" class="te-nav" style="padding: 10px 0; font-size: 15px; font-weight: 600; color: #262a67; text-decoration: none">Albums</a>
+</nav>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px">
+<a href="WebHomeAr.dc.html" lang="ar" dir="rtl" style="height: 44px; padding: 0 12px; display: flex; align-items: center; font-family: Cairo, sans-serif; font-size: 15px; font-weight: 600; color: #262a67; text-decoration: none">العربية</a>
+<a href="WebProfile.dc.html" style="height: 48px; box-sizing: border-box; padding: 0 14px 0 4px; border-radius: 999px; background: #ffffff; display: flex; align-items: center; gap: 10px; color: #262a67; font-size: 15px; font-weight: 600; text-decoration: none"><img src="../assets/6c1d1b4ec8611e67e7f6f2ac68edcb50.svg" alt="" style="width: 40px; height: 40px; border-radius: 999px; object-fit: cover; display: block">Mariam<span style="padding: 2px 8px; border-radius: 999px; background: #f89e23; font-size: 12px; font-weight: 700">Explorer</span></a>
+</div>
+</div>
+</header>
+
+<main style="flex-grow: 1; width: 100%; max-width: 1200px; margin: 0 auto; box-sizing: border-box; padding: 32px 24px 48px; display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start">
+<nav aria-label="Account" style="flex: 1 1 220px; max-width: 280px; box-sizing: border-box; padding: 12px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 4px">
+<a href="WebProfile.dc.html" class="te-side" style="min-height: 44px; padding: 0 12px; border-radius: 12px; display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 600; color: #262a67; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0"></path></svg>Profile and notifications</a>
+<a href="WebPlans.dc.html" class="te-side" style="min-height: 44px; padding: 0 12px; border-radius: 12px; display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 600; color: #262a67; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"></path></svg>Plan</a>
+<a href="WebReceipts.dc.html" class="te-side" style="min-height: 44px; padding: 0 12px; border-radius: 12px; display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 600; color: #262a67; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zM14 3v5h5"></path></svg>Receipts and invoices</a>
+<a href="WebPrivacy.dc.html" aria-current="page" style="min-height: 44px; padding: 0 12px; border-radius: 12px; background: #ffe7dc; display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 700; color: #c93a00; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5.5c0 4.4-3 8-7 9.5-4-1.5-7-5.1-7-9.5V6zM9 12l2 2 4-4"></path></svg>Privacy</a>
+<a href="WebBecomeProvider.dc.html" class="te-side" style="min-height: 44px; padding: 0 12px; border-radius: 12px; display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 600; color: #262a67; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Become a provider</a>
+</nav>
+
+<div style="flex: 999 1 600px; min-width: 0; display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; flex-direction: column; gap: 2px"><h1 style="margin: 0; font-size: 32px; line-height: 40px; font-weight: 700">Privacy</h1><span style="font-size: 15px; color: #5b5f86">Get a copy of your data or delete your account. Read how we use data in the <a href="WebLegal.dc.html">privacy policy</a>.</span></div>
+
+<section aria-labelledby="cp-h" style="padding: 24px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; align-items: flex-start">
+<div style="flex: 1 1 360px; display: flex; flex-direction: column; gap: 4px"><h2 id="cp-h" style="margin: 0; font-size: 20px; font-weight: 600">Get a copy of your data</h2><span style="font-size: 15px; line-height: 22px; color: #5b5f86">Your profile, bookings, payments, receipts, notification settings and family members you added. We confirm it's you first, then send it within 30 days.</span></div>
+<sc-if value="{{canRequestCopy}}" hint-placeholder-val="{{true}}"><button type="button" onClick="{{requestCopy}}" style="height: 48px; padding: 0 18px; border: 0; border-radius: 12px; background: #262a67; color: #f6f3e4; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12M7 11l5 5 5-5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"></path></svg>Request a copy</button></sc-if>
+</div>
+<sc-if value="{{copyRequested}}" hint-placeholder-val="{{false}}">
+<div role="status" style="padding: 16px; border-radius: 12px; background: #f6f3e4; display: flex; flex-direction: column; gap: 12px">
+<span style="font-size: 15px; font-weight: 600">Requested Fri 17 Oct · due by Sun 16 Nov</span>
+<ol style="margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px">
+<sc-for list="{{copySteps}}" as="c" hint-placeholder-count="4"><li style="display: flex; flex-direction: column; gap: 6px"><span style="{{c.bar}}"></span><span style="font-size: 14px; font-weight: 600">{{c.t}}</span><span style="font-size: 13px; color: #5b5f86">{{c.d}}</span></li></sc-for>
+</ol>
+</div>
+</sc-if>
+</section>
+
+<section aria-labelledby="dl-h" style="padding: 24px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 16px">
+<h2 id="dl-h" style="margin: 0; font-size: 20px; font-weight: 600">Delete your account</h2>
+
+<sc-if value="{{isRequested}}" hint-placeholder-val="{{false}}">
+<div role="status" style="padding: 16px; border-radius: 12px; background: #fdf0d5; color: #8a4b00; display: flex; flex-wrap: wrap; gap: 12px 16px; align-items: center">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7v5l3 2"></path></svg>
+<span style="flex: 1 1 360px; font-size: 15px; line-height: 22px"><strong>Deletion requested on Fri 17 Oct. Your account is deleted on Mon 17 Nov.</strong> We'll sign you out now. Sign in any time before then to keep your account.</span>
+<a href="PubDeletionGrace.dc.html" style="font-size: 15px; font-weight: 600; color: #8a4b00">What you'll see at sign-in</a>
+</div>
+</sc-if>
+
+<sc-if value="{{isBlocked}}" hint-placeholder-val="{{false}}">
+<div role="alert" style="padding: 16px; border-radius: 12px; background: #fde8e6; color: #b42318; display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 22px">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M6 11h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1zM8 11V7a4 4 0 0 1 8 0v4"></path></svg>
+<span><strong>You can't delete your account during a trip.</strong> Siwa Oasis Escape is in progress. You can request deletion after it ends on Sat 1 Nov.</span>
+</div>
+</sc-if>
+
+<ul style="margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px">
+<sc-for list="{{facts}}" as="f" hint-placeholder-count="6">
+<li style="padding: 14px; border-radius: 12px; border: 1px solid #e3dfc9; display: flex; gap: 12px; align-items: flex-start">
+<span style="width: 36px; height: 36px; flex-shrink: 0; border-radius: 10px; background: #e6e8f5; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{f.icon}}"></path></svg></span>
+<span style="display: flex; flex-direction: column; gap: 2px"><strong style="font-size: 15px">{{f.t}}</strong><span style="font-size: 14px; line-height: 20px; color: #5b5f86">{{f.d}}</span></span>
+</li>
+</sc-for>
+</ul>
+
+<div style="padding: 14px 16px; border-radius: 12px; background: #f6f3e4; display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; font-size: 15px">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v2a2.5 2.5 0 0 0 0 5v3a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-3a2.5 2.5 0 0 0 0-5zM14 5v14"></path></svg>
+<span style="flex: 1 1 320px"><strong>1 upcoming booking:</strong> Siwa Oasis Escape (TE-50217) is cancelled and refunded in full when your account is deleted.</span>
+<a href="WebBooking.dc.html" style="font-size: 14px; font-weight: 600">View booking</a>
+</div>
+
+<sc-if value="{{canDelete}}" hint-placeholder-val="{{true}}">
+<label style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 22px; cursor: pointer"><input type="checkbox" checked="{{agree}}" onChange="{{toggleAgree}}" style="margin-top: 1px">I understand my account is deleted after 30 days unless I sign in, and that my upcoming booking will be cancelled.</label>
+<div style="display: flex; flex-wrap: wrap; gap: 12px">
+<sc-if value="{{agree}}" hint-placeholder-val="{{false}}"><a href="ShWebConfirm.dc.html" style="height: 48px; padding: 0 22px; border-radius: 12px; background: #b42318; color: #ffffff; font-size: 16px; font-weight: 600; display: flex; align-items: center; text-decoration: none">Request deletion</a></sc-if>
+<sc-if value="{{notAgree}}" hint-placeholder-val="{{true}}"><span role="button" aria-disabled="true" style="height: 48px; padding: 0 22px; border-radius: 12px; background: #e3dfc9; color: #5b5f86; font-size: 16px; font-weight: 600; display: flex; align-items: center">Request deletion</span></sc-if>
+<a href="WebProfile.dc.html" style="height: 48px; box-sizing: border-box; padding: 0 20px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-size: 15px; font-weight: 600; display: flex; align-items: center; text-decoration: none">Keep my account</a>
+</div>
+</sc-if>
+</section>
+</div>
+</main>
+
+<footer style="background: #262a67; color: #f6f3e4">
+<div style="max-width: 1200px; margin: 0 auto; box-sizing: border-box; padding: 24px; display: flex; flex-wrap: wrap; gap: 16px 32px; align-items: center; justify-content: space-between; font-size: 13px; color: #b8bad6">
+<img src="../assets/6ea846350ba3adc0e289d47fa0612c3b.svg" alt="Trips Enjoy" style="height: 32px; width: auto">
+<span>© 2026 Trips Enjoy · Cairo, Egypt</span>
+<nav aria-label="Footer" style="display: flex; flex-wrap: wrap; gap: 20px"><a href="WebLegal.dc.html" style="color: #b8bad6">Privacy</a><a href="WebLegal.dc.html" style="color: #b8bad6">Terms</a><a href="WebBecomeProvider.dc.html" style="color: #b8bad6">Become a provider</a><a href="WebHomeAr.dc.html" lang="ar" dir="rtl" style="color: #b8bad6; font-family: Cairo, sans-serif">العربية</a></nav>
+</div>
+</footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1060},"state":{"editor":"enum","options":["none","copyRequested","deletionRequested","deletionBlocked"],"default":"none"}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { copy: false, agree: false }; }
+  renderVals() {
+    const m = this.props.state || 'none';
+    const copy = this.state.copy || m === 'copyRequested';
+    const bar = (k) => 'height: 6px; border-radius: 999px; ' + ({ done: 'background: #1f7a4d;', now: 'background: #ff6c2e;', later: 'background: #e3dfc9;' })[k];
+    const copySteps = [['done', 'Requested', 'Fri 17 Oct'], ['now', 'Confirm it’s you', 'Code sent to your email'], ['later', 'Preparing', 'Usually a few days'], ['later', 'Ready to download', 'By Sun 16 Nov']].map(([k, t, d]) => ({ t, d, bar: bar(k) }));
+    const facts = [
+      ['M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7v5l3 2', '30 days to change your mind', 'Sign in before day 31 and your account is restored as it was.'],
+      ['M6 11h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1zM8 11V7a4 4 0 0 1 8 0v4', 'No bookings meanwhile', 'You can’t book or pay while deletion is pending.'],
+      ['M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13', 'Deleted on day 31', 'Your profile, family members, settings and album access are removed.'],
+      ['M6 4h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM4 11h16M8 18v2M16 18v2M8 14.5h.01M16 14.5h.01', 'Trip records kept 5 years', 'Organizers must keep who traveled on each trip.'],
+      ['M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zM14 3v5h5', 'Financial records kept 7 years', 'Invoices, payments and refunds, as the law requires.'],
+      ['M12 4v12M7 11l5 5 5-5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3', 'Want your data first?', 'Request a copy above before you delete your account.']
+    ].map(([icon, t, d]) => ({ icon, t, d }));
+    const agree = this.state.agree;
+    return { copySteps, facts, copyRequested: copy, canRequestCopy: !copy, requestCopy: () => this.setState({ copy: true }),
+      isRequested: m === 'deletionRequested', isBlocked: m === 'deletionBlocked', canDelete: m === 'none' || m === 'copyRequested',
+      agree, notAgree: !agree, toggleAgree: () => this.setState({ agree: !agree }) };
+  }
+}
+</script>
+</body>
+</html>

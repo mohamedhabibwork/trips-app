@@ -78,6 +78,7 @@ export function createDriverService(deps: { db: ServiceDatabase }) {
         driverAccountId: input.driverAccountId,
         requestedByAdminAccountId: adminAccountId,
         deadlineAt: new Date(input.deadlineAt),
+        testType: input.testType,
       });
       await repo.syncDriverLabStatus(
         input.driverAccountId,

@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Admin · Trip oversight</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+.te-row:hover{background:#faf8ef}
+</style>
+</helmet>
+<div style="position: relative; min-height: 1000px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="AdmNav" active="Trips" hint-size="248px,1000px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 20px">
+
+<a href="AdmTrips.dc.html" style="align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 600; text-decoration: none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg>All trips</a>
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 4px; min-width: 0">
+<div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center">
+<h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">AlUla Heritage Weekend</h1>
+<span style="display: inline-flex; align-items: center; gap: 6px; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; background: #ffe7dc; color: #c93a00"><span style="width: 8px; height: 8px; border-radius: 999px; background: #c93a00"></span>In progress · day 1 of 3</span>
+<sc-if value="{{paused}}" hint-placeholder-val="{{false}}"><span style="display: inline-flex; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; background: #fdf0d5; color: #8a4b00">Sales paused</span></sc-if>
+</div>
+<span style="font-size: 15px; color: #5b5f86">TRP-20418 · <a href="AdmOrg.dc.html" style="font-weight: 600">Sunrise Tours Co.</a> (Growth) · Thu 16 – Sat 18 Oct · Riyadh → AlUla · 4 buses · 172 seats</span>
+<span id="cx-why" style="display: inline-flex; align-items: center; gap: 6px; font-size: 14px; color: #262a67"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 11v5M12 8h.01"></path></svg><span><strong>Trips in progress cannot be cancelled; use incident handling.</strong> <a href="../mobile/ModIncident.dc.html" style="font-weight: 600">Incident reports</a> can cancel single passengers or a vehicle.</span></span>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 10px">
+<a href="OrgTrip.dc.html" style="height: 48px; box-sizing: border-box; padding: 0 16px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 11h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1zM8 11V7a4 4 0 0 1 8 0v4"></path></svg>View as organization (read-only)</a>
+<button type="button" aria-pressed="{{pausedStr}}" onClick="{{togglePause}}" style="height: 48px; padding: 0 16px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer">{{pauseLabel}}</button>
+<button type="button" aria-disabled="true" aria-describedby="cx-why" onClick="{{openBlocked}}" style="height: 48px; padding: 0 16px; border-radius: 12px; border: 1px dashed #7b7fa6; background: #f6f3e4; color: #5b5f86; font: inherit; font-size: 15px; font-weight: 600; cursor: not-allowed; display: flex; align-items: center; gap: 8px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 11h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1zM8 11V7a4 4 0 0 1 8 0v4"></path></svg>Cancel trip</button>
+<a href="AdmSupport.dc.html" style="height: 48px; box-sizing: border-box; padding: 0 18px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16v12H4zM4 7l8 6 8-6"></path></svg>Contact organizer</a>
+</div>
+</div>
+
+<sc-if value="{{paused}}" hint-placeholder-val="{{false}}">
+<div role="status" style="display: flex; gap: 10px; align-items: center; padding: 12px 16px; border-radius: 12px; background: #fdf0d5; color: #8a4b00; font-size: 14px; font-weight: 500"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9.5 17h-19zM12 10v4M12 17h.01"></path></svg>Sales are paused by Reem Othman. The 4 remaining seats are hidden from search; existing bookings and the running trip are not affected. Sunrise Tours Co. was notified.</div>
+</sc-if>
+
+<section aria-labelledby="lc-h" style="background: #ffffff; border-radius: 20px; padding: 18px 20px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px"><h2 id="lc-h" style="margin: 0; font-size: 18px; font-weight: 600">Lifecycle</h2><span style="font-size: 13px; color: #5b5f86">Next: Partially completed when Bus 1 checks out in Riyadh · Sat 18 Oct ~21:00</span></div>
+<ol style="list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(84px, 1fr)); gap: 6px">
+<sc-for list="{{steps}}" as="s" hint-placeholder-count="11">
+<li aria-current="{{s.cur}}" style="display: flex; flex-direction: column; gap: 6px"><span style="{{s.bar}}"></span><span style="{{s.ls}}">{{s.l}}</span><span style="font-size: 12px; color: #5b5f86">{{s.d}}</span></li>
+</sc-for>
+</ol>
+</section>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px">
+<sc-for list="{{kpis}}" as="k" hint-placeholder-count="5">
+<div style="padding: 14px 16px; border-radius: 16px; background: #ffffff; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 13px; color: #5b5f86">{{k.l}}</span><span style="font-size: 22px; font-weight: 700">{{k.v}}</span><span style="{{k.ds}}">{{k.d}}</span></div>
+</sc-for>
+</div>
+
+<section aria-labelledby="bus-h" style="background: #ffffff; border-radius: 20px; padding: 18px 0 6px">
+<div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; padding: 0 20px 10px"><h2 id="bus-h" style="margin: 0; font-size: 18px; font-weight: 600">Buses &amp; live tracking</h2><a href="OrgTripLive.dc.html" style="font-size: 14px; font-weight: 600">Open live map (read-only)</a></div>
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 900px; border-collapse: collapse; font-size: 14px">
+<thead><tr style="color: #5b5f86; font-size: 13px"><th scope="col" style="text-align: start; padding: 8px 20px; font-weight: 600">Bus</th><th scope="col" style="text-align: start; padding: 8px 12px; font-weight: 600">Driver</th><th scope="col" style="text-align: start; padding: 8px 12px; font-weight: 600">Moderator</th><th scope="col" style="text-align: start; padding: 8px 12px; font-weight: 600">On board</th><th scope="col" style="text-align: start; padding: 8px 12px; font-weight: 600">Tracking</th><th scope="col" style="text-align: start; padding: 8px 20px; font-weight: 600">Status</th></tr></thead>
+<tbody>
+<sc-for list="{{buses}}" as="b" hint-placeholder-count="4">
+<tr class="te-row" style="border-top: 1px solid #e3dfc9">
+<td style="padding: 10px 20px"><span style="display: flex; flex-direction: column"><span style="font-weight: 600">{{b.n}}</span><span style="font-size: 12px; color: #5b5f86">{{b.v}}</span></span></td>
+<td style="padding: 10px 12px"><span style="display: flex; flex-direction: column"><a href="{{b.dh}}" style="color: #262a67; font-weight: 500">{{b.dr}}</a><span style="font-size: 12px; color: #5b5f86">{{b.dt}}</span></span></td>
+<td style="padding: 10px 12px">{{b.m}}</td>
+<td style="padding: 10px 12px; white-space: nowrap">{{b.ob}}</td>
+<td style="padding: 10px 12px"><span style="{{b.ts}}">{{b.t}}</span></td>
+<td style="padding: 10px 20px"><span style="{{b.ss}}">{{b.s}}</span></td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+</section>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
+<div style="flex: 3 1 480px; min-width: 0; display: flex; flex-direction: column; gap: 20px">
+
+<section aria-labelledby="mon-h" style="background: #ffffff; border-radius: 20px; padding: 18px 20px; display: flex; flex-direction: column; gap: 8px">
+<div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px"><h2 id="mon-h" style="margin: 0; font-size: 18px; font-weight: 600">Bookings &amp; GMV</h2><a href="AdmSettlements.dc.html" style="font-size: 14px; font-weight: 600">Settlement</a></div>
+<sc-for list="{{money}}" as="m" hint-placeholder-count="6">
+<div style="{{m.rs}}"><span>{{m.l}}</span><span style="white-space: nowrap">{{m.v}}</span></div>
+</sc-for>
+<span style="font-size: 13px; color: #5b5f86">Settlement opens when the trip is Completed and closes once every payout is made and no dispute is open.</span>
+</section>
+
+<section aria-labelledby="deal-h" style="background: #ffffff; border-radius: 20px; padding: 18px 20px; display: flex; flex-direction: column; gap: 4px">
+<div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; padding-bottom: 6px"><h2 id="deal-h" style="margin: 0; font-size: 18px; font-weight: 600">Deals</h2><a href="AdmDeals.dc.html" style="font-size: 14px; font-weight: 600">Deal audit</a></div>
+<sc-for list="{{deals}}" as="d" hint-placeholder-count="3">
+<div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding: 8px 0; border-top: 1px solid #e3dfc9; font-size: 14px"><span style="flex: 1 1 220px; display: flex; flex-direction: column"><span style="font-weight: 600">{{d.n}}</span><span style="font-size: 12px; color: #5b5f86">{{d.sub}}</span></span><span style="font-weight: 600; white-space: nowrap">{{d.a}}</span><span style="{{d.ss}}">{{d.s}}</span></div>
+</sc-for>
+</section>
+
+<section aria-labelledby="wh-h" style="background: #ffffff; border-radius: 20px; padding: 18px 20px; display: flex; flex-direction: column; gap: 4px">
+<div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; padding-bottom: 6px"><h2 id="wh-h" style="margin: 0; font-size: 18px; font-weight: 600">Webhooks fired</h2><a href="AdmWebhooks.dc.html" style="font-size: 14px; font-weight: 600">Webhook health</a></div>
+<sc-for list="{{hooks}}" as="w" hint-placeholder-count="4">
+<div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding: 7px 0; border-top: 1px solid #e3dfc9; font-size: 14px"><code style="flex: 1 1 200px; font-family: ui-monospace, Menlo, monospace; font-size: 13px">{{w.e}}</code><span style="color: #5b5f86; font-size: 13px">{{w.d}}</span><span style="{{w.ss}}">{{w.s}}</span></div>
+</sc-for>
+</section>
+</div>
+
+<div style="flex: 2 1 320px; min-width: 0; display: flex; flex-direction: column; gap: 20px">
+<section aria-labelledby="inc-h" style="background: #ffffff; border-radius: 20px; padding: 18px 20px; display: flex; flex-direction: column; gap: 4px">
+<h2 id="inc-h" style="margin: 0 0 6px; font-size: 18px; font-weight: 600">Incidents &amp; refunds</h2>
+<sc-for list="{{incidents}}" as="i" hint-placeholder-count="4">
+<div style="display: flex; gap: 10px; padding: 8px 0; border-top: 1px solid #e3dfc9"><span style="flex: 1; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; font-weight: 600">{{i.t}}</span><span style="font-size: 13px; line-height: 18px; color: #5b5f86">{{i.d}}</span></span><span style="{{i.ss}}">{{i.s}}</span></div>
+</sc-for>
+</section>
+
+<section aria-labelledby="alb-h" style="background: #ffffff; border-radius: 20px; padding: 18px 20px; display: flex; flex-direction: column; gap: 8px">
+<h2 id="alb-h" style="margin: 0; font-size: 18px; font-weight: 600">Albums</h2>
+<div style="display: flex; gap: 12px; align-items: center"><img src="../assets/44a218548719fe367b614a0dd5151345.svg" alt="AlUla Heritage Weekend album cover" style="width: 56px; height: 56px; flex-shrink: 0; border-radius: 12px; object-fit: cover"><span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; font-weight: 600">Noura Al-Shehri · Studio · Verified</span><span style="font-size: 13px; color: #5b5f86">Album opens at Post-processing · due within 7 days of Sat 18 Oct · privacy: Shared link</span></span></div>
+<a href="AdmModeration.dc.html" style="font-size: 14px; font-weight: 600">Moderation queue for this organization</a>
+</section>
+
+<section aria-labelledby="aud-h" style="background: #ffffff; border-radius: 20px; padding: 18px 20px; display: flex; flex-direction: column; gap: 4px">
+<div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; padding-bottom: 6px"><h2 id="aud-h" style="margin: 0; font-size: 18px; font-weight: 600">Audit trail</h2><a href="AdmAudit.dc.html" style="font-size: 14px; font-weight: 600">Full log</a></div>
+<sc-for list="{{audit}}" as="a" hint-placeholder-count="5">
+<div style="display: flex; flex-direction: column; padding: 7px 0; border-top: 1px solid #e3dfc9"><span style="font-size: 14px; font-weight: 500">{{a.t}}</span><span style="font-size: 12px; color: #5b5f86">{{a.d}}</span></div>
+</sc-for>
+</section>
+</div>
+</div>
+
+</main>
+
+<sc-if value="{{showBlocked}}" hint-placeholder-val="{{false}}">
+<div style="position: absolute; inset: 0; background: rgba(16,18,48,.45); display: flex; align-items: flex-start; justify-content: center; padding: 140px 24px 24px">
+<div role="dialog" aria-modal="true" aria-labelledby="bk-h" style="width: 100%; max-width: 520px; box-sizing: border-box; background: #ffffff; border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 14px">
+<h2 id="bk-h" style="margin: 0; font-size: 22px; font-weight: 600">This trip cannot be cancelled now</h2>
+<p style="margin: 0; font-size: 15px; color: #5b5f86; line-height: 22px">AlUla Heritage Weekend is in progress with 168 travellers on 4 buses. Trips in progress cannot be cancelled; use incident handling.</p>
+<ul style="margin: 0; padding: 0 0 0 18px; font-size: 14px; line-height: 22px">
+<li>Record what happened in an incident report.</li>
+<li>From the report, cancel single passengers or take one vehicle off the trip.</li>
+<li>Refunds for those passengers follow the incident outcome.</li>
+</ul>
+<div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end">
+<button type="button" onClick="{{closeCancel}}" style="height: 48px; padding: 0 18px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Close</button>
+<a href="../mobile/ModIncident.dc.html" style="height: 48px; box-sizing: border-box; padding: 0 18px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 15px; font-weight: 700; display: flex; align-items: center; text-decoration: none">Open incident handling</a>
+</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{showCancel}}" hint-placeholder-val="{{false}}">
+<div style="position: absolute; inset: 0; background: rgba(16,18,48,.45); display: flex; align-items: flex-start; justify-content: center; padding: 140px 24px 24px">
+<div role="dialog" aria-modal="true" aria-labelledby="fc-h" style="width: 100%; max-width: 560px; box-sizing: border-box; background: #ffffff; border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 14px">
+<span style="align-self: flex-start; padding: 2px 10px; border-radius: 999px; background: #e6e8f5; font-size: 12px; font-weight: 600">Shown for trips not yet in progress · e.g. this trip before Thu 16 Oct 06:30</span>
+<h2 id="fc-h" style="margin: 0; font-size: 22px; font-weight: 600; color: #b42318">Cancel AlUla Heritage Weekend?</h2>
+<p style="margin: 0; font-size: 15px; color: #5b5f86; line-height: 22px">The trip has not departed. Cancelling ends it for all 168 travellers and cannot be undone.</p>
+<ul style="margin: 0; padding: 0 0 0 18px; font-size: 14px; line-height: 22px">
+<li>Refunds are queued in full for all 61 bookings: 232,400 SAR, coupons reversed, credit notes issued. No policy deduction applies.</li>
+<li>Sunrise Tours Co., 4 drivers, 4 moderators and Noura Al-Shehri are notified.</li>
+<li>Fees for finalized deals after cancellation are not set yet; Finance decides case by case.</li>
+</ul>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="fc-why" style="font-size: 14px; font-weight: 600">Reason (required)</label><select id="fc-why" aria-invalid="true" aria-describedby="fc-err" style="height: 48px; border-radius: 8px; border: 1px solid #b42318; background: #fff; padding: 0 12px; font: inherit; font-size: 15px; color: #262a67"><option>Choose a reason</option><option>Safety risk on the route</option><option>Organization breach of terms</option><option>Authority instruction</option><option>Payment fraud</option></select><span id="fc-err" style="font-size: 13px; color: #b42318">Choose a reason. It is sent to the organization and recorded in the audit log.</span></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="fc-n" style="font-size: 14px; font-weight: 600">Message to travellers</label><textarea id="fc-n" rows="3" style="border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 10px 14px; font: inherit; font-size: 15px; color: #262a67"></textarea></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="fc-c" style="font-size: 14px; font-weight: 600">Type TRP-20418 to confirm</label><input id="fc-c" type="text" style="height: 48px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 14px; font: inherit; font-size: 15px; color: #262a67"></div>
+<div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end">
+<button type="button" onClick="{{closeCancel}}" style="height: 48px; padding: 0 18px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Keep trip</button>
+<button type="button" onClick="{{closeCancel}}" style="height: 48px; padding: 0 18px; border-radius: 12px; border: 0; background: #b42318; color: #ffffff; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Cancel trip and queue refunds</button>
+</div>
+</div>
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"cancelDialog":{"editor":"enum","options":["none","blocked (in progress)","before departure"],"default":"none"},"$preview":{"width":1440,"height":1580}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { paused: false, dlg: null }; }
+  renderVals() {
+    const tone = { ok: 'background: #e3f3ea; color: #1f7a4d;', warn: 'background: #fdf0d5; color: #8a4b00;', bad: 'background: #fde8e6; color: #b42318;', info: 'background: #e6e8f5; color: #262a67;', live: 'background: #ffe7dc; color: #c93a00;', mute: 'background: #f6f3e4; color: #5b5f86;' };
+    const pill = (t) => 'align-self: flex-start; display: inline-flex; white-space: nowrap; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; ' + tone[t];
+    const S = [
+      ['Draft', 'Fri 5 Sep', 'done'], ['Published', 'Sun 7 Sep', 'done'], ['Negotiating', '2 deals', 'done'], ['Ready', 'Wed 10 Sep', 'done'], ['Filling up', 'Thu 11 Sep', 'done'],
+      ['Sold out', 'Skipped · 168/172', 'skip'], ['In progress', 'Since 06:30', 'cur'], ['Partially completed', '', 'next'], ['Completed', '', 'next'], ['Post-processing', '', 'next'], ['Archived', '', 'next']
+    ];
+    const barC = { done: '#262a67', skip: '#e3dfc9', cur: '#ff6c2e', next: '#e3dfc9' };
+    const steps = S.map(([l, d, k]) => ({ l, d: d || (k === 'next' ? 'Upcoming' : ''), cur: k === 'cur' ? 'step' : 'false',
+      bar: 'display: block; height: 6px; border-radius: 999px; background: ' + barC[k],
+      ls: 'font-size: 13px; line-height: 16px; ' + (k === 'cur' ? 'font-weight: 700; color: #c93a00;' : k === 'done' ? 'font-weight: 600; color: #262a67;' : 'font-weight: 500; color: #5b5f86;') }));
+    const kpis = [
+      { l: 'Seats sold', v: '168 / 172', d: '61 bookings · 4 left', ds: 'font-size: 13px; color: #5b5f86' },
+      { l: 'GMV', v: '232,400 SAR', d: 'Programs 41,950 SAR', ds: 'font-size: 13px; color: #5b5f86' },
+      { l: 'On board now', v: '168 / 168', d: 'All checked in by 06:24', ds: 'font-size: 13px; font-weight: 600; color: #1f7a4d' },
+      { l: 'Tracking health', v: '3 of 4', d: 'Bus 4 GPS delayed 6 min', ds: 'font-size: 13px; font-weight: 600; color: #8a4b00' },
+      { l: 'Open incidents', v: '1', d: '2 resolved today', ds: 'font-size: 13px; font-weight: 600; color: #8a4b00' }
+    ];
+    const buses = [
+      { n: 'Bus 1', v: 'Mercedes Tourismo · 49 seats', dr: 'Khalid Al-Harbi', dh: 'AdmUser.dc.html', dt: 'Platform · Verified · deal finalized', m: 'Yara Al-Dosari', ob: '49 / 49', t: 'Live · 12 s ago', tt: 'ok', s: 'On route · 61%', st: 'live' },
+      { n: 'Bus 2', v: 'Mercedes Tourismo · 49 seats', dr: 'Saeed Mubarak', dh: 'AdmUsers.dc.html', dt: 'Own driver · Sunrise Tours', m: 'Nadia Yusuf', ob: '48 / 49', t: 'Live · 8 s ago', tt: 'ok', s: 'On route · 60%', st: 'live' },
+      { n: 'Bus 3', v: 'Volvo 9700 · 37 seats', dr: 'Turki Al-Otaibi', dh: 'AdmUsers.dc.html', dt: 'Platform · deal finalized', m: 'Hessa Al-Mutairi', ob: '35 / 37', t: 'Live · 20 s ago', tt: 'ok', s: 'Rest stop · Buraydah', st: 'info' },
+      { n: 'Bus 4', v: 'Volvo 9700 · 37 seats', dr: 'Fahad Al-Shahri', dh: 'AdmUsers.dc.html', dt: 'Own driver · Sunrise Tours', m: 'Majed Al-Anazi', ob: '36 / 37', t: 'Delayed · 6 min', tt: 'warn', s: 'On route · 54%', st: 'live' }
+    ].map((b) => ({ ...b, ts: pill(b.tt), ss: pill(b.st) }));
+    const row = 'display: flex; justify-content: space-between; gap: 12px; font-size: 14px; padding: 6px 0; border-top: 1px solid #e3dfc9;';
+    const money = [
+      ['Seats · 168 travellers', '196,800 SAR'], ['Programs · 7 programs', '41,950 SAR'], ['Coupons · AUTUMN15, ALULA150', '−6,350 SAR'], ['Gross bookings (GMV)', '232,400 SAR', 1],
+      ['Refunds · 2 bookings', '−2,500 SAR'], ['Platform commission · 10% of base trip price (placeholder)', '19,680 SAR']
+    ].map(([l, v, b]) => ({ l, v, rs: row + (b ? ' font-weight: 700;' : ' color: #262a67;') }));
+    const deals = [
+      { n: 'Khalid Al-Harbi · Bus 1 driver', sub: 'Proposed 3,800 · countered 4,400 · finalized Wed 10 Sep', a: '4,200 SAR', s: 'Finalized', t: 'ok' },
+      { n: 'Turki Al-Otaibi · Bus 3 driver', sub: 'Accepted first offer · finalized Tue 9 Sep', a: '3,600 SAR', s: 'Finalized', t: 'ok' },
+      { n: 'Noura Al-Shehri · Photographer', sub: '2 rounds · finalized Mon 8 Sep', a: '2,750 SAR', s: 'Finalized', t: 'ok' }
+    ].map((x) => ({ ...x, ss: pill(x.t) }));
+    const hooks = [
+      { e: 'passenger.checked_in', d: '168 events · Sunrise ERP', s: '200 OK', t: 'ok' },
+      { e: 'trip.status_changed', d: 'In progress · 06:30', s: '200 OK', t: 'ok' },
+      { e: 'booking.refunded', d: '2 events · accounting endpoint', s: '500 · retry 3 of 8', t: 'bad' },
+      { e: 'deal.finalized', d: '3 events · Sep', s: '200 OK', t: 'ok' }
+    ].map((x) => ({ ...x, ss: pill(x.t) }));
+    const incidents = [
+      { t: 'Bus 4 GPS updates delayed', d: 'Driver app on weak signal near Al Ghat. Moderator check-ins still syncing.', s: 'Open', t2: 'warn' },
+      { t: 'Bus 3 left Riyadh 14 min late', d: 'Two travellers re-routed from Bus 1 pickup. Reported by Hessa Al-Mutairi 06:44.', s: 'Resolved', t2: 'ok' },
+      { t: 'Refund · BK-90122 · 2 seats', d: 'Cancelled before deadline · 1,250 SAR to Mada card · Mon 13 Oct', s: 'Refunded', t2: 'ok' },
+      { t: 'Refund · BK-90175 · 1 seat', d: 'Cancelled before deadline · 1,250 SAR · gateway processing', s: 'Pending', t2: 'warn' }
+    ].map((x) => ({ ...x, ss: pill(x.t2) }));
+    const audit = [
+      { t: 'Trip status Ready → In progress (automatic)', d: 'System · Tue 14 Oct 06:30' },
+      { t: 'Bus 3 moderator changed to Hessa Al-Mutairi', d: 'Yousef Amin (Sunrise) · Mon 13 Oct 18:02' },
+      { t: 'Viewed as organization (read-only)', d: 'Dalia Fouad · Mon 13 Oct 11:40' },
+      { t: 'Seat price edited 1,200 → 1,250 SAR', d: 'Mona Saleh (Sunrise) · Thu 11 Sep 09:15' },
+      { t: 'Trip published · public', d: 'Mona Saleh (Sunrise) · Sun 7 Sep 20:01' }
+    ];
+    const paused = this.state.paused;
+    const dlg = this.state.dlg === null ? (this.props.cancelDialog ?? 'none') : this.state.dlg;
+    return { steps, kpis, buses, money, deals, hooks, incidents, audit, paused, pausedStr: paused ? 'true' : 'false', pauseLabel: paused ? 'Resume sales' : 'Pause sales',
+      togglePause: () => this.setState({ paused: !paused }), showBlocked: dlg === 'blocked (in progress)', showCancel: dlg === 'before departure', openBlocked: () => this.setState({ dlg: 'blocked (in progress)' }), closeCancel: () => this.setState({ dlg: 'none' }) };
+  }
+}
+</script>
+</body>
+</html>

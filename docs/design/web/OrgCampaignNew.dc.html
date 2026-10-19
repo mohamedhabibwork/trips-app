@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Organization · New campaign</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;family=Cairo:wght@400;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="min-height: 1000px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="OrgNav" active="Campaigns" hint-size="248px,1000px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 20px">
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 4px"><a href="OrgCampaigns.dc.html" style="font-size: 14px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg>Campaigns</a><h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">AlUla last family seats · autumn</h1></div>
+<span style="font-size: 14px; color: #5b5f86">Draft saved 10:42 · 1,240 of 2,000 messages used this month</span>
+</div>
+
+<ol aria-label="Campaign steps" style="list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px">
+<sc-for list="{{steps}}" as="s" hint-placeholder-count="4"><li><a href="{{s.href}}" aria-current="{{s.cur}}" style="{{s.st}}"><span style="{{s.ns}}">{{s.i}}</span>{{s.n}}</a></li></sc-for>
+</ol>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
+<div style="flex: 3 1 520px; min-width: 0; display: flex; flex-direction: column; gap: 20px">
+
+<section id="aud" aria-labelledby="aud-h" style="background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 14px">
+<h2 id="aud-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">1 · Audience</h2>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; align-items: end">
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">Segment<select style="height: 52px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 12px; font: inherit; font-size: 16px; color: #262a67"><option>Families with children · 1,104</option><option>Repeat travellers · 1,296</option><option>Lapsed 90+ days · 742</option><option>Jeddah VIP · 86</option></select></label>
+<div style="display: flex; gap: 16px; padding: 10px 14px; border-radius: 12px; background: #f6f3e4"><span style="display: flex; flex-direction: column"><span style="font-size: 13px; color: #5b5f86">In segment</span><span style="font-size: 20px; font-weight: 700">1,104</span></span><span style="display: flex; flex-direction: column"><span style="font-size: 13px; color: #5b5f86">Opted in · {{ch}}</span><span style="font-size: 20px; font-weight: 700; color: #1f7a4d">{{optin}}</span></span></div>
+</div>
+<label style="display: flex; gap: 10px; align-items: center; font-size: 15px"><input type="checkbox" checked style="width: 20px; height: 20px; accent-color: #262a67">Skip customers already booked on AlUla Heritage Weekend (138)</label>
+<div style="display: flex; gap: 10px; align-items: flex-start; padding: 12px 14px; border-radius: 12px; background: #e6e8f5; font-size: 14px; line-height: 20px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 1px"><path d="M12 3l7 3v5.5c0 4.4-3 8-7 9.5-4-1.5-7-5.1-7-9.5V6zM9 12l2 2 4-4"></path></svg><span>Only customers who opted in receive marketing. {{skipped}} people in this segment haven't opted in to {{ch}} and will be skipped. Every message has an unsubscribe link.</span></div>
+</section>
+
+<section id="msg" aria-labelledby="msg-h" style="background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 14px; border: 2px solid #fb8030">
+<h2 id="msg-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">2 · Message</h2>
+<div role="tablist" aria-label="Channel" style="display: flex; flex-wrap: wrap; gap: 6px">
+<sc-for list="{{channels}}" as="c" hint-placeholder-count="4"><button type="button" role="tab" aria-selected="{{c.sel}}" onClick="{{c.on}}" style="{{c.st}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{c.icon}}"></path></svg>{{c.n}} <span style="font-size: 12px; opacity: .8">{{c.cnt}}</span></button></sc-for>
+</div>
+<sc-if value="{{isEmail}}" hint-placeholder-val="{{false}}">
+<div style="display: flex; flex-direction: column; gap: 10px; padding: 14px; border-radius: 12px; background: #f6f3e4">
+<label style="display: flex; gap: 10px; align-items: center; font-size: 15px; font-weight: 600"><button type="button" role="switch" aria-checked="{{abOn}}" onClick="{{toggleAb}}" aria-label="A/B test subject line" style="{{abTrack}}"><span style="{{abKnob}}"></span></button>A/B test the subject · 20% test, winner by opens after 4 h</label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">Subject A<input value="14 family seats left for AlUla this week" style="height: 48px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 14px; font: inherit; font-size: 16px; color: #262a67"></label>
+<sc-if value="{{ab}}" hint-placeholder-val="{{true}}"><label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">Subject B<input value="Hegra, stars and 15% off for your family" style="height: 48px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 14px; font: inherit; font-size: 16px; color: #262a67"></label></sc-if>
+</div>
+</sc-if>
+<sc-if value="{{isWa}}" hint-placeholder-val="{{true}}"><span style="font-size: 13px; color: #5b5f86">Uses approved WhatsApp template trip_offer_v2 · one button: Book seats</span></sc-if>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px">
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">English<textarea rows="5" style="border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 10px 12px; font: inherit; font-size: 15px; line-height: 22px; color: #262a67; resize: vertical">{{enText}}</textarea></label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">Arabic<textarea dir="rtl" lang="ar" rows="5" style="border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 10px 12px; font-family: Cairo, sans-serif; font-size: 15px; line-height: 24px; color: #262a67; resize: vertical">{{arText}}</textarea></label>
+</div>
+<span style="font-size: 13px; color: #5b5f86">[First name] is filled per customer. Each customer gets the language set in their app.</span>
+</section>
+
+<section id="offer" aria-labelledby="of-h" style="background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+<h2 id="of-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">3 · Offer</h2>
+<div role="radiogroup" aria-label="Attach a coupon" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px">
+<sc-for list="{{coupons}}" as="c" hint-placeholder-count="3"><button type="button" role="radio" aria-checked="{{c.sel}}" onClick="{{c.on}}" style="{{c.st}}"><span style="font-weight: 700; letter-spacing: .4px">{{c.code}}</span><span style="font-size: 13px; color: #5b5f86">{{c.d}}</span></button></sc-for>
+</div>
+<sc-if value="{{couponLow}}" hint-placeholder-val="{{true}}"><div role="alert" style="display: flex; gap: 10px; align-items: flex-start; padding: 12px 14px; border-radius: 12px; background: #fdf0d5; color: #8a4b00; font-size: 14px; line-height: 20px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 1px"><path d="M12 3l9.5 17h-19zM12 10v4M12 17h.01"></path></svg><span>AUTUMN15 has 16 redemptions left and this goes to {{optin}} people. <a href="OrgCoupons.dc.html" style="color: #8a4b00; font-weight: 700">Raise the limit</a> or attach FAMILY10.</span></div></sc-if>
+</section>
+
+<section id="sched" aria-labelledby="sc-h" style="background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+<h2 id="sc-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">4 · Schedule</h2>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px">
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">Date<input value="Wed 15 Oct" style="height: 52px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 14px; font: inherit; font-size: 16px; color: #262a67"></label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">Time · Riyadh<input value="19:00" style="height: 52px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 14px; font: inherit; font-size: 16px; color: #262a67"></label>
+</div>
+<span style="font-size: 13px; color: #5b5f86">Quiet hours 22:00–08:00 are respected · sends finish within 30 minutes</span>
+</section>
+</div>
+
+<aside aria-labelledby="pv-h" style="flex: 2 1 340px; min-width: 0; display: flex; flex-direction: column; gap: 14px">
+<div style="background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap"><h2 id="pv-h" style="margin: 0; font-size: 18px; line-height: 26px; font-weight: 600">Preview · {{ch}}</h2>
+<div role="group" aria-label="Preview language" style="display: inline-flex; padding: 3px; border-radius: 999px; background: #f6f3e4; border: 1px solid #e3dfc9"><button type="button" aria-pressed="{{enOn}}" onClick="{{setEn}}" style="{{enSt}}">English</button><button type="button" aria-pressed="{{arOn}}" onClick="{{setAr}}" style="{{arSt}}">العربية</button></div></div>
+
+<sc-if value="{{isPhone}}" hint-placeholder-val="{{true}}">
+<div role="img" aria-label="{{phoneLabel}}" style="align-self: center; width: 100%; max-width: 290px; box-sizing: border-box; border-radius: 36px; background: #262a67; padding: 12px">
+<div style="border-radius: 26px; background: #e9e6d3; min-height: 420px; padding: 18px 14px; display: flex; flex-direction: column; gap: 10px">
+<span style="align-self: center; font-size: 12px; color: #5b5f86; font-weight: 600">{{phoneTop}}</span>
+<sc-if value="{{isPush}}" hint-placeholder-val="{{false}}"><div style="border-radius: 18px; background: rgba(255,255,255,0.9); padding: 12px; display: flex; gap: 10px; align-items: flex-start"><img src="../assets/d8314577d8376991a72b92ec8ec2dadb.svg" alt="" style="width: 32px; height: 32px; border-radius: 8px; flex-shrink: 0"><span dir="{{dir}}" style="{{bodyFont}} display: flex; flex-direction: column; gap: 2px; font-size: 13px; line-height: 18px"><span style="font-weight: 700">{{pushTitle}}</span><span>{{pushBody}}</span></span></div></sc-if>
+<sc-if value="{{isChat}}" hint-placeholder-val="{{true}}"><div dir="{{dir}}" style="{{bodyFont}} align-self: flex-start; max-width: 92%; border-radius: 14px; background: #ffffff; padding: 10px 12px; font-size: 13px; line-height: 19px; display: flex; flex-direction: column; gap: 8px"><span style="font-weight: 700">Sunrise Tours Co.</span><span>{{previewText}}</span><span style="font-size: 11px; color: #5b5f86">19:00</span></div>
+<sc-if value="{{isWa}}" hint-placeholder-val="{{true}}"><span style="align-self: flex-start; width: 92%; box-sizing: border-box; text-align: center; padding: 10px; border-radius: 12px; background: #ffffff; color: #c93a00; font-size: 14px; font-weight: 700">{{waButton}}</span></sc-if></sc-if>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{isEmail}}" hint-placeholder-val="{{false}}">
+<div style="border: 1px solid #e3dfc9; border-radius: 16px; overflow: hidden">
+<div style="padding: 10px 14px; background: #f6f3e4; font-size: 13px; display: flex; flex-direction: column; gap: 2px"><span style="color: #5b5f86">From: Sunrise Tours Co. via Trips Enjoy</span><span style="font-weight: 700">14 family seats left for AlUla this week</span></div>
+<div style="position: relative; height: 120px; background: #262a67; overflow: hidden"><img src="../assets/44a218548719fe367b614a0dd5151345.svg" alt="AlUla sandstone rock formations under a night sky" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover"></div>
+<div dir="{{dir}}" style="{{bodyFont}} padding: 14px; display: flex; flex-direction: column; gap: 10px; font-size: 14px; line-height: 21px"><span>{{previewText}}</span><sc-if value="{{hasCoupon}}" hint-placeholder-val="{{true}}"><span style="align-self: flex-start; padding: 6px 12px; border-radius: 8px; border: 1px dashed #7b7fa6; font-weight: 700; letter-spacing: .5px">{{code}}</span></sc-if><span style="align-self: flex-start; padding: 10px 16px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-weight: 700">{{waButton}}</span><span style="font-size: 12px; color: #5b5f86">{{unsub}}</span></div>
+</div>
+</sc-if>
+</div>
+
+<div style="background: #ffffff; border-radius: 20px; padding: 18px 20px; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; justify-content: space-between; font-size: 14px"><span style="color: #5b5f86">Messages this campaign</span><span style="font-weight: 700">{{optin}}</span></div>
+<div style="display: flex; justify-content: space-between; font-size: 14px"><span style="color: #5b5f86">Quota after sending</span><span style="font-weight: 700; color: {{quotaColor}}">{{quotaAfter}} / 2,000</span></div>
+<sc-if value="{{over}}" hint-placeholder-val="{{false}}"><div role="alert" style="padding: 10px 12px; border-radius: 12px; background: #fde8e6; color: #b42318; font-size: 14px; line-height: 20px">{{optin}} messages is more than the 760 left this month. Narrow the audience or <a href="OrgBilling.dc.html" style="color: #b42318; font-weight: 700">upgrade to Enterprise</a> for unlimited messages.</div></sc-if>
+<sc-if value="{{done}}" hint-placeholder-val="{{false}}"><div role="status" style="padding: 10px 12px; border-radius: 12px; background: #e3f3ea; color: #1f7a4d; font-size: 14px; font-weight: 600">Scheduled for Wed 15 Oct 19:00. You can edit it until then.</div></sc-if>
+<div style="display: flex; gap: 10px; flex-wrap: wrap">
+<a href="OrgCampaigns.dc.html" style="flex: 1 1 120px; height: 48px; box-sizing: border-box; border-radius: 12px; border: 1px solid #7b7fa6; background: #fff; color: #262a67; font-size: 15px; font-weight: 600; display: flex; align-items: center; justify-content: center; text-decoration: none">Save draft</a>
+<button type="button" onClick="{{schedule}}" aria-disabled="{{overStr}}" style="{{primarySt}}">Schedule campaign</button>
+</div>
+</div>
+</aside>
+</div>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1320}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { ch: 'WhatsApp', lang: 'en', ab: true, coupon: 'AUTUMN15', done: false }; }
+  renderVals() {
+    const { ch, lang, ab, coupon } = this.state;
+    const I = { Email: 'M4 6h16v12H4zM4 7l8 6 8-6', SMS: 'M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2', WhatsApp: 'M4 5h16v11H9l-5 4z', Push: 'M6 16v-5a6 6 0 0 1 12 0v5l2 2H4zM10 21a2 2 0 0 0 4 0' };
+    const OPT = { Email: 918, SMS: 486, WhatsApp: 642, Push: 704 };
+    const fmt = (n) => n.toLocaleString('en-US');
+    const n = OPT[ch];
+    const over = n > 760;
+    const channels = ['Email', 'SMS', 'WhatsApp', 'Push'].map((c) => { const on = c === ch; return { n: c, icon: I[c], cnt: fmt(OPT[c]), sel: on ? 'true' : 'false', on: () => this.setState({ ch: c, done: false }),
+      st: 'height: 40px; padding: 0 14px; border-radius: 999px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; ' + (on ? 'background: #262a67; color: #f6f3e4; border: 1px solid #262a67;' : 'background: #fff; color: #262a67; border: 1px solid #e3dfc9;') }; });
+    const C = { AUTUMN15: ['15% off', '15%', 'خصم 15%'], FAMILY10: ['10% off', '10%', 'خصم 10%'], none: null };
+    const cp = C[coupon];
+    const enOffer = cp ? ' Use ' + coupon + ' for ' + cp[0] + ' until Wed 15 Oct.' : '';
+    const arOffer = cp ? ' استخدموا الرمز ' + coupon + ' لـ' + cp[2] + ' حتى الأربعاء 15 أكتوبر.' : '';
+    const enText = 'Hi [First name], AlUla Heritage Weekend (Thu 16–Sat 18 Oct) has 14 family seats left on Bus 3. Children ride with live tracking for parents.' + enOffer;
+    const arText = 'مرحباً [الاسم الأول]، بقي 14 مقعداً عائلياً على الحافلة 3 في رحلة عطلة العُلا التراثية (الخميس 16 – السبت 18 أكتوبر). يسافر الأطفال مع تتبع مباشر للوالدين.' + arOffer;
+    const ar = lang === 'ar';
+    const previewText = (ar ? arText : enText).replace('[First name]', 'Sara').replace('[الاسم الأول]', 'سارة');
+    const coupons = [['AUTUMN15', '15% off · 16 left of 200'], ['FAMILY10', '10% off · 341 left · families'], ['none', 'No coupon']].map(([k, d]) => { const on = k === coupon; return { code: k === 'none' ? 'No coupon' : k, d, sel: on ? 'true' : 'false', on: () => this.setState({ coupon: k }),
+      st: 'display: flex; flex-direction: column; align-items: flex-start; gap: 2px; padding: 12px 14px; border-radius: 12px; font: inherit; font-size: 15px; color: #262a67; text-align: start; cursor: pointer; background: #fff; ' + (on ? 'border: 2px solid #fb8030;' : 'border: 1px solid #e3dfc9;') }; });
+    const stepSt = (on, done) => 'display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 12px; text-decoration: none; font-size: 15px; font-weight: 600; ' + (on ? 'background: #262a67; color: #f6f3e4;' : 'background: #ffffff; color: #262a67;');
+    const steps = [['Audience', '#aud'], ['Message', '#msg'], ['Offer', '#offer'], ['Schedule', '#sched']].map(([s, href], i) => ({ n: s, href, i: i === 0 ? '✓' : String(i + 1), cur: i === 1 ? 'step' : 'false', st: stepSt(i === 1),
+      ns: 'width: 24px; height: 24px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; ' + (i === 0 ? 'background: #e3f3ea; color: #1f7a4d;' : i === 1 ? 'background: #ff6c2e; color: #262a67;' : 'background: #f6f3e4; color: #5b5f86;') }));
+    const tog = (on) => 'height: 32px; padding: 0 12px; border-radius: 999px; border: 0; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; ' + (on ? 'background: #262a67; color: #f6f3e4;' : 'background: transparent; color: #262a67;');
+    const after = 1240 + n;
+    return {
+      steps, channels, coupons, ch, optin: fmt(n), skipped: fmt(1104 - n), enText, arText, previewText,
+      isEmail: ch === 'Email', isWa: ch === 'WhatsApp', isPush: ch === 'Push', isChat: ch === 'WhatsApp' || ch === 'SMS', isPhone: ch !== 'Email',
+      phoneLabel: ch + ' preview on a phone', phoneTop: ch === 'Push' ? 'Wed 15 Oct · 19:00' : (ch === 'SMS' ? 'SUNRISETRS' : 'Sunrise Tours Co. · verified business'),
+      pushTitle: ar ? 'العُلا: بقي 14 مقعداً عائلياً' : 'AlUla: 14 family seats left', pushBody: ar ? ('الخميس 16 – السبت 18 أكتوبر. ' + (cp ? coupon + ' ' + cp[2] : '')) : ('Thu 16–Sat 18 Oct. ' + (cp ? coupon + ' for ' + cp[0] + '.' : 'Tap to book.')),
+      waButton: ar ? 'احجز المقاعد' : 'Book seats', unsub: ar ? 'إلغاء الاشتراك من رسائل Sunrise Tours' : 'Unsubscribe from Sunrise Tours marketing',
+      dir: ar ? 'rtl' : 'ltr', bodyFont: ar ? 'font-family: Cairo, sans-serif;' : '',
+      hasCoupon: !!cp, code: coupon, couponLow: coupon === 'AUTUMN15',
+      ab, abOn: ab ? 'true' : 'false', toggleAb: () => this.setState({ ab: !ab }),
+      abTrack: 'width: 44px; height: 26px; flex-shrink: 0; border-radius: 999px; border: 0; padding: 3px; cursor: pointer; display: flex; ' + (ab ? 'background: #262a67; justify-content: flex-end;' : 'background: #7b7fa6; justify-content: flex-start;'),
+      abKnob: 'width: 20px; height: 20px; border-radius: 999px; background: #fff; display: block',
+      enOn: ar ? 'false' : 'true', arOn: ar ? 'true' : 'false', enSt: tog(!ar), arSt: tog(ar) + ' font-family: Cairo, sans-serif;',
+      setEn: () => this.setState({ lang: 'en' }), setAr: () => this.setState({ lang: 'ar' }),
+      quotaAfter: fmt(after), quotaColor: over ? '#b42318' : '#262a67', over, overStr: over ? 'true' : 'false', done: this.state.done && !over,
+      schedule: () => { if (!over) this.setState({ done: true }); },
+      primarySt: 'flex: 2 1 180px; height: 48px; border-radius: 12px; border: 0; font: inherit; font-size: 15px; font-weight: 700; ' + (over ? 'background: #e3dfc9; color: #5b5f86; cursor: not-allowed;' : 'background: #ff6c2e; color: #262a67; cursor: pointer;')
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Organization · My organizations</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="min-height: 1100px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="OrgNav" active="Settings" hint-size="248px,1100px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 24px">
+
+<div style="display: flex; flex-direction: column; gap: 4px">
+<a href="OrgSettings.dc.html" style="font-size: 14px; font-weight: 600">Settings</a>
+<h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">My organizations</h1>
+<p style="margin: 0; font-size: 15px; line-height: 22px; color: #5b5f86; max-width: 760px">Any organization on Trips Enjoy can invite your email. Each one gives you its own role, and you switch between them from the organization name at the top of the menu.</p>
+</div>
+
+<section aria-labelledby="ac-h" style="display: flex; flex-wrap: wrap; align-items: center; gap: 16px; padding: 20px; border-radius: 20px; background: #ffffff">
+<img src="../assets/1da5f4a1d52001ce8dfc722d595c772b.svg" alt="" style="width: 48px; height: 48px; flex-shrink: 0; border-radius: 999px; object-fit: cover">
+<div style="flex: 1 1 280px; display: flex; flex-direction: column; gap: 2px">
+<h2 id="ac-h" style="margin: 0; font-size: 18px; line-height: 24px; font-weight: 600">Mona Saleh</h2>
+<span style="font-size: 14px; color: #5b5f86">Sign-in email <strong style="color: #262a67">mona.saleh@outlook.com</strong> · verified · +966 50 ••• 3318</span>
+</div>
+<span style="padding: 4px 12px; border-radius: 999px; background: #e3f3ea; color: #1f7a4d; font-size: 13px; font-weight: 600">Authenticator on</span>
+<a href="#" style="height: 44px; box-sizing: border-box; padding: 0 16px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-size: 14px; font-weight: 600; display: flex; align-items: center; text-decoration: none">Change sign-in email</a>
+</section>
+
+<section aria-labelledby="ol-h" style="background: #ffffff; border-radius: 20px; padding: 20px 0 8px">
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 0 20px 12px"><h2 id="ol-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">Organizations you can open · {{count}}</h2><a href="OrgSwitcher.dc.html" style="font-size: 14px; font-weight: 600">Open switcher</a></div>
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 900px; border-collapse: collapse; font-size: 15px">
+<thead><tr style="color: #5b5f86; font-size: 13px"><th scope="col" style="text-align: start; padding: 10px 20px; font-weight: 600">Organization</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Your role</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Plan</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Sign-in rule</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Last opened</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Opens first</th><th scope="col" style="text-align: end; padding: 10px 20px; font-weight: 600"><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Actions</span></th></tr></thead>
+<tbody>
+<sc-for list="{{orgs}}" as="o" hint-placeholder-count="4">
+<tr style="border-top: 1px solid #e3dfc9">
+<td style="padding: 12px 20px"><span style="display: flex; align-items: center; gap: 10px"><img src="{{o.logo}}" alt="" style="{{o.tile}}"><span style="display: flex; flex-direction: column"><span style="font-weight: 600">{{o.n}}</span><span style="font-size: 13px; color: #5b5f86">{{o.city}}</span></span></span></td>
+<td style="padding: 12px">{{o.role}}</td>
+<td style="padding: 12px"><span style="{{o.ps}}">{{o.plan}}</span></td>
+<td style="padding: 12px; font-size: 14px; color: #5b5f86">{{o.rule}}</td>
+<td style="padding: 12px; font-size: 14px; color: #5b5f86">{{o.last}}</td>
+<td style="padding: 12px"><label style="display: flex; align-items: center; gap: 8px; font-size: 14px"><input type="radio" name="def" checked="{{o.def}}" onChange="{{o.pick}}" style="width: 18px; height: 18px; accent-color: #262a67"><span>{{o.defLabel}}</span></label></td>
+<td style="padding: 12px 20px; text-align: end; white-space: nowrap"><a href="{{o.href}}" style="font-size: 14px; font-weight: 600">Open</a><sc-if value="{{o.canLeave}}" hint-placeholder-val="{{true}}"><span style="color: #e3dfc9"> · </span><button onClick="{{o.leave}}" style="border: none; background: none; padding: 0; font-family: inherit; font-size: 14px; font-weight: 600; color: #b42318; cursor: pointer">Leave</button></sc-if></td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+<sc-if value="{{leaving}}" hint-placeholder-val="{{false}}">
+<div role="alert" style="margin: 12px 20px; padding: 14px 16px; border-radius: 12px; background: #fde8e6; display: flex; flex-wrap: wrap; align-items: center; gap: 12px">
+<span style="flex: 1 1 360px; font-size: 14px; line-height: 20px; color: #262a67"><strong>Leave {{leavingName}}?</strong> You lose access at once. Its owner can invite you again. Your past actions stay in its audit log.</span>
+<button onClick="{{confirmLeave}}" style="height: 40px; padding: 0 16px; border-radius: 12px; border: none; background: #b42318; color: #ffffff; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer">Leave organization</button>
+<button onClick="{{cancelLeave}}" style="height: 40px; padding: 0 16px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer">Cancel</button>
+</div>
+</sc-if>
+<p style="margin: 0; padding: 8px 20px 12px; font-size: 13px; color: #5b5f86">You own Sunrise Tours Co. To leave it, transfer ownership first in Team.</p>
+</section>
+
+<div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start">
+<section aria-labelledby="pi-h" style="flex: 1 1 380px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+<h2 id="pi-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">Pending invitations</h2>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 12px; border-radius: 12px; background: #f6f3e4">
+<img src="../assets/604626c00c7762fd3f4718f28e2a3ed2.svg" alt="" style="width: 40px; height: 40px; flex-shrink: 0; border-radius: 10px; object-fit: cover">
+<span style="flex: 1 1 180px; display: flex; flex-direction: column"><span style="font-size: 15px; font-weight: 600">Taif Heritage Tours</span><span style="font-size: 13px; color: #5b5f86">Support · invited by Ahmad Zahrani · expires in 6 days</span></span>
+<a href="OrgSwitcher.dc.html" style="height: 40px; padding: 0 16px; border-radius: 12px; background: #262a67; color: #f6f3e4; font-size: 14px; font-weight: 600; display: flex; align-items: center; text-decoration: none">Review</a>
+</div>
+<p style="margin: 0; font-size: 13px; line-height: 19px; color: #5b5f86">Invitations only reach the email you sign in with. If a company invited a different address, ask them to resend it to mona.saleh@outlook.com.</p>
+</section>
+
+<section aria-labelledby="hw-h" style="flex: 1 1 380px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 10px">
+<h2 id="hw-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">How access works</h2>
+<sc-for list="{{rules}}" as="r" hint-placeholder-count="5">
+<div style="display: flex; gap: 10px; font-size: 14px; line-height: 20px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1f7a4d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 1px"><path d="M5 12.5l4.5 4.5L19 7"></path></svg><span>{{r}}</span></div>
+</sc-for>
+</section>
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1100}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { def: 'ST', left: [], leaving: null }; }
+  renderVals() {
+    const O = [
+      { i: 'ST', logo: '../assets/697a49af6be5a077ae1851c1a8b9dfcd.svg', n: 'Sunrise Tours Co.', city: 'Riyadh · Saudi Arabia', role: 'Owner', plan: 'Growth', pt: 'ok', rule: 'Sign-in code (SMS)', last: 'Now', href: 'OrgHome.dc.html', bg: '#f89e23', owner: true },
+      { i: 'DE', logo: '../assets/472625e3fa0e959013f492568148458e.svg', n: 'Desert Events LLC', city: 'Dubai · UAE', role: 'Operations manager', plan: 'Starter', pt: 'ok', rule: 'Sign-in code (SMS)', last: 'Yesterday 18:40', href: 'OrgSwitched.dc.html', bg: '#fb8030' },
+      { i: 'NA', logo: '../assets/1134174426625e453cca9ca4339809ce.svg', n: 'Najd Adventures', city: 'Riyadh · Saudi Arabia', role: 'Finance · view only', plan: 'Enterprise', pt: 'ok', rule: 'Authenticator app', last: '3 Oct', href: 'OrgSwitched.dc.html', bg: '#e6e8f5' },
+      { i: 'RS', logo: '../assets/f79d619b2dadb265155b85ab880f3c79.svg', n: 'Red Sea Diving Club', city: 'Jeddah · Saudi Arabia', role: 'Support', plan: 'Plan ended', pt: 'warn', rule: 'Sign-in code (SMS)', last: '21 Sep', href: 'ShStaffLocked.dc.html', bg: '#e3dfc9' }
+    ].filter((o) => !this.state.left.includes(o.i));
+    const lv = O.find((o) => o.i === this.state.leaving);
+    const orgs = O.map((o) => ({ ...o, def: this.state.def === o.i, defLabel: this.state.def === o.i ? 'Default' : 'Set default', pick: () => this.setState({ def: o.i }),
+      canLeave: !o.owner, leave: () => this.setState({ leaving: o.i }),
+      tile: 'width: 36px; height: 36px; flex-shrink: 0; border-radius: 10px; object-fit: cover',
+      ps: 'display: inline-flex; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; ' + (o.pt === 'ok' ? 'background: #e3f3ea; color: #1f7a4d;' : 'background: #fdf0d5; color: #8a4b00;') }));
+    const rules = [
+      'Access comes only from invitations sent to your sign-in email. Organizations cannot see each other.',
+      'Your role, permissions and sign-in rule are set by each organization separately.',
+      'Switching never carries data across — filters, drafts and exports stay in the organization they belong to.',
+      'The organization marked Default opens after you sign in. You can switch at any time without signing out.',
+      'If an organization’s plan ends, it pauses for staff until its owner renews; your other organizations keep working.'
+    ];
+    return { orgs, count: orgs.length, rules, leaving: !!lv, leavingName: lv ? lv.n : '',
+      confirmLeave: () => this.setState({ left: [...this.state.left, this.state.leaving], leaving: null }), cancelLeave: () => this.setState({ leaving: null }) };
+  }
+}
+</script>
+</body>
+</html>

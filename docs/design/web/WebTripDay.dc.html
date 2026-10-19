@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Web · Trip day</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+footer a:focus-visible,.te-navy a:focus-visible{outline-color:#f89e23}
+.te-nav:hover{color:#c93a00}
+</style>
+</helmet>
+<div style="min-height: 1000px; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif; display: flex; flex-direction: column">
+
+<header style="border-bottom: 1px solid #e3dfc9">
+<div style="max-width: 1200px; margin: 0 auto; box-sizing: border-box; padding: 14px 24px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 32px">
+<a href="WebHome.dc.html" aria-label="Trips Enjoy home" style="display: flex"><img src="../assets/1fbce194fcb16bf54904c32c189fca31.svg" alt="Trips Enjoy" style="height: 40px; width: auto"></a>
+<nav aria-label="Main" style="flex-grow: 1; display: flex; flex-wrap: wrap; gap: 4px 24px">
+<a href="WebExplore.dc.html" class="te-nav" style="padding: 10px 0; font-size: 15px; font-weight: 600; color: #262a67; text-decoration: none">Explore trips</a>
+<a href="WebBookings.dc.html" aria-current="page" class="te-nav" style="padding: 10px 0; font-size: 15px; font-weight: 700; color: #c93a00; text-decoration: none; border-bottom: 2px solid #fb8030">My bookings</a>
+<a href="WebAlbums.dc.html" class="te-nav" style="padding: 10px 0; font-size: 15px; font-weight: 600; color: #262a67; text-decoration: none">Albums</a>
+</nav>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px">
+<a href="WebHomeAr.dc.html" lang="ar" dir="rtl" style="height: 44px; padding: 0 12px; display: flex; align-items: center; font-family: Cairo, sans-serif; font-size: 15px; font-weight: 600; color: #262a67; text-decoration: none">العربية</a>
+<a href="WebProfile.dc.html" style="height: 48px; box-sizing: border-box; padding: 0 14px 0 4px; border-radius: 999px; background: #ffffff; display: flex; align-items: center; gap: 10px; color: #262a67; font-size: 15px; font-weight: 600; text-decoration: none"><img src="../assets/6c1d1b4ec8611e67e7f6f2ac68edcb50.svg" alt="" style="width: 40px; height: 40px; border-radius: 999px; object-fit: cover; display: block">Mariam<span style="padding: 2px 8px; border-radius: 999px; background: #f89e23; font-size: 12px; font-weight: 700">Explorer</span></a>
+</div>
+</div>
+</header>
+
+<main style="flex-grow: 1; width: 100%; max-width: 1200px; margin: 0 auto; box-sizing: border-box; padding: 28px 24px 48px; display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; gap: 12px; align-items: center">
+<a href="WebBooking.dc.html" aria-label="Back to booking" style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 999px; background: #ffffff; color: #262a67; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a>
+<div style="display: flex; flex-direction: column"><h1 style="margin: 0; font-size: 30px; line-height: 38px; font-weight: 700">Trip day</h1><span style="font-size: 15px; color: #5b5f86">Siwa Oasis Escape · Thu 30 Oct · booking TE-50217</span></div>
+</div>
+
+<sc-if value="{{changed}}" hint-placeholder-val="{{false}}">
+<div role="alert" style="padding: 14px 18px; border-radius: 12px; background: #fdf0d5; color: #8a4b00; display: flex; flex-wrap: wrap; gap: 12px 16px; align-items: center">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9.5 17h-19zM12 10v4M12 17h.01"></path></svg>
+<span style="flex: 1 1 380px; font-size: 15px; line-height: 22px"><strong>Your bus changed at 04:41: you're now on Bus 3, seats 2A to 2D.</strong> Same meeting point and departure time. Your driver is now Mahmoud Saeed.</span>
+</div>
+</sc-if>
+
+<section class="te-navy" aria-labelledby="bus-h" style="padding: 28px; border-radius: 20px; background: #262a67; color: #f6f3e4; display: flex; flex-wrap: wrap; gap: 24px 32px; align-items: center">
+<div style="flex: 1 1 420px; min-width: 0; display: flex; flex-direction: column; gap: 18px">
+<div style="display: flex; flex-wrap: wrap; gap: 12px 28px; align-items: flex-end">
+<div style="display: flex; flex-direction: column"><span style="font-size: 14px; font-weight: 600; color: #b8bad6">Your bus</span><span id="bus-h" style="font-size: 40px; line-height: 46px; font-weight: 700">{{bus}}</span></div>
+<div style="display: flex; flex-direction: column"><span style="font-size: 14px; font-weight: 600; color: #b8bad6">Your seats</span><span style="font-size: 26px; line-height: 34px; font-weight: 700">{{seats}}</span></div>
+<span style="padding: 4px 12px; border-radius: 999px; background: #31367a; font-size: 14px; font-weight: 600">{{busMeta}}</span>
+</div>
+<ol aria-label="Bus status" style="margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 6px">
+<sc-for list="{{vsteps}}" as="v" hint-placeholder-count="5">
+<li aria-current="{{v.cur}}" style="display: flex; flex-direction: column; gap: 6px"><span style="{{v.bar}}"></span><span style="{{v.ts}}">{{v.t}}</span></li>
+</sc-for>
+</ol>
+<span style="font-size: 15px; line-height: 22px; color: #b8bad6">{{statusLine}}</span>
+</div>
+<sc-if value="{{showQr}}" hint-placeholder-val="{{true}}">
+<div style="flex: 0 0 auto; padding: 16px; border-radius: 20px; background: #ffffff; color: #262a67; display: flex; flex-direction: column; align-items: center; gap: 8px">
+<img src="../assets/820ae1ed630eb3e04ea4d7ce91f50535.png" alt="Boarding QR code for booking TE-50217" style="width: 150px; height: 150px">
+<span style="font-size: 13px; font-weight: 600">Show at boarding</span>
+</div>
+</sc-if>
+</section>
+
+<div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start">
+<div style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+<section aria-labelledby="gp-h" style="padding: 20px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 10px">
+<h2 id="gp-h" style="margin: 0; font-size: 20px; font-weight: 600">Your group</h2>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px">
+<sc-for list="{{group}}" as="g" hint-placeholder-count="4">
+<div style="padding: 12px 14px; border-radius: 12px; border: 1px solid #e3dfc9; display: flex; align-items: center; gap: 12px">
+<span style="width: 36px; height: 36px; flex-shrink: 0; border-radius: 999px; background: #e6e8f5; overflow: hidden; display: block"><img src="{{g.av}}" alt="" style="width: 100%; height: 100%; border-radius: 999px; object-fit: cover; display: block"></span>
+<span style="flex-grow: 1; display: flex; flex-direction: column"><span style="font-size: 15px; font-weight: 600">{{g.n}}</span><span style="font-size: 13px; color: #5b5f86">Seat {{g.seat}}</span></span>
+<span style="{{g.bs}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{g.icon}}"></path></svg>{{g.board}}</span>
+</div>
+</sc-for>
+</div>
+</section>
+
+<section aria-labelledby="nt-h" style="padding: 20px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 4px">
+<h2 id="nt-h" style="margin: 0 0 8px; font-size: 20px; font-weight: 600">Notices</h2>
+<ol style="margin: 0; padding: 0; list-style: none">
+<sc-for list="{{notices}}" as="n" hint-placeholder-count="4">
+<li style="padding: 12px 0; border-top: 1px solid #e3dfc9; display: flex; gap: 14px; align-items: flex-start">
+<span style="{{n.dot}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{n.icon}}"></path></svg></span>
+<span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 15px; font-weight: 600">{{n.t}}</span><span style="font-size: 14px; line-height: 20px; color: #5b5f86">{{n.d}}</span></span>
+<span style="font-size: 13px; font-weight: 600; color: #5b5f86; white-space: nowrap">{{n.at}}</span>
+</li>
+</sc-for>
+</ol>
+</section>
+</div>
+
+<aside style="flex: 1 1 320px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+<section aria-labelledby="mt-h" style="padding: 20px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 10px">
+<h2 id="mt-h" style="margin: 0; font-size: 18px; font-weight: 600">Meeting point</h2>
+<span style="display: flex; gap: 10px; align-items: flex-start; font-size: 15px; line-height: 22px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#c93a00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 2px"><path d="M12 21s-7-6.1-7-11.5A7 7 0 0 1 19 9.5C19 14.9 12 21 12 21zM12 7a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z"></path></svg><span><strong>Ramses Hilton, Corniche El Nil</strong><br>Boarding opens 05:00 · departs 05:30</span></span>
+<span style="font-size: 14px; color: #5b5f86">Bus moderator: Heba Mostafa scans your QR at the door.</span>
+</section>
+<section aria-labelledby="pv-h" style="padding: 20px; border-radius: 20px; border: 1px solid #e3dfc9; display: flex; flex-direction: column; gap: 8px">
+<h2 id="pv-h" style="margin: 0; font-size: 16px; font-weight: 600; display: flex; align-items: center; gap: 8px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5.5c0 4.4-3 8-7 9.5-4-1.5-7-5.1-7-9.5V6zM9 12l2 2 4-4"></path></svg>Why there's no bus map</h2>
+<span style="font-size: 14px; line-height: 20px; color: #5b5f86">For everyone's safety, the bus's live location is shared only with parents following a child. You get a notice when you board, when the trip starts, at each stop and when it ends.</span>
+</section>
+<a href="WebBooking.dc.html" style="height: 48px; box-sizing: border-box; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-size: 15px; font-weight: 600; display: flex; align-items: center; justify-content: center; text-decoration: none">Booking details</a>
+</aside>
+</div>
+</main>
+
+<footer style="background: #262a67; color: #f6f3e4">
+<div style="max-width: 1200px; margin: 0 auto; box-sizing: border-box; padding: 24px; display: flex; flex-wrap: wrap; gap: 16px 32px; align-items: center; justify-content: space-between; font-size: 13px; color: #b8bad6">
+<img src="../assets/6ea846350ba3adc0e289d47fa0612c3b.svg" alt="Trips Enjoy" style="height: 32px; width: auto">
+<span>© 2026 Trips Enjoy · Cairo, Egypt</span>
+<nav aria-label="Footer" style="display: flex; flex-wrap: wrap; gap: 20px"><a href="WebLegal.dc.html" style="color: #b8bad6">Privacy</a><a href="WebLegal.dc.html" style="color: #b8bad6">Terms</a><a href="WebBecomeProvider.dc.html" style="color: #b8bad6">Become a provider</a><a href="WebHomeAr.dc.html" lang="ar" dir="rtl" style="color: #b8bad6; font-family: Cairo, sans-serif">العربية</a></nav>
+</div>
+</footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1000},"state":{"editor":"enum","options":["beforeBoarding","checkedIn","checkedOut","tripEnded","vehicleChanged"],"default":"beforeBoarding"}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const m = this.props.state || 'beforeBoarding';
+    const changed = m === 'vehicleChanged';
+    const step = { beforeBoarding: 0, vehicleChanged: 0, checkedIn: 2, checkedOut: 3, tripEnded: 4 }[m];
+    const vsteps = ['Not started', 'Boarding', 'In transit', 'Partly completed', 'Completed'].map((t, i) => ({ t, cur: i === step ? 'step' : 'false',
+      bar: 'height: 6px; border-radius: 999px; ' + (i < step ? 'background: #b8bad6;' : i === step ? 'background: #ff6c2e;' : 'background: #31367a;'),
+      ts: 'font-size: 13px; ' + (i === step ? 'font-weight: 700; color: #f6f3e4;' : 'font-weight: 500; color: #b8bad6;') }));
+    const I = { ok: 'M5 12.5l4.5 4.5L19 7', clock: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7v5l3 2', out: 'M5 12h14M13 6l6 6-6 6', bell: 'M6 16v-5a6 6 0 0 1 12 0v5l2 2H4zM10 21a2 2 0 0 0 4 0', bus: 'M6 4h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM4 11h16M8 18v2M16 18v2M8 14.5h.01M16 14.5h.01', pin: 'M12 21s-7-6.1-7-11.5A7 7 0 0 1 19 9.5C19 14.9 12 21 12 21zM12 7a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z', alert: 'M12 3l9.5 17h-19zM12 10v4M12 17h.01' };
+    const bd = { before: ['Not boarded', 'background: #e6e8f5; color: #262a67;', I.clock], in: ['Checked in 05:12', 'background: #e3f3ea; color: #1f7a4d;', I.ok], out: ['Checked out 13:31', 'background: #f6f3e4; color: #262a67;', I.out] };
+    const b = m === 'checkedIn' ? bd.in : (m === 'checkedOut' || m === 'tripEnded') ? bd.out : bd.before;
+    const seatsA = changed ? ['2A', '2B', '2C', '2D'] : ['4A', '4B', '4C', '4D'];
+    const AVM = { MA: '../assets/6c1d1b4ec8611e67e7f6f2ac68edcb50.svg', KH: '../assets/efa256a2f8e91a9b7c53c0666efed019.svg', YK: '../assets/f265ad96f0a4653d686827dc8cddfe31.svg', SK: '../assets/dfa2765c8a511633e1838be374d89602.svg' };
+    const group = [['MA', 'Mariam Adel'], ['KH', 'Karim Hassan'], ['YK', 'Youssef Karim'], ['SK', 'Salma Karim']].map(([i, n], k) => ({ i, av: AVM[i], n, seat: seatsA[k], board: b[0], icon: b[2],
+      bs: 'padding: 4px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 6px; white-space: nowrap; ' + b[1] }));
+    const dot = (bg) => 'width: 32px; height: 32px; flex-shrink: 0; border-radius: 999px; display: flex; align-items: center; justify-content: center; ' + bg;
+    const N = {
+      reminder: ['Trip reminder', 'Departs tomorrow at 05:30 from Ramses Hilton. Boarding opens at 05:00.', 'Wed 29 Oct, 05:30', I.bell, 'background: #e6e8f5; color: #262a67;'],
+      changed: ['Bus changed', 'You’re now on Bus 3, seats 2A to 2D. Same meeting point and time.', 'Thu 30 Oct, 04:41', I.alert, 'background: #fdf0d5; color: #8a4b00;'],
+      board: ['Boarding confirmed', 'Mariam, Karim, Youssef and Salma checked in on Bus 2.', '05:12', I.ok, 'background: #e3f3ea; color: #1f7a4d;'],
+      start: ['Trip started', 'Bus 2 left Cairo for Siwa.', '05:34', I.bus, 'background: #ffe7dc; color: #c93a00;'],
+      stop: ['Stop reached', 'Bus 2 arrived at Shali Lodge, Siwa. Your group checked out at 13:31.', '13:20', I.pin, 'background: #e6e8f5; color: #262a67;'],
+      end: ['Trip ended', 'Bus 2 is back in Cairo. Trip updates for this booking are now closed.', 'Sat 1 Nov, 21:10', I.ok, 'background: #e3f3ea; color: #1f7a4d;']
+    };
+    const order = { beforeBoarding: ['reminder'], vehicleChanged: ['changed', 'reminder'], checkedIn: ['start', 'board', 'reminder'], checkedOut: ['stop', 'start', 'board', 'reminder'], tripEnded: ['end', 'stop', 'start', 'board', 'reminder'] }[m];
+    const notices = order.map((k) => { const x = N[k]; return { t: x[0], d: x[1], at: x[2], icon: x[3], dot: dot(x[4]) }; });
+    const line = {
+      beforeBoarding: 'Boarding opens at 05:00. Have your QR ready in the app or on this page.',
+      vehicleChanged: 'Boarding opens at 05:00 on Bus 3. Have your QR ready.',
+      checkedIn: 'You’re on your way. We’ll send a notice at each stop.',
+      checkedOut: 'Your group checked out at Shali Lodge. The bus continues its route.',
+      tripEnded: 'This trip has ended. Photos from the trip appear in Albums when they’re published.'
+    }[m];
+    return { changed, vsteps, group, notices, statusLine: line,
+      bus: changed ? 'Bus 3' : 'Bus 2', seats: seatsA[0] + '–' + seatsA[3],
+      busMeta: changed ? '49-seat coach · driver Mahmoud Saeed' : '49-seat coach',
+      showQr: m === 'beforeBoarding' || m === 'vehicleChanged' };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Photographer · Bookings</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="height: 100%; box-sizing: border-box; padding: 56px 16px 24px; display: flex; flex-direction: column; gap: 14px">
+
+<div style="display: flex; align-items: center; gap: 12px">
+<a href="PhoHome.dc.html" aria-label="Back" style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 999px; background: #ffffff; color: #262a67; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a>
+<h1 style="margin: 0; flex-grow: 1; font-size: 22px; line-height: 28px; font-weight: 700">Bookings</h1>
+<span style="font-size: 13px; font-weight: 600; color: #5b5f86">6 of 10 this month</span>
+</div>
+
+<section aria-labelledby="cal-h" style="padding: 14px 14px 12px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 8px">
+<div style="display: flex; align-items: center; justify-content: space-between">
+<h2 id="cal-h" style="margin: 0; font-size: 16px; font-weight: 600">October</h2>
+<div style="display: flex; gap: 12px; font-size: 12px; color: #5b5f86">
+<span style="display: flex; align-items: center; gap: 4px"><span style="width: 8px; height: 8px; border-radius: 999px; background: #1a1c4b"></span>Confirmed</span>
+<span style="display: flex; align-items: center; gap: 4px"><span style="width: 8px; height: 8px; border-radius: 2px; background: #f89e23"></span>Pending deal</span>
+</div>
+</div>
+<div role="grid" aria-label="October calendar" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; text-align: center">
+<sc-for list="{{wd}}" as="w" hint-placeholder-count="7"><span style="font-size: 11px; font-weight: 600; color: #5b5f86; padding-bottom: 2px">{{w}}</span></sc-for>
+<sc-for list="{{days}}" as="d" hint-placeholder-count="35"><span style="{{d.s}}" aria-label="{{d.al}}">{{d.n}}</span></sc-for>
+</div>
+</section>
+
+<div role="tablist" aria-label="Booking status" style="display: flex; gap: 8px">
+<sc-for list="{{tabs}}" as="t" hint-placeholder-count="3">
+<button role="tab" aria-selected="{{t.sel}}" onClick="{{t.go}}" style="{{t.style}}">{{t.label}}</button>
+</sc-for>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 10px">
+<sc-for list="{{items}}" as="b" hint-placeholder-count="3">
+<a href="{{b.href}}" style="padding: 12px 14px; border-radius: 16px; background: #ffffff; color: #262a67; display: flex; align-items: center; gap: 12px; text-decoration: none">
+<span style="width: 48px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; padding: 4px 0; border-radius: 12px; background: #f6f3e4"><span style="font-size: 11px; font-weight: 600; color: #5b5f86">{{b.mon}}</span><span style="font-size: 18px; font-weight: 700">{{b.day}}</span></span>
+<span style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px">
+<span style="font-size: 15px; font-weight: 600">{{b.t}}</span>
+<span style="font-size: 13px; color: #5b5f86">{{b.sub}}</span>
+</span>
+<span style="display: flex; flex-direction: column; align-items: flex-end; gap: 4px"><span style="{{b.ps}}">{{b.s}}</span><span style="font-size: 13px; font-weight: 600">{{b.price}}</span></span>
+</a>
+</sc-for>
+</div>
+
+<a href="PhoOffers.dc.html" style="margin-top: auto; height: 52px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-size: 16px; font-weight: 600; display: flex; align-items: center; justify-content: center; text-decoration: none">Open offers inbox</a>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { tab: 'conf' }; }
+  renderVals() {
+    const conf = { 16: 1, 17: 1, 18: 1, 4: 1 };
+    const pend = { 24: 1, 25: 1 };
+    const days = [];
+    for (let i = 0; i < 2; i++) days.push({ n: '', s: 'height: 30px', al: '' });
+    for (let n = 1; n <= 31; n++) {
+      const c = conf[n], p = pend[n], today = n === 6;
+      let s = 'height: 30px; display: flex; align-items: center; justify-content: center; font-size: 13px; border-radius: 8px; ';
+      if (c) s += 'background: #1a1c4b; color: #f6f3e4; font-weight: 700;';
+      else if (p) s += 'background: #fdf0d5; color: #8a4b00; font-weight: 700; box-shadow: inset 0 -3px 0 #f89e23;';
+      else if (today) s += 'border: 2px solid #fb8030; font-weight: 700;';
+      days.push({ n: String(n), s, al: n + ' October' + (c ? ', confirmed shoot' : p ? ', pending deal' : today ? ', today' : '') });
+    }
+    while (days.length < 35) days.push({ n: '', s: 'height: 30px', al: '' });
+    const pill = (tone) => 'padding: 2px 8px; border-radius: 999px; font-size: 12px; font-weight: 700; white-space: nowrap; ' + ({ ok: 'background: #e3f3ea; color: #1f7a4d;', warn: 'background: #fdf0d5; color: #8a4b00;', info: 'background: #e6e8f5; color: #262a67;' })[tone];
+    const L = {
+      conf: [
+        { mon: 'OCT', day: '16', t: 'AlUla Heritage Weekend', sub: 'Sunrise Tours Co. · 3 days · Bus 1', s: 'Confirmed', tone: 'ok', price: '4,800 SAR', href: 'PhoHome.dc.html' },
+        { mon: 'NOV', day: '7', t: 'Diriyah Evening Walk', sub: 'Sunrise Tours Co. · 17:00–22:00', s: 'Confirmed', tone: 'ok', price: '1,100 SAR', href: 'PhoHome.dc.html' }
+      ],
+      pend: [
+        { mon: 'OCT', day: '24', t: 'Red Sea Snorkel Day', sub: 'Sunrise Tours Co. · new offer', s: 'Your reply', tone: 'warn', price: '2,200 SAR', href: 'PhoOffer.dc.html' },
+        { mon: 'OCT', day: '25', t: 'Edge of the World Hike', sub: 'Najd Adventures · you countered', s: 'Waiting', tone: 'info', price: '1,600 SAR', href: 'PhoOffers.dc.html' },
+        { mon: 'NOV', day: '1', t: 'Al-Balad Heritage Walk', sub: 'Sunrise Tours Co. · they countered', s: 'Your reply', tone: 'warn', price: '1,300 SAR', href: 'PhoOffers.dc.html' }
+      ],
+      done: [
+        { mon: 'OCT', day: '4', t: 'Taif Rose Farms', sub: 'Album due in 1 day · 0 photos', s: 'Album due', tone: 'warn', price: '1,400 SAR', href: 'PhoAlbumNew.dc.html' },
+        { mon: 'OCT', day: '2', t: 'Al Noor School Graduation', sub: 'Album delivered Sat 4 Oct · 164 photos', s: 'Delivered', tone: 'ok', price: '2,400 SAR', href: 'PhoAlbums.dc.html' },
+        { mon: 'SEP', day: '26', t: 'Diriyah Evening Walk', sub: 'Album delivered Sun 28 Sep · 96 photos', s: 'Delivered', tone: 'ok', price: '1,100 SAR', href: 'PhoAlbums.dc.html' }
+      ]
+    };
+    const tabs = [['conf', 'Confirmed 2'], ['pend', 'Pending 3'], ['done', 'Delivered']].map(([id, label]) => {
+      const on = this.state.tab === id;
+      return { label, sel: on ? 'true' : 'false', go: () => this.setState({ tab: id }),
+        style: 'height: 40px; padding: 0 14px; border-radius: 999px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; ' + (on ? 'background: #262a67; color: #f6f3e4; border: 1px solid #262a67;' : 'background: #ffffff; color: #262a67; border: 1px solid #7b7fa6;') };
+    });
+    const items = L[this.state.tab].map((b) => ({ ...b, ps: pill(b.tone) }));
+    return { wd: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'], days, tabs, items };
+  }
+}
+</script>
+</body>
+</html>

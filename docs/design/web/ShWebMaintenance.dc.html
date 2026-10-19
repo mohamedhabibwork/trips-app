@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Web · Scheduled maintenance</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="min-height: 1000px; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif; display: flex; flex-direction: column">
+
+<header style="border-bottom: 1px solid #e3dfc9">
+<div style="max-width: 1200px; margin: 0 auto; box-sizing: border-box; padding: 14px 24px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px">
+<a href="WebHome.dc.html" aria-label="Trips Enjoy home" style="flex-grow: 1; display: flex"><img src="../assets/1fbce194fcb16bf54904c32c189fca31.svg" alt="Trips Enjoy" style="height: 40px; width: auto"></a>
+<a href="WebHomeAr.dc.html" lang="ar" dir="rtl" style="height: 44px; padding: 0 8px; display: flex; align-items: center; font-family: Cairo, sans-serif; font-size: 15px; font-weight: 600; color: #262a67; text-decoration: none">العربية</a>
+</div>
+</header>
+
+<main style="flex-grow: 1; width: 100%; max-width: 1200px; margin: 0 auto; box-sizing: border-box; padding: 56px 24px; display: flex; flex-wrap: wrap; gap: 32px; align-items: flex-start">
+<div style="flex: 3 1 480px; min-width: 0; display: flex; flex-direction: column; gap: 18px">
+<span style="width: 72px; height: 72px; border-radius: 999px; background: #fdf0d5; color: #8a4b00; display: flex; align-items: center; justify-content: center"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7v5l3 2"></path></svg></span>
+<h1 style="margin: 0; font-size: 40px; line-height: 48px; font-weight: 700">We're doing scheduled maintenance</h1>
+<p style="margin: 0; max-width: 600px; font-size: 18px; line-height: 27px; color: #5b5f86">Booking on the website is paused while we upgrade our payment systems. Trips running tonight are not affected.</p>
+
+<div style="padding: 18px 20px; border-radius: 20px; background: #262a67; color: #f6f3e4; display: flex; flex-wrap: wrap; gap: 16px 32px; align-items: center">
+<span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 13px; color: #b8bad6">Maintenance window</span><span style="font-size: 22px; font-weight: 700">Wed 22 Oct, 02:00–04:00 (Riyadh)</span></span>
+<span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 13px; color: #b8bad6">Expected back</span><span style="font-size: 22px; font-weight: 700; color: #ff8655">by 04:00</span></span>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px">
+<section aria-labelledby="ok-h" style="padding: 20px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 10px">
+<h2 id="ok-h" style="margin: 0; font-size: 18px; font-weight: 600; display: flex; align-items: center; gap: 8px"><span style="padding: 2px 10px; border-radius: 999px; background: #e3f3ea; color: #1f7a4d; font-size: 13px; font-weight: 600">Working</span>Still works</h2>
+<sc-for list="{{works}}" as="w" hint-placeholder-count="3"><span style="display: flex; gap: 10px; font-size: 15px; line-height: 21px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1f7a4d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M5 12.5l4.5 4.5L19 7"></path></svg>{{w}}</span></sc-for>
+</section>
+<section aria-labelledby="ps-h" style="padding: 20px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 10px">
+<h2 id="ps-h" style="margin: 0; font-size: 18px; font-weight: 600; display: flex; align-items: center; gap: 8px"><span style="padding: 2px 10px; border-radius: 999px; background: #fdf0d5; color: #8a4b00; font-size: 13px; font-weight: 600">Paused</span>Until 04:00</h2>
+<sc-for list="{{paused}}" as="w" hint-placeholder-count="3"><span style="display: flex; gap: 10px; font-size: 15px; line-height: 21px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8a4b00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7v5l3 2"></path></svg>{{w}}</span></sc-for>
+</section>
+</div>
+</div>
+
+<aside aria-labelledby="sub-h" style="flex: 2 1 320px; min-width: 0; padding: 24px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 14px">
+<img src="../assets/e15e301529dfca735deed42db0d8dd3c.png" alt="" style="width: 100%; height: 200px; object-fit: cover; border-radius: 12px">
+<h2 id="sub-h" style="margin: 0; font-size: 20px; font-weight: 600">Get a message when we're back</h2>
+<sc-if value="{{notSubscribed}}" hint-placeholder-val="{{true}}">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="m-email" style="font-size: 14px; font-weight: 600">Email</label>
+<input id="m-email" type="email" value="sara.qahtani@example.com" style="height: 52px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; padding: 0 14px; font: inherit; font-size: 16px; color: #262a67">
+</div>
+<button type="button" onClick="{{subscribe}}" style="height: 48px; border: 0; border-radius: 12px; background: #ff6c2e; color: #262a67; font: inherit; font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 16v-5a6 6 0 0 1 12 0v5l2 2H4zM10 21a2 2 0 0 0 4 0"></path></svg>Subscribe for updates</button>
+</sc-if>
+<sc-if value="{{subscribed}}" hint-placeholder-val="{{false}}">
+<div role="status" style="padding: 12px 14px; border-radius: 12px; background: #e3f3ea; color: #1f7a4d; display: flex; gap: 10px; font-size: 15px; line-height: 21px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M5 12.5l4.5 4.5L19 7"></path></svg>Subscribed. We'll email sara.qahtani@example.com as soon as booking is open again.</div>
+</sc-if>
+<span style="font-size: 14px; line-height: 20px; color: #5b5f86">Live progress is on <a href="#">status.trips-enjoy.com</a>. Travelling tonight? Your ticket is in <a href="WebBookings.dc.html">My bookings</a> and the app.</span>
+</aside>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { sub: false }; }
+  renderVals() {
+    return {
+      works: ['Tickets and QR boarding passes in the app', 'Live bus tracking for travellers and parents', 'Moderator check-in and check-out on the bus'],
+      paused: ['New bookings and checkout', 'Payments, refunds and coupon changes', 'Plan upgrades and account changes'],
+      notSubscribed: !this.state.sub, subscribed: this.state.sub,
+      subscribe: () => this.setState({ sub: true })
+    };
+  }
+}
+</script>
+</body>
+</html>

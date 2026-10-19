@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Parent · Tracking unavailable</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="height: 100%; box-sizing: border-box; padding: 56px 16px 24px; display: flex; flex-direction: column; gap: 12px">
+
+<div style="display: flex; align-items: center; gap: 12px">
+<a href="ParHome.dc.html" aria-label="Back" style="width: 44px; height: 44px; border-radius: 999px; background: #ffffff; color: #262a67; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a>
+<span style="font-size: 15px; font-weight: 600; color: #5b5f86">Live tracking</span>
+</div>
+
+<img src="../assets/7af26845f1899d68ac8358f14ccdccea.png" alt="A parent walking a child to Bus 3 in the city" style="width: 100%; height: 120px; border-radius: 20px; object-fit: cover; object-position: 50% 55%">
+
+<div style="display: flex; flex-direction: column; gap: 6px">
+<h1 style="margin: 0; font-size: 24px; line-height: 30px; font-weight: 700">{{title}}</h1>
+<p style="margin: 0; font-size: 15px; line-height: 21px; color: #5b5f86">{{lede}}</p>
+</div>
+
+<ul aria-label="What tracking shows" style="margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 6px">
+<li style="padding: 4px 10px; border-radius: 999px; background: #ffffff; font-size: 13px; font-weight: 600">Bus &amp; live location</li>
+<li style="padding: 4px 10px; border-radius: 999px; background: #ffffff; font-size: 13px; font-weight: 600">Seat</li>
+<li style="padding: 4px 10px; border-radius: 999px; background: #ffffff; font-size: 13px; font-weight: 600">Check-in &amp; out times</li>
+<li style="padding: 4px 10px; border-radius: 999px; background: #ffffff; font-size: 13px; font-weight: 600">Enrolled programs</li>
+</ul>
+
+<sc-if value="{{isOrg}}" hint-placeholder-val="{{false}}">
+<div style="padding: 14px 16px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 8px; font-size: 14px; line-height: 20px">
+<span style="align-self: flex-start; padding: 3px 10px; border-radius: 999px; background: #e6e8f5; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 5px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 11v5M12 8h.01"></path></svg>Set by the organizer</span>
+<span>Child tracking for this trip depends on the organizer’s plan and settings. Your own plan can’t turn it on.</span>
+<span style="color: #5b5f86">You still get the trip reminder, and the organizer can tell you about boarding and return times.</span>
+</div>
+<div style="padding: 12px 16px; border-radius: 20px; background: #ffffff; display: flex; align-items: center; gap: 12px">
+<span style="flex-grow: 1; display: flex; flex-direction: column"><span style="font-size: 12px; color: #5b5f86">Organizer</span><span style="font-size: 15px; font-weight: 600">Najd Adventures · Trips desk</span><span style="font-size: 13px; color: #5b5f86">Edge of the World Hike · Sat 25 Oct</span></span>
+<a href="#" aria-label="Call Najd Adventures trips desk" style="width: 44px; height: 44px; border-radius: 999px; background: #e6e8f5; color: #262a67; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"></path></svg></a>
+</div>
+<div style="margin-top: auto; display: flex; flex-direction: column; gap: 6px">
+<a href="ParHome.dc.html" style="height: 52px; border-radius: 12px; background: #262a67; color: #f6f3e4; font-weight: 700; font-size: 16px; text-decoration: none; display: flex; align-items: center; justify-content: center">Back to family</a>
+</div>
+</sc-if>
+
+<sc-if value="{{isPlan}}" hint-placeholder-val="{{true}}">
+<table style="width: 100%; border-collapse: collapse; background: #ffffff; border-radius: 20px; overflow: hidden; font-size: 14px">
+<caption style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Plan comparison</caption>
+<thead><tr>
+<th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600; color: #5b5f86; font-size: 13px">Plan</th>
+<th scope="col" style="padding: 10px 6px; font-weight: 600">Free</th>
+<th scope="col" style="padding: 10px 6px; font-weight: 700; background: #ffe7dc; color: #c93a00">Explorer</th>
+<th scope="col" style="padding: 10px 6px; font-weight: 600">VIP</th>
+</tr></thead>
+<tbody>
+<sc-for list="{{rows}}" as="r" hint-placeholder-count="4">
+<tr style="border-top: 1px solid #e3dfc9">
+<th scope="row" style="text-align: start; padding: 9px 12px; font-weight: 500">{{r.k}}</th>
+<td style="padding: 9px 6px; text-align: center; color: #5b5f86">{{r.a}}</td>
+<td style="padding: 9px 6px; text-align: center; font-weight: 700; background: #fff4ee">{{r.b}}</td>
+<td style="padding: 9px 6px; text-align: center; font-weight: 600">{{r.c}}</td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+
+<p style="margin: 0; padding: 10px 12px; border-radius: 12px; background: #e6e8f5; display: flex; gap: 8px; font-size: 13px; line-height: 18px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 11v5M12 8h.01"></path></svg>The trip's organizer must also offer tracking (Growth plan or higher). Al Noor School and Sunrise Tours Co. both do.</p>
+
+<div style="margin-top: auto; display: flex; flex-direction: column; gap: 6px">
+<a href="TrvPlan.dc.html" style="height: 52px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-weight: 700; font-size: 16px; text-decoration: none; display: flex; align-items: center; justify-content: center">Upgrade to Explorer · 19 SAR/mo</a>
+<a href="ParHome.dc.html" style="height: 40px; color: #262a67; font-weight: 600; font-size: 15px; text-decoration: none; display: flex; align-items: center; justify-content: center">Not now</a>
+</div>
+</sc-if>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"reason":{"editor":"enum","options":["plan","organization"],"default":"plan"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const isOrg = (this.props.reason ?? 'plan') === 'organization';
+    const title = isOrg ? 'Tracking isn’t available for this trip' : 'Track Omar’s bus live';
+    const lede = isOrg ? 'Najd Adventures hasn’t turned on child tracking for Omar’s trip. Contact the organizer if you have questions.' : 'Live tracking is part of the Explorer (19 SAR/mo) and VIP plans. You’re on Free.';
+    const rows = [
+      { k: 'Child tracking', a: 'No', b: 'Yes', c: 'Yes' },
+      { k: 'Program discount', a: '0%', b: '5%', c: '10%' },
+      { k: 'Priority seats', a: 'No', b: 'Yes', c: 'Yes' },
+      { k: 'Price', a: 'Free', b: '19 SAR/mo', c: '49 SAR/mo' }
+    ];
+    return { rows, isOrg, isPlan: !isOrg, title, lede };
+  }
+}
+</script>
+</body>
+</html>

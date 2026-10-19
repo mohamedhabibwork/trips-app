@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Create account — web</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); font-family: Outfit, Nunito, system-ui, sans-serif; color: #262a67; background: #f6f3e4">
+<div style="background: #262a67; color: #f6f3e4; padding: 48px; display: flex; flex-direction: column; gap: 32px">
+<img src="../assets/6ea846350ba3adc0e289d47fa0612c3b.svg" alt="Trips Enjoy — تريبس إنجوي" style="height: 56px; width: auto; align-self: flex-start">
+<img src="{{img}}" alt="{{imgAlt}}" style="flex-grow: 1; min-height: 0; width: 100%; object-fit: cover; border-radius: 20px; display: block">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<span style="font-size: 13px; font-weight: 600; color: #f89e23; letter-spacing: 1px">{{eyebrow}}</span>
+<h2 style="margin: 0; font-size: 32px; line-height: 40px; font-weight: 700">{{pitch}}</h2>
+</div>
+</div>
+<div style="display: flex; align-items: center; justify-content: center; padding: 40px 48px">
+<div style="width: 460px; display: flex; flex-direction: column; gap: 12px">
+<span style="align-self: flex-start; display: flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 999px; background: #ffffff; border: 1px solid #e3dfc9; font-size: 13px; font-weight: 600; color: #5b5f86"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg>{{url}}</span>
+<div style="display: flex; flex-direction: column; gap: 4px">
+<h1 style="margin: 0; font-size: 32px; line-height: 40px; font-weight: 700">{{title}}</h1>
+<p style="margin: 0; font-size: 15px; color: #5b5f86">Not a {{roleLower}}? <a href="WebRegister.dc.html" style="font-weight: 600">Choose another account type</a> · <a href="WebSignIn.dc.html" style="font-weight: 600">Sign in</a></p>
+</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="wu-fn" style="font-size: 14px; font-weight: 600">First name</label><input id="wu-fn" dir="auto" autocomplete="given-name" value="{{first}}" style="height: 48px; padding: 0 14px; border-radius: 8px; border: 1px solid #7b7fa6; font-family: inherit; font-size: 16px; color: #262a67"></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="wu-ln" style="font-size: 14px; font-weight: 600">Last name</label><input id="wu-ln" dir="auto" autocomplete="family-name" value="{{last}}" style="height: 48px; padding: 0 14px; border-radius: 8px; border: 1px solid #7b7fa6; font-family: inherit; font-size: 16px; color: #262a67"></div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
+<dc-import name="CountryField" label="Country" country="SA" field-id="wu-country" hint-size="100%,78px"></dc-import>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="wu-city" style="font-size: 14px; font-weight: 600">City</label><input id="wu-city" dir="auto" value="Riyadh" style="height: 52px; box-sizing: border-box; padding: 0 14px; border-radius: 8px; border: 1px solid #7b7fa6; font-family: inherit; font-size: 16px; color: #262a67"></div>
+</div>
+<dc-import name="PhoneField" label="Mobile number" value="551234821" country="SA" field-id="wu-phone" hint-size="100%,78px"></dc-import>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="wu-em" style="font-size: 14px; font-weight: 600">Email</label><input id="wu-em" type="email" autocomplete="email" value="{{email}}" style="height: 48px; padding: 0 14px; border-radius: 8px; border: 1px solid #7b7fa6; font-family: inherit; font-size: 16px; color: #262a67"></div>
+<dc-import name="PasswordField" label="Password" value="Trips2026!" show-strength="{{yes}}" is-new="{{yes}}" field-id="wu-pass" hint-size="100%,112px"></dc-import>
+<label style="display: flex; gap: 10px; align-items: center; font-size: 14px"><input type="checkbox" checked="" style="width: 18px; height: 18px; margin: 0; accent-color: #262a67">I agree to the <a href="#">Terms</a> and <a href="#">Privacy Policy</a>.</label>
+<a href="{{next}}" style="height: 52px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 16px; font-weight: 600; display: flex; align-items: center; justify-content: center; text-decoration: none">{{cta}}</a>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"role":{"editor":"enum","options":["traveler","driver","photographer"],"default":"traveler"},"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+renderVals() {
+const R = {
+traveler: { url: 'trips-enjoy.com/register/traveler', title: 'Create your traveler account', eyebrow: 'FOR TRAVELERS AND PARENTS', pitch: 'Book seats for your group and follow every bus live.', img: '../assets/7af26845f1899d68ac8358f14ccdccea.png', imgAlt: 'Parent seeing a child onto Bus 3', first: 'Sara', last: 'Al-Qahtani', email: 'sara@example.com', next: 'WebVerifyTraveler.dc.html', cta: 'Create account' },
+driver: { url: 'trips-enjoy.com/register/driver', title: 'Drive with Trips Enjoy', eyebrow: 'FOR DRIVERS', pitch: 'Get assigned group trips that fit your schedule and vehicle.', img: '../assets/92f31a1e8051b0122485e134ddb4f444.svg', imgAlt: 'A driver waves beside his coach before departure', first: 'Khalid', last: 'Al-Harbi', email: 'khalid@example.com', next: 'WebVerify.dc.html', cta: 'Create account and apply' },
+photographer: { url: 'trips-enjoy.com/register/photographer', title: 'Shoot trips with Trips Enjoy', eyebrow: 'FOR PHOTOGRAPHERS', pitch: 'Get booked for group trips and deliver galleries in the app.', img: '../assets/8285215df674a3dee0a35b58d0d931e6.svg', imgAlt: 'A trip photographer frames the group in front of the bus', first: 'Noura', last: 'Al-Shehri', email: 'noura@example.com', next: 'WebVerifyPhotographer.dc.html', cta: 'Create account and apply' }
+};
+const k = this.props.role ?? 'traveler';
+const r = R[k] || R.traveler;
+return { ...r, yes: true, roleLower: k };
+}
+}
+</script>
+</body>
+</html>

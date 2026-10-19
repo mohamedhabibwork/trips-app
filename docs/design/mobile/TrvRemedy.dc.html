@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Traveler · Choose a remedy</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="height: 100%; box-sizing: border-box; padding: 56px 16px 24px; display: flex; flex-direction: column; gap: 12px">
+
+<div style="display: flex; align-items: center; gap: 12px">
+<a href="TrvBooking.dc.html" aria-label="Back to booking" style="width: 44px; height: 44px; border-radius: 999px; background: #ffffff; color: #262a67; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a>
+<h1 style="margin: 0; flex-grow: 1; font-size: 22px; line-height: 28px; font-weight: 700">Your trip changed</h1>
+</div>
+
+<div style="padding: 14px 16px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 8px">
+<span style="{{pillStyle}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{pillIcon}}"></path></svg>{{pill}}</span>
+<span style="font-size: 13px; color: #5b5f86">Siwa Oasis Escape · TE-51907 · notice from Nile Horizon Tours, Sat 17 Oct</span>
+<p style="margin: 0; font-size: 15px; line-height: 21px">The <strong>Sand-dune safari</strong> on Fri 30 Oct at 16:00 can’t run: the 4x4 operator cancelled. You booked it for 2 people (900 EGP).</p>
+</div>
+
+<sc-if value="{{isOpen}}" hint-placeholder-val="{{true}}">
+<div role="radiogroup" aria-labelledby="opt-h" style="display: flex; flex-direction: column; gap: 8px">
+<h2 id="opt-h" style="margin: 0; font-size: 15px; font-weight: 600">Options offered by the organizer</h2>
+<sc-for list="{{options}}" as="o" hint-placeholder-count="3">
+<button type="button" role="radio" aria-checked="{{o.checked}}" onClick="{{o.pick}}" style="{{o.style}}">
+<span style="{{o.ring}}"><span style="{{o.dot}}"></span></span>
+<span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px; text-align: left"><span style="font-size: 15px; font-weight: 600">{{o.t}}</span><span style="font-size: 13px; line-height: 18px; color: #5b5f86">{{o.d}}</span></span>
+<span style="{{o.diffStyle}}">{{o.diff}}</span>
+</button>
+</sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{isClosed}}" hint-placeholder-val="{{false}}">
+<div role="status" style="{{closedStyle}}"><strong style="font-size: 15px">{{closedTitle}}</strong><span>{{closedText}}</span></div>
+</sc-if>
+
+<sc-if value="{{isOpen}}" hint-placeholder-val="{{true}}">
+<div style="margin-top: auto; display: flex; flex-direction: column; gap: 6px">
+<button type="button" onClick="{{openSheet}}" style="height: 52px; border: 0; border-radius: 12px; background: #ff6c2e; color: #262a67; font: inherit; font-weight: 700; font-size: 16px; cursor: pointer">Accept this option</button>
+<a href="TrvBooking.dc.html" style="height: 44px; color: #262a67; font-weight: 600; font-size: 15px; text-decoration: none; display: flex; align-items: center; justify-content: center">Decide later</a>
+</div>
+</sc-if>
+<sc-if value="{{isClosed}}" hint-placeholder-val="{{false}}">
+<a href="{{closedHref}}" style="margin-top: auto; height: 52px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-weight: 700; font-size: 16px; text-decoration: none; display: flex; align-items: center; justify-content: center">{{closedCta}}</a>
+</sc-if>
+</div>
+
+<sc-if value="{{sheet}}" hint-placeholder-val="{{false}}">
+<div style="position: absolute; inset: 0; background: rgba(16,18,48,.45)"></div>
+<div role="dialog" aria-modal="true" aria-labelledby="sheet-h" style="position: absolute; left: 0; right: 0; bottom: 0; box-sizing: border-box; padding: 20px 16px 28px; border-radius: 20px 20px 0 0; background: #ffffff; display: flex; flex-direction: column; gap: 12px">
+<span aria-hidden="true" style="align-self: center; width: 40px; height: 5px; border-radius: 999px; background: #e3dfc9"></span>
+<h2 id="sheet-h" style="margin: 0; font-size: 20px; line-height: 26px; font-weight: 700">{{sheetTitle}}</h2>
+<p style="margin: 0; font-size: 15px; line-height: 21px; color: #5b5f86">{{sheetText}}</p>
+<button type="button" onClick="{{accept}}" style="height: 52px; border: 0; border-radius: 12px; background: #ff6c2e; color: #262a67; font: inherit; font-weight: 700; font-size: 16px; cursor: pointer">Confirm</button>
+<button type="button" onClick="{{closeSheet}}" style="height: 48px; border-radius: 12px; background: #ffffff; border: 1px solid #7b7fa6; color: #262a67; font: inherit; font-weight: 600; font-size: 15px; cursor: pointer">Keep looking</button>
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"state":{"editor":"enum","options":["open","accepted","expired","noRemedy"],"default":"open"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { pick: 'camel', sheet: false, done: false }; }
+  renderVals() {
+    const prop = this.props.state ?? 'open';
+    const st = this.state.done ? 'accepted' : prop;
+    const O = [
+      ['camel', 'Sunset camel ride instead', 'Fri 30 Oct, 17:00 · 2 people · same meeting point', '−200 EGP', 'Switch to the Sunset camel ride?', 'Your booking is updated and the 200 EGP difference goes back to your card within 2 working days.'],
+      ['date', 'Move to another departure', 'Thu 12 – Sat 14 Nov · safari included · seats 6A, 6B', '0 EGP', 'Move to Thu 12 – Sat 14 Nov?', 'Your whole booking moves to the November departure at the same price. Your new seats are 6A and 6B.'],
+      ['refund', 'Refund the safari', 'Keep the rest of the trip as booked', '900 EGP back', 'Refund the Sand-dune safari?', 'The safari is removed from your booking. The organizer confirms the amount, up to 900 EGP, and it goes back to your card.']
+    ];
+    const cur = O.find((o) => o[0] === this.state.pick) || O[0];
+    const options = O.map(([id, t, d, diff]) => {
+      const on = this.state.pick === id;
+      return { t, d, diff, checked: on ? 'true' : 'false', pick: () => this.setState({ pick: id }),
+        style: 'width: 100%; min-height: 72px; box-sizing: border-box; padding: 12px 14px; border-radius: 16px; background: #ffffff; display: flex; align-items: center; gap: 12px; font: inherit; color: #262a67; cursor: pointer; ' + (on ? 'border: 2px solid #fb8030;' : 'border: 1px solid #e3dfc9;'),
+        ring: 'width: 22px; height: 22px; flex-shrink: 0; box-sizing: border-box; border-radius: 999px; border: 2px solid ' + (on ? '#262a67' : '#7b7fa6') + '; display: flex; align-items: center; justify-content: center',
+        dot: 'width: 10px; height: 10px; border-radius: 999px; background: ' + (on ? '#262a67' : 'transparent'),
+        diffStyle: 'flex-shrink: 0; font-size: 14px; font-weight: 700; white-space: nowrap; ' + (diff.charAt(0) === '−' || diff.indexOf('back') > 0 ? 'color: #1f7a4d;' : 'color: #262a67;') };
+    });
+    const CLOCK = 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7v5l3 2', CHECK = 'M5 12.5l4.5 4.5L19 7', ALERT = 'M12 3l9.5 17h-19zM12 10v4M12 17h.01';
+    const P = {
+      open: ['Answer by Sat 24 Oct, 18:05 · 7 days left', CLOCK, 'background: #fdf0d5; color: #8a4b00;'],
+      accepted: ['Remedy accepted', CHECK, 'background: #e3f3ea; color: #1f7a4d;'],
+      expired: ['No answer in 7 days', ALERT, 'background: #fde8e6; color: #b42318;'],
+      noRemedy: ['No options offered yet', ALERT, 'background: #e6e8f5; color: #262a67;']
+    }[st];
+    const picked = this.state.done ? cur[1] : 'Sunset camel ride instead';
+    const C = {
+      accepted: ['You chose: ' + picked, 'Your booking is updated. Any money due back goes to your card within 2 working days.', 'ok', 'Back to booking', 'TrvBooking.dc.html'],
+      expired: ['The Trips Enjoy team is reviewing it', 'The 7 days ended on Sat 24 Oct. Our team is deciding with Nile Horizon Tours and will message you. You won’t be charged for this change.', 'bad', 'Back to booking', 'TrvBooking.dc.html'],
+      noRemedy: ['Support will contact you', 'Nile Horizon Tours hasn’t offered an alternative yet. Our support team is following up and you won’t be charged for this change.', 'info', 'Contact support', 'TrvSupport.dc.html']
+    }[st];
+    const tone = C ? (C[2] === 'ok' ? 'background: #e3f3ea; color: #1f7a4d;' : C[2] === 'bad' ? 'background: #fde8e6; color: #b42318;' : 'background: #e6e8f5; color: #262a67;') : '';
+    return {
+      options, isOpen: st === 'open', isClosed: st !== 'open',
+      pill: P[0], pillIcon: P[1], pillStyle: 'align-self: flex-start; min-height: 28px; padding: 0 10px; border-radius: 999px; display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; ' + P[2],
+      closedTitle: C ? C[0] : '', closedText: C ? C[1] : '', closedCta: C ? C[3] : '', closedHref: C ? C[4] : '#',
+      closedStyle: 'padding: 14px 16px; border-radius: 16px; display: flex; flex-direction: column; gap: 4px; font-size: 14px; line-height: 20px; ' + tone,
+      sheet: this.state.sheet && st === 'open', sheetTitle: cur[4], sheetText: cur[5],
+      openSheet: () => this.setState({ sheet: true }),
+      closeSheet: () => this.setState({ sheet: false }),
+      accept: () => this.setState({ sheet: false, done: true })
+    };
+  }
+}
+</script>
+</body>
+</html>

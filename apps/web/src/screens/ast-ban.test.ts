@@ -9,6 +9,7 @@ import { ADMIN_SCREENS } from "@/screens/admin";
 import { ORGANIZATION_SCREENS } from "@/screens/organization";
 import { PUBLIC_SCREENS } from "@/screens/public";
 import { SHARED_SCREENS } from "@/screens/shared";
+import { TRAVELER_SCREENS } from "@/screens/traveler";
 import { ALL_SCREENS } from "@/screens/registry";
 import { orpc } from "@/utils/orpc";
 
@@ -146,7 +147,7 @@ describe("Milestone 6: Global AST Barrier & Source Purity Audit", () => {
     });
   });
 
-  describe("Screen Registry Completeness: 110 Screens with Typed Loaders", () => {
+  describe("Screen Registry Completeness: 131 Screens with Typed Loaders", () => {
     test("ADMIN_SCREENS contains 33 registered screens and all define typed loaders", () => {
       expect(ADMIN_SCREENS.length).toBe(33);
       for (const screen of ADMIN_SCREENS) {
@@ -175,8 +176,15 @@ describe("Milestone 6: Global AST Barrier & Source Purity Audit", () => {
       }
     });
 
-    test("ALL_SCREENS contains all 110 screens and every single screen entry defines a typed loader", () => {
-      expect(ALL_SCREENS.length).toBe(110);
+    test("TRAVELER_SCREENS contains 21 registered screens and all define typed loaders", () => {
+      expect(TRAVELER_SCREENS.length).toBe(21);
+      for (const screen of TRAVELER_SCREENS) {
+        expect(typeof screen.loader).toBe("function");
+      }
+    });
+
+    test("ALL_SCREENS contains all 131 screens and every single screen entry defines a typed loader", () => {
+      expect(ALL_SCREENS.length).toBe(131);
       for (const screen of ALL_SCREENS) {
         expect(typeof screen.loader).toBe("function");
       }
@@ -316,7 +324,7 @@ describe("Milestone 6: Global AST Barrier & Source Purity Audit", () => {
   });
 
   describe("SSR Loader Resilience: Graceful Handling of Exceptions", () => {
-    test("All 110 screen loaders absorb server errors gracefully without unhandled rejections", async () => {
+    test("All 131 screen loaders absorb server errors gracefully without unhandled rejections", async () => {
       const rejectingQueryClient = {
         ensureQueryData: mock(async () => {
           throw new Error("RPC Network Timeout / 500 Internal Error");

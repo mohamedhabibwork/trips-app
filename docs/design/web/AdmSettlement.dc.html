@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Admin · Settlement run</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+.te-tr:hover{background:#fbf9f0}
+</style>
+</helmet>
+<div style="min-height: 1000px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="AdmNav" active="Settlements" hint-size="248px,1000px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 20px">
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: center">
+<div style="display: flex; align-items: center; gap: 14px">
+<a href="AdmSettlements.dc.html" aria-label="Back to settlements" style="width: 44px; height: 44px; border-radius: 999px; background: #ffffff; color: #262a67; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a>
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; color: #5b5f86">STL-2026-W42 · trips completed Mon 13 – Sun 19 Oct · pays Mon 20 Oct 06:00</span><h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Week 42 settlement</h1></div>
+</div>
+<span style="{{statusPill}}">{{statusText}}</span>
+</div>
+
+<section aria-labelledby="flow-h" style="background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px"><h2 id="flow-h" style="margin: 0; font-size: 18px; font-weight: 600">Who owes whom</h2><span style="font-size: 13px; color: #5b5f86">SAR · totals reconcile to gross collected</span></div>
+<div style="display: flex; flex-wrap: wrap; align-items: stretch; gap: 12px">
+<div style="flex: 1 1 180px; padding: 16px; border-radius: 16px; background: #e6e8f5; display: flex; flex-direction: column; justify-content: center; gap: 4px">
+<span style="display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM3 20a6 6 0 0 1 12 0M16 4.5a3.5 3.5 0 0 1 0 6.5M18 14.5a6 6 0 0 1 3 5.5"></path></svg>Travelers paid</span>
+<span style="font-size: 26px; font-weight: 700; font-variant-numeric: tabular-nums">9,620,000</span>
+<span style="font-size: 13px; color: #5b5f86">28,410 bookings · card, mada, Apple Pay</span>
+</div>
+<div aria-hidden="true" style="flex: 0 0 auto; display: flex; align-items: center; color: #c93a00"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></div>
+<div style="flex: 1 1 200px; padding: 16px; border-radius: 16px; background: #262a67; color: #f6f3e4; display: flex; flex-direction: column; justify-content: center; gap: 4px">
+<img src="../assets/6ea846350ba3adc0e289d47fa0612c3b.svg" alt="Trips Enjoy" style="height: 26px; width: auto; align-self: flex-start">
+<span style="font-size: 14px; color: #b8bad6">Merchant of record · holds funds</span>
+<span style="font-size: 13px; color: #b8bad6">Refunds out: <strong style="color: #f6f3e4">148,600</strong></span>
+<span style="font-size: 13px; color: #b8bad6">Gateway fees 2.2%: <strong style="color: #f6f3e4">211,640</strong></span>
+</div>
+<div aria-hidden="true" style="flex: 0 0 auto; display: flex; align-items: center; color: #c93a00"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></div>
+<div style="flex: 2 1 320px; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px">
+<sc-for list="{{flowOut}}" as="f" hint-placeholder-count="4">
+<div style="padding: 12px 14px; border-radius: 12px; background: {{f.bg}}; display: flex; flex-direction: column; gap: 2px">
+<span style="font-size: 13px; color: #5b5f86">{{f.l}}</span>
+<span style="font-size: 20px; font-weight: 700; font-variant-numeric: tabular-nums">{{f.v}}</span>
+<span style="font-size: 12px; color: #5b5f86">{{f.d}}</span>
+</div>
+</sc-for>
+</div>
+</div>
+</section>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
+
+<section aria-labelledby="pp-h" style="flex: 3 1 600px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 8px 0">
+<div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; align-items: center; padding: 12px 20px">
+<h2 id="pp-h" style="margin: 0; font-size: 18px; font-weight: 600">Parties · 1,254</h2>
+<div role="group" aria-label="Filter by role" style="display: flex; flex-wrap: wrap; gap: 6px">
+<sc-for list="{{chips}}" as="c" hint-placeholder-count="4"><button type="button" onClick="{{c.on}}" aria-pressed="{{c.pr}}" style="{{c.st}}">{{c.t}}</button></sc-for>
+</div>
+</div>
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 900px; border-collapse: collapse; font-size: 14px">
+<thead><tr style="color: #5b5f86; font-size: 13px"><th scope="col" style="text-align: start; padding: 10px 20px; font-weight: 600">Party</th><th scope="col" style="text-align: end; padding: 10px 8px; font-weight: 600">Gross</th><th scope="col" style="text-align: end; padding: 10px 8px; font-weight: 600">Deductions</th><th scope="col" style="text-align: end; padding: 10px 8px; font-weight: 600">Holds</th><th scope="col" style="text-align: end; padding: 10px 8px; font-weight: 600">Net</th><th scope="col" style="text-align: start; padding: 10px 8px; font-weight: 600">IBAN check</th><th scope="col" style="text-align: start; padding: 10px 20px; font-weight: 600">Status</th></tr></thead>
+<tbody>
+<sc-for list="{{rows}}" as="r" hint-placeholder-count="8">
+<tr class="te-tr" style="border-top: 1px solid #e3dfc9; font-variant-numeric: tabular-nums">
+<td style="padding: 10px 20px"><span style="display: flex; flex-direction: column; gap: 3px; align-items: flex-start"><a href="{{r.href}}" style="font-weight: 600; color: #262a67; text-decoration: none">{{r.n}}</a><span style="{{r.rs}}">{{r.role}}</span></span></td>
+<td style="padding: 10px 8px; text-align: end">{{r.g}}</td>
+<td style="padding: 10px 8px; text-align: end; color: #5b5f86"><span style="display: flex; flex-direction: column; align-items: flex-end"><span>{{r.d}}</span><span style="font-size: 12px">{{r.dd}}</span></span></td>
+<td style="padding: 10px 8px; text-align: end; {{r.hs}}">{{r.h}}</td>
+<td style="padding: 10px 8px; text-align: end; font-weight: 700">{{r.net}}</td>
+<td style="padding: 10px 8px; white-space: nowrap"><span style="display: inline-flex; align-items: center; gap: 6px; {{r.ic}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{r.ii}}"></path></svg>{{r.iban}}</span></td>
+<td style="padding: 10px 20px"><span style="{{r.ss}}">{{r.s}}</span></td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+<div style="padding: 10px 20px 6px; border-top: 1px solid #e3dfc9; font-size: 14px; color: #5b5f86">Showing {{shown}} of 1,254 parties · 54 with holds</div>
+</section>
+
+<aside style="flex: 1 1 320px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+<section aria-labelledby="ap-h" style="background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+<h2 id="ap-h" style="margin: 0; font-size: 18px; font-weight: 600">Approval · two people required</h2>
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 12px; border-radius: 12px; background: #f6f3e4; font-size: 14px">
+<div style="display: flex; justify-content: space-between"><span>Pay now</span><strong style="font-variant-numeric: tabular-nums">7,887,633 SAR</strong></div>
+<div style="display: flex; justify-content: space-between; color: #8a4b00"><span>Held · 54 parties</span><strong style="font-variant-numeric: tabular-nums">276,580 SAR</strong></div>
+</div>
+<ol style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px">
+<li style="display: flex; gap: 10px; align-items: center; padding: 10px 12px; border-radius: 12px; background: #e3f3ea">
+<span style="width: 32px; height: 32px; border-radius: 999px; background: #1f7a4d; color: #ffffff; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg></span>
+<span style="display: flex; flex-direction: column; font-size: 14px"><span style="font-weight: 600">Tariq Mansour · Finance lead</span><span style="color: #1f7a4d; font-size: 13px; font-weight: 600">Approved Mon 20 Oct 05:14</span></span>
+</li>
+<li style="{{secondStyle}}">
+<span style="{{secondDot}}">{{secondMark}}</span>
+<span style="display: flex; flex-direction: column; font-size: 14px"><span style="font-weight: 600">Reem Othman · Super admin</span><span style="font-size: 13px; font-weight: 600; {{secondTone}}">{{secondText}}</span></span>
+</li>
+</ol>
+<label style="display: flex; gap: 10px; align-items: flex-start; font-size: 14px; line-height: 20px"><input type="checkbox" onChange="{{toggleAck}}" style="width: 20px; height: 20px; margin: 0; accent-color: #262a67; flex-shrink: 0">I checked the exceptions and the reconciliation (99.8% matched)</label>
+<button type="button" onClick="{{approve}}" aria-disabled="{{approveDis}}" style="{{approveStyle}}">{{approveLabel}}</button>
+<button type="button" style="height: 44px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font: inherit; font-size: 15px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12M7 11l5 5 5-5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"></path></svg>Export bank file (SARIE)</button>
+<p style="margin: 0; font-size: 13px; color: #5b5f86; line-height: 18px">Approval sends 1,200 statements and issues self-billed invoices for providers. Held amounts join the next Monday run once cleared. The settlement closes when every payout is made and no dispute is open.</p>
+</section>
+
+<section aria-labelledby="led-h" style="background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; justify-content: space-between; align-items: center"><h2 id="led-h" style="margin: 0; font-size: 18px; font-weight: 600">Ledger entries</h2><span style="font-size: 12px; color: #5b5f86">Preview · JE-2026-10-001</span></div>
+<div style="display: flex; flex-direction: column; font-size: 13px; font-variant-numeric: tabular-nums">
+<sc-for list="{{ledger}}" as="l" hint-placeholder-count="6">
+<div style="display: grid; grid-template-columns: 28px minmax(0, 1fr) auto; gap: 8px; padding: 7px 0; border-top: 1px solid #e3dfc9"><span style="font-weight: 700; {{l.sc}}">{{l.s}}</span><span>{{l.a}}</span><span style="font-weight: 600">{{l.v}}</span></div>
+</sc-for>
+<div style="display: flex; justify-content: space-between; padding: 8px 0 0; border-top: 2px solid #262a67; font-weight: 700"><span>Balanced</span><span>9,471,400 = 9,471,400</span></div>
+</div>
+</section>
+</aside>
+</div>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"approved":{"editor":"boolean","default":false},"$preview":{"width":1440,"height":1240}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { chip: 'All', ack: false, ok: null }; }
+  renderVals() {
+    const pill = (tone) => 'display: inline-flex; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; white-space: nowrap; ' + ({ ok: 'background: #e3f3ea; color: #1f7a4d;', warn: 'background: #fdf0d5; color: #8a4b00;', bad: 'background: #fde8e6; color: #b42318;', info: 'background: #e6e8f5; color: #262a67;', live: 'background: #ffe7dc; color: #c93a00;' })[tone];
+    const badge = (role) => 'display: inline-flex; padding: 0 8px; border-radius: 999px; font-size: 12px; font-weight: 600; line-height: 20px; ' + (role.indexOf('Organization') === 0 ? 'background: #262a67; color: #f6f3e4;' : role.indexOf('Driver') === 0 ? 'background: #ffe7dc; color: #c93a00;' : 'background: #e6e8f5; color: #262a67;');
+    const flowOut = [
+      { l: 'To organizations · 212', v: '5,223,733', d: 'Net of 8% commission & deals', bg: '#f6f3e4' },
+      { l: 'To platform drivers · 731', v: '2,500,326', d: 'Deals 2,778,140 − 10%', bg: '#f6f3e4' },
+      { l: 'To photographers · 311', v: '440,154', d: 'Deals 500,175 − 12%', bg: '#f6f3e4' },
+      { l: 'Commissions retained', v: '1,095,547', d: '757,712 org · 277,814 drv · 60,021 pho', bg: '#ffe7dc' }
+    ];
+    const OK = 'M5 12.5l4.5 4.5L19 7', BAD = 'M12 3l9.5 17h-19zM12 10v4M12 17h.01';
+    const D = [
+      ['Sunrise Tours Co.', 'Organization · Growth', 'AdmOrg.dc.html', '486,250', '122,306', 'Refunds 12,400 · comm. 37,908 · fees 10,698 · deals 61,300', '0', '363,944', 'SA03 •• 4410 verified', true, 'Ready', 'ok'],
+      ['Desert Pearl Travel', 'Organization · Starter', 'AdmOrg.dc.html', '128,400', '17,329', 'Refunds 4,600 · comm. 9,904 · fees 2,825', '22,000', '89,071', 'SA71 •• 2208 verified', true, 'Part held · D-1062', 'warn'],
+      ['Hijaz Coach Lines', 'Organization · Growth', 'AdmOrg.dc.html', '64,800', '33,566', 'Refunds 9,300 · comm. 4,440 · fees 1,426 · deals 18,400', '−2,140 carried', '29,094', 'SA19 •• 7731 verified', true, 'Ready · recovered', 'ok'],
+      ['Khalid Al-Harbi', 'Driver · Professional', 'AdmUser.dc.html', '4,217', '422', 'Commission 10%', '0', '3,795', 'Al Rajhi •• 6021 verified', true, 'Ready', 'ok'],
+      ['Noura Al-Shehri', 'Photographer · Studio', 'AdmUser.dc.html', '5,600', '672', 'Commission 12%', '0', '4,928', 'Riyad Bank •• 0457 verified', true, 'Ready', 'ok'],
+      ['Ibrahim Saleh', 'Driver · Professional', 'AdmUser.dc.html', '7,250', '725', 'Commission 10%', '6,525', '0', 'No IBAN on file', false, 'Held · missing IBAN', 'bad'],
+      ['Yara Khoury', 'Photographer · Pro', 'AdmDispute.dc.html', '9,900', '1,188', 'Commission 12%', '8,712', '0', 'Alinma •• 8812 verified', true, 'Held · dispute D-1051', 'bad'],
+      ['Turki Al-Shammari', 'Driver · Professional', 'AdmUser.dc.html', '2,600', '260', 'Commission 10%', '2,340', '0', 'Name does not match ID', false, 'Held · KYC failed', 'bad']
+    ];
+    const names = ['All', 'Organizations', 'Drivers', 'Photographers'];
+    const pre = { Organizations: 'Organization', Drivers: 'Driver', Photographers: 'Photographer' };
+    const chip = this.state.chip;
+    const chips = names.map((t) => ({ t, pr: t === chip ? 'true' : 'false', on: () => this.setState({ chip: t }),
+      st: 'height: 36px; padding: 0 14px; border-radius: 999px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; ' + (t === chip ? 'background: #262a67; color: #f6f3e4; border: 1px solid #262a67;' : 'background: #ffffff; color: #262a67; border: 1px solid #7b7fa6;') }));
+    const rows = D.filter((d) => chip === 'All' || d[1].indexOf(pre[chip]) === 0).map((d) => ({ n: d[0], role: d[1], rs: badge(d[1]), href: d[2], g: d[3], d: '−' + d[4], dd: d[5], h: d[6], hs: d[6] === '0' ? 'color: #5b5f86;' : 'color: #8a4b00; font-weight: 600;', net: d[7],
+      iban: d[8], ii: d[9] ? OK : BAD, ic: d[9] ? 'color: #1f7a4d;' : 'color: #b42318; font-weight: 600;', s: d[10], ss: pill(d[11]) }));
+    const ledger = [
+      { s: 'Dr', a: 'Traveler funds clearing (2105)', v: '9,471,400' },
+      { s: 'Cr', a: 'Payable · organizations (2210)', v: '5,223,733' },
+      { s: 'Cr', a: 'Payable · drivers (2220)', v: '2,500,326' },
+      { s: 'Cr', a: 'Payable · photographers (2230)', v: '440,154' },
+      { s: 'Cr', a: 'Commission revenue (4100)', v: '1,095,547' },
+      { s: 'Cr', a: 'Gateway fees payable (2310)', v: '211,640' }
+    ].map((l) => ({ ...l, sc: l.s === 'Dr' ? 'color: #c93a00;' : 'color: #262a67;' }));
+    const ok = this.state.ok === null ? !!this.props.approved : this.state.ok;
+    const ack = this.state.ack || ok;
+    return { flowOut, chips, rows, shown: String(rows.length), ledger, ack,
+      toggleAck: () => this.setState({ ack: !this.state.ack }),
+      statusText: ok ? 'Approved · ready to pay' : 'Reviewed · 1 of 2 approvals', statusPill: pill(ok ? 'ok' : 'warn'),
+      secondStyle: 'display: flex; gap: 10px; align-items: center; padding: 10px 12px; border-radius: 12px; background: ' + (ok ? '#e3f3ea;' : '#fdf0d5;'),
+      secondDot: 'width: 32px; height: 32px; border-radius: 999px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 13px; font-weight: 700; ' + (ok ? 'background: #1f7a4d; color: #ffffff;' : 'background: #ff6c2e; color: #262a67;'),
+      secondMark: ok ? 'OK' : 'RO', secondTone: ok ? 'color: #1f7a4d;' : 'color: #8a4b00;', secondText: ok ? 'Approved just now' : 'Waiting for you',
+      approveDis: ack && !ok ? 'false' : 'true', approve: () => { if (ack && !ok) this.setState({ ok: true }); },
+      approveLabel: ok ? 'Run approved' : 'Approve run',
+      approveStyle: 'height: 48px; border-radius: 12px; border: 0; font: inherit; font-size: 15px; font-weight: 700; cursor: pointer; ' + (ack && !ok ? 'background: #ff6c2e; color: #262a67;' : 'background: #e3dfc9; color: #5b5f86;') };
+  }
+}
+</script>
+</body>
+</html>

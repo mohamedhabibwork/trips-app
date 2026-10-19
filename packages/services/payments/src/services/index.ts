@@ -2,14 +2,18 @@ import { PaymentsServiceError } from "../errors";
 import {
   DEFAULT_PLATFORM_COMMISSION_BPS,
   FAWRY_EXPIRY_HOURS,
+  PAYMENT_CONFIRM_TIMEOUT_SECONDS,
+  buildMockGatewayHandoff,
   generateFawryReferenceCode,
   generateProviderReference,
+  resolveGatewayCallbackAction,
 } from "../model";
 import { createPaymentsRepository, type ServiceDatabase } from "../repository";
 import type {
   ConfirmPaymentInput,
   CreatePaymentIntentInput,
   OpenDisputeInput,
+  ProcessGatewayCallbackInput,
   RefundPaymentInput,
   ResolveDisputeInput,
 } from "../types";
@@ -108,33 +112,66 @@ export function createPaymentsService(deps: { db: ServiceDatabase }) {
         );
       }
 
-      const confirmed = await repo.markPaymentSucceeded(payment.id);
+      const confirmed = await applySuccessfulPayment(repo, payment);
       if (!confirmed) {
         throw new PaymentsServiceError("PAYMENT_NOT_FOUND", "Payment transaction not found.");
       }
 
-      if (payment.bookingId && payment.tenantId) {
-        const booking = await repo.findBookingById(payment.bookingId);
-        await repo.updateBookingStatus(payment.bookingId, "confirmed");
-        const commissionMinor = Math.floor(
-          (payment.amountMinor * DEFAULT_PLATFORM_COMMISSION_BPS) / 10000,
-        );
-        const netMinor = payment.amountMinor - commissionMinor;
-        await repo.insertRevenueLedgerEntry({
-          tenantId: payment.tenantId,
-          tripId: booking?.tripId ?? null,
-          bookingId: payment.bookingId,
-          grossAmountMinor: payment.amountMinor,
-          commissionAmountMinor: commissionMinor,
-          netAmountMinor: netMinor,
-          currencyCode: payment.currencyCode,
-          invoiceNumber: `INV-${payment.providerReference}`,
-          description: `Booking payment ${booking?.bookingReference ?? payment.bookingId}`,
-        });
-      }
-
       return confirmed;
     },
+
+    /**
+     * Gateway webhook/callback (FR-PAY-02): processed idempotently. Repeated deliveries for an
+     * already-settled payment return the current transaction with `alreadyProcessed: true` and
+     * never re-apply booking confirmation or ledger entries.
+     */
+    async processGatewayCallback(input: ProcessGatewayCallbackInput) {
+      const payment = await repo.findPaymentByProviderReference(input.providerReference);
+      if (!payment) {
+        throw new PaymentsServiceError("PAYMENT_NOT_FOUND", "Payment transaction not found.");
+      }
+      if (payment.gateway !== input.gateway) {
+        throw new PaymentsServiceError(
+          "INVALID_PAYMENT_STATE",
+          "Gateway does not match the payment transaction.",
+        );
+      }
+
+      const decision = resolveGatewayCallbackAction(payment.status, input.outcome);
+      if (decision.action === "already_processed") {
+        return { payment, alreadyProcessed: true };
+      }
+      if (decision.action === "apply_success") {
+        const settled = await applySuccessfulPayment(repo, payment);
+        return { payment: settled ?? payment, alreadyProcessed: false };
+      }
+      const failed = await repo.markPaymentFailed(payment.id);
+      return { payment: failed ?? payment, alreadyProcessed: false };
+    },
+
+    /** D-30: fail pendings that never received a callback, freeing the traveler to retry. */
+    async expireStalePendingPayments(olderThanSeconds?: number) {
+      const seconds = olderThanSeconds ?? PAYMENT_CONFIRM_TIMEOUT_SECONDS;
+      const cutoff = new Date(Date.now() - seconds * 1000);
+      return { expiredCount: await repo.expireStalePending(cutoff) };
+    },
+
+    /** Mock gateway handoff (dry run, NFR-SEC-12) for an existing pending transaction. */
+    async getGatewayHandoff(paymentId: string, actor?: { accountId: string }) {
+      const payment = await repo.findPaymentById(paymentId);
+      if (!payment) {
+        throw new PaymentsServiceError("PAYMENT_NOT_FOUND", "Payment transaction not found.");
+      }
+      if (actor && payment.payerAccountId !== actor.accountId) {
+        throw new PaymentsServiceError(
+          "FORBIDDEN_PAYMENT_ACCESS",
+          "You do not have permission to open this payment handoff.",
+        );
+      }
+      return buildMockGatewayHandoff(payment.gateway, payment.providerReference);
+    },
+
+    buildMockGatewayHandoff,
 
     async refundPayment(
       actor: { accountId: string; tenantId?: string | null; role: string },
@@ -226,3 +263,31 @@ export function createPaymentsService(deps: { db: ServiceDatabase }) {
 }
 
 export type PaymentsService = ReturnType<typeof createPaymentsService>;
+
+/** Shared success path for both the direct confirm and the gateway callback. */
+async function applySuccessfulPayment(
+  repo: ReturnType<typeof createPaymentsRepository>,
+  payment: NonNullable<Awaited<ReturnType<typeof repo.findPaymentById>>>,
+) {
+  const confirmed = await repo.markPaymentSucceeded(payment.id);
+  if (payment.bookingId && payment.tenantId) {
+    const booking = await repo.findBookingById(payment.bookingId);
+    await repo.updateBookingStatus(payment.bookingId, "confirmed");
+    const commissionMinor = Math.floor(
+      (payment.amountMinor * DEFAULT_PLATFORM_COMMISSION_BPS) / 10000,
+    );
+    const netMinor = payment.amountMinor - commissionMinor;
+    await repo.insertRevenueLedgerEntry({
+      tenantId: payment.tenantId,
+      tripId: booking?.tripId ?? null,
+      bookingId: payment.bookingId,
+      grossAmountMinor: payment.amountMinor,
+      commissionAmountMinor: commissionMinor,
+      netAmountMinor: netMinor,
+      currencyCode: payment.currencyCode,
+      invoiceNumber: `INV-${payment.providerReference}`,
+      description: `Booking payment ${booking?.bookingReference ?? payment.bookingId}`,
+    });
+  }
+  return confirmed;
+}

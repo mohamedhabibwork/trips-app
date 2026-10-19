@@ -66,6 +66,36 @@ export function createBookingRepository(db: Database) {
       return row ?? null;
     },
 
+    /** Unscoped existence probe so a foreign-creator coupon maps to the generic failure message. */
+    async findAnyCouponByCode(code: string) {
+      const normalized = code.trim().toUpperCase();
+      const [row] = await db
+        .select()
+        .from(schema.coupons)
+        .where(eq(schema.coupons.code, normalized))
+        .limit(1);
+      return row ?? null;
+    },
+
+    async decrementCouponRedemption(couponId: string) {
+      await db
+        .update(schema.coupons)
+        .set({
+          redemptionsCount: sql`GREATEST(0, ${schema.coupons.redemptionsCount} - 1)`,
+          updatedAt: new Date(),
+        })
+        .where(eq(schema.coupons.id, couponId));
+    },
+
+    async findTripByBookingId(tripId: string) {
+      const [row] = await db
+        .select({ startsAt: schema.trips.startsAt })
+        .from(schema.trips)
+        .where(eq(schema.trips.id, tripId))
+        .limit(1);
+      return row ?? null;
+    },
+
     async incrementCouponRedemption(couponId: string) {
       await db
         .update(schema.coupons)

@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>PDF · Simplified tax invoice</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;family=Cairo:wght@400;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#ffffff}
+</style>
+</helmet>
+<div style="width: 794px; height: 1123px; box-sizing: border-box; padding: 48px; background: #ffffff; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif; font-size: 15px; line-height: 1.45; display: flex; flex-direction: column; gap: 20px">
+<header style="display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; padding-bottom: 16px; border-bottom: 2px solid #262a67">
+<img src="../assets/1fbce194fcb16bf54904c32c189fca31.svg" alt="Trips Enjoy" style="height: 40px; width: auto; display: block">
+<div style="text-align: right">
+<div style="font-size: 24px; font-weight: 700; line-height: 1.15">Simplified Tax Invoice</div>
+<div style="font-family: Cairo, sans-serif; font-size: 18px; font-weight: 700" dir="rtl" lang="ar">فاتورة ضريبية مبسطة</div>
+<div style="font-size: 16px; font-weight: 600">INV-ST-2026-004812</div>
+</div>
+</header>
+<section style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0; border: 1px solid #e3dfc9; border-radius: 8px">
+<div style="padding: 10px 14px; border-right: 1px solid #e3dfc9"><div style="font-size: 13px; color: #5b5f86">Issue date · <span style="font-family: Cairo, sans-serif">تاريخ الإصدار</span></div><div style="font-weight: 600">6 Oct 2026, 11:40</div></div>
+<div style="padding: 10px 14px; border-right: 1px solid #e3dfc9"><div style="font-size: 13px; color: #5b5f86">Supply date · <span style="font-family: Cairo, sans-serif">تاريخ التوريد</span></div><div style="font-weight: 600">16 Oct 2026</div></div>
+<div style="padding: 10px 14px"><div style="font-size: 13px; color: #5b5f86">ZATCA status</div><div style="font-weight: 600">Reported · 6 Oct, 11:40</div></div>
+</section>
+<section style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px">
+<div><div style="display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: #5b5f86"><img src="../assets/697a49af6be5a077ae1851c1a8b9dfcd.svg" alt="" style="width: 32px; height: 32px; border-radius: 10px; object-fit: cover; flex-shrink: 0; display: block"><span>SELLER · <span style="font-family: Cairo, sans-serif">البائع</span></span></div><div style="font-size: 17px; font-weight: 700">Sunrise Tours Co. <span style="font-family: Cairo, sans-serif; font-weight: 600" lang="ar">شركة شروق للسياحة</span></div><div>VAT 310245678900003 · CR 1010734512</div><div>Olaya St, Al Olaya, Riyadh 12213</div></div>
+<div><div style="min-height: 32px; display: flex; align-items: center; font-size: 13px; font-weight: 600; color: #5b5f86"><span>BUYER · <span style="font-family: Cairo, sans-serif">المشتري</span></span></div><div style="font-size: 17px; font-weight: 700">Sara Al-Qahtani</div><div>Booking TE-48213</div><div>AlUla Heritage Weekend · Thu 16 – Sat 18 Oct</div></div>
+</section>
+<table style="width: 100%; border-collapse: collapse">
+<thead>
+<tr style="font-size: 13px; color: #5b5f86; border-bottom: 1px solid #262a67">
+<th style="padding: 6px 8px 6px 0; text-align: left; font-weight: 600">Item · <span style="font-family: Cairo, sans-serif">البند</span></th>
+<th style="padding: 6px 8px; text-align: right; font-weight: 600">Excl. VAT</th>
+<th style="padding: 6px 8px; text-align: right; font-weight: 600">VAT 15%</th>
+<th style="padding: 6px 0 6px 8px; text-align: right; font-weight: 600">Incl. VAT</th>
+</tr>
+</thead>
+<tbody>
+<sc-for list="{{lines}}" as="l" hint-placeholder-count="6">
+<tr style="border-bottom: 1px solid #e3dfc9">
+<td style="padding: 8px 8px 8px 0">{{l.t}}</td>
+<td style="padding: 8px; text-align: right; white-space: nowrap">{{l.x}}</td>
+<td style="padding: 8px; text-align: right; white-space: nowrap">{{l.v}}</td>
+<td style="padding: 8px 0 8px 8px; text-align: right; white-space: nowrap; font-weight: 600">{{l.a}}</td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+<section style="display: flex; justify-content: space-between; gap: 24px; align-items: flex-start">
+<div style="display: flex; gap: 14px; align-items: center">
+<img src="../assets/820ae1ed630eb3e04ea4d7ce91f50535.png" alt="ZATCA QR code for invoice INV-ST-2026-004812" style="width: 120px; height: 120px; display: block">
+<div style="font-size: 13px; color: #5b5f86; max-width: 200px">ZATCA QR: seller, VAT number, time stamp, total and VAT. Scan with the Fatoora app to verify.</div>
+</div>
+<div style="flex: 0 1 320px">
+<div style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #e3dfc9"><span>Total excl. VAT <span style="font-family: Cairo, sans-serif; color: #5b5f86">الإجمالي غير شامل</span></span><span>3,993.04</span></div>
+<div style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #e3dfc9"><span>VAT 15% <span style="font-family: Cairo, sans-serif; color: #5b5f86">الضريبة</span></span><span>598.96</span></div>
+<div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 2px solid #262a67; font-size: 18px; font-weight: 700"><span>Total incl. VAT</span><span>4,592.00 SAR</span></div>
+<div style="padding-top: 8px; font-size: 14px">Paid · Visa •• 4421 · Mon 6 Oct 2026 · Ref PAY-88213041</div>
+</div>
+</section>
+<div style="font-size: 14px; color: #5b5f86">Issued by Trips Enjoy Co. on behalf of the seller. Discounts: coupon AUTUMN15 (15% off seats) and Explorer plan (5% off programs). Refunds are issued as credit notes referencing this invoice.</div>
+<footer style="margin-top: auto; padding-top: 12px; border-top: 1px solid #e3dfc9; display: flex; justify-content: space-between; gap: 16px; font-size: 13px; color: #5b5f86">
+<span>Trips Enjoy Co. · CR 1010998877 · VAT 311098765400003 · Prince Turki St, Al Aqiq, Riyadh 13511</span>
+<span style="white-space: nowrap">support@trips-enjoy.com · Page 1 / 1</span>
+</footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":794,"height":1123}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const L = [
+      ['Seats · adults · 2 × 1,250', '2,173.90', '326.10', '2,500.00'],
+      ['Seats · children · 2 × 990', '1,721.74', '258.26', '1,980.00'],
+      ['Travel insurance · 4 × 25', '86.96', '13.04', '100.00'],
+      ['Hegra guided tour · 4 × 180', '626.09', '93.91', '720.00'],
+      ['Coupon AUTUMN15 · 15% off seats', '−584.35', '−87.65', '−672.00'],
+      ['Explorer plan · 5% off programs', '−31.30', '−4.70', '−36.00']
+    ];
+    return { lines: L.map(([t, x, v, a]) => ({ t, x, v, a })) };
+  }
+}
+</script>
+</body>
+</html>

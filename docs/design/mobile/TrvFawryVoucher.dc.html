@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Book · Pay cash at Fawry</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;family=Cairo:wght@500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="height: 100%; box-sizing: border-box; padding: 56px 16px 24px; display: flex; flex-direction: column; gap: 12px">
+
+<div style="display: flex; align-items: center; gap: 12px">
+<a href="TrvPay.dc.html" aria-label="Back to payment" style="width: 44px; height: 44px; border-radius: 999px; background: #ffffff; color: #262a67; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a>
+<h1 style="margin: 0; flex-grow: 1; font-size: 22px; line-height: 28px; font-weight: 700">Pay cash at Fawry</h1>
+</div>
+
+<div role="status" style="display: flex; flex-direction: column; gap: 6px">
+<span style="{{pillStyle}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{pillIcon}}"></path></svg>{{pill}}</span>
+<span style="font-size: 15px; line-height: 21px">{{lede}}</span>
+</div>
+
+<div style="{{voucherStyle}}">
+<span style="font-size: 13px; color: #5b5f86">Fawry reference</span>
+<div style="display: flex; align-items: center; gap: 10px">
+<span aria-label="Reference 8 2 3 1, 4 4 7 0, 1 9" style="{{refStyle}}">8231 4470 19</span>
+<sc-if value="{{isIssued}}" hint-placeholder-val="{{true}}"><button type="button" onClick="{{copy}}" style="margin-inline-start: auto; height: 44px; padding: 0 14px; border-radius: 12px; background: #ffffff; border: 1px solid #7b7fa6; color: #262a67; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer">{{copyLabel}}</button></sc-if>
+</div>
+<div style="display: flex; justify-content: space-between; gap: 8px; padding-top: 10px; border-top: 1px solid #e3dfc9; font-size: 14px">
+<span style="display: flex; flex-direction: column"><span style="color: #5b5f86; font-size: 13px">Amount</span><strong style="font-size: 18px">10,425 EGP</strong></span>
+<span style="display: flex; flex-direction: column; align-items: flex-end"><span style="color: #5b5f86; font-size: 13px">{{expiryLabel}}</span><strong style="font-size: 15px">Mon 19 Oct, 14:32</strong><span style="font-size: 12px; color: #5b5f86">Cairo time</span></span>
+</div>
+</div>
+
+<sc-if value="{{isIssued}}" hint-placeholder-val="{{true}}">
+<section aria-labelledby="how-h" style="padding: 12px 16px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 8px">
+<h2 id="how-h" style="margin: 0; font-size: 15px; font-weight: 600">How to pay</h2>
+<ol style="margin: 0; padding: 0 0 0 18px; font-size: 14px; line-height: 20px; display: flex; flex-direction: column; gap: 2px">
+<li>Go to any Fawry outlet, or open the Fawry app.</li>
+<li>Ask to pay Trips Enjoy and give the reference.</li>
+<li>Pay 10,425 EGP and keep the receipt.</li>
+</ol>
+<ol lang="ar" dir="rtl" style="margin: 0; padding: 8px 18px 0 0; border-top: 1px solid #e3dfc9; font-family: Cairo, sans-serif; font-size: 14px; line-height: 22px; display: flex; flex-direction: column; gap: 2px">
+<li>اذهب إلى أي منفذ فوري، أو افتح تطبيق فوري.</li>
+<li>اطلب الدفع لـ Trips Enjoy وأعطِ الرقم المرجعي.</li>
+<li>ادفع 10,425 جنيه واحتفظ بالإيصال.</li>
+</ol>
+</section>
+</sc-if>
+
+<div style="padding: 12px 14px; border-radius: 16px; background: #ffffff; display: flex; gap: 10px; align-items: flex-start; font-size: 13px; line-height: 18px">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M7 4h7a2 2 0 0 1 2 2v7H7zM5 13h12a2 2 0 0 1 2 2v2H5zM7 17v3M17 17v3"></path></svg>
+<span style="display: flex; flex-direction: column; gap: 2px"><strong style="font-size: 14px">Siwa Oasis Escape · TE-51907</strong><span style="color: #5b5f86">{{holdText}}</span></span>
+</div>
+
+<div style="margin-top: auto; display: flex; flex-direction: column; gap: 6px">
+<sc-if value="{{isIssued}}" hint-placeholder-val="{{true}}"><button type="button" onClick="{{share}}" style="height: 52px; border: 0; border-radius: 12px; background: #ff6c2e; color: #262a67; font: inherit; font-weight: 700; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12M7 9l5-5 5 5M5 14v5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-5"></path></svg>Share voucher</button></sc-if>
+<sc-if value="{{notIssued}}" hint-placeholder-val="{{false}}"><a href="{{ctaHref}}" style="height: 52px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-weight: 700; font-size: 16px; text-decoration: none; display: flex; align-items: center; justify-content: center">{{ctaLabel}}</a></sc-if>
+<a href="{{secHref}}" style="height: 44px; color: #262a67; font-weight: 600; font-size: 15px; text-decoration: none; display: flex; align-items: center; justify-content: center">{{secLabel}}</a>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"state":{"editor":"enum","options":["issued","paid","expired","paidLateConfirmed","paidLateRefunded"],"default":"issued"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { copied: false }; }
+  renderVals() {
+    const st = this.props.state ?? 'issued';
+    const CLOCK = 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7v5l3 2', CHECK = 'M5 12.5l4.5 4.5L19 7', ALERT = 'M12 3l9.5 17h-19zM12 10v4M12 17h.01';
+    const T = { warn: 'background: #fdf0d5; color: #8a4b00;', ok: 'background: #e3f3ea; color: #1f7a4d;', bad: 'background: #fde8e6; color: #b42318;', info: 'background: #e6e8f5; color: #262a67;' };
+    const S = {
+      issued: ['Cash payment pending', CLOCK, 'warn', 'Pay this amount at any Fawry outlet before the reference expires. We confirm your booking as soon as Fawry tells us.', 'Your 2 seats on Bus 1 are held until the reference expires.', '', '', 'View booking', 'TrvBooking.dc.html'],
+      paid: ['Paid at Fawry · Sat 17 Oct, 19:05', CHECK, 'ok', 'Fawry confirmed your cash payment. Your booking is confirmed.', 'Seats 5A and 5B on Bus 1 are yours.', 'See confirmation', 'TrvBooked.dc.html', 'View booking', 'TrvBooking.dc.html'],
+      expired: ['Reference expired', ALERT, 'bad', 'The 48 hours ended before a payment arrived, so the seats were released. Your choices are saved if you want to book again.', 'Seats released Mon 19 Oct, 14:32. Nothing was charged.', 'Book again', 'TrvBookSeats.dc.html', 'Back to trip', 'TrvTrip.dc.html'],
+      paidLateConfirmed: ['Paid after expiry · confirmed', CHECK, 'ok', 'Your payment arrived after the reference expired. The seats were still free, so your booking is confirmed at the price you were shown.', 'Seats 5A and 5B on Bus 1 are yours at 10,425 EGP.', 'See confirmation', 'TrvBooked.dc.html', 'View booking', 'TrvBooking.dc.html'],
+      paidLateRefunded: ['Paid after expiry · refund on its way', ALERT, 'info', 'Your payment arrived after the reference expired, and the seats were already taken. We are refunding the full 10,425 EGP.', 'Refund sent within 2 working days. You can choose how to receive it.', 'View refund', 'TrvBooking.dc.html', 'Back to trip', 'TrvTrip.dc.html']
+    }[st];
+    const issued = st === 'issued';
+    const dim = st === 'expired' || st.indexOf('paidLate') === 0;
+    return {
+      pill: S[0], pillIcon: S[1], lede: S[3], holdText: S[4], ctaLabel: S[5], ctaHref: S[6] || '#', secLabel: S[7], secHref: S[8],
+      isIssued: issued, notIssued: !issued,
+      expiryLabel: st === 'expired' ? 'Expired' : issued ? 'Pay before' : 'Valid until',
+      pillStyle: 'align-self: flex-start; min-height: 28px; padding: 0 10px; border-radius: 999px; display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; ' + T[S[2]],
+      voucherStyle: 'padding: 14px 16px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 6px; ' + (issued ? 'border: 2px solid #262a67;' : 'border: 1px solid #e3dfc9;'),
+      refStyle: 'font-size: 30px; line-height: 38px; font-weight: 700; letter-spacing: 0.06em; ' + (dim ? 'color: #5b5f86; text-decoration: line-through;' : 'color: #262a67;'),
+      copyLabel: this.state.copied ? 'Copied' : 'Copy',
+      copy: () => this.setState({ copied: true }),
+      share: () => this.setState({ copied: this.state.copied })
+    };
+  }
+}
+</script>
+</body>
+</html>

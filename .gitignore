@@ -60,3 +60,4 @@ uploads
 
 # Firebase service account keys (admin credentials, never commit)
 *-firebase-adminsdk-*.json
+.mimosa

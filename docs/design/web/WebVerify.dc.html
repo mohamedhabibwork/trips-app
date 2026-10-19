@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Verify phone — web</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif; display: flex; flex-direction: column; align-items: center; padding: 48px; gap: 48px">
+<img src="../assets/1fbce194fcb16bf54904c32c189fca31.svg" alt="Trips Enjoy — تريبس إنجوي" style="height: 52px; width: auto">
+<div style="width: 480px; box-sizing: border-box; background: #ffffff; border-radius: 20px; padding: 40px; display: flex; flex-direction: column; gap: 24px; box-shadow: 0 1px 2px rgba(38,42,103,.06), 0 6px 20px rgba(38,42,103,.08)">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Check your phone</h1>
+<p style="margin: 0; font-size: 16px; line-height: 24px; color: #5b5f86">We texted a 6-digit code to <span style="font-weight: 600; color: #262a67">+966 55 ••• 4821</span>. <a href="{{back}}" style="font-weight: 600">Change number</a></p>
+</div>
+<dc-import name="OtpField" digits="4819" length="{{six}}" hint-size="100%,60px"></dc-import>
+<p style="margin: 0; font-size: 14px; color: #5b5f86">Resend in <span style="font-weight: 600; color: #262a67">00:42</span> · or <a href="#" style="font-weight: 600">get it on WhatsApp</a></p>
+<a href="{{next}}" style="height: 52px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 16px; font-weight: 600; display: flex; align-items: center; justify-content: center; text-decoration: none">Verify and continue</a>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"next":{"editor":"text","default":"WebApply.dc.html"},"back":{"editor":"text","default":"WebSignUpDriver.dc.html"},"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+renderVals() { return { six: 6, next: this.props.next ?? 'WebApply.dc.html', back: this.props.back ?? 'WebSignUpDriver.dc.html' }; }
+}
+</script>
+</body>
+</html>

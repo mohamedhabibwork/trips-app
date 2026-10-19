@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Admin · Audit log</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+.te-row:hover{background:#faf8ef}
+</style>
+</helmet>
+<div style="min-height: 1000px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="AdmNav" active="Audit log" hint-size="248px,1000px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 20px">
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 14px; color: #5b5f86">System</span><h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Audit log</h1><span style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-size: 15px; color: #5b5f86"><span style="display: inline-flex; gap: 4px; align-items: center; padding: 2px 10px; border-radius: 999px; background: #e6e8f5; color: #262a67; font-size: 13px; font-weight: 600"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 11h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1zM8 11V7a4 4 0 0 1 8 0v4"></path></svg>Append-only</span>Entries can’t be edited or deleted. Kept 7 years.</span></div>
+<button type="button" style="height: 48px; padding: 0 20px; border: 0; border-radius: 12px; background: #ff6c2e; color: #262a67; font: inherit; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12M7 11l5 5 5-5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"></path></svg>Export filtered (CSV)</button>
+</div>
+
+<section aria-label="Filters" style="background: #ffffff; border-radius: 20px; padding: 16px 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; align-items: end">
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="f1" style="font-size: 14px; font-weight: 600">Actor</label><select id="f1" style="height: 44px; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; padding: 0 10px; font: inherit; font-size: 15px; color: #262a67"><option>Anyone</option><option>Admins</option><option>Organization staff</option><option>Moderators</option><option>Drivers</option><option>System</option></select></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="f2" style="font-size: 14px; font-weight: 600">Entity type</label><select id="f2" style="height: 44px; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; padding: 0 10px; font: inherit; font-size: 15px; color: #262a67"><option>All entities</option><option>Booking</option><option>Check-in</option><option>Coupon</option><option>Subscription</option><option>Dispute</option><option>Settings</option><option>User</option></select></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="f3" style="font-size: 14px; font-weight: 600">Action</label><select id="f3" style="height: 44px; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; padding: 0 10px; font: inherit; font-size: 15px; color: #262a67"><option>All actions</option><option>Create</option><option>Update</option><option>Revoke</option><option>Decision</option><option>Sign-in</option></select></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="f4" style="font-size: 14px; font-weight: 600">Date (UTC)</label><input id="f4" value="Sun 12 – Tue 14 Oct" style="height: 44px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; padding: 0 12px; font: inherit; font-size: 15px; color: #262a67"></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="f5" style="font-size: 14px; font-weight: 600">Search</label><input id="f5" placeholder="ID, name, IP" style="height: 44px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; padding: 0 12px; font: inherit; font-size: 15px; color: #262a67"></div>
+</section>
+
+<section aria-labelledby="lg-h" style="background: #ffffff; border-radius: 20px; padding: 20px 0 8px">
+<div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; padding: 0 20px 12px"><h2 id="lg-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">48,212 entries</h2><span style="font-size: 13px; color: #5b5f86">Newest first</span></div>
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 1120px; border-collapse: collapse; font-size: 14px">
+<thead><tr style="color: #5b5f86; font-size: 13px"><th scope="col" style="text-align: start; padding: 10px 20px; font-weight: 600">Time (UTC)</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Actor</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Action</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Entity</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Before → after</th><th scope="col" style="text-align: start; padding: 10px 20px; font-weight: 600">IP / device</th></tr></thead>
+<tbody>
+<sc-for list="{{rows}}" as="r" hint-placeholder-count="10">
+<tr class="te-row" style="border-top: 1px solid #e3dfc9; vertical-align: top">
+<td style="padding: 10px 20px; white-space: nowrap; font-variant-numeric: tabular-nums"><span style="display: flex; flex-direction: column"><span style="font-weight: 600">{{r.t}}</span><span style="font-size: 12px; color: #5b5f86">{{r.dd}}</span></span></td>
+<td style="padding: 10px 12px"><span style="display: flex; flex-direction: column"><span style="font-weight: 500">{{r.a}}</span><span style="font-size: 12px; color: #5b5f86">{{r.ar}}</span></span></td>
+<td style="padding: 10px 12px"><span style="{{r.xs}}">{{r.x}}</span></td>
+<td style="padding: 10px 12px; max-width: 320px; line-height: 19px">{{r.e}}</td>
+<td style="padding: 10px 12px"><span style="display: flex; flex-wrap: wrap; gap: 6px; align-items: center"><span style="padding: 2px 8px; border-radius: 8px; background: #f6f3e4; color: #5b5f86; font-size: 13px">{{r.b}}</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="changed to"><path d="M5 12h14M13 6l6 6-6 6"></path></svg><span style="padding: 2px 8px; border-radius: 8px; background: #e6e8f5; font-size: 13px; font-weight: 600">{{r.af}}</span></span></td>
+<td style="padding: 10px 20px; white-space: nowrap"><span style="display: flex; flex-direction: column"><span style="font-variant-numeric: tabular-nums">{{r.ip}}</span><span style="font-size: 12px; color: #5b5f86">{{r.dev}}</span></span></td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+<div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; padding: 12px 20px; font-size: 14px; color: #5b5f86"><span>Showing 1–10 of 48,212</span><span style="display: flex; gap: 8px"><button type="button" disabled style="height: 36px; padding: 0 14px; border-radius: 12px; border: 1px solid #e3dfc9; background: #ffffff; color: #5b5f86; font: inherit; font-size: 14px; font-weight: 600">Previous</button><button type="button" style="height: 36px; padding: 0 14px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer">Next</button></span></div>
+</section>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1080}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const tone = { ok: 'background: #e3f3ea; color: #1f7a4d;', warn: 'background: #fdf0d5; color: #8a4b00;', bad: 'background: #fde8e6; color: #b42318;', info: 'background: #e6e8f5; color: #262a67;', live: 'background: #ffe7dc; color: #c93a00;' };
+    const pill = (t) => 'display: inline-flex; align-items: center; white-space: nowrap; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; ' + tone[t];
+    const rows = [
+      { t: '08:44:12', dd: 'Tue 14 Oct', a: 'Reem Othman', ar: 'Super admin', x: 'Dispute decision', xt: 'ok', e: 'DSP-1161 · Faisal Al-Qahtani vs Sunrise Tours Co. · refund 120 SAR', b: 'Open', af: 'Resolved · partial refund', ip: '37.42.118.20', dev: 'Chrome 129 · macOS' },
+      { t: '08:31:57', dd: 'Tue 14 Oct', a: 'Reem Othman', ar: 'Super admin', x: 'Coupon revoke', xt: 'bad', e: 'KHALID10 · created by Khalid Al-Harbi (driver)', b: 'Active · 61 / 100', af: 'Revoked', ip: '37.42.118.20', dev: 'Chrome 129 · macOS' },
+      { t: '08:03:55', dd: 'Tue 14 Oct', a: 'System', ar: 'Security', x: 'Sign-in lockout', xt: 'bad', e: 'Admin Omar Saeed · 5 wrong authenticator codes', b: 'Active', af: 'Locked until 08:18', ip: '41.33.90.18', dev: 'Chrome 128 · Android' },
+      { t: '07:32:08', dd: 'Tue 14 Oct', a: 'Nadia Yusuf', ar: 'Moderator · Bus 2', x: 'Check-in', xt: 'live', e: 'Check-in · Omar Al-Qahtani · Bus 2 · Seat 4C · GPS 26.61,37.92 · by Nadia Yusuf', b: 'Reserved', af: 'Checked-in · IN', ip: '188.48.7.91', dev: 'Trips Enjoy iOS 3.4 · iPhone 13' },
+      { t: '07:31:40', dd: 'Tue 14 Oct', a: 'Nadia Yusuf', ar: 'Moderator · Bus 2', x: 'Check-in', xt: 'live', e: 'Check-in · Lina Al-Qahtani · Bus 2 · Seat 4D · GPS 26.61,37.92 · by Nadia Yusuf', b: 'Reserved', af: 'Checked-in · IN', ip: '188.48.7.91', dev: 'Trips Enjoy iOS 3.4 · iPhone 13' },
+      { t: '07:12:03', dd: 'Tue 14 Oct', a: 'Mariam Fouad', ar: 'Finance', x: 'Plan override', xt: 'warn', e: 'Sunrise Tours Co. · subscription SUB-3310 · gift until Fri 14 Nov', b: 'Growth', af: 'Enterprise (gift, 30 days)', ip: '94.97.12.6', dev: 'Chrome 129 · Windows' },
+      { t: '06:58:21', dd: 'Tue 14 Oct', a: 'Hessa Al-Rashid', ar: 'Driver compliance', x: 'Lab test required', xt: 'warn', e: 'Driver Tariq Al-Shammari · deadline Fri 17 Oct', b: 'Clear', af: 'Lab test due · app blocked', ip: '5.42.220.14', dev: 'Chrome 129 · Windows' },
+      { t: '22:14:47', dd: 'Mon 13 Oct', a: 'Bandar Al-Subaie', ar: 'Super admin', x: 'Settings update', xt: 'info', e: 'Booking rules · seat hold during checkout', b: '10 min', af: '15 min', ip: '37.42.118.77', dev: 'Safari 18 · macOS' },
+      { t: '15:20:09', dd: 'Mon 13 Oct', a: 'Rana Fadel', ar: 'Sunrise Tours · Support', x: 'Booking update', xt: 'info', e: 'BK-88412 · Sara Al-Qahtani · refund request', b: 'Cancelled', af: 'No refund (policy fee)', ip: '91.106.34.2', dev: 'Edge 129 · Windows' },
+      { t: '19:48:33', dd: 'Sun 12 Oct', a: 'Sara Al-Qahtani', ar: 'Traveller · Explorer', x: 'Booking cancel', xt: 'bad', e: 'BK-88412 · Taif Rose Festival Weekend · 4 travellers · Bus 1', b: 'Confirmed', af: 'Cancelled · seats released', ip: '188.50.3.144', dev: 'Trips Enjoy iOS 3.4 · iPhone 15' }
+    ].map((r) => ({ ...r, xs: pill(r.xt) }));
+    return { rows };
+  }
+}
+</script>
+</body>
+</html>

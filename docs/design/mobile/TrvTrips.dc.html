@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Traveler · My trips</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="height: 100%; box-sizing: border-box; padding: 56px 16px 120px; display: flex; flex-direction: column; gap: 16px">
+
+<div style="display: flex; align-items: center; justify-content: space-between">
+<h1 style="margin: 0; font-size: 28px; line-height: 34px; font-weight: 700">My trips</h1>
+<a href="TrvResults.dc.html" style="height: 44px; padding: 0 14px; border-radius: 999px; background: #ffffff; color: #262a67; display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 600; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Book a trip</a>
+</div>
+
+<div role="group" aria-label="Filter trips" style="display: flex; gap: 4px; padding: 4px; border-radius: 999px; background: #ffffff; border: 1px solid #e3dfc9">
+<sc-for list="{{segs}}" as="s" hint-placeholder-count="3"><button type="button" aria-pressed="{{s.sel}}" onClick="{{s.on}}" style="{{s.style}}">{{s.t}}</button></sc-for>
+</div>
+
+<sc-if value="{{isUp}}" hint-placeholder-val="{{true}}">
+<div style="display: flex; flex-direction: column; gap: 12px">
+<a href="TrvTicket.dc.html" style="border-radius: 20px; background: #ffffff; color: #262a67; text-decoration: none; overflow: hidden; display: flex; flex-direction: column">
+<span style="position: relative; height: 112px; display: block; background: #262a67">
+<img src="../assets/44a218548719fe367b614a0dd5151345.svg" alt="AlUla sandstone rocks under a night sky" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover">
+<span style="position: absolute; top: 10px; inset-inline-start: 10px; padding: 3px 10px; border-radius: 999px; background: #ffe7dc; color: #c93a00; font-size: 12px; font-weight: 700">In 4 days</span>
+</span>
+<span style="padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 6px">
+<span style="display: flex; justify-content: space-between; align-items: baseline; gap: 8px"><span style="font-size: 18px; line-height: 24px; font-weight: 600">AlUla Heritage Weekend</span><span style="font-size: 13px; color: #5b5f86; flex-shrink: 0">TE-48213</span></span>
+<span style="font-size: 14px; color: #5b5f86">Thu 16 – Sat 18 Oct · Sunrise Tours Co.</span>
+<span style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px">
+<span style="height: 28px; padding: 0 10px; border-radius: 999px; background: #e6e8f5; display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM3 20a6 6 0 0 1 12 0M16 4.5a3.5 3.5 0 0 1 0 6.5M18 14.5a6 6 0 0 1 3 5.5"></path></svg>4 travellers</span>
+<span style="height: 28px; padding: 0 10px; border-radius: 999px; background: #e6e8f5; display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 4h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM4 11h16M8 18v2M16 18v2M8 14.5h.01M16 14.5h.01"></path></svg>Bus 2</span>
+<span style="height: 28px; padding: 0 10px; border-radius: 999px; background: #e6e8f5; display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4h7a2 2 0 0 1 2 2v7H7zM5 13h12a2 2 0 0 1 2 2v2H5zM7 17v3M17 17v3"></path></svg>3C, 3D, 4C, 4D</span>
+</span>
+<span style="display: flex; justify-content: space-between; align-items: center; margin-top: 6px; padding-top: 10px; border-top: 1px solid #e3dfc9"><span style="font-size: 13px; color: #5b5f86">Pickup Olaya · 06:15</span><span style="font-size: 14px; font-weight: 600; color: #c93a00">View ticket</span></span>
+</span>
+</a>
+
+<a href="TrvBooking.dc.html" style="padding: 14px 16px; border-radius: 20px; background: #ffffff; color: #262a67; text-decoration: none; display: flex; gap: 12px; align-items: center">
+<span style="width: 64px; height: 64px; flex-shrink: 0; border-radius: 12px; overflow: hidden; background: #262a67; display: block"><img src="../assets/dc9df8d5382e0fc7d2bf084f5632c713.svg" alt="Boat on the Red Sea over a coral reef" style="width: 100%; height: 100%; object-fit: cover"></span>
+<span style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px">
+<span style="font-size: 16px; font-weight: 600">Red Sea Snorkel Day</span>
+<span style="font-size: 13px; color: #5b5f86">Fri 24 Oct · Jeddah · 2 travellers · Bus 1</span>
+<span style="font-size: 13px; font-weight: 600; color: #8a4b00; display: flex; align-items: center; gap: 5px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7v5l3 2"></path></svg>Seats assigned before departure</span>
+</span>
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
+</a>
+</div>
+</sc-if>
+
+<sc-if value="{{isPast}}" hint-placeholder-val="{{false}}">
+<div style="display: flex; flex-direction: column; gap: 12px">
+<div style="border-radius: 20px; background: #ffffff; overflow: hidden">
+<div style="position: relative; height: 104px; background: #262a67"><img src="../assets/cc51d7ccafd703646b5cfbed3b8222aa.svg" alt="Taif rose farms below green mountains" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover"><span style="position: absolute; top: 10px; inset-inline-start: 10px; padding: 3px 10px; border-radius: 999px; background: #e3f3ea; color: #1f7a4d; font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 4px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg>Completed</span></div>
+<div style="padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; flex-direction: column; gap: 3px"><span style="font-size: 18px; font-weight: 600">Taif Rose Farms</span><span style="font-size: 14px; color: #5b5f86">Sat 27 Sep · Sunrise Tours Co. · 4 travellers</span></div>
+<div style="padding: 10px 12px; border-radius: 12px; background: #e6e8f5; display: flex; align-items: center; gap: 10px; font-size: 14px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1zM8.5 10a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM20 15l-5-5L5 20"></path></svg><span style="flex-grow: 1"><strong>Album ready</strong> · 3 albums by Noura Al-Shehri</span></div>
+<div style="display: flex; gap: 8px">
+<a href="TrvAlbums.dc.html" style="flex: 1 1 0; height: 48px; border-radius: 12px; background: #ffffff; border: 1px solid #7b7fa6; color: #262a67; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 600; text-decoration: none">View albums</a>
+<a href="TrvRate.dc.html" style="flex: 1 1 0; height: 48px; border-radius: 12px; background: #ff6c2e; color: #262a67; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 15px; font-weight: 700; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"></path></svg>Rate trip</a>
+</div>
+</div>
+</div>
+<a href="TrvAlbums.dc.html" style="padding: 14px 16px; border-radius: 20px; background: #ffffff; color: #262a67; text-decoration: none; display: flex; gap: 12px; align-items: center">
+<span style="width: 56px; height: 56px; flex-shrink: 0; border-radius: 12px; overflow: hidden; background: #262a67; display: block"><img src="../assets/c05dcb937e01218b8073e886669c75d4.svg" alt="Jeddah Corniche and the sea" style="width: 100%; height: 100%; object-fit: cover"></span>
+<span style="flex-grow: 1; display: flex; flex-direction: column; gap: 3px"><span style="font-size: 16px; font-weight: 600">Jeddah Corniche Night</span><span style="font-size: 13px; color: #5b5f86">Thu 11 Sep · 2 travellers · You rated 5 stars</span></span>
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
+</a>
+</div>
+</sc-if>
+
+<sc-if value="{{isCan}}" hint-placeholder-val="{{false}}">
+<div style="display: flex; flex-direction: column; gap: 12px">
+<a href="TrvCancelled.dc.html" style="padding: 16px; border-radius: 20px; background: #ffffff; color: #262a67; text-decoration: none; display: flex; flex-direction: column; gap: 8px">
+<span style="display: flex; justify-content: space-between; align-items: center"><span style="font-size: 16px; font-weight: 600">Edge of the World Hike</span><span style="padding: 3px 10px; border-radius: 999px; background: #fde8e6; color: #b42318; font-size: 12px; font-weight: 700">Cancelled</span></span>
+<span style="font-size: 13px; color: #5b5f86">Sat 25 Oct · Najd Adventures · 2 seats · cancelled Wed 1 Oct</span>
+<span style="display: flex; justify-content: space-between; align-items: center; padding-top: 8px; border-top: 1px solid #e3dfc9"><span style="font-size: 14px; display: flex; align-items: center; gap: 6px; color: #1f7a4d; font-weight: 600"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg>Refund received · 550 SAR</span><span style="font-size: 14px; font-weight: 600; color: #c93a00">Details</span></span>
+</a>
+<p style="margin: 0; font-size: 13px; line-height: 18px; color: #5b5f86">Cancelled trips stay here for 12 months with their refund receipts.</p>
+</div>
+</sc-if>
+
+</div>
+<div style="position: absolute; left: 0; right: 0; bottom: 0; height: 120px">
+<dc-import name="TabBar" role="traveler" active="trips" hint-size="390px,120px"></dc-import>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { tab: 'upcoming' }; }
+  renderVals() {
+    const tab = this.state.tab;
+    const segs = [['upcoming', 'Upcoming'], ['past', 'Past'], ['cancelled', 'Cancelled']].map(([id, t]) => ({
+      t, sel: tab === id ? 'true' : 'false', on: () => this.setState({ tab: id }),
+      style: 'flex: 1 1 0; height: 40px; border: 0; border-radius: 999px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; ' + (tab === id ? 'background: #262a67; color: #f6f3e4;' : 'background: transparent; color: #262a67;')
+    }));
+    return { segs, isUp: tab === 'upcoming', isPast: tab === 'past', isCan: tab === 'cancelled' };
+  }
+}
+</script>
+</body>
+</html>

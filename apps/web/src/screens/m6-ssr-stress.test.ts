@@ -242,9 +242,9 @@ describe("Milestone 6 Empirical Challenge: SSR Loader Stress Testing & Hardening
   });
 
   /* -------------------------------------------------------------------------- */
-  /* Task 2: Authenticated SSR RPC Failure Injection across ALL 110 Loaders      */
+  /* Task 2: Authenticated SSR RPC Failure Injection across ALL 131 Loaders      */
   /* -------------------------------------------------------------------------- */
-  describe("Task 2: Authenticated SSR RPC Failure Injection across ALL 110 Screens", () => {
+  describe("Task 2: Authenticated SSR RPC Failure Injection across ALL 131 Screens", () => {
     const errorScenarios = [
       {
         name: "Standard Error instance (500 Internal Error)",
@@ -265,7 +265,7 @@ describe("Milestone 6 Empirical Challenge: SSR Loader Stress Testing & Hardening
     ];
 
     for (const { name, error } of errorScenarios) {
-      test(`All 110 screen loaders absorb RPC error (${name}) without throwing`, async () => {
+      test(`All 131 screen loaders absorb RPC error (${name}) without throwing`, async () => {
         const rejectingQueryClient = {
           ensureQueryData: mock(async () => {
             throw error;
@@ -277,7 +277,7 @@ describe("Milestone 6 Empirical Challenge: SSR Loader Stress Testing & Hardening
 
         const auth = createMockAuth("authenticated-bearer-token-12345");
 
-        expect(ALL_SCREENS.length).toBe(110);
+        expect(ALL_SCREENS.length).toBe(131);
 
         for (const screen of ALL_SCREENS) {
           expect(typeof screen.loader).toBe("function");
@@ -310,7 +310,7 @@ describe("Milestone 6 Empirical Challenge: SSR Loader Stress Testing & Hardening
   /* Task 3: Adversarial Input Fuzzing and Boundary Cases                      */
   /* -------------------------------------------------------------------------- */
   describe("Task 3: Adversarial Input Fuzzing and Boundary Cases", () => {
-    test("All 110 loaders withstand undefined/empty search and params gracefully", async () => {
+    test("All 131 loaders withstand undefined/empty search and params gracefully", async () => {
       const mockQueryClient = {
         ensureQueryData: mock(async () => ({ items: [] })),
         prefetchQuery: mock(async () => {}),
@@ -331,7 +331,7 @@ describe("Milestone 6 Empirical Challenge: SSR Loader Stress Testing & Hardening
       }
     });
 
-    test("All 110 loaders withstand adversarial search params (XSS payloads, SQL injections, types)", async () => {
+    test("All 131 loaders withstand adversarial search params (XSS payloads, SQL injections, types)", async () => {
       const mockQueryClient = {
         ensureQueryData: mock(async () => ({ items: [] })),
         prefetchQuery: mock(async () => {}),
@@ -401,7 +401,7 @@ describe("Milestone 6 Empirical Challenge: SSR Loader Stress Testing & Hardening
       ).resolves.toBeUndefined();
     });
 
-    test("findScreen accurately resolves all 110 registered screens by surface and slug", () => {
+    test("findScreen accurately resolves all 131 registered screens by surface and slug", () => {
       for (const screen of ALL_SCREENS) {
         const found = findScreen(screen.surface, screen.slug);
         expect(found).toBeDefined();

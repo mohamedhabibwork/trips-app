@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Driver · Counter offer</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="height: 100%; box-sizing: border-box; padding: 56px 16px 24px; display: flex; flex-direction: column; gap: 14px">
+
+<div style="display: flex; align-items: center; gap: 12px">
+<a href="DrvOffer.dc.html" aria-label="Back" style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 999px; background: #ffffff; color: #262a67; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a>
+<div style="display: flex; flex-direction: column"><h1 style="margin: 0; font-size: 22px; line-height: 28px; font-weight: 700">Counter offer</h1><span style="font-size: 13px; color: #5b5f86">Red Sea Snorkel Day · Fri 24 Oct · Bus 2</span></div>
+</div>
+
+<div style="padding: 12px 16px; border-radius: 20px; background: #ffffff; display: flex; align-items: center; justify-content: space-between">
+<span style="display: flex; flex-direction: column"><span style="font-size: 13px; color: #5b5f86">Current offer · Sunrise Tours Co.</span><span style="font-size: 22px; font-weight: 700">1,300 SAR</span></span>
+<span style="font-size: 13px; color: #5b5f86; text-align: end">92 km · 12.5 h</span>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 8px">
+<label for="price" style="font-size: 14px; font-weight: 600">Your price</label>
+<div style="position: relative">
+<input id="price" type="text" inputmode="numeric" value="{{priceStr}}" onInput="{{onPrice}}" aria-describedby="price-h" style="width: 100%; height: 60px; box-sizing: border-box; border-radius: 8px; border: 2px solid #fb8030; background: #ffffff; padding: 0 64px 0 14px; font: inherit; font-size: 26px; font-weight: 700; color: #262a67">
+<span style="position: absolute; top: 0; bottom: 0; inset-inline-end: 14px; display: flex; align-items: center; font-size: 16px; color: #5b5f86">SAR</span>
+</div>
+<div style="display: flex; gap: 8px">
+<button type="button" onClick="{{minus}}" aria-label="Lower by 50 SAR" style="flex: 1 1 0; height: 44px; border-radius: 999px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer">−50</button>
+<button type="button" onClick="{{plus50}}" style="flex: 1 1 0; height: 44px; border-radius: 999px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer">+50</button>
+<button type="button" onClick="{{plus100}}" style="flex: 1 1 0; height: 44px; border-radius: 999px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer">+100</button>
+</div>
+<span id="price-h" style="{{diffStyle}}">{{diffText}}</span>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 8px">
+<label for="note" style="font-size: 14px; font-weight: 600">Note to Sunrise Tours Co.</label>
+<textarea id="note" rows="2" style="box-sizing: border-box; height: 72px; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; padding: 10px 14px; font: inherit; font-size: 15px; line-height: 20px; color: #262a67; resize: none">Includes a second stop at Obhur beach car park and 2 extra waiting hours.</textarea>
+</div>
+
+<section aria-labelledby="thr-h" style="display: flex; flex-direction: column; gap: 8px">
+<h2 id="thr-h" style="margin: 0; font-size: 15px; font-weight: 600">History</h2>
+<div style="align-self: flex-start; max-width: 78%; padding: 8px 12px; border-radius: 12px 12px 12px 4px; background: #ffffff; font-size: 14px; line-height: 19px"><strong>Sunrise proposed 1,300 SAR</strong><br><span style="color: #5b5f86; font-size: 12px">Mon 13 Oct · 09:12</span></div>
+<div style="align-self: flex-end; max-width: 78%; padding: 8px 12px; border-radius: 12px 12px 4px 12px; background: #e6e8f5; border: 1px dashed #7b7fa6; font-size: 14px; line-height: 19px"><strong>You · {{priceStr}} SAR</strong><br><span style="color: #5b5f86; font-size: 12px">Draft · not sent</span></div>
+</section>
+
+<p style="margin: 0; padding: 10px 12px; border-radius: 12px; background: #e6e8f5; display: flex; gap: 8px; font-size: 13px; line-height: 18px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 11v5M12 8h.01"></path></svg><span>Either side can accept, counter or reject. Nothing is confirmed until both of you accept the same price.</span></p>
+
+<a href="DrvDealLocked.dc.html" style="margin-top: auto; height: 52px; flex-shrink: 0; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 17px; font-weight: 700; text-decoration: none; display: flex; align-items: center; justify-content: center">Send counter · {{priceStr}} SAR</a>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { price: 1450 }; }
+  renderVals() {
+    const p = this.state.price;
+    const base = 1300;
+    const set = (v) => this.setState({ price: Math.max(0, v) });
+    const d = p - base;
+    const pct = Math.round((d / base) * 1000) / 10;
+    const low = p < base;
+    return {
+      priceStr: p.toLocaleString('en-US'),
+      onPrice: (e) => set(parseInt(String(e.target.value).replace(/[^0-9]/g, ''), 10) || 0),
+      minus: () => set(p - 50), plus50: () => set(p + 50), plus100: () => set(p + 100),
+      diffText: d === 0 ? 'Same as their offer. Accept it instead from the offer screen.' : (low ? Math.abs(d).toLocaleString('en-US') + ' SAR below their offer' : '+' + d.toLocaleString('en-US') + ' SAR (' + pct + '%) above their offer'),
+      diffStyle: 'font-size: 13px; font-weight: 600; color: ' + (d === 0 ? '#8a4b00' : '#5b5f86') + ';'
+    };
+  }
+}
+</script>
+</body>
+</html>

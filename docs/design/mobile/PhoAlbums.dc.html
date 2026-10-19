@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Photographer · Albums</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="height: 100%; box-sizing: border-box; padding: 56px 16px 120px; display: flex; flex-direction: column; gap: 14px">
+
+<div style="display: flex; align-items: center; justify-content: space-between">
+<h1 style="margin: 0; font-size: 28px; line-height: 34px; font-weight: 700">Albums</h1>
+<a href="PhoAlbumNew.dc.html" style="height: 44px; padding: 0 16px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 6px; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>New album</a>
+</div>
+
+<div role="group" aria-label="Filter albums" style="display: flex; gap: 8px">
+<sc-for list="{{filters}}" as="f" hint-placeholder-count="3">
+<button aria-pressed="{{f.on}}" onClick="{{f.go}}" style="{{f.style}}">{{f.label}}</button>
+</sc-for>
+</div>
+
+<sc-for list="{{groups}}" as="g" hint-placeholder-count="2">
+<section style="padding: 14px 16px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; flex-direction: column; align-items: flex-start; gap: 6px">
+<div style="display: flex; flex-direction: column"><h2 style="margin: 0; font-size: 16px; line-height: 22px; font-weight: 600">{{g.trip}}</h2><span style="font-size: 13px; color: #5b5f86">{{g.sub}}</span></div>
+<span style="padding: 2px 8px; border-radius: 999px; background: #e6e8f5; color: #262a67; font-size: 12px; font-weight: 600; white-space: nowrap">{{g.used}}</span>
+</div>
+<sc-for list="{{g.albums}}" as="a" hint-placeholder-count="2">
+<a href="{{a.href}}" style="display: flex; align-items: center; gap: 12px; padding-top: 10px; border-top: 1px solid #e3dfc9; color: #262a67; text-decoration: none">
+<span style="position: relative; width: 64px; height: 64px; flex-shrink: 0; border-radius: 12px; overflow: hidden; background: #262a67; display: flex; align-items: center; justify-content: center">
+<sc-if value="{{a.hasImg}}" hint-placeholder-val="{{true}}"><img src="{{a.img}}" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover"></sc-if>
+<sc-if value="{{a.noImg}}" hint-placeholder-val="{{false}}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#b8bad6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1zM8.5 10a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM20 15l-5-5L5 20"></path></svg></sc-if>
+</span>
+<span style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 15px; font-weight: 600">{{a.title}}</span>
+<span style="display: flex; flex-wrap: wrap; gap: 6px; align-items: center">
+<span style="{{a.ss}}">{{a.status}}</span>
+<span style="{{a.prs}}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{a.picon}}"></path></svg>{{a.privacy}}</span>
+</span>
+<span style="font-size: 13px; color: #5b5f86">{{a.meta}}</span>
+</span>
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M9 6l6 6-6 6"></path></svg>
+</a>
+</sc-for>
+</section>
+</sc-for>
+
+<p style="margin: 0; font-size: 13px; line-height: 18px; color: #5b5f86">Studio lets you make up to 5 albums per trip. Albums for selected people need <a href="PhoPlanManage.dc.html" style="font-weight: 600">Pro</a>.</p>
+
+</div>
+<div style="position: absolute; left: 0; right: 0; bottom: 0; height: 120px">
+<dc-import name="TabBar" role="photographer" active="albums" hint-size="390px,120px"></dc-import>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { f: 'all' }; }
+  renderVals() {
+    const pill = (tone) => 'display: inline-flex; align-items: center; gap: 4px; padding: 1px 8px; border-radius: 999px; font-size: 12px; font-weight: 700; ' + ({ draft: 'background: #fdf0d5; color: #8a4b00;', ok: 'background: #e3f3ea; color: #1f7a4d;', info: 'background: #e6e8f5; color: #262a67;' })[tone];
+    const ICON = { users: 'M9 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM3 20a6 6 0 0 1 12 0M16 4.5a3.5 3.5 0 0 1 0 6.5M18 14.5a6 6 0 0 1 3 5.5', link: 'M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1', lock: 'M6 11h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1zM8 11V7a4 4 0 0 1 8 0v4' };
+    const G = [
+      { trip: 'Taif Rose Farms', sub: 'Ended Sat 4 Oct · album due in 1 day', used: '1 of 5 albums used on this trip', albums: [
+        { title: 'Taif Rose Farms', status: 'Draft', tone: 'draft', privacy: 'Not shared', pi: 'lock', meta: '0 photos · continue uploading', img: '../assets/cc51d7ccafd703646b5cfbed3b8222aa.svg', href: 'PhoAlbumNew.dc.html', kind: 'draft' }
+      ] },
+      { trip: 'AlUla Heritage Weekend 2025', sub: 'Sunrise Tours Co. · Nov 2025 · 172 travellers', used: '2 of 5 albums used on this trip', albums: [
+        { title: 'AlUla 2025', status: 'Published', tone: 'ok', privacy: 'Public', pi: 'users', meta: '212 photos · 1,904 views', img: '../assets/44a218548719fe367b614a0dd5151345.svg', href: 'PhoAlbumLive.dc.html', kind: 'pub' },
+        { title: 'Family portraits', status: 'Published', tone: 'ok', privacy: 'Link-shared', pi: 'link', meta: '48 photos · link expires Sun 30 Nov', img: '../assets/79a6ce5310828e799852c7aef2cdc987.svg', href: 'PhoAlbumLive.dc.html', kind: 'pub' }
+      ] }
+    ];
+    const f = this.state.f;
+    const groups = G.map((g) => ({ ...g, albums: g.albums.filter((a) => f === 'all' || a.kind === f).map((a) => ({ ...a, hasImg: !!a.img, noImg: !a.img, ss: pill(a.tone), prs: pill('info'), picon: ICON[a.pi] })) })).filter((g) => g.albums.length);
+    const filters = [['all', 'All 3'], ['draft', 'Drafts 1'], ['pub', 'Published 2']].map(([id, label]) => {
+      const on = f === id;
+      return { label, on: on ? 'true' : 'false', go: () => this.setState({ f: id }),
+        style: 'height: 40px; padding: 0 14px; border-radius: 999px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; ' + (on ? 'background: #262a67; color: #f6f3e4; border: 1px solid #262a67;' : 'background: #ffffff; color: #262a67; border: 1px solid #7b7fa6;') };
+    });
+    return { groups, filters };
+  }
+}
+</script>
+</body>
+</html>

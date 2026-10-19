@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Organization navigation</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;family=Cairo:wght@500;600;700&amp;display=swap">
+<style>body{margin:0} .te-on:focus-visible{outline:2px solid #f89e23;outline-offset:2px} .te-on:hover{background:#31367a}</style>
+</helmet>
+<nav aria-label="Organization" dir="{{dir}}" style="font-family: {{font}}; width: 100%; min-height: 1000px; height: 100%; box-sizing: border-box; background: #262a67; color: #f6f3e4; font-family: Outfit, Nunito, system-ui, sans-serif; padding: 20px 16px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 12px">
+<img src="../assets/6ea846350ba3adc0e289d47fa0612c3b.svg" alt="Trips Enjoy" style="height: 36px; width: auto; align-self: flex-start">
+<a href="OrgSwitcher.dc.html" class="te-on" aria-label="{{orgLabel}}" style="display: flex; align-items: center; gap: 10px; padding: 10px; border-radius: 12px; background: #31367a; color: #f6f3e4; text-decoration: none">
+<img src="{{orgLogo}}" alt="" style="width: 36px; height: 36px; flex-shrink: 0; border-radius: 10px; object-fit: cover">
+<span style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column"><span style="font-size: 14px; font-weight: 600">{{orgName}}</span><span style="font-size: 12px; color: #b8bad6">{{orgMeta}}</span></span>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 9l4-4 4 4M8 15l4 4 4-4"></path></svg>
+</a>
+</div>
+<div style="display: flex; flex-direction: column; gap: 2px">
+<sc-for list="{{items}}" as="i" hint-placeholder-count="12">
+<sc-if value="{{i.isHead}}" hint-placeholder-val="{{false}}"><span style="padding: 8px 12px 2px; font-size: 11px; font-weight: 700; letter-spacing: .6px; color: #b8bad6">{{i.t}}</span></sc-if>
+<sc-if value="{{i.isLink}}" hint-placeholder-val="{{true}}">
+<a href="{{i.href}}" class="te-on" aria-current="{{i.cur}}" style="{{i.style}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{i.d}}"></path></svg><span style="flex-grow: 1">{{i.t}}</span><sc-if value="{{i.hasN}}" hint-placeholder-val="{{false}}"><span style="padding: 0 8px; border-radius: 999px; background: #f89e23; color: #262a67; font-size: 12px; font-weight: 700; line-height: 20px">{{i.n}}</span></sc-if></a>
+</sc-if>
+</sc-for>
+</div>
+<div style="margin-top: auto; display: flex; align-items: center; gap: 10px; font-size: 14px; padding-top: 12px; border-top: 1px solid #31367a"><img src="{{avatar}}" alt="" style="width: 36px; height: 36px; flex-shrink: 0; border-radius: 999px; object-fit: cover"><span style="display: flex; flex-direction: column"><span style="font-weight: 600">{{person}}</span><span style="font-size: 12px; color: #b8bad6">{{personRole}}</span></span></div>
+</nav>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"active":{"editor":"enum","options":["Overview","Trips","Live operations","Bookings","Customers","Leads","Campaigns","Inbox","Invoices","Settlements","Integrations","Deals","Team","Crew & providers","Fleet","Coupons","Accounting","Analytics","Subscription","Settings"],"default":"Overview"},"scope":{"editor":"enum","options":["full","finance"],"default":"full"},"org":{"editor":"enum","options":["sunrise","desert"],"default":"sunrise"},"lang":{"editor":"enum","options":["en","ar"],"default":"en"},"$preview":{"width":248,"height":1000}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const P = {
+      home: 'M4 11l8-7 8 7v8a1 1 0 0 1-1 1h-5v-6h-4v6H5a1 1 0 0 1-1-1z',
+      route: 'M6 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM18 9a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM6 15V9a4 4 0 0 1 8 0v6a4 4 0 0 0 4 4M18 9v2',
+      live: 'M12 10.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM8.5 15.5a5 5 0 0 1 0-7M15.5 8.5a5 5 0 0 1 0 7M5.6 18.4a9 9 0 0 1 0-12.8M18.4 5.6a9 9 0 0 1 0 12.8',
+      ticket: 'M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v2a2.5 2.5 0 0 0 0 5v3a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-3a2.5 2.5 0 0 0 0-5zM14 5v14',
+      file: 'M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zM14 3v5h5',
+      users: 'M9 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM3 20a6 6 0 0 1 12 0M16 4.5a3.5 3.5 0 0 1 0 6.5M18 14.5a6 6 0 0 1 3 5.5',
+      camera: 'M4 8a2 2 0 0 1 2-2h2l2-2h4l2 2h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zM12 9.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7z',
+      bus: 'M6 4h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM4 11h16M8 18v2M16 18v2M8 14.5h.01M16 14.5h.01',
+      tag: 'M3 12V4a1 1 0 0 1 1-1h8l9 9-9 9zM7.5 7.5h.01',
+      wallet: 'M4 7a2 2 0 0 1 2-2h12v4M4 7v11a2 2 0 0 0 2 2h14V9H6a2 2 0 0 1-2-2zM16 14.5h.01',
+      chart: 'M4 20h16M7 16v-4M12 16V8M17 16v-7',
+      heart: 'M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z',
+      flag: 'M5 21V4M5 4h11l-2 4 2 4H5',
+      send: 'M21 3L10 14M21 3l-7 18-4-7-7-4z',
+      chat: 'M4 5h16v11H9l-5 4z',
+      receipt: 'M6 3h12v18l-3-2-3 2-3-2-3 2zM9 8h6M9 12h6',
+      swap: 'M4 8h13l-3-3M20 16H7l3 3',
+      plug: 'M9 3v5M15 3v5M7 8h10v4a5 5 0 0 1-10 0zM12 17v4',
+      star: 'M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z',
+      gear: 'M12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6zM19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z'
+    };
+    const ALL = [
+      ['h', 'OPERATE'],
+      ['Overview', 'home', 'OrgHome', 0, ['full', 'finance']],
+      ['Trips', 'route', 'OrgTrips', 0, ['full']],
+      ['Live operations', 'live', 'OrgTripLive', 0, ['full']],
+      ['Bookings', 'ticket', 'OrgBookings', 0, ['full']],
+      ['h', 'CUSTOMERS'],
+      ['Customers', 'heart', 'OrgCustomers', 0, ['full']],
+      ['Leads', 'flag', 'OrgLeads', 5, ['full']],
+      ['Campaigns', 'send', 'OrgCampaigns', 0, ['full']],
+      ['Inbox', 'chat', 'OrgInbox', 4, ['full']],
+      ['h', 'PEOPLE & FLEET'],
+      ['Deals', 'file', 'OrgDeals', 3, ['full']],
+      ['Team', 'users', 'OrgStaff', 0, ['full']],
+      ['Crew & providers', 'camera', 'OrgCrew', 0, ['full']],
+      ['Fleet', 'bus', 'OrgFleet', 0, ['full']],
+      ['h', 'MONEY'],
+      ['Coupons', 'tag', 'OrgCoupons', 0, ['full', 'finance']],
+      ['Accounting', 'wallet', 'OrgAccounting', 0, ['full', 'finance']],
+      ['Invoices', 'receipt', 'OrgInvoices', 0, ['full', 'finance']],
+      ['Settlements', 'swap', 'OrgSettlements', 0, ['full', 'finance']],
+      ['Analytics', 'chart', 'OrgAnalytics', 0, ['full', 'finance']],
+      ['h', 'ACCOUNT'],
+      ['Subscription', 'star', 'OrgBilling', 0, ['full']],
+      ['Integrations', 'plug', 'OrgWebhooks', 0, ['full']],
+      ['Settings', 'gear', 'OrgSettings', 0, ['full']]
+    ];
+    const a = this.props.active ?? 'Overview';
+    const ar = (this.props.lang ?? 'en') === 'ar';
+    const AR = { OPERATE: 'التشغيل', CUSTOMERS: 'العملاء', 'PEOPLE & FLEET': 'الفريق والأسطول', MONEY: 'المالية', ACCOUNT: 'الحساب', Overview: 'نظرة عامة', Trips: 'الرحلات', 'Live operations': 'التشغيل المباشر', Bookings: 'الحجوزات', Customers: 'العملاء', Leads: 'الفرص', Campaigns: 'الحملات', Inbox: 'الرسائل', Deals: 'الصفقات', Team: 'الفريق', 'Crew & providers': 'الطاقم ومقدمو الخدمة', Fleet: 'الأسطول', Coupons: 'القسائم', Accounting: 'المحاسبة', Invoices: 'الفواتير', Settlements: 'التسويات', Analytics: 'التحليلات', Subscription: 'الاشتراك', Integrations: 'التكاملات', Settings: 'الإعدادات' };
+    const scope = this.props.scope ?? 'full';
+    const items = [];
+    ALL.forEach((r, i) => {
+      if (r[0] === 'h') {
+        const next = ALL.slice(i + 1).find((x) => x[0] !== 'h' && x[4].includes(scope));
+        const sectionEnd = ALL.slice(i + 1).findIndex((x) => x[0] === 'h');
+        const block = ALL.slice(i + 1, sectionEnd < 0 ? undefined : i + 1 + sectionEnd);
+        if (block.some((x) => x[4].includes(scope))) items.push({ isHead: true, isLink: false, t: ar ? (AR[r[1]] || r[1]) : r[1] });
+        return;
+      }
+      if (!r[4].includes(scope)) return;
+      const on = r[0] === a;
+      items.push({ isHead: false, isLink: true, t: ar ? (AR[r[0]] || r[0]) : r[0], d: P[r[1]], href: r[2] + '.dc.html', n: r[3], hasN: r[3] > 0, cur: on ? 'page' : 'false',
+        style: 'display: flex; align-items: center; gap: 10px; height: 30px; padding: 0 12px; border-radius: 12px; color: #f6f3e4; text-decoration: none; font-size: 14px; font-weight: ' + (on ? '600; background: #31367a; box-shadow: inset 3px 0 0 #ff6c2e;' : '500;') });
+    });
+    const fin = scope === 'finance';
+    const desert = (this.props.org ?? 'sunrise') === 'desert';
+    const O = desert ? { n: 'Desert Events LLC', m: 'Starter plan · Dubai', i: 'DE', bg: '#fb8030', logo: '../assets/472625e3fa0e959013f492568148458e.svg' } : { n: 'Sunrise Tours Co.', m: 'Growth plan · Riyadh', i: 'ST', bg: '#f89e23', logo: '../assets/697a49af6be5a077ae1851c1a8b9dfcd.svg' };
+    return { dir: ar ? 'rtl' : 'ltr', font: ar ? 'Cairo, sans-serif' : 'Outfit, Nunito, system-ui, sans-serif', items, orgName: O.n, orgMeta: O.m, orgInitials: O.i, orgLogo: O.logo, avatar: fin ? '../assets/17fb7a19876b9e012cc17bde6f69c632.svg' : '../assets/1da5f4a1d52001ce8dfc722d595c772b.svg', orgLabel: 'Switch organization. Current: ' + O.n,
+      orgTile: 'width: 36px; height: 36px; flex-shrink: 0; border-radius: 10px; background: ' + O.bg + '; color: #262a67; font-weight: 700; display: flex; align-items: center; justify-content: center',
+      initials: fin ? 'HN' : 'MS', person: fin ? 'Hala Nasser' : 'Mona Saleh', personRole: fin ? 'Finance' : (desert ? 'Operations manager' : 'Owner') };
+  }
+}
+</script>
+</body>
+</html>

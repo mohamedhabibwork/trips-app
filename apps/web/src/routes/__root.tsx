@@ -16,7 +16,7 @@ import type { RouterAppContext } from "@/types";
 
 import { installClientLocale } from "@/i18n/client-locale";
 import { PublicShell } from "@/components/shells/public-shell";
-import { ScreenById } from "@/components/shells/shell-content";
+import { ScreenById } from "@/components/shells/screen-by-id";
 import appCss from "../index.css?url";
 
 // The browser reads the language from the same cookie the server rendered with (Arabic when unset),
@@ -58,7 +58,7 @@ export const Route = createRootRouteWithContext<RouterAppContext>()({
 
 // Dashboard layouts draw their own chrome; every other page sits in the public shell. The admin
 // sign-in pages use its navy variant (SCR-PUB-09, SCR-PUB-10).
-const DASHBOARD_LAYOUTS = new Set(["/business", "/admin"]);
+const DASHBOARD_LAYOUTS = new Set(["/business", "/admin", "/traveler"]);
 const INVERSE_PAGES = new Set(["/admin_/sign-in", "/admin_/sign-in_/authenticator"]);
 
 function PageFrame() {
@@ -66,10 +66,12 @@ function PageFrame() {
     select: (matches) => {
       if (matches.some((match) => DASHBOARD_LAYOUTS.has(match.routeId))) return "dashboard";
       if (matches.some((match) => INVERSE_PAGES.has(match.routeId))) return "inverse";
+      // The landing draws its own artboard header and footer (SCR-PUB-01), so it gets no shell.
+      if (matches.some((match) => match.routeId === "/")) return "bare";
       return "default";
     },
   });
-  if (frame === "dashboard") return <Outlet />;
+  if (frame === "dashboard" || frame === "bare") return <Outlet />;
   return (
     <PublicShell tone={frame === "inverse" ? "inverse" : "default"}>
       <Outlet />
@@ -80,7 +82,9 @@ function PageFrame() {
 function RootDocument() {
   const locale = getLocale();
   return (
-    <html lang={locale} dir={directionOf(locale)} suppressHydrationWarning>
+    <html lang={locale} dir={directionOf(locale)} data-theme="light" suppressHydrationWarning>
+      {/* data-theme="light": the design canvases define a light palette only, so the token
+          sheet's OS-dark following would leave half the screens unpainted. */}
       <head>
         <HeadContent />
       </head>

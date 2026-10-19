@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Session expired — web</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; position: relative; background: #f6f3e4; font-family: Outfit, Nunito, system-ui, sans-serif; color: #262a67">
+<div style="height: 72px; padding: 0 48px; display: flex; align-items: center; justify-content: space-between; background: #ffffff; border-bottom: 1px solid #e3dfc9">
+<img src="../assets/1fbce194fcb16bf54904c32c189fca31.svg" alt="Trips Enjoy" style="height: 40px; width: auto">
+<span style="font-size: 14px; font-weight: 600">Sara Al-Qahtani</span>
+</div>
+<div style="padding: 40px 48px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; opacity: .5">
+<img src="../assets/44a218548719fe367b614a0dd5151345.svg" alt="" style="width: 100%; height: 260px; object-fit: cover; border-radius: 20px">
+<img src="../assets/dc9df8d5382e0fc7d2bf084f5632c713.svg" alt="" style="width: 100%; height: 260px; object-fit: cover; border-radius: 20px">
+<img src="../assets/767dc865917d29911dbc19beb44053f6.svg" alt="" style="width: 100%; height: 260px; object-fit: cover; border-radius: 20px">
+</div>
+<div style="position: absolute; inset: 0; background: rgba(16,18,48,.45)"></div>
+<div role="dialog" aria-modal="true" aria-labelledby="se-h" style="position: absolute; top: 200px; left: 50%; margin-left: -220px; width: 440px; box-sizing: border-box; background: #ffffff; border-radius: 20px; padding: 28px; display: flex; flex-direction: column; gap: 16px; box-shadow: 0 8px 30px rgba(38,42,103,.3)">
+<h2 id="se-h" style="margin: 0; font-size: 22px; line-height: 28px; font-weight: 600">You've been signed out</h2>
+<p style="margin: 0; font-size: 15px; line-height: 22px; color: #5b5f86">For your security we sign you out after 12 hours. Your booking draft for "AlUla Weekend" is saved.</p>
+<dc-import name="PasswordField" label="Password for sara@example.com" value="" field-id="se-pass" hint-size="100%,82px"></dc-import>
+<a href="WebReady.dc.html" style="height: 48px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 16px; font-weight: 600; display: flex; align-items: center; justify-content: center; text-decoration: none">Sign in again</a>
+<div style="display: flex; justify-content: space-between; font-size: 14px"><a href="WebForgot.dc.html" style="font-weight: 600">Forgot password?</a><a href="WebSignIn.dc.html" style="font-weight: 600">Use another account</a></div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

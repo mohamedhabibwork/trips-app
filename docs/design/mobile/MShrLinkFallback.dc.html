@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Mobile · Link can't be opened</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="height: 100%; box-sizing: border-box; padding: 56px 16px 24px; display: flex; flex-direction: column; gap: 16px">
+
+<img src="../assets/1fbce194fcb16bf54904c32c189fca31.svg" alt="Trips Enjoy" style="align-self: center; height: 36px; width: auto">
+
+<div style="flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; text-align: center; padding: 0 8px">
+<sc-if value="{{hasIllo}}" hint-placeholder-val="{{true}}"><img src="{{illo}}" alt="" style="width: 160px; height: 160px; object-fit: contain; flex-shrink: 0"></sc-if>
+<sc-if value="{{noIllo}}" hint-placeholder-val="{{false}}"><span style="width: 72px; height: 72px; border-radius: 999px; background: {{iconBg}}; color: {{iconFg}}; display: flex; align-items: center; justify-content: center"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{icon}}"></path></svg></span></sc-if>
+<h1 style="margin: 4px 0 0; font-size: 26px; line-height: 32px; font-weight: 700">{{title}}</h1>
+<p style="margin: 0; font-size: 16px; line-height: 23px; color: #5b5f86">{{body}}</p>
+
+<div style="margin-top: 12px; align-self: stretch; padding: 14px 16px; border-radius: 20px; background: #ffffff; display: flex; gap: 12px; align-items: flex-start; text-align: start">
+<span style="width: 40px; height: 40px; flex-shrink: 0; border-radius: 12px; background: #e6e8f5; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{cardIcon}}"></path></svg></span>
+<span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 12px; font-weight: 600; color: #5b5f86">{{cardLabel}}</span><span style="font-size: 15px; font-weight: 600">{{cardTitle}}</span><span style="font-size: 14px; line-height: 20px; color: #5b5f86">{{cardMeta}}</span></span>
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 10px">
+<a href="{{primaryHref}}" style="height: 52px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; text-decoration: none">{{primary}}</a>
+<sc-if value="{{hasSecondary}}" hint-placeholder-val="{{true}}"><a href="{{secondaryHref}}" style="height: 52px; box-sizing: border-box; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-size: 16px; font-weight: 600; display: flex; align-items: center; justify-content: center; text-decoration: none">{{secondary}}</a></sc-if>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"variant":{"editor":"enum","options":["no longer exists","other role","expired link","old notice","signed out"],"default":"no longer exists"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const I = {
+      link: 'M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1',
+      users: 'M9 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM3 20a6 6 0 0 1 12 0M16 4.5a3.5 3.5 0 0 1 0 6.5M18 14.5a6 6 0 0 1 3 5.5',
+      clock: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7v5l3 2',
+      bell: 'M6 16v-5a6 6 0 0 1 12 0v5l2 2H4zM10 21a2 2 0 0 0 4 0',
+      lock: 'M6 11h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1zM8 11V7a4 4 0 0 1 8 0v4',
+      info: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 11v5M12 8h.01',
+      ticket: 'M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v2a2.5 2.5 0 0 0 0 5v3a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-3a2.5 2.5 0 0 0 0-5zM14 5v14',
+      image: 'M5 4h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1zM8.5 10a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM20 15l-5-5L5 20',
+      bus: 'M6 4h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM4 11h16M8 18v2M16 18v2M8 14.5h.01M16 14.5h.01'
+    };
+    const neutral = ['#e6e8f5', '#262a67'], warn = ['#fdf0d5', '#8a4b00'];
+    const V = {
+      'no longer exists': { c: neutral, icon: I.link, title: 'This is no longer available',
+        body: 'The trip or booking this link pointed to has been removed. Nothing in your account changed.',
+        cardIcon: I.info, cardLabel: 'YOU TAPPED', cardTitle: 'Wadi El Rayan Day Trip', cardMeta: 'Removed by Nile Horizon Tours on Thu 15 Oct',
+        primary: 'Go to home', primaryHref: 'TrvHome.dc.html', secondary: 'Explore trips', secondaryHref: 'TrvSearch.dc.html' },
+      'other role': { c: neutral, icon: I.users, title: 'This link is for another app',
+        body: 'It opens a driver offer, and you’re signed in to the traveler app. We’ve kept you here.',
+        cardIcon: I.bus, cardLabel: 'SIGNED IN AS', cardTitle: 'Mariam Adel · Traveler', cardMeta: 'Driver links open in Trips Enjoy Driver with a driver account',
+        primary: 'Go to home', primaryHref: 'TrvHome.dc.html', secondary: '', secondaryHref: '#' },
+      'expired link': { c: warn, icon: I.clock, title: 'This link has expired',
+        body: 'Invitations and shared links only work for a limited time. Ask the person who sent it for a new one.',
+        cardIcon: I.image, cardLabel: 'SHARED ALBUM', cardTitle: 'Siwa Oasis Escape · Day 2', cardMeta: 'Shared by Laila Fathy · link turned off',
+        primary: 'Go to home', primaryHref: 'TrvHome.dc.html', secondary: 'My albums', secondaryHref: 'TrvAlbums.dc.html' },
+      'old notice': { c: warn, icon: I.bell, title: 'This notice is from earlier today',
+        body: 'Trip-day notices older than 2 hours don’t open as live updates. Here is what it said, with its original time.',
+        cardIcon: I.bus, cardLabel: 'SENT 07:32 · CAIRO TIME', cardTitle: 'Bus 1 left Ramses Square', cardMeta: 'Siwa Oasis Escape · Youssef and Salma boarded at 07:28',
+        primary: 'Go to home', primaryHref: 'TrvHome.dc.html', secondary: 'Open the trip', secondaryHref: 'TrvTrip.dc.html' },
+      'signed out': { c: neutral, icon: I.lock, title: 'Sign in to open this',
+        body: 'You’re signed out on this phone. After you sign in, we’ll take you straight to it.',
+        cardIcon: I.ticket, cardLabel: 'WAITING FOR YOU', cardTitle: 'A booking link', cardMeta: 'Details stay hidden until you’re signed in',
+        primary: 'Sign in', primaryHref: 'TrvBooked.dc.html', secondary: 'Go to home', secondaryHref: 'TrvHome.dc.html' }
+    };
+    const v = V[this.props.variant ?? 'no longer exists'] || V['no longer exists'];
+    const IL = { 'no longer exists': '../assets/bc4a243214747d2f6ffae3319dc5cf0a.svg', 'signed out': '../assets/257fcb5b0eb667e3fd21e8475667d3c8.svg' };
+    const illo = IL[this.props.variant ?? 'no longer exists'] || (V[this.props.variant] ? '' : IL['no longer exists']);
+    return { ...v, iconBg: v.c[0], iconFg: v.c[1], hasSecondary: v.secondary !== '', illo, hasIllo: illo !== '', noIllo: illo === '' };
+  }
+}
+</script>
+</body>
+</html>

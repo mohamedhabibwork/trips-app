@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Admin · Appeal review</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="min-height: 1000px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="AdmNav" active="Applications" hint-size="248px,1000px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 20px">
+
+<a href="AdminApplications.dc.html" style="align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 600; text-decoration: none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg>Applications</a>
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center"><img src="../assets/fa4aea3b99ab1c92ea071dc7fc9f9299.svg" alt="" style="width: 44px; height: 44px; border-radius: 999px; object-fit: cover; flex-shrink: 0"><h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Appeal · Laila Fathy</h1><span style="display: inline-flex; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; background: #e6e8f5; color: #262a67">Platform photographer</span><span style="{{statePill}}">{{stateLabel}}</span></div>
+<span style="font-size: 15px; color: #5b5f86">APL-EG-0031 for APP-EG-0377 · Cairo, Egypt · appeal filed Mon 13 Oct · one appeal per rejection</span>
+</div>
+<div style="display: flex; flex-direction: column; align-items: flex-end; gap: 2px"><span style="font-size: 13px; color: #5b5f86">Decide within 5 working days</span><span style="font-size: 18px; font-weight: 700">Due Mon 20 Oct</span></div>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
+<div style="flex: 3 1 520px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+
+<section aria-labelledby="orig-h" style="background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px"><h2 id="orig-h" style="margin: 0; font-size: 18px; font-weight: 600">Original application</h2><a href="AdminAppReview.dc.html" style="font-size: 14px; font-weight: 600">Open application</a></div>
+<dl style="margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px 20px">
+<sc-for list="{{facts}}" as="f" hint-placeholder-count="4"><div style="display: flex; flex-direction: column; gap: 2px"><dt style="font-size: 13px; color: #5b5f86">{{f.l}}</dt><dd style="margin: 0; font-size: 15px; font-weight: 600">{{f.v}}</dd></div></sc-for>
+</dl>
+<div style="display: flex; gap: 10px; padding: 12px 14px; border-radius: 12px; background: #fde8e6; color: #b42318"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 1px"><path d="M6 6l12 12M18 6L6 18"></path></svg><span style="display: flex; flex-direction: column; gap: 2px; font-size: 14px; line-height: 20px"><span style="font-weight: 700">Rejected Thu 2 Oct · Below portfolio minimum</span><span style="color: #262a67">6 of 10 photos were usable; 4 were near-duplicates of one shot. At least 8 distinct photos are needed. Decided by Omar Lotfy.</span></span></div>
+</section>
+
+<section aria-labelledby="st-h" style="background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+<h2 id="st-h" style="margin: 0; font-size: 18px; font-weight: 600">Laila's appeal</h2>
+<blockquote style="margin: 0; padding: 12px 16px; border-radius: 12px; background: #f6f3e4; font-size: 15px; line-height: 22px">I uploaded a burst series by mistake. I have replaced them with four photos from different trips: a Siwa sunset group shot, two family portraits at Wadi El Rayan and a school trip at Al Azhar Park. All 10 are now distinct.</blockquote>
+<div style="display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 14px; font-weight: 600">Files · 4 of 5</span>
+<sc-for list="{{files}}" as="f" hint-placeholder-count="4">
+<div style="display: flex; gap: 10px; align-items: center; padding: 8px 0; border-top: 1px solid #e3dfc9; font-size: 14px"><img src="{{f.img}}" alt="{{f.alt}}" style="{{f.imgSt}}"><span style="flex: 1">{{f.n}}</span><span style="color: #5b5f86">{{f.s}}</span><a href="#" style="font-weight: 600">View</a></div>
+</sc-for>
+</div>
+<div role="img" aria-label="Portfolio now has 10 photos, 4 of them new" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(72px, 1fr)); gap: 8px">
+<sc-for list="{{tiles}}" as="t" hint-placeholder-count="10"><div style="{{t.st}}"><img src="{{t.img}}" alt="" style="{{t.imgSt}}"><sc-if value="{{t.isNew}}" hint-placeholder-val="{{false}}"><span style="position: absolute; top: 4px; left: 4px; padding: 0 6px; border-radius: 999px; background: #fb8030; color: #262a67; font-size: 11px; font-weight: 700">New</span></sc-if></div></sc-for>
+</div>
+</section>
+</div>
+
+<aside style="flex: 2 1 340px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+
+<sc-if value="{{isPending}}" hint-placeholder-val="{{true}}">
+<section aria-labelledby="dec-h" style="background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+<h2 id="dec-h" style="margin: 0; font-size: 18px; font-weight: 600">Your decision</h2>
+<div role="radiogroup" aria-labelledby="dec-h" style="display: flex; flex-direction: column; gap: 8px">
+<sc-for list="{{opts}}" as="o" hint-placeholder-count="2">
+<button type="button" role="radio" aria-checked="{{o.ch}}" onClick="{{o.on}}" style="{{o.st}}"><span style="{{o.dot}}"></span><span style="display: flex; flex-direction: column; text-align: start"><span style="font-size: 15px; font-weight: 600">{{o.t}}</span><span style="font-size: 13px; line-height: 18px; color: #5b5f86">{{o.d}}</span></span></button>
+</sc-for>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="ap-r" style="font-size: 14px; font-weight: 600">Reason (required, shown to Laila)</label><textarea id="ap-r" rows="3" aria-invalid="true" aria-describedby="ap-err" style="border-radius: 8px; border: 1px solid #b42318; background: #fff; padding: 10px 14px; font: inherit; font-size: 15px; color: #262a67; resize: vertical"></textarea><span id="ap-err" style="font-size: 13px; color: #b42318">Write a reason before saving. It goes to Laila and the audit log.</span></div>
+<button type="button" style="height: 48px; border-radius: 12px; border: 0; background: #ff6c2e; color: #262a67; font: inherit; font-size: 15px; font-weight: 700; cursor: pointer">Save decision</button>
+</section>
+</sc-if>
+
+<sc-if value="{{isDecided}}" hint-placeholder-val="{{false}}">
+<section role="status" style="background: #e3f3ea; color: #1f7a4d; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 6px">
+<h2 style="margin: 0; font-size: 18px; font-weight: 700">Appeal upheld · Approved</h2>
+<span style="font-size: 14px; line-height: 20px; color: #262a67">Decided Wed 15 Oct 11:20 by Reem Othman. Laila was notified and can now sign in. Photographer Basic plan assigned on approval.</span>
+<a href="AdmUser.dc.html" style="font-size: 14px; font-weight: 600">Open Laila's account</a>
+</section>
+</sc-if>
+
+<sc-if value="{{isClosed}}" hint-placeholder-val="{{false}}">
+<section role="status" style="background: #f6f3e4; border: 1px solid #e3dfc9; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 6px">
+<h2 style="margin: 0; font-size: 18px; font-weight: 700">Appeal window closed</h2>
+<span style="font-size: 14px; line-height: 20px; color: #5b5f86">No appeal can be filed after Thu 16 Oct, 14 days after the rejection notice. The application stays Rejected; Laila can re-apply from Sat 1 Nov with new documents.</span>
+</section>
+</sc-if>
+
+<section aria-labelledby="coi-h" style="background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 10px">
+<h2 id="coi-h" style="margin: 0; font-size: 16px; font-weight: 600">Assigned to Reem Othman</h2>
+<p style="margin: 0; font-size: 14px; line-height: 20px; color: #5b5f86">If you are linked to this applicant, for example as staff of an organization she works with, you cannot decide this appeal. Reassign it to another admin.</p>
+<button type="button" style="align-self: flex-start; height: 44px; padding: 0 16px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer">Reassign: conflict of interest</button>
+</section>
+
+<section aria-labelledby="tl-h" style="background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 4px">
+<h2 id="tl-h" style="margin: 0 0 6px; font-size: 16px; font-weight: 600">Timeline</h2>
+<sc-for list="{{timeline}}" as="t" hint-placeholder-count="4"><div style="display: flex; justify-content: space-between; gap: 12px; padding: 7px 0; border-top: 1px solid #e3dfc9; font-size: 14px"><span>{{t.a}}</span><span style="color: #5b5f86; white-space: nowrap">{{t.d}}</span></div></sc-for>
+</section>
+</aside>
+</div>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"state":{"editor":"enum","options":["pending","decided","window closed"],"default":"pending"},"$preview":{"width":1440,"height":1020}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { pick: 'uphold' }; }
+  renderVals() {
+    const s = this.props.state ?? 'pending';
+    const P = { pending: ['Appealed · pending', 'background: #fdf0d5; color: #8a4b00;'], decided: ['Approved on appeal', 'background: #e3f3ea; color: #1f7a4d;'], 'window closed': ['Rejected · window closed', 'background: #fde8e6; color: #b42318;'] }[s];
+    const facts = [
+      { l: 'Submitted', v: 'Thu 18 Sep' }, { l: 'Plan picked', v: 'Studio (Basic on approval)' },
+      { l: 'Portfolio at review', v: '10 photos · 6 usable' }, { l: 'Appeal window', v: 'Until Thu 16 Oct' }
+    ];
+    const files = [
+      { n: 'siwa-sunset-group.jpg', s: 'JPEG · 8.4 MB', img: '../assets/d86de248246e3c2af9ac141f04f94d0a.svg', alt: 'Group at sunset over Siwa Oasis', pos: '50% 50%' }, { n: 'wadi-el-rayan-family-1.jpg', s: 'JPEG · 6.1 MB', img: '../assets/6c681277de59192cae4171833ad9e5e7.svg', alt: 'Family portrait at Wadi El Rayan', pos: '30% 50%' },
+      { n: 'wadi-el-rayan-family-2.heic', s: 'HEIC · 4.9 MB', img: '../assets/6c681277de59192cae4171833ad9e5e7.svg', alt: 'Second family portrait at Wadi El Rayan', pos: '75% 60%' }, { n: 'al-azhar-park-school-day.jpg', s: 'JPEG · 7.7 MB', img: '../assets/3c9baf624f42e5a28246b4e6de48737d.svg', alt: 'School day at Al Azhar Park', pos: '50% 50%' }
+    ].map((f) => ({ ...f, imgSt: 'width: 40px; height: 30px; flex-shrink: 0; border-radius: 6px; object-fit: cover; object-position: ' + f.pos + ';' }));
+    const TI = [['../assets/79a6ce5310828e799852c7aef2cdc987.svg', '50% 50%'], ['../assets/073b7fe9ddee4e94c5d8ddaa41cbb4f4.svg', '50% 60%'], ['../assets/61261514261614e6b661d310c333264d.svg', '40% 50%'], ['../assets/dd052dab07949cd087d95323479af226.svg', '50% 50%'], ['../assets/cafd59426799492e5f83c95087214500.svg', '60% 50%'], ['../assets/b2bcb63d43641eb25576376d35060477.png', '38% 58%'], ['../assets/d86de248246e3c2af9ac141f04f94d0a.svg', '50% 50%'], ['../assets/6c681277de59192cae4171833ad9e5e7.svg', '30% 50%'], ['../assets/6c681277de59192cae4171833ad9e5e7.svg', '75% 60%'], ['../assets/3c9baf624f42e5a28246b4e6de48737d.svg', '50% 50%']];
+    const tiles = Array.from({ length: 10 }, (_, i) => ({ isNew: i >= 6, img: TI[i][0],
+      imgSt: 'position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: ' + TI[i][1] + ';',
+      st: 'position: relative; overflow: hidden; aspect-ratio: 1; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #b8bad6; ' + (i >= 6 ? 'background: #31367a; outline: 2px solid #fb8030; outline-offset: -2px;' : 'background: #262a67;') }));
+    const pick = this.state.pick;
+    const opts = [
+      ['uphold', 'Uphold appeal', 'Application becomes Approved. Photographer Basic plan assigned; Laila is notified.'],
+      ['reject', 'Uphold rejection', 'Stays Rejected. Re-apply from Sat 1 Nov. No further appeal.']
+    ].map(([k, t, d]) => { const on = k === pick; return { t, d, ch: on ? 'true' : 'false', on: () => this.setState({ pick: k }),
+      st: 'display: flex; gap: 12px; align-items: flex-start; padding: 12px; border-radius: 12px; font: inherit; color: #262a67; cursor: pointer; ' + (on ? 'background: #fff8f3; border: 1px solid #fb8030;' : 'background: #ffffff; border: 1px solid #e3dfc9;'),
+      dot: 'width: 18px; height: 18px; flex-shrink: 0; margin-top: 2px; box-sizing: border-box; border-radius: 999px; ' + (on ? 'border: 6px solid #262a67;' : 'border: 2px solid #7b7fa6;') }; });
+    const timeline = [
+      { a: 'Application submitted', d: 'Thu 18 Sep' }, { a: 'Rejected · below portfolio minimum', d: 'Thu 2 Oct' },
+      { a: 'Appeal filed with 4 files', d: 'Mon 13 Oct' }, { a: 'Assigned to Reem Othman', d: 'Mon 13 Oct' }
+    ];
+    return { stateLabel: P[0], statePill: 'display: inline-flex; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; ' + P[1],
+      facts, files, tiles, opts, timeline, isPending: s === 'pending', isDecided: s === 'decided', isClosed: s === 'window closed' };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Organization · Bookings</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+.te-row:hover{background:#fbfaf3}
+</style>
+</helmet>
+<div style="min-height: 1000px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="OrgNav" active="Bookings" hint-size="248px,1000px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 20px">
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; color: #5b5f86">All trips · October</span><h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Bookings</h1></div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center">
+<button type="button" style="height: 48px; box-sizing: border-box; padding: 0 18px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12M7 11l5 5 5-5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"></path></svg>Export CSV</button>
+<a href="OrgDispute.dc.html" style="height: 48px; padding: 0 12px; display: flex; align-items: center; gap: 6px; font-size: 15px; font-weight: 600; text-decoration: none">1 open dispute · respond in 48 h</a>
+<a href="OrgBooking.dc.html" style="height: 48px; padding: 0 20px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 10px; text-decoration: none">Review refund requests<span style="padding: 0 8px; border-radius: 999px; background: #262a67; color: #f6f3e4; font-size: 13px; line-height: 22px">3</span></a>
+</div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px">
+<sc-for list="{{kpis}}" as="k" hint-placeholder-count="4">
+<div style="padding: 16px 20px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 14px; color: #5b5f86">{{k.l}}</span>
+<span style="font-size: 26px; line-height: 32px; font-weight: 700">{{k.v}} <span style="font-size: 14px; font-weight: 500; color: #5b5f86">{{k.u}}</span></span>
+<span style="{{k.ds}}">{{k.d}}</span>
+</div>
+</sc-for>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end">
+<div role="group" aria-label="Filter by status" style="display: flex; flex-wrap: wrap; gap: 8px; flex: 1 1 520px">
+<sc-for list="{{chips}}" as="c" hint-placeholder-count="6">
+<button type="button" aria-pressed="{{c.pressed}}" onClick="{{c.on}}" style="{{c.style}}">{{c.k}} <span style="{{c.ns}}">{{c.n}}</span></button>
+</sc-for>
+</div>
+<div style="display: flex; flex-direction: column; gap: 4px; flex: 0 1 240px"><label for="trip" style="font-size: 13px; font-weight: 600">Trip</label><select id="trip" style="height: 44px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 10px; font: inherit; font-size: 15px; color: #262a67"><option>All trips</option><option>AlUla Heritage Weekend</option><option>Red Sea Snorkel Day</option><option>Jeddah Corniche Night</option><option>Edge of the World Hike</option><option>Taif Rose Farms</option></select></div>
+<div style="display: flex; flex-direction: column; gap: 4px; flex: 0 1 260px"><label for="q" style="font-size: 13px; font-weight: 600">Search</label><input id="q" type="search" placeholder="Ref, name or phone" style="height: 44px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 12px; font: inherit; font-size: 15px; color: #262a67"></div>
+</div>
+
+<section aria-labelledby="bk-h" style="background: #ffffff; border-radius: 20px; padding: 16px 0 8px">
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 0 20px 8px"><h2 id="bk-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">{{title}}</h2><span style="font-size: 13px; color: #5b5f86">Export includes payments and coupons · Advanced accounting on Growth</span></div>
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 1080px; border-collapse: collapse; font-size: 15px">
+<thead><tr style="color: #5b5f86; font-size: 13px"><th scope="col" style="text-align: start; padding: 10px 20px; font-weight: 600">Ref</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Traveller</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Trip</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Seats</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Programs</th><th scope="col" style="text-align: end; padding: 10px 12px; font-weight: 600">Amount</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Coupon</th><th scope="col" style="text-align: start; padding: 10px 20px; font-weight: 600">Status</th></tr></thead>
+<tbody>
+<sc-for list="{{rows}}" as="r" hint-placeholder-count="10">
+<tr class="te-row" style="border-top: 1px solid #e3dfc9">
+<td style="padding: 11px 20px; font-weight: 600; white-space: nowrap"><a href="OrgBooking.dc.html" style="color: #c93a00">{{r.ref}}</a></td>
+<td style="padding: 11px 12px"><span style="display: flex; flex-direction: column"><span style="font-weight: 600">{{r.who}}</span><span style="font-size: 13px; color: #5b5f86">{{r.party}}</span></span></td>
+<td style="padding: 11px 12px; font-size: 14px">{{r.trip}}</td>
+<td style="padding: 11px 12px; font-size: 14px">{{r.seats}}</td>
+<td style="padding: 11px 12px; font-size: 14px; color: #5b5f86">{{r.prog}}</td>
+<td style="padding: 11px 12px; text-align: end; white-space: nowrap; font-variant-numeric: tabular-nums">{{r.amt}}</td>
+<td style="padding: 11px 12px"><span style="{{r.cs}}">{{r.coupon}}</span></td>
+<td style="padding: 11px 20px"><span style="{{r.ss}}"><span aria-hidden="true" style="width: 6px; height: 6px; border-radius: 999px; background: currentColor"></span>{{r.s}}</span></td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 20px 4px; font-size: 14px; color: #5b5f86; border-top: 1px solid #e3dfc9"><span>{{shown}}</span><span style="display: flex; gap: 8px"><button type="button" style="height: 36px; padding: 0 12px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; color: #262a67; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer">Previous</button><button type="button" style="height: 36px; padding: 0 12px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; color: #262a67; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer">Next</button></span></div>
+</section>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1140}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { f: 'All' }; }
+  renderVals() {
+    const tones = { ok: 'background: #e3f3ea; color: #1f7a4d;', warn: 'background: #fdf0d5; color: #8a4b00;', bad: 'background: #fde8e6; color: #b42318;', info: 'background: #e6e8f5; color: #262a67;', neutral: 'background: #f6f3e4; color: #5b5f86;' };
+    const pill = (t) => 'display: inline-flex; align-items: center; gap: 6px; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; white-space: nowrap; ' + tones[t];
+    const toneOf = { 'Confirmed': 'ok', 'Payment pending': 'warn', 'Checked-in': 'info', 'Cancelled': 'bad', 'Refunded': 'neutral', 'Refund requested': 'warn' };
+    const kpis = [
+      { l: 'Bookings this month', v: '412', u: '', d: '1,284 seats · 18 trips', ds: 'font-size: 13px; color: #5b5f86' },
+      { l: 'Collected', v: '498,350', u: 'SAR', d: 'incl. 61,920 SAR programs', ds: 'font-size: 13px; color: #5b5f86' },
+      { l: 'Payment pending', v: '9', u: '', d: 'Seats held 15 min, then released', ds: 'font-size: 13px; color: #8a4b00; font-weight: 600' },
+      { l: 'Refund requests', v: '3', u: '', d: '2 in the 80% refund window', ds: 'font-size: 13px; color: #8a4b00; font-weight: 600' }
+    ];
+    const counts = [['All', 412], ['Confirmed', 336], ['Payment pending', 9], ['Checked-in', 32], ['Refund requested', 3], ['Cancelled', 21], ['Refunded', 11]];
+    const f = this.state.f;
+    const chips = counts.map(([k, n]) => { const on = k === f; return { k, n, pressed: on ? 'true' : 'false', on: () => this.setState({ f: k }),
+      style: 'height: 36px; padding: 0 14px; border-radius: 999px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; ' + (on ? 'background: #262a67; color: #f6f3e4; border: 1px solid #262a67;' : 'background: #ffffff; color: #262a67; border: 1px solid #e3dfc9;'),
+      ns: 'font-size: 12px; font-weight: 700; ' + (on ? 'color: #f89e23;' : 'color: #5b5f86;') }; });
+    const all = [
+      ['TE-48217', 'Sara Al-Qahtani', '2 adults · 2 children', 'AlUla Heritage Weekend', '4 · Bus 2', 'Hegra tour, Dinner Standard, Insurance', '5,720 SAR', 'AUTUMN15', 'Refund requested'],
+      ['TE-48233', 'Abdullah Al-Shammari', '1 adult', 'AlUla Heritage Weekend', '1 · Bus 1', 'Hot-air balloon, Insurance', '2,225 SAR', '—', 'Confirmed'],
+      ['TE-48240', 'Reem Al-Dosari', '2 adults', 'AlUla Heritage Weekend', '2 · Bus 3', 'Insurance, Camp kit × 2', '2,670 SAR', 'FIRSTTRIP', 'Confirmed'],
+      ['TE-48302', 'Hassan Al-Mutawa', '3 adults', 'Red Sea Snorkel Day', '3 · Bus 1', 'Gear rental', '1,050 SAR', '—', 'Payment pending'],
+      ['TE-48297', 'Lama Al-Rashid', '1 adult · 1 child', 'Taif Rose Farms', '2 · Bus 1', 'Rose distillery visit', '840 SAR', '—', 'Confirmed'],
+      ['TE-48288', 'Al Noor School', '30 children · 2 teachers', 'Al Noor School · Grade 4', '32 · Bus 1', 'Zoo lunch box', '4,480 SAR', 'NOOR-G4', 'Checked-in'],
+      ['TE-48261', 'Majid Al-Harthy', '2 adults', 'Jeddah Corniche Night', '2 · Bus 3', '—', '360 SAR', '—', 'Refund requested'],
+      ['TE-48255', 'Nouf Al-Qahtani', '4 adults', 'Edge of the World Hike', '4 · Bus 1', 'Breakfast pack × 4', '1,180 SAR', 'GROUP5', 'Confirmed'],
+      ['TE-48190', 'Turki Al-Anazi', '2 adults', 'AlUla Heritage Weekend', '2 · Bus 4', 'Insurance', '2,550 SAR', '—', 'Cancelled'],
+      ['TE-48144', 'Yara Al-Saud', '1 adult', 'Al Ahsa Oasis Day', '1 · Bus 2', 'Date farm lunch', '320 SAR', 'AUTUMN15', 'Refunded']
+    ].map(([ref, who, party, trip, seats, prog, amt, coupon, s]) => ({ ref, who, party, trip, seats, prog, amt, coupon, s, ss: pill(toneOf[s]),
+      cs: coupon === '—' ? 'color: #5b5f86;' : 'padding: 2px 8px; border-radius: 6px; background: #f6f3e4; border: 1px dashed #7b7fa6; font-size: 12px; font-weight: 700; letter-spacing: .4px;' }));
+    const rows = all.filter((r) => f === 'All' || r.s === f);
+    const total = counts.find((c) => c[0] === f)[1];
+    return { kpis, chips, rows, title: f === 'All' ? 'All bookings' : f, shown: 'Showing ' + rows.length + ' of ' + total };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Traveler · Notifications</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="height: 100%; box-sizing: border-box; padding: 56px 16px 120px; display: flex; flex-direction: column; gap: 12px">
+
+<div style="display: flex; align-items: center; justify-content: space-between">
+<h1 style="margin: 0; font-size: 28px; line-height: 34px; font-weight: 700">Alerts</h1>
+<button type="button" onClick="{{markAll}}" style="{{markStyle}}">{{markLabel}}</button>
+</div>
+
+<sc-for list="{{groups}}" as="g" hint-placeholder-count="2">
+<section style="display: flex; flex-direction: column; gap: 8px">
+<h2 style="margin: 4px 0 0; font-size: 14px; font-weight: 600; color: #5b5f86">{{g.t}}</h2>
+<div style="border-radius: 20px; background: #ffffff; padding: 0 16px">
+<sc-for list="{{g.items}}" as="n" hint-placeholder-count="3">
+<a href="{{n.href}}" style="{{n.row}}">
+<span style="{{n.iconBox}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{n.d}}"></path></svg></span>
+<span style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px"><span style="{{n.titleStyle}}">{{n.t}}</span><span style="font-size: 13px; line-height: 17px; color: #5b5f86">{{n.b}}</span></span>
+<span style="display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex-shrink: 0"><span style="font-size: 12px; color: #5b5f86">{{n.time}}</span><sc-if value="{{n.unread}}" hint-placeholder-val="{{true}}"><span aria-label="Unread" style="width: 10px; height: 10px; border-radius: 999px; background: #f89e23"></span></sc-if></span>
+</a>
+</sc-for>
+</div>
+</section>
+</sc-for>
+
+</div>
+<div style="position: absolute; left: 0; right: 0; bottom: 0; height: 120px">
+<dc-import name="TabBar" role="traveler" active="alerts" hint-size="390px,120px"></dc-import>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { read: false }; }
+  renderVals() {
+    const I = {
+      bus: 'M6 4h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM4 11h16M8 18v2M16 18v2M8 14.5h.01M16 14.5h.01',
+      seat: 'M7 4h7a2 2 0 0 1 2 2v7H7zM5 13h12a2 2 0 0 1 2 2v2H5zM7 17v3M17 17v3',
+      tag: 'M3 12V4a1 1 0 0 1 1-1h8l9 9-9 9zM7.5 7.5h.01',
+      image: 'M5 4h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1zM8.5 10a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM20 15l-5-5L5 20',
+      file: 'M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zM14 3v5h5',
+      calendar: 'M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zM4 10h16M8 3v4M16 3v4'
+    };
+    const read = this.state.read;
+    const G = [
+      ['Today', [
+        { k: 'bus', live: true, t: 'Omar boarded Bus 2 at 07:32', b: 'Al Noor School · Grade 4 Zoo Day · seat 6A', time: '07:32', href: 'ParLive.dc.html', u: true },
+        { k: 'seat', t: 'Seats assigned for Red Sea Snorkel Day', b: 'You and Faisal are in 5A and 5B on Bus 1', time: '06:10', href: 'TrvTicket.dc.html', u: true },
+        { k: 'tag', t: 'AUTUMN15 expires Fri 31 Oct', b: 'Use it on any Sunrise Tours Co. trip', time: '06:00', href: 'TrvResults.dc.html', u: true }
+      ]],
+      ['Earlier', [
+        { k: 'image', t: 'Noura Al-Shehri published an album', b: 'Rose harvest day · 148 photos from Taif Rose Farms', time: 'Tue', href: 'TrvAlbums.dc.html', u: false },
+        { k: 'file', t: 'Payment receipt · 4,592 SAR', b: 'AlUla Heritage Weekend · TE-48213 · Visa 4421', time: 'Mon', href: 'TrvReceipts.dc.html', u: false },
+        { k: 'calendar', t: 'AlUla Heritage Weekend in 10 days', b: 'Pickup Olaya 06:15 · Thu 16 Oct', time: 'Mon', href: 'TrvTicket.dc.html', u: false }
+      ]]
+    ];
+    const groups = G.map(([t, items]) => ({ t, items: items.map((n, i) => {
+      const unread = n.u && !read;
+      return { ...n, d: I[n.k], unread,
+        row: 'min-height: 68px; padding: 12px 0; box-sizing: border-box; display: flex; align-items: center; gap: 12px; color: #262a67; text-decoration: none;' + (i < items.length - 1 ? ' border-bottom: 1px solid #e3dfc9;' : ''),
+        iconBox: 'width: 40px; height: 40px; flex-shrink: 0; border-radius: 12px; display: flex; align-items: center; justify-content: center; ' + (n.live ? 'background: #ffe7dc; color: #c93a00;' : 'background: #e6e8f5; color: #262a67;'),
+        titleStyle: 'font-size: 15px; line-height: 20px; ' + (unread ? 'font-weight: 700;' : 'font-weight: 500;') };
+    }) }));
+    return { groups,
+      markAll: () => this.setState({ read: true }),
+      markLabel: read ? 'All read' : 'Mark all read',
+      markStyle: 'height: 44px; padding: 0 14px; border-radius: 999px; border: 0; font: inherit; font-size: 14px; font-weight: 600; ' + (read ? 'background: transparent; color: #5b5f86;' : 'background: #ffffff; color: #262a67; cursor: pointer;') };
+  }
+}
+</script>
+</body>
+</html>

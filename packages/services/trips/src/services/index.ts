@@ -168,6 +168,7 @@ export function createTripsService(db: ServiceDatabase) {
       origin: trip.origin ?? null,
       destinations: trip.destinations ?? [],
       seatAssignmentMode: trip.seatAssignmentMode,
+      seatPriorityWindowHours: trip.seatPriorityWindowHours,
       basePrice: money(trip.basePriceMinor, trip.currencyCode),
       basePriceMinor: trip.basePriceMinor,
       currencyCode: trip.currencyCode,

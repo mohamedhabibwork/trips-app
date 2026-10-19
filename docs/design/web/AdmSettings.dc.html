@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Admin · Platform settings</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="min-height: 1000px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="AdmNav" active="Settings" hint-size="248px,1000px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 20px">
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; color: #5b5f86">System</span><h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Platform settings</h1><span style="font-size: 15px; color: #5b5f86">Changes apply to new bookings, deals and sign-ins from the moment you save. Every change is written to the <a href="AdmAudit.dc.html" style="font-weight: 600">audit log</a>.</span></div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center">
+<span style="display: inline-flex; gap: 6px; align-items: center; padding: 4px 12px; border-radius: 999px; background: #fdf0d5; color: #8a4b00; font-size: 13px; font-weight: 600"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16zM14 6l4 4"></path></svg>2 unsaved changes</span>
+<button type="button" style="height: 48px; padding: 0 20px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Discard</button>
+<button type="button" style="height: 48px; padding: 0 24px; border: 0; border-radius: 12px; background: #ff6c2e; color: #262a67; font: inherit; font-size: 15px; font-weight: 700; cursor: pointer">Save changes</button>
+</div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 16px; align-items: start">
+<sc-for list="{{sections}}" as="s" hint-placeholder-count="6">
+<section aria-label="{{s.t}}" style="background: #ffffff; border-radius: 20px; padding: 18px 20px 10px; display: flex; flex-direction: column">
+<div style="display: flex; gap: 10px; align-items: center; padding-bottom: 6px"><span style="width: 32px; height: 32px; border-radius: 10px; background: #e6e8f5; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{s.icon}}"></path></svg></span><span style="display: flex; flex-direction: column"><h2 style="margin: 0; font-size: 18px; line-height: 24px; font-weight: 600">{{s.t}}</h2><span style="font-size: 13px; color: #5b5f86">{{s.d}}</span></span></div>
+<sc-for list="{{s.rows}}" as="r" hint-placeholder-count="3">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 9px 0; border-top: 1px solid #e3dfc9">
+<label for="{{r.id}}" style="display: flex; flex-direction: column; min-width: 0"><span style="font-size: 14px; font-weight: 600">{{r.l}}</span><span style="font-size: 12px; color: #5b5f86">{{r.h}}</span></label>
+<sc-if value="{{r.isNum}}" hint-placeholder-val="{{true}}"><span style="{{r.box}}"><input id="{{r.id}}" value="{{r.v}}" style="width: 100%; min-width: 0; border: 0; background: transparent; font: inherit; font-size: 15px; font-weight: 600; color: #262a67; text-align: end; outline-offset: 4px"><span style="font-size: 13px; color: #5b5f86; white-space: nowrap">{{r.u}}</span></span></sc-if>
+<sc-if value="{{r.isSel}}" hint-placeholder-val="{{false}}"><select id="{{r.id}}" style="height: 40px; max-width: 60%; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; padding: 0 10px; font: inherit; font-size: 14px; color: #262a67"><option>{{r.v}}</option><option>{{r.alt}}</option></select></sc-if>
+<sc-if value="{{r.isTog}}" hint-placeholder-val="{{false}}"><button type="button" id="{{r.id}}" role="switch" aria-checked="{{r.ac}}" onClick="{{r.flip}}" style="{{r.tg}}"><span style="width: 22px; height: 22px; border-radius: 999px; background: #ffffff"></span></button></sc-if>
+</div>
+</sc-for>
+</section>
+</sc-for>
+</div>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1180}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { tg: { autoSusp: true, seatSel: true, child: true, albumLinks: true, chat: false, egypt: false, ar: true, en: true, passFees: false } }; }
+  renderVals() {
+    const T = this.state.tg;
+    const changed = { trip: true, hold: true };
+    const box = (c) => 'display: flex; align-items: center; gap: 6px; width: 132px; flex-shrink: 0; height: 40px; box-sizing: border-box; padding: 0 10px; border-radius: 8px; background: #ffffff; ' + (c ? 'border: 2px solid #fb8030;' : 'border: 1px solid #7b7fa6;');
+    const N = (id, l, h, v, u) => ({ id, l, h: changed[id] ? (h ? h + ' · ' : '') + 'Changed, not saved' : h, v, u, isNum: true, isSel: false, isTog: false, box: box(changed[id]) });
+    const S = (id, l, h, v, alt) => ({ id, l, h, v, alt, isNum: false, isSel: true, isTog: false });
+    const G = (id, l, h) => ({ id, l, h, isNum: false, isSel: false, isTog: true, ac: T[id] ? 'true' : 'false', flip: () => this.setState({ tg: { ...T, [id]: !T[id] } }),
+      tg: 'width: 48px; height: 28px; flex-shrink: 0; border: 0; border-radius: 999px; padding: 3px; cursor: pointer; display: flex; ' + (T[id] ? 'background: #262a67; justify-content: flex-end;' : 'background: #7b7fa6; justify-content: flex-start;') });
+    const sections = [
+      { t: 'Commissions', d: 'Taken from each paid amount', icon: 'M4 20h16M7 16v-4M12 16V8M17 16v-7', rows: [
+        N('trip', 'Trip bookings', 'Was 7.5%', '8', '%'), N('drv', 'Platform driver deals', '', '10', '%'), N('pho', 'Photographer deals', '', '12', '%') ] },
+      { t: 'Payments', d: 'Collection and payouts', icon: 'M4 7a2 2 0 0 1 2-2h12v4M4 7v11a2 2 0 0 0 2 2h14V9H6a2 2 0 0 1-2-2zM16 14.5h.01', rows: [
+        S('gw', 'Payment gateway', 'Mada, Visa, Mastercard, Apple Pay', 'HyperPay · KSA', 'Checkout.com · UAE'), N('po', 'Payout schedule', 'Weekly for drivers, photographers, organizations · no minimum', 'Mon 06:00', 'weekly'), G('passFees', 'Pass gateway fees to travellers', 'Off: organizations absorb fees') ] },
+      { t: 'Booking rules', d: 'Seats and cancellations', icon: 'M7 4h7a2 2 0 0 1 2 2v7H7zM5 13h12a2 2 0 0 1 2 2v2H5zM7 17v3M17 17v3', rows: [
+        N('hold', 'Seat hold during checkout', 'Was 10 min', '15', 'min'), N('cxl', '80% refund until', 'Before departure · placeholder', '48', 'hours'), N('cxl50', '50% refund until', 'Under this: no refund; request goes to the organization', '24', 'hours'), N('prio', 'Explorer and VIP seat window', 'Early access before everyone', '24', 'hours') ] },
+      { t: 'Applications', d: 'Organizations, drivers, photographers', icon: 'M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zM14 3v5h5', rows: [
+        N('dec', 'Decision target', 'Shown to applicants', '2', 'working days'), N('chg', 'Changes-needed window', 'Then the application closes', '14', 'days'), N('reap', 'Re-apply cooldown', 'After a rejection', '30', 'days') ] },
+      { t: 'Verification & sessions', d: 'Sign-in codes and lockout', icon: 'M6 11h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1zM8 11V7a4 4 0 0 1 8 0v4', rows: [
+        N('exp', 'Code expiry', '', '5', 'min'), N('tries', 'Wrong tries before lockout', '', '5', 'tries'), N('lock', 'Lockout length', '', '15', 'min'), N('sess', 'Web session length', 'Admin and organization consoles', '12', 'hours') ] },
+      { t: 'Driver safety', d: 'Lab tests and suspensions', icon: 'M12 3l7 3v5.5c0 4.4-3 8-7 9.5-4-1.5-7-5.1-7-9.5V6zM9 12l2 2 4-4', rows: [
+        N('lab', 'Lab test deadline (default)', 'App blocked until submitted', '3', 'days'), G('autoSusp', 'Auto-suspend after missed deadline', 'Pending deals are released'), N('close', 'Close account after suspension', 'Driver is notified at day 23', '30', 'days') ] },
+      { t: 'Languages', d: 'App, emails and templates', icon: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM3 12h18M12 3c2.5 2.6 3.7 5.6 3.7 9s-1.2 6.4-3.7 9c-2.5-2.6-3.7-5.6-3.7-9S9.5 5.6 12 3z', rows: [
+        G('ar', 'Arabic · العربية', 'Right-to-left, Cairo font'), G('en', 'English', 'Left-to-right'), S('def', 'Default for new users', 'Detected from device first', 'Arabic', 'English') ] },
+      { t: 'Feature flags', d: 'Turn features on for everyone', icon: 'M4 21V4M4 4h12l-2 4 2 4H4', rows: [
+        G('seatSel', 'Seat self-selection', 'Growth and Enterprise organizations'), G('child', 'Child tracking for parents', 'Explorer and VIP users'), G('albumLinks', 'Shared album links', 'Studio and Pro photographers'), G('chat', 'In-app chat with organizations', 'Beta · 3 organizations on allow list'), G('egypt', 'Egypt market', 'EGP pricing and Egyptian gateways') ] }
+    ];
+    return { sections };
+  }
+}
+</script>
+</body>
+</html>

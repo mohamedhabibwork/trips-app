@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Admin · Webhooks</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+.te-tr:hover{background:#fbf9f0}
+</style>
+</helmet>
+<div style="min-height: 1000px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="AdmNav" active="Webhooks" hint-size="248px,1000px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 20px">
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; color: #5b5f86">Organization integrations on Growth and Enterprise · current API version 2026-09-01</span><h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Webhooks &amp; API</h1></div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px">
+<a href="OrgWebhooks.dc.html" style="height: 48px; box-sizing: border-box; padding: 0 20px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-size: 15px; font-weight: 600; display: flex; align-items: center; text-decoration: none">Organization view</a>
+<button type="button" onClick="{{openNew}}" style="height: 48px; padding: 0 20px; border-radius: 12px; border: 0; background: #ff6c2e; color: #262a67; font: inherit; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Internal endpoint</button>
+</div>
+</div>
+
+<div role="note" style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; padding: 14px 16px; border-radius: 12px; background: #fdf0d5; color: #262a67">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8a4b00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M12 3l9.5 17h-19zM12 10v4M12 17h.01"></path></svg>
+<span style="flex: 1 1 400px; font-size: 14px; line-height: 20px"><strong style="color: #8a4b00">API version 2025-03-01 is deprecated.</strong> It stops on Mon 1 Mar 2027. 41 endpoints at 17 organizations still receive it; payloads move <code style="font-size: 13px">booking.seats</code> to <code style="font-size: 13px">booking.seat_ids</code> in 2026-09-01.</span>
+<button type="button" style="height: 40px; padding: 0 14px; border-radius: 12px; border: 0; background: #262a67; color: #f6f3e4; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer">Email the 17 owners</button>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px">
+<sc-for list="{{kpis}}" as="k" hint-placeholder-count="4">
+<div style="padding: 16px 18px; border-radius: 16px; background: #ffffff; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 13px; color: #5b5f86">{{k.l}}</span><span style="font-size: 26px; line-height: 32px; font-weight: 700">{{k.v}}</span><span style="{{k.ds}}">{{k.d}}</span></div>
+</sc-for>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: stretch">
+<section aria-labelledby="vol-h" style="flex: 3 1 520px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; flex-wrap: wrap; gap: 8px 16px; justify-content: space-between; align-items: center">
+<h2 id="vol-h" style="margin: 0; font-size: 18px; font-weight: 600">Delivery volume · last 14 days</h2>
+<div style="display: flex; gap: 16px; font-size: 13px; color: #5b5f86"><span style="display: inline-flex; align-items: center; gap: 6px"><span style="width: 12px; height: 12px; border-radius: 3px; background: #262a67"></span>Deliveries (thousands)</span><span style="display: inline-flex; align-items: center; gap: 6px"><span style="width: 12px; height: 12px; border-radius: 999px; border: 2px solid #c93a00; box-sizing: border-box"></span>Failure rate</span></div>
+</div>
+<svg viewBox="0 0 740 222" width="100%" role="img" aria-label="Daily webhook deliveries from 1 to 14 October, between 176 and 274 thousand a day. Failure rate stays near 0.5% except Sun 5 Oct at 1.6% and Sun 12 Oct at 2.4%, when Hijaz Coach Lines' endpoint was down." style="display: block; font-family: Outfit, sans-serif">
+<line x1="36" y1="10" x2="704" y2="10" stroke="#e3dfc9"></line><line x1="36" y1="70" x2="704" y2="70" stroke="#e3dfc9"></line><line x1="36" y1="130" x2="704" y2="130" stroke="#e3dfc9"></line><line x1="36" y1="190" x2="704" y2="190" stroke="#7b7fa6"></line>
+<text x="30" y="14" text-anchor="end" font-size="11" fill="#5b5f86">300k</text><text x="30" y="74" text-anchor="end" font-size="11" fill="#5b5f86">200k</text><text x="30" y="134" text-anchor="end" font-size="11" fill="#5b5f86">100k</text><text x="30" y="194" text-anchor="end" font-size="11" fill="#5b5f86">0</text>
+<text x="710" y="14" font-size="11" fill="#c93a00">3%</text><text x="710" y="104" font-size="11" fill="#c93a00">1.5%</text><text x="710" y="194" font-size="11" fill="#c93a00">0%</text>
+<rect x="40.0" y="80.8" width="34" height="109.2" rx="4" fill="#262a67"></rect><rect x="88.2" y="84.4" width="34" height="105.6" rx="4" fill="#262a67"></rect><rect x="136.3" y="69.4" width="34" height="120.6" rx="4" fill="#262a67"></rect><rect x="184.5" y="61.6" width="34" height="128.4" rx="4" fill="#262a67"></rect><rect x="232.6" y="48.4" width="34" height="141.6" rx="4" fill="#262a67"></rect><rect x="280.8" y="39.4" width="34" height="150.6" rx="4" fill="#262a67"></rect><rect x="328.9" y="71.2" width="34" height="118.8" rx="4" fill="#262a67"></rect><rect x="377.1" y="77.2" width="34" height="112.8" rx="4" fill="#262a67"></rect><rect x="425.2" y="65.8" width="34" height="124.2" rx="4" fill="#262a67"></rect><rect x="473.4" y="57.4" width="34" height="132.6" rx="4" fill="#262a67"></rect><rect x="521.5" y="44.2" width="34" height="145.8" rx="4" fill="#262a67"></rect><rect x="569.7" y="32.8" width="34" height="157.2" rx="4" fill="#262a67"></rect><rect x="617.8" y="25.6" width="34" height="164.4" rx="4" fill="#262a67"></rect><rect x="666.0" y="51.4" width="34" height="138.6" rx="4" fill="#262a67"></rect>
+<polyline points="57.0,150.4 105.2,159.3 153.3,148.2 201.5,159.2 249.6,93.4 297.8,158.9 345.9,159.7 394.1,164.5 442.2,155.2 490.4,149.3 538.5,162.8 586.7,48.0 634.8,159.3 683.0,164.0" fill="none" stroke="#c93a00" stroke-width="2" stroke-linejoin="round"></polyline>
+<circle cx="57.0" cy="150.4" r="3.5" fill="#ffffff" stroke="#c93a00" stroke-width="2"></circle><circle cx="105.2" cy="159.3" r="3.5" fill="#ffffff" stroke="#c93a00" stroke-width="2"></circle><circle cx="153.3" cy="148.2" r="3.5" fill="#ffffff" stroke="#c93a00" stroke-width="2"></circle><circle cx="201.5" cy="159.2" r="3.5" fill="#ffffff" stroke="#c93a00" stroke-width="2"></circle><circle cx="249.6" cy="93.4" r="3.5" fill="#ffffff" stroke="#c93a00" stroke-width="2"></circle><circle cx="297.8" cy="158.9" r="3.5" fill="#ffffff" stroke="#c93a00" stroke-width="2"></circle><circle cx="345.9" cy="159.7" r="3.5" fill="#ffffff" stroke="#c93a00" stroke-width="2"></circle><circle cx="394.1" cy="164.5" r="3.5" fill="#ffffff" stroke="#c93a00" stroke-width="2"></circle><circle cx="442.2" cy="155.2" r="3.5" fill="#ffffff" stroke="#c93a00" stroke-width="2"></circle><circle cx="490.4" cy="149.3" r="3.5" fill="#ffffff" stroke="#c93a00" stroke-width="2"></circle><circle cx="538.5" cy="162.8" r="3.5" fill="#ffffff" stroke="#c93a00" stroke-width="2"></circle><circle cx="586.7" cy="48.0" r="3.5" fill="#ffffff" stroke="#c93a00" stroke-width="2"></circle><circle cx="634.8" cy="159.3" r="3.5" fill="#ffffff" stroke="#c93a00" stroke-width="2"></circle><circle cx="683.0" cy="164.0" r="3.5" fill="#ffffff" stroke="#c93a00" stroke-width="2"></circle>
+<text x="586.7" y="38" text-anchor="middle" font-size="11" font-weight="600" fill="#c93a00">2.4%</text>
+<text x="57.0" y="210" text-anchor="middle" font-size="11" fill="#5b5f86">1 Oct</text><text x="153.3" y="210" text-anchor="middle" font-size="11" fill="#5b5f86">3</text><text x="249.6" y="210" text-anchor="middle" font-size="11" fill="#5b5f86">5</text><text x="345.9" y="210" text-anchor="middle" font-size="11" fill="#5b5f86">7</text><text x="442.2" y="210" text-anchor="middle" font-size="11" fill="#5b5f86">9</text><text x="538.5" y="210" text-anchor="middle" font-size="11" fill="#5b5f86">11</text><text x="634.8" y="210" text-anchor="middle" font-size="11" fill="#5b5f86">13</text>
+</svg>
+<p style="margin: 0; font-size: 13px; color: #5b5f86">Sun 12 Oct spike: Hijaz Coach Lines' ERP returned 503 for 9 h. Retries delivered 96% within 24 h.</p>
+</section>
+
+<section aria-labelledby="int-h" style="flex: 2 1 320px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 10px">
+<h2 id="int-h" style="margin: 0; font-size: 18px; font-weight: 600">Platform outbound · internal systems</h2>
+<sc-for list="{{internal}}" as="i" hint-placeholder-count="4">
+<div style="display: flex; flex-direction: column; gap: 4px; padding: 12px; border-radius: 12px; background: #f6f3e4">
+<div style="display: flex; justify-content: space-between; gap: 8px; align-items: center"><span style="font-size: 15px; font-weight: 600">{{i.n}}</span><span style="{{i.ss}}">{{i.s}}</span></div>
+<span style="font-family: ui-monospace, Menlo, monospace; font-size: 12px; color: #5b5f86; word-break: break-all">{{i.url}}</span>
+<span style="font-size: 13px; color: #5b5f86">{{i.ev}}</span>
+</div>
+</sc-for>
+</section>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
+<section aria-labelledby="cat-h" style="flex: 1 1 480px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 16px 0 8px">
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 0 20px 10px"><h2 id="cat-h" style="margin: 0; font-size: 18px; font-weight: 600">Event catalog · 25 events</h2><span style="font-size: 13px; color: #5b5f86">Signed HMAC-SHA256</span></div>
+<div role="group" aria-label="Event group" style="display: flex; flex-wrap: wrap; gap: 6px; padding: 0 20px 12px">
+<sc-for list="{{groups}}" as="g" hint-placeholder-count="7"><button type="button" onClick="{{g.on}}" aria-pressed="{{g.pr}}" style="{{g.st}}">{{g.t}}</button></sc-for>
+</div>
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 480px; border-collapse: collapse; font-size: 14px">
+<thead><tr style="color: #5b5f86; font-size: 13px"><th scope="col" style="text-align: start; padding: 8px 20px; font-weight: 600">Event</th><th scope="col" style="text-align: start; padding: 8px 10px; font-weight: 600">Description</th><th scope="col" style="text-align: start; padding: 8px 10px; font-weight: 600">Payload</th><th scope="col" style="text-align: end; padding: 8px 20px; font-weight: 600">Subscribers</th></tr></thead>
+<tbody>
+<sc-for list="{{events}}" as="e" hint-placeholder-count="6">
+<tr class="te-tr" style="border-top: 1px solid #e3dfc9">
+<td style="padding: 9px 20px; font-family: ui-monospace, Menlo, monospace; font-size: 13px; font-weight: 600; white-space: nowrap">{{e.n}}</td>
+<td style="padding: 9px 10px; color: #5b5f86">{{e.d}}</td>
+<td style="padding: 9px 10px; white-space: nowrap"><span style="display: inline-flex; padding: 0 8px; border-radius: 999px; background: #e6e8f5; font-size: 12px; font-weight: 600; line-height: 20px">{{e.v}}</span></td>
+<td style="padding: 9px 20px; text-align: end; font-weight: 600; font-variant-numeric: tabular-nums">{{e.s}}</td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+</section>
+
+<section aria-labelledby="org-h" style="flex: 1 1 480px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 16px 0 8px">
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 0 20px 10px"><h2 id="org-h" style="margin: 0; font-size: 18px; font-weight: 600">Organization endpoints · 214</h2><span style="font-size: 13px; color: #5b5f86">Last 7 days</span></div>
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 520px; border-collapse: collapse; font-size: 14px">
+<thead><tr style="color: #5b5f86; font-size: 13px"><th scope="col" style="text-align: start; padding: 8px 20px; font-weight: 600">Organization</th><th scope="col" style="text-align: end; padding: 8px 10px; font-weight: 600">Endpoints</th><th scope="col" style="text-align: end; padding: 8px 10px; font-weight: 600">Success</th><th scope="col" style="text-align: end; padding: 8px 10px; font-weight: 600">Failing</th><th scope="col" style="text-align: start; padding: 8px 20px; font-weight: 600">Auto-disabled</th></tr></thead>
+<tbody>
+<sc-for list="{{orgs}}" as="o" hint-placeholder-count="7">
+<tr class="te-tr" style="border-top: 1px solid #e3dfc9; font-variant-numeric: tabular-nums">
+<td style="padding: 9px 20px"><a href="AdmOrg.dc.html" style="display: flex; flex-direction: column; color: #262a67; text-decoration: none"><span style="font-weight: 600">{{o.n}}</span><span style="font-size: 12px; color: #5b5f86">{{o.plan}}</span></a></td>
+<td style="padding: 9px 10px; text-align: end">{{o.e}}</td>
+<td style="padding: 9px 10px; text-align: end; font-weight: 600; {{o.sc}}">{{o.s}}</td>
+<td style="padding: 9px 10px; text-align: end; {{o.fc}}">{{o.f}}</td>
+<td style="padding: 9px 20px"><span style="{{o.ds}}">{{o.d}}</span></td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+</section>
+</div>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1340}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { g: 'Bookings' }; }
+  renderVals() {
+    const pill = (tone) => 'display: inline-flex; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; white-space: nowrap; ' + ({ ok: 'background: #e3f3ea; color: #1f7a4d;', warn: 'background: #fdf0d5; color: #8a4b00;', bad: 'background: #fde8e6; color: #b42318;', none: 'background: #f6f3e4; color: #5b5f86;' })[tone];
+    const kpis = [
+      { l: 'Deliveries · last 24 h', v: '231,040', d: '▲ 6.1% vs previous day', ds: 'font-size: 13px; font-weight: 600; color: #1f7a4d' },
+      { l: 'First-attempt success', v: '99.57%', d: 'After retries 99.96%', ds: 'font-size: 13px; color: #5b5f86' },
+      { l: 'Median latency', v: '184 ms', d: 'p95 620 ms', ds: 'font-size: 13px; color: #5b5f86' },
+      { l: 'Auto-disabled endpoints', v: '3', d: '2 organizations · owners emailed', ds: 'font-size: 13px; font-weight: 600; color: #b42318' }
+    ];
+    const internal = [
+      { n: 'Finance ERP', url: 'https://erp.internal.trips-enjoy.com/hooks/te', ev: 'invoice.issued, invoice.paid, credit_note.issued, settlement.paid', s: 'Healthy', t: 'ok' },
+      { n: 'Data warehouse ingest', url: 'https://ingest.data.trips-enjoy.com/v1/events', ev: 'All 25 events · 2026-09-01', s: 'Healthy', t: 'ok' },
+      { n: 'Risk & fraud service', url: 'https://risk.internal.trips-enjoy.com/webhook', ev: 'payment.failed, booking.refunded, coupon.redeemed', s: 'Retrying · 2 queued', t: 'warn' },
+      { n: 'Support desk', url: 'https://support.internal.trips-enjoy.com/te-events', ev: 'booking.cancelled, review.posted', s: 'Paused', t: 'none' }
+    ].map((x) => ({ ...x, ss: pill(x.t) }));
+    const E = {
+      Bookings: [['booking.created', 'Seats held, payment not yet taken', 'v3', '188'], ['booking.confirmed', 'Payment succeeded, ticket issued', 'v3', '201'], ['booking.cancelled', 'Traveler or organization cancelled', 'v3', '176'], ['booking.refunded', 'Refund sent to the original method', 'v3', '149']],
+      Payments: [['payment.succeeded', 'Card, mada or Apple Pay captured', 'v2', '163'], ['payment.failed', 'Declined or 3-D Secure failed', 'v2', '121']],
+      Trips: [['trip.published', 'Trip is live and bookable', 'v2', '142'], ['trip.updated', 'Schedule, price or programs changed', 'v2', '137'], ['trip.status_changed', 'Moved to a new trip state', 'v2', '119'], ['trip.completed', 'All buses finished the route', 'v2', '131']],
+      Passengers: [['passenger.checked_in', 'Boarded, seat locked, GPS logged', 'v1', '74'], ['passenger.checked_out', 'Left the bus at a stop or destination', 'v1', '69']],
+      Deals: [['deal.proposed', 'Offer sent to a platform provider', 'v1', '38'], ['deal.countered', 'Either side countered the price', 'v1', '35'], ['deal.finalized', 'Both sides approved; provider assigned', 'v1', '52']],
+      Finance: [['invoice.issued', 'ZATCA-cleared or reported invoice', 'v1', '96'], ['invoice.paid', 'Invoice fully paid', 'v1', '88'], ['credit_note.issued', 'Refund or adjustment against an invoice', 'v1', '71'], ['settlement.paid', 'Payout sent to the organization IBAN', 'v1', '84']],
+      'Coupons & CRM': [['coupon.redeemed', 'Coupon applied to a confirmed booking', 'v1', '57'], ['customer.created', 'New customer in the organization CRM', 'v1', '44'], ['customer.updated', 'Contact or consent changed', 'v1', '39'], ['lead.created', 'Group or corporate inquiry received', 'v1', '28'], ['lead.status_changed', 'Lead moved in the pipeline', 'v1', '26'], ['review.posted', 'Traveler reviewed a trip', 'v1', '61']]
+    };
+    const g = this.state.g;
+    const groups = Object.keys(E).map((t) => ({ t: t + ' · ' + E[t].length, pr: t === g ? 'true' : 'false', on: () => this.setState({ g: t }),
+      st: 'height: 34px; padding: 0 12px; border-radius: 999px; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; ' + (t === g ? 'background: #262a67; color: #f6f3e4; border: 1px solid #262a67;' : 'background: #ffffff; color: #262a67; border: 1px solid #7b7fa6;') }));
+    const events = E[g].map((e) => ({ n: e[0], d: e[1], v: e[2], s: e[3] }));
+    const O = [
+      ['Red Sea Escapes', 'Enterprise', '7', '99.92%', '0', '—', 'none'],
+      ['Sunrise Tours Co.', 'Growth', '3', '99.88%', '0', '—', 'none'],
+      ['Golden Sands Tours', 'Enterprise', '5', '98.40%', '1', 'Retrying · 19 h left', 'warn'],
+      ['Hijaz Coach Lines', 'Growth', '2', '81.40%', '1', '1 · since Tue 14 Oct', 'bad'],
+      ['Najd Explorers', 'Growth', '2', '0.00%', '2', '2 · since Fri 10 Oct', 'bad'],
+      ['Gulf Schools Transport', 'Enterprise', '4', '99.71%', '0', '—', 'none'],
+      ['Al Wadi Adventures', 'Growth', '1', '99.95%', '0', '—', 'none']
+    ];
+    const orgs = O.map((o) => { const pct = parseFloat(o[3]); return { n: o[0], plan: o[1] + ' plan', e: o[2], s: o[3], sc: pct >= 99 ? 'color: #1f7a4d;' : pct >= 95 ? 'color: #8a4b00;' : 'color: #b42318;', f: o[4], fc: o[4] === '0' ? 'color: #5b5f86;' : 'color: #b42318; font-weight: 600;', d: o[5], ds: o[6] === 'none' ? 'color: #5b5f86;' : pill(o[6]) }; });
+    return { kpis, internal, groups, events, orgs, openNew: () => {} };
+  }
+}
+</script>
+</body>
+</html>

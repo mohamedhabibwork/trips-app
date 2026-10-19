@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>PDF · Settlement statement</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;family=Cairo:wght@400;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#ffffff}
+</style>
+</helmet>
+<div style="width: 794px; height: 1123px; box-sizing: border-box; padding: 48px; background: #ffffff; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif; font-size: 15px; line-height: 1.4; display: flex; flex-direction: column; gap: 16px">
+<header style="display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; padding-bottom: 14px; border-bottom: 2px solid #262a67">
+<img src="../assets/1fbce194fcb16bf54904c32c189fca31.svg" alt="Trips Enjoy" style="height: 40px; width: auto; display: block">
+<div style="text-align: right">
+<div style="font-size: 24px; font-weight: 700; line-height: 1.15">Settlement statement</div>
+<div style="font-size: 16px; font-weight: 600">STL-ST-2026-09 · September 2026</div>
+<div style="font-size: 14px; color: #5b5f86">Period 1–30 Sep 2026 · Issued Thu 1 Oct 2026</div>
+</div>
+</header>
+<section style="display: flex; justify-content: space-between; gap: 24px; font-size: 14px">
+<div style="display: flex; gap: 12px; align-items: flex-start"><img src="../assets/697a49af6be5a077ae1851c1a8b9dfcd.svg" alt="" style="width: 44px; height: 44px; border-radius: 12px; object-fit: cover; flex-shrink: 0; display: block"><div><div style="font-size: 13px; font-weight: 600; color: #5b5f86">PAYEE</div><div style="font-size: 17px; font-weight: 700">Sunrise Tours Co.</div><div>CR 1010734512 · VAT 310245678900003</div><div>Al Rajhi Bank · IBAN SA•• •• 2207</div></div></div>
+<div style="text-align: right"><div style="font-size: 13px; font-weight: 600; color: #5b5f86">PAYOUT</div><div style="font-size: 17px; font-weight: 700">248,207.76 SAR</div><div>Paid in Monday 06:00 runs · 8, 15, 22, 29 Sep · SARIE</div><div>Ref TE-PO-2026-10-0418</div></div>
+</section>
+<section style="display: grid; grid-template-columns: repeat(6, 1fr); border: 1px solid #e3dfc9; border-radius: 8px">
+<sc-for list="{{ledger}}" as="g" hint-placeholder-count="6">
+<div style="{{g.box}}"><div style="font-size: 12px; opacity: .8">{{g.l}}</div><div style="font-size: 15px; font-weight: 700; white-space: nowrap">{{g.v}}</div></div>
+</sc-for>
+</section>
+<div>
+<div style="font-weight: 700; margin-bottom: 4px">Completed trips · SAR · each trip paid in the first Monday run after it is completed</div>
+<table style="width: 100%; border-collapse: collapse; font-size: 13px">
+<thead>
+<tr style="color: #5b5f86; border-bottom: 1px solid #262a67; text-align: right">
+<th style="padding: 5px 6px 5px 0; text-align: left; font-weight: 600">Trip</th>
+<th style="padding: 5px 4px; font-weight: 600">Gross</th>
+<th style="padding: 5px 4px; font-weight: 600">Refunds</th>
+<th style="padding: 5px 4px; font-weight: 600">Comm. 8%</th>
+<th style="padding: 5px 4px; font-weight: 600">Gateway 2.2%</th>
+<th style="padding: 5px 4px; font-weight: 600">VAT on fees</th>
+<th style="padding: 5px 4px; font-weight: 600">Provider deals</th>
+<th style="padding: 5px 0 5px 4px; font-weight: 600">Net</th>
+</tr>
+</thead>
+<tbody>
+<sc-for list="{{trips}}" as="t" hint-placeholder-count="6">
+<tr style="border-bottom: 1px solid #e3dfc9; text-align: right; vertical-align: top">
+<td style="padding: 6px 6px 6px 0; text-align: left"><div style="font-weight: 600; font-size: 14px">{{t.n}}</div><div style="color: #5b5f86">{{t.d}}</div></td>
+<td style="padding: 6px 4px">{{t.g}}</td>
+<td style="padding: 6px 4px">{{t.r}}</td>
+<td style="padding: 6px 4px">{{t.c}}</td>
+<td style="padding: 6px 4px">{{t.f}}</td>
+<td style="padding: 6px 4px">{{t.v}}</td>
+<td style="padding: 6px 4px">{{t.dl}}</td>
+<td style="padding: 6px 0 6px 4px; font-weight: 600">{{t.net}}</td>
+</tr>
+</sc-for>
+<tr style="border-top: 2px solid #262a67; text-align: right; font-weight: 700">
+<td style="padding: 6px 6px 6px 0; text-align: left">Total · 6 trips</td>
+<td style="padding: 6px 4px">291,655.00</td>
+<td style="padding: 6px 4px">−6,265.00</td>
+<td style="padding: 6px 4px">−22,831.20</td>
+<td style="padding: 6px 4px">−6,416.41</td>
+<td style="padding: 6px 4px">−4,387.13</td>
+<td style="padding: 6px 4px">−2,357.50</td>
+<td style="padding: 6px 0 6px 4px">249,397.76</td>
+</tr>
+</tbody>
+</table>
+</div>
+<section style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 14px">
+<div>
+<div style="font-weight: 700; font-size: 15px">Adjustments &amp; holds</div>
+<div style="padding: 5px 0; border-bottom: 1px solid #e3dfc9; display: flex; justify-content: space-between; gap: 8px"><span>Refund after payout, recovered · Edge of the World Hike, 22 Aug · CN-ST-2026-000019</span><b style="white-space: nowrap">−550.00</b></div>
+<div style="padding: 5px 0; border-bottom: 1px solid #e3dfc9; display: flex; justify-content: space-between; gap: 8px"><span>Held for open dispute DSP-2026-0192 · Red Sea Snorkel Day, 4 Sep</span><b style="white-space: nowrap">−640.00</b></div>
+<div style="padding: 5px 0; display: flex; justify-content: space-between; gap: 8px; font-weight: 700"><span>249,397.76 − 550.00 − 640.00 = payout</span><span style="white-space: nowrap">248,207.76</span></div>
+</div>
+<div>
+<div style="font-weight: 700; font-size: 15px">Linked invoices</div>
+<sc-for list="{{invoices}}" as="i" hint-placeholder-count="5">
+<div style="padding: 4px 0; border-bottom: 1px solid #e3dfc9; display: flex; justify-content: space-between; gap: 8px"><span>{{i.t}}</span><b style="white-space: nowrap">{{i.v}}</b></div>
+</sc-for>
+</div>
+</section>
+<div style="font-size: 13px; color: #5b5f86">Gross is what travelers paid after coupons (NATDAY96, SUMMEREND10: 9,840.00 SAR off across 214 bookings); commission is charged on that amount. Provider deals were paid by Trips Enjoy directly to the providers on your behalf.</div>
+<footer style="margin-top: auto; padding-top: 10px; border-top: 1px solid #e3dfc9; display: flex; justify-content: space-between; gap: 16px; font-size: 13px; color: #5b5f86">
+<span>Trips Enjoy Co. · CR 1010998877 · VAT 311098765400003 · Prince Turki St, Al Aqiq, Riyadh 13511</span>
+<span style="white-space: nowrap">finance@trips-enjoy.com · Page 1 / 1</span>
+</footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":794,"height":1123}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const T = [
+      ['AlUla Heritage Weekend', 'Thu 10–Sat 12 Sep · 4 buses', '153,000.00', '−3,750.00', '−11,940.00', '−3,366.00', '−2,295.90', '0.00', '131,648.10'],
+      ['Red Sea Snorkel Day', 'Fri 4 Sep · 2 buses', '30,080.00', '−640.00', '−2,355.20', '−661.76', '−452.54', '0.00', '25,970.50'],
+      ['Edge of the World Hike', 'Sat 5 Sep · 1 bus', '12,925.00', '−275.00', '−1,012.00', '−284.35', '−194.45', '0.00', '11,159.20'],
+      ['Jeddah Corniche Night', 'Thu 17 Sep · Khalid Al-Harbi, Bus 3', '47,250.00', '−1,050.00', '−3,696.00', '−1,039.50', '−710.32', '−1,495.00', '39,259.18'],
+      ['National Day Diriyah Evening', 'Wed 23 Sep · Noura Al-Shehri, photos', '26,400.00', '0.00', '−2,112.00', '−580.80', '−403.92', '−862.50', '22,440.78'],
+      ['Taif Rose Farms', 'Fri 25 Sep · 1 bus', '22,000.00', '−550.00', '−1,716.00', '−484.00', '−330.00', '0.00', '18,920.00']
+    ];
+    const trips = T.map((a) => ({ n: a[0], d: a[1], g: a[2], r: a[3], c: a[4], f: a[5], v: a[6], dl: a[7], net: a[8] }));
+    const b = 'padding: 8px 10px; ';
+    const sep = 'border-right: 1px solid #e3dfc9;';
+    const ledger = [
+      { l: 'Opening balance', v: '0.00', box: b + sep },
+      { l: 'Net from 6 trips', v: '+249,397.76', box: b + sep },
+      { l: 'Adjustments', v: '−550.00', box: b + sep },
+      { l: 'Held', v: '−640.00', box: b + sep },
+      { l: 'Net payout', v: '248,207.76', box: b + sep + ' background: #262a67; color: #f6f3e4;' },
+      { l: 'Closing balance', v: '640.00', box: b }
+    ];
+    const invoices = [
+      { t: 'INV-TE-2026-000944 · Trips Enjoy commission & fees', v: '33,634.74' },
+      { t: 'SB-KH-2026-000137 · Khalid Al-Harbi', v: '1,495.00' },
+      { t: 'SB-NS-2026-000079 · Noura Al-Shehri', v: '862.50' },
+      { t: '14 credit notes · CN-ST-2026-000007 to 000020', v: '6,815.00' },
+      { t: '1,112 simplified invoices · bookings', v: '291,655.00' }
+    ];
+    return { trips, ledger, invoices };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Moderator · Manifest</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+input::placeholder{color:#5b5f86}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="height: 100%; box-sizing: border-box; padding: 56px 16px 120px; display: flex; flex-direction: column; gap: 12px">
+
+<div style="display: flex; align-items: center; gap: 12px">
+<div style="flex-grow: 1; display: flex; flex-direction: column"><span style="font-size: 13px; color: #5b5f86">Bus 2 · ABC 4821 · Olaya</span><h1 style="margin: 0; font-size: 24px; line-height: 30px; font-weight: 700">Manifest</h1></div>
+<a href="ModScan.dc.html" style="height: 44px; padding: 0 16px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-weight: 700; font-size: 15px; text-decoration: none; display: flex; align-items: center; gap: 8px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3M7 12h10"></path></svg>Scan</a>
+</div>
+
+<div style="padding: 12px 14px; border-radius: 16px; background: #ffffff; display: flex; flex-direction: column; gap: 8px">
+<div style="display: flex; justify-content: space-between; align-items: baseline"><span role="status" style="font-size: 16px; font-weight: 600">{{progress}}</span><a href="ModBoarded.dc.html" style="font-size: 14px; font-weight: 600">Finish</a></div>
+<div role="progressbar" aria-label="Boarded" aria-valuemin="0" aria-valuemax="43" aria-valuenow="{{boarded}}" style="height: 8px; border-radius: 999px; background: #e3dfc9; display: flex; overflow: hidden"><span style="{{barB}}"></span><span style="{{barN}}"></span></div>
+<span style="display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 12px; color: #5b5f86"><span>Boarding closes 06:10 · each check-in logs time and GPS</span><a href="ModSyncQueue.dc.html" style="flex-shrink: 0; min-height: 32px; padding: 0 10px; border-radius: 999px; background: #e6e8f5; color: #262a67; font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: 4px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7"></path></svg>Sync queue</a></span>
+</div>
+
+<label style="height: 48px; box-sizing: border-box; padding: 0 14px; border-radius: 8px; background: #ffffff; border: 1px solid #7b7fa6; display: flex; align-items: center; gap: 10px">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#262a67" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM20 20l-4-4"></path></svg>
+<span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Search passengers</span>
+<input type="search" placeholder="Name, seat or booking ref" style="flex-grow: 1; min-width: 0; border: 0; outline-offset: 4px; background: transparent; font: inherit; font-size: 16px; color: #262a67">
+</label>
+
+<div role="group" aria-label="Filter passengers" style="display: flex; gap: 6px">
+<sc-for list="{{chips}}" as="c" hint-placeholder-count="4"><button type="button" aria-pressed="{{c.pressed}}" onClick="{{c.on}}" style="{{c.style}}">{{c.t}}</button></sc-for>
+</div>
+
+<ul aria-label="Passengers on Bus 2" style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; overflow: hidden">
+<sc-for list="{{rows}}" as="r" hint-placeholder-count="6">
+<li style="padding: 8px 8px 8px 10px; border-radius: 14px; background: #ffffff; display: flex; align-items: center; gap: 6px">
+<span style="width: 36px; height: 40px; flex-shrink: 0; border-radius: 10px; background: #e6e8f5; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700">{{r.seat}}</span>
+<span style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column">
+<span style="display: flex; align-items: center; gap: 6px"><span style="font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.name}}</span><sc-if value="{{r.child}}" hint-placeholder-val="{{false}}"><span style="padding: 0 6px; border-radius: 999px; background: #ffe7dc; color: #c93a00; font-size: 11px; font-weight: 700">Child</span></sc-if></span>
+<span style="font-size: 12px; color: #5b5f86">{{r.ref}}</span>
+</span>
+<button type="button" aria-pressed="{{r.bP}}" aria-label="{{r.bLabel}}" onClick="{{r.onB}}" style="{{r.bStyle}}">Boarded</button>
+<button type="button" aria-pressed="{{r.nP}}" aria-label="{{r.nLabel}}" onClick="{{r.onN}}" style="{{r.nStyle}}">No-show</button>
+</li>
+</sc-for>
+</ul>
+</div>
+<div style="position: absolute; left: 0; right: 0; bottom: 0; height: 120px">
+<dc-import name="TabBar" role="moderator" active="manifest" hint-size="390px,120px"></dc-import>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(p) {
+    super(p);
+    this.state = { filter: 'all', st: { 0: 'b', 1: 'b', 2: 'w', 3: 'w', 4: 'n', 5: 'w' } };
+  }
+  set(i, v) { const st = { ...this.state.st }; st[i] = st[i] === v ? 'w' : v; this.setState({ st }); }
+  renderVals() {
+    const P = [
+      ['Sara Al-Qahtani', '3C', 'TE-48213', false], ['Faisal Al-Qahtani', '3D', 'TE-48213', false],
+      ['Omar Al-Qahtani', '4C', 'TE-48213', true], ['Lina Al-Qahtani', '4D', 'TE-48213', true],
+      ['Abdullah Rashed', '5A', 'TE-48377', false], ['Huda Mansour', '5B', 'TE-48390', false]
+    ];
+    const { st, filter } = this.state;
+    const vis = { b: 0, n: 0, w: 0 };
+    P.forEach((_, i) => { vis[st[i]] += 1; });
+    const boarded = 29 + vis.b, noshow = 1 + vis.n, waiting = 7 + vis.w;
+    const base = 'height: 40px; min-width: 40px; padding: 0 8px; border-radius: 10px; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 4px; ';
+    const rows = P.map(([name, seat, ref, child], i) => ({ name, seat, ref: ref + ' · Seat ' + seat, child, s: st[i],
+      bP: st[i] === 'b' ? 'true' : 'false', nP: st[i] === 'n' ? 'true' : 'false',
+      bLabel: 'Mark ' + name + ' boarded', nLabel: 'Mark ' + name + ' no-show',
+      bStyle: base + (st[i] === 'b' ? 'background: #1f7a4d; color: #ffffff; border: 1px solid #1f7a4d;' : 'background: #ffffff; color: #262a67; border: 1px solid #7b7fa6;'),
+      nStyle: base + (st[i] === 'n' ? 'background: #b42318; color: #ffffff; border: 1px solid #b42318;' : 'background: #ffffff; color: #262a67; border: 1px solid #7b7fa6;'),
+      onB: () => this.set(i, 'b'), onN: () => this.set(i, 'n') }))
+      .filter((r) => filter === 'all' || r.s === filter);
+    const F = [['all', 'All 43'], ['w', 'Waiting ' + waiting], ['b', 'Boarded ' + boarded], ['n', 'No-show ' + noshow]];
+    const chips = F.map(([id, t]) => ({ t, pressed: filter === id ? 'true' : 'false', on: () => this.setState({ filter: id }),
+      style: 'flex-shrink: 0; height: 40px; padding: 0 10px; border-radius: 999px; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; ' + (filter === id ? 'background: #262a67; color: #f6f3e4; border: 1px solid #262a67;' : 'background: #ffffff; color: #262a67; border: 1px solid #7b7fa6;') }));
+    return { rows, chips, boarded,
+      progress: boarded + ' of 43 boarded · ' + noshow + ' no-show',
+      barB: 'width: ' + (boarded / 43 * 100).toFixed(1) + '%; background: #1f7a4d;',
+      barN: 'width: ' + (noshow / 43 * 100).toFixed(1) + '%; background: #b42318;' };
+  }
+}
+</script>
+</body>
+</html>

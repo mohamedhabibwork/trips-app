@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Driver · Upload lab result</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif; display: flex; flex-direction: column; padding: 56px 16px 32px; gap: 16px">
+<div style="display: flex; align-items: center; gap: 12px">
+<a href="DrvLabBlocked.dc.html" aria-label="Back" style="width: 44px; height: 44px; border-radius: 999px; background: #ffffff; display: flex; align-items: center; justify-content: center; color: #262a67"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg></a>
+<h1 style="margin: 0; font-size: 22px; line-height: 28px; font-weight: 700">Upload your lab result</h1>
+</div>
+<p style="margin: 0; font-size: 15px; line-height: 22px; color: #5b5f86">The report must show your full name, ID number, the lab's stamp, and be issued after 4 Oct.</p>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="lb-n" style="font-size: 14px; font-weight: 600">Lab name</label><input id="lb-n" value="Al Borg Diagnostics" style="height: 52px; box-sizing: border-box; padding: 0 14px; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-family: inherit; font-size: 16px"></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="lb-d" style="font-size: 14px; font-weight: 600">Test date</label><input id="lb-d" value="05/10/2026" style="height: 52px; box-sizing: border-box; padding: 0 14px; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-family: inherit; font-size: 16px"></div>
+<div style="display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 12px; background: #ffffff; border: 1px solid #e3dfc9">
+<img src="../assets/7a6d570500a318cae2af7ef076baddd9.svg" alt="Lab report preview" style="width: 40px; height: 40px; flex-shrink: 0; border-radius: 8px; object-fit: cover">
+<span style="flex-grow: 1; display: flex; flex-direction: column"><span style="font-size: 15px; font-weight: 600">lab-report-oct.pdf</span><span style="font-size: 13px; color: #1f7a4d; font-weight: 500">Uploaded · 2 pages</span></span>
+<button style="height: 44px; padding: 0 8px; border: none; background: transparent; color: #c93a00; font-family: inherit; font-size: 14px; font-weight: 600">Replace</button>
+</div>
+<label style="display: flex; gap: 10px; align-items: flex-start; font-size: 14px; line-height: 20px"><input type="checkbox" checked="" style="width: 20px; height: 20px; margin: 0; accent-color: #262a67; flex-shrink: 0">I confirm this is my genuine result. False documents permanently close the account.</label>
+<a href="DrvLabPending.dc.html" style="margin-top: auto; height: 52px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 16px; font-weight: 600; display: flex; align-items: center; justify-content: center; text-decoration: none">Submit result</a>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

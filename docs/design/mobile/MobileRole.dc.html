@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Choose role</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif; display: flex; flex-direction: column; padding: 56px 16px 32px; gap: 20px">
+<div style="display: flex; align-items: center; justify-content: space-between">
+<a href="AuthWelcome.dc.html" aria-label="Back" style="width: 44px; height: 44px; border-radius: 999px; background: #ffffff; display: flex; align-items: center; justify-content: center; color: #262a67"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg></a>
+<span style="font-size: 13px; font-weight: 500; color: #5b5f86">Step 1</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 4px">
+<h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 700">How will you use Trips Enjoy?</h1>
+<p style="margin: 0; font-size: 16px; line-height: 24px; color: #5b5f86">You can apply for another role later from your profile.</p>
+</div>
+<div role="radiogroup" aria-label="Account type" style="display: flex; flex-direction: column; gap: 12px">
+<sc-for list="{{roles}}" as="r" hint-placeholder-count="4">
+<button role="radio" aria-checked="{{r.checked}}" onClick="{{r.pick}}" style="{{r.style}}">
+<span style="width: 44px; height: 44px; border-radius: 12px; background: #f6f3e4; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: #262a67">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{r.icon}}"></path></svg>
+</span>
+<span style="display: flex; flex-direction: column; gap: 2px; flex-grow: 1; text-align: start">
+<span style="font-size: 16px; font-weight: 600">{{r.title}}</span>
+<span style="font-size: 13px; line-height: 18px; color: #5b5f86">{{r.desc}}</span>
+</span>
+<sc-if value="{{r.review}}" hint-placeholder-val="{{false}}"><span style="padding: 4px 10px; border-radius: 999px; background: #f89e23; color: #262a67; font-size: 12px; font-weight: 600; white-space: nowrap">Reviewed</span></sc-if>
+</button>
+</sc-for>
+</div>
+<p style="margin: 0; padding: 12px; border-radius: 12px; background: #ffffff; font-size: 13px; line-height: 18px; color: #5b5f86">Photographer, driver and organization accounts are checked by our team before they go live — usually within 2 working days.</p>
+<a href="{{next}}" style="margin-top: auto; height: 52px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 16px; font-weight: 600; display: flex; align-items: center; justify-content: center; text-decoration: none">Continue</a>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+constructor(p){ super(p); this.state = { picked: 'traveler' }; }
+renderVals() {
+const base = 'display: flex; align-items: center; gap: 12px; padding: 14px; min-height: 76px; border-radius: 12px; background: #ffffff; color: #262a67; font-family: inherit; cursor: pointer; ';
+const xs = [
+{ id: 'traveler', title: 'Traveler', desc: 'Book trips and seats for you or your family.', review: false, icon: 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21c0-4 4-6 8-6s8 2 8 6' },
+{ id: 'photographer', title: 'Photographer', desc: 'Offer trip photography and share galleries.', review: true, icon: 'M4 8h3l2-3h6l2 3h3v11H4zM12 17a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z' },
+{ id: 'driver', title: 'Driver', desc: 'Drive group buses and accept trip assignments.', review: true, icon: 'M5 4h14v12H5zM5 11h14M7 16v3M17 16v3M8 13.5h.01M16 13.5h.01' },
+{ id: 'org', title: 'Organization', desc: 'Sell trips and events. Continues on the web.', review: true, icon: 'M4 21V7l8-4 8 4v14M9 21v-6h6v6M9 10h.01M15 10h.01' }
+];
+const nx = { traveler: 'MobileSignUp.dc.html', driver: 'DrvAccount.dc.html', photographer: 'PhoAccount.dc.html', org: 'OrgRegister.dc.html' };
+return { next: nx[this.state.picked], roles: xs.map(x => ({ ...x, checked: this.state.picked === x.id ? 'true' : 'false', style: base + (this.state.picked === x.id ? 'border: 2px solid #fb8030;' : 'border: 1px solid #e3dfc9;'), pick: () => this.setState({ picked: x.id }) })) };
+}
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Org · Notifications</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+.te-row:hover{background:#fbfaf3}
+</style>
+</helmet>
+<div style="min-height: 1000px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="OrgNav" active="Overview" hint-size="248px,1000px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 20px">
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 2px"><a href="OrgHome.dc.html" style="display: inline-flex; align-items: center; gap: 4px; font-size: 14px; font-weight: 600; text-decoration: none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg>Overview</a><h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Notifications</h1><span style="font-size: 15px; color: #5b5f86">{{unreadLine}}</span></div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px">
+<a href="OrgSettings.dc.html" style="height: 48px; box-sizing: border-box; padding: 0 18px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-size: 15px; font-weight: 600; display: flex; align-items: center; text-decoration: none">Notification settings</a>
+<button type="button" onClick="{{markAll}}" style="height: 48px; padding: 0 20px; border: 0; border-radius: 12px; background: #ff6c2e; color: #262a67; font: inherit; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg>Mark all as read</button>
+</div>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 8px" role="group" aria-label="Filter by type">
+<sc-for list="{{chips}}" as="c" hint-placeholder-count="6">
+<button type="button" aria-pressed="{{c.pressed}}" onClick="{{c.on}}" style="{{c.style}}">{{c.l}}</button>
+</sc-for>
+</div>
+
+<sc-for list="{{groups}}" as="g" hint-placeholder-count="2">
+<section aria-label="{{g.h}}" style="background: #ffffff; border-radius: 20px; padding: 12px 0">
+<h2 style="margin: 0; padding: 4px 20px 8px; font-size: 13px; font-weight: 700; letter-spacing: .6px; color: #5b5f86">{{g.h}}</h2>
+<sc-for list="{{g.items}}" as="n" hint-placeholder-count="4">
+<div class="te-row" style="display: flex; gap: 14px; align-items: flex-start; padding: 14px 20px; border-top: 1px solid #e3dfc9">
+<span style="width: 40px; height: 40px; flex-shrink: 0; border-radius: 12px; background: {{n.bg}}; color: {{n.fg}}; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{n.icon}}"></path></svg></span>
+<span style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2px">
+<span style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap"><sc-if value="{{n.unread}}" hint-placeholder-val="{{true}}"><span style="width: 8px; height: 8px; border-radius: 999px; background: #fb8030" aria-label="Unread" role="img"></span></sc-if><span style="font-size: 15px; {{n.ts}}">{{n.t}}</span><span style="font-size: 12px; font-weight: 600; color: #5b5f86">{{n.type}}</span></span>
+<span style="font-size: 14px; line-height: 20px; color: #5b5f86">{{n.d}}</span>
+<span style="display: flex; gap: 16px; align-items: center; margin-top: 4px"><a href="{{n.href}}" style="font-size: 14px; font-weight: 600">{{n.cta}}</a><sc-if value="{{n.unread}}" hint-placeholder-val="{{true}}"><button type="button" onClick="{{n.read}}" style="border: 0; background: transparent; padding: 0; min-height: 32px; color: #5b5f86; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer">Mark read</button></sc-if></span>
+</span>
+<span style="font-size: 13px; color: #5b5f86; white-space: nowrap">{{n.when}}</span>
+</div>
+</sc-for>
+</section>
+</sc-for>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1370}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { f: 'All', read: {} }; }
+  renderVals() {
+    const I = {
+      file: 'M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zM14 3v5h5',
+      ticket: 'M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v2a2.5 2.5 0 0 0 0 5v3a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-3a2.5 2.5 0 0 0 0-5zM14 5v14',
+      wallet: 'M4 7a2 2 0 0 1 2-2h12v4M4 7v11a2 2 0 0 0 2 2h14V9H6a2 2 0 0 1-2-2zM16 14.5h.01',
+      alert: 'M12 3l9.5 17h-19zM12 10v4M12 17h.01',
+      tag: 'M3 12V4a1 1 0 0 1 1-1h8l9 9-9 9zM7.5 7.5h.01',
+      star: 'M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z',
+      users: 'M9 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM3 20a6 6 0 0 1 12 0M16 4.5a3.5 3.5 0 0 1 0 6.5M18 14.5a6 6 0 0 1 3 5.5'
+    };
+    const tone = { Safety: ['#fde8e6', '#b42318'], Deals: ['#fdf0d5', '#8a4b00'], Bookings: ['#e6e8f5', '#262a67'], Staff: ['#ffe7dc', '#c93a00'], Money: ['#e3f3ea', '#1f7a4d'] };
+    const N = [
+      { g: 'TODAY', type: 'Safety', icon: I.alert, t: 'Child-safety report CS-0142 opened', d: 'Al Noor School · Grade 4 Zoo Day · Bus 1. A parent reported a pickup concern. Routed to your safety lead, Yousef Amin.', when: '11:05', href: 'OrgSafetyReports.dc.html', cta: 'Open safety reports', unread: true },
+      { g: 'TODAY', type: 'Safety', icon: I.alert, t: 'Incident reported by Nadia Yusuf', d: 'AlUla Heritage Weekend · Bus 2 · a traveller felt unwell at the Khaybar rest stop. Nadia stayed with them; first aid given, continuing the trip.', when: '10:42', href: 'OrgTripLive.dc.html', cta: 'Open live operations', unread: true },
+      { g: 'TODAY', type: 'Deals', icon: I.file, t: 'Khalid Al-Harbi countered 1,450 SAR', d: 'Red Sea Snorkel Day · Bus 2. You offered 1,300 SAR. Reply within 22 hours.', when: '08:40', href: 'OrgDeal.dc.html', cta: 'Review deal', unread: true },
+      { g: 'TODAY', type: 'Bookings', icon: I.ticket, t: 'Refund requested by Sara Al-Qahtani', d: 'Booking TE-48213 · Jeddah Corniche Night · 2 travellers · 640 SAR. Request is 48 h or more before departure (80% refund).', when: '08:15', href: 'OrgBooking.dc.html', cta: 'Review refund', unread: true },
+      { g: 'TODAY', type: 'Staff', icon: I.users, t: 'Bus 3 has no moderator', d: 'Jeddah Corniche Night · Fri 17 Oct · bookings close in 2 days.', when: '07:00', href: 'OrgNew4.dc.html', cta: 'Assign moderator', unread: true },
+      { g: 'YESTERDAY', type: 'Bookings', icon: I.ticket, t: 'Booking cancelled · Edge of the World Hike', d: 'Faisal Al-Qahtani cancelled 1 seat. 275 SAR refunded to mada; seat 4C released.', when: '21:18', href: 'OrgBookings.dc.html', cta: 'See booking', unread: false },
+      { g: 'YESTERDAY', type: 'Money', icon: I.tag, t: 'ALNOOR4 is exhausted', d: 'All 32 uses redeemed for Al Noor School · Grade 4 Zoo Day.', when: '16:02', href: 'OrgCoupons.dc.html', cta: 'View coupon', unread: false },
+      { g: 'YESTERDAY', type: 'Money', icon: I.star, t: '2 active trips left on Growth', d: 'You have 18 of 20 active trips this month. Upgrade for unlimited trips.', when: '09:30', href: 'OrgBilling.dc.html', cta: 'Plan & usage', unread: false },
+      { g: 'YESTERDAY', type: 'Money', icon: I.wallet, t: 'Payout sent · 52,180 SAR', d: 'To Al Rajhi Bank SA•• •• 2207. Arrives within 1 working day.', when: '06:00', href: 'OrgAccounting.dc.html', cta: 'See statement', unread: false }
+    ];
+    const items = N.map((n, i) => {
+      const unread = n.unread && !this.state.read[i];
+      return { ...n, unread, bg: tone[n.type][0], fg: tone[n.type][1], ts: unread ? 'font-weight: 700;' : 'font-weight: 500;', read: () => this.setState({ read: { ...this.state.read, [i]: true } }) };
+    }).filter((n) => this.state.f === 'All' || n.type === this.state.f);
+    const groups = ['TODAY', 'YESTERDAY'].map((h) => ({ h, items: items.filter((n) => n.g === h) })).filter((g) => g.items.length);
+    const chips = ['All', 'Safety', 'Deals', 'Bookings', 'Staff', 'Money'].map((l) => {
+      const on = this.state.f === l;
+      return { l, pressed: on ? 'true' : 'false', on: () => this.setState({ f: l }),
+        style: 'height: 40px; padding: 0 16px; border-radius: 999px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; ' + (on ? 'background: #262a67; color: #f6f3e4; border: 1px solid #262a67;' : 'background: #ffffff; color: #262a67; border: 1px solid #7b7fa6;') };
+    });
+    const unreadN = N.filter((n, i) => n.unread && !this.state.read[i]).length;
+    return { groups, chips, unreadLine: unreadN ? unreadN + ' unread' : 'You’re all caught up',
+      markAll: () => { const r = {}; N.forEach((n, i) => { r[i] = true; }); this.setState({ read: r }); } };
+  }
+}
+</script>
+</body>
+</html>

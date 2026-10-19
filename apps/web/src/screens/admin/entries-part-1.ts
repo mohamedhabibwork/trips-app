@@ -166,14 +166,14 @@ export const ADMIN_SCREENS_PART_1: readonly ScreenEntry[] = [
     titleKey: "screen.registry.admin.entityDetail.title",
     surface: "admin",
     component: EntityDetail,
-    loader: async ({ queryClient, orpc, auth }) => {
+    loader: async ({ queryClient, orpc, auth, search, params }) => {
       if (typeof window === "undefined" && !auth.accessToken()) return;
+      const entityId = (search.entityId as string) ?? (params.entityId as string);
+      if (!entityId) return;
       try {
-        await Promise.allSettled([
-          queryClient.ensureQueryData(orpc.onboarding.listReviewQueue.queryOptions({ input: {} })),
-          queryClient.ensureQueryData(orpc.trips.browsePublicTrips.queryOptions({ input: {} })),
-          queryClient.ensureQueryData(orpc.plans.getCatalog.queryOptions({ input: {} })),
-        ]);
+        await queryClient.ensureQueryData(
+          orpc.onboarding.getApplicationDetail.queryOptions({ input: { applicationId: entityId } }),
+        );
       } catch {
         // Gracefully ignore SSR errors
       }
@@ -185,11 +185,13 @@ export const ADMIN_SCREENS_PART_1: readonly ScreenEntry[] = [
     titleKey: "screen.registry.admin.suspendOrReinstateDecision.title",
     surface: "admin",
     component: SuspendOrReinstateDecision,
-    loader: async ({ queryClient, orpc, auth }) => {
+    loader: async ({ queryClient, orpc, auth, search, params }) => {
       if (typeof window === "undefined" && !auth.accessToken()) return;
+      const entityId = (search.entityId as string) ?? (params.entityId as string);
+      if (!entityId) return;
       try {
         await queryClient.ensureQueryData(
-          orpc.onboarding.listReviewQueue.queryOptions({ input: {} }),
+          orpc.onboarding.getApplicationDetail.queryOptions({ input: { applicationId: entityId } }),
         );
       } catch {
         // Gracefully ignore SSR errors
@@ -202,15 +204,9 @@ export const ADMIN_SCREENS_PART_1: readonly ScreenEntry[] = [
     titleKey: "screen.registry.admin.deletionAndDataRequests.title",
     surface: "admin",
     component: DeletionAndDataRequests,
-    loader: async ({ queryClient, orpc, auth }) => {
+    loader: async ({ auth }) => {
       if (typeof window === "undefined" && !auth.accessToken()) return;
-      try {
-        await queryClient.ensureQueryData(
-          orpc.onboarding.listReviewQueue.queryOptions({ input: { state: "Closed" } }),
-        );
-      } catch {
-        // Gracefully ignore SSR errors
-      }
+      // Rows arrive with a deletion/data-request list procedure; nothing to prefetch yet.
     },
   },
   {

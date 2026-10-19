@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Traveler · Cancelled &amp; refund</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="height: 100%; box-sizing: border-box; padding: 56px 16px 24px; display: flex; flex-direction: column; gap: 14px">
+
+<div style="display: flex; align-items: center; gap: 12px">
+<a href="TrvTrips.dc.html" aria-label="Back to my trips" style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 999px; background: #ffffff; color: #262a67; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a>
+<h1 style="margin: 0; font-size: 22px; line-height: 28px; font-weight: 700">Refund status</h1>
+</div>
+
+<div style="border-radius: 20px; background: #262a67; color: #f6f3e4; padding: 20px; display: flex; flex-direction: column; gap: 6px">
+<span style="align-self: flex-start; padding: 3px 10px; border-radius: 999px; background: #31367a; color: #ff8655; font-size: 12px; font-weight: 700">Booking cancelled · TE-48213</span>
+<span style="font-size: 14px; color: #b8bad6; margin-top: 6px">Refund on its way</span>
+<span style="font-size: 36px; line-height: 42px; font-weight: 700">3,674 SAR</span>
+<span style="font-size: 14px; line-height: 19px; color: #b8bad6">AlUla Heritage Weekend · 4 seats · 80% refund · to Visa ending 4421</span>
+</div>
+
+<div style="border-radius: 20px; background: #ffffff; padding: 18px 16px 6px">
+<h2 style="margin: 0 0 12px; font-size: 16px; font-weight: 600">Refund progress</h2>
+<ol style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column">
+<sc-for list="{{steps}}" as="s" hint-placeholder-count="4">
+<li style="display: flex; gap: 12px">
+<span style="display: flex; flex-direction: column; align-items: center; flex-shrink: 0">
+<span style="{{s.dot}}"><sc-if value="{{s.done}}" hint-placeholder-val="{{true}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg></sc-if></span>
+<sc-if value="{{s.line}}" hint-placeholder-val="{{true}}"><span style="{{s.lineStyle}}"></span></sc-if>
+</span>
+<span style="padding-bottom: 14px; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 15px; font-weight: 600">{{s.t}}<span style="font-weight: 500; color: #5b5f86">{{s.state}}</span></span><span style="font-size: 13px; color: #5b5f86">{{s.d}}</span></span>
+</li>
+</sc-for>
+</ol>
+</div>
+
+<div style="border-radius: 20px; background: #ffffff; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; font-size: 14px; line-height: 19px">
+<div style="display: flex; gap: 10px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1f7a4d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M7 4h7a2 2 0 0 1 2 2v7H7zM5 13h12a2 2 0 0 1 2 2v2H5zM7 17v3M17 17v3"></path></svg><span>Seats 3C, 3D, 4C, 4D on Bus 2 are released. Nadia Yusuf and Sunrise Tours Co. have been told.</span></div>
+<div style="display: flex; gap: 10px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M3 12V4a1 1 0 0 1 1-1h8l9 9-9 9zM7.5 7.5h.01"></path></svg><span>Coupon AUTUMN15 is back in your account until Fri 31 Oct.</span></div>
+<a href="TrvReceipts.dc.html" style="display: flex; align-items: center; gap: 10px; font-weight: 600; min-height: 32px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12M7 11l5 5 5-5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"></path></svg>Download cancellation receipt</a>
+</div>
+
+<div style="margin-top: auto; display: flex; flex-direction: column; gap: 6px">
+<a href="TrvResults.dc.html" style="height: 52px; border-radius: 12px; background: #ff6c2e; color: #262a67; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700; text-decoration: none">Find another trip</a>
+<a href="TrvSupport.dc.html" style="height: 44px; color: #262a67; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 600; text-decoration: none">Refund not arrived? Get help</a>
+</div>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const S = [
+      { t: 'Requested', d: 'Mon 6 Oct · 18:40', st: 'done' },
+      { t: 'Approved', d: 'Mon 6 Oct · 18:41 · 48 h or more before departure · 80%', st: 'done' },
+      { t: 'Sent to your bank', d: 'Tue 7 Oct · 09:15', st: 'now' },
+      { t: 'Received', d: 'Expected by Tue 21 Oct', st: 'todo' }
+    ];
+    const steps = S.map((s, i) => ({
+      t: s.t, d: s.d, done: s.st === 'done', line: i < S.length - 1,
+      state: s.st === 'now' ? ' · in progress' : s.st === 'todo' ? ' · waiting' : '',
+      dot: 'width: 24px; height: 24px; border-radius: 999px; display: flex; align-items: center; justify-content: center; box-sizing: border-box; ' + (s.st === 'done' ? 'background: #1f7a4d;' : s.st === 'now' ? 'background: #ffffff; border: 6px solid #ff6c2e;' : 'background: #ffffff; border: 2px solid #7b7fa6;'),
+      lineStyle: 'width: 2px; flex-grow: 1; min-height: 22px; background: ' + (s.st === 'done' ? '#1f7a4d;' : '#e3dfc9;')
+    }));
+    return { steps };
+  }
+}
+</script>
+</body>
+</html>

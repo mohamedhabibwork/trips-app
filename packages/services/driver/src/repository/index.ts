@@ -1,3 +1,4 @@
+import type { DriverLabTestKind } from "@trips-app/domain";
 import { desc, eq } from "@trips-app/db";
 import type { Database, Database as ServiceDatabase } from "@trips-app/db";
 import { schema } from "@trips-app/db/zod";
@@ -49,6 +50,7 @@ export function createDriverRepository(db: Database) {
       driverAccountId: string;
       requestedByAdminAccountId: string;
       deadlineAt: Date;
+      testType: DriverLabTestKind;
     }) {
       const [created] = await db
         .insert(schema.driverLabTests)
@@ -56,6 +58,7 @@ export function createDriverRepository(db: Database) {
           driverAccountId: values.driverAccountId,
           requestedByAdminAccountId: values.requestedByAdminAccountId,
           status: "requested",
+          testType: values.testType,
           deadlineAt: values.deadlineAt,
         })
         .returning();

@@ -9,7 +9,7 @@ export type Money = {
 
 export type SupportedCountryCode = "EG" | "SA" | "AE";
 export type SupportedLocale = "ar" | "en";
-export type PaymentGatewayCode = "stripe" | "paymob" | "fawry";
+export type PaymentGatewayCode = "stripe" | "paymob" | "tap" | "fawry" | "stub"; // stub is for local dev/test only
 
 export type UserRole =
   | "traveler"
@@ -927,6 +927,9 @@ export type DriverLabTestStatus =
   | "verified_pass"
   | "verified_fail"
   | "expired";
+
+/** What a requested lab test covers (SCR-ADM-14's test-type choice). */
+export type DriverLabTestKind = "drug_screening" | "medical_fitness" | "both";
 
 export type NotificationCategory =
   | "bookings"

@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Organization · Billing details</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif; display: flex; flex-direction: column">
+<div style="height: 72px; padding: 0 48px; display: flex; align-items: center; justify-content: space-between; background: #ffffff; border-bottom: 1px solid #e3dfc9">
+<div style="display: flex; align-items: center; gap: 12px"><img src="../assets/1fbce194fcb16bf54904c32c189fca31.svg" alt="Trips Enjoy" style="height: 40px; width: auto"><span style="padding: 4px 10px; border-radius: 999px; background: #262a67; color: #f6f3e4; font-size: 13px; font-weight: 600">Business</span></div>
+<a href="OrgPlan.dc.html" style="font-size: 14px; font-weight: 600">Change plan</a>
+</div>
+<div style="flex-grow: 1; display: grid; grid-template-columns: minmax(0, 1fr) 400px; gap: 32px; padding: 40px 120px">
+<div style="background: #ffffff; border-radius: 20px; padding: 32px; display: flex; flex-direction: column; gap: 18px">
+<h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Billing details</h1>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px">
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="b-n" style="font-size: 14px; font-weight: 600">Billing name</label><input id="b-n" value="Al-Noor International School" style="height: 48px; padding: 0 14px; border-radius: 8px; border: 1px solid #7b7fa6; font-family: inherit; font-size: 16px; color: #262a67"></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="b-v" style="font-size: 14px; font-weight: 600">VAT number (on invoices)</label><input id="b-v" value="310245678900003" style="height: 48px; padding: 0 14px; border-radius: 8px; border: 1px solid #7b7fa6; font-family: inherit; font-size: 16px; color: #262a67"></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="b-e" style="font-size: 14px; font-weight: 600">Invoice email</label><input id="b-e" type="email" value="finance@alnoor.edu.sa" style="height: 48px; padding: 0 14px; border-radius: 8px; border: 1px solid #7b7fa6; font-family: inherit; font-size: 16px; color: #262a67"></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="b-a" style="font-size: 14px; font-weight: 600">Address</label><input id="b-a" value="King Fahd Rd, Riyadh 12271" style="height: 48px; padding: 0 14px; border-radius: 8px; border: 1px solid #7b7fa6; font-family: inherit; font-size: 16px; color: #262a67"></div>
+</div>
+<span style="font-size: 14px; font-weight: 600">Payment method</span>
+<div role="radiogroup" aria-label="Payment method" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px">
+<label style="display: flex; gap: 10px; align-items: center; padding: 14px; border-radius: 12px; border: 2px solid #fb8030; font-size: 15px; font-weight: 600"><input type="radio" name="pm" checked style="width: 18px; height: 18px; accent-color: #262a67">Card / mada</label>
+<label style="display: flex; gap: 10px; align-items: center; padding: 14px; border-radius: 12px; border: 1px solid #7b7fa6; font-size: 15px; font-weight: 600"><input type="radio" name="pm" style="width: 18px; height: 18px; accent-color: #262a67">Bank transfer</label>
+<label style="display: flex; gap: 10px; align-items: center; padding: 14px; border-radius: 12px; border: 1px solid #7b7fa6; font-size: 15px; font-weight: 600"><input type="radio" name="pm" style="width: 18px; height: 18px; accent-color: #262a67">SADAD</label>
+</div>
+<div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 16px">
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="b-c" style="font-size: 14px; font-weight: 600">Card number</label><input id="b-c" autocomplete="cc-number" value="5297 •••• •••• 0921" style="height: 48px; min-width: 0; padding: 0 14px; border-radius: 8px; border: 1px solid #7b7fa6; font-family: inherit; font-size: 16px; color: #262a67; letter-spacing: 1px"></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="b-x" style="font-size: 14px; font-weight: 600">Expiry</label><input id="b-x" value="09 / 28" style="height: 48px; min-width: 0; padding: 0 14px; border-radius: 8px; border: 1px solid #7b7fa6; font-family: inherit; font-size: 16px; color: #262a67"></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="b-cv" style="font-size: 14px; font-weight: 600">CVC</label><input id="b-cv" value="•••" style="height: 48px; min-width: 0; padding: 0 14px; border-radius: 8px; border: 1px solid #7b7fa6; font-family: inherit; font-size: 16px; color: #262a67"></div>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 16px">
+<div style="background: #ffffff; border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 12px; font-size: 15px">
+<span style="font-size: 18px; font-weight: 600">Growth · annual</span>
+<span style="display: flex; justify-content: space-between; color: #5b5f86"><span>SAR 719 × 12 months</span><span>SAR 8,628</span></span>
+<span style="display: flex; justify-content: space-between; color: #5b5f86"><span>VAT 15%</span><span>SAR 1,294.20</span></span>
+<span style="height: 1px; background: #e3dfc9"></span>
+<span style="display: flex; justify-content: space-between; font-weight: 700"><span>Due today</span><span style="color: #1f7a4d">SAR 0 · 14-day trial</span></span>
+<span style="font-size: 13px; color: #5b5f86">First charge SAR 9,922.20 on 18 Oct 2026. ZATCA e-invoice sent to finance@alnoor.edu.sa.</span>
+</div>
+<a href="OrgWorkspace.dc.html" style="height: 52px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 16px; font-weight: 600; display: flex; align-items: center; justify-content: center; text-decoration: none">Start trial and open dashboard</a>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

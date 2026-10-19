@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Org · Tax invoice B2B</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;family=Cairo:wght@400;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+.te-act:hover{background:#f6f3e4}
+</style>
+</helmet>
+<div style="min-height: 1560px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="OrgNav" active="Invoices" hint-size="248px,1560px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 24px">
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center">
+<a href="OrgInvoices.dc.html" aria-label="Back to invoices" style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 999px; background: #ffffff; color: #262a67; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a>
+<div style="display: flex; flex-direction: column; gap: 2px; flex: 1 1 300px"><span style="font-size: 14px; color: #5b5f86">Invoices · Issued to businesses</span><h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">B2B-ST-2026-000117</h1></div>
+<span style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 999px; background: #e3f3ea; color: #1f7a4d; font-size: 14px; font-weight: 600"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg>Cleared by ZATCA</span>
+<span style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 999px; background: #e6e8f5; color: #262a67; font-size: 14px; font-weight: 600"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7v5l3 2"></path></svg>Unpaid</span>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start">
+
+<article aria-label="Tax invoice B2B-ST-2026-000117" style="flex: 3 1 620px; min-width: 0; background: #ffffff; border-radius: 12px; border: 1px solid #e3dfc9; box-shadow: 0 2px 12px rgba(38,42,103,0.06); padding: 36px 40px; box-sizing: border-box; display: flex; flex-direction: column; gap: 24px; font-size: 13px; line-height: 18px">
+
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; align-items: flex-start; padding-bottom: 20px; border-bottom: 2px solid #262a67">
+<div style="display: flex; gap: 12px; align-items: center">
+<img src="../assets/697a49af6be5a077ae1851c1a8b9dfcd.svg" alt="" style="width: 48px; height: 48px; border-radius: 12px; object-fit: cover; flex-shrink: 0">
+<span style="display: flex; flex-direction: column"><span style="font-size: 18px; font-weight: 700">Sunrise Tours Co.</span><span dir="rtl" lang="ar" style="font-family: Cairo, sans-serif; font-size: 15px; font-weight: 600; text-align: start">شركة شروق للسياحة</span></span>
+</div>
+<div style="display: flex; flex-direction: column; align-items: flex-end; text-align: end">
+<span style="font-size: 22px; line-height: 28px; font-weight: 700">Tax invoice</span>
+<span dir="rtl" lang="ar" style="font-family: Cairo, sans-serif; font-size: 20px; font-weight: 700">فاتورة ضريبية</span>
+</div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0 24px">
+<sc-for list="{{meta}}" as="m" hint-placeholder-count="6">
+<div style="display: flex; flex-direction: column; gap: 2px; padding: 8px 0; border-bottom: 1px solid #e3dfc9">
+<span style="display: flex; justify-content: space-between; gap: 8px; color: #5b5f86; font-size: 12px"><span>{{m.en}}</span><span dir="rtl" lang="ar" style="font-family: Cairo, sans-serif">{{m.ar}}</span></span>
+<span style="font-size: 14px; font-weight: 600; word-break: break-all">{{m.v}}</span>
+</div>
+</sc-for>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px">
+<sc-for list="{{parties}}" as="p" hint-placeholder-count="2">
+<div style="border: 1px solid #e3dfc9; border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; gap: 6px">
+<span style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; letter-spacing: .4px; color: #5b5f86"><span>{{p.en}}</span><span dir="rtl" lang="ar" style="font-family: Cairo, sans-serif; letter-spacing: 0">{{p.ar}}</span></span>
+<span style="font-size: 15px; font-weight: 700">{{p.name}}</span>
+<span dir="rtl" lang="ar" style="font-family: Cairo, sans-serif; font-size: 14px; font-weight: 600">{{p.nameAr}}</span>
+<span style="display: grid; grid-template-columns: auto 1fr; gap: 2px 12px; font-size: 13px">
+<span style="color: #5b5f86">VAT no.</span><span style="font-weight: 600">{{p.vat}}</span>
+<span style="color: #5b5f86">CR no.</span><span style="font-weight: 600">{{p.cr}}</span>
+<span style="color: #5b5f86">Address</span><span>{{p.addr}}</span>
+<span style="color: #5b5f86">Contact</span><span>{{p.contact}}</span>
+</span>
+</div>
+</sc-for>
+</div>
+
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 640px; border-collapse: collapse; font-size: 13px">
+<thead><tr style="background: #262a67; color: #f6f3e4; font-size: 12px; line-height: 16px">
+<th scope="col" style="text-align: start; padding: 8px 10px; font-weight: 600">#</th>
+<th scope="col" style="text-align: start; padding: 8px 10px; font-weight: 600">Description <span lang="ar" style="font-family: Cairo, sans-serif; display: block; font-weight: 600">الوصف</span></th>
+<th scope="col" style="text-align: end; padding: 8px 10px; font-weight: 600">Qty <span lang="ar" style="font-family: Cairo, sans-serif; display: block">الكمية</span></th>
+<th scope="col" style="text-align: end; padding: 8px 10px; font-weight: 600">Unit price <span lang="ar" style="font-family: Cairo, sans-serif; display: block">سعر الوحدة</span></th>
+<th scope="col" style="text-align: end; padding: 8px 10px; font-weight: 600">Discount <span lang="ar" style="font-family: Cairo, sans-serif; display: block">الخصم</span></th>
+<th scope="col" style="text-align: end; padding: 8px 10px; font-weight: 600">Taxable <span lang="ar" style="font-family: Cairo, sans-serif; display: block">المبلغ الخاضع</span></th>
+<th scope="col" style="text-align: end; padding: 8px 10px; font-weight: 600">VAT 15% <span lang="ar" style="font-family: Cairo, sans-serif; display: block">الضريبة</span></th>
+<th scope="col" style="text-align: end; padding: 8px 10px; font-weight: 600">Total <span lang="ar" style="font-family: Cairo, sans-serif; display: block">الإجمالي</span></th>
+</tr></thead>
+<tbody>
+<sc-for list="{{lines}}" as="l" hint-placeholder-count="4">
+<tr style="border-bottom: 1px solid #e3dfc9; vertical-align: top">
+<td style="padding: 10px; color: #5b5f86">{{l.n}}</td>
+<td style="padding: 10px"><span style="display: flex; flex-direction: column; gap: 2px"><span style="font-weight: 600">{{l.d}}</span><span style="color: #5b5f86; font-size: 12px">{{l.sub}}</span><span dir="rtl" lang="ar" style="font-family: Cairo, sans-serif; font-size: 13px; text-align: start">{{l.ar}}</span></span></td>
+<td style="padding: 10px; text-align: end">{{l.q}}</td>
+<td style="padding: 10px; text-align: end; white-space: nowrap">{{l.u}}</td>
+<td style="padding: 10px; text-align: end; white-space: nowrap">{{l.disc}}</td>
+<td style="padding: 10px; text-align: end; white-space: nowrap">{{l.tx}}</td>
+<td style="padding: 10px; text-align: end; white-space: nowrap">{{l.v}}</td>
+<td style="padding: 10px; text-align: end; white-space: nowrap; font-weight: 700">{{l.t}}</td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 24px; justify-content: space-between; align-items: flex-start">
+<div style="flex: 1 1 260px; display: flex; flex-direction: column; gap: 6px; padding: 12px 14px; border-radius: 12px; background: #f6f3e4">
+<span style="font-size: 12px; font-weight: 700; color: #5b5f86">Amount in words</span>
+<span>One hundred twenty-five thousand seven hundred four Saudi riyals and twenty halalas</span>
+<span dir="rtl" lang="ar" style="font-family: Cairo, sans-serif; font-size: 13px; text-align: start">مائة وخمسة وعشرون ألفاً وسبعمائة وأربعة ريالات سعودية وعشرون هللة</span>
+</div>
+<div style="flex: 1 1 300px; display: flex; flex-direction: column">
+<sc-for list="{{totals}}" as="t" hint-placeholder-count="5">
+<div style="{{t.row}}"><span style="display: flex; flex-direction: column"><span>{{t.en}}</span><span lang="ar" style="font-family: Cairo, sans-serif; font-size: 12px; color: {{t.arc}}">{{t.ar}}</span></span><span style="white-space: nowrap">{{t.v}}</span></div>
+</sc-for>
+</div>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start; padding-top: 20px; border-top: 1px solid #e3dfc9">
+<div style="flex: 2 1 300px; display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; font-size: 13px">
+<span style="color: #5b5f86">Payment terms</span><span><strong>Net 30</strong> · due <strong>Thu 5 Nov 2026</strong> <span lang="ar" dir="rtl" style="font-family: Cairo, sans-serif">· صافي 30 يوماً</span></span>
+<span style="color: #5b5f86">Bank</span><span>Al Rajhi Bank · account name Sunrise Tours Co.</span>
+<span style="color: #5b5f86">IBAN</span><span style="font-weight: 700; letter-spacing: .3px">SA44 8000 0123 6080 1010 2207</span>
+<span style="color: #5b5f86">Transfer reference</span><span>B2B-ST-2026-000117</span>
+<span style="color: #5b5f86">Notes</span><span>Includes 8 free teacher seats. Seats and programs follow the quote Q-ANS-0042 accepted on Sun 4 Oct.</span>
+</div>
+<div style="flex: 1 1 240px; display: flex; gap: 14px; align-items: flex-start">
+<img src="../assets/820ae1ed630eb3e04ea4d7ce91f50535.png" alt="ZATCA QR code for invoice B2B-ST-2026-000117" style="width: 116px; height: 116px; flex-shrink: 0; border: 1px solid #e3dfc9; border-radius: 8px; padding: 4px; box-sizing: border-box; background: #fff">
+<span style="display: flex; flex-direction: column; gap: 4px; font-size: 12px; line-height: 16px; min-width: 0">
+<span style="display: inline-flex; align-items: center; gap: 4px; font-weight: 700; color: #1f7a4d"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5.5c0 4.4-3 8-7 9.5-4-1.5-7-5.1-7-9.5V6zM9 12l2 2 4-4"></path></svg>Cleared by ZATCA 6 Oct 2026 10:42</span>
+<span style="color: #5b5f86">UUID</span><span style="word-break: break-all">3f9c2a71-8e4b-4d0f-9b6a-1c7e5d2a9f40</span>
+<span style="color: #5b5f86">Invoice hash</span><span style="word-break: break-all">nT6kq2W0yX8vR4Lm9cPfZ1aB7sHd3UeJ5oQgK0iVtYw=</span>
+</span>
+</div>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; font-size: 12px; color: #5b5f86; padding-top: 12px; border-top: 1px solid #e3dfc9"><span>Issued through Trips Enjoy · business.trips-enjoy.com · Page 1 of 1</span><span dir="rtl" lang="ar" style="font-family: Cairo, sans-serif">صدرت عبر منصة تريبس إنجوي</span></div>
+</article>
+
+<aside aria-label="Invoice actions" style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+<section aria-labelledby="st-h" style="background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+<h2 id="st-h" style="margin: 0; font-size: 14px; font-weight: 600; color: #5b5f86">Balance due</h2>
+<span style="font-size: 28px; line-height: 34px; font-weight: 700">{{due}} <span style="font-size: 15px; font-weight: 500; color: #5b5f86">SAR</span></span>
+<span style="display: flex; align-items: center; gap: 8px; font-size: 14px"><span style="{{payPill}}">{{payLabel}}</span><span style="color: #5b5f86">{{dueNote}}</span></span>
+<span aria-hidden="true" style="height: 8px; border-radius: 999px; background: #f6f3e4; overflow: hidden; display: block"><span style="display: block; height: 100%; width: 20%; background: #262a67; border-radius: 999px"></span></span>
+<span style="font-size: 13px; color: #5b5f86">6 of 30 days of the payment term used</span>
+
+<sc-if value="{{notPaying}}" hint-placeholder-val="{{true}}">
+<button type="button" onClick="{{openPay}}" style="height: 48px; border: 0; border-radius: 12px; background: #ff6c2e; color: #262a67; font: inherit; font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7a2 2 0 0 1 2-2h12v4M4 7v11a2 2 0 0 0 2 2h14V9H6a2 2 0 0 1-2-2zM16 14.5h.01"></path></svg>Record payment</button>
+</sc-if>
+<sc-if value="{{paying}}" hint-placeholder-val="{{false}}">
+<form aria-label="Record payment" style="display: flex; flex-direction: column; gap: 10px; padding: 14px; border-radius: 12px; border: 1px solid #e3dfc9">
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">Amount received (SAR)<input value="125,704.20" inputmode="decimal" style="height: 48px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 14px; font: inherit; font-size: 16px; font-weight: 500; color: #262a67"></label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">Bank transfer reference<input placeholder="e.g. RJHI-20261029-55812" style="height: 48px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 14px; font: inherit; font-size: 16px; font-weight: 500; color: #262a67"></label>
+<span style="font-size: 12px; color: #5b5f86">Or let bank reconciliation match it automatically when the transfer lands in SA•• •• 2207.</span>
+<div style="display: flex; gap: 8px">
+<button type="button" onClick="{{savePay}}" style="flex: 1; height: 48px; border: 0; border-radius: 12px; background: #ff6c2e; color: #262a67; font: inherit; font-size: 15px; font-weight: 700; cursor: pointer">Mark as paid</button>
+<button type="button" onClick="{{closePay}}" style="height: 48px; padding: 0 14px; border: 0; border-radius: 12px; background: transparent; color: #262a67; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Cancel</button>
+</div>
+</form>
+</sc-if>
+
+<button type="button" class="te-act" style="height: 44px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font: inherit; font-size: 15px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16v12H4zM4 7l8 6 8-6"></path></svg>Send to customer</button>
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px">
+<a href="../pdf/PdfInvoiceB2B.dc.html" class="te-act" style="height: 44px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font: inherit; font-size: 14px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer; text-decoration: none; box-sizing: border-box"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12M7 11l5 5 5-5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"></path></svg>PDF/A-3</a>
+<button type="button" class="te-act" style="height: 44px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font: inherit; font-size: 14px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12M7 11l5 5 5-5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"></path></svg>XML (UBL 2.1)</button>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 14px; font-weight: 600"><a href="OrgInvoiceNew.dc.html">Issue credit note</a><a href="OrgInvoiceNew.dc.html">Issue debit note</a></div>
+</section>
+
+<section aria-labelledby="ln-h" style="background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 10px">
+<h2 id="ln-h" style="margin: 0; font-size: 18px; font-weight: 600">Linked to</h2>
+<a href="OrgLead.dc.html" style="display: flex; gap: 10px; align-items: center; color: #262a67; text-decoration: none; font-size: 14px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V4M5 4h11l-2 4 2 4H5"></path></svg><span style="display: flex; flex-direction: column"><span style="font-weight: 600">Lead · Al Noor Grade 6 Jeddah</span><span style="font-size: 13px; color: #5b5f86">Quote Q-ANS-0042 · Won</span></span></a>
+<a href="OrgTrip.dc.html" style="display: flex; gap: 10px; align-items: center; color: #262a67; text-decoration: none; font-size: 14px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM18 9a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM6 15V9a4 4 0 0 1 8 0v6a4 4 0 0 0 4 4M18 9v2"></path></svg><span style="display: flex; flex-direction: column"><span style="font-weight: 600">Trip · Grade 6 Jeddah (private)</span><span style="font-size: 13px; color: #5b5f86">Mon 26–Wed 28 Oct · 3 buses · 140 seats</span></span></a>
+<a href="OrgCustomer.dc.html" style="display: flex; gap: 10px; align-items: center; color: #262a67; text-decoration: none; font-size: 14px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11l8-7 8 7v8a1 1 0 0 1-1 1h-5v-6h-4v6H5a1 1 0 0 1-1-1z"></path></svg><span style="display: flex; flex-direction: column"><span style="font-weight: 600">Corporate account · Al Noor</span><span style="font-size: 13px; color: #5b5f86">3 invoices + 1 debit note · 160,296.20 SAR this year</span></span></a>
+</section>
+
+<section aria-labelledby="log-h" style="background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 4px">
+<h2 id="log-h" style="margin: 0 0 8px; font-size: 18px; font-weight: 600">Activity</h2>
+<ol style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column">
+<sc-for list="{{log}}" as="g" hint-placeholder-count="6">
+<li style="display: grid; grid-template-columns: 12px 1fr; gap: 10px; padding: 6px 0"><span style="width: 10px; height: 10px; margin-top: 5px; border-radius: 999px; background: {{g.c}}"></span><span style="display: flex; flex-direction: column"><span style="font-size: 14px; font-weight: 600">{{g.t}}</span><span style="font-size: 12px; color: #5b5f86">{{g.w}}</span></span></li>
+</sc-for>
+</ol>
+</section>
+</aside>
+
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1560}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { paying: false, paid: false }; }
+  renderVals() {
+    const meta = [
+      { en: 'Invoice number', ar: 'رقم الفاتورة', v: 'B2B-ST-2026-000117' },
+      { en: 'Issue date', ar: 'تاريخ الإصدار', v: 'Tue 6 Oct 2026 · 10:41' },
+      { en: 'Supply date', ar: 'تاريخ التوريد', v: 'Mon 26 – Wed 28 Oct 2026' },
+      { en: 'Buyer PO number', ar: 'رقم أمر الشراء', v: 'PO-ANS-2291' },
+      { en: 'Due date', ar: 'تاريخ الاستحقاق', v: 'Thu 5 Nov 2026 · Net 30' },
+      { en: 'Currency', ar: 'العملة', v: 'SAR · Saudi riyal' }
+    ];
+    const parties = [
+      { en: 'SELLER', ar: 'البائع', name: 'Sunrise Tours Co.', nameAr: 'شركة شروق للسياحة', vat: '310245678900003', cr: '1010734512', addr: 'Olaya St, Al Olaya, Riyadh 12213', contact: 'Hala Nasser · finance@sunrisetours.sa' },
+      { en: 'BUYER', ar: 'المشتري', name: 'Al Noor International School', nameAr: 'مدارس النور العالمية', vat: '300512349800003', cr: '1010458821', addr: 'King Abdullah Rd, Al Nakheel, Riyadh 12382', contact: 'Accounts · accounts@alnoor.edu.sa' }
+    ];
+    const lines = [
+      { n: '1', d: 'Grade 6 Jeddah trip · seats', sub: 'Riyadh ⇄ Jeddah, 3 days, 2 nights · early confirmation 5%', ar: 'مقاعد رحلة الصف السادس إلى جدة', q: '132', u: '720.00', disc: '4,752.00', tx: '90,288.00', v: '13,543.20', t: '103,831.20' },
+      { n: '2', d: 'Fakieh Aquarium entry', sub: 'Program · per person', ar: 'دخول أكواريوم فقيه', q: '132', u: '85.00', disc: '0.00', tx: '11,220.00', v: '1,683.00', t: '12,903.00' },
+      { n: '3', d: 'Al-Balad heritage walk, guided', sub: 'Program · per group of 35', ar: 'جولة البلد التاريخية بمرشد', q: '4', u: '600.00', disc: '0.00', tx: '2,400.00', v: '360.00', t: '2,760.00' },
+      { n: '4', d: 'Dedicated coaches, 49 seats', sub: 'Return, with driver and moderator', ar: 'حافلات مخصصة ذهاباً وإياباً', q: '3', u: '1,800.00', disc: '0.00', tx: '5,400.00', v: '810.00', t: '6,210.00' }
+    ];
+    const r = 'display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 6px 0; font-size: 14px; border-bottom: 1px solid #e3dfc9;';
+    const totals = [
+      { en: 'Total excl. VAT, before discount', ar: 'الإجمالي قبل الخصم غير شامل الضريبة', v: '114,060.00', row: r, arc: '#5b5f86' },
+      { en: 'Discount', ar: 'الخصم', v: '−4,752.00', row: r, arc: '#5b5f86' },
+      { en: 'Taxable amount', ar: 'الإجمالي الخاضع للضريبة', v: '109,308.00', row: r + ' font-weight: 600;', arc: '#5b5f86' },
+      { en: 'VAT 15%', ar: 'ضريبة القيمة المضافة 15%', v: '16,396.20', row: r, arc: '#5b5f86' },
+      { en: 'Total incl. VAT', ar: 'الإجمالي شامل الضريبة', v: '125,704.20 SAR', row: r + ' margin-top: 8px; padding: 10px 12px; border: 0; border-radius: 8px; background: #262a67; color: #f6f3e4; font-size: 16px; font-weight: 700;', arc: '#b8bad6' }
+    ];
+    const paid = this.state.paid;
+    const log = [
+      ...(paid ? [{ t: 'Payment recorded · 125,704.20 SAR', w: 'Just now · Hala Nasser', c: '#1f7a4d' }] : []),
+      { t: 'Reminder scheduled for Thu 29 Oct', w: 'Automatic · 7 days before due date', c: '#b8bad6' },
+      { t: 'Viewed by accounts@alnoor.edu.sa', w: 'Wed 7 Oct · 09:15', c: '#262a67' },
+      { t: 'invoice.issued sent to Odoo ERP webhook', w: 'Tue 6 Oct · 10:43 · 200 OK', c: '#262a67' },
+      { t: 'Emailed with PDF/A-3 and XML', w: 'Tue 6 Oct · 10:43 · Hala Nasser', c: '#262a67' },
+      { t: 'Cleared by ZATCA', w: 'Tue 6 Oct · 10:42 · 1.8 s', c: '#1f7a4d' },
+      { t: 'Created from quote Q-ANS-0042', w: 'Tue 6 Oct · 10:41 · Hala Nasser', c: '#262a67' }
+    ];
+    const pill = 'display: inline-flex; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; ';
+    return {
+      meta, parties, lines, totals, log,
+      due: paid ? '0.00' : '125,704.20',
+      payLabel: paid ? 'Paid' : 'Unpaid',
+      payPill: pill + (paid ? 'background: #e3f3ea; color: #1f7a4d;' : 'background: #e6e8f5; color: #262a67;'),
+      dueNote: paid ? 'Bank transfer recorded today' : 'Due Thu 5 Nov · in 24 days',
+      paying: this.state.paying && !paid, notPaying: !this.state.paying && !paid,
+      openPay: () => this.setState({ paying: true }),
+      closePay: () => this.setState({ paying: false }),
+      savePay: () => this.setState({ paying: false, paid: true })
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -30,9 +30,17 @@ import {
   moderatorAssignments,
   notificationPreferences,
   organizationSettings,
+  coupons,
   organizations,
   otpVerifications,
   photographerProfiles,
+  tripPhotoAlbums,
+  tripPrograms,
+  tripSeatInventory,
+  tripVehicles,
+  trips,
+  vehicleTypes,
+  vehicles,
 } from "../schema";
 import type {
   AccountSeedSpec,
@@ -1879,6 +1887,369 @@ export async function seedDemoData(
         },
       });
   }
+
+  // ---------------------------------------------------------------------------
+  // Traveler-facing demo content (SCR-TRV browse/detail/booking/albums):
+  // a published trip with programs + a seat map, a platform coupon, and a
+  // completed trip with a published album so the album screens have data.
+  // ---------------------------------------------------------------------------
+  const travelerTripId = await resolveId(
+    db
+      .select({ id: trips.id })
+      .from(trips)
+      .where(eq(trips.titleEn, "Luxury Nile Sunset Cruise"))
+      .limit(1),
+  );
+  const travelerTripStartsAt = new Date(now.getTime() + 10 * 24 * 60 * 60 * 1000);
+  const travelerTripEndsAt = new Date(now.getTime() + 12 * 24 * 60 * 60 * 1000);
+
+  await db
+    .insert(trips)
+    .values({
+      id: travelerTripId,
+      tenantId: orgIds.nileHorizonEnterprise,
+      titleAr: "رحلة كروز النيل عند الغروب",
+      titleEn: "Luxury Nile Sunset Cruise",
+      descriptionAr: "رحلة فاخرة على النيل مع برامج اختيارية.",
+      descriptionEn: "A luxury Nile cruise with optional add-on programs.",
+      categoryLookupCode: "NILE_CRUISE",
+      language: "ar",
+      coverImageUrl: "https://cdn.trips-enjoy.com/demo/nile-cruise.jpg",
+      startsAt: travelerTripStartsAt,
+      endsAt: travelerTripEndsAt,
+      timezone: "Africa/Cairo",
+      origin: {
+        nameAr: "القاهرة - كورنيش النيل",
+        nameEn: "Cairo - Corniche El Nil",
+        regionLookupCode: "CAIRO",
+        latitude: 29.9601,
+        longitude: 31.2569,
+      },
+      destinations: [
+        {
+          nameAr: "الجيزة - رصيف الضفة الغربية",
+          nameEn: "Giza - West Bank Dock",
+          regionLookupCode: "GIZA",
+          latitude: 29.9871,
+          longitude: 31.2108,
+        },
+      ],
+      seatAssignmentMode: "traveler_choice",
+      seatPriorityWindowHours: 24,
+      basePriceMinor: 250_000,
+      currencyCode: "EGP",
+      totalCapacity: 12,
+      confirmedSeatsCount: 0,
+      state: "published",
+      publishMode: "public",
+      vipEarlyAccessUntil: null,
+      hasStaffingGap: false,
+      publishedAt: now,
+      createdByAccountId: accountIdFor("owner@nilehorizon.eg"),
+      createdAt: now,
+      updatedAt: now,
+    })
+    .onConflictDoUpdate({
+      target: trips.id,
+      set: { state: "published", publishMode: "public", totalCapacity: 12, updatedAt: now },
+    });
+
+  const cruiseVehicleTypeId = await resolveId(
+    db
+      .select({ id: vehicleTypes.id })
+      .from(vehicleTypes)
+      .where(
+        and(
+          eq(vehicleTypes.nameEn, "Luxury Minibus"),
+          eq(vehicleTypes.tenantId, orgIds.nileHorizonEnterprise),
+        ),
+      )
+      .limit(1),
+  );
+  const cruiseSeatLayout = {
+    rows: 3,
+    cols: 4,
+    cells: Array.from({ length: 12 }, (_, i) => {
+      const row = Math.floor(i / 4);
+      const col = i % 4;
+      return {
+        row,
+        col,
+        type: col === 2 ? ("aisle" as const) : ("seat" as const),
+        seatLabel: col === 2 ? null : `${String.fromCharCode(65 + row)}${col + 1}`,
+      };
+    }),
+  };
+  await db
+    .insert(vehicleTypes)
+    .values({
+      id: cruiseVehicleTypeId,
+      tenantId: orgIds.nileHorizonEnterprise,
+      scope: "organization",
+      categoryLookupCode: "NILE_CRUISE",
+      nameAr: "ميكروباص فاخر",
+      nameEn: "Luxury Minibus",
+      seatCount: 9,
+      seatLayout: cruiseSeatLayout,
+      status: "active",
+      createdByAccountId: accountIdFor("owner@nilehorizon.eg"),
+      createdAt: now,
+      updatedAt: now,
+    })
+    .onConflictDoUpdate({
+      target: vehicleTypes.id,
+      set: { seatLayout: cruiseSeatLayout, seatCount: 9, updatedAt: now },
+    });
+
+  const cruiseVehicleId = await resolveId(
+    db
+      .select({ id: vehicles.id })
+      .from(vehicles)
+      .where(
+        and(
+          eq(vehicles.tenantId, orgIds.nileHorizonEnterprise),
+          eq(vehicles.plateNumber, "ABC 1234"),
+        ),
+      )
+      .limit(1),
+  );
+  await db
+    .insert(vehicles)
+    .values({
+      id: cruiseVehicleId,
+      tenantId: orgIds.nileHorizonEnterprise,
+      vehicleTypeId: cruiseVehicleTypeId,
+      plateNumber: "ABC 1234",
+      plateNumberNormalized: "ABC1234",
+      model: "Mercedes Sprinter",
+      manufacturingYear: 2023,
+      seatCount: 9,
+      registrationStatus: "valid",
+      registrationExpiry: in9Months,
+      createdByAccountId: accountIdFor("owner@nilehorizon.eg"),
+      createdAt: now,
+      updatedAt: now,
+    })
+    .onConflictDoUpdate({
+      target: vehicles.id,
+      set: { seatCount: 9, updatedAt: now },
+    });
+
+  await db
+    .insert(tripVehicles)
+    .values({
+      tenantId: orgIds.nileHorizonEnterprise,
+      tripId: travelerTripId,
+      vehicleId: cruiseVehicleId,
+      seatCountSnapshot: 9,
+      seatLayoutSnapshot: cruiseSeatLayout,
+      driverSource: "org_staff",
+      driverAccountId: null,
+      moderatorSource: "org_staff",
+      moderatorAccountId: null,
+      photographerSource: "org_staff",
+      photographerAccountId: null,
+      createdAt: now,
+      updatedAt: now,
+    })
+    .onConflictDoNothing();
+
+  // Materialize the seat map for the trip vehicle (traveler_choice mode).
+  const existingSeatRows = await db
+    .select({ seatLabel: tripSeatInventory.seatLabel })
+    .from(tripSeatInventory)
+    .where(
+      and(
+        eq(tripSeatInventory.tripId, travelerTripId),
+        eq(tripSeatInventory.vehicleId, cruiseVehicleId),
+      ),
+    );
+  const seededSeatLabels = new Set(existingSeatRows.map((r) => r.seatLabel));
+  const seatRows = cruiseSeatLayout.cells
+    .filter((c) => c.type === "seat" && c.seatLabel)
+    .map((c) => ({
+      tenantId: orgIds.nileHorizonEnterprise,
+      tripId: travelerTripId,
+      vehicleId: cruiseVehicleId,
+      seatLabel: c.seatLabel!,
+      rowIndex: c.row,
+      colIndex: c.col,
+      isAccessible: false,
+      isPriority: c.row === 0,
+      status: "available" as const,
+      updatedAt: now,
+    }))
+    .filter((row) => !seededSeatLabels.has(row.seatLabel));
+  if (seatRows.length > 0) {
+    await db.insert(tripSeatInventory).values(seatRows);
+  }
+
+  // Programs: one included, one paid per-person add-on with limited capacity.
+  const cruiseProgramIds = await db
+    .select({ id: tripPrograms.id, titleEn: tripPrograms.titleEn })
+    .from(tripPrograms)
+    .where(eq(tripPrograms.tripId, travelerTripId));
+  const programIdByTitle = new Map(cruiseProgramIds.map((r) => [r.titleEn, r.id]));
+  const includedProgramId = programIdByTitle.get("Welcome Dinner") ?? randomUUID();
+  const quadProgramId = programIdByTitle.get("Desert Quad Adventure") ?? randomUUID();
+  await db
+    .insert(tripPrograms)
+    .values([
+      {
+        id: includedProgramId,
+        tenantId: orgIds.nileHorizonEnterprise,
+        tripId: travelerTripId,
+        titleAr: "عشاء ترحيبي",
+        titleEn: "Welcome Dinner",
+        descriptionAr: "عشاء مضمّن في سعر الرحلة.",
+        descriptionEn: "Dinner included in the base trip price.",
+        dayNumber: 1,
+        priceMinor: 0,
+        currencyCode: "EGP",
+        isIncludedInBase: true,
+        capacity: null,
+        bookedCount: 0,
+        sortOrder: 1,
+        status: "active",
+        createdByAccountId: accountIdFor("owner@nilehorizon.eg"),
+        createdAt: now,
+        updatedAt: now,
+      },
+      {
+        id: quadProgramId,
+        tenantId: orgIds.nileHorizonEnterprise,
+        tripId: travelerTripId,
+        titleAr: "مغامرة دراجات الصحراء",
+        titleEn: "Desert Quad Adventure",
+        descriptionAr: "جولة دراجات رباعية بسعر لكل شخص.",
+        descriptionEn: "Per-person quad-bike safari add-on.",
+        dayNumber: 2,
+        priceMinor: 150_000,
+        currencyCode: "EGP",
+        isIncludedInBase: false,
+        capacity: 10,
+        bookedCount: 8,
+        sortOrder: 2,
+        status: "active",
+        createdByAccountId: accountIdFor("owner@nilehorizon.eg"),
+        createdAt: now,
+        updatedAt: now,
+      },
+    ])
+    .onConflictDoUpdate({
+      target: tripPrograms.id,
+      set: { status: "active", updatedAt: now },
+    });
+
+  // Platform coupon spendable on any trip.
+  const cruiseCouponId = await resolveId(
+    db.select({ id: coupons.id }).from(coupons).where(eq(coupons.code, "TRAVEL10")).limit(1),
+  );
+  await db
+    .insert(coupons)
+    .values({
+      id: cruiseCouponId,
+      scope: "platform",
+      tenantId: null,
+      ownerAccountId: bootstrapSuperAdminId,
+      code: "TRAVEL10",
+      titleAr: "خصم 10% للمسافرين",
+      titleEn: "10% off for travelers",
+      discountType: "percentage",
+      discountValue: 10,
+      maxDiscountMinor: 50_000,
+      minOrderMinor: 100_000,
+      currencyCode: "EGP",
+      maxRedemptions: 1000,
+      redemptionsCount: 0,
+      tripId: null,
+      startsAt: null,
+      expiresAt: in30Days,
+      status: "active",
+      createdAt: now,
+      updatedAt: now,
+    })
+    .onConflictDoUpdate({
+      target: coupons.id,
+      set: { status: "active", expiresAt: in30Days, updatedAt: now },
+    });
+
+  // A completed trip with a published album (album screens, SCR-TRV-16/17).
+  const pastTripId = await resolveId(
+    db
+      .select({ id: trips.id })
+      .from(trips)
+      .where(eq(trips.titleEn, "Red Sea Snorkel Weekend (Past)"))
+      .limit(1),
+  );
+  await db
+    .insert(trips)
+    .values({
+      id: pastTripId,
+      tenantId: orgIds.redSeaGrowth,
+      titleAr: "رحلة غوص البحر الأحمر (سابقة)",
+      titleEn: "Red Sea Snorkel Weekend (Past)",
+      descriptionAr: "رحلة مكتملة للصور التذكارية.",
+      descriptionEn: "Completed trip with photo albums.",
+      categoryLookupCode: "SNORKELING",
+      language: "ar",
+      startsAt: fiveDaysAgo,
+      endsAt: new Date(fiveDaysAgo.getTime() + 2 * 24 * 60 * 60 * 1000),
+      timezone: "Africa/Cairo",
+      seatAssignmentMode: "organization_assigned",
+      basePriceMinor: 180_000,
+      currencyCode: "EGP",
+      totalCapacity: 20,
+      confirmedSeatsCount: 20,
+      state: "completed",
+      publishMode: "public",
+      hasStaffingGap: false,
+      publishedAt: new Date(now.getTime() - 40 * 24 * 60 * 60 * 1000),
+      createdByAccountId: accountIdFor("owner@nilehorizon.eg"),
+      createdAt: now,
+      updatedAt: now,
+    })
+    .onConflictDoUpdate({
+      target: trips.id,
+      set: { state: "completed", updatedAt: now },
+    });
+
+  const pastAlbumId = await resolveId(
+    db
+      .select({ id: tripPhotoAlbums.id })
+      .from(tripPhotoAlbums)
+      .where(
+        and(eq(tripPhotoAlbums.tripId, pastTripId), eq(tripPhotoAlbums.titleEn, "Reef Day One")),
+      )
+      .limit(1),
+  );
+  await db
+    .insert(tripPhotoAlbums)
+    .values({
+      id: pastAlbumId,
+      tenantId: orgIds.redSeaGrowth,
+      tripId: pastTripId,
+      photographerAccountId: bootstrapSuperAdminId,
+      titleAr: "اليوم الأول على الشعاب",
+      titleEn: "Reef Day One",
+      coverPhotoUrl: "https://cdn.trips-enjoy.com/demo/reef-day-one.jpg",
+      photoUrls: [
+        "https://cdn.trips-enjoy.com/demo/reef-01.jpg",
+        "https://cdn.trips-enjoy.com/demo/reef-02.jpg",
+      ],
+      photoCount: 2,
+      watermarked: true,
+      audience: "public",
+      audienceAccountIds: [],
+      status: "published",
+      publishedAt: new Date(now.getTime() - 2 * 24 * 60 * 60 * 1000),
+      createdAt: now,
+      updatedAt: now,
+    })
+    .onConflictDoUpdate({
+      target: tripPhotoAlbums.id,
+      set: { status: "published", audience: "public", audienceAccountIds: [], updatedAt: now },
+    });
 
   const credentials: DemoAccountCredential[] = [
     {

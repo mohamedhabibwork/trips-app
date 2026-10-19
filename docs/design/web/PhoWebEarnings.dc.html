@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Studio web · Earnings</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+.te-nav:focus-visible{outline:2px solid #f89e23;outline-offset:2px}
+.te-row:hover{background:#f6f3e4}
+</style>
+</helmet>
+<div style="min-height: 1000px; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif; display: flex; flex-direction: column">
+
+<header style="background: #1a1c4b; color: #f6f3e4">
+<div style="box-sizing: border-box; padding: 12px 40px; display: flex; flex-wrap: wrap; align-items: center; gap: 16px 28px">
+<a href="PhoWebHome.dc.html" class="te-nav" style="display: flex; align-items: center; gap: 10px; text-decoration: none"><img src="../assets/6ea846350ba3adc0e289d47fa0612c3b.svg" alt="Trips Enjoy" style="height: 36px; width: auto"><span style="padding: 2px 10px; border-radius: 999px; background: #f89e23; color: #1a1c4b; font-size: 12px; font-weight: 700">Studio</span></a>
+<nav aria-label="Studio" style="display: flex; flex-wrap: wrap; gap: 4px; flex-grow: 1">
+<sc-for list="{{nav}}" as="n" hint-placeholder-count="8"><a href="{{n.href}}" class="te-nav" aria-current="{{n.cur}}" style="{{n.style}}">{{n.label}}</a></sc-for>
+</nav>
+<a href="PhoWebProfile.dc.html" class="te-nav" style="display: flex; align-items: center; gap: 10px; color: #f6f3e4; text-decoration: none">
+<span style="display: flex; flex-direction: column; align-items: flex-end"><span style="font-size: 14px; font-weight: 600">Laila Fathy</span><span style="font-size: 12px; color: #b8bad6">Studio plan · Verified</span></span>
+<span style="width: 40px; height: 40px; border-radius: 999px; background: #31367a; color: #f89e23; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; overflow: hidden" aria-hidden="true"><img src="../assets/fa4aea3b99ab1c92ea071dc7fc9f9299.svg" alt="" style="width: 100%; height: 100%; object-fit: cover"></span>
+</a>
+</div>
+</header>
+
+<div style="box-sizing: border-box; width: 100%; max-width: 1440px; margin: 0 auto; padding: 24px 40px 40px; display: flex; flex-direction: column; gap: 20px">
+
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 700">Earnings and payouts</h1>
+<span style="font-size: 14px; color: #5b5f86">Paid weekly on Monday at 06:00 Cairo time · bank transfer to CIB ••• 4410 · all amounts in EGP</span>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center">
+<div role="tablist" aria-label="Period" style="display: flex; padding: 4px; border-radius: 999px; background: #ffffff; border: 1px solid #e3dfc9">
+<sc-for list="{{periods}}" as="p" hint-placeholder-count="3"><button role="tab" aria-selected="{{p.on}}" onClick="{{p.go}}" style="{{p.style}}">{{p.label}}</button></sc-for>
+</div>
+<span style="display: flex; flex-direction: column; align-items: flex-end; gap: 2px">
+<button disabled="true" aria-describedby="exp-h" style="height: 48px; padding: 0 18px; border-radius: 12px; border: 1px dashed #7b7fa6; background: #f6f3e4; color: #5b5f86; font: inherit; font-size: 15px; font-weight: 600; cursor: not-allowed; display: flex; align-items: center; gap: 8px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 11h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1zM8 11V7a4 4 0 0 1 8 0v4"></path></svg>Export CSV</button>
+<a id="exp-h" href="../mobile/PhoPlanManage.dc.html" style="font-size: 13px; font-weight: 600">Export needs Pro</a>
+</span>
+</div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 16px">
+<sc-for list="{{kpis}}" as="k" hint-placeholder-count="4">
+<div style="{{k.box}}">
+<span style="{{k.ls}}">{{k.l}}</span>
+<span style="font-size: 28px; line-height: 34px; font-weight: 700">{{k.v}} <span style="{{k.us}}">EGP</span></span>
+<span style="{{k.ds}}">{{k.d}}</span>
+</div>
+</sc-for>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start">
+
+<section aria-labelledby="po-h" style="flex: 2 1 420px; min-width: 0; padding: 20px 0 8px; border-radius: 20px; background: #ffffff">
+<h2 id="po-h" style="margin: 0; padding: 0 20px 12px; font-size: 20px; font-weight: 600">Payouts</h2>
+<ul style="margin: 0; padding: 0; list-style: none">
+<sc-for list="{{payouts}}" as="o" hint-placeholder-count="4">
+<li style="padding: 12px 20px; border-top: 1px solid #e3dfc9; display: flex; gap: 12px; align-items: center">
+<span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 15px; font-weight: 600">{{o.d}}</span><span style="font-size: 13px; line-height: 18px; color: #5b5f86">{{o.sub}}</span></span>
+<span style="display: flex; flex-direction: column; align-items: flex-end; gap: 4px"><span style="font-size: 16px; font-weight: 700">{{o.a}}</span><span style="{{o.ss}}">{{o.s}}</span></span>
+</li>
+</sc-for>
+</ul>
+</section>
+
+<section aria-labelledby="lg-h" style="flex: 3 1 560px; min-width: 0; padding: 20px 0 8px; border-radius: 20px; background: #ffffff">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; align-items: center; padding: 0 20px 12px"><h2 id="lg-h" style="margin: 0; font-size: 20px; font-weight: 600">Ledger · October</h2><span style="font-size: 13px; color: #5b5f86">Full report · Studio</span></div>
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 600px; border-collapse: collapse; font-size: 14px">
+<thead><tr style="color: #5b5f86; font-size: 13px"><th scope="col" style="text-align: start; padding: 8px 20px; font-weight: 600">Date</th><th scope="col" style="text-align: start; padding: 8px 12px; font-weight: 600">Line</th><th scope="col" style="text-align: end; padding: 8px 12px; font-weight: 600">Amount</th><th scope="col" style="text-align: end; padding: 8px 20px; font-weight: 600">Balance</th></tr></thead>
+<tbody>
+<sc-for list="{{ledger}}" as="l" hint-placeholder-count="8">
+<tr class="te-row" style="border-top: 1px solid #e3dfc9">
+<td style="padding: 10px 20px; white-space: nowrap; color: #5b5f86">{{l.d}}</td>
+<td style="padding: 10px 12px"><span style="display: flex; flex-direction: column"><span style="font-weight: 600">{{l.t}}</span><span style="font-size: 13px; color: #5b5f86">{{l.sub}}</span></span></td>
+<td style="{{l.as}}">{{l.a}}</td>
+<td style="{{l.bs}}">{{l.b}}</td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+<p style="margin: 0; padding: 12px 20px 8px; font-size: 13px; line-height: 18px; color: #5b5f86; border-top: 1px solid #e3dfc9">The platform fee is shown as an amount on each deal. When the balance is below zero, no payout is sent and the amount is taken from the next payout.</p>
+</section>
+
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { period: 'month' }; }
+  renderVals() {
+    const nav = [['Home', 'PhoWebHome'], ['Portfolio', 'PhoWebPortfolio'], ['Profile', 'PhoWebProfile'], ['Rates', 'PhoWebRates'], ['Deals', 'PhoWebDeals'], ['Albums', 'PhoWebAlbums'], ['Earnings', 'PhoWebEarnings'], ['Coupons', 'PhoWebCoupons']].map(([label, f]) => {
+      const on = label === 'Earnings';
+      return { label, href: f + '.dc.html', cur: on ? 'page' : 'false',
+        style: 'height: 40px; padding: 0 14px; border-radius: 999px; display: flex; align-items: center; font-size: 15px; font-weight: 600; text-decoration: none; ' + (on ? 'background: #31367a; color: #f89e23;' : 'color: #f6f3e4;') };
+    });
+    const per = this.state.period;
+    const periods = [['week', 'This week'], ['month', 'October'], ['q', 'Last 90 days']].map(([id, label]) => {
+      const on = per === id;
+      return { label, on: on ? 'true' : 'false', go: () => this.setState({ period: id }),
+        style: 'height: 40px; padding: 0 14px; border: 0; border-radius: 999px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; ' + (on ? 'background: #262a67; color: #f6f3e4;' : 'background: transparent; color: #262a67;') };
+    });
+    const K = {
+      week: [['Earned', '3,200', 'Wadi El Rayan Day Trip'], ['Platform fee', '−320', 'Ledger line per deal'], ['Next payout', '2,480', 'Mon 19 Oct, 06:00'], ['Held', '9,000', 'Siwa Oasis Escape · not completed']],
+      month: [['Earned in October', '5,700', '2 completed trips'], ['Platform fee', '−570', 'Ledger lines per deal'], ['Next payout', '2,480', 'Mon 19 Oct, 06:00 · after a −400 adjustment'], ['Held', '9,000', 'Siwa Oasis Escape · paid after it completes']],
+      q: [['Earned, last 90 days', '14,300', '5 completed trips'], ['Platform fee', '−1,430', 'Ledger lines per deal'], ['Paid out', '10,350', '6 payouts since Mon 20 Jul'], ['Held', '9,000', 'Siwa Oasis Escape · not completed']]
+    }[per];
+    const kpis = K.map(([l, v, d], i) => ({ l, v, d,
+      box: 'padding: 18px 20px; border-radius: 20px; display: flex; flex-direction: column; gap: 6px; ' + (i === 2 ? 'background: #262a67; color: #f6f3e4;' : 'background: #ffffff;'),
+      ls: 'font-size: 14px; color: ' + (i === 2 ? '#b8bad6' : '#5b5f86'),
+      us: 'font-size: 15px; font-weight: 500; color: ' + (i === 2 ? '#b8bad6' : '#5b5f86'),
+      ds: 'font-size: 13px; color: ' + (i === 2 ? '#b8bad6' : i === 3 ? '#8a4b00; font-weight: 600' : '#5b5f86') }));
+    const tones = { ok: 'background: #e3f3ea; color: #1f7a4d;', warn: 'background: #fdf0d5; color: #8a4b00;', info: 'background: #e6e8f5; color: #262a67;', bad: 'background: #fde8e6; color: #b42318;' };
+    const pill = (t) => 'display: inline-flex; padding: 2px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; white-space: nowrap; ' + tones[t];
+    const payouts = [
+      { d: 'Mon 19 Oct, 06:00', sub: 'Wadi El Rayan Day Trip 2,880, less the −400 balance carried from last week', a: '2,480 EGP', s: 'Scheduled', t: 'info' },
+      { d: 'Mon 12 Oct, 06:00', sub: 'Not sent: balance was −400 after a refund adjustment on Giza Pyramids Sunrise', a: '0 EGP', s: 'Netted', t: 'warn' },
+      { d: 'Mon 5 Oct, 06:00', sub: 'Giza Pyramids Sunrise', a: '2,250 EGP', s: 'Paid', t: 'ok' },
+      { d: 'Mon 28 Sep, 06:00', sub: 'Fayoum Lakes Weekend', a: '4,050 EGP', s: 'Paid', t: 'ok' },
+      { d: 'Siwa Oasis Escape', sub: 'Held until the trip is Completed (planned Sat 24 Oct)', a: '9,000 EGP', s: 'Held', t: 'warn' }
+    ].map((o) => ({ ...o, ss: pill(o.t) }));
+    const R = [
+      ['Sat 3 Oct', 'Deal fee', 'Giza Pyramids Sunrise · Cairo Weekenders', 2500, 2500],
+      ['Sat 3 Oct', 'Platform fee', 'Giza Pyramids Sunrise', -250, 2250],
+      ['Mon 5 Oct', 'Payout', 'Bank transfer CIB ••• 4410', -2250, 0],
+      ['Fri 9 Oct', 'Refund adjustment', 'Giza Pyramids Sunrise · dispute resolved', -400, -400],
+      ['Mon 12 Oct', 'Payout not sent', 'Balance below zero', 0, -400],
+      ['Tue 13 Oct', 'Deal fee', 'Wadi El Rayan Day Trip · marked Completed', 3200, 2800],
+      ['Tue 13 Oct', 'Platform fee', 'Wadi El Rayan Day Trip', -320, 2480]
+    ];
+    const fmt = (n) => (n < 0 ? '−' : n > 0 ? '+' : '') + Math.abs(n).toLocaleString('en-US');
+    const ledger = R.map(([d, t, sub, a, b]) => ({ d, t, sub, a: fmt(a), b: (b < 0 ? '−' : '') + Math.abs(b).toLocaleString('en-US'),
+      as: 'padding: 10px 12px; text-align: end; font-weight: 600; white-space: nowrap; color: ' + (a > 0 ? '#1f7a4d' : '#262a67'),
+      bs: 'padding: 10px 20px; text-align: end; white-space: nowrap; ' + (b < 0 ? 'color: #b42318; font-weight: 700' : 'color: #262a67') }));
+    return { nav, periods, kpis, payouts, ledger };
+  }
+}
+</script>
+</body>
+</html>

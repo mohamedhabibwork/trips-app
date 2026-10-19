@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Admin · Admin team</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+.te-row:hover{background:#faf8ef}
+</style>
+</helmet>
+<div style="position: relative; min-height: 1000px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="AdmNav" active="Admin team" hint-size="248px,1000px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 20px">
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; color: #5b5f86">System</span><h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Admin team</h1><span style="font-size: 15px; color: #5b5f86">9 staff · 2-step sign-in with an authenticator app is required for every admin</span></div>
+<button type="button" onClick="{{openInvite}}" style="height: 48px; padding: 0 20px; border: 0; border-radius: 12px; background: #ff6c2e; color: #262a67; font: inherit; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Invite admin</button>
+</div>
+
+<section aria-labelledby="st-h" style="background: #ffffff; border-radius: 20px; padding: 20px 0 8px">
+<h2 id="st-h" style="margin: 0; padding: 0 20px 12px; font-size: 20px; line-height: 28px; font-weight: 600">Staff</h2>
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 900px; border-collapse: collapse; font-size: 14px">
+<thead><tr style="color: #5b5f86; font-size: 13px"><th scope="col" style="text-align: start; padding: 10px 20px; font-weight: 600">Name</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Role</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">2-step sign-in</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Last sign-in</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Status</th><th scope="col" style="padding: 10px 20px"><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Actions</span></th></tr></thead>
+<tbody>
+<sc-for list="{{staff}}" as="s" hint-placeholder-count="7">
+<tr class="te-row" style="border-top: 1px solid #e3dfc9">
+<td style="padding: 10px 20px"><span style="display: flex; gap: 10px; align-items: center"><sc-if value="{{s.hasImg}}" hint-placeholder-val="{{false}}"><img src="{{s.img}}" alt="" style="width: 34px; height: 34px; flex-shrink: 0; border-radius: 999px; object-fit: cover"></sc-if><sc-if value="{{s.noImg}}" hint-placeholder-val="{{true}}"><span style="width: 34px; height: 34px; flex-shrink: 0; border-radius: 999px; background: {{s.av}}; color: {{s.avc}}; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center">{{s.ini}}</span></sc-if><span style="display: flex; flex-direction: column"><span style="font-weight: 600; font-size: 15px">{{s.n}}</span><span style="font-size: 12px; color: #5b5f86">{{s.e}}</span></span></span></td>
+<td style="padding: 10px 12px">{{s.r}}</td>
+<td style="padding: 10px 12px"><span style="{{s.tfs}}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{s.tfi}}"></path></svg>{{s.tf}}</span></td>
+<td style="padding: 10px 12px; white-space: nowrap"><span style="display: flex; flex-direction: column"><span>{{s.last}}</span><span style="font-size: 12px; color: #5b5f86">{{s.dev}}</span></span></td>
+<td style="padding: 10px 12px"><span style="{{s.ss}}">{{s.s}}</span></td>
+<td style="padding: 10px 20px; text-align: end"><button type="button" aria-label="{{s.al}}" style="width: 36px; height: 36px; border-radius: 12px; border: 1px solid #e3dfc9; background: #ffffff; color: #262a67; display: inline-flex; align-items: center; justify-content: center; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h.01M12 12h.01M19 12h.01"></path></svg></button></td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+</section>
+
+<section aria-labelledby="pm-h" style="background: #ffffff; border-radius: 20px; padding: 20px 0 8px">
+<div style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: space-between; align-items: center; padding: 0 20px 12px"><h2 id="pm-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">Role permissions</h2><span style="font-size: 13px; color: #5b5f86">Only a Super admin can change roles. Changes are logged.</span></div>
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 820px; border-collapse: collapse; font-size: 14px">
+<thead><tr style="font-size: 13px"><th scope="col" style="text-align: start; padding: 10px 20px; font-weight: 600; color: #5b5f86">Permission</th><sc-for list="{{roles}}" as="r" hint-placeholder-count="4"><th scope="col" style="text-align: center; padding: 10px 12px; font-weight: 600">{{r}}</th></sc-for></tr></thead>
+<tbody>
+<sc-for list="{{perms}}" as="p" hint-placeholder-count="10">
+<tr style="border-top: 1px solid #e3dfc9">
+<th scope="row" style="text-align: start; padding: 8px 20px; font-weight: 500">{{p.l}}</th>
+<sc-for list="{{p.cells}}" as="c" hint-placeholder-count="4">
+<td style="padding: 8px 12px; text-align: center"><span style="{{c.st}}"><sc-if value="{{c.full}}" hint-placeholder-val="{{true}}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg></sc-if>{{c.t}}</span></td>
+</sc-for>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+</section>
+
+</main>
+
+<sc-if value="{{invite}}" hint-placeholder-val="{{false}}">
+<div style="position: absolute; inset: 0; background: rgba(16,18,48,.45); display: flex; align-items: flex-start; justify-content: center; padding: 120px 24px 24px">
+<div role="dialog" aria-modal="true" aria-labelledby="iv-h" style="width: 100%; max-width: 480px; box-sizing: border-box; background: #ffffff; border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 14px">
+<h2 id="iv-h" style="margin: 0; font-size: 22px; font-weight: 600">Invite an admin</h2>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="iv-e" style="font-size: 14px; font-weight: 600">Work email</label><input id="iv-e" value="layla.harbi@trips-enjoy.com" style="height: 48px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; padding: 0 14px; font: inherit; font-size: 16px; color: #262a67"></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="iv-r" style="font-size: 14px; font-weight: 600">Role</label><select id="iv-r" style="height: 48px; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; padding: 0 12px; font: inherit; font-size: 16px; color: #262a67"><option>Support agent</option><option>Finance</option><option>Driver compliance</option><option>Super admin</option></select></div>
+<p style="margin: 0; padding: 10px 12px; border-radius: 12px; background: #e6e8f5; font-size: 14px; line-height: 20px">The invite link works for 48 hours. They must set a password and connect an authenticator app before they can open anything.</p>
+<div style="display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap">
+<button type="button" onClick="{{closeInvite}}" style="height: 48px; padding: 0 20px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Cancel</button>
+<button type="button" onClick="{{closeInvite}}" style="height: 48px; padding: 0 20px; border: 0; border-radius: 12px; background: #ff6c2e; color: #262a67; font: inherit; font-size: 15px; font-weight: 700; cursor: pointer">Send invite</button>
+</div>
+</div>
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"showInvite":{"editor":"boolean","default":false},"$preview":{"width":1440,"height":1380}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { inv: null }; }
+  renderVals() {
+    const tone = { ok: 'background: #e3f3ea; color: #1f7a4d;', warn: 'background: #fdf0d5; color: #8a4b00;', bad: 'background: #fde8e6; color: #b42318;', info: 'background: #e6e8f5; color: #262a67;', mute: 'background: #f6f3e4; color: #5b5f86;' };
+    const pill = (t) => 'display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; ' + tone[t];
+    const shield = 'M12 3l7 3v5.5c0 4.4-3 8-7 9.5-4-1.5-7-5.1-7-9.5V6zM9 12l2 2 4-4';
+    const clock = 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7v5l3 2';
+    const staff = [
+      { n: 'Reem Othman', e: 'reem.othman@trips-enjoy.com', r: 'Super admin', tf: 'Authenticator on', tt: 'ok', last: 'Today 08:41 UTC', dev: 'Chrome · Riyadh', s: 'Active', st: 'ok', me: true },
+      { n: 'Bandar Al-Subaie', e: 'bandar.subaie@trips-enjoy.com', r: 'Super admin', tf: 'Authenticator on', tt: 'ok', last: 'Mon 13 Oct 17:02', dev: 'Safari · Riyadh', s: 'Active', st: 'ok' },
+      { n: 'Hessa Al-Rashid', e: 'hessa.rashid@trips-enjoy.com', r: 'Driver compliance', tf: 'Authenticator on', tt: 'ok', last: 'Today 07:15 UTC', dev: 'Chrome · Jeddah', s: 'Active', st: 'ok' },
+      { n: 'Waleed Kamal', e: 'waleed.kamal@trips-enjoy.com', r: 'Driver compliance', tf: 'Authenticator on', tt: 'ok', last: 'Sun 12 Oct 10:30', dev: 'Edge · Cairo', s: 'Active', st: 'ok' },
+      { n: 'Mariam Fouad', e: 'mariam.fouad@trips-enjoy.com', r: 'Finance', tf: 'Authenticator on', tt: 'ok', last: 'Today 06:58 UTC', dev: 'Chrome · Riyadh', s: 'Active', st: 'ok' },
+      { n: 'Ali Hamdan', e: 'ali.hamdan@trips-enjoy.com', r: 'Support agent', tf: 'Authenticator on', tt: 'ok', last: 'Today 08:20 UTC', dev: 'Chrome · Riyadh', s: 'Active', st: 'ok' },
+      { n: 'Nouf Al-Anazi', e: 'nouf.anazi@trips-enjoy.com', r: 'Support agent', tf: 'Authenticator on', tt: 'ok', last: 'Today 05:44 UTC', dev: 'Firefox · Dammam', s: 'Active', st: 'ok' },
+      { n: 'Omar Saeed', e: 'omar.saeed@trips-enjoy.com', r: 'Support agent', tf: 'Locked · 5 failed codes', tt: 'bad', last: 'Today 08:03 UTC', dev: 'Unlocks at 08:18', s: 'Locked 15 min', st: 'bad' },
+      { n: 'Yara Mansour', e: 'yara.mansour@trips-enjoy.com', r: 'Finance', tf: 'Not set up yet', tt: 'warn', last: 'Invited Mon 13 Oct', dev: 'Link expires in 22 h', s: 'Invited', st: 'info' }
+    ].map((x) => ({ ...x, hasImg: !!x.me, noImg: !x.me, img: x.me ? '../assets/a2107042fb2903c5e36101018e509bf2.svg' : '', ini: '',av: x.me ? '#ff6c2e' : '#e6e8f5', avc: '#262a67', tfs: pill(x.tt), tfi: x.tt === 'ok' ? shield : clock, ss: pill(x.st), al: 'Actions for ' + x.n }));
+    staff.forEach((x) => { const p = x.n.split(' '); x.ini = (p[0][0] + p[p.length - 1].replace('Al-', '')[0]).toUpperCase(); });
+    const roles = ['Super admin', 'Driver compliance', 'Finance', 'Support agent'];
+    const P = [
+      ['Review applications', 'F', 'F', '-', 'V'],
+      ['Require lab tests, suspend drivers', 'F', 'F', '-', '-'],
+      ['Suspend or reactivate users', 'F', 'F', '-', 'F'],
+      ['Plan override and gifts', 'F', '-', 'F', '-'],
+      ['Dispute decisions and refunds', 'F', '-', 'F', 'F'],
+      ['Approve payouts', 'F', '-', 'F', '-'],
+      ['Revoke coupons', 'F', '-', 'F', 'F'],
+      ['View as organization', 'F', 'V', 'V', 'V'],
+      ['Platform settings and templates', 'F', '-', 'V', '-'],
+      ['Manage admins and roles', 'F', '-', '-', '-'],
+      ['Audit log', 'F', 'V', 'V', 'V']
+    ];
+    const cellSt = { F: 'display: inline-flex; align-items: center; gap: 4px; padding: 2px 10px; border-radius: 999px; background: #e3f3ea; color: #1f7a4d; font-size: 13px; font-weight: 600;', V: 'display: inline-flex; padding: 2px 10px; border-radius: 999px; background: #e6e8f5; color: #262a67; font-size: 13px; font-weight: 600;', '-': 'font-size: 13px; color: #5b5f86;' };
+    const cellT = { F: 'Full', V: 'View', '-': 'No access' };
+    const perms = P.map((r) => ({ l: r[0], cells: r.slice(1).map((c) => ({ full: c === 'F', t: cellT[c], st: cellSt[c] })) }));
+    const inv = this.state.inv === null ? !!this.props.showInvite : this.state.inv;
+    return { staff, roles, perms, invite: inv, openInvite: () => this.setState({ inv: true }), closeInvite: () => this.setState({ inv: false }) };
+  }
+}
+</script>
+</body>
+</html>

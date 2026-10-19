@@ -6,7 +6,7 @@
 // have no path; they are mounted inside other pages.
 import type { ScreenSurface } from "@/screens/types";
 
-export type WebArea = "public" | "organization" | "admin";
+export type WebArea = "public" | "organization" | "admin" | "traveler";
 
 export interface WebRoute {
   /** Screen ID from the design canvases, e.g. `SCR-ORG-04`. */
@@ -46,6 +46,14 @@ const admin = (id: string, path: string, section: string): WebRoute => ({
 const pub = (id: string, path: string): WebRoute => ({ id, path, area: "public" });
 
 const signedIn = (id: string, path: string): WebRoute => ({ ...pub(id, path), signedIn: true });
+
+/** Traveler app: every signed-in page sits inside the traveler shell with its bottom tabs. */
+const trv = (id: string, path: string): WebRoute => ({
+  id,
+  path: `/traveler${path}`,
+  area: "traveler",
+  signedIn: true,
+});
 
 export const WEB_ROUTES: readonly WebRoute[] = [
   // Public site, sign-up and sign-in (SCR-PUB)
@@ -157,6 +165,29 @@ export const WEB_ROUTES: readonly WebRoute[] = [
   admin("SCR-ADM-31", "/notifications", "notifications"),
   admin("SCR-ADM-32", "/platform", "platform"),
   admin("SCR-ADM-33", "/platform/health", "platform"),
+
+  // Traveler app (SCR-TRV). 01, 02 and 17 are public; the rest need a signed-in traveler.
+  pub("SCR-TRV-01", "/trips"),
+  pub("SCR-TRV-02", "/trips/$tripId"),
+  trv("SCR-TRV-03", "/book/$tripId"),
+  trv("SCR-TRV-04", "/book/$tripId/seats"),
+  trv("SCR-TRV-05", "/book/$tripId/review"),
+  trv("SCR-TRV-06", "/bookings/$bookingId/pay"),
+  trv("SCR-TRV-07", "/bookings/$bookingId/payment"),
+  trv("SCR-TRV-08", "/bookings/$bookingId/payment/failed"),
+  trv("SCR-TRV-09", "/bookings/$bookingId/confirmed"),
+  trv("SCR-TRV-10", "/bookings"),
+  trv("SCR-TRV-11", "/bookings/$bookingId"),
+  trv("SCR-TRV-12", "/bookings/$bookingId/cancel"),
+  trv("SCR-TRV-13", "/bookings/$bookingId/trip-day"),
+  trv("SCR-TRV-14", "/receipts"),
+  trv("SCR-TRV-15", "/albums"),
+  trv("SCR-TRV-16", "/albums/$albumId"),
+  pub("SCR-TRV-17", "/album/s/$token"),
+  trv("SCR-TRV-18", "/plans"),
+  trv("SCR-TRV-19", "/profile"),
+  trv("SCR-TRV-20", "/privacy"),
+  trv("SCR-TRV-21", "/become-supplier"),
 ];
 
 const BY_ID = new Map(WEB_ROUTES.filter((route) => !route.alias).map((route) => [route.id, route]));
@@ -240,5 +271,6 @@ export function surfaceForScreenId(id: string): ScreenSurface {
   if (id.startsWith("SCR-ORG")) return "organization";
   if (id.startsWith("SCR-ADM")) return "admin";
   if (id.startsWith("SCR-SHR")) return "shared";
+  if (id.startsWith("SCR-TRV")) return "traveler";
   return "public";
 }

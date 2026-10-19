@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Organization dashboard · Reset password</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif; display: flex; flex-direction: column; align-items: center; padding: 48px; gap: 48px">
+<div style="display: flex; align-items: center; gap: 12px">
+<img src="../assets/1fbce194fcb16bf54904c32c189fca31.svg" alt="Trips Enjoy" style="height: 48px; width: auto">
+<span style="padding: 4px 10px; border-radius: 999px; background: #262a67; color: #f6f3e4; font-size: 13px; font-weight: 600">Business</span>
+</div>
+<div style="width: 480px; box-sizing: border-box; background: #ffffff; border-radius: 20px; padding: 40px; display: flex; flex-direction: column; gap: 20px; box-shadow: 0 1px 2px rgba(38,42,103,.06), 0 6px 20px rgba(38,42,103,.08)">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Reset your password</h1>
+<p style="margin: 0; font-size: 16px; line-height: 24px; color: #5b5f86">Enter your work email and we'll send a reset link, valid for 30 minutes.</p>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="of-e" style="font-size: 14px; font-weight: 600">Work email</label><input id="of-e" type="email" value="fahad@sunrisetours.sa" style="height: 52px; box-sizing: border-box; padding: 0 14px; border-radius: 8px; border: 1px solid #7b7fa6; font-family: inherit; font-size: 16px; color: #262a67"></div>
+<button style="height: 52px; border-radius: 12px; border: none; background: #ff6c2e; color: #262a67; font-family: inherit; font-size: 16px; font-weight: 600">Send reset link</button>
+<div style="display: flex; justify-content: space-between; font-size: 14px"><a href="OrgLogin.dc.html" style="font-weight: 600">Back to sign in</a><a href="#" style="font-weight: 600">Use my phone instead</a></div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

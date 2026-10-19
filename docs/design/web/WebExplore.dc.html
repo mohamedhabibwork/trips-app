@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Web · Explore trips</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+.te-nav:hover{color:#c93a00}
+.te-card:hover{box-shadow:0 8px 24px rgba(38,42,103,0.12)}
+input[type=checkbox]{accent-color:#262a67;width:18px;height:18px;margin:0}
+</style>
+</helmet>
+<div style="min-height: 1000px; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+
+<header style="border-bottom: 1px solid #e3dfc9">
+<div style="max-width: 1200px; margin: 0 auto; box-sizing: border-box; padding: 14px 24px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 32px">
+<a href="WebHome.dc.html" aria-label="Trips Enjoy home" style="display: flex"><img src="../assets/1fbce194fcb16bf54904c32c189fca31.svg" alt="Trips Enjoy" style="height: 40px; width: auto"></a>
+<nav aria-label="Main" style="flex-grow: 1; display: flex; flex-wrap: wrap; gap: 4px 24px">
+<a href="WebExplore.dc.html" aria-current="page" class="te-nav" style="padding: 10px 0; font-size: 15px; font-weight: 700; color: #c93a00; text-decoration: none; border-bottom: 2px solid #fb8030">Explore trips</a>
+<a href="WebHome.dc.html#organizers" class="te-nav" style="padding: 10px 0; font-size: 15px; font-weight: 600; color: #262a67; text-decoration: none">For organizers</a>
+<a href="WebHome.dc.html#organizers" class="te-nav" style="padding: 10px 0; font-size: 15px; font-weight: 600; color: #262a67; text-decoration: none">For drivers &amp; photographers</a>
+</nav>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px">
+<a href="WebHomeAr.dc.html" lang="ar" dir="rtl" style="height: 44px; padding: 0 12px; display: flex; align-items: center; font-family: Cairo, sans-serif; font-size: 15px; font-weight: 600; color: #262a67; text-decoration: none">العربية</a>
+<a href="WebBookings.dc.html" style="height: 48px; box-sizing: border-box; padding: 0 20px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-size: 15px; font-weight: 600; display: flex; align-items: center; text-decoration: none">Sign in</a>
+<a href="WebExplore.dc.html" style="height: 48px; padding: 0 20px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 15px; font-weight: 700; display: flex; align-items: center; text-decoration: none">Book a trip</a>
+</div>
+</div>
+</header>
+
+<main style="max-width: 1200px; margin: 0 auto; box-sizing: border-box; padding: 28px 24px 48px; display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<nav aria-label="Breadcrumb" style="font-size: 14px; color: #5b5f86"><a href="WebHome.dc.html" style="color: #5b5f86">Home</a> / Explore trips</nav>
+<h1 style="margin: 0; font-size: 32px; line-height: 40px; font-weight: 700">Trips from Riyadh in October</h1>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start">
+<aside aria-labelledby="flt-h" style="flex: 1 1 260px; min-width: 0; box-sizing: border-box; padding: 20px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; justify-content: space-between; align-items: center"><h2 id="flt-h" style="margin: 0; font-size: 20px; font-weight: 600">Filters</h2><button type="button" style="min-height: 44px; border: 0; background: transparent; color: #c93a00; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer">Clear all</button></div>
+
+<fieldset style="margin: 0; padding: 0; border: 0; display: flex; flex-direction: column; gap: 10px">
+<legend style="padding: 0 0 10px; font-size: 14px; font-weight: 600">Trip type</legend>
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{types}}" as="t" hint-placeholder-count="6"><button type="button" aria-pressed="{{t.pressed}}" onClick="{{t.toggle}}" style="{{t.style}}">{{t.t}}</button></sc-for>
+</div>
+</fieldset>
+
+<fieldset style="margin: 0; padding: 0; border: 0; display: flex; gap: 10px">
+<legend style="padding: 0 0 10px; font-size: 14px; font-weight: 600">Dates</legend>
+<label style="flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: #5b5f86">From<input type="text" value="Wed 15 Oct" style="height: 48px; box-sizing: border-box; width: 100%; border-radius: 8px; border: 1px solid #7b7fa6; padding: 0 12px; font: inherit; font-size: 15px; color: #262a67"></label>
+<label style="flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: #5b5f86">To<input type="text" value="Fri 31 Oct" style="height: 48px; box-sizing: border-box; width: 100%; border-radius: 8px; border: 1px solid #7b7fa6; padding: 0 12px; font: inherit; font-size: 15px; color: #262a67"></label>
+</fieldset>
+
+<fieldset style="margin: 0; padding: 0; border: 0; display: flex; gap: 10px; align-items: flex-end">
+<legend style="padding: 0 0 10px; font-size: 14px; font-weight: 600">Price per person (SAR)</legend>
+<label style="flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: #5b5f86">Min<input type="number" value="200" style="height: 48px; box-sizing: border-box; width: 100%; border-radius: 8px; border: 1px solid #7b7fa6; padding: 0 12px; font: inherit; font-size: 15px; color: #262a67"></label>
+<span aria-hidden="true" style="padding-bottom: 14px; color: #5b5f86">–</span>
+<label style="flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: #5b5f86">Max<input type="number" value="1500" style="height: 48px; box-sizing: border-box; width: 100%; border-radius: 8px; border: 1px solid #7b7fa6; padding: 0 12px; font: inherit; font-size: 15px; color: #262a67"></label>
+</fieldset>
+
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="f-city" style="font-size: 14px; font-weight: 600">Departure city</label>
+<select id="f-city" style="height: 48px; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; padding: 0 12px; font: inherit; font-size: 15px; color: #262a67"><option>Riyadh</option><option>Jeddah</option><option>Dammam</option><option>Dubai</option><option>Cairo</option></select>
+</div>
+
+<fieldset style="margin: 0; padding: 0; border: 0; display: flex; flex-direction: column; gap: 4px">
+<legend style="padding: 0 0 6px; font-size: 14px; font-weight: 600">Organizer</legend>
+<label style="min-height: 36px; display: flex; align-items: center; gap: 10px; font-size: 15px"><input type="checkbox" checked="">Sunrise Tours Co.<span style="margin-left: auto; font-size: 13px; color: #5b5f86">9</span></label><label style="min-height: 36px; display: flex; align-items: center; gap: 10px; font-size: 15px"><input type="checkbox" checked="">Najd Adventures<span style="margin-left: auto; font-size: 13px; color: #5b5f86">7</span></label><label style="min-height: 36px; display: flex; align-items: center; gap: 10px; font-size: 15px"><input type="checkbox">Hijaz Journeys<span style="margin-left: auto; font-size: 13px; color: #5b5f86">8</span></label>
+</fieldset>
+
+<fieldset style="margin: 0; padding: 0; border: 0; display: flex; flex-direction: column; gap: 4px">
+<legend style="padding: 0 0 6px; font-size: 14px; font-weight: 600">Features</legend>
+<label style="min-height: 36px; display: flex; align-items: center; gap: 10px; font-size: 15px"><input type="checkbox" checked="">Live bus tracking</label><label style="min-height: 36px; display: flex; align-items: center; gap: 10px; font-size: 15px"><input type="checkbox">Choose your own seat</label><label style="min-height: 36px; display: flex; align-items: center; gap: 10px; font-size: 15px"><input type="checkbox">Child tracking for parents</label><label style="min-height: 36px; display: flex; align-items: center; gap: 10px; font-size: 15px"><input type="checkbox">Free cancellation 7+ days</label>
+</fieldset>
+</aside>
+
+<section aria-labelledby="res-h" style="flex: 999 1 600px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; align-items: center">
+<h2 id="res-h" style="margin: 0; font-size: 18px; font-weight: 600">24 trips <span style="font-weight: 400; color: #5b5f86">· Weekend, Desert · 15–31 Oct</span></h2>
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center">
+<label for="f-sort" style="font-size: 14px; font-weight: 600">Sort by</label>
+<select id="f-sort" style="height: 44px; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; padding: 0 12px; font: inherit; font-size: 15px; color: #262a67"><option>Recommended</option><option>Departure: soonest</option><option>Price: low to high</option><option>Rating</option></select>
+<div role="group" aria-label="View" style="display: flex; padding: 4px; border-radius: 999px; background: #ffffff; border: 1px solid #e3dfc9">
+<button type="button" aria-pressed="{{listPressed}}" onClick="{{showList}}" style="{{listStyle}}">List</button>
+<button type="button" aria-pressed="{{mapPressed}}" onClick="{{showMap}}" style="{{mapStyle}}">Map</button>
+</div>
+</div>
+</div>
+
+<sc-if value="{{isMap}}" hint-placeholder-val="{{false}}">
+<div role="img" aria-label="Map of 6 trips departing from Riyadh, with price pins at AlUla, Edge of the World, Taif and Diriyah" style="position: relative; height: 520px; border-radius: 20px; background: #e9e6d3; overflow: hidden">
+<div style="position: absolute; left: 0; right: 0; top: 0; height: 70px; background: #d6e6ee"></div>
+<div style="position: absolute; left: 55%; top: 58%; width: 14px; height: 14px; border-radius: 999px; background: #262a67; border: 3px solid #ffffff"></div>
+<span style="position: absolute; left: calc(55% + 20px); top: 58%; font-size: 13px; font-weight: 600">Riyadh</span>
+<sc-for list="{{pins}}" as="p" hint-placeholder-count="4"><a href="WebTrip.dc.html" style="{{p.style}}">{{p.t}}</a></sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{isList}}" hint-placeholder-val="{{true}}">
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px">
+<sc-for list="{{trips}}" as="t" hint-placeholder-count="6">
+<a href="WebTrip.dc.html" class="te-card" style="border-radius: 20px; background: #ffffff; color: #262a67; text-decoration: none; overflow: hidden; display: flex; flex-direction: column">
+<span style="position: relative; height: 150px; background: #262a67; display: flex; align-items: center; justify-content: center; overflow: hidden">
+<sc-if value="{{t.hasImg}}" hint-placeholder-val="{{true}}"><img src="{{t.img}}" alt="{{t.alt}}" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover"></sc-if>
+<sc-if value="{{t.noImg}}" hint-placeholder-val="{{false}}"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#b8bad6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 4h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM4 11h16M8 18v2M16 18v2M8 14.5h.01M16 14.5h.01"></path></svg></sc-if>
+<sc-if value="{{t.hasBadge}}" hint-placeholder-val="{{false}}"><span style="position: absolute; top: 12px; left: 12px; padding: 2px 10px; border-radius: 999px; background: #f89e23; color: #262a67; font-size: 12px; font-weight: 700">{{t.badge}}</span></sc-if>
+</span>
+<span style="padding: 12px 16px 16px; display: flex; flex-direction: column; gap: 3px">
+<span style="font-size: 16px; line-height: 22px; font-weight: 600">{{t.title}}</span>
+<span style="font-size: 13px; color: #5b5f86">{{t.org}} · <span style="color: #262a67; font-weight: 600">{{t.rating}}</span> ({{t.reviews}})</span>
+<span style="font-size: 13px; color: #5b5f86">{{t.meta}}</span>
+<span style="font-size: 13px; color: #5b5f86">{{t.feat}}</span>
+<span style="margin-top: 6px; display: flex; justify-content: space-between; align-items: baseline"><span style="{{t.seatStyle}}">{{t.seats}}</span><span style="font-size: 13px; color: #5b5f86">from <strong style="font-size: 18px; color: #262a67">{{t.price}}</strong> SAR</span></span>
+</span>
+</a>
+</sc-for>
+</div>
+</sc-if>
+
+<nav aria-label="Pagination" style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; padding-top: 8px">
+<a href="#" aria-label="Previous page" style="width: 44px; height: 44px; border-radius: 12px; border: 1px solid #e3dfc9; background: #ffffff; color: #5b5f86; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a>
+<sc-for list="{{pages}}" as="p" hint-placeholder-count="4"><a href="#" aria-current="{{p.cur}}" style="{{p.style}}">{{p.n}}</a></sc-for>
+<a href="#" aria-label="Next page" style="width: 44px; height: 44px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg></a>
+</nav>
+</section>
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1140}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { view: 'list', types: { Weekend: true, Desert: true } }; }
+  renderVals() {
+    const s = this.state;
+    const chip = (on) => 'min-height: 40px; padding: 0 14px; border-radius: 999px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; ' + (on ? 'background: #262a67; color: #f6f3e4; border: 1px solid #262a67;' : 'background: #ffffff; color: #262a67; border: 1px solid #7b7fa6;');
+    const types = ['Weekend', 'Family', 'Desert', 'Sea', 'Hiking', 'Schools'].map((t) => {
+      const on = !!s.types[t];
+      return { t, pressed: on ? 'true' : 'false', style: chip(on), toggle: () => this.setState({ types: { ...s.types, [t]: !on } }) };
+    });
+    const orgs = [{ t: 'Sunrise Tours Co.', n: '9', on: true }, { t: 'Najd Adventures', n: '7', on: true }, { t: 'Hijaz Journeys', n: '8', on: false }];
+    const features = [{ t: 'Live bus tracking', on: true }, { t: 'Choose your own seat', on: false }, { t: 'Child tracking for parents', on: false }, { t: 'Free cancellation 7+ days', on: false }];
+    const T = [
+      { title: 'AlUla Heritage Weekend', org: 'Sunrise Tours Co.', rating: '4.9', reviews: '212', meta: 'Thu 16 – Sat 18 Oct · 3 days', feat: 'Live tracking · Choose seats', seats: '38 seats left', low: false, price: '1,250', badge: '', img: '../assets/44a218548719fe367b614a0dd5151345.svg', alt: 'AlUla sandstone rocks under a night sky' },
+      { title: 'Edge of the World Hike', org: 'Najd Adventures', rating: '4.7', reviews: '96', meta: 'Sat 25 Oct · day trip', feat: 'Live tracking', seats: '18 seats left', low: false, price: '275', badge: '', img: '../assets/767dc865917d29911dbc19beb44053f6.svg', alt: 'Hikers at the Edge of the World cliffs at sunrise' },
+      { title: 'Taif Rose Farms', org: 'Sunrise Tours Co.', rating: '4.8', reviews: '140', meta: 'Thu 30 Oct · day trip', feat: 'Live tracking · Family', seats: '3 seats left', low: true, price: '410', badge: 'Almost full', img: '../assets/cc51d7ccafd703646b5cfbed3b8222aa.svg', alt: 'Taif rose farms below green mountains' },
+      { title: 'Diriyah Evening Walk', org: 'Sunrise Tours Co.', rating: '4.6', reviews: '58', meta: 'Tue 21 Oct · evening', feat: 'Family friendly', seats: '22 seats left', low: false, price: '140', badge: '', img: '../assets/ec6a722ee32901158955f2a8dec188bd.svg', alt: 'Diriyah old town at dusk' },
+      { title: 'Empty Quarter Dunes Camp', org: 'Najd Adventures', rating: '4.8', reviews: '74', meta: 'Thu 23 – Fri 24 Oct · 2 days', feat: 'Live tracking · Choose seats', seats: '12 seats left', low: false, price: '890', badge: 'New', img: '../assets/dd052dab07949cd087d95323479af226.svg', alt: 'Group around a campfire in the dunes' },
+      { title: 'Ushaiger Heritage Village', org: 'Najd Adventures', rating: '4.5', reviews: '41', meta: 'Fri 31 Oct · day trip', feat: 'Family friendly', seats: '30 seats left', low: false, price: '195', badge: '', img: '../assets/ec6a722ee32901158955f2a8dec188bd.svg', alt: 'Mud-brick heritage village at dusk' }
+    ];
+    const trips = T.map((t) => ({ ...t, hasImg: !!t.img, noImg: !t.img, hasBadge: !!t.badge, seatStyle: 'font-size: 13px; font-weight: 600; color: ' + (t.low ? '#b42318' : '#1f7a4d') }));
+    const pinBase = 'position: absolute; padding: 6px 12px; border-radius: 999px; font-size: 14px; font-weight: 700; text-decoration: none; ';
+    const pins = [
+      { t: 'AlUla · 1,250 SAR', x: '12%', y: '22%', on: true }, { t: 'Edge of the World · 275 SAR', x: '36%', y: '46%' },
+      { t: 'Taif · 410 SAR', x: '20%', y: '74%' }, { t: 'Diriyah · 140 SAR', x: '58%', y: '40%' }
+    ].map((p) => ({ t: p.t, style: pinBase + 'left: ' + p.x + '; top: ' + p.y + '; ' + (p.on ? 'background: #ff6c2e; color: #262a67;' : 'background: #ffffff; color: #262a67; border: 1px solid #7b7fa6;') }));
+    const pages = ['1', '2', '3', '4'].map((n) => ({ n, cur: n === '1' ? 'page' : 'false',
+      style: 'min-width: 44px; height: 44px; box-sizing: border-box; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 600; text-decoration: none; ' + (n === '1' ? 'background: #262a67; color: #f6f3e4;' : 'background: #ffffff; color: #262a67; border: 1px solid #e3dfc9;') }));
+    const isMap = s.view === 'map';
+    const seg = (on) => 'min-width: 64px; height: 36px; padding: 0 14px; border: 0; border-radius: 999px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; ' + (on ? 'background: #262a67; color: #f6f3e4;' : 'background: transparent; color: #262a67;');
+    return { types, orgs, features, trips, pins, pages, isMap, isList: !isMap,
+      listPressed: isMap ? 'false' : 'true', mapPressed: isMap ? 'true' : 'false', listStyle: seg(!isMap), mapStyle: seg(isMap),
+      showList: () => this.setState({ view: 'list' }), showMap: () => this.setState({ view: 'map' }) };
+  }
+}
+</script>
+</body>
+</html>

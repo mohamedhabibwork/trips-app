@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Studio web · Profile</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+.te-nav:focus-visible{outline:2px solid #f89e23;outline-offset:2px}
+.te-radio:focus-within{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="min-height: 1000px; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif; display: flex; flex-direction: column">
+
+<header style="background: #1a1c4b; color: #f6f3e4">
+<div style="box-sizing: border-box; padding: 12px 40px; display: flex; flex-wrap: wrap; align-items: center; gap: 16px 28px">
+<a href="PhoWebHome.dc.html" class="te-nav" style="display: flex; align-items: center; gap: 10px; text-decoration: none"><img src="../assets/6ea846350ba3adc0e289d47fa0612c3b.svg" alt="Trips Enjoy" style="height: 36px; width: auto"><span style="padding: 2px 10px; border-radius: 999px; background: #f89e23; color: #1a1c4b; font-size: 12px; font-weight: 700">Studio</span></a>
+<nav aria-label="Studio" style="display: flex; flex-wrap: wrap; gap: 4px; flex-grow: 1">
+<sc-for list="{{nav}}" as="n" hint-placeholder-count="8"><a href="{{n.href}}" class="te-nav" aria-current="{{n.cur}}" style="{{n.style}}">{{n.label}}</a></sc-for>
+</nav>
+<a href="PhoWebProfile.dc.html" class="te-nav" style="display: flex; align-items: center; gap: 10px; color: #f6f3e4; text-decoration: none">
+<span style="display: flex; flex-direction: column; align-items: flex-end"><span style="font-size: 14px; font-weight: 600">Laila Fathy</span><span style="font-size: 12px; color: #b8bad6">Studio plan · Verified</span></span>
+<span style="width: 40px; height: 40px; border-radius: 999px; background: #31367a; color: #f89e23; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; overflow: hidden" aria-hidden="true"><img src="../assets/fa4aea3b99ab1c92ea071dc7fc9f9299.svg" alt="" style="width: 100%; height: 100%; object-fit: cover"></span>
+</a>
+</div>
+</header>
+
+<div style="box-sizing: border-box; width: 100%; max-width: 1440px; margin: 0 auto; padding: 24px 40px 40px; display: flex; flex-direction: column; gap: 20px">
+
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 700">Profile and visibility</h1>
+<span style="font-size: 14px; color: #5b5f86">This is what organizations see in the photographer pool and on deal requests.</span>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center">
+<sc-if value="{{saved}}" hint-placeholder-val="{{false}}"><span role="status" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px; background: #e3f3ea; color: #1f7a4d; font-size: 14px; font-weight: 600"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg>Saved · live on your profile</span></sc-if>
+<a href="PhoWebPortfolio.dc.html" style="height: 48px; box-sizing: border-box; padding: 0 20px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-size: 15px; font-weight: 600; display: flex; align-items: center; text-decoration: none">Edit portfolio</a>
+<button onClick="{{save}}" style="height: 48px; padding: 0 24px; border: 0; border-radius: 12px; background: #ff6c2e; color: #262a67; font: inherit; font-size: 15px; font-weight: 700; cursor: pointer">Save profile</button>
+</div>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start">
+
+<form aria-labelledby="pd-h" style="flex: 3 1 560px; min-width: 0; padding: 24px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 18px">
+<h2 id="pd-h" style="margin: 0; font-size: 20px; font-weight: 600">Profile details</h2>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px">
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="fn" style="font-size: 14px; font-weight: 600">Full name <span style="color: #b42318">*</span></label><input id="fn" required value="Laila Fathy" style="height: 52px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; padding: 0 14px; font: inherit; font-size: 16px; color: #262a67"></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="sn" style="font-size: 14px; font-weight: 600">Studio name <span style="font-weight: 400; color: #5b5f86">(optional)</span></label><input id="sn" value="Laila Fathy Studio" style="height: 52px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; padding: 0 14px; font: inherit; font-size: 16px; color: #262a67"></div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="ds" style="font-size: 14px; font-weight: 600">Description</label><textarea id="ds" rows="3" style="box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; padding: 12px 14px; font: inherit; font-size: 16px; line-height: 1.45; color: #262a67; resize: vertical">Group and travel photographer based in Cairo. I shoot desert and oasis trips, school days out and beach weekends, and deliver edited albums the week after the trip.</textarea><span style="font-size: 13px; color: #5b5f86">164 of 600 characters</span></div>
+
+<fieldset style="margin: 0; padding: 0; border: 0; display: flex; flex-direction: column; gap: 8px">
+<legend style="padding: 0 0 8px; font-size: 14px; font-weight: 600">Specialties</legend>
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{specs}}" as="s" hint-placeholder-count="4"><button type="button" aria-pressed="{{s.on}}" onClick="{{s.go}}" style="{{s.style}}">{{s.label}}</button></sc-for>
+</div>
+</fieldset>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px">
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="ct" style="font-size: 14px; font-weight: 600">Service country</label><select id="ct" style="height: 52px; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; padding: 0 12px; font: inherit; font-size: 16px; color: #262a67"><option>Egypt</option><option>Saudi Arabia (from phase 5)</option><option>United Arab Emirates (from phase 5)</option></select></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="cy" style="font-size: 14px; font-weight: 600">Add a city</label><select id="cy" style="height: 52px; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; padding: 0 12px; font: inherit; font-size: 16px; color: #262a67"><option>Choose a city</option><option>Fayoum</option><option>Luxor</option><option>Aswan</option><option>Hurghada</option><option>Siwa</option></select></div>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 8px" aria-label="Cities you cover">
+<sc-for list="{{cities}}" as="c" hint-placeholder-count="3"><span style="display: inline-flex; align-items: center; gap: 4px; height: 36px; padding: 0 6px 0 12px; border-radius: 999px; background: #e6e8f5; font-size: 14px; font-weight: 600">{{c.n}}<button type="button" aria-label="{{c.rm}}" style="width: 28px; height: 28px; border: 0; border-radius: 999px; background: transparent; color: #262a67; cursor: pointer; display: flex; align-items: center; justify-content: center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></button></span></sc-for>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px">
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="em" style="font-size: 14px; font-weight: 600">Contact email</label><input id="em" type="email" value="laila@lailafathy.studio" style="height: 52px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; padding: 0 14px; font: inherit; font-size: 16px; color: #262a67"><span style="display: inline-flex; align-items: center; gap: 4px; font-size: 13px; color: #1f7a4d"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg>Verified</span></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="ph" style="font-size: 14px; font-weight: 600">Contact phone</label><input id="ph" type="tel" value="+20 10 ••• 2210" style="height: 52px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; padding: 0 14px; font: inherit; font-size: 16px; color: #262a67"><span style="display: inline-flex; align-items: center; gap: 4px; font-size: 13px; color: #1f7a4d"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg>Verified · changing it sends a new code</span></div>
+</div>
+</form>
+
+<aside style="flex: 2 1 360px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+<section aria-labelledby="vis-h" style="padding: 20px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 10px">
+<h2 id="vis-h" style="margin: 0; font-size: 20px; font-weight: 600">Visibility in the pool</h2>
+<span style="font-size: 13px; line-height: 18px; color: #5b5f86">Your plan sets how high you appear when organizations search for a photographer.</span>
+<sc-for list="{{vis}}" as="v" hint-placeholder-count="3">
+<label class="te-radio" style="{{v.style}}">
+<input type="radio" name="vis" checked="{{v.on}}" disabled="{{v.locked}}" onChange="{{v.go}}" style="width: 18px; height: 18px; margin: 2px 0 0; accent-color: #262a67; flex-shrink: 0">
+<span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 15px; font-weight: 600">{{v.t}} <span style="{{v.bs}}">{{v.badge}}</span></span><span style="font-size: 13px; line-height: 18px; color: #5b5f86">{{v.d}}</span></span>
+</label>
+</sc-for>
+<a href="../mobile/PhoPlanManage.dc.html" style="font-size: 14px; font-weight: 600">Top placement needs Pro · Compare plans</a>
+</section>
+
+<section aria-labelledby="pv-h" style="padding: 20px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 12px">
+<h2 id="pv-h" style="margin: 0; font-size: 16px; font-weight: 600">How organizations see you</h2>
+<div style="display: flex; gap: 12px; align-items: center">
+<img src="../assets/fa4aea3b99ab1c92ea071dc7fc9f9299.svg" alt="" style="width: 64px; height: 64px; border-radius: 999px; object-fit: cover">
+<span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 17px; font-weight: 700">Laila Fathy Studio</span><span style="font-size: 13px; color: #5b5f86">Laila Fathy · Cairo, Giza, Alexandria</span>
+<span style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px"><span style="display: inline-flex; align-items: center; gap: 4px; padding: 2px 10px; border-radius: 999px; background: #e3f3ea; color: #1f7a4d; font-size: 12px; font-weight: 700"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5.5c0 4.4-3 8-7 9.5-4-1.5-7-5.1-7-9.5V6zM9 12l2 2 4-4"></path></svg>Verified</span><span style="padding: 2px 10px; border-radius: 999px; background: #1a1c4b; color: #f89e23; font-size: 12px; font-weight: 700">Featured</span><span style="display: inline-flex; align-items: center; gap: 4px; padding: 2px 10px; border-radius: 999px; background: #e6e8f5; font-size: 12px; font-weight: 600">4.8 · 23 trips</span></span></span>
+</div>
+<p style="margin: 0; font-size: 13px; line-height: 18px; color: #5b5f86">The verified badge shows on Studio and Pro. On Basic, the profile shows without a badge at standard visibility.</p>
+</section>
+</aside>
+
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { saved: false, vis: 'featured', specs: { Group: true, Travel: true, Event: false, Portrait: false } }; }
+  renderVals() {
+    const nav = [['Home', 'PhoWebHome'], ['Portfolio', 'PhoWebPortfolio'], ['Profile', 'PhoWebProfile'], ['Rates', 'PhoWebRates'], ['Deals', 'PhoWebDeals'], ['Albums', 'PhoWebAlbums'], ['Earnings', 'PhoWebEarnings'], ['Coupons', 'PhoWebCoupons']].map(([label, f]) => {
+      const on = label === 'Profile';
+      return { label, href: f + '.dc.html', cur: on ? 'page' : 'false',
+        style: 'height: 40px; padding: 0 14px; border-radius: 999px; display: flex; align-items: center; font-size: 15px; font-weight: 600; text-decoration: none; ' + (on ? 'background: #31367a; color: #f89e23;' : 'color: #f6f3e4;') };
+    });
+    const specs = ['Event', 'Group', 'Portrait', 'Travel'].map((label) => {
+      const on = !!this.state.specs[label];
+      return { label, on: on ? 'true' : 'false', go: () => this.setState({ saved: false, specs: { ...this.state.specs, [label]: !on } }),
+        style: 'height: 40px; padding: 0 16px; border-radius: 999px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; ' + (on ? 'background: #262a67; color: #f6f3e4; border: 1px solid #262a67;' : 'background: #ffffff; color: #262a67; border: 1px solid #7b7fa6;') };
+    });
+    const cities = ['Cairo', 'Giza', 'Alexandria'].map((n) => ({ n, rm: 'Remove ' + n }));
+    const vis = [
+      { id: 'standard', t: 'Standard', d: 'Listed in search results in the usual order', badge: 'Basic' },
+      { id: 'featured', t: 'Featured', d: 'Shown in the featured row above other results', badge: 'Studio · your plan' },
+      { id: 'top', t: 'Top placement', d: 'First in results for your cities', badge: 'Pro', locked: true }
+    ].map((v) => {
+      const on = this.state.vis === v.id;
+      return { ...v, on, locked: !!v.locked, go: () => this.setState({ vis: v.id, saved: false }),
+        bs: 'margin-inline-start: 4px; padding: 0 8px; border-radius: 999px; font-size: 11px; font-weight: 700; ' + (v.locked ? 'background: #262a67; color: #f6f3e4;' : 'background: #e6e8f5; color: #262a67;'),
+        style: 'padding: 12px; border-radius: 12px; display: flex; gap: 10px; align-items: flex-start; ' + (v.locked ? 'cursor: not-allowed; border: 1px dashed #7b7fa6; background: #f6f3e4;' : 'cursor: pointer; ' + (on ? 'border: 2px solid #fb8030; background: #ffffff;' : 'border: 2px solid #e3dfc9; background: #ffffff;')) };
+    });
+    return { nav, specs, cities, vis, saved: this.state.saved, save: () => this.setState({ saved: true }) };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Sign in — web</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); font-family: Outfit, Nunito, system-ui, sans-serif; color: #262a67; background: #f6f3e4">
+<div style="background: #262a67; color: #f6f3e4; padding: 48px; display: flex; flex-direction: column; gap: 32px">
+<img src="../assets/6ea846350ba3adc0e289d47fa0612c3b.svg" alt="Trips Enjoy — تريبس إنجوي" style="height: 56px; width: auto; align-self: flex-start">
+<img src="../assets/d69d91e9f1749b4b6bbebf258113beb4.png" alt="Trip bus on a desert road at sunset" style="flex-grow: 1; min-height: 0; width: 100%; object-fit: cover; object-position: center; border-radius: 20px; display: block">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<h2 style="margin: 0; font-size: 40px; line-height: 48px; font-weight: 700">Every trip, together.</h2>
+<p style="margin: 0; font-size: 16px; line-height: 24px; color: #b8bad6">Travelers, parents, drivers, photographers and organizers — one account, one place.</p>
+</div>
+</div>
+<div style="display: flex; align-items: center; justify-content: center; padding: 48px">
+<div style="width: 420px; display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<h1 style="margin: 0; font-size: 32px; line-height: 40px; font-weight: 700">Sign in</h1>
+<p style="margin: 0; font-size: 16px; color: #5b5f86">Welcome back to Trips Enjoy.</p>
+</div>
+<div role="tablist" style="display: flex; padding: 4px; border-radius: 999px; background: #e3dfc9; gap: 4px">
+<button role="tab" aria-selected="{{phoneSel}}" onClick="{{toPhone}}" style="{{tabPhone}}">Phone</button>
+<button role="tab" aria-selected="{{emailSel}}" onClick="{{toEmail}}" style="{{tabEmail}}">Email</button>
+</div>
+<sc-if value="{{isPhone}}" hint-placeholder-val="{{true}}">
+<dc-import name="PhoneField" label="Mobile number" value="551234821" country="SA" field-id="ws-phone" hint-size="100%,82px"></dc-import>
+</sc-if>
+<sc-if value="{{isEmail}}" hint-placeholder-val="{{false}}">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="ws-email" style="font-size: 14px; font-weight: 600">Email</label>
+<input id="ws-email" type="email" autocomplete="email" value="sara@example.com" style="height: 52px; box-sizing: border-box; padding: 0 14px; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-family: inherit; font-size: 16px">
+</div>
+</sc-if>
+<div style="display: flex; flex-direction: column; gap: 4px">
+<dc-import name="PasswordField" label="Password" value="Trips2026" error="Wrong password. 3 attempts left before a 15-minute pause." field-id="ws-pass" hint-size="100%,106px"></dc-import>
+<a href="WebForgot.dc.html" style="align-self: flex-end; font-size: 14px; font-weight: 600; padding: 8px 0">Forgot password?</a>
+</div>
+<label style="display: flex; align-items: center; gap: 8px; font-size: 14px"><input type="checkbox" checked="" style="width: 18px; height: 18px; accent-color: #262a67">Keep me signed in on this computer</label>
+<a href="WebLoginVerify.dc.html" style="height: 52px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 16px; font-weight: 600; display: flex; align-items: center; justify-content: center; text-decoration: none">Sign in</a>
+<div style="display: flex; align-items: center; gap: 12px; color: #5b5f86; font-size: 13px"><span style="flex-grow: 1; height: 1px; background: #e3dfc9"></span>or continue with<span style="flex-grow: 1; height: 1px; background: #e3dfc9"></span></div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
+<button style="height: 48px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-family: inherit; font-size: 15px; font-weight: 600">Google</button>
+<button style="height: 48px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-family: inherit; font-size: 15px; font-weight: 600">Apple</button>
+</div>
+<p style="margin: 0; text-align: center; font-size: 14px; color: #5b5f86">No account yet? <a href="WebRegister.dc.html" style="font-weight: 600">Create one</a> · <a href="WebHomeAr.dc.html" style="font-weight: 600; font-family: Cairo, sans-serif">العربية</a></p>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+constructor(p) { super(p); this.state = { tab: 'phone' }; }
+renderVals() {
+const t = (on) => 'flex-grow: 1; height: 40px; border-radius: 999px; border: none; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; ' + (on ? 'background: #ffffff; color: #262a67;' : 'background: transparent; color: #5b5f86;');
+const p = this.state.tab === 'phone';
+return { isPhone: p, isEmail: !p, phoneSel: p ? 'true' : 'false', emailSel: p ? 'false' : 'true', tabPhone: t(p), tabEmail: t(!p),
+toPhone: () => this.setState({ tab: 'phone' }), toEmail: () => this.setState({ tab: 'email' }) };
+}
+}
+</script>
+</body>
+</html>

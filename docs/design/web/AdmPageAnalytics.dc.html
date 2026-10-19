@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Admin · Page and app analytics</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;family=Cairo:wght@500;600&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+.te-row:hover{background:#f6f3e4}
+</style>
+</helmet>
+<div style="min-height: 1000px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="AdmNav" active="Analytics" hint-size="248px,1000px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 20px">
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; color: #5b5f86">trips-enjoy.com and the Trips Enjoy apps · traffic, funnel, search and performance · updated today 09:00</span><h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Analytics</h1></div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center">
+<label for="pa-range" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Date range</label>
+<select id="pa-range" style="height: 48px; border-radius: 12px; border: 1px solid #7b7fa6; background: #fff; padding: 0 14px; font: inherit; font-size: 15px; font-weight: 600; color: #262a67"><option>October to date · 1–14 Oct 2026</option><option>Last 7 days</option><option>Last 30 days</option><option>This quarter</option><option>Custom range…</option></select>
+<button type="button" style="height: 48px; padding: 0 20px; border-radius: 12px; border: 0; background: #ff6c2e; color: #262a67; font: inherit; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12M7 11l5 5 5-5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"></path></svg>Export CSV</button>
+</div>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; border-bottom: 1px solid #e3dfc9">
+<nav aria-label="Analytics sections" style="display: flex; flex-wrap: wrap; gap: 4px">
+<sc-for list="{{tabs}}" as="t" hint-placeholder-count="5"><a href="{{t.href}}" aria-current="{{t.cur}}" style="{{t.st}}">{{t.l}}</a></sc-for>
+</nav>
+<div role="group" aria-label="Country" style="display: flex; flex-wrap: wrap; gap: 4px; padding: 4px; margin-bottom: 8px; background: #ffffff; border-radius: 999px">
+<sc-for list="{{countries}}" as="c" hint-placeholder-count="4"><button type="button" aria-pressed="{{c.p}}" onClick="{{c.on}}" style="{{c.st}}">{{c.l}}</button></sc-for>
+</div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px">
+<sc-for list="{{kpis}}" as="k" hint-placeholder-count="6">
+<div style="padding: 14px 18px; border-radius: 16px; background: #ffffff; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 13px; color: #5b5f86">{{k.l}}</span><span style="font-size: 24px; font-weight: 700">{{k.v}} <span style="font-size: 14px; font-weight: 500; color: #5b5f86">{{k.u}}</span></span><span style="{{k.ds}}">{{k.d}}</span></div>
+</sc-for>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: stretch">
+<section aria-labelledby="tr-h" style="flex: 3 1 520px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px"><h2 id="tr-h" style="margin: 0; font-size: 18px; font-weight: 600">Sessions per day</h2>
+<span style="display: flex; flex-wrap: wrap; gap: 14px; font-size: 13px; color: #5b5f86"><span style="display: inline-flex; align-items: center; gap: 6px"><span style="width: 14px; height: 3px; border-radius: 2px; background: #262a67"></span>App · iOS and Android</span><span style="display: inline-flex; align-items: center; gap: 6px"><span style="width: 14px; height: 3px; border-radius: 2px; background: #ff6c2e"></span>Web · trips-enjoy.com</span></span></div>
+<svg viewBox="0 0 660 170" role="img" aria-label="Daily sessions 1 to 14 October. App between 78 and 99 thousand a day, web between 48 and 60 thousand. Both peak on Thursday and Friday, 2 and 9 October." style="width: 100%; height: auto; display: block; font-family: Outfit, sans-serif">
+<g stroke="#e3dfc9" stroke-width="1"><line x1="48" y1="10" x2="640" y2="10"></line><line x1="48" y1="42.5" x2="640" y2="42.5"></line><line x1="48" y1="75" x2="640" y2="75"></line><line x1="48" y1="107.5" x2="640" y2="107.5"></line><line x1="48" y1="140" x2="640" y2="140"></line></g>
+<g fill="#5b5f86" font-size="12" text-anchor="end"><text x="38" y="14">120K</text><text x="38" y="46.5">90K</text><text x="38" y="79">60K</text><text x="38" y="111.5">30K</text><text x="38" y="144">0</text></g>
+<g fill="#5b5f86" font-size="12" text-anchor="middle"><text x="48" y="162" text-anchor="start">01 Oct</text><text x="181.8" y="162">04 Oct</text><text x="315.7" y="162">07 Oct</text><text x="449.5" y="162">10 Oct</text><text x="640" y="162" text-anchor="end">14 Oct</text></g>
+<path d="{{traffic.app}}" fill="none" stroke="#262a67" stroke-width="3" stroke-linejoin="round"></path>
+<path d="{{traffic.web}}" fill="none" stroke="#ff6c2e" stroke-width="3" stroke-linejoin="round"></path>
+</svg>
+<p style="margin: 0; font-size: 14px; line-height: 20px"><span style="font-weight: 600">Takeaway:</span> 62% of sessions are in the app; both channels peak Thursday and Friday as weekend trips are booked.</p>
+</section>
+
+<section aria-labelledby="src-h" style="flex: 2 1 320px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px"><h2 id="src-h" style="margin: 0; font-size: 18px; font-weight: 600">Traffic sources</h2><span style="font-size: 13px; color: #5b5f86">612K users</span></div>
+<sc-for list="{{sources}}" as="s" hint-placeholder-count="6">
+<div style="display: grid; grid-template-columns: minmax(120px, 1.3fr) minmax(0, 1.5fr) 40px; gap: 10px; align-items: center; font-size: 14px">
+<span style="font-weight: 600">{{s.l}}</span>
+<div role="img" aria-label="{{s.aria}}" style="height: 12px; border-radius: 999px; background: #f6f3e4; overflow: hidden"><div style="{{s.bar}}"></div></div>
+<span style="text-align: end; font-weight: 700">{{s.v}}</span>
+</div>
+</sc-for>
+<p style="margin: auto 0 0; padding-top: 4px; font-size: 14px; line-height: 20px"><span style="font-weight: 600">Takeaway:</span> Social now sends more users than direct; TikTok alone is 11%.</p>
+</section>
+</div>
+
+<section aria-labelledby="fn-h" style="background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px"><h2 id="fn-h" style="margin: 0; font-size: 18px; font-weight: 600">Marketplace funnel · last 7 days</h2><span style="font-size: 13px; color: #5b5f86">Sessions reaching each step · overall 3.1% · app 3.6% · web 2.3%</span></div>
+<div role="img" aria-label="Funnel: 522,600 searches, 339,700 trip page views, 74,700 booking starts, 29,100 reached payment, 16,200 booked. Biggest drop is trip page to booking start, 78% leave." style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px">
+<sc-for list="{{funnel}}" as="f" hint-placeholder-count="5">
+<div style="display: flex; flex-direction: column; gap: 6px; min-width: 0">
+<span style="display: flex; justify-content: space-between; align-items: baseline; gap: 6px; flex-wrap: wrap"><span style="font-size: 14px; font-weight: 600">{{f.l}}</span><span style="{{f.ds}}">{{f.drop}}</span></span>
+<span style="font-size: 22px; font-weight: 700; line-height: 26px">{{f.n}}</span>
+<div style="height: 72px; display: flex; align-items: flex-end; border-bottom: 1px solid #e3dfc9"><div style="{{f.bar}}"></div></div>
+<span style="font-size: 13px; color: #5b5f86">{{f.p}}</span>
+</div>
+</sc-for>
+</div>
+<p style="margin: 0; font-size: 14px; line-height: 20px"><span style="font-weight: 600">Takeaway:</span> 78% leave between the trip page and starting a booking; trip pages without a seat map or photos convert 40% worse.</p>
+</section>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: stretch">
+<section aria-labelledby="sq-h" style="flex: 2 1 360px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 16px 0 8px; display: flex; flex-direction: column">
+<div style="display: flex; flex-direction: column; gap: 2px; padding: 0 20px 8px"><h2 id="sq-h" style="margin: 0; font-size: 18px; font-weight: 600">Top search terms</h2><span style="font-size: 13px; color: #5b5f86">App and web · English and Arabic</span></div>
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 360px; border-collapse: collapse; font-size: 14px">
+<thead><tr style="color: #5b5f86; font-size: 12px"><th scope="col" style="text-align: start; padding: 6px 8px 6px 20px; font-weight: 600">Term</th><th scope="col" style="text-align: end; padding: 6px 8px; font-weight: 600">Searches</th><th scope="col" style="text-align: end; padding: 6px 8px; font-weight: 600">Clicked</th><th scope="col" style="text-align: end; padding: 6px 20px 6px 8px; font-weight: 600">Booked</th></tr></thead>
+<tbody>
+<sc-for list="{{terms}}" as="s" hint-placeholder-count="6">
+<tr style="border-top: 1px solid #e3dfc9"><td style="padding: 8px 8px 8px 20px; font-weight: 600"><span dir="{{s.dir}}" lang="{{s.lang}}" style="{{s.fs}}">{{s.t}}</span></td><td style="padding: 8px; text-align: end">{{s.n}}</td><td style="padding: 8px; text-align: end">{{s.c}}</td><td style="padding: 8px 20px 8px 8px; text-align: end"><span style="{{s.bs}}">{{s.b}}</span></td></tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+<p style="margin: 0; padding: 10px 20px 8px; font-size: 14px; line-height: 20px"><span style="font-weight: 600">Takeaway:</span> 3,410 searched "Abha winter" and found nothing; 28% of searches are in Arabic.</p>
+</section>
+
+<section aria-labelledby="tp-h" style="flex: 3 1 520px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 16px 0 8px; display: flex; flex-direction: column">
+<div style="display: flex; flex-direction: column; gap: 2px; padding: 0 20px 8px"><h2 id="tp-h" style="margin: 0; font-size: 18px; font-weight: 600">Top pages and screens</h2><span style="font-size: 13px; color: #5b5f86">Open a row to see the screen</span></div>
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 560px; border-collapse: collapse; font-size: 14px">
+<thead><tr style="color: #5b5f86; font-size: 12px"><th scope="col" style="text-align: start; padding: 6px 8px 6px 20px; font-weight: 600">Page or screen</th><th scope="col" style="text-align: start; padding: 6px 8px; font-weight: 600">Where</th><th scope="col" style="text-align: end; padding: 6px 8px; font-weight: 600">Views</th><th scope="col" style="text-align: end; padding: 6px 8px; font-weight: 600">Avg time</th><th scope="col" style="text-align: end; padding: 6px 20px 6px 8px; font-weight: 600">Exit rate</th></tr></thead>
+<tbody>
+<sc-for list="{{pages}}" as="p" hint-placeholder-count="6">
+<tr class="te-row" style="border-top: 1px solid #e3dfc9"><td style="padding: 8px 8px 8px 20px"><a href="{{p.href}}" style="color: #262a67; font-weight: 600; text-decoration: none">{{p.n}}</a></td><td style="padding: 8px"><span style="{{p.ws}}">{{p.w}}</span></td><td style="padding: 8px; text-align: end">{{p.v}}</td><td style="padding: 8px; text-align: end">{{p.t}}</td><td style="padding: 8px 20px 8px 8px; text-align: end; {{p.es}}">{{p.e}}</td></tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+<p style="margin: 0; padding: 10px 20px 8px; font-size: 14px; line-height: 20px"><span style="font-weight: 600">Takeaway:</span> Parents keep the live map open 4:42 on average, the stickiest screen in the app.</p>
+</section>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: stretch">
+<section aria-labelledby="av-h" style="flex: 1 1 420px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px"><div style="display: flex; flex-direction: column; gap: 2px"><h2 id="av-h" style="margin: 0; font-size: 18px; font-weight: 600">App versions and crash-free users</h2><span style="font-size: 13px; color: #5b5f86">Version · share of users · crash-free (bar 97–100%) · status</span></div><a href="../mobile/ShMobUpdate.dc.html" style="font-size: 14px; font-weight: 600">Forced update screen</a></div>
+<sc-for list="{{versions}}" as="v" hint-placeholder-count="5">
+<div style="display: grid; grid-template-columns: minmax(110px, 1fr) 48px minmax(0, 1.2fr) 56px minmax(0, auto); gap: 10px; align-items: center; font-size: 14px">
+<span style="font-weight: 600">{{v.n}}</span>
+<span style="color: #5b5f86">{{v.s}}</span>
+<div role="img" aria-label="{{v.aria}}" style="height: 10px; border-radius: 999px; background: #f6f3e4; overflow: hidden"><div style="{{v.bar}}"></div></div>
+<span style="font-weight: 700; text-align: end">{{v.c}}</span>
+<span style="{{v.ss}}">{{v.st}}</span>
+</div>
+</sc-for>
+<p style="margin: auto 0 0; font-size: 14px; line-height: 20px"><span style="font-weight: 600">Takeaway:</span> Android 3.7.9 crashes on the seat map; 9% of users are still on it, so raise the minimum to 3.8.</p>
+</section>
+
+<section aria-labelledby="lcp-h" style="flex: 1 1 420px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px"><h2 id="lcp-h" style="margin: 0; font-size: 18px; font-weight: 600">Page speed · LCP</h2>
+<span style="display: flex; flex-wrap: wrap; gap: 12px; font-size: 13px; color: #5b5f86"><span style="display: inline-flex; align-items: center; gap: 6px"><span style="width: 0; height: 12px; border-left: 2px dashed #b42318"></span>2.5 s target</span><span>75th percentile, mobile web</span></span></div>
+<sc-for list="{{lcp}}" as="l" hint-placeholder-count="6">
+<div style="display: grid; grid-template-columns: minmax(120px, 1fr) minmax(0, 1.6fr) 44px; gap: 10px; align-items: center; font-size: 14px">
+<span style="font-weight: 600">{{l.n}}</span>
+<div role="img" aria-label="{{l.aria}}" style="position: relative; height: 14px; border-radius: 4px; background: #f6f3e4"><div style="{{l.bar}}"></div><span aria-hidden="true" style="position: absolute; top: -3px; bottom: -3px; left: 62.5%; border-left: 2px dashed #b42318"></span></div>
+<span style="{{l.vs}}">{{l.v}}</span>
+</div>
+</sc-for>
+<p style="margin: auto 0 0; padding-top: 4px; font-size: 14px; line-height: 20px"><span style="font-weight: 600">Takeaway:</span> Organizer pages are slowest at 3.4 s, mostly from uncompressed banner images.</p>
+</section>
+</div>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1600}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { country: 'All countries' }; }
+  renderVals() {
+    const pill = (tone) => 'justify-self: start; display: inline-flex; padding: 2px 8px; border-radius: 999px; font-size: 12px; font-weight: 600; white-space: nowrap; ' + ({ ok: 'background: #e3f3ea; color: #1f7a4d;', warn: 'background: #fdf0d5; color: #8a4b00;', bad: 'background: #fde8e6; color: #b42318;', info: 'background: #e6e8f5; color: #262a67;', cream: 'background: #f6f3e4; color: #262a67;' })[tone];
+    const TABS = [['Platform', 'AdmAnalytics.dc.html'], ['Companies', 'AdmCompanyAnalytics.dc.html'], ['Trips', 'AdmTripAnalytics.dc.html'], ['Pages & app', 'AdmPageAnalytics.dc.html'], ['Providers', 'AdmProviderAnalytics.dc.html']];
+    const tabs = TABS.map(([l, href]) => { const on = l === 'Pages & app'; return { l, href, cur: on ? 'page' : 'false', st: 'display: flex; align-items: center; height: 44px; padding: 0 14px; font-size: 15px; text-decoration: none; margin-bottom: -1px; border-bottom: 3px solid ' + (on ? '#ff6c2e; font-weight: 700; color: #262a67;' : 'transparent; font-weight: 500; color: #5b5f86;') }; });
+    const country = this.state.country;
+    const countries = ['All countries', 'Saudi Arabia', 'UAE', 'Egypt'].map((l) => ({ l, p: l === country ? 'true' : 'false', on: () => this.setState({ country: l }),
+      st: 'height: 40px; padding: 0 14px; border-radius: 999px; border: 0; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; ' + (l === country ? 'background: #262a67; color: #f6f3e4;' : 'background: transparent; color: #262a67;') }));
+    const up = 'font-size: 13px; font-weight: 600; color: #1f7a4d';
+    const mut = 'font-size: 13px; color: #5b5f86';
+    const warn = 'font-size: 13px; font-weight: 600; color: #8a4b00';
+    const K = {
+      'All countries': ['1.92M', '612K', '3.1%'], 'Saudi Arabia': ['1.31M', '418K', '3.3%'], 'UAE': ['0.37M', '119K', '3.2%'], 'Egypt': ['0.24M', '75K', '2.0%']
+    }[country];
+    const kpis = [
+      { l: 'Sessions (Oct to date)', v: K[0], u: '', d: '▲ 12% vs Sep same day', ds: up },
+      { l: 'Users', v: K[1], u: '', d: '41% new this month', ds: mut },
+      { l: 'App share of sessions', v: '62%', u: '', d: '▲ 4 pts vs September', ds: up },
+      { l: 'Search → booked', v: K[2], u: '', d: '▲ 0.2 pts vs September', ds: up },
+      { l: 'Crash-free users', v: '99.4%', u: '', d: 'Android 3.7.9 at 98.1%', ds: warn },
+      { l: 'Median LCP (web)', v: '2.1', u: 's', d: 'Target 2.5 s', ds: mut }
+    ];
+    const APP = [80, 92, 96, 78, 79, 81, 83, 82, 94, 99, 80, 82, 84, 86]; const WEB = [49, 56, 58, 48, 49, 50, 51, 50, 57, 60, 49, 50, 51, 52];
+    const X = (i) => 48 + i * 592 / 13; const Y = (v) => 140 - v / 120 * 130;
+    const pts = (a) => a.map((v, i) => (i ? 'L' : 'M') + X(i).toFixed(1) + ' ' + Y(v).toFixed(1)).join(' ');
+    const traffic = { app: pts(APP), web: pts(WEB) };
+    const SR = [['Organic search', 34], ['Social · Instagram, TikTok, Snapchat', 24], ['Direct', 22], ['Campaigns and email', 9], ['Organizer page referrals', 8], ['Paid search', 3]];
+    const sources = SR.map((s, i) => ({ l: s[0], v: s[1] + '%', aria: s[0] + ': ' + s[1] + '% of users', bar: 'height: 100%; border-radius: 999px; width: ' + Math.round(s[1] / 34 * 100) + '%; background: ' + (i === 1 ? '#ff6c2e' : '#262a67') + ';' }));
+    const FN = [['Search', 522600, '', 'Start'], ['Trip page', 339700, '65% of search', '−35%'], ['Booking start', 74700, '22% of trip page', '−78%'], ['Payment', 29100, '39% of booking start', '−61%'], ['Booked', 16200, '56% of payment', '−44%']];
+    const funnel = FN.map((f, i) => ({ l: f[0], n: f[1].toLocaleString('en-US'), p: i ? f[2] : '100%', drop: i ? f[3] + ' drop' : '',
+      ds: i === 2 ? 'font-size: 12px; font-weight: 700; color: #b42318; background: #fde8e6; padding: 1px 8px; border-radius: 999px' : 'font-size: 12px; font-weight: 600; color: #5b5f86',
+      bar: 'width: 100%; border-radius: 8px 8px 0 0; height: ' + Math.max(4, Math.round(f[1] / 522600 * 72)) + 'px; background: ' + (i === 4 ? '#ff6c2e' : '#262a67') + ';' }));
+    const ar = 'font-family: Cairo, sans-serif; font-weight: 600';
+    const TM = [['AlUla', 48210, '71%', '4.8%', 0], ['العلا', 36940, '68%', '4.5%', 1], ['Red Sea snorkel', 21300, '64%', '3.9%', 0], ['رحلات مدرسية', 14870, '59%', '2.7%', 1], ['Edge of the World', 12650, '73%', '5.2%', 0], ['Abha winter', 3410, '—', 'No results', 0]];
+    const terms = TM.map((t) => ({ t: t[0], n: t[1].toLocaleString('en-US'), c: t[2], b: t[3], dir: t[4] ? 'rtl' : 'ltr', lang: t[4] ? 'ar' : 'en', fs: t[4] ? ar : '',
+      bs: t[3] === 'No results' ? 'display: inline-flex; padding: 2px 8px; border-radius: 999px; font-size: 12px; font-weight: 600; background: #fde8e6; color: #b42318; white-space: nowrap' : '' }));
+    const PG = [['Home', 'App', 612400, '0:48', 18, 'TrvHome.dc.html'], ['Trip details', 'App', 418900, '1:52', 34, 'TrvTrip.dc.html'], ['Explore and search results', 'Web', 286300, '1:05', 29, 'WebExplore.dc.html'], ['AlUla Heritage Weekend trip page', 'Web', 94800, '2:14', 41, 'WebTrip.dc.html'], ['Payment', 'App', 58200, '1:21', 22, 'TrvPay.dc.html'], ['Parent live map', 'App', 33100, '4:42', 12, 'ParLive.dc.html']];
+    const pages = PG.map((p) => ({ n: p[0], w: p[1], ws: pill(p[1] === 'App' ? 'info' : 'cream'), v: p[2].toLocaleString('en-US'), t: p[3], e: p[4] + '%', es: p[4] >= 35 ? 'color: #b42318; font-weight: 600;' : '', href: p[5] }));
+    const VR = [['iOS 3.8.2', '54%', 99.7, 'Current', 'ok'], ['Android 3.8.2', '31%', 99.4, 'Current', 'ok'], ['Android 3.7.9', '9%', 98.1, 'Seat map crash', 'warn'], ['iOS 3.7.4', '4%', 99.2, 'Supported', 'info'], ['Older than 3.7', '2%', 97.6, 'Forced update', 'bad']];
+    const versions = VR.map((v) => ({ n: v[0], s: v[1], c: v[2] + '%', st: v[3], ss: pill(v[4]), aria: v[0] + ': ' + v[1] + ' of users, ' + v[2] + '% crash-free',
+      bar: 'height: 100%; border-radius: 999px; width: ' + Math.round((v[2] - 97) / 3 * 100) + '%; background: ' + (v[2] < 98.5 ? '#f89e23' : '#262a67') + ';' }));
+    const LC = [['Home', 1.8], ['Explore and search', 2.3], ['Checkout', 2.0], ['Trip page', 2.6], ['Album viewer', 2.9], ['Organizer page', 3.4]];
+    const lcp = LC.map((l) => { const bad = l[1] > 2.5; return { n: l[0], v: l[1].toFixed(1) + ' s', aria: l[0] + ': ' + l[1].toFixed(1) + ' seconds' + (bad ? ', over the 2.5 second target' : ', within target'),
+      vs: 'text-align: end; font-weight: 700; color: ' + (bad ? '#b42318' : '#1f7a4d') + ';', bar: 'height: 100%; border-radius: 4px; width: ' + Math.round(l[1] / 4 * 100) + '%; background: ' + (bad ? '#ff6c2e' : '#262a67') + ';' }; });
+    return { tabs, countries, kpis, traffic, sources, funnel, terms, pages, versions, lcp };
+  }
+}
+</script>
+</body>
+</html>

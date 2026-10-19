@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="ar">
+<head>
+<meta charset="utf-8">
+<title>الحجز · 4 الملخص والقسيمة</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;family=Cairo:wght@500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div dir="rtl" lang="ar" style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #f6f3e4; color: #262a67; font-family: Cairo, sans-serif; line-height: 1.6; text-align: start">
+<div style="height: 100%; box-sizing: border-box; padding: 56px 16px 24px; display: flex; flex-direction: column; gap: 10px">
+
+<div style="display: flex; align-items: center; gap: 12px">
+<a href="TrvTripAr.dc.html" aria-label="رجوع" style="width: 44px; height: 44px; border-radius: 999px; background: #ffffff; color: #262a67; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg></a>
+<h1 style="margin: 0; font-size: 22px; line-height: 32px; font-weight: 700">راجع حجزك</h1>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 4px">
+<div role="progressbar" aria-label="تقدّم الحجز" aria-valuemin="1" aria-valuemax="5" aria-valuenow="4" aria-valuetext="الخطوة 4 من 5، الملخص" style="display: flex; gap: 4px">
+<span style="flex: 1 1 0; height: 6px; border-radius: 999px; background: #262a67"></span>
+<span style="flex: 1 1 0; height: 6px; border-radius: 999px; background: #262a67"></span>
+<span style="flex: 1 1 0; height: 6px; border-radius: 999px; background: #262a67"></span>
+<span style="flex: 1 1 0; height: 6px; border-radius: 999px; background: #ff6c2e"></span>
+<span style="flex: 1 1 0; height: 6px; border-radius: 999px; background: #e3dfc9"></span>
+</div>
+<span style="font-size: 13px; line-height: 20px; font-weight: 600; color: #5b5f86">الخطوة 4 من 5 · التالي: الدفع</span>
+</div>
+
+<div style="padding: 10px 14px; border-radius: 20px; background: #262a67; color: #f6f3e4; display: flex; flex-direction: column; gap: 0">
+<span style="font-size: 16px; line-height: 24px; font-weight: 700">عطلة العُلا التراثية</span>
+<span style="font-size: 13px; line-height: 20px; color: #b8bad6">الخميس 16 – السبت 18 أكتوبر · الانطلاق من العليا 06:30</span>
+<span style="font-size: 13px; line-height: 20px; color: #b8bad6">سارة، فيصل، عمر، لينا · الحافلة 2 · المقاعد <span dir="ltr">3C 3D 4C 4D</span></span>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 4px">
+<label for="coupon" style="font-size: 14px; line-height: 22px; font-weight: 600">رمز القسيمة</label>
+<div style="display: flex; gap: 8px">
+<input id="coupon" type="text" dir="ltr" value="{{code}}" placeholder="أدخل الرمز" aria-invalid="{{invalid}}" aria-describedby="coupon-msg" style="{{inputStyle}}">
+<sc-if value="{{isApplied}}" hint-placeholder-val="{{true}}"><button type="button" onClick="{{remove}}" style="height: 52px; padding: 0 16px; border-radius: 12px; background: #ffffff; border: 1px solid #7b7fa6; color: #262a67; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer">إزالة</button></sc-if>
+<sc-if value="{{notApplied}}" hint-placeholder-val="{{false}}"><button type="button" onClick="{{apply}}" style="height: 52px; padding: 0 18px; border-radius: 12px; background: #262a67; border: 0; color: #f6f3e4; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer">تطبيق</button></sc-if>
+</div>
+<div id="coupon-msg" role="status">
+<sc-if value="{{isApplied}}" hint-placeholder-val="{{true}}"><span style="font-size: 13px; line-height: 20px; color: #1f7a4d; font-weight: 600; display: flex; align-items: center; gap: 6px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M5 12.5l4.5 4.5L19 7"></path></svg><span>تم تطبيق <span dir="ltr">AUTUMN15</span> · خصم 15% على رحلات صن رايز</span></span></sc-if>
+<sc-if value="{{isError}}" hint-placeholder-val="{{false}}"><span style="font-size: 13px; line-height: 20px; color: #b42318; display: flex; gap: 6px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M12 3l9.5 17h-19zM12 10v4M12 17h.01"></path></svg><span>الرمز <span dir="ltr">KHALID10</span> خاص بالحجوزات مع السائق خالد الحربي. جرّب رمزًا آخر أو أكمل بدون قسيمة.</span></span></sc-if>
+</div>
+</div>
+
+<div style="padding: 10px 14px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 0; font-size: 14px; line-height: 21px">
+<sc-for list="{{lines}}" as="l" hint-placeholder-count="8"><div style="display: flex; justify-content: space-between; gap: 8px"><span>{{l.label}}</span><span dir="ltr" style="{{l.style}}">{{l.amount}}</span></div></sc-for>
+<div style="margin-top: 4px; padding-top: 4px; border-top: 1px solid #e3dfc9; display: flex; justify-content: space-between"><span style="color: #5b5f86">المجموع الفرعي</span><span dir="ltr">6,160</span></div>
+<div style="display: flex; justify-content: space-between; color: #1f7a4d; font-weight: 600"><span>خصم المستكشف 5% على البرامج</span><span dir="ltr">−83</span></div>
+<sc-if value="{{isApplied}}" hint-placeholder-val="{{true}}"><div style="display: flex; justify-content: space-between; color: #1f7a4d; font-weight: 600"><span><span dir="ltr">AUTUMN15</span> · خصم 15% على سعر الرحلة</span><span dir="ltr">−675</span></div></sc-if>
+<div style="margin-top: 4px; padding-top: 6px; border-top: 1px solid #e3dfc9; display: flex; justify-content: space-between; align-items: baseline"><span style="font-size: 16px; font-weight: 700">الإجمالي</span><span aria-live="polite" style="font-size: 22px; line-height: 32px; font-weight: 700">{{total}} ر.س</span></div>
+</div>
+
+<p style="margin: 0; font-size: 13px; line-height: 20px; color: #5b5f86">إلغاء مجاني حتى الخميس 9 أكتوبر الساعة 23:59، بعدها يُحتسب 50% من قيمة التذكرة. المقاعد محجوزة لك لمدة 11:05 دقيقة.</p>
+
+<a href="TrvTicketAr.dc.html" style="margin-top: auto; flex-shrink: 0; height: 52px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-weight: 700; font-size: 16px; display: flex; align-items: center; justify-content: center; text-decoration: none">ادفع {{total}} ر.س</a>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"couponError":{"editor":"boolean","default":false},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { mode: null }; }
+  renderVals() {
+    const mode = this.state.mode || (this.props.couponError ? 'error' : 'applied');
+    const applied = mode === 'applied';
+    const error = mode === 'error';
+    const amt = 'font-weight: 600; white-space: nowrap;';
+    const lines = [
+      ['بالغون · 2 × 1,250', '2,500'], ['أطفال · 2 × 1,000', '2,000'], ['تأمين السفر · × 4', '100'],
+      ['جولة البلدة القديمة · × 4', 'مجاني'], ['جولة الحِجر مع مرشد · × 3', '540'], ['عشاء جبل الفيل، الباقة القياسية · × 4', '600'],
+      ['عُدّة المخيم الصحراوي · × 2', '120'], ['باقة صور المجموعة · × 1', '300']
+    ].map(([label, amount]) => ({ label, amount, style: amount === 'مجاني' ? 'color: #1f7a4d; font-weight: 600;' : amt }));
+    const total = applied ? '5,402' : '6,077';
+    const inputStyle = 'flex-grow: 1; min-width: 0; box-sizing: border-box; height: 52px; border-radius: 8px; background: #fff; padding: 0 14px; font-family: Outfit, Cairo, sans-serif; font-size: 16px; font-weight: 600; letter-spacing: 0.04em; text-align: right; color: #262a67; border: ' + (error ? '2px solid #b42318;' : applied ? '2px solid #1f7a4d;' : '1px solid #7b7fa6;');
+    return { lines, total, inputStyle, isApplied: applied, notApplied: !applied, isError: error,
+      code: applied ? 'AUTUMN15' : error ? 'KHALID10' : '', invalid: error ? 'true' : 'false',
+      remove: () => this.setState({ mode: 'none' }), apply: () => this.setState({ mode: 'applied' }) };
+  }
+}
+</script>
+</body>
+</html>

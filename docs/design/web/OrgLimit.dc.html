@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Trips · Plan limit reached</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="position: relative; min-height: 1000px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="OrgNav" active="Trips" hint-size="248px,1000px"></dc-import></div>
+<main aria-hidden="{{hideBg}}" style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 24px">
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; color: #5b5f86">Sunrise Tours Co. · October</span><h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Trips</h1></div>
+<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center">
+<div style="display: flex; flex-direction: column; gap: 6px; min-width: 220px">
+<span style="font-size: 14px; font-weight: 600; color: #b42318">20 of 20 active trips <span style="font-weight: 500; color: #5b5f86">· Growth plan</span></span>
+<div aria-hidden="true" style="height: 8px; border-radius: 999px; background: #e3dfc9; overflow: hidden"><div style="width: 100%; height: 8px; background: #b42318"></div></div>
+</div>
+<button type="button" onClick="{{open}}" style="height: 48px; padding: 0 20px; border-radius: 12px; border: 0; background: #ff6c2e; color: #262a67; font: inherit; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>New trip</button>
+</div>
+</div>
+
+<section style="background: #ffffff; border-radius: 20px; padding: 16px 0 8px">
+<h2 style="margin: 0; padding: 0 20px 8px; font-size: 20px; line-height: 28px; font-weight: 600">All trips</h2>
+<sc-for list="{{rows}}" as="r" hint-placeholder-count="8">
+<div style="display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr) 130px; gap: 12px; align-items: center; padding: 14px 20px; border-top: 1px solid #e3dfc9; font-size: 15px">
+<span style="display: flex; align-items: center; gap: 12px; min-width: 0"><img src="{{r.img}}" alt="{{r.alt}}" style="width: 48px; height: 36px; border-radius: 8px; object-fit: cover; flex-shrink: 0"><span style="font-weight: 600">{{r.n}}</span></span><span>{{r.d}}</span><span>{{r.sold}}</span><span style="{{r.ss}}">{{r.s}}</span>
+</div>
+</sc-for>
+</section>
+</main>
+
+<sc-if value="{{show}}" hint-placeholder-val="{{true}}">
+<div style="position: absolute; inset: 0; background: rgba(16,18,48,.45); display: flex; align-items: flex-start; justify-content: center; padding: 120px 24px 24px; box-sizing: border-box">
+<div role="dialog" aria-modal="true" aria-labelledby="lim-h" aria-describedby="lim-d" style="width: 100%; max-width: 640px; background: #ffffff; border-radius: 20px; padding: 28px; box-sizing: border-box; display: flex; flex-direction: column; gap: 18px; box-shadow: 0 24px 60px rgba(16,18,48,.25)">
+<div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px">
+<div style="display: flex; gap: 14px; align-items: flex-start">
+<span style="width: 48px; height: 48px; flex-shrink: 0; border-radius: 14px; background: #fdf0d5; color: #8a4b00; display: flex; align-items: center; justify-content: center"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM18 9a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM6 15V9a4 4 0 0 1 8 0v6a4 4 0 0 0 4 4M18 9v2"></path></svg></span>
+<div style="display: flex; flex-direction: column; gap: 4px">
+<h2 id="lim-h" style="margin: 0; font-size: 24px; line-height: 30px; font-weight: 700">You’ve used 20 of 20 active trips on Growth</h2>
+<p id="lim-d" style="margin: 0; font-size: 15px; line-height: 22px; color: #5b5f86">To start a new trip this month, upgrade your plan or archive a completed trip. Your published trips and bookings are not affected.</p>
+</div>
+</div>
+<button type="button" aria-label="Close" onClick="{{close}}" style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 999px; border: 0; background: #f6f3e4; color: #262a67; cursor: pointer; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+</div>
+
+<div style="padding: 18px; border-radius: 16px; border: 2px solid #fb8030; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px"><span style="font-size: 18px; font-weight: 700">Upgrade to Enterprise</span><span style="font-size: 15px"><strong style="font-size: 20px">1,240 SAR</strong> <span style="color: #5b5f86">due now, prorated</span></span></div>
+<ul style="margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 6px 16px; font-size: 14px">
+<sc-for list="{{perks}}" as="p" hint-placeholder-count="4"><li style="display: flex; gap: 8px; align-items: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1f7a4d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg>{{p}}</li></sc-for>
+</ul>
+<span style="font-size: 13px; line-height: 18px; color: #5b5f86">Upgrades take effect immediately. You pay only for the 25 days left in this billing cycle; from Sat 1 Nov Enterprise renews at 4,900 SAR a month.</span>
+<a href="OrgBilling.dc.html" style="height: 48px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; text-decoration: none">Upgrade now · 1,240 SAR</a>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px">
+<div style="padding: 16px; border-radius: 16px; border: 1px solid #e3dfc9; display: flex; flex-direction: column; gap: 8px">
+<span style="font-size: 16px; font-weight: 700">Archive a completed trip</span>
+<span style="font-size: 13px; line-height: 18px; color: #5b5f86">Al Ahsa Oasis Day (returned Sat 11 Oct) frees 1 slot. Albums and accounting stay available.</span>
+<button type="button" onClick="{{archive}}" style="{{archiveStyle}}">{{archiveLabel}}</button>
+</div>
+<div style="padding: 16px; border-radius: 16px; border: 1px solid #e3dfc9; display: flex; flex-direction: column; gap: 8px">
+<span style="font-size: 16px; font-weight: 700">Talk to sales</span>
+<span style="font-size: 13px; line-height: 18px; color: #5b5f86">Seasonal peak or a large school contract? We can tailor limits. Replies within 1 working day.</span>
+<a href="mailto:sales@trips-enjoy.com" style="height: 44px; box-sizing: border-box; border-radius: 12px; border: 1px solid #7b7fa6; background: #fff; color: #262a67; font-size: 15px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; margin-top: auto"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16v12H4zM4 7l8 6 8-6"></path></svg>Contact sales</a>
+</div>
+</div>
+<button type="button" onClick="{{close}}" style="align-self: center; height: 44px; padding: 0 16px; border: 0; background: transparent; color: #262a67; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Not now</button>
+</div>
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { show: true, archived: false }; }
+  renderVals() {
+    const tones = { ok: 'background: #e3f3ea; color: #1f7a4d;', warn: 'background: #fdf0d5; color: #8a4b00;', info: 'background: #e6e8f5; color: #262a67;', live: 'background: #ffe7dc; color: #c93a00;', neutral: 'background: #f6f3e4; color: #5b5f86;' };
+    const pill = (t) => 'justify-self: start; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; ' + tones[t];
+    const rows = [
+      ['AlUla Heritage Weekend', '../assets/44a218548719fe367b614a0dd5151345.svg', 'AlUla sandstone rocks under a night sky', 'Thu 16 – Sat 18 Oct', '168 / 172', 'Filling up', 'info'],
+      ['Jeddah Corniche Night', '../assets/c05dcb937e01218b8073e886669c75d4.svg', 'Jeddah Corniche fountain and skyline', 'Fri 17 Oct', '120 / 150', 'Filling up', 'info'],
+      ['Red Sea Snorkel Day', '../assets/dc9df8d5382e0fc7d2bf084f5632c713.svg', 'Boat over a Red Sea coral reef', 'Fri 24 Oct', '96 / 100', 'Negotiating', 'warn'],
+      ['Edge of the World Hike', '../assets/767dc865917d29911dbc19beb44053f6.svg', 'Hikers on the Edge of the World cliffs', 'Sat 25 Oct', '32 / 50', 'Filling up', 'info'],
+      ['Taif Rose Farms', '../assets/cc51d7ccafd703646b5cfbed3b8222aa.svg', 'Rows of roses at a Taif farm', 'Thu 30 Oct', '50 / 50', 'Sold out', 'ok'],
+      ['Al Noor School · Grade 4 Zoo Day', '../assets/2c90013b05936cc82deb2ba3571360d4.svg', 'Teacher lining up the class for the bus', 'Tue 14 Oct', '32 / 32', 'In progress', 'live'],
+      ['Abha Summit Escape', '../assets/d69d91e9f1749b4b6bbebf258113beb4.png', 'Coach on a desert road at sunset', 'Thu 13 – Sat 15 Nov', '12 / 98', 'Published', 'info'],
+      ['Al Ahsa Oasis Day', '../assets/8e86331acb7080e5e12facebe9aa4069.svg', 'Families picking fruit in a green orchard', 'Sat 11 Oct', '94 / 98', 'Completed', 'neutral']
+    ].map(([n, img, alt, d, sold, s, t]) => ({ n, img, alt, d, sold, s, ss: pill(t) }));
+    const ar = this.state.archived;
+    return { rows, show: this.state.show, hideBg: this.state.show ? 'true' : 'false',
+      open: () => this.setState({ show: true }), close: () => this.setState({ show: false }),
+      perks: ['Unlimited active trips', 'Unlimited buses and programs', 'Full accounting with export', 'Priority support and custom branding'],
+      archive: () => this.setState({ archived: true }),
+      archiveLabel: ar ? 'Archived · 19 of 20 used' : 'Archive Al Ahsa Oasis Day',
+      archiveStyle: 'margin-top: auto; height: 44px; border-radius: 12px; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer; ' + (ar ? 'border: 0; background: #e3f3ea; color: #1f7a4d;' : 'border: 1px solid #7b7fa6; background: #fff; color: #262a67;') };
+  }
+}
+</script>
+</body>
+</html>

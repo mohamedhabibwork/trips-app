@@ -1,6 +1,7 @@
 import type {
   CheckInMethod,
   CheckInStatus,
+  DriverLabTestKind,
   DriverLabTestStatus,
   NotificationCategory,
   NotificationDeliveryChannel,
@@ -152,6 +153,8 @@ export const tripPhotoAlbums = pgTable(
     photoUrls: jsonb("photo_urls").$type<string[]>().default([]).notNull(),
     photoCount: integer("photo_count").default(0).notNull(),
     watermarked: boolean("watermarked").default(false).notNull(),
+    audience: text("audience").$type<TripPhotoAlbumAudience>().default("public").notNull(),
+    audienceAccountIds: jsonb("audience_account_ids").$type<string[]>().default([]).notNull(),
     status: text("status").$type<TripPhotoAlbumStatus>().default("draft").notNull(),
     publishedAt: timestamp("published_at", { withTimezone: true }),
     createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
@@ -161,6 +164,40 @@ export const tripPhotoAlbums = pgTable(
     index("trip_photo_albums_tenant_idx").on(table.tenantId),
     index("trip_photo_albums_trip_idx").on(table.tripId),
     index("trip_photo_albums_photographer_idx").on(table.photographerAccountId),
+  ],
+);
+
+/** Who may open a published album (SCR-TRV-17 privacy rules). */
+export type TripPhotoAlbumAudience = "public" | "selected_travelers";
+
+/** Lifecycle of a traveler-facing shared album link (32-char token). */
+export type AlbumSharedLinkStatus = "active" | "revoked";
+
+export const albumSharedLinks = pgTable(
+  "album_shared_links",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    tenantId: uuid("tenant_id")
+      .references(() => organizations.id, { onDelete: "cascade" })
+      .notNull(),
+    albumId: uuid("album_id")
+      .references(() => tripPhotoAlbums.id, { onDelete: "cascade" })
+      .notNull(),
+    token: text("token").notNull(),
+    createdByAccountId: uuid("created_by_account_id")
+      .references(() => accounts.id, { onDelete: "cascade" })
+      .notNull(),
+    status: text("status").$type<AlbumSharedLinkStatus>().default("active").notNull(),
+    expiresAt: timestamp("expires_at", { withTimezone: true }),
+    revokedAt: timestamp("revoked_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => [
+    uniqueIndex("album_shared_links_token_uidx").on(table.token),
+    index("album_shared_links_album_idx").on(table.albumId),
+    index("album_shared_links_tenant_idx").on(table.tenantId),
+    index("album_shared_links_status_idx").on(table.status),
   ],
 );
 
@@ -175,6 +212,7 @@ export const driverLabTests = pgTable(
       onDelete: "set null",
     }),
     status: text("status").$type<DriverLabTestStatus>().default("requested").notNull(),
+    testType: text("test_type").$type<DriverLabTestKind>().default("both").notNull(),
     labCenterName: text("lab_center_name"),
     appointmentAt: timestamp("appointment_at", { withTimezone: true }),
     deadlineAt: timestamp("deadline_at", { withTimezone: true }).notNull(),

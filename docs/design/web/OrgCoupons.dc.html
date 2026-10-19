@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Org · Coupons</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+.te-row:hover{background:#f6f3e4}
+</style>
+</helmet>
+<div style="min-height: 1000px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="OrgNav" active="Coupons" hint-size="248px,1000px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 20px">
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; color: #5b5f86">Discounts that apply only to Sunrise Tours trips</span><h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Coupons</h1></div>
+<a href="OrgCouponNew.dc.html" style="height: 48px; padding: 0 20px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Create coupon</a>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 16px">
+<div style="padding: 18px 20px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 8px"><span style="font-size: 14px; color: #5b5f86">Coupons on Growth</span><span style="font-size: 28px; line-height: 34px; font-weight: 700">6 <span style="font-size: 15px; font-weight: 500; color: #5b5f86">of 20</span></span><div role="progressbar" aria-label="Coupons used" aria-valuenow="6" aria-valuemin="0" aria-valuemax="20" style="height: 8px; border-radius: 999px; background: #e3dfc9; overflow: hidden"><div style="width: 30%; height: 100%; background: #262a67"></div></div></div>
+<div style="padding: 18px 20px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 6px"><span style="font-size: 14px; color: #5b5f86">Redemptions · October</span><span style="font-size: 28px; line-height: 34px; font-weight: 700">412</span><span style="font-size: 13px; font-weight: 600; color: #1f7a4d">▲ 18% vs September</span></div>
+<div style="padding: 18px 20px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 6px"><span style="font-size: 14px; color: #5b5f86">Discount given</span><span style="font-size: 28px; line-height: 34px; font-weight: 700">38,940 <span style="font-size: 15px; font-weight: 500; color: #5b5f86">SAR</span></span><span style="font-size: 13px; color: #5b5f86">Avg 94.5 SAR per booking</span></div>
+<div style="padding: 18px 20px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 6px"><span style="font-size: 14px; color: #5b5f86">Revenue influenced</span><span style="font-size: 28px; line-height: 34px; font-weight: 700">286,300 <span style="font-size: 15px; font-weight: 500; color: #5b5f86">SAR</span></span><span style="font-size: 13px; color: #5b5f86">Bookings that used a coupon</span></div>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 8px" role="group" aria-label="Filter by status">
+<sc-for list="{{chips}}" as="c" hint-placeholder-count="7">
+<button type="button" aria-pressed="{{c.pressed}}" onClick="{{c.on}}" style="{{c.style}}">{{c.l}} <span style="font-weight: 500; opacity: .8">{{c.n}}</span></button>
+</sc-for>
+</div>
+
+<section aria-labelledby="cp-h" style="background: #ffffff; border-radius: 20px; padding: 20px 0 8px">
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 0 20px 12px; gap: 12px; flex-wrap: wrap"><h2 id="cp-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">{{title}}</h2><span style="font-size: 13px; color: #5b5f86">Expired and revoked coupons don't count toward your limit of 20</span></div>
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 1060px; border-collapse: collapse; font-size: 15px">
+<thead><tr style="color: #5b5f86; font-size: 13px"><th scope="col" style="text-align: start; padding: 10px 20px; font-weight: 600">Code</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Type · value</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Scope</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Used / limit</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Valid</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Status</th><th scope="col" style="text-align: end; padding: 10px 20px; font-weight: 600">Actions</th></tr></thead>
+<tbody>
+<sc-for list="{{rows}}" as="r" hint-placeholder-count="8">
+<tr class="te-row" style="border-top: 1px solid #e3dfc9">
+<td style="padding: 12px 20px"><a href="OrgCouponStats.dc.html" aria-label="Analytics for coupon {{r.code}}" style="display: inline-flex; padding: 4px 10px; border-radius: 8px; border: 1px dashed #7b7fa6; font-weight: 700; letter-spacing: .5px; font-size: 14px; color: #262a67; text-decoration: none">{{r.code}}</a></td>
+<td style="padding: 12px"><span style="display: flex; flex-direction: column"><span style="font-weight: 600">{{r.val}}</span><span style="font-size: 13px; color: #5b5f86">{{r.type}}</span></span></td>
+<td style="padding: 12px; font-size: 14px">{{r.scope}}</td>
+<td style="padding: 12px; min-width: 140px"><span style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 14px">{{r.used}} / {{r.limit}}</span><span style="height: 6px; border-radius: 999px; background: #e3dfc9; overflow: hidden; display: block"><span style="display: block; height: 100%; width: {{r.pct}}; background: {{r.bar}}"></span></span></span></td>
+<td style="padding: 12px; font-size: 14px; color: #5b5f86; white-space: nowrap">{{r.win}}</td>
+<td style="padding: 12px"><span style="{{r.ss}}">{{r.s}}</span></td>
+<td style="padding: 12px 20px; text-align: end; white-space: nowrap">
+<sc-if value="{{r.canPause}}" hint-placeholder-val="{{true}}"><button type="button" onClick="{{r.pause}}" style="height: 36px; padding: 0 12px; border-radius: 8px; border: 1px solid #e3dfc9; background: #fff; color: #262a67; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer">Pause</button></sc-if>
+<sc-if value="{{r.canResume}}" hint-placeholder-val="{{false}}"><button type="button" onClick="{{r.resume}}" style="height: 36px; padding: 0 12px; border-radius: 8px; border: 1px solid #e3dfc9; background: #fff; color: #1f7a4d; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer">Resume</button></sc-if>
+<sc-if value="{{r.canEdit}}" hint-placeholder-val="{{false}}"><a href="OrgCouponNew.dc.html" style="display: inline-flex; align-items: center; height: 36px; padding: 0 12px; border-radius: 8px; border: 1px solid #e3dfc9; background: #fff; color: #262a67; font-size: 13px; font-weight: 600; text-decoration: none">Edit draft</a></sc-if>
+<sc-if value="{{r.canRevoke}}" hint-placeholder-val="{{true}}"><button type="button" onClick="{{r.revoke}}" style="height: 36px; padding: 0 12px; margin-inline-start: 6px; border-radius: 8px; border: 0; background: transparent; color: #b42318; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer">Revoke</button></sc-if>
+<sc-if value="{{r.noActions}}" hint-placeholder-val="{{false}}"><span style="font-size: 13px; color: #5b5f86">—</span></sc-if>
+</td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+</section>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { f: 'All', over: {} }; }
+  renderVals() {
+    const pill = (tone) => 'display: inline-flex; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; white-space: nowrap; ' + ({ ok: 'background: #e3f3ea; color: #1f7a4d;', warn: 'background: #fdf0d5; color: #8a4b00;', bad: 'background: #fde8e6; color: #b42318;', info: 'background: #e6e8f5; color: #262a67;', mute: 'background: #f6f3e4; color: #5b5f86;', amber: 'background: #f89e23; color: #262a67;' })[tone];
+    const tone = { Draft: 'mute', Active: 'ok', Paused: 'warn', Expired: 'mute', Exhausted: 'amber', Revoked: 'bad' };
+    const C = [
+      { code: 'AUTUMN15', val: '15% off', type: 'Percentage · max 200 SAR', scope: 'Sunrise Tours trips', used: 184, limit: 200, win: '1 Oct – 31 Oct', s: 'Active' },
+      { code: 'ALULA100', val: '100 SAR off', type: 'Fixed · min 1,000 SAR', scope: 'AlUla Heritage Weekend', used: 61, limit: 150, win: '20 Sep – 15 Oct', s: 'Active' },
+      { code: 'FIRSTSUN', val: '10% off', type: 'First booking', scope: 'Sunrise Tours trips', used: 97, limit: 500, win: '1 Sep – 31 Dec', s: 'Active' },
+      { code: 'BALLOONVIP', val: 'Free program', type: 'Program · Hot-air balloon', scope: 'AlUla Heritage Weekend', used: 4, limit: 12, win: '1 Oct – 15 Oct', s: 'Paused' },
+      { code: 'ALNOOR4', val: '50 SAR off', type: 'Fixed · targeted: school code', scope: 'Al Noor School · Grade 4', used: 32, limit: 32, win: '1 Oct – 14 Oct', s: 'Exhausted' },
+      { code: 'REDSEA20', val: '20% off', type: 'Percentage · min 600 SAR', scope: 'Red Sea Snorkel Day', used: 0, limit: 80, win: '10 Oct – 23 Oct', s: 'Draft' },
+      { code: 'SUMMER25', val: '25% off', type: 'Percentage', scope: 'Sunrise Tours trips', used: 342, limit: 400, win: '1 Jul – 31 Aug', s: 'Expired' },
+      { code: 'STAFF50', val: '50% off', type: 'Percentage · targeted', scope: 'Sunrise Tours trips', used: 3, limit: 20, win: '1 Sep – 31 Dec', s: 'Revoked' }
+    ];
+    const set = (i, s) => this.setState({ over: { ...this.state.over, [i]: s } });
+    const all = C.map((c, i) => {
+      const s = this.state.over[i] || c.s;
+      const pct = Math.round(c.used / c.limit * 100);
+      return { ...c, s, ss: pill(tone[s]), pct: pct + '%', bar: pct >= 90 ? '#f89e23' : '#262a67',
+        canPause: s === 'Active', canResume: s === 'Paused', canEdit: s === 'Draft', canRevoke: ['Active', 'Paused', 'Draft'].includes(s), noActions: ['Expired', 'Exhausted', 'Revoked'].includes(s),
+        pause: () => set(i, 'Paused'), resume: () => set(i, 'Active'), revoke: () => set(i, 'Revoked') };
+    });
+    const labels = ['All', 'Draft', 'Active', 'Paused', 'Expired', 'Exhausted', 'Revoked'];
+    const chips = labels.map((l) => {
+      const on = this.state.f === l;
+      return { l, n: l === 'All' ? all.length : all.filter((r) => r.s === l).length, pressed: on ? 'true' : 'false', on: () => this.setState({ f: l }),
+        style: 'height: 40px; padding: 0 16px; border-radius: 999px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; ' + (on ? 'background: #262a67; color: #f6f3e4; border: 1px solid #262a67;' : 'background: #ffffff; color: #262a67; border: 1px solid #7b7fa6;') };
+    });
+    const rows = all.filter((r) => this.state.f === 'All' || r.s === this.state.f);
+    return { chips, rows, title: this.state.f === 'All' ? 'All coupons' : this.state.f + ' coupons' };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Live operations · AlUla</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="min-height: 1000px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="OrgNav" active="Live operations" hint-size="248px,1000px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 20px">
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<a href="OrgTrip.dc.html" style="font-size: 14px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px; text-decoration: none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg>AlUla Heritage Weekend</a>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px"><h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Live operations</h1><span style="display: inline-flex; align-items: center; gap: 6px; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; background: #ffe7dc; color: #c93a00"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 999px; background: #c93a00"></span>Live · updated 10:14</span></div>
+<span style="font-size: 15px; color: #5b5f86">Thu 16 Oct · 4 buses on route · 168 of 168 passengers boarded · Day 1 of 3</span>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px">
+<a href="OrgRoster.dc.html" style="height: 48px; box-sizing: border-box; padding: 0 18px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px; text-decoration: none">Passenger roster</a>
+</div>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between">
+<div role="group" aria-label="Filter by bus" style="display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{filters}}" as="f" hint-placeholder-count="5">
+<button type="button" aria-pressed="{{f.pressed}}" onClick="{{f.on}}" style="{{f.style}}">{{f.l}}</button>
+</sc-for>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center; flex: 0 1 620px">
+<label for="who" style="font-size: 14px; font-weight: 600">Which bus is this passenger in?</label>
+<div style="position: relative; flex: 1 1 200px; display: flex; align-items: center">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5b5f86" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position: absolute; left: 14px"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM20 20l-4-4"></path></svg>
+<input id="who" type="search" value="Omar Al-Q" style="width: 100%; height: 44px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; padding: 0 14px 0 42px; font: inherit; font-size: 15px; color: #262a67">
+</div>
+</div>
+</div>
+
+<div role="status" style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; padding: 12px 16px; border-radius: 12px; background: #e6e8f5; font-size: 15px">
+<span style="display: flex; align-items: center; gap: 10px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 4h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM4 11h16M8 18v2M16 18v2M8 14.5h.01M16 14.5h.01"></path></svg><span><strong>Omar Al-Qahtani (9)</strong> is on <strong>Bus 2</strong> · Seat 4C · checked in 07:32 by Nadia Yusuf · parent tracking on</span></span>
+<a href="OrgBooking.dc.html" style="font-size: 14px; font-weight: 600">Open booking TE-48217</a>
+</div>
+
+<div role="alert" style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center; justify-content: space-between; padding: 14px 16px; border-radius: 12px; background: #fde8e6; color: #262a67">
+<span style="display: flex; gap: 12px; align-items: flex-start; flex: 1 1 420px"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#b42318" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 2px"><path d="M12 3l9.5 17h-19zM12 10v4M12 17h.01"></path></svg><span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 15px; font-weight: 700; color: #b42318">Incident · Bus 3 stopped at km 212, Route 65</span><span style="font-size: 14px; color: #5b5f86">Reported 09:58 by Layla Al-Mutairi: tyre pressure warning. Driver Majed Al-Zahrani is changing the tyre, expects to move by 10:35. All 27 passengers on board and safe.</span></span></span>
+<span style="display: flex; gap: 8px; flex-wrap: wrap">
+<a href="../mobile/ModIncident.dc.html" style="height: 44px; box-sizing: border-box; padding: 0 16px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"></path></svg>Call moderator</a>
+<button type="button" onClick="{{ack}}" style="{{ackStyle}}">{{ackLabel}}</button>
+</span>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: stretch">
+<section aria-labelledby="map-h" style="flex: 3 1 480px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; justify-content: space-between; align-items: center"><h2 id="map-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">Route · Riyadh → AlUla</h2><span style="font-size: 13px; color: #5b5f86">1,080 km · ETA AlUla 17:40</span></div>
+<div role="img" aria-label="{{mapLabel}}" style="position: relative; height: 380px; border-radius: 16px; background: #e9e6d3; overflow: hidden">
+<div style="position: absolute; left: 0; top: 0; width: 14%; height: 100%; background: #d6e6ee"></div>
+<div style="position: absolute; left: 30%; top: 12%; width: 22%; height: 30%; border-radius: 50%; background: #e1dcc4"></div>
+<div style="position: absolute; left: 68%; top: 62%; width: 20%; height: 26%; border-radius: 50%; background: #e1dcc4"></div>
+<svg viewBox="0 0 1000 380" preserveAspectRatio="none" width="100%" height="100%" aria-hidden="true" style="position: absolute; inset: 0"><path d="M880 330 C 800 300, 720 260, 560 190 S 300 110, 180 70" fill="none" stroke="#262a67" stroke-width="4" stroke-dasharray="10 8" stroke-linecap="round"></path><path d="M880 330 C 800 300, 720 260, 640 225" fill="none" stroke="#c93a00" stroke-width="5" stroke-linecap="round"></path></svg>
+<sc-for list="{{stops}}" as="s" hint-placeholder-count="3">
+<div style="{{s.pos}}"><span style="width: 14px; height: 14px; border-radius: 999px; background: #ffffff; border: 3px solid #262a67; box-sizing: border-box"></span><span style="padding: 2px 8px; border-radius: 999px; background: #ffffff; font-size: 12px; font-weight: 600; white-space: nowrap">{{s.n}}</span></div>
+</sc-for>
+<sc-for list="{{markers}}" as="m" hint-placeholder-count="4">
+<div style="{{m.pos}}">
+<span style="position: relative; width: 36px; height: 36px; border-radius: 999px; background: {{m.bg}}; color: #262a67; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 0 6px rgba(255,108,46,.25)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 4h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM4 11h16M8 18v2M16 18v2M8 14.5h.01M16 14.5h.01"></path></svg></span>
+<span style="padding: 2px 8px; border-radius: 999px; background: #262a67; color: #f6f3e4; font-size: 12px; font-weight: 700; white-space: nowrap">{{m.n}}</span>
+</div>
+</sc-for>
+</div>
+</section>
+
+<section aria-labelledby="log-h" style="flex: 2 1 340px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 16px 0 8px; display: flex; flex-direction: column">
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 0 20px 8px"><h2 id="log-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">Check-in / out log</h2><span style="font-size: 13px; color: #5b5f86">{{logCount}}</span></div>
+<ol style="list-style: none; margin: 0; padding: 0">
+<sc-for list="{{log}}" as="e" hint-placeholder-count="8">
+<li style="display: grid; grid-template-columns: 48px 1fr; gap: 10px; padding: 9px 20px; border-top: 1px solid #e3dfc9; font-size: 14px; line-height: 20px">
+<span style="font-weight: 700; font-variant-numeric: tabular-nums">{{e.t}}</span>
+<span style="display: flex; flex-direction: column; gap: 2px"><span><span style="{{e.ks}}">{{e.k}}</span> {{e.who}}</span><span style="font-size: 13px; color: #5b5f86">{{e.d}}</span></span>
+</li>
+</sc-for>
+</ol>
+</section>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px">
+<sc-for list="{{buses}}" as="b" hint-placeholder-count="4">
+<div style="{{b.card}}">
+<div style="display: flex; justify-content: space-between; align-items: center"><span style="font-size: 17px; font-weight: 700">{{b.n}}</span><span style="{{b.ss}}">{{b.s}}</span></div>
+<span style="font-size: 15px"><strong>{{b.boarded}}</strong> on board</span>
+<span style="font-size: 14px; color: #5b5f86">Next: {{b.next}}</span>
+<span style="font-size: 14px; color: #5b5f86">Moderator {{b.mod}} · Driver {{b.drv}}</span>
+</div>
+</sc-for>
+</div>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1100}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { bus: 'All', ack: false }; }
+  renderVals() {
+    const sel = this.state.bus;
+    const tones = { ok: 'background: #e3f3ea; color: #1f7a4d;', warn: 'background: #fdf0d5; color: #8a4b00;', bad: 'background: #fde8e6; color: #b42318;', info: 'background: #e6e8f5; color: #262a67;', live: 'background: #ffe7dc; color: #c93a00;' };
+    const pill = (t) => 'padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; white-space: nowrap; ' + tones[t];
+    const filters = ['All', 'Bus 1', 'Bus 2', 'Bus 3', 'Bus 4'].map((l) => {
+      const on = l === sel;
+      return { l: l === 'All' ? 'All buses' : l, pressed: on ? 'true' : 'false', on: () => this.setState({ bus: l }),
+        style: 'height: 40px; padding: 0 16px; border-radius: 999px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; ' + (on ? 'background: #262a67; color: #f6f3e4; border: 1px solid #262a67;' : 'background: #ffffff; color: #262a67; border: 1px solid #e3dfc9;') };
+    });
+    const stops = [
+      { n: 'Riyadh · Olaya 06:30', x: 88, y: 87 },
+      { n: 'Buraidah rest stop', x: 56, y: 50 },
+      { n: 'AlUla · Shaden Resort', x: 18, y: 18 }
+    ].map((s) => ({ n: s.n, pos: 'position: absolute; left: ' + s.x + '%; top: ' + s.y + '%; transform: translate(-7px, -7px); display: flex; align-items: center; gap: 6px' }));
+    const raw = [
+      { n: 'Bus 1', x: 61, y: 56, pct: 47 },
+      { n: 'Bus 2', x: 64, y: 60, pct: 42 },
+      { n: 'Bus 3', x: 74, y: 70, pct: 30 },
+      { n: 'Bus 4', x: 56, y: 47, pct: 50 }
+    ];
+    const markers = raw.map((m) => ({ n: m.n, bg: m.n === 'Bus 3' ? '#f89e23' : '#ff6c2e',
+      pos: 'position: absolute; left: ' + m.x + '%; top: ' + m.y + '%; transform: translate(-18px, -18px); display: flex; align-items: center; gap: 6px; opacity: ' + (sel === 'All' || sel === m.n ? '1' : '0.3') }));
+    const mapLabel = 'Map of Riyadh to AlUla. ' + raw.map((m) => m.n + ' is ' + m.pct + '% along the route').join(', ') + '. Bus 3 is stopped after an incident.';
+    const kind = (k) => 'font-weight: 700; ' + ({ 'IN': 'color: #1f7a4d;', 'OUT': 'color: #8a4b00;', 'ALERT': 'color: #b42318;', 'BUS': 'color: #262a67;' })[k];
+    const events = [
+      { t: '10:12', k: 'IN', who: '22 passengers re-boarded', d: 'Bus 4 · Buraidah rest stop · by Omar Haddad', bus: 'Bus 4' },
+      { t: '10:05', k: 'BUS', who: 'Bus 4 arrived at Buraidah rest stop', d: '20 min stop · 46 on board', bus: 'Bus 4' },
+      { t: '09:58', k: 'ALERT', who: 'Incident reported · tyre pressure', d: 'Bus 3 · km 212 · by Layla Al-Mutairi', bus: 'Bus 3' },
+      { t: '07:41', k: 'BUS', who: 'Bus 2 departed Olaya', d: '48 of 48 on board · Driver Fahad Al-Otaibi', bus: 'Bus 2' },
+      { t: '07:36', k: 'IN', who: 'Sara Al-Qahtani checked in', d: 'Bus 2 · Seat 4B · by Nadia Yusuf', bus: 'Bus 2' },
+      { t: '07:34', k: 'IN', who: 'Lina Al-Qahtani checked in', d: 'Bus 2 · Seat 4D · by Nadia Yusuf', bus: 'Bus 2' },
+      { t: '07:32', k: 'IN', who: 'Omar Al-Qahtani checked in', d: 'Bus 2 · Seat 4C · by Nadia Yusuf', bus: 'Bus 2' },
+      { t: '07:31', k: 'IN', who: 'Abdullah Al-Shammari checked in', d: 'Bus 1 · Seat 11A · by Huda Saleh', bus: 'Bus 1' },
+      { t: '07:29', k: 'IN', who: 'Reem Al-Dosari checked in', d: 'Bus 3 · Seat 6B · by Layla Al-Mutairi', bus: 'Bus 3' },
+      { t: '07:27', k: 'IN', who: 'Huda Al-Ghamdi checked in', d: 'Bus 4 · Seat 2C · by Omar Haddad', bus: 'Bus 4' }
+    ];
+    const log = events.filter((e) => sel === 'All' || e.bus === sel).slice(0, 8).map((e) => ({ ...e, ks: kind(e.k) }));
+    const buses = [
+      { n: 'Bus 1', boarded: '47 / 47', next: 'Buraidah rest stop · ETA 10:22', mod: 'Huda Saleh', drv: 'Saeed Mubarak', s: 'On route', t: 'live' },
+      { n: 'Bus 2', boarded: '48 / 48', next: 'Buraidah rest stop · ETA 10:31', mod: 'Nadia Yusuf', drv: 'Fahad Al-Otaibi', s: 'On route', t: 'live' },
+      { n: 'Bus 3', boarded: '27 / 27', next: 'Moving again ~10:35', mod: 'Layla Al-Mutairi', drv: 'Majed Al-Zahrani', s: 'Incident', t: 'bad' },
+      { n: 'Bus 4', boarded: '46 / 46', next: 'Departs rest stop 10:25', mod: 'Omar Haddad', drv: 'Khalid Al-Harbi', s: 'At rest stop', t: 'info' }
+    ].map((b) => ({ ...b, ss: pill(b.t),
+      card: 'padding: 16px 18px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 6px; ' + (sel === b.n ? 'outline: 2px solid #fb8030;' : '') + (sel !== 'All' && sel !== b.n ? 'opacity: 0.55;' : '') }));
+    const ack = this.state.ack;
+    return { filters, stops, markers, mapLabel, log, buses, logCount: (sel === 'All' ? 'All buses' : sel) + ' · newest first',
+      ack: () => this.setState({ ack: true }), ackLabel: ack ? 'Acknowledged 10:14' : 'Acknowledge incident',
+      ackStyle: 'height: 44px; padding: 0 18px; border-radius: 12px; border: 0; font: inherit; font-size: 15px; font-weight: 700; cursor: pointer; ' + (ack ? 'background: #e3f3ea; color: #1f7a4d;' : 'background: #ff6c2e; color: #262a67;') };
+  }
+}
+</script>
+</body>
+</html>

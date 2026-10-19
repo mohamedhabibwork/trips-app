@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Parent · Add a child</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif; display: flex; flex-direction: column; padding: 56px 16px 24px; gap: 14px">
+<div style="display: flex; align-items: center; gap: 12px">
+<a href="MobileReady.dc.html" aria-label="Back" style="width: 44px; height: 44px; border-radius: 999px; background: #ffffff; display: flex; align-items: center; justify-content: center; color: #262a67"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg></a>
+<h1 style="margin: 0; font-size: 22px; line-height: 28px; font-weight: 700">Add a family member</h1>
+</div>
+<p style="margin: 0; font-size: 15px; line-height: 22px; color: #5b5f86">Children don't need their own phone or account. Book their seats from yours and follow their bus live.</p>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="ch-n" style="font-size: 14px; font-weight: 600">Child's full name</label><input id="ch-n" dir="auto" value="Omar Al-Qahtani" style="height: 52px; box-sizing: border-box; padding: 0 14px; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-family: inherit; font-size: 16px"></div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="ch-d" style="font-size: 14px; font-weight: 600">Date of birth</label><input id="ch-d" value="02/05/2016" style="height: 52px; min-width: 0; box-sizing: border-box; padding: 0 14px; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-family: inherit; font-size: 16px"></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="ch-r" style="font-size: 14px; font-weight: 600">You are their</label><select id="ch-r" style="height: 52px; box-sizing: border-box; padding: 0 10px; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-family: inherit; font-size: 16px"><option>Mother</option><option>Father</option><option>Legal guardian</option></select></div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="ch-s" style="font-size: 14px; font-weight: 600">School or company code <span style="font-weight: 500; color: #5b5f86">(optional)</span></label><input id="ch-s" value="ALNOOR-G4" style="height: 52px; box-sizing: border-box; padding: 0 14px; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-family: inherit; font-size: 16px; letter-spacing: 1px"><span style="font-size: 13px; color: #5b5f86">Links Omar to trips his school books for him.</span></div>
+<div style="padding: 14px; border-radius: 12px; background: #262a67; color: #f6f3e4; display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 15px; font-weight: 600">Live tracking needs Explorer or VIP</span>
+<span style="font-size: 13px; line-height: 18px; color: #b8bad6">See Omar's bus, seat, check-in and programs in real time. Only you see his data.</span>
+<a href="TravPlan.dc.html" style="color: #ff8655; font-size: 14px; font-weight: 600">See plans</a>
+</div>
+<a href="MobileReady.dc.html" style="margin-top: auto; height: 52px; flex-shrink: 0; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 16px; font-weight: 600; display: flex; align-items: center; justify-content: center; text-decoration: none">Add Omar</a>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

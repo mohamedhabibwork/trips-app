@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Traveler · Profile</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="height: 100%; box-sizing: border-box; padding: 56px 16px 120px; display: flex; flex-direction: column; gap: 14px">
+
+<div style="display: flex; align-items: center; gap: 14px">
+<img src="../assets/9bae6808275a736bdbdad8b4ffd6c82b.svg" alt="" style="width: 64px; height: 64px; border-radius: 999px; object-fit: cover; border: 3px solid #ffffff">
+<div style="flex-grow: 1; display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 22px; line-height: 28px; font-weight: 700">Sara Al-Qahtani</span>
+<span style="font-size: 13px; color: #5b5f86">+966 55 ••• 4821 · Riyadh</span>
+</div>
+<a href="TrvPlan.dc.html" style="padding: 4px 12px; border-radius: 999px; background: #f89e23; color: #262a67; font-size: 13px; font-weight: 700; text-decoration: none">Explorer</a>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px">
+<div style="padding: 10px 12px; border-radius: 12px; background: #ffffff; display: flex; flex-direction: column"><span style="font-size: 20px; font-weight: 700">7</span><span style="font-size: 12px; color: #5b5f86">Trips taken</span></div>
+<div style="padding: 10px 12px; border-radius: 12px; background: #ffffff; display: flex; flex-direction: column"><span style="font-size: 20px; font-weight: 700">2</span><span style="font-size: 12px; color: #5b5f86">Upcoming</span></div>
+<div style="padding: 10px 12px; border-radius: 12px; background: #ffffff; display: flex; flex-direction: column"><span style="font-size: 20px; font-weight: 700">4</span><span style="font-size: 12px; color: #5b5f86">Family members</span></div>
+</div>
+
+<nav aria-label="Account" style="border-radius: 20px; background: #ffffff; padding: 0 16px">
+<sc-for list="{{rows}}" as="r" hint-placeholder-count="7">
+<a href="{{r.href}}" style="{{r.row}}">
+<span style="width: 36px; height: 36px; flex-shrink: 0; border-radius: 10px; background: #e6e8f5; display: flex; align-items: center; justify-content: center"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{r.d}}"></path></svg></span>
+<span style="flex-grow: 1; font-size: 15px; font-weight: 600">{{r.t}}</span>
+<span style="font-size: 13px; color: #5b5f86">{{r.meta}}</span>
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5b5f86" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
+</a>
+</sc-for>
+</nav>
+
+<a href="TrvProviderHandoff.dc.html" style="padding: 14px 16px; border-radius: 20px; background: #262a67; color: #f6f3e4; text-decoration: none; display: flex; align-items: center; gap: 12px">
+<span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 16px; font-weight: 600">Work with Trips Enjoy</span><span style="font-size: 13px; line-height: 18px; color: #b8bad6">Become a driver, photographer or organizer. One account, a separate workspace for each role.</span></span>
+<span style="font-size: 14px; font-weight: 600; color: #ff8655; flex-shrink: 0">Apply</span>
+</a>
+
+</div>
+<div style="position: absolute; left: 0; right: 0; bottom: 0; height: 120px">
+<dc-import name="TabBar" role="traveler" active="profile" hint-size="390px,120px"></dc-import>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const R = [
+      ['Family members', 'Faisal, Omar, Lina', 'TrvFamily.dc.html', 'M9 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM3 20a6 6 0 0 1 12 0M16 4.5a3.5 3.5 0 0 1 0 6.5M18 14.5a6 6 0 0 1 3 5.5'],
+      ['Track my children', '1 live now', 'ParHome.dc.html', 'M12 10.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM8.5 15.5a5 5 0 0 1 0-7M15.5 8.5a5 5 0 0 1 0 7M5.6 18.4a9 9 0 0 1 0-12.8M18.4 5.6a9 9 0 0 1 0 12.8'],
+      ['My plan', 'Explorer', 'TrvPlan.dc.html', 'M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z'],
+      ['Receipts', '', 'TrvReceipts.dc.html', 'M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zM14 3v5h5'],
+      ['Settings', '', 'TrvSettings.dc.html', 'M4 6h16M7 12h10M10 18h4'],
+      ['Help & support', '1 open', 'TrvSupport.dc.html', 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 11v5M12 8h.01'],
+      ['Roles & security', '', '#', 'M12 3l7 3v5.5c0 4.4-3 8-7 9.5-4-1.5-7-5.1-7-9.5V6zM9 12l2 2 4-4'],
+      ['Privacy & data', 'Copy or delete', 'TrvPrivacy.dc.html', 'M6 11h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1zM8 11V7a4 4 0 0 1 8 0v4']
+    ];
+    const rows = R.map(([t, meta, href, d], i) => ({ t, meta, href, d,
+      row: 'min-height: 50px; display: flex; align-items: center; gap: 12px; color: #262a67; text-decoration: none;' + (i < R.length - 1 ? ' border-bottom: 1px solid #e3dfc9;' : '') }));
+    return { rows };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Traveler · Rate the trip</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="height: 100%; box-sizing: border-box; padding: 56px 16px 24px; display: flex; flex-direction: column; gap: 12px">
+
+<div style="display: flex; align-items: center; gap: 12px">
+<a href="TrvTrips.dc.html" aria-label="Back" style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 999px; background: #ffffff; color: #262a67; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a>
+<div style="flex-grow: 1; display: flex; flex-direction: column"><h1 style="margin: 0; font-size: 22px; line-height: 28px; font-weight: 700">Rate your trip</h1><span style="font-size: 13px; color: #5b5f86">Taif Rose Farms · Sat 27 Sep · Sunrise Tours Co.</span></div>
+</div>
+
+<div style="border-radius: 20px; background: #ffffff; padding: 14px 16px; display: flex; flex-direction: column; align-items: center; gap: 4px">
+<span id="overall-l" style="font-size: 15px; font-weight: 600">How was the trip overall?</span>
+<div role="radiogroup" aria-labelledby="overall-l" style="display: flex; gap: 2px">
+<sc-for list="{{overall}}" as="s" hint-placeholder-count="5"><button type="button" role="radio" aria-checked="{{s.checked}}" aria-label="{{s.aria}}" onClick="{{s.on}}" style="width: 48px; height: 48px; padding: 0; border: 0; background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center"><svg width="36" height="36" viewBox="0 0 24 24" fill="{{s.fill}}" stroke="{{s.stroke}}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"></path></svg></button></sc-for>
+</div>
+<span style="font-size: 14px; font-weight: 600; color: #c93a00">{{overallWord}}</span>
+</div>
+
+<div style="border-radius: 20px; background: #ffffff; padding: 4px 8px 4px 16px">
+<sc-for list="{{aspects}}" as="a" hint-placeholder-count="4">
+<div style="{{a.row}}">
+<span style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column"><span id="{{a.id}}" style="font-size: 15px; font-weight: 600">{{a.t}}</span><span style="font-size: 12px; color: #5b5f86">{{a.who}}</span></span>
+<div role="radiogroup" aria-labelledby="{{a.id}}" style="display: flex">
+<sc-for list="{{a.stars}}" as="s" hint-placeholder-count="5"><button type="button" role="radio" aria-checked="{{s.checked}}" aria-label="{{s.aria}}" onClick="{{s.on}}" style="width: 32px; height: 44px; padding: 0; border: 0; background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="{{s.fill}}" stroke="{{s.stroke}}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"></path></svg></button></sc-for>
+</div>
+</div>
+</sc-for>
+</div>
+
+<div role="group" aria-label="Quick tags" style="display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{tags}}" as="t" hint-placeholder-count="6"><button type="button" aria-pressed="{{t.pressed}}" onClick="{{t.on}}" style="{{t.style}}">{{t.t}}</button></sc-for>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="comment" style="font-size: 14px; font-weight: 600">Tell other groups more (optional)</label>
+<textarea id="comment" rows="3" style="height: 84px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; padding: 12px 14px; font: inherit; font-size: 16px; line-height: 22px; color: #262a67; resize: none">The kids loved picking roses. Bus left exactly on time.</textarea>
+</div>
+
+<div style="margin-top: auto; display: flex; flex-direction: column; gap: 8px">
+<span style="font-size: 13px; line-height: 18px; color: #5b5f86; display: flex; gap: 8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 1px"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 11v5M12 8h.01"></path></svg>Reviews are public and show your first name, “Sara”. <a href="TrvSettings.dc.html" style="font-weight: 600">Change</a></span>
+<a href="TrvTrips.dc.html" style="height: 52px; border-radius: 12px; background: #ff6c2e; color: #262a67; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700; text-decoration: none">Post review</a>
+</div>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { overall: 5, asp: [5, 5, 4, 5], tags: ['On time', 'Great for kids'] }; }
+  renderVals() {
+    const mk = (val, set, size) => [1, 2, 3, 4, 5].map((n) => ({
+      checked: n === val ? 'true' : 'false', aria: n + (n === 1 ? ' star' : ' stars'),
+      fill: n <= val ? '#f89e23' : 'none', stroke: n <= val ? '#f89e23' : '#7b7fa6', on: () => set(n)
+    }));
+    const words = ['', 'Poor', 'Fair', 'Good', 'Very good', 'Excellent'];
+    const overall = mk(this.state.overall, (n) => this.setState({ overall: n }));
+    const A = [['Organizer', 'Sunrise Tours Co.'], ['Driver', 'Khalid Al-Harbi'], ['Bus comfort', 'Bus 1 · Mercedes Tourismo'], ['Photographer', 'Noura Al-Shehri']];
+    const aspects = A.map(([t, who], i) => ({
+      t, who, id: 'asp-' + i,
+      row: 'min-height: 52px; display: flex; align-items: center; gap: 8px;' + (i < A.length - 1 ? ' border-bottom: 1px solid #e3dfc9;' : ''),
+      stars: mk(this.state.asp[i], (n) => { const a = this.state.asp.slice(); a[i] = n; this.setState({ asp: a }); })
+    }));
+    const tags = ['On time', 'Friendly crew', 'Clean bus', 'Great for kids', 'Well organized'].map((t) => {
+      const on = this.state.tags.indexOf(t) >= 0;
+      return { t, pressed: on ? 'true' : 'false',
+        on: () => { const s = this.state.tags.slice(); const k = s.indexOf(t); if (k >= 0) s.splice(k, 1); else s.push(t); this.setState({ tags: s }); },
+        style: 'height: 40px; padding: 0 14px; border-radius: 999px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; ' + (on ? 'background: #262a67; color: #f6f3e4; border: 1px solid #262a67;' : 'background: #ffffff; color: #262a67; border: 1px solid #7b7fa6;') };
+    });
+    return { overall, overallWord: words[this.state.overall], aspects, tags };
+  }
+}
+</script>
+</body>
+</html>

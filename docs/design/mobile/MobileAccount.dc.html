@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Account · Roles and security</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+.te-li:hover{background:#f6f3e4}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif; display: flex; flex-direction: column; padding: 56px 16px 24px; gap: 16px; position: relative; overflow: hidden">
+<h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 700">Account</h1>
+<div style="display: flex; align-items: center; gap: 12px; padding: 14px; border-radius: 20px; background: #ffffff">
+<img src="../assets/c311d0b40fa5c0d792261872e7c7b89d.svg" alt="" style="width: 52px; height: 52px; border-radius: 999px; object-fit: cover; flex-shrink: 0">
+<span style="flex-grow: 1; display: flex; flex-direction: column"><span style="font-size: 17px; font-weight: 600">Khalid Al-Harbi</span><span style="font-size: 13px; color: #5b5f86">+966 55 ••• 4821 · Saudi Arabia</span></span>
+</div>
+<span style="font-size: 13px; font-weight: 600; color: #5b5f86">USING THE APP AS</span>
+<div role="radiogroup" aria-label="Active role" style="display: flex; flex-direction: column; gap: 8px">
+<sc-for list="{{roles}}" as="r" hint-placeholder-count="2">
+<button role="radio" aria-checked="{{r.on}}" onClick="{{r.pick}}" style="{{r.style}}">
+<span style="flex-grow: 1; display: flex; flex-direction: column; text-align: start"><span style="font-size: 15px; font-weight: 600">{{r.t}}</span><span style="font-size: 13px; color: #5b5f86">{{r.d}}</span></span>
+<span style="{{r.badgeStyle}}">{{r.badge}}</span>
+</button>
+</sc-for>
+<a href="MobileRole.dc.html" style="display: flex; align-items: center; gap: 10px; min-height: 52px; padding: 0 14px; border-radius: 12px; border: 1px dashed #7b7fa6; color: #262a67; font-size: 15px; font-weight: 600; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>Apply for another role</a>
+</div>
+<span style="font-size: 13px; font-weight: 600; color: #5b5f86">SECURITY</span>
+<div style="border-radius: 20px; background: #ffffff; overflow: hidden">
+<a href="MobileNewPassword.dc.html" class="te-li" style="display: flex; justify-content: space-between; align-items: center; min-height: 52px; padding: 0 16px; border-bottom: 1px solid #e3dfc9; color: #262a67; font-size: 15px; font-weight: 500; text-decoration: none">Change password<span style="color: #5b5f86">›</span></a>
+<a href="#" class="te-li" style="display: flex; justify-content: space-between; align-items: center; min-height: 52px; padding: 0 16px; border-bottom: 1px solid #e3dfc9; color: #262a67; font-size: 15px; font-weight: 500; text-decoration: none">Face ID sign-in<span style="font-size: 13px; color: #1f7a4d; font-weight: 600">On</span></a>
+<a href="#" class="te-li" style="display: flex; justify-content: space-between; align-items: center; min-height: 52px; padding: 0 16px; color: #262a67; font-size: 15px; font-weight: 500; text-decoration: none">Signed-in devices<span style="font-size: 13px; color: #5b5f86">3</span></a>
+</div>
+<div style="margin-top: auto; display: flex; flex-direction: column; gap: 4px">
+<button onClick="{{openOut}}" style="height: 52px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-family: inherit; font-size: 16px; font-weight: 600">Sign out</button>
+<a href="MobileDeleteAccount.dc.html" style="height: 44px; display: flex; align-items: center; justify-content: center; color: #b42318; font-size: 14px; font-weight: 600; text-decoration: none">Delete account</a>
+</div>
+<sc-if value="{{sheet}}" hint-placeholder-val="{{false}}">
+<div style="position: absolute; inset: 0; background: rgba(16,18,48,.45)"></div>
+<div role="dialog" aria-modal="true" aria-labelledby="so-h" style="position: absolute; left: 0; right: 0; bottom: 0; background: #ffffff; border-radius: 20px 20px 0 0; padding: 24px 16px 32px; display: flex; flex-direction: column; gap: 12px">
+<h2 id="so-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">Sign out of Trips Enjoy?</h2>
+<p style="margin: 0; font-size: 15px; line-height: 22px; color: #5b5f86">You won't get trip offers or live updates on this phone until you sign in again.</p>
+<label style="display: flex; gap: 10px; align-items: center; font-size: 15px"><input type="checkbox" style="width: 20px; height: 20px; accent-color: #262a67">Sign out on all my devices</label>
+<a href="AuthWelcome.dc.html" style="height: 52px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 16px; font-weight: 600; display: flex; align-items: center; justify-content: center; text-decoration: none">Sign out</a>
+<button onClick="{{closeOut}}" style="height: 48px; border: none; background: transparent; color: #262a67; font-family: inherit; font-size: 15px; font-weight: 600">Cancel</button>
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"showSignOut":{"editor":"boolean","default":false},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+constructor(p) { super(p); this.state = { role: 'driver', sheet: null }; }
+renderVals() {
+const R = [{ id: 'traveler', t: 'Traveler', d: 'Book trips for you and your family', badge: 'Active', ok: true }, { id: 'driver', t: 'Driver', d: 'Trip offers and your schedule', badge: 'Approved', ok: true }, { id: 'photographer', t: 'Photographer', d: 'Application under review', badge: 'In review', ok: false }];
+const sheet = this.state.sheet ?? !!this.props.showSignOut;
+return { sheet, openOut: () => this.setState({ sheet: true }), closeOut: () => this.setState({ sheet: false }),
+roles: R.map(r => { const on = this.state.role === r.id; return { ...r, on: on ? 'true' : 'false', pick: () => r.ok && this.setState({ role: r.id }),
+style: 'display: flex; align-items: center; gap: 12px; min-height: 60px; padding: 8px 14px; border-radius: 12px; background: #ffffff; color: #262a67; font-family: inherit; cursor: ' + (r.ok ? 'pointer;' : 'default; opacity: .75;') + (on ? ' border: 2px solid #fb8030;' : ' border: 1px solid #e3dfc9;'),
+badgeStyle: 'padding: 2px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; ' + (r.ok ? 'background: #e3f3ea; color: #1f7a4d;' : 'background: #f89e23; color: #262a67;') }; }) };
+}
+}
+</script>
+</body>
+</html>

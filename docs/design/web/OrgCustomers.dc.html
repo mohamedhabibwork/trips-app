@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Organization · Customers</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+.te-row:hover{background:#f6f3e4}
+</style>
+</helmet>
+<div style="min-height: 1000px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="OrgNav" active="Customers" hint-size="248px,1000px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 20px">
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; color: #5b5f86">Travelers and corporate accounts who booked with Sunrise Tours</span><h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Customers</h1></div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px">
+<button type="button" style="height: 48px; padding: 0 18px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font: inherit; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"></path></svg>Import CSV</button>
+<button type="button" style="height: 48px; padding: 0 18px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font: inherit; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12M7 11l5 5 5-5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"></path></svg>Export</button>
+<button type="button" style="height: 48px; padding: 0 20px; border-radius: 12px; border: 0; background: #ff6c2e; color: #262a67; font: inherit; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Add customer</button>
+</div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 16px">
+<sc-for list="{{kpis}}" as="k" hint-placeholder-count="4">
+<div style="padding: 18px 20px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 14px; color: #5b5f86">{{k.l}}</span>
+<span style="font-size: 28px; line-height: 34px; font-weight: 700">{{k.v}} <span style="font-size: 15px; font-weight: 500; color: #5b5f86">{{k.u}}</span></span>
+<span style="{{k.ds}}">{{k.d}}</span>
+</div>
+</sc-for>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center" role="group" aria-label="Segments">
+<sc-for list="{{chips}}" as="c" hint-placeholder-count="6">
+<button type="button" aria-pressed="{{c.pressed}}" onClick="{{c.on}}" style="{{c.style}}">{{c.l}} <span style="{{c.ns}}">{{c.n}}</span></button>
+</sc-for>
+<a href="OrgSegments.dc.html" style="margin-inline-start: 4px; font-size: 14px; font-weight: 600">Manage segments</a>
+</div>
+
+<section aria-labelledby="cu-h" style="background: #ffffff; border-radius: 20px; padding: 20px 0 8px">
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 0 20px 14px; gap: 12px; flex-wrap: wrap">
+<h2 id="cu-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">{{title}}</h2>
+<div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center">
+<label style="position: relative; display: flex; align-items: center"><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Search customers</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5b5f86" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position: absolute; left: 12px"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM20 20l-4-4"></path></svg><input type="search" placeholder="Name, phone, email or booking ref" style="height: 44px; width: 300px; max-width: 100%; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 14px 0 38px; font: inherit; font-size: 15px; color: #262a67"></label>
+<label style="display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600">Type<select style="height: 44px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 10px; font: inherit; font-size: 15px; color: #262a67"><option>All types</option><option>Traveler</option><option>Family</option><option>Corporate</option></select></label>
+</div>
+</div>
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 1080px; border-collapse: collapse; font-size: 15px">
+<thead><tr style="color: #5b5f86; font-size: 13px"><th scope="col" style="text-align: start; padding: 10px 20px; font-weight: 600">Customer</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Type</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">City</th><th scope="col" style="text-align: end; padding: 10px 12px; font-weight: 600">Trips</th><th scope="col" style="text-align: end; padding: 10px 12px; font-weight: 600">Lifetime spend</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Last trip</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Plan</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Tags</th><th scope="col" style="text-align: start; padding: 10px 20px; font-weight: 600">Marketing consent</th></tr></thead>
+<tbody>
+<sc-for list="{{rows}}" as="r" hint-placeholder-count="8">
+<tr class="te-row" style="border-top: 1px solid #e3dfc9">
+<td style="padding: 10px 20px"><a href="OrgCustomer.dc.html" style="display: flex; flex-direction: column; color: #262a67; text-decoration: none"><span style="font-weight: 600">{{r.n}}</span><span style="font-size: 13px; color: #5b5f86">{{r.c}}</span></a></td>
+<td style="padding: 10px 12px"><span style="{{r.ts}}">{{r.t}}</span></td>
+<td style="padding: 10px 12px; font-size: 14px">{{r.city}}</td>
+<td style="padding: 10px 12px; text-align: end">{{r.trips}}</td>
+<td style="padding: 10px 12px; text-align: end; font-weight: 600; white-space: nowrap">{{r.spend}}</td>
+<td style="padding: 10px 12px"><span style="display: flex; flex-direction: column"><span style="font-size: 14px">{{r.last}}</span><span style="font-size: 13px; color: #5b5f86">{{r.lastD}}</span></span></td>
+<td style="padding: 10px 12px; font-size: 14px">{{r.plan}}</td>
+<td style="padding: 10px 12px"><span style="display: flex; flex-wrap: wrap; gap: 4px"><sc-for list="{{r.tags}}" as="g" hint-placeholder-count="2"><span style="padding: 1px 8px; border-radius: 999px; background: #f6f3e4; border: 1px solid #e3dfc9; font-size: 12px; font-weight: 600; white-space: nowrap">{{g}}</span></sc-for></span></td>
+<td style="padding: 10px 20px"><span style="display: flex; gap: 4px"><sc-for list="{{r.cons}}" as="o" hint-placeholder-count="4"><span role="img" aria-label="{{o.lab}}" title="{{o.lab}}" style="{{o.st}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{o.d}}"></path></svg></span></sc-for></span></td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+<div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; padding: 12px 20px 4px; border-top: 1px solid #e3dfc9; font-size: 14px; color: #5b5f86">
+<span>{{shown}}</span>
+<span style="display: flex; gap: 14px; align-items: center"><span style="display: inline-flex; align-items: center; gap: 6px"><span style="width: 14px; height: 14px; border-radius: 4px; background: #e3f3ea; border: 1px solid #1f7a4d"></span>Opted in</span><span style="display: inline-flex; align-items: center; gap: 6px"><span style="width: 14px; height: 14px; border-radius: 4px; background: #ffffff; border: 1px dashed #7b7fa6"></span>Not opted in</span></span>
+</div>
+</section>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { seg: 'All' }; }
+  renderVals() {
+    const typeTone = { Traveler: 'background: #e6e8f5; color: #262a67;', Family: 'background: #fdf0d5; color: #8a4b00;', Corporate: 'background: #262a67; color: #f6f3e4;' };
+    const pill = (t) => 'display: inline-flex; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; ' + typeTone[t];
+    const kpis = [
+      { l: 'Customers', v: '3,412', u: '', d: '▲ 146 new in October', ds: 'font-size: 13px; font-weight: 600; color: #1f7a4d' },
+      { l: 'Repeat rate', v: '38%', u: '', d: 'Booked 2 or more trips', ds: 'font-size: 13px; color: #5b5f86' },
+      { l: 'Avg lifetime spend', v: '2,860', u: 'SAR', d: 'Corporate accounts avg 41,200 SAR', ds: 'font-size: 13px; color: #5b5f86' },
+      { l: 'Opted in to marketing', v: '2,214', u: '', d: '65% on at least one channel', ds: 'font-size: 13px; color: #5b5f86' }
+    ];
+    const segs = [['All', 'All customers', '3,412'], ['fam', 'Families with children', '1,104'], ['rep', 'Repeat travellers', '1,296'], ['lap', 'Lapsed 90+ days', '742'], ['jvip', 'Jeddah VIP', '86'], ['corp', 'Corporate & schools', '24']];
+    const seg = this.state.seg;
+    const chips = segs.map(([k, l, n]) => { const on = k === seg; return { l, n, pressed: on ? 'true' : 'false', on: () => this.setState({ seg: k }),
+      style: 'height: 36px; padding: 0 14px; border-radius: 999px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; ' + (on ? 'background: #262a67; color: #f6f3e4; border: 1px solid #262a67;' : 'background: #ffffff; color: #262a67; border: 1px solid #e3dfc9;'),
+      ns: 'font-size: 12px; font-weight: 700; ' + (on ? 'color: #f89e23;' : 'color: #5b5f86;') }; });
+    const I = { mail: 'M4 6h16v12H4zM4 7l8 6 8-6', sms: 'M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2', wa: 'M4 5h16v11H9l-5 4z', push: 'M6 16v-5a6 6 0 0 1 12 0v5l2 2H4zM10 21a2 2 0 0 0 4 0' };
+    const ch = [['mail', 'Email'], ['sms', 'SMS'], ['wa', 'WhatsApp'], ['push', 'Push']];
+    const cons = (flags) => ch.map(([k, lab], i) => { const on = flags[i] === '1'; return { d: I[k], lab: lab + (on ? ': opted in' : ': not opted in'),
+      st: 'width: 26px; height: 26px; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; ' + (on ? 'background: #e3f3ea; color: #1f7a4d; border: 1px solid #1f7a4d;' : 'background: #ffffff; color: #5b5f86; border: 1px dashed #7b7fa6;') }; });
+    const all = [
+      ['Sara Al-Qahtani', '+966 55 ••• 4821 · 4 travellers', 'Family', 'Riyadh', '3', '14,980 SAR', 'AlUla Heritage Weekend', 'Upcoming · Thu 16 Oct', 'Explorer', ['Repeat', 'Tracking on'], '1011', ['fam', 'rep']],
+      ['Al Noor International School', 'Huda Al-Otaibi · Activities', 'Corporate', 'Riyadh', '6', '128,400 SAR', 'Grade 4 Zoo Day', 'Today · Tue 14 Oct', 'B2B · Net 30', ['School', 'Child tracking'], '1000', ['corp', 'rep']],
+      ['Majid Al-Harthy', '+966 50 ••• 1937', 'Traveler', 'Jeddah', '7', '11,260 SAR', 'Jeddah Corniche Night', 'Upcoming · Fri 17 Oct', 'VIP', ['VIP', 'Repeat'], '1111', ['jvip', 'rep']],
+      ['Abdullah Al-Shammari', '+966 54 ••• 6620', 'Traveler', 'Riyadh', '5', '9,875 SAR', 'AlUla Heritage Weekend', 'Upcoming · Thu 16 Oct', 'VIP', ['VIP', 'Balloon'], '1011', ['rep']],
+      ['Hassan Al-Mutawa', '+966 56 ••• 3048 · 3 travellers', 'Family', 'Jeddah', '4', '7,340 SAR', 'Red Sea Snorkel Day', 'Upcoming · Fri 24 Oct', 'Explorer', ['Jeddah VIP'], '0110', ['fam', 'jvip', 'rep']],
+      ['Yara Al-Saud', '+966 53 ••• 7714', 'Traveler', 'Riyadh', '3', '3,210 SAR', 'Al Ahsa Oasis Day', 'Thu 12 Jun · 124 days ago', 'Free', ['Lapsed'], '1000', ['lap', 'rep']],
+      ['Lama Al-Rashid', '+966 55 ••• 2290 · 2 travellers', 'Family', 'Taif', '2', '1,680 SAR', 'Taif Rose Farms', 'Upcoming · Thu 30 Oct', 'Explorer', ['Tracking on'], '1001', ['fam', 'rep']],
+      ['Nakheel Engineering', 'Faris Al-Ghamdi · HR', 'Corporate', 'Riyadh', '2', '38,600 SAR', 'Edge of the World Hike', 'Sat 21 Jun · 115 days ago', 'B2B · Net 30', ['Team offsite'], '1000', ['corp', 'lap', 'rep']],
+      ['Reem Al-Dosari', '+966 59 ••• 0482', 'Traveler', 'Dammam', '1', '2,670 SAR', 'AlUla Heritage Weekend', 'Upcoming · Thu 16 Oct', 'Free', ['First trip'], '0001', []]
+    ].map(([n, c, t, city, trips, spend, last, lastD, plan, tags, flags, sg]) => ({ n, c, t, ts: pill(t), city, trips, spend, last, lastD, plan, tags, cons: cons(flags), sg }));
+    const rows = (seg === 'All' ? all : all.filter((r) => r.sg.includes(seg))).slice(0, 8);
+    const cur = segs.find((s) => s[0] === seg);
+    return { kpis, chips, rows, title: seg === 'All' ? 'All customers' : cur[1], shown: 'Showing ' + rows.length + ' of ' + cur[2] + ' · sorted by last activity' };
+  }
+}
+</script>
+</body>
+</html>

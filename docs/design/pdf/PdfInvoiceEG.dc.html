@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>PDF · Tax invoice (Egypt)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;family=Cairo:wght@400;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#ffffff}
+</style>
+</helmet>
+<div style="width: 794px; height: 1123px; box-sizing: border-box; padding: 48px; background: #ffffff; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif; font-size: 15px; line-height: 1.45; display: flex; flex-direction: column; gap: 20px">
+<header style="display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; padding-bottom: 16px; border-bottom: 2px solid #262a67">
+<img src="../assets/1fbce194fcb16bf54904c32c189fca31.svg" alt="Trips Enjoy" style="height: 40px; width: auto; display: block">
+<div style="text-align: right">
+<div style="font-size: 24px; font-weight: 700; line-height: 1.15">Tax Invoice</div>
+<div style="font-family: Cairo, sans-serif; font-size: 18px; font-weight: 700" dir="rtl" lang="ar">فاتورة ضريبية</div>
+<div style="font-size: 16px; font-weight: 600">INV-EG-2026-000318</div>
+</div>
+</header>
+<section style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0; border: 1px solid #e3dfc9; border-radius: 8px">
+<div style="padding: 10px 14px; border-right: 1px solid #e3dfc9"><div style="font-size: 13px; color: #5b5f86">Issue date · <span style="font-family: Cairo, sans-serif">تاريخ الإصدار</span></div><div style="font-weight: 600">17 Oct 2026, 11:40 (Cairo)</div></div>
+<div style="padding: 10px 14px; border-right: 1px solid #e3dfc9"><div style="font-size: 13px; color: #5b5f86">Supply date · <span style="font-family: Cairo, sans-serif">تاريخ التوريد</span></div><div style="font-weight: 600">5 Nov 2026</div></div>
+<div style="padding: 10px 14px"><div style="font-size: 13px; color: #5b5f86">Currency · <span style="font-family: Cairo, sans-serif">العملة</span></div><div style="font-weight: 600">EGP · Egyptian pound</div></div>
+</section>
+<section style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px">
+<div><div style="display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: #5b5f86"><img src="../assets/2e100411aaec4ed457eb0b41922f0daa.svg" alt="" style="width: 32px; height: 32px; border-radius: 10px; object-fit: cover; flex-shrink: 0; display: block"><span>SELLER · <span style="font-family: Cairo, sans-serif">البائع</span></span></div><div style="font-size: 17px; font-weight: 700">Nile Horizon Tours <span style="font-family: Cairo, sans-serif; font-weight: 600" lang="ar">نايل هورايزن للسياحة</span></div><div>Tax reg. no. 512-384-907 · CR 184522 Cairo</div><div>14 Mohamed Mazhar St, Zamalek, Cairo 11211</div></div>
+<div><div style="min-height: 32px; display: flex; align-items: center; font-size: 13px; font-weight: 600; color: #5b5f86"><span>BUYER · <span style="font-family: Cairo, sans-serif">المشتري</span></span></div><div style="font-size: 17px; font-weight: 700">Mariam Adel</div><div>Booking TE-E10482 · +20 10 ••• 2210</div><div>Siwa Oasis Escape · Thu 5 – Sat 7 Nov · 4 travelers</div></div>
+</section>
+<table style="width: 100%; border-collapse: collapse">
+<thead>
+<tr style="font-size: 13px; color: #5b5f86; border-bottom: 1px solid #262a67">
+<th style="padding: 6px 8px 6px 0; text-align: left; font-weight: 600">Item · <span style="font-family: Cairo, sans-serif">البند</span></th>
+<th style="padding: 6px 8px; text-align: right; font-weight: 600">Qty</th>
+<th style="padding: 6px 8px; text-align: right; font-weight: 600">Unit price</th>
+<th style="padding: 6px 0 6px 8px; text-align: right; font-weight: 600">Amount incl. tax</th>
+</tr>
+</thead>
+<tbody>
+<sc-for list="{{lines}}" as="l" hint-placeholder-count="6">
+<tr style="border-bottom: 1px solid #e3dfc9">
+<td style="padding: 8px 8px 8px 0">{{l.t}}</td>
+<td style="padding: 8px; text-align: right; white-space: nowrap">{{l.q}}</td>
+<td style="padding: 8px; text-align: right; white-space: nowrap">{{l.u}}</td>
+<td style="padding: 8px 0 8px 8px; text-align: right; white-space: nowrap; font-weight: 600">{{l.a}}</td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+<section style="display: flex; justify-content: space-between; gap: 24px; align-items: flex-start">
+<div style="display: flex; gap: 14px; align-items: center">
+<img src="../assets/820ae1ed630eb3e04ea4d7ce91f50535.png" alt="QR code that opens booking TE-E10482" style="width: 112px; height: 112px; display: block">
+<div style="font-size: 13px; color: #5b5f86; max-width: 200px">Scan to open booking TE-E10482 in the Trips Enjoy app. This is a booking code, not a tax authority code.</div>
+</div>
+<div style="flex: 0 1 360px">
+<div style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #e3dfc9"><span>Subtotal <span style="font-family: Cairo, sans-serif; color: #5b5f86">المجموع</span></span><span>23,180.00</span></div>
+<div style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #e3dfc9"><span>Discounts <span style="font-family: Cairo, sans-serif; color: #5b5f86">الخصومات</span></span><span>−2,125.00</span></div>
+<div style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #e3dfc9"><span>Total excl. tax</span><span>[amount]</span></div>
+<div style="display: flex; justify-content: space-between; gap: 12px; padding: 6px 0; border-bottom: 1px solid #e3dfc9"><span>Tax ([rate]% — Egypt rate set in Admin › Countries) <span style="font-family: Cairo, sans-serif; color: #5b5f86">الضريبة</span></span><span style="white-space: nowrap">[amount]</span></div>
+<div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 2px solid #262a67; font-size: 18px; font-weight: 700"><span>Total incl. tax</span><span>21,055.00 EGP</span></div>
+<div style="padding-top: 8px; font-size: 14px">Paid · card via Paymob •• 7713 · Sat 17 Oct 2026 · Ref PMB-55120934</div>
+</div>
+</section>
+<div style="font-size: 14px; color: #5b5f86">Issued by Trips Enjoy on behalf of the seller. Prices include tax at the rate set for Egypt; tax is worked out per line and rounded half up to the piastre. Discounts: coupon NILE10 (10% off seats) and Explorer plan (5% off the two optional programs). Refunds are issued as credit notes that reference this invoice number.</div>
+<footer style="margin-top: auto; padding-top: 12px; border-top: 1px solid #e3dfc9; display: flex; justify-content: space-between; gap: 16px; font-size: 13px; color: #5b5f86">
+<span>Trips Enjoy · 26 July St, Zamalek, Cairo · trips-enjoy.com</span>
+<span style="white-space: nowrap">support@trips-enjoy.com · Page 1 / 1</span>
+</footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":794,"height":1123}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const L = [
+      ['Seats · Siwa Oasis Escape, 3 days', '4', '4,950.00', '19,800.00'],
+      ['Travel insurance (required)', '4', '120.00', '480.00'],
+      ['Cleopatra Spring swim and Fatnas sunset', '4', '350.00', '1,400.00'],
+      ['Great Sand Sea 4×4 safari', '2', '750.00', '1,500.00'],
+      ['Coupon NILE10 · 10% off seats', '', '', '−1,980.00'],
+      ['Explorer plan · 5% off programs', '', '', '−145.00']
+    ];
+    return { lines: L.map(([t, q, u, a]) => ({ t, q, u, a })) };
+  }
+}
+</script>
+</body>
+</html>

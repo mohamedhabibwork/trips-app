@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Finish signing up with Apple</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif; display: flex; flex-direction: column; padding: 56px 16px 32px; gap: 18px">
+<a href="MobileSignIn.dc.html" aria-label="Back" style="width: 44px; height: 44px; border-radius: 999px; background: #ffffff; display: flex; align-items: center; justify-content: center; color: #262a67"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg></a>
+<div style="display: flex; flex-direction: column; gap: 4px">
+<h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 700">Almost there</h1>
+<p style="margin: 0; font-size: 15px; line-height: 22px; color: #5b5f86">You signed in with Apple. Add your mobile number so drivers and organizers can reach you on trip day.</p>
+</div>
+<div style="display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 12px; background: #ffffff">
+<img src="../assets/9bae6808275a736bdbdad8b4ffd6c82b.svg" alt="" style="width: 40px; height: 40px; border-radius: 999px; object-fit: cover; flex-shrink: 0; display: block">
+<span style="flex-grow: 1; display: flex; flex-direction: column"><span style="font-size: 15px; font-weight: 600">Sara Al-Qahtani</span><span style="font-size: 13px; color: #5b5f86">Hidden email · privaterelay.appleid.com</span></span>
+<span style="font-size: 12px; font-weight: 600; color: #1f7a4d">Linked</span>
+</div>
+<dc-import name="CountryField" label="Country" country="SA" field-id="sc-country" hint-size="100%,78px"></dc-import>
+<dc-import name="PhoneField" label="Mobile number" value="" country="SA" helper="We'll text you a code to verify it." field-id="sc-phone" hint-size="100%,100px"></dc-import>
+<div style="padding: 12px; border-radius: 12px; background: #ffffff; font-size: 13px; line-height: 18px; color: #5b5f86">Joining as a driver, photographer or organization? <a href="MobileRole.dc.html" style="font-weight: 600">Choose your account type</a> — you'll continue with the same Apple login.</div>
+<a href="MobileOtp.dc.html" style="margin-top: auto; height: 52px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 16px; font-weight: 600; display: flex; align-items: center; justify-content: center; text-decoration: none">Send code</a>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

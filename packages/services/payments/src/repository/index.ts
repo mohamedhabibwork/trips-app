@@ -1,4 +1,4 @@
-import { desc, eq } from "@trips-app/db";
+import { and, desc, eq, lt, or } from "@trips-app/db";
 import type { Database, Database as ServiceDatabase } from "@trips-app/db";
 import { schema } from "@trips-app/db/zod";
 import type {
@@ -46,6 +46,33 @@ export function createPaymentsRepository(db: Database) {
         .where(eq(schema.paymentTransactions.id, paymentId))
         .limit(1);
       return row ?? null;
+    },
+
+    async findPaymentByProviderReference(providerReference: string) {
+      const [row] = await db
+        .select()
+        .from(schema.paymentTransactions)
+        .where(eq(schema.paymentTransactions.providerReference, providerReference))
+        .limit(1);
+      return row ?? null;
+    },
+
+    /** D-30: pending payments with no callback before the deadline fail and free the retry. */
+    async expireStalePending(cutoff: Date) {
+      const rows = await db
+        .update(schema.paymentTransactions)
+        .set({ status: "failed", updatedAt: new Date() })
+        .where(
+          and(
+            or(
+              eq(schema.paymentTransactions.status, "pending"),
+              eq(schema.paymentTransactions.status, "requires_action"),
+            ),
+            lt(schema.paymentTransactions.createdAt, cutoff),
+          ),
+        )
+        .returning({ id: schema.paymentTransactions.id });
+      return rows.length;
     },
 
     async markPaymentSucceeded(paymentId: string) {

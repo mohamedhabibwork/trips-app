@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>PDF · Driver statement</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;family=Cairo:wght@400;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#ffffff}
+</style>
+</helmet>
+<div style="width: 794px; height: 1123px; box-sizing: border-box; padding: 48px; background: #ffffff; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif; font-size: 15px; line-height: 1.45; display: flex; flex-direction: column; gap: 20px">
+<header style="display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; padding-bottom: 16px; border-bottom: 2px solid #262a67">
+<img src="../assets/1fbce194fcb16bf54904c32c189fca31.svg" alt="Trips Enjoy" style="height: 40px; width: auto; display: block">
+<div style="text-align: right">
+<div style="font-size: 24px; font-weight: 700; line-height: 1.15">Provider statement</div>
+<div style="font-size: 16px; font-weight: 600">STL-KH-2026-10 · October 2026</div>
+<div style="font-size: 14px; color: #5b5f86">Period 1–31 Oct 2026 · Paid weekly, Mondays 06:00 · no minimum</div>
+</div>
+</header>
+<section style="display: flex; justify-content: space-between; gap: 24px">
+<div><div style="font-size: 13px; font-weight: 600; color: #5b5f86">PAYEE</div><div style="font-size: 18px; font-weight: 700">Khalid Al-Harbi</div><div>Platform driver · Professional plan · Verified</div><div>Mercedes Tourismo, 49 seats · plate ABC 4821</div><div>Payout to IBAN SA•• •• 2207</div></div>
+<div style="text-align: right"><div style="font-size: 13px; font-weight: 600; color: #5b5f86">NET PAYOUT</div><div style="font-size: 28px; font-weight: 700">3,880.00 SAR</div><div>Status: 2 paid · 1 scheduled</div></div>
+</section>
+<section style="display: grid; grid-template-columns: repeat(5, 1fr); border: 1px solid #e3dfc9; border-radius: 8px">
+<div style="padding: 10px 12px; border-right: 1px solid #e3dfc9"><div style="font-size: 13px; color: #5b5f86">Opening balance</div><div style="font-weight: 700">−80.00</div></div>
+<div style="padding: 10px 12px; border-right: 1px solid #e3dfc9"><div style="font-size: 13px; color: #5b5f86">Deals · credits</div><div style="font-weight: 700">+4,400.00</div></div>
+<div style="padding: 10px 12px; border-right: 1px solid #e3dfc9"><div style="font-size: 13px; color: #5b5f86">Commission</div><div style="font-weight: 700">−440.00</div></div>
+<div style="padding: 10px 12px; border-right: 1px solid #e3dfc9; background: #262a67; color: #f6f3e4"><div style="font-size: 13px; color: #b8bad6">Payout</div><div style="font-weight: 700">−3,880.00</div></div>
+<div style="padding: 10px 12px"><div style="font-size: 13px; color: #5b5f86">Closing balance</div><div style="font-weight: 700">0.00</div></div>
+</section>
+<table style="width: 100%; border-collapse: collapse">
+<thead>
+<tr style="font-size: 13px; color: #5b5f86; border-bottom: 1px solid #262a67; text-align: right">
+<th style="padding: 6px 8px 6px 0; text-align: left; font-weight: 600">Date</th>
+<th style="padding: 6px 8px; text-align: left; font-weight: 600">Description</th>
+<th style="padding: 6px 8px; text-align: left; font-weight: 600">Document</th>
+<th style="padding: 6px 0 6px 8px; font-weight: 600">Amount SAR</th>
+</tr>
+</thead>
+<tbody>
+<sc-for list="{{rows}}" as="r" hint-placeholder-count="6">
+<tr style="border-bottom: 1px solid #e3dfc9; vertical-align: top">
+<td style="padding: 8px 8px 8px 0; white-space: nowrap">{{r.d}}</td>
+<td style="padding: 8px"><div style="font-weight: 600">{{r.t}}</div><div style="font-size: 13px; color: #5b5f86">{{r.s}}</div></td>
+<td style="padding: 8px; font-size: 14px">{{r.doc}}</td>
+<td style="padding: 8px 0 8px 8px; text-align: right; font-weight: 600; white-space: nowrap">{{r.a}}</td>
+</tr>
+</sc-for>
+<tr style="border-top: 2px solid #262a67; font-weight: 700">
+<td style="padding: 8px 8px 8px 0" colspan="3">Net payout · 4,400.00 − 440.00 − 80.00</td>
+<td style="padding: 8px 0 8px 8px; text-align: right">3,880.00</td>
+</tr>
+</tbody>
+</table>
+<section style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 14px">
+<div><div style="font-weight: 700; font-size: 15px">Not in this payout</div>Professional plan, October · 149.00 + VAT 22.35 = 171.35 SAR, charged to your card on file, not deducted from earnings.</div>
+<div><div style="font-weight: 700; font-size: 15px">About self-billed invoices</div>Trips Enjoy issues SB-KH invoices to each organization on your behalf after you approve them. SB-KH-2026-0031 is paid once you approve it.</div>
+</section>
+<footer style="margin-top: auto; padding-top: 12px; border-top: 1px solid #e3dfc9; display: flex; justify-content: space-between; gap: 16px; font-size: 13px; color: #5b5f86">
+<span>Trips Enjoy Co. · CR 1010998877 · VAT 311098765400003 · Prince Turki St, Al Aqiq, Riyadh 13511</span>
+<span style="white-space: nowrap">support@trips-enjoy.com · Page 1 / 1</span>
+</footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":794,"height":1123}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const R = [
+      ['1 Oct', 'Refund carried from September', 'Negative balance after Sep payout', 'CN adjustment', '−80.00'],
+      ['3 Oct', 'Desert Rose Travel · Taif Rose Farms', 'Deal finalized · 1 bus · 700.00 less commission 70.00', 'SB-KH-2026-0027 · Cleared', '+630.00'],
+      ['6 Oct', 'Payout to IBAN SA•• •• 2207', 'Paid · Monday run · after the 80.00 carried', 'TE-PO-2026-W40-KH', '−550.00'],
+      ['9 Oct', 'Sunrise Tours Co. · Jeddah Corniche Night', 'Deal finalized · Bus 3 · 700.00 less commission 70.00', 'SB-KH-2026-0029 · Cleared', '+630.00'],
+      ['13 Oct', 'Payout to IBAN SA•• •• 2207', 'Paid · Monday run', 'TE-PO-2026-W41-KH', '−630.00'],
+      ['18 Oct', 'Sunrise Tours Co. · AlUla Heritage Weekend', 'Deal finalized · Bus 2, 3 days · 3,000.00 less commission 300.00 (INV-TE-2026-118204)', 'SB-KH-2026-0031 · Awaiting approval', '+2,700.00'],
+      ['20 Oct', 'Payout to IBAN SA•• •• 2207', 'Scheduled · Monday run, once you approve SB-KH-2026-0031', 'TE-PO-2026-W42-KH', '−2,700.00']
+    ];
+    return { rows: R.map(([d, t, s, doc, a]) => ({ d, t, s, doc, a })) };
+  }
+}
+</script>
+</body>
+</html>

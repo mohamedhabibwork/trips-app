@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Org · Company analytics</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+.te-tab:hover{background:#f6f3e4}
+.te-row:hover{background:#f6f3e4}
+</style>
+</helmet>
+<div style="min-height: 1500px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="OrgNav" active="Analytics" hint-size="248px,1500px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 24px">
+
+<div style="display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; color: #5b5f86">Analytics · Basic on Growth plan</span><h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Company analytics</h1></div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end">
+<label style="display: flex; flex-direction: column; gap: 4px; font-size: 14px; font-weight: 600">Date range<select style="height: 48px; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; padding: 0 12px; font: inherit; font-size: 15px; font-weight: 500; color: #262a67"><option>Last 12 months · Nov–Oct</option><option>This quarter</option><option>Last 30 days</option><option>Custom range</option></select></label>
+<a href="OrgBilling.dc.html" style="height: 48px; box-sizing: border-box; padding: 0 16px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 11h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1zM8 11V7a4 4 0 0 1 8 0v4"></path></svg>Export<span style="padding: 1px 8px; border-radius: 999px; background: #e6e8f5; font-size: 12px; font-weight: 700">Enterprise</span></a>
+</div>
+</div>
+<nav aria-label="Analytics reports" style="align-self: flex-start; max-width: 100%; display: flex; flex-wrap: wrap; gap: 4px; padding: 4px; border-radius: 14px; background: #ffffff">
+<sc-for list="{{tabs}}" as="t" hint-placeholder-count="5"><a href="{{t.href}}" class="te-tab" aria-current="{{t.cur}}" style="{{t.style}}">{{t.l}}<sc-if value="{{t.ent}}" hint-placeholder-val="{{false}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 11h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1zM8 11V7a4 4 0 0 1 8 0v4"></path></svg><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap">(Enterprise)</span></sc-if></a></sc-for>
+</nav>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px">
+<sc-for list="{{kpis}}" as="k" hint-placeholder-count="8">
+<div style="padding: 16px 20px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 14px; color: #5b5f86">{{k.l}}</span>
+<span style="font-size: 28px; line-height: 34px; font-weight: 700">{{k.v}} <span style="font-size: 15px; font-weight: 500; color: #5b5f86">{{k.u}}</span></span>
+<span style="font-size: 13px; font-weight: 600; color: {{k.dc}}">{{k.d}}</span>
+</div>
+</sc-for>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: stretch">
+<section aria-labelledby="rev-h" style="flex: 2 1 520px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; align-items: center">
+<h2 id="rev-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">Revenue by month</h2>
+<div style="display: flex; gap: 16px; flex-wrap: wrap; font-size: 13px"><span style="display: inline-flex; align-items: center; gap: 6px"><span style="width: 16px; height: 3px; border-radius: 2px; background: #262a67"></span>Last 12 months</span><span style="display: inline-flex; align-items: center; gap: 6px"><span style="width: 16px; height: 0; border-top: 3px dashed #8a8fc4"></span>Year before</span></div>
+</div>
+<svg viewBox="0 0 640 224" role="img" aria-label="Revenue by month in SAR. Last 12 months: November 210 thousand, rising to 340 thousand in April, dipping to 230 thousand in June, then climbing to 381 thousand in September and 412.6 thousand in October. Every month is above the year before, which ran from 160 to 330 thousand." style="width: 100%; height: auto; display: block; font-family: Outfit, Nunito, system-ui, sans-serif">
+<g stroke="#e3dfc9" stroke-width="1"><line x1="48" y1="16" x2="624" y2="16"></line><line x1="48" y1="76" x2="624" y2="76"></line><line x1="48" y1="136" x2="624" y2="136"></line><line x1="48" y1="196" x2="624" y2="196"></line></g>
+<g fill="#5b5f86" font-size="11" text-anchor="end"><text x="40" y="20">450k</text><text x="40" y="80">300k</text><text x="40" y="140">150k</text><text x="40" y="200">0</text></g>
+<polygon points="48,196 48.0,112.0 100.4,90.0 152.7,100.0 205.1,94.0 257.5,76.0 309.8,60.0 362.2,80.0 414.5,104.0 466.9,98.0 519.3,88.0 571.6,43.6 624.0,31.0 624,196" fill="#262a67" fill-opacity="0.07"></polygon>
+<polyline points="48.0,132.0 100.4,120.0 152.7,114.0 205.1,116.0 257.5,96.0 309.8,86.0 362.2,100.0 414.5,118.0 466.9,116.0 519.3,110.0 571.6,76.0 624.0,64.0" fill="none" stroke="#8a8fc4" stroke-width="2.5" stroke-dasharray="6 5" stroke-linejoin="round"></polyline>
+<polyline points="48.0,112.0 100.4,90.0 152.7,100.0 205.1,94.0 257.5,76.0 309.8,60.0 362.2,80.0 414.5,104.0 466.9,98.0 519.3,88.0 571.6,43.6 624.0,31.0" fill="none" stroke="#262a67" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"></polyline>
+<g fill="#262a67"><circle cx="309.8" cy="60" r="4"></circle><circle cx="624" cy="31" r="5" fill="#ff6c2e" stroke="#262a67" stroke-width="2"></circle></g>
+<text x="309.8" y="50" font-size="11" font-weight="600" fill="#262a67" text-anchor="middle">Eid · 340k</text>
+<text x="616" y="20" font-size="11" font-weight="700" fill="#262a67" text-anchor="end">Oct 412.6k</text>
+<g fill="#5b5f86" font-size="11" text-anchor="middle"><text x="48" y="216">Nov</text><text x="100.4" y="216">Dec</text><text x="152.7" y="216">Jan</text><text x="205.1" y="216">Feb</text><text x="257.5" y="216">Mar</text><text x="309.8" y="216">Apr</text><text x="362.2" y="216">May</text><text x="414.5" y="216">Jun</text><text x="466.9" y="216">Jul</text><text x="519.3" y="216">Aug</text><text x="571.6" y="216">Sep</text><text x="618" y="216">Oct</text></g>
+</svg>
+<p style="margin: 0; font-size: 14px; line-height: 20px; color: #5b5f86"><strong style="color: #262a67">Takeaway:</strong> 3.44M SAR, up 24.6% on the year before. Autumn season (Sep–Oct) brought 23% of the year's revenue; June is the quiet month to plan around.</p>
+</section>
+
+<section aria-labelledby="mix-h" style="flex: 1 1 280px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+<h2 id="mix-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">Revenue mix</h2>
+<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center">
+<svg viewBox="0 0 42 42" role="img" aria-label="Revenue mix: seats 82 percent, 2,820,180 SAR; programs 18 percent, 618,420 SAR" style="width: 150px; height: 150px; flex-shrink: 0">
+<circle cx="21" cy="21" r="15.915" fill="none" stroke="#e3dfc9" stroke-width="6"></circle>
+<circle cx="21" cy="21" r="15.915" fill="none" stroke="#262a67" stroke-width="6" stroke-dasharray="82 18" stroke-dashoffset="25"></circle>
+<circle cx="21" cy="21" r="15.915" fill="none" stroke="#ff6c2e" stroke-width="6" stroke-dasharray="18 82" stroke-dashoffset="43"></circle>
+<text x="21" y="20.5" text-anchor="middle" font-size="6" font-weight="700" fill="#262a67" font-family="Outfit, sans-serif">3.44M</text>
+<text x="21" y="26" text-anchor="middle" font-size="3.2" fill="#5b5f86" font-family="Outfit, sans-serif">SAR total</text>
+</svg>
+<div style="display: flex; flex-direction: column; gap: 10px; font-size: 14px; flex: 1 1 120px">
+<span style="display: flex; align-items: flex-start; gap: 8px"><span style="width: 12px; height: 12px; margin-top: 4px; flex-shrink: 0; border-radius: 3px; background: #262a67"></span><span style="display: flex; flex-direction: column"><strong>Seats · 82%</strong><span style="color: #5b5f86">2,820,180 SAR</span></span></span>
+<span style="display: flex; align-items: flex-start; gap: 8px"><span style="width: 12px; height: 12px; margin-top: 4px; flex-shrink: 0; border-radius: 3px; background: #ff6c2e"></span><span style="display: flex; flex-direction: column"><strong>Programs · 18%</strong><span style="color: #5b5f86">618,420 SAR</span></span></span>
+</div>
+</div>
+<p style="margin: 0; font-size: 14px; line-height: 20px; color: #5b5f86"><strong style="color: #262a67">Takeaway:</strong> programs grew from 14% to 18% of revenue. AlUla alone earns 50,850 SAR in programs on one departure.</p>
+</section>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px">
+<section aria-labelledby="cat-h" style="background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+<h2 id="cat-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">Bookings by trip category</h2>
+<div role="img" aria-label="Bookings by category: Heritage 2,840; Beach and sea 2,150; Adventure 1,620; City nights 1,380; School trips 980; Nature and farms 670" style="display: flex; flex-direction: column; gap: 6px">
+<div style="position: relative; height: 170px; display: flex; align-items: flex-end; gap: 8px; border-bottom: 1px solid #7b7fa6">
+<div aria-hidden="true" style="position: absolute; left: 0; right: 0; top: 50%; border-top: 1px solid #e3dfc9"></div>
+<sc-for list="{{cats}}" as="c" hint-placeholder-count="6">
+<div style="position: relative; flex: 1 1 0; align-self: stretch; display: flex; flex-direction: column; justify-content: flex-end; align-items: center">
+<span style="font-size: 12px; font-weight: 700; margin-bottom: 4px">{{c.v}}</span>
+<div style="width: 78%; height: {{c.h}}; border-radius: 4px 4px 0 0; background: #262a67"></div>
+</div>
+</sc-for>
+</div>
+<div aria-hidden="true" style="display: flex; gap: 8px"><sc-for list="{{cats}}" as="c" hint-placeholder-count="6"><span style="flex: 1 1 0; text-align: center; font-size: 11px; line-height: 14px; color: #5b5f86">{{c.l}}</span></sc-for></div>
+</div>
+<p style="margin: 0; font-size: 14px; line-height: 20px; color: #5b5f86"><strong style="color: #262a67">Takeaway:</strong> heritage trips are 29% of all 9,640 bookings.</p>
+</section>
+
+<section aria-labelledby="att-h" style="background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 8px"><h2 id="att-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">Top programs by attach rate</h2><a href="OrgPrograms.dc.html" style="font-size: 14px; font-weight: 600">Programs</a></div>
+<sc-for list="{{progs}}" as="p" hint-placeholder-count="6">
+<div style="display: flex; flex-direction: column; gap: 4px; font-size: 14px">
+<span style="display: flex; justify-content: space-between; gap: 8px"><span><strong>{{p.n}}</strong> <span style="color: #5b5f86">· {{p.t}}</span></span><strong>{{p.a}}</strong></span>
+<span style="height: 8px; border-radius: 999px; background: #f6f3e4; display: block; overflow: hidden"><span style="display: block; height: 100%; width: {{p.a}}; background: {{p.c}}; border-radius: 999px"></span></span>
+</div>
+</sc-for>
+<p style="margin: 0; font-size: 14px; line-height: 20px; color: #5b5f86"><strong style="color: #262a67">Takeaway:</strong> 2 in 3 AlUla travellers add the Hegra tour (orange = required).</p>
+</section>
+
+<section aria-labelledby="cx-h" style="background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+<h2 id="cx-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">Cancellations &amp; refunds</h2>
+<svg viewBox="0 0 400 156" role="img" aria-label="Cancellation rate by month fell from 5.2 percent in November to 3.4 percent in October" style="width: 100%; height: auto; display: block; font-family: Outfit, Nunito, system-ui, sans-serif">
+<g stroke="#e3dfc9" stroke-width="1"><line x1="36" y1="12" x2="372" y2="12"></line><line x1="36" y1="52" x2="372" y2="52"></line><line x1="36" y1="92" x2="372" y2="92"></line><line x1="36" y1="132" x2="372" y2="132"></line></g>
+<g fill="#5b5f86" font-size="11" text-anchor="end"><text x="30" y="16">6%</text><text x="30" y="56">4%</text><text x="30" y="96">2%</text><text x="30" y="136">0</text></g>
+<polygon points="36,132 36.0,28.0 66.5,34.0 97.1,24.0 127.6,36.0 158.2,40.0 188.7,32.0 219.3,46.0 249.8,44.0 280.4,54.0 310.9,56.0 341.5,60.0 372.0,64.0 372,132" fill="#f89e23" fill-opacity="0.18"></polygon>
+<polyline points="36.0,28.0 66.5,34.0 97.1,24.0 127.6,36.0 158.2,40.0 188.7,32.0 219.3,46.0 249.8,44.0 280.4,54.0 310.9,56.0 341.5,60.0 372.0,64.0" fill="none" stroke="#262a67" stroke-width="2.5" stroke-linejoin="round"></polyline>
+<g fill="#5b5f86" font-size="11" text-anchor="middle"><text x="36" y="150">Nov</text><text x="188.7" y="150">Apr</text><text x="366" y="150">Oct</text></g>
+<text x="366" y="80" font-size="11" font-weight="700" fill="#262a67" text-anchor="end">3.4%</text>
+</svg>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; font-size: 13px; color: #5b5f86">
+<span style="display: flex; flex-direction: column"><strong style="font-size: 18px; color: #262a67">395</strong>cancellations</span>
+<span style="display: flex; flex-direction: column"><strong style="font-size: 18px; color: #262a67">118,400</strong>SAR refunded</span>
+<span style="display: flex; flex-direction: column"><strong style="font-size: 18px; color: #262a67">62%</strong>in 80% window</span>
+</div>
+<p style="margin: 0; font-size: 14px; line-height: 20px; color: #5b5f86"><strong style="color: #262a67">Takeaway:</strong> rate fell 1.8 pts since the 48 h / 80% refund policy.</p>
+</section>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start">
+<section aria-labelledby="occ-h" style="flex: 1 1 480px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px 0 12px; display: flex; flex-direction: column">
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 0 20px 8px"><h2 id="occ-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">Occupancy by trip</h2><a href="OrgTripAnalytics.dc.html" style="font-size: 14px; font-weight: 600">Trip analytics</a></div>
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 480px; border-collapse: collapse; font-size: 14px">
+<thead><tr style="color: #5b5f86; font-size: 12px"><th scope="col" style="text-align: start; padding: 8px 20px; font-weight: 600">Trip</th><th scope="col" style="text-align: end; padding: 8px; font-weight: 600">Departures</th><th scope="col" style="text-align: end; padding: 8px; font-weight: 600">Seats sold</th><th scope="col" style="text-align: start; padding: 8px 20px; font-weight: 600; width: 34%">Occupancy</th></tr></thead>
+<tbody>
+<sc-for list="{{occ}}" as="o" hint-placeholder-count="6">
+<tr class="te-row" style="border-top: 1px solid #e3dfc9"><td style="padding: 9px 20px; font-weight: 600"><a href="OrgTripAnalytics.dc.html" style="color: #262a67; text-decoration: none">{{o.n}}</a></td><td style="padding: 9px 8px; text-align: end">{{o.d}}</td><td style="padding: 9px 8px; text-align: end">{{o.s}}</td><td style="padding: 9px 20px"><span style="display: flex; align-items: center; gap: 8px"><span style="flex: 1 1 auto; height: 8px; border-radius: 999px; background: #f6f3e4; overflow: hidden"><span style="display: block; height: 100%; width: {{o.p}}; background: {{o.c}}"></span></span><strong style="width: 40px; text-align: end">{{o.p}}</strong></span></td></tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+<p style="margin: 0; padding: 10px 20px 0; font-size: 14px; line-height: 20px; color: #5b5f86"><strong style="color: #262a67">Takeaway:</strong> Edge of the World runs at 68% (amber); a 30-seat Coaster would fill it.</p>
+</section>
+
+<section aria-labelledby="cp-h" style="flex: 1 1 480px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px 0 12px; display: flex; flex-direction: column">
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 0 20px 8px"><h2 id="cp-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">Coupon ROI</h2><a href="OrgCoupons.dc.html" style="font-size: 14px; font-weight: 600">Coupons</a></div>
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 480px; border-collapse: collapse; font-size: 14px">
+<thead><tr style="color: #5b5f86; font-size: 12px"><th scope="col" style="text-align: start; padding: 8px 20px; font-weight: 600">Code</th><th scope="col" style="text-align: end; padding: 8px; font-weight: 600">Uses</th><th scope="col" style="text-align: end; padding: 8px; font-weight: 600">Discount</th><th scope="col" style="text-align: end; padding: 8px; font-weight: 600">Revenue</th><th scope="col" style="text-align: end; padding: 8px; font-weight: 600">New cust.</th><th scope="col" style="text-align: end; padding: 8px 20px; font-weight: 600">ROI</th></tr></thead>
+<tbody>
+<sc-for list="{{coupons}}" as="c" hint-placeholder-count="5">
+<tr style="border-top: 1px solid #e3dfc9"><td style="padding: 9px 20px; font-weight: 700">{{c.c}}</td><td style="padding: 9px 8px; text-align: end">{{c.u}}</td><td style="padding: 9px 8px; text-align: end">{{c.d}}</td><td style="padding: 9px 8px; text-align: end">{{c.r}}</td><td style="padding: 9px 8px; text-align: end">{{c.n}}</td><td style="padding: 9px 20px; text-align: end"><span style="{{c.rs}}">{{c.roi}}</span></td></tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+<p style="margin: 0; padding: 10px 20px 0; font-size: 14px; line-height: 20px; color: #5b5f86"><strong style="color: #262a67">Takeaway:</strong> ALULA100 returns 12.5 SAR per SAR of discount; ALNOOR4 only 2.5.</p>
+</section>
+</div>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1500}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const ACTIVE = 0;
+    const tabs = [['Company', 'OrgAnalytics.dc.html', false], ['Trip', 'OrgTripAnalytics.dc.html', false], ['Pages & funnel', 'OrgPageAnalytics.dc.html', true], ['Customers', 'OrgCustomerAnalytics.dc.html', true], ['Drivers & photographers', 'OrgProviderAnalytics.dc.html', true]].map(([l, href, ent], i) => ({
+      l, href, ent, cur: i === ACTIVE ? 'page' : 'false',
+      style: 'height: 40px; padding: 0 14px; border-radius: 10px; display: inline-flex; align-items: center; gap: 6px; font-size: 15px; font-weight: 600; text-decoration: none; white-space: nowrap; ' + (i === ACTIVE ? 'background: #262a67; color: #f6f3e4;' : 'color: #5b5f86;')
+    }));
+    const up = '#1f7a4d', flat = '#5b5f86', down = '#b42318';
+    const kpis = [
+      { l: 'Revenue', v: '3.44M', u: 'SAR', d: '▲ 24.6% vs year before', dc: up },
+      { l: 'Bookings', v: '9,640', u: '', d: '▲ 15.2% vs year before', dc: up },
+      { l: 'Seats sold', v: '12,920', u: '', d: '▲ 17.0% · 1.34 seats per booking', dc: up },
+      { l: 'Average occupancy', v: '84%', u: '', d: '▲ 3 pts vs year before', dc: up },
+      { l: 'Average booking value', v: '357', u: 'SAR', d: '▲ 8.1% · more programs per booking', dc: up },
+      { l: 'Repeat rate', v: '34%', u: '', d: '▲ 5 pts · 2,110 returning travellers', dc: up },
+      { l: 'Cancellations', v: '4.1%', u: '', d: '▼ 0.8 pts · 395 bookings', dc: up },
+      { l: 'Rating · NPS', v: '4.7', u: '★ · NPS 62', d: '1,812 reviews · NPS ▼ 2 vs Q2', dc: down }
+    ];
+    const C = [['Heritage', 2840], ['Beach & sea', 2150], ['Adventure', 1620], ['City nights', 1380], ['School trips', 980], ['Nature & farms', 670]];
+    const cats = C.map(([l, v]) => ({ l, v: v.toLocaleString('en-US'), h: (v / 3400 * 100).toFixed(1) + '%' }));
+    const progs = [
+      { n: 'Travel insurance', t: 'required', a: '100%', c: '#ff6c2e' },
+      { n: 'Old Town walk', t: 'AlUla · free', a: '78%', c: '#262a67' },
+      { n: 'Hegra guided tour', t: 'AlUla', a: '67%', c: '#262a67' },
+      { n: 'Snorkel gear rental', t: 'Red Sea', a: '61%', c: '#262a67' },
+      { n: 'Elephant Rock dinner', t: 'AlUla · tiered', a: '56%', c: '#262a67' },
+      { n: 'Desert camp kit', t: 'AlUla', a: '23%', c: '#262a67' }
+    ];
+    const occ = [
+      { n: 'Taif Rose Farms', d: 8, s: '392 / 400', p: '98%' },
+      { n: 'AlUla Heritage Weekend', d: 6, s: '978 / 1,032', p: '95%' },
+      { n: 'Red Sea Snorkel Day', d: 10, s: '912 / 1,000', p: '91%' },
+      { n: 'Jeddah Corniche Night', d: 14, s: '1,680 / 2,100', p: '80%' },
+      { n: 'Diriyah Evening Walk', d: 20, s: '1,150 / 1,600', p: '72%' },
+      { n: 'Edge of the World Hike', d: 12, s: '410 / 600', p: '68%' }
+    ].map((o) => ({ ...o, c: parseInt(o.p, 10) < 70 ? '#f89e23' : '#262a67' }));
+    const pill = (t) => 'display: inline-flex; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 700; ' + (t === 'ok' ? 'background: #e3f3ea; color: #1f7a4d;' : t === 'warn' ? 'background: #fdf0d5; color: #8a4b00;' : 'background: #e6e8f5; color: #262a67;');
+    const coupons = [
+      { c: 'ALULA100', u: 61, d: '6,100 SAR', r: '76,250 SAR', n: 22, roi: '12.5×', t: 'ok' },
+      { c: 'FIRSTSUN', u: 97, d: '8,210 SAR', r: '74,600 SAR', n: 97, roi: '9.1×', t: 'ok' },
+      { c: 'AUTUMN15', u: 184, d: '19,870 SAR', r: '131,400 SAR', n: 41, roi: '6.6×', t: 'info' },
+      { c: 'SUMMER20', u: 240, d: '28,800 SAR', r: '142,000 SAR', n: 58, roi: '4.9×', t: 'info' },
+      { c: 'ALNOOR4', u: 32, d: '1,600 SAR', r: '4,050 SAR', n: 0, roi: '2.5×', t: 'warn' }
+    ].map((c) => ({ ...c, rs: pill(c.t) }));
+    return { tabs, kpis, cats, progs, occ, coupons };
+  }
+}
+</script>
+</body>
+</html>

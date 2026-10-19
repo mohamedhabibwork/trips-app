@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Create account</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif; display: flex; flex-direction: column; padding: 48px 16px 24px; gap: 12px">
+<div style="display: flex; align-items: center; justify-content: space-between">
+<a href="{{back}}" aria-label="Back" style="width: 44px; height: 44px; border-radius: 999px; background: #ffffff; display: flex; align-items: center; justify-content: center; color: #262a67"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg></a>
+<span style="font-size: 13px; font-weight: 500; color: #5b5f86">{{step}}</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 4px">
+<h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 700">Create your account</h1>
+<p style="margin: 0; font-size: 15px; line-height: 22px; color: #5b5f86">Signing up as <span style="font-weight: 600; color: #262a67">{{roleLabel}}</span> · <a href="MobileRole.dc.html" style="font-weight: 600">Change</a></p>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="su-name" style="font-size: 14px; font-weight: 600">Full name</label>
+<input id="su-name" dir="auto" autocomplete="name" value="{{person}}" style="height: 52px; box-sizing: border-box; padding: 0 14px; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-family: inherit; font-size: 16px">
+</div>
+<dc-import name="CountryField" label="Country" country="SA" field-id="su-country" hint-size="100%,78px"></dc-import>
+<dc-import name="PhoneField" label="Mobile number" value="551234821" country="SA" field-id="su-phone" hint-size="100%,78px"></dc-import>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="su-email" style="font-size: 14px; font-weight: 600">Email <span style="font-weight: 500; color: #5b5f86">{{emailNote}}</span></label>
+<input id="su-email" type="email" autocomplete="email" value="" placeholder="name@example.com" style="height: 52px; box-sizing: border-box; padding: 0 14px; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-family: inherit; font-size: 16px">
+</div>
+<dc-import name="PasswordField" label="Create a password" value="Trips2026" show-strength="{{yes}}" is-new="{{yes}}" field-id="su-pass" hint-size="100%,112px"></dc-import>
+<label style="display: flex; gap: 10px; align-items: flex-start; font-size: 14px; line-height: 20px"><input type="checkbox" checked="" style="width: 20px; height: 20px; margin: 0; accent-color: #262a67; flex-shrink: 0">I agree to the <a href="#">Terms</a> and <a href="#">Privacy Policy</a>.</label>
+<a href="{{next}}" style="margin-top: auto; height: 52px; flex-shrink: 0; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 16px; font-weight: 600; display: flex; align-items: center; justify-content: center; text-decoration: none">Create account</a>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"roleLabel":{"editor":"enum","options":["Traveler","Driver","Photographer"],"default":"Traveler"},"step":{"editor":"text","default":"Step 2 of 4"},"next":{"editor":"text","default":"MobileOtp.dc.html"},"back":{"editor":"text","default":"MobileRole.dc.html"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() {
+const role = this.props.roleLabel ?? 'Traveler';
+return { yes: true, roleLabel: role, step: this.props.step ?? 'Step 2 of 4',
+next: this.props.next ?? 'MobileOtp.dc.html', back: this.props.back ?? 'MobileRole.dc.html',
+person: role === 'Driver' ? 'Khalid Al-Harbi' : role === 'Photographer' ? 'Noura Al-Shehri' : 'Sara Al-Qahtani',
+emailNote: role === 'Traveler' ? '(optional)' : '(for payouts and receipts)' };
+}
+}
+</script>
+</body>
+</html>

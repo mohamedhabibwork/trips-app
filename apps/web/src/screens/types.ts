@@ -4,7 +4,7 @@ import type { QueryClient } from "@tanstack/react-query";
 import type { SessionController } from "@/auth/session-controller";
 import type { orpc } from "@/utils/orpc";
 
-export type ScreenSurface = "organization" | "admin" | "public" | "shared";
+export type ScreenSurface = "organization" | "admin" | "public" | "shared" | "traveler";
 
 export interface ScreenLoaderContext {
   queryClient: QueryClient;

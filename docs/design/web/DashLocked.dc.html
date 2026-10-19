@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Account locked</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; background: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24px">
+<img src="../assets/6ea846350ba3adc0e289d47fa0612c3b.svg" alt="Trips Enjoy" style="height: 48px; width: auto">
+<div style="width: 440px; box-sizing: border-box; background: #ffffff; color: #262a67; border-radius: 20px; padding: 32px; display: flex; flex-direction: column; gap: 20px; box-shadow: 0 8px 30px rgba(0,0,0,.4)">
+<span style="width: 48px; height: 48px; border-radius: 12px; background: #fde8e6; color: #b42318; display: flex; align-items: center; justify-content: center"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg></span>
+<div style="display: flex; flex-direction: column; gap: 4px">
+<h1 style="margin: 0; font-size: 24px; line-height: 32px; font-weight: 600">Account locked for 15 minutes</h1>
+<p style="margin: 0; font-size: 14px; line-height: 20px; color: #5b5f86">There were 5 failed sign-in attempts on ops@trips-enjoy.com. We've emailed you and notified your workspace owner.</p>
+</div>
+<div style="padding: 12px; border-radius: 12px; background: #f6f3e4; font-size: 14px; line-height: 20px">Try again at <span style="font-weight: 600">09:47</span>, or reset your password now to unlock immediately.</div>
+<a href="DashForgot.dc.html" style="height: 48px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 16px; font-weight: 600; display: flex; align-items: center; justify-content: center; text-decoration: none">Reset password</a>
+<p style="margin: 0; font-size: 14px; color: #5b5f86">Wasn't you? <a href="#" style="font-weight: 600">Report it to security</a></p>
+</div>
+<a href="DashLogin.dc.html" style="color: #ff8655; font-size: 14px; font-weight: 600">Back to sign in</a>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

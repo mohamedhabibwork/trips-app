@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Driver · Licence and vehicle</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif; display: flex; flex-direction: column; padding: 56px 16px 32px; gap: 16px">
+<div style="display: flex; align-items: center; justify-content: space-between">
+<a href="DrvDetails.dc.html" aria-label="Back" style="width: 44px; height: 44px; border-radius: 999px; background: #ffffff; display: flex; align-items: center; justify-content: center; color: #262a67"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg></a>
+<span style="font-size: 13px; font-weight: 500; color: #5b5f86">Step 5 of 7</span>
+</div>
+<h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 700">Licence and vehicle</h1>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="dv-lic" style="font-size: 14px; font-weight: 600">Licence number</label><input id="dv-lic" value="DL-55271" style="height: 52px; min-width: 0; box-sizing: border-box; padding: 0 14px; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-family: inherit; font-size: 16px"></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="dv-exp" style="font-size: 14px; font-weight: 600">Expiry date</label><input id="dv-exp" value="12/08/2029" style="height: 52px; min-width: 0; box-sizing: border-box; padding: 0 14px; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-family: inherit; font-size: 16px"></div>
+</div>
+<fieldset style="margin: 0; padding: 0; border: none; display: flex; flex-direction: column">
+<legend style="padding: 0; margin-bottom: 8px; font-size: 14px; font-weight: 600">Licence class</legend>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
+<button aria-pressed="false" style="height: 48px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-family: inherit; font-size: 14px; font-weight: 600">Private</button>
+<button aria-pressed="true" style="height: 48px; border-radius: 12px; border: 2px solid #fb8030; background: #ffffff; color: #262a67; font-family: inherit; font-size: 14px; font-weight: 600">Public bus</button>
+<button aria-pressed="false" style="height: 48px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-family: inherit; font-size: 14px; font-weight: 600">Heavy</button>
+</div>
+</fieldset>
+<label style="display: flex; gap: 10px; align-items: center; font-size: 15px; font-weight: 500"><input type="checkbox" checked="" style="width: 20px; height: 20px; margin: 0; accent-color: #262a67">I drive my own vehicle</label>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="dv-plate" style="font-size: 14px; font-weight: 600">Plate number</label><input id="dv-plate" dir="auto" value="ر س ط 4821" style="height: 52px; min-width: 0; box-sizing: border-box; padding: 0 14px; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-family: inherit; font-size: 16px"></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="dv-seats" style="font-size: 14px; font-weight: 600">Passenger seats</label><input id="dv-seats" inputmode="numeric" value="30" style="height: 52px; min-width: 0; box-sizing: border-box; padding: 0 14px; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-family: inherit; font-size: 16px"></div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="dv-model" style="font-size: 14px; font-weight: 600">Make and model</label><input id="dv-model" value="Toyota Coaster" style="height: 52px; min-width: 0; box-sizing: border-box; padding: 0 14px; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-family: inherit; font-size: 16px"></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="dv-year" style="font-size: 14px; font-weight: 600">Year</label><input id="dv-year" inputmode="numeric" value="2021" style="height: 52px; min-width: 0; box-sizing: border-box; padding: 0 14px; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-family: inherit; font-size: 16px"></div>
+</div>
+<a href="MobileApply.dc.html" style="margin-top: auto; height: 52px; flex-shrink: 0; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 16px; font-weight: 600; display: flex; align-items: center; justify-content: center; text-decoration: none">Continue</a>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

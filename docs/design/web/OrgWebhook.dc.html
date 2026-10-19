@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Org · Webhook endpoint</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+.te-row:hover{background:#f6f3e4}
+</style>
+</helmet>
+<div style="min-height: 1360px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="OrgNav" active="Integrations" hint-size="248px,1360px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 24px">
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; gap: 14px; align-items: center; min-width: 0; flex: 1 1 480px">
+<a href="OrgWebhooks.dc.html" aria-label="Back to webhooks" style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 999px; background: #ffffff; color: #262a67; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a>
+<div style="display: flex; flex-direction: column; gap: 2px; min-width: 0"><span style="font-size: 14px; color: #5b5f86">Odoo ERP · bookings, payments and invoices · created by Mona Saleh on Tue 2 Sep</span><h1 style="margin: 0; font-size: 24px; line-height: 32px; font-weight: 600; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; overflow-wrap: anywhere">erp.sunrisetours.sa/hooks/trips-enjoy</h1></div>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center">
+<button type="button" role="switch" aria-checked="{{activeAria}}" onClick="{{toggleActive}}" style="height: 48px; padding: 0 16px 0 10px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font: inherit; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 10px; cursor: pointer">
+<span aria-hidden="true" style="{{trackStyle}}"><span style="{{knobStyle}}"></span></span>{{activeLabel}}</button>
+<button type="button" style="height: 48px; padding: 0 18px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Send test event</button>
+<a href="OrgWebhookNew.dc.html" style="height: 48px; box-sizing: border-box; padding: 0 18px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 6px; text-decoration: none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16zM14 6l4 4"></path></svg>Edit</a>
+</div>
+</div>
+
+<sc-if value="{{paused}}" hint-placeholder-val="{{false}}">
+<div role="status" style="display: flex; gap: 10px; align-items: center; padding: 12px 16px; border-radius: 12px; background: #e6e8f5; font-size: 15px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7v5l3 2"></path></svg><span><strong>Paused.</strong> New events are kept for 3 days and sent in order when you turn the endpoint back on.</span></div>
+</sc-if>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px">
+<sc-for list="{{stats}}" as="k" hint-placeholder-count="4">
+<div style="padding: 18px 20px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 14px; color: #5b5f86">{{k.l}}</span>
+<span style="font-size: 28px; line-height: 34px; font-weight: 700">{{k.v}} <span style="font-size: 15px; font-weight: 500; color: #5b5f86">{{k.u}}</span></span>
+<span style="{{k.ds}}">{{k.d}}</span>
+</div>
+</sc-for>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: stretch">
+<section aria-labelledby="ev-h" style="flex: 3 1 480px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; justify-content: space-between; align-items: baseline; gap: 8px; flex-wrap: wrap"><h2 id="ev-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">Subscribed events <span style="font-size: 15px; font-weight: 500; color: #5b5f86">9</span></h2><span style="font-size: 14px; color: #5b5f86">API version 2026-09-01</span></div>
+<ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{events}}" as="e" hint-placeholder-count="9">
+<li style="padding: 4px 12px; border-radius: 999px; background: #e6e8f5; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; font-weight: 600">{{e.n}}</li>
+</sc-for>
+</ul>
+<span style="font-size: 14px; color: #5b5f86">Custom headers: X-Source-System, X-Company-Code</span>
+</section>
+<section aria-labelledby="sec-h" style="flex: 2 1 360px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+<h2 id="sec-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">Signing secret</h2>
+<div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap; padding: 10px 12px; border-radius: 12px; border: 1px solid #e3dfc9">
+<code style="flex: 1 1 200px; min-width: 0; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 14px; overflow-wrap: anywhere">{{secret}}</code>
+<button type="button" onClick="{{toggleReveal}}" style="height: 40px; padding: 0 12px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer">{{revealLabel}}</button>
+<button type="button" onClick="{{rotate}}" style="height: 40px; padding: 0 12px; border: 0; border-radius: 12px; background: #262a67; color: #f6f3e4; font: inherit; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 6px; cursor: pointer"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7"></path></svg>Rotate</button>
+</div>
+<span role="status" style="font-size: 14px; line-height: 20px; {{rotStyle}}">{{rotNote}}</span>
+</section>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start">
+<section aria-labelledby="log-h" style="flex: 3 1 560px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px 0 8px">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; padding: 0 20px 12px"><h2 id="log-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">Delivery log</h2>
+<label style="display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600">Show<select style="height: 40px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 10px; font: inherit; font-size: 14px; color: #262a67"><option>All deliveries</option><option>Failed only</option><option>Retrying</option></select></label></div>
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 640px; border-collapse: collapse; font-size: 14px">
+<thead><tr style="color: #5b5f86; font-size: 13px"><th scope="col" style="text-align: start; padding: 10px 20px; font-weight: 600">Time</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Event</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Attempt</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">HTTP</th><th scope="col" style="text-align: end; padding: 10px 20px; font-weight: 600">Latency</th></tr></thead>
+<tbody>
+<sc-for list="{{log}}" as="r" hint-placeholder-count="7">
+<tr class="te-row" style="border-top: 1px solid #e3dfc9; {{r.rowBg}}">
+<td style="padding: 10px 20px; white-space: nowrap; font-weight: 600">{{r.time}}</td>
+<td style="padding: 10px 12px"><button type="button" onClick="{{r.pick}}" aria-pressed="{{r.selAria}}" style="border: 0; background: transparent; padding: 0; min-height: 36px; text-align: start; font: inherit; color: #262a67; cursor: pointer; display: flex; flex-direction: column"><code style="font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; font-weight: 600; text-decoration: underline; text-decoration-color: #7b7fa6">{{r.id}}</code><span style="font-size: 13px; color: #5b5f86">{{r.type}}</span></button></td>
+<td style="padding: 10px 12px">{{r.attemptLabel}}</td>
+<td style="padding: 10px 12px"><span style="{{r.ss}}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{r.si}}"></path></svg>{{r.code}}</span></td>
+<td style="padding: 10px 20px; text-align: end">{{r.lat}}</td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+</section>
+
+<section aria-labelledby="det-h" style="flex: 2 1 380px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap">
+<div style="display: flex; flex-direction: column; gap: 2px; min-width: 0"><h2 id="det-h" style="margin: 0; font-size: 18px; line-height: 26px; font-weight: 600; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; overflow-wrap: anywhere">{{sel.id}}</h2><span style="font-size: 14px; color: #5b5f86">{{sel.type}} · {{sel.time}} · attempt {{sel.attempt}} of 8</span></div>
+<button type="button" onClick="{{resend}}" style="height: 44px; padding: 0 18px; border: 0; border-radius: 12px; background: #ff6c2e; color: #262a67; font: inherit; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 6px; cursor: pointer"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7"></path></svg>{{resendLabel}}</button>
+</div>
+<sc-if value="{{sel.failed}}" hint-placeholder-val="{{true}}">
+<div role="status" style="display: flex; gap: 10px; align-items: flex-start; padding: 12px; border-radius: 12px; background: #fde8e6; color: #b42318; font-size: 14px; line-height: 20px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 1px"><path d="M12 3l9.5 17h-19zM12 10v4M12 17h.01"></path></svg><span><strong>HTTP 500 from your server.</strong> Next retry at 09:22, in 8 min (attempt 4 of 8). Fix the tax mapping in Odoo, then resend now instead of waiting.</span></div>
+</sc-if>
+<span style="font-size: 13px; font-weight: 700; letter-spacing: .4px; color: #5b5f86">REQUEST HEADERS</span>
+<pre style="margin: 0; padding: 12px 14px; border-radius: 12px; background: #262a67; color: #f6f3e4; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; line-height: 18px; overflow-x: auto; white-space: pre">{{sel.reqHeaders}}</pre>
+<span style="font-size: 13px; font-weight: 700; letter-spacing: .4px; color: #5b5f86">REQUEST BODY</span>
+<pre style="margin: 0; padding: 12px 14px; border-radius: 12px; background: #262a67; color: #f6f3e4; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; line-height: 18px; overflow-x: auto; white-space: pre">{{sel.body}}</pre>
+<span style="font-size: 13px; font-weight: 700; letter-spacing: .4px; color: #5b5f86">RESPONSE · {{sel.code}} · {{sel.lat}}</span>
+<pre style="margin: 0; padding: 12px 14px; border-radius: 12px; background: #f6f3e4; border: 1px solid #e3dfc9; color: #262a67; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; line-height: 18px; overflow-x: auto; white-space: pre">{{sel.response}}</pre>
+</section>
+</div>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1360}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { active: true, reveal: false, rotated: false, pick: 2, resent: -1 }; }
+  renderVals() {
+    const s = this.state;
+    const pill = (ok) => 'display: inline-flex; align-items: center; gap: 4px; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; ' + (ok ? 'background: #e3f3ea; color: #1f7a4d;' : 'background: #fde8e6; color: #b42318;');
+    const stats = [
+      { l: 'Success rate · 24 h', v: '98.7', u: '%', d: '1,267 of 1,284 delivered', ds: 'font-size: 13px; font-weight: 600; color: #1f7a4d' },
+      { l: 'p95 latency', v: '420', u: 'ms', d: 'Median 180 ms', ds: 'font-size: 13px; font-weight: 600; color: #5b5f86' },
+      { l: 'Deliveries · 24 h', v: '1,284', u: '', d: 'Busiest hour 07:00 to 08:00', ds: 'font-size: 13px; font-weight: 600; color: #5b5f86' },
+      { l: 'Waiting for retry', v: '3', u: '', d: 'Oldest: invoice.issued, 09:04', ds: 'font-size: 13px; font-weight: 600; color: #8a4b00' }
+    ];
+    const events = ['booking.created', 'booking.confirmed', 'booking.cancelled', 'booking.refunded', 'payment.succeeded', 'invoice.issued', 'invoice.paid', 'credit_note.issued', 'settlement.paid'].map((n) => ({ n }));
+    const D = {
+      'invoice.paid': { invoice_number: 'INV-ST-2026-004811', booking_id: 'BK-48207', amount: 2340.0, currency: 'SAR', paid_at: '2026-10-14T09:13:58Z' },
+      'booking.confirmed': { booking_id: 'BK-48213', trip_id: 'trp_alula_1610', vehicle: 'Bus 2', passengers: 4, total: 5960.0, currency: 'SAR' },
+      'invoice.issued': { invoice_number: 'INV-ST-2026-004812', booking_id: 'BK-48213', type: 'simplified', vat_rate: 0.15, total_incl_vat: 5960.0, currency: 'SAR', zatca_status: 'reported' },
+      'booking.created': { booking_id: 'BK-48212', trip_id: 'trp_redsea_2410', passengers: 2, status: 'seats_held', hold_expires_at: '2026-10-14T09:13:30Z' },
+      'payment.succeeded': { payment_id: 'pay_9Xc2Lm', booking_id: 'BK-48209', method: 'mada', amount: 640.0, currency: 'SAR' },
+      'booking.cancelled': { booking_id: 'BK-47950', trip_id: 'trp_edge_2510', reason: 'traveller_request', refund_amount: 275.0, currency: 'SAR' },
+      'credit_note.issued': { credit_note_number: 'CN-ST-2026-000214', invoice_number: 'INV-ST-2026-004530', amount: 320.0, currency: 'SAR' }
+    };
+    const rows = [
+      ['09:14:02', 'evt_01JB9X2K7QPA', 'invoice.paid', 1, 200, '184 ms'],
+      ['09:12:47', 'evt_01JB9X1FZ3MC', 'booking.confirmed', 1, 200, '211 ms'],
+      ['09:04:12', 'evt_01JB9WQ8D4NE', 'invoice.issued', 3, 500, '1,203 ms'],
+      ['08:58:30', 'evt_01JB9WJ6H2TR', 'booking.created', 1, 200, '176 ms'],
+      ['08:51:09', 'evt_01JB9WB0Y8KS', 'payment.succeeded', 1, 200, '402 ms'],
+      ['08:47:55', 'evt_01JB9W7R5LUV', 'booking.cancelled', 2, 200, '388 ms'],
+      ['08:40:18', 'evt_01JB9VZQ2MWX', 'credit_note.issued', 1, 200, '233 ms']
+    ];
+    const log = rows.map((r, i) => {
+      const resentOk = s.resent === i;
+      const code = resentOk ? 200 : r[4];
+      const ok = code < 300;
+      const on = i === s.pick;
+      return {
+        time: r[0], id: r[1], type: r[2], attempt: resentOk ? r[3] + 1 : r[3], attemptLabel: (resentOk ? r[3] + 1 : r[3]) + ' of 8',
+        code: String(code), ok, failed: !ok, lat: resentOk ? '296 ms' : r[5],
+        ss: pill(ok), si: ok ? 'M5 12.5l4.5 4.5L19 7' : 'M12 3l9.5 17h-19zM12 10v4M12 17h.01',
+        rowBg: on ? 'background: #fff7f2; box-shadow: inset 3px 0 0 #fb8030;' : '',
+        selAria: on ? 'true' : 'false', pick: () => this.setState({ pick: i }),
+        body: JSON.stringify({ id: r[1], type: r[2], api_version: '2026-09-01', created: '2026-10-14T' + r[0] + 'Z', data: D[r[2]] }, null, 2)
+      };
+    });
+    const sel = Object.assign({}, log[s.pick]);
+    sel.reqHeaders = [
+      'POST /hooks/trips-enjoy HTTP/1.1',
+      'Host: erp.sunrisetours.sa',
+      'Content-Type: application/json',
+      'User-Agent: TripsEnjoy-Webhooks/2026-09-01',
+      'X-TE-Event-Id: ' + sel.id,
+      'X-TE-Delivery-Attempt: ' + sel.attempt,
+      'X-TE-Signature: t=1760433852,v1=5f8e2c91a0d47b3e6c1f9a28d5b07e44c3a9f1d26e8b5c70a4f3d9e12b6c8a57',
+      'X-Source-System: trips-enjoy',
+      'X-Company-Code: SUNRISE-RUH'
+    ].join('\n');
+    sel.response = sel.ok
+      ? 'HTTP/1.1 200 OK\nContent-Type: application/json\n\n' + JSON.stringify({ received: true, odoo_ref: 'SO/2026/03184' })
+      : 'HTTP/1.1 500 Internal Server Error\nContent-Type: application/json\n\n' + JSON.stringify({ error: 'account.move: tax "VAT 15%" is not mapped for this partner' });
+    const on = s.active;
+    return {
+      stats, events, log, sel,
+      paused: !on, activeAria: on ? 'true' : 'false', activeLabel: on ? 'Active' : 'Paused',
+      toggleActive: () => this.setState({ active: !on }),
+      trackStyle: 'width: 40px; height: 24px; border-radius: 999px; display: flex; align-items: center; padding: 2px; box-sizing: border-box; ' + (on ? 'background: #1f7a4d; justify-content: flex-end;' : 'background: #7b7fa6; justify-content: flex-start;'),
+      knobStyle: 'width: 20px; height: 20px; border-radius: 999px; background: #ffffff;',
+      secret: s.reveal ? (s.rotated ? 'whsec_Pz4nV8cQ1tLx7Rb2Kd9Ms0Gy5Hf3Ue6W' : 'whsec_8Kq2fT7vXn4LpR9mZc1sYe6Hd3Ab0Wu5') : (s.rotated ? 'whsec_••••••••••••••••••••••••6W' : 'whsec_••••••••••••••••••••••••Wu5'),
+      revealLabel: s.reveal ? 'Hide' : 'Reveal', toggleReveal: () => this.setState({ reveal: !s.reveal }),
+      rotate: () => this.setState({ rotated: true }),
+      rotNote: s.rotated ? 'New secret is live. The old one keeps working until Wed 15 Oct 09:14 (24 h overlap), so you can update Odoo without missing events.' : 'Rotating creates a new secret. The old one keeps working for 24 hours so you can switch over without missing events. Last rotated Tue 2 Sep.',
+      rotStyle: s.rotated ? 'color: #1f7a4d; font-weight: 600;' : 'color: #5b5f86;',
+      resendLabel: s.resent === s.pick ? 'Resent' : 'Resend', resend: () => this.setState({ resent: s.pick })
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Organization dashboard · Sign in</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); font-family: Outfit, Nunito, system-ui, sans-serif; color: #262a67; background: #f6f3e4">
+<div style="display: flex; flex-direction: column; padding: 40px 48px">
+<div style="display: flex; align-items: center; gap: 12px">
+<img src="../assets/1fbce194fcb16bf54904c32c189fca31.svg" alt="Trips Enjoy" style="height: 44px; width: auto">
+<span style="padding: 4px 10px; border-radius: 999px; background: #262a67; color: #f6f3e4; font-size: 13px; font-weight: 600">Business</span>
+</div>
+<div style="flex-grow: 1; display: flex; align-items: center; justify-content: center">
+<div style="width: 420px; display: flex; flex-direction: column; gap: 18px">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 13px; font-weight: 600; color: #5b5f86">business.trips-enjoy.com</span>
+<h1 style="margin: 0; font-size: 32px; line-height: 40px; font-weight: 700">Organization sign in</h1>
+<p style="margin: 0; font-size: 15px; color: #5b5f86">For trip companies, schools and event organizers and their staff.</p>
+</div>
+<div role="tablist" style="display: flex; padding: 4px; border-radius: 999px; background: #e3dfc9; gap: 4px">
+<button role="tab" aria-selected="{{eSel}}" onClick="{{toE}}" style="{{tabE}}">Work email</button>
+<button role="tab" aria-selected="{{pSel}}" onClick="{{toP}}" style="{{tabP}}">Phone</button>
+</div>
+<sc-if value="{{isEmail}}" hint-placeholder-val="{{true}}">
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="ol-e" style="font-size: 14px; font-weight: 600">Work email</label><input id="ol-e" type="email" autocomplete="username" value="fahad@sunrisetours.sa" style="height: 52px; box-sizing: border-box; padding: 0 14px; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; font-family: inherit; font-size: 16px; color: #262a67"></div>
+</sc-if>
+<sc-if value="{{isPhone}}" hint-placeholder-val="{{false}}">
+<dc-import name="PhoneField" label="Mobile number" value="501119022" country="SA" field-id="ol-phone" hint-size="100%,82px"></dc-import>
+</sc-if>
+<div style="display: flex; flex-direction: column; gap: 4px">
+<dc-import name="PasswordField" label="Password" value="Sunrise-2026!" field-id="ol-pass" hint-size="100%,82px"></dc-import>
+<a href="OrgForgot.dc.html" style="align-self: flex-end; font-size: 14px; font-weight: 600; padding: 8px 0">Forgot password?</a>
+</div>
+<a href="Org2fa.dc.html" style="height: 52px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 16px; font-weight: 600; display: flex; align-items: center; justify-content: center; text-decoration: none">Sign in</a>
+<p style="margin: 0; font-size: 14px; color: #5b5f86; text-align: center">New organization? <a href="OrgRegister.dc.html" style="font-weight: 600">Register here</a> · Got an invite? <a href="OrgStaffInviteAccept.dc.html" style="font-weight: 600">Accept it</a></p>
+</div>
+</div>
+</div>
+<div style="background: #262a67; padding: 48px; display: flex; flex-direction: column; justify-content: flex-end; gap: 16px; color: #f6f3e4">
+<img src="../assets/e15e301529dfca735deed42db0d8dd3c.png" alt="Organizer briefing a group before boarding" style="flex-grow: 1; min-height: 0; width: 100%; object-fit: cover; object-position: center; border-radius: 20px; display: block">
+<h2 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Publish trips, fill seats, and follow every bus live.</h2>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+constructor(p) { super(p); this.state = { t: 'e' }; }
+renderVals() {
+const s = (on) => 'flex-grow: 1; height: 40px; border-radius: 999px; border: none; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; ' + (on ? 'background: #ffffff; color: #262a67;' : 'background: transparent; color: #5b5f86;');
+const e = this.state.t === 'e';
+return { isEmail: e, isPhone: !e, eSel: e ? 'true' : 'false', pSel: e ? 'false' : 'true', tabE: s(e), tabP: s(!e), toE: () => this.setState({ t: 'e' }), toP: () => this.setState({ t: 'p' }) };
+}
+}
+</script>
+</body>
+</html>

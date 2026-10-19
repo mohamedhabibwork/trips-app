@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Org · Coupon analytics</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+.te-row:hover{background:#f6f3e4}
+</style>
+</helmet>
+<div style="min-height: 1000px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="OrgNav" active="Coupons" hint-size="248px,1000px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 24px">
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<a href="OrgCoupons.dc.html" style="display: inline-flex; align-items: center; gap: 4px; font-size: 14px; font-weight: 600; text-decoration: none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg>Coupons</a>
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center"><h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Coupon analytics</h1><span style="{{planPill}}">{{planLabel}}</span></div>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end">
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">Coupon<select onChange="{{setCoupon}}" style="height: 48px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 12px; font: inherit; font-size: 15px; font-weight: 500; color: #262a67"><option value="0">AUTUMN15 · 15% off</option><option value="1">WINTER10 · 10% off (new)</option></select></label>
+</div>
+</div>
+
+<sc-if value="{{starter}}" hint-placeholder-val="{{false}}">
+<section aria-labelledby="up-h" style="background: #262a67; color: #f6f3e4; border-radius: 20px; padding: 32px; display: flex; flex-wrap: wrap; gap: 24px; align-items: center">
+<div style="flex: 1 1 360px; display: flex; flex-direction: column; gap: 8px"><h2 id="up-h" style="margin: 0; font-size: 24px; line-height: 30px; font-weight: 600">Coupon analytics start on Growth</h2><p style="margin: 0; font-size: 15px; line-height: 22px; color: #b8bad6">On Starter you can create up to 5 coupons and see their use count on the coupons list. Growth adds redemptions over time, discount totals and CSV export. Enterprise adds the full breakdown by trip and customer.</p></div>
+<a href="OrgBilling.dc.html" style="height: 48px; padding: 0 24px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 15px; font-weight: 700; display: flex; align-items: center; text-decoration: none">Compare plans</a>
+</section>
+</sc-if>
+
+<sc-if value="{{showStats}}" hint-placeholder-val="{{true}}">
+<div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; align-items: center; padding: 16px 20px; border-radius: 20px; background: #ffffff">
+<span style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center"><span style="display: inline-flex; padding: 4px 10px; border-radius: 8px; border: 1px dashed #7b7fa6; font-weight: 700; letter-spacing: .5px; font-size: 15px">{{c.code}}</span><span style="font-size: 14px; color: #5b5f86">{{c.desc}}</span><span style="{{c.ss}}">{{c.s}}</span></span>
+<div role="group" aria-label="Date range" style="display: flex; flex-wrap: wrap; gap: 6px">
+<sc-for list="{{ranges}}" as="r" hint-placeholder-count="4"><button type="button" aria-pressed="{{r.pressed}}" onClick="{{r.on}}" style="{{r.style}}">{{r.l}}</button></sc-for>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{empty}}" hint-placeholder-val="{{false}}">
+<section style="background: #ffffff; border-radius: 20px; padding: 48px 24px; display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center">
+<img src="../assets/d295183985a4e48eb598df8972be7176.svg" alt="" style="width: 180px; height: 180px; object-fit: contain">
+<h2 style="margin: 0; font-size: 22px; font-weight: 600">No redemptions yet</h2>
+<p style="margin: 0; max-width: 460px; font-size: 15px; line-height: 22px; color: #5b5f86">WINTER10 went live on Wed 15 Oct for Jeddah Corniche Night and Taif Rose Farms. Redemptions show here within 5 minutes of a booking. Share the code with your group to get it moving.</p>
+<a href="OrgCampaignNew.dc.html" style="height: 48px; padding: 0 22px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 15px; font-weight: 700; display: flex; align-items: center; text-decoration: none">Send it in a campaign</a>
+</section>
+</sc-if>
+
+<sc-if value="{{full}}" hint-placeholder-val="{{true}}">
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px">
+<sc-for list="{{kpis}}" as="k" hint-placeholder-count="4">
+<div style="padding: 18px 20px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 6px"><span style="font-size: 14px; color: #5b5f86">{{k.l}}</span><span style="font-size: 28px; line-height: 34px; font-weight: 700">{{k.v}} <span style="font-size: 15px; font-weight: 500; color: #5b5f86">{{k.u}}</span></span><span style="font-size: 13px; color: #5b5f86">{{k.d}}</span></div>
+</sc-for>
+</div>
+
+<section aria-labelledby="ch-h" style="background: #ffffff; border-radius: 20px; padding: 20px 24px; display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: space-between; align-items: center"><h2 id="ch-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">Redemptions over time</h2><span style="font-size: 13px; color: #5b5f86">{{rangeNote}}</span></div>
+<div role="img" aria-label="{{chartLabel}}" style="display: flex; align-items: flex-end; gap: 4px; height: 160px; padding-bottom: 4px; border-bottom: 1px solid #e3dfc9">
+<sc-for list="{{bars}}" as="b" hint-placeholder-count="30"><span style="{{b.style}}"></span></sc-for>
+</div>
+<div style="display: flex; justify-content: space-between; font-size: 12px; color: #5b5f86"><span>{{axisStart}}</span><span>{{axisMid}}</span><span>{{axisEnd}}</span></div>
+</section>
+
+<div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start">
+<section aria-labelledby="bk-h" style="flex: 3 1 520px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px 0 8px">
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 0 20px 12px; gap: 12px; flex-wrap: wrap"><h2 id="bk-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">Bookings using AUTUMN15</h2><button type="button" style="height: 40px; padding: 0 14px; border-radius: 12px; border: 1px solid #7b7fa6; background: #fff; color: #262a67; font: inherit; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 6px; cursor: pointer"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12M7 11l5 5 5-5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"></path></svg>Export CSV</button></div>
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 640px; border-collapse: collapse; font-size: 15px">
+<thead><tr style="color: #5b5f86; font-size: 13px"><th scope="col" style="text-align: start; padding: 10px 20px; font-weight: 600">Booking</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Trip</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Redeemed</th><th scope="col" style="text-align: end; padding: 10px 12px; font-weight: 600">Seats</th><th scope="col" style="text-align: end; padding: 10px 20px; font-weight: 600">Discount</th></tr></thead>
+<tbody>
+<sc-for list="{{bookings}}" as="b" hint-placeholder-count="5">
+<tr class="te-row" style="border-top: 1px solid #e3dfc9"><td style="padding: 12px 20px; font-weight: 600"><a href="OrgBooking.dc.html" style="color: #262a67">{{b.id}}</a></td><td style="padding: 12px">{{b.trip}}</td><td style="padding: 12px; color: #5b5f86; font-size: 14px">{{b.when}}</td><td style="padding: 12px; text-align: end">{{b.seats}}</td><td style="padding: 12px 20px; text-align: end; font-variant-numeric: tabular-nums">{{b.disc}}</td></tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+<div style="padding: 10px 20px 4px; font-size: 13px; color: #5b5f86">Showing 5 of 184 · 20 per page</div>
+</section>
+
+<section aria-labelledby="br-h" style="flex: 2 1 320px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 8px"><h2 id="br-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">By trip</h2><sc-if value="{{ent}}" hint-placeholder-val="{{false}}"><button type="button" style="height: 36px; padding: 0 12px; border-radius: 10px; border: 1px solid #7b7fa6; background: #fff; color: #262a67; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer">Export CSV</button></sc-if></div>
+<sc-if value="{{ent}}" hint-placeholder-val="{{false}}">
+<sc-for list="{{byTrip}}" as="t" hint-placeholder-count="3">
+<div style="display: flex; flex-direction: column; gap: 6px"><span style="display: flex; justify-content: space-between; gap: 8px; font-size: 14px"><span style="font-weight: 600">{{t.n}}</span><span>{{t.v}}</span></span><span style="height: 8px; border-radius: 999px; background: #e3dfc9; display: block; overflow: hidden"><span style="{{t.bar}}"></span></span></div>
+</sc-for>
+<span style="font-size: 13px; color: #5b5f86">62% of redeemers booked with you for the first time.</span>
+</sc-if>
+<sc-if value="{{growth}}" hint-placeholder-val="{{true}}">
+<div style="padding: 16px; border-radius: 12px; background: #f6f3e4; display: flex; flex-direction: column; gap: 8px">
+<span style="display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 600"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 11h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1zM8 11V7a4 4 0 0 1 8 0v4"></path></svg>Full breakdown needs Enterprise</span>
+<span style="font-size: 14px; line-height: 20px; color: #5b5f86">See redemptions by trip, first-time vs returning customers, and export every table. Growth shows the totals and bookings list.</span>
+<a href="OrgBilling.dc.html" style="font-size: 14px; font-weight: 600">See Enterprise</a>
+</div>
+</sc-if>
+</section>
+</div>
+</sc-if>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"plan":{"editor":"enum","options":["Starter","Growth","Enterprise"],"default":"Growth"},"$preview":{"width":1440,"height":1100}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { coupon: 0, range: 1 }; }
+  renderVals() {
+    const plan = this.props.plan ?? 'Growth';
+    const starter = plan === 'Starter';
+    const pill = (tone) => 'display: inline-flex; align-items: center; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; ' + ({ ok: 'background: #e3f3ea; color: #1f7a4d;', info: 'background: #e6e8f5; color: #262a67;', warn: 'background: #fdf0d5; color: #8a4b00;' })[tone];
+    const C = [
+      { code: 'AUTUMN15', desc: '15% off the trip price · all October trips · 200 uses', s: 'Active · 92% used', t: 'warn' },
+      { code: 'WINTER10', desc: '10% off · Jeddah Corniche Night, Taif Rose Farms · 100 uses', s: 'Active', t: 'ok' }
+    ];
+    const c = { ...C[this.state.coupon], ss: pill(C[this.state.coupon].t) };
+    const R = [['Last 7 days', 7], ['Last 30 days', 30], ['Last 90 days', 90], ['Custom', 30]];
+    const ri = this.state.range;
+    const ranges = R.map((r, i) => ({ l: r[0], pressed: i === ri ? 'true' : 'false', on: () => this.setState({ range: i }),
+      style: 'height: 40px; padding: 0 14px; border-radius: 999px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; ' + (i === ri ? 'background: #262a67; color: #f6f3e4; border: 1px solid #262a67;' : 'background: #fff; color: #262a67; border: 1px solid #7b7fa6;') }));
+    const days = R[ri][1];
+    const nBars = Math.min(days, 30);
+    const seed = [2, 3, 1, 4, 6, 5, 3, 7, 9, 8, 6, 10, 12, 9, 7, 11, 13, 10, 8, 6, 9, 5, 4, 7, 8, 6, 5, 4, 3, 5];
+    const vals = seed.slice(30 - nBars);
+    const max = Math.max.apply(null, vals);
+    const bars = vals.map((v, i) => ({ style: 'flex: 1 1 0; min-width: 0; display: block; border-radius: 6px 6px 0 0; height: ' + Math.round(v / max * 150) + 'px; background: ' + (i === vals.length - 1 ? '#ff6c2e' : '#262a67') }));
+    const totals = { 7: ['40', '6,020'], 30: ['184', '27,640'], 90: ['184', '27,640'] }[days];
+    const kpis = [
+      { l: 'Redemptions', v: totals[0], u: '', d: R[ri][0].toLowerCase() },
+      { l: 'Discount given', v: totals[1], u: 'SAR', d: 'Taken from your trip revenue' },
+      { l: 'Remaining uses', v: '16', u: 'of 200', d: 'Ends when used up or on Fri 31 Oct' },
+      { l: 'Bookings using it', v: '184', u: '', d: 'One code per booking · 412 seats' }
+    ];
+    const bookings = [
+      { id: 'TE-48391', trip: 'AlUla Heritage Weekend', when: 'Wed 15 Oct · 21:04', seats: '3', disc: '562.50 SAR' },
+      { id: 'TE-48377', trip: 'Red Sea Snorkel Day', when: 'Wed 15 Oct · 18:40', seats: '2', disc: '96.00 SAR' },
+      { id: 'TE-48352', trip: 'Edge of the World Hike', when: 'Wed 15 Oct · 12:15', seats: '4', disc: '165.00 SAR' },
+      { id: 'TE-48340', trip: 'AlUla Heritage Weekend', when: 'Tue 14 Oct · 22:51', seats: '2', disc: '375.00 SAR' },
+      { id: 'TE-48318', trip: 'Red Sea Snorkel Day', when: 'Tue 14 Oct · 09:02', seats: '1', disc: '48.00 SAR' }
+    ];
+    const byTrip = [['AlUla Heritage Weekend', 92], ['Red Sea Snorkel Day', 58], ['Edge of the World Hike', 34]].map((t) => ({ n: t[0], v: t[1] + ' redemptions', bar: 'display: block; height: 100%; background: #262a67; width: ' + Math.round(t[1] / 92 * 100) + '%' }));
+    const empty = !starter && this.state.coupon === 1;
+    return { starter, showStats: !starter, empty, full: !starter && !empty, ent: plan === 'Enterprise', growth: plan === 'Growth',
+      planLabel: plan + (plan === 'Enterprise' ? ' · full analytics' : plan === 'Growth' ? ' · basic analytics' : ' · no analytics'), planPill: pill('info'),
+      setCoupon: (e) => this.setState({ coupon: parseInt(e.target.value, 10) || 0 }), c, ranges, bars, kpis, bookings, byTrip,
+      rangeNote: 'Daily · numbers lag up to 5 minutes',
+      chartLabel: 'Daily redemptions of ' + c.code + ' over ' + R[ri][0].toLowerCase() + ', peaking at ' + max + ' on one day',
+      axisStart: days === 7 ? 'Thu 9 Oct' : 'Wed 17 Sep', axisMid: days === 7 ? 'Sun 12 Oct' : 'Wed 1 Oct', axisEnd: 'Wed 15 Oct' };
+  }
+}
+</script>
+</body>
+</html>

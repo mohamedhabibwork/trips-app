@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Org · Ledger &amp; exports</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+.te-row:hover{background:#f6f3e4}
+</style>
+</helmet>
+<div style="min-height: 1000px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="OrgNav" active="Accounting" hint-size="248px,1000px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 20px">
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<a href="OrgAccounting.dc.html" style="display: inline-flex; align-items: center; gap: 4px; font-size: 14px; font-weight: 600; text-decoration: none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg>Accounting</a>
+<h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Ledger &amp; exports</h1>
+<span style="font-size: 15px; color: #5b5f86">Every money event, with both sides recorded. Lines can't be edited; corrections are new lines.</span>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px">
+<button type="button" onClick="{{tryExport}}" style="height: 48px; padding: 0 16px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font: inherit; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zM14 3v5h5"></path></svg>Export PDF</button>
+<button type="button" onClick="{{tryExport}}" style="height: 48px; padding: 0 20px; border: 0; border-radius: 12px; background: #ff6c2e; color: #262a67; font: inherit; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12M7 11l5 5 5-5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"></path></svg>Export CSV</button>
+</div>
+</div>
+
+<sc-if value="{{refused}}" hint-placeholder-val="{{false}}">
+<div role="alert" style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; padding: 14px 16px; border-radius: 12px; background: #fdf0d5; color: #8a4b00; font-size: 15px">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 11h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1zM8 11V7a4 4 0 0 1 8 0v4"></path></svg>
+<span style="flex: 1 1 300px"><strong>Exports aren't included in Starter.</strong> You can browse every ledger line here. Upgrade to Growth to export CSV and PDF reports.</span>
+<a href="OrgBilling.dc.html" style="font-weight: 700; color: #262a67">Upgrade plan</a>
+</div>
+</sc-if>
+<sc-if value="{{queued}}" hint-placeholder-val="{{false}}">
+<div role="status" style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; padding: 14px 16px; border-radius: 12px; background: #e3f3ea; color: #1f7a4d; font-size: 15px">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg>
+<span style="flex: 1 1 300px"><strong>Export started.</strong> {{exportCount}} lines, total {{totalFmt}}. Ready within 15 minutes in Accounting › Exports; the file is kept for 7 days.</span>
+</div>
+</sc-if>
+
+<section aria-label="Filters" style="background: #ffffff; border-radius: 20px; padding: 16px 20px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px">
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">Period<select style="height: 48px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 12px; font: inherit; font-size: 15px; font-weight: 500; color: #262a67"><option>Mon 13 – Thu 16 Oct 2026</option><option>October 2026 · to date</option><option>September 2026</option><option>Custom range…</option></select></label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">Trip<select style="height: 48px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 12px; font: inherit; font-size: 15px; font-weight: 500; color: #262a67"><option>All trips</option><option>AlUla Heritage Weekend</option><option>Red Sea Snorkel Day</option><option>Jeddah Corniche Night</option></select></label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">Market &amp; currency<select style="height: 48px; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 12px; font: inherit; font-size: 15px; font-weight: 500; color: #262a67"><option>Saudi Arabia · SAR</option><option>United Arab Emirates · AED</option><option>Egypt · EGP</option></select></label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">Search<input type="search" placeholder="Booking, deal or gateway ref" style="height: 48px; min-width: 0; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 12px; font: inherit; font-size: 15px; font-weight: 400; color: #262a67"></label>
+</div>
+<div role="group" aria-label="Event type" style="display: flex; flex-wrap: wrap; gap: 6px">
+<sc-for list="{{chips}}" as="c" hint-placeholder-count="8"><button type="button" aria-pressed="{{c.pressed}}" onClick="{{c.on}}" style="{{c.style}}">{{c.l}}</button></sc-for>
+</div>
+</section>
+
+<section aria-labelledby="lg-h" style="background: #ffffff; border-radius: 20px; padding: 18px 0 0">
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 0 20px 10px; gap: 12px; flex-wrap: wrap"><h2 id="lg-h" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 600">{{count}} lines</h2><span style="font-size: 13px; color: #5b5f86">Times in Riyadh (AST) · updated 2 minutes ago</span></div>
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 960px; border-collapse: collapse; font-size: 15px">
+<thead><tr style="color: #5b5f86; font-size: 13px"><th scope="col" style="text-align: start; padding: 10px 20px; font-weight: 600">Time</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Event</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Linked to</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Gateway reference</th><th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Currency</th><th scope="col" style="text-align: end; padding: 10px 20px; font-weight: 600">Amount</th></tr></thead>
+<tbody>
+<sc-for list="{{rows}}" as="r" hint-placeholder-count="9">
+<tr class="te-row" style="border-top: 1px solid #e3dfc9">
+<td style="padding: 12px 20px; font-size: 14px; color: #5b5f86; white-space: nowrap">{{r.when}}</td>
+<td style="padding: 12px"><span style="display: flex; flex-direction: column; gap: 2px"><span style="{{r.ts}}">{{r.type}}</span><span style="font-size: 13px; color: #5b5f86">{{r.note}}</span></span></td>
+<td style="padding: 12px; font-size: 14px"><a href="{{r.href}}" style="font-weight: 600">{{r.link}}</a></td>
+<td style="padding: 12px; font-size: 13px; color: #5b5f86; font-family: ui-monospace, Menlo, monospace">{{r.ref}}</td>
+<td style="padding: 12px; font-size: 14px">SAR</td>
+<td style="{{r.as}}">{{r.amt}}</td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; align-items: center; padding: 14px 20px; border-top: 1px solid #e3dfc9; background: #e6e8f5; border-radius: 0 0 20px 20px">
+<span style="display: flex; align-items: center; gap: 8px; font-size: 14px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1f7a4d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg>Export total will equal the ledger total for these filters: <strong>{{totalFmt}}</strong></span>
+<span style="font-size: 18px; font-weight: 700; font-variant-numeric: tabular-nums">Net {{totalFmt}}</span>
+</div>
+</section>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"plan":{"editor":"enum","options":["Starter","Growth","Enterprise"],"default":"Growth"},"$preview":{"width":1440,"height":1120}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { type: 'All', tried: false }; }
+  renderVals() {
+    const plan = this.props.plan ?? 'Growth';
+    const L = [
+      ['Thu 16 Oct · 06:12', 'Booking', 'AlUla Heritage Weekend · 3 seats', 'TE-48391', 'OrgBooking.dc.html', 'tap_chg_7Fd29Kx4', 3187.50],
+      ['Thu 16 Oct · 06:12', 'Coupon', 'AUTUMN15 · 15% on TE-48391', 'TE-48391', 'OrgBooking.dc.html', '—', -562.50],
+      ['Thu 16 Oct · 06:12', 'Commission', 'Platform commission on TE-48391', 'TE-48391', 'OrgBooking.dc.html', '—', -262.50],
+      ['Wed 15 Oct · 18:40', 'Booking', 'Red Sea Snorkel Day · 2 seats', 'TE-48377', 'OrgBooking.dc.html', 'tap_chg_2Lw81Qa9', 640.00],
+      ['Wed 15 Oct · 14:05', 'Refund', '80% refund · cancelled 3 days ahead', 'TE-48213', 'OrgBooking.dc.html', 'tap_rfd_9Pz33Mc1', -512.00],
+      ['Wed 15 Oct · 09:30', 'Deal payout', 'Khalid Al-Harbi · Bus 2 driver', 'Deal DL-2291', 'OrgDeal.dc.html', 'po_1Q8xA2Tr', -1450.00],
+      ['Tue 14 Oct · 11:20', 'Subscription charge', 'Growth plan · October', 'Plan invoice INV-S-1042', 'OrgBilling.dc.html', 'tap_chg_5Kt60Vb2', -1490.00],
+      ['Mon 13 Oct · 06:00', 'Payout', 'Weekly payout to Al Rajhi •••• 2207', 'Settlement ST-0918', 'OrgSettlement.dc.html', 'po_1Q7mZ8Lk', -52180.00],
+      ['Mon 13 Oct · 06:00', 'Booking', 'Edge of the World Hike · 4 seats', 'TE-48352', 'OrgBooking.dc.html', 'tap_chg_8Hr15Ne7', 1100.00]
+    ];
+    const tone = { Booking: ['#e3f3ea', '#1f7a4d'], Refund: ['#fde8e6', '#b42318'], Coupon: ['#fdf0d5', '#8a4b00'], 'Subscription charge': ['#e6e8f5', '#262a67'], Payout: ['#e6e8f5', '#262a67'], 'Deal payout': ['#ffe7dc', '#c93a00'], Commission: ['#f6f3e4', '#262a67'] };
+    const types = ['All', 'Booking', 'Refund', 'Coupon', 'Subscription charge', 'Payout', 'Deal payout', 'Commission'];
+    const sel = this.state.type;
+    const chips = types.map((t) => ({ l: t, pressed: t === sel ? 'true' : 'false', on: () => this.setState({ type: t }),
+      style: 'height: 36px; padding: 0 14px; border-radius: 999px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; ' + (t === sel ? 'background: #262a67; color: #f6f3e4; border: 1px solid #262a67;' : 'background: #fff; color: #262a67; border: 1px solid #7b7fa6;') }));
+    const fmt = (n) => (n < 0 ? '− ' : '+ ') + Math.abs(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const f = L.filter((r) => sel === 'All' || r[1] === sel);
+    const rows = f.map((r) => ({ when: r[0], type: r[1], note: r[2], link: r[3], href: r[4], ref: r[5], amt: fmt(r[6]),
+      ts: 'align-self: flex-start; display: inline-flex; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; background: ' + tone[r[1]][0] + '; color: ' + tone[r[1]][1],
+      as: 'padding: 12px 20px; text-align: end; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; color: ' + (r[6] < 0 ? '#262a67' : '#1f7a4d') }));
+    const total = f.reduce((a, r) => a + r[6], 0);
+    const totalFmt = (total < 0 ? '− ' : '') + Math.abs(total).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' SAR';
+    const tried = this.state.tried;
+    return { chips, rows, count: String(rows.length), exportCount: String(rows.length), totalFmt,
+      refused: tried && plan === 'Starter', queued: tried && plan !== 'Starter', tryExport: () => this.setState({ tried: true }) };
+  }
+}
+</script>
+</body>
+</html>

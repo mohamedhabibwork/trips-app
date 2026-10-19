@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Admin · Platform coupon</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="min-height: 1000px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="AdmNav" active="Coupons" hint-size="248px,1000px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 20px">
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; align-items: center; gap: 14px">
+<a href="AdmCoupons.dc.html" aria-label="Back to coupons" style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 999px; background: #ffffff; color: #262a67; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a>
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; color: #5b5f86">Coupons</span><h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">New platform coupon</h1></div>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px">
+<a href="AdmCoupons.dc.html" style="height: 48px; box-sizing: border-box; padding: 0 20px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font-size: 15px; font-weight: 600; display: flex; align-items: center; text-decoration: none">Save draft</a>
+<a href="AdmCoupons.dc.html" style="height: 48px; padding: 0 22px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg>Activate coupon</a>
+</div>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
+<form style="flex: 2 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+
+<section aria-labelledby="s1" style="background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 14px">
+<h2 id="s1" style="margin: 0; font-size: 18px; font-weight: 600">Code &amp; discount</h2>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px">
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="c-code" style="font-size: 14px; font-weight: 600">Code</label><span style="display: flex; gap: 8px"><input id="c-code" value="WINTERGROUPS" style="flex: 1; min-width: 0; height: 48px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 14px; font: inherit; font-size: 16px; font-weight: 600; letter-spacing: .5px; color: #262a67"><button type="button" style="height: 48px; padding: 0 14px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer">Generate</button></span></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="c-val" style="font-size: 14px; font-weight: 600">{{valLabel}}</label><input id="c-val" value="{{valDefault}}" style="height: 48px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 14px; font: inherit; font-size: 16px; color: #262a67"></div>
+</div>
+<fieldset style="border: 0; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px"><legend style="font-size: 14px; font-weight: 600; padding: 0 0 8px">Type</legend>
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{types}}" as="t" hint-placeholder-count="6">
+<button type="button" aria-pressed="{{t.on}}" onClick="{{t.pick}}" style="{{t.style}}">{{t.l}}</button>
+</sc-for>
+</div>
+</fieldset>
+</section>
+
+<section aria-labelledby="s2" style="background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 14px">
+<h2 id="s2" style="margin: 0; font-size: 18px; font-weight: 600">Scope &amp; audience</h2>
+<p style="margin: 0; font-size: 14px; color: #5b5f86">Platform coupons can apply to any trip or service. The platform covers the discount; organizations and providers are paid in full.</p>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px">
+<fieldset style="border: 0; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px"><legend style="font-size: 14px; font-weight: 600; padding: 0 0 8px">Where it applies</legend>
+<sc-for list="{{scopes}}" as="s" hint-placeholder-count="3">
+<button type="button" role="radio" aria-checked="{{s.ac}}" onClick="{{s.pick}}" style="{{s.style}}"><span style="{{s.dot}}"></span><span style="display: flex; flex-direction: column"><span style="font-size: 15px; font-weight: 600">{{s.l}}</span><span style="font-size: 13px; color: #5b5f86">{{s.d}}</span></span></button>
+</sc-for>
+<span style="font-size: 14px; font-weight: 600; padding-top: 4px">Services</span>
+<div style="display: flex; flex-wrap: wrap; gap: 14px; font-size: 15px">
+<label style="display: flex; gap: 8px; align-items: center"><input type="checkbox" checked style="width: 18px; height: 18px; accent-color: #262a67; margin: 0">Trips</label>
+<label style="display: flex; gap: 8px; align-items: center"><input type="checkbox" style="width: 18px; height: 18px; accent-color: #262a67; margin: 0">Drivers</label>
+<label style="display: flex; gap: 8px; align-items: center"><input type="checkbox" style="width: 18px; height: 18px; accent-color: #262a67; margin: 0">Photographers</label>
+</div>
+</fieldset>
+<fieldset style="border: 0; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px"><legend style="font-size: 14px; font-weight: 600; padding: 0 0 8px">Audience</legend>
+<sc-for list="{{auds}}" as="a" hint-placeholder-count="4">
+<button type="button" role="radio" aria-checked="{{a.ac}}" onClick="{{a.pick}}" style="{{a.style}}"><span style="{{a.dot}}"></span><span style="display: flex; flex-direction: column"><span style="font-size: 15px; font-weight: 600">{{a.l}}</span><span style="font-size: 13px; color: #5b5f86">{{a.d}}</span></span></button>
+</sc-for>
+</fieldset>
+</div>
+<sc-if value="{{scopeOrgs}}" hint-placeholder-val="{{false}}"><div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center"><span style="font-size: 14px; font-weight: 600">Organizations:</span><span style="padding: 4px 12px; border-radius: 999px; background: #e6e8f5; font-size: 14px; font-weight: 600">Sunrise Tours Co.</span><span style="padding: 4px 12px; border-radius: 999px; background: #e6e8f5; font-size: 14px; font-weight: 600">Asir Trails</span><button type="button" style="height: 32px; padding: 0 12px; border-radius: 999px; border: 1px dashed #7b7fa6; background: #ffffff; color: #262a67; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer">Add organization</button></div></sc-if>
+<sc-if value="{{scopeTrips}}" hint-placeholder-val="{{false}}"><div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center"><span style="font-size: 14px; font-weight: 600">Trips:</span><span style="padding: 4px 12px; border-radius: 999px; background: #e6e8f5; font-size: 14px; font-weight: 600">AlUla Heritage Weekend</span><span style="padding: 4px 12px; border-radius: 999px; background: #e6e8f5; font-size: 14px; font-weight: 600">Taif Rose Farms</span><button type="button" style="height: 32px; padding: 0 12px; border-radius: 999px; border: 1px dashed #7b7fa6; background: #ffffff; color: #262a67; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer">Add trip</button></div></sc-if>
+</section>
+
+<section aria-labelledby="s3" style="background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 14px">
+<h2 id="s3" style="margin: 0; font-size: 18px; font-weight: 600">Limits, budget &amp; validity</h2>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px">
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="l1" style="font-size: 14px; font-weight: 600">Total uses</label><input id="l1" value="2,000" style="height: 48px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 14px; font: inherit; font-size: 16px; color: #262a67"></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="l2" style="font-size: 14px; font-weight: 600">Per user</label><input id="l2" value="1" style="height: 48px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 14px; font: inherit; font-size: 16px; color: #262a67"></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="l3" style="font-size: 14px; font-weight: 600">Minimum booking (SAR)</label><input id="l3" value="500" style="height: 48px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 14px; font: inherit; font-size: 16px; color: #262a67"></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="l4" style="font-size: 14px; font-weight: 600">Budget cap (SAR)</label><input id="l4" value="120,000" aria-describedby="l4h" style="height: 48px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 14px; font: inherit; font-size: 16px; color: #262a67"><span id="l4h" style="font-size: 12px; color: #5b5f86">Auto-pauses when reached</span></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="l5" style="font-size: 14px; font-weight: 600">Starts</label><input id="l5" value="Sat 1 Nov · 00:00" style="height: 48px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 14px; font: inherit; font-size: 16px; color: #262a67"></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="l6" style="font-size: 14px; font-weight: 600">Ends</label><input id="l6" value="Thu 31 Dec · 23:59" style="height: 48px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #fff; padding: 0 14px; font: inherit; font-size: 16px; color: #262a67"></div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 10px; padding-top: 4px">
+<label style="display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 12px 14px; border-radius: 12px; background: #f6f3e4"><span style="display: flex; flex-direction: column"><span style="font-size: 15px; font-weight: 600">Stackable with plan discounts</span><span style="font-size: 13px; color: #5b5f86">Explorer 5% and VIP 10% program discounts still apply on top</span></span><button type="button" role="switch" aria-checked="{{stackA}}" onClick="{{toggleStack}}" aria-label="Stackable with plan discounts" style="{{stackStyle}}"><span style="{{stackKnob}}"></span></button></label>
+<label style="display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 12px 14px; border-radius: 12px; background: #f6f3e4"><span style="display: flex; flex-direction: column"><span style="font-size: 15px; font-weight: 600">Exclusive with other coupons</span><span style="font-size: 13px; color: #5b5f86">Can’t be combined with organization or provider codes</span></span><span style="padding: 2px 10px; border-radius: 999px; background: #e6e8f5; font-size: 13px; font-weight: 600">Always on</span></label>
+</div>
+</section>
+</form>
+
+<aside aria-labelledby="pv-h" style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+<section style="background: #262a67; color: #f6f3e4; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 14px">
+<h2 id="pv-h" style="margin: 0; font-size: 18px; font-weight: 600">Preview at checkout</h2>
+<div style="background: #ffffff; color: #262a67; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 8px; font-size: 14px">
+<span style="font-weight: 600">AlUla Heritage Weekend · 2 travellers</span>
+<span style="display: flex; justify-content: space-between"><span>Trip seats</span><span>2,500 SAR</span></span>
+<span style="display: flex; justify-content: space-between"><span>Programs</span><span>590 SAR</span></span>
+<span style="display: flex; justify-content: space-between; color: #1f7a4d; font-weight: 600"><span style="display: inline-flex; gap: 6px; align-items: center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg>WINTERGROUPS</span><span>{{pvDisc}}</span></span>
+<span style="height: 1px; background: #e3dfc9"></span>
+<span style="display: flex; justify-content: space-between; font-size: 16px; font-weight: 700"><span>Total</span><span>{{pvTotal}}</span></span>
+</div>
+<span style="font-size: 14px; color: #b8bad6; line-height: 20px">{{pvLine}}</span>
+</section>
+<section style="background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 10px; font-size: 14px">
+<h3 style="margin: 0; font-size: 16px; font-weight: 600">Summary</h3>
+<span style="display: flex; justify-content: space-between; gap: 12px"><span style="color: #5b5f86">Type</span><span style="font-weight: 600; text-align: end">{{type}}</span></span>
+<span style="display: flex; justify-content: space-between; gap: 12px"><span style="color: #5b5f86">Scope</span><span style="font-weight: 600; text-align: end">{{scopeL}}</span></span>
+<span style="display: flex; justify-content: space-between; gap: 12px"><span style="color: #5b5f86">Audience</span><span style="font-weight: 600; text-align: end">{{audL}}</span></span>
+<span style="display: flex; justify-content: space-between; gap: 12px"><span style="color: #5b5f86">Budget</span><span style="font-weight: 600; text-align: end">120,000 SAR · about 800 uses</span></span>
+<span style="display: flex; justify-content: space-between; gap: 12px"><span style="color: #5b5f86">Plan discounts</span><span style="font-weight: 600; text-align: end">{{stackL}}</span></span>
+<p style="margin: 4px 0 0; padding: 10px 12px; border-radius: 12px; background: #fdf0d5; color: #8a4b00; line-height: 20px">Activating notifies the chosen audience by push and email on the start date. Draft coupons are only visible to admins.</p>
+</section>
+</aside>
+</div>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1260}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { type: 'Percentage', scope: 0, aud: 1, stack: true }; }
+  renderVals() {
+    const S = this.state;
+    const T = { 'Fixed amount': ['Amount off (SAR)', '150', '−150 SAR', '2,940 SAR'], 'Percentage': ['Percent off', '12%', '−370.80 SAR', '2,719.20 SAR'], 'Program-specific': ['Percent off selected programs', '20%', '−118 SAR', '2,972 SAR'], 'Free program': ['Program made free', 'Old Town walk + Desert camp kit', '−120 SAR', '2,970 SAR'], 'First booking': ['Amount off first booking (SAR)', '100', '−100 SAR', '2,990 SAR'], 'Minimum spend': ['Amount off when over minimum (SAR)', '250', '−250 SAR', '2,840 SAR'] };
+    const types = Object.keys(T).map((l) => ({ l, on: l === S.type ? 'true' : 'false', pick: () => this.setState({ type: l }),
+      style: 'height: 40px; padding: 0 14px; border-radius: 999px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; ' + (l === S.type ? 'background: #262a67; color: #f6f3e4; border: 1px solid #262a67;' : 'background: #ffffff; color: #262a67; border: 1px solid #7b7fa6;') }));
+    const card = (on) => 'display: flex; gap: 10px; align-items: flex-start; text-align: start; font: inherit; color: #262a67; padding: 10px 12px; border-radius: 12px; cursor: pointer; ' + (on ? 'border: 2px solid #fb8030; background: #fffaf5;' : 'border: 1px solid #e3dfc9; background: #ffffff;');
+    const dot = (on) => 'width: 18px; height: 18px; flex-shrink: 0; margin-top: 2px; box-sizing: border-box; border-radius: 999px; ' + (on ? 'border: 6px solid #262a67; background: #ffffff;' : 'border: 2px solid #7b7fa6; background: #ffffff;');
+    const SC = [['Any trip', 'Every organization on the platform'], ['Specific organizations', 'Only trips run by chosen organizations'], ['Specific trips', 'Pick individual trips']];
+    const AU = [['All users', 'Anyone with a Trips Enjoy account'], ['Plan segment', 'VIP members only'], ['New users', 'No booking on the platform yet'], ['Targeted list', 'Upload a CSV of user IDs']];
+    const scopes = SC.map((x, i) => ({ l: x[0], d: x[1], ac: i === S.scope ? 'true' : 'false', dot: dot(i === S.scope), style: card(i === S.scope), pick: () => this.setState({ scope: i }) }));
+    const auds = AU.map((x, i) => ({ l: x[0], d: x[1], ac: i === S.aud ? 'true' : 'false', dot: dot(i === S.aud), style: card(i === S.aud), pick: () => this.setState({ aud: i }) }));
+    const t = T[S.type];
+    return { types, scopes, auds, valLabel: t[0], valDefault: t[1], pvDisc: t[2], pvTotal: t[3], type: S.type + ' · ' + t[1],
+      scopeOrgs: S.scope === 1, scopeTrips: S.scope === 2,
+      scopeL: SC[S.scope][0] + ' · Trips', audL: S.aud === 1 ? 'Plan segment · VIP' : AU[S.aud][0],
+      pvLine: 'A VIP traveller sees the code applied on their Order Summary. ' + (S.stack ? 'Their 10% VIP program discount still applies.' : 'Their VIP program discount is replaced by this code.'),
+      stackA: S.stack ? 'true' : 'false', stackL: S.stack ? 'Stack' : 'Replace',
+      toggleStack: () => this.setState({ stack: !S.stack }),
+      stackStyle: 'width: 52px; height: 30px; flex-shrink: 0; border-radius: 999px; border: 0; padding: 3px; cursor: pointer; display: flex; ' + (S.stack ? 'background: #262a67; justify-content: flex-end;' : 'background: #7b7fa6; justify-content: flex-start;'),
+      stackKnob: 'width: 24px; height: 24px; border-radius: 999px; background: #ffffff;' };
+  }
+}
+</script>
+</body>
+</html>

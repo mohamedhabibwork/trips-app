@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Driver · Offers</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="height: 100%; box-sizing: border-box; padding: 56px 16px 120px; display: flex; flex-direction: column; gap: 14px">
+
+<div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 2px"><h1 style="margin: 0; font-size: 28px; line-height: 34px; font-weight: 700">Offers</h1><span style="font-size: 14px; color: #5b5f86">Trip offers from companies</span></div>
+<a href="DrvPlanManage.dc.html" style="height: 32px; padding: 0 12px; border-radius: 999px; background: #e6e8f5; color: #262a67; display: flex; align-items: center; font-size: 13px; font-weight: 600; text-decoration: none">3 bookings left</a>
+</div>
+
+<div role="tablist" aria-label="Offer status" style="height: 48px; box-sizing: border-box; padding: 4px; border-radius: 999px; background: #ffffff; border: 1px solid #e3dfc9; display: flex; gap: 4px">
+<sc-for list="{{tabs}}" as="t" hint-placeholder-count="3">
+<button type="button" role="tab" aria-selected="{{t.sel}}" onClick="{{t.go}}" style="{{t.style}}">{{t.label}}<span style="{{t.countStyle}}">{{t.count}}</span></button>
+</sc-for>
+</div>
+
+<div role="tabpanel" style="display: flex; flex-direction: column; gap: 12px">
+<sc-for list="{{offers}}" as="o" hint-placeholder-count="3">
+<a href="DrvOffer.dc.html" style="padding: 14px 16px; border-radius: 20px; background: #ffffff; color: #262a67; text-decoration: none; display: flex; flex-direction: column; gap: 8px">
+<span style="display: flex; align-items: center; justify-content: space-between; gap: 8px"><span style="font-size: 13px; font-weight: 600; color: #5b5f86">{{o.company}}</span><span style="{{o.pillStyle}}">{{o.status}}</span></span>
+<span style="font-size: 18px; line-height: 23px; font-weight: 600">{{o.trip}}</span>
+<span style="display: flex; align-items: center; gap: 6px; font-size: 13px; color: #5b5f86"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zM4 10h16M8 3v4M16 3v4"></path></svg>{{o.meta}}</span>
+<span style="display: flex; align-items: baseline; justify-content: space-between; padding-top: 8px; border-top: 1px solid #e3dfc9"><span style="font-size: 13px; color: #5b5f86">{{o.priceLabel}}</span><span style="font-size: 20px; font-weight: 700">{{o.price}} <span style="font-size: 13px; font-weight: 500; color: #5b5f86">SAR</span></span></span>
+<sc-if value="{{o.hasNote}}" hint-placeholder-val="{{false}}"><span style="font-size: 13px; font-weight: 600; color: #c93a00">{{o.note}}</span></sc-if>
+</a>
+</sc-for>
+</div>
+
+<p style="margin: 0; display: flex; gap: 8px; font-size: 13px; line-height: 18px; color: #5b5f86"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 11v5M12 8h.01"></path></svg>Nothing is confirmed until both you and the company accept the same price.</p>
+</div>
+<div style="position: absolute; left: 0; right: 0; bottom: 0; height: 120px">
+<dc-import name="TabBar" role="driver" active="offers" hint-size="390px,120px"></dc-import>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { tab: 'new' }; }
+  renderVals() {
+    const pill = (k) => {
+      const m = { new: 'background: #f89e23; color: #262a67;', neg: 'background: #ffe7dc; color: #c93a00;', ok: 'background: #e3f3ea; color: #1f7a4d;', off: 'background: #fde8e6; color: #b42318;', mute: 'background: #e6e8f5; color: #262a67;' };
+      return 'padding: 2px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; ' + m[k];
+    };
+    const D = {
+      new: [
+        { company: 'Sunrise Tours Co.', status: 'New offer', k: 'new', trip: 'Red Sea Snorkel Day', meta: 'Fri 24 Oct · Bus 2 · 46 passengers', priceLabel: 'Offered', price: '1,300', note: 'Respond by Thu 16 Oct, 09:12' },
+        { company: 'Desert Rose Travel', status: 'New offer', k: 'new', trip: 'Taif Rose Farms', meta: 'Sat 1 Nov · Bus 1 · 38 passengers', priceLabel: 'Offered', price: '1,100', note: '' }
+      ],
+      neg: [
+        { company: 'Najd Adventures', status: 'They countered', k: 'neg', trip: 'Edge of the World Hike', meta: 'Sat 25 Oct · Bus 1 · 40 passengers', priceLabel: 'Their counter · you asked 1,050', price: '900', note: 'Your turn to reply' },
+        { company: 'Sunrise Tours Co.', status: 'You countered', k: 'mute', trip: 'Jeddah Corniche Night', meta: 'Sat 8 Nov · Bus 3 · 44 passengers', priceLabel: 'Your counter', price: '700', note: '' }
+      ],
+      closed: [
+        { company: 'Sunrise Tours Co.', status: 'Accepted', k: 'ok', trip: 'AlUla Heritage Weekend', meta: 'Thu 16 – Sat 18 Oct · Bus 2', priceLabel: 'Agreed', price: '4,350', note: '' },
+        { company: 'Al Noor School', status: 'Expired', k: 'mute', trip: 'Grade 4 Zoo Day', meta: 'Wed 22 Oct · Bus 1', priceLabel: 'Offered', price: '800', note: '' },
+        { company: 'Gulf Trails', status: 'Declined', k: 'off', trip: 'Hail Rock Art Tour', meta: 'Sun 19 Oct · day blocked', priceLabel: 'Offered', price: '1,600', note: '' }
+      ]
+    };
+    const T = [['new', 'New', 2], ['neg', 'Negotiating', 2], ['closed', 'Closed', 3]];
+    const tabs = T.map(([id, label, count]) => {
+      const on = this.state.tab === id;
+      return { label, count: String(count), sel: on ? 'true' : 'false', go: () => this.setState({ tab: id }),
+        style: 'flex: 1 1 0; height: 38px; border: none; border-radius: 999px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; ' + (on ? 'background: #262a67; color: #f6f3e4;' : 'background: transparent; color: #262a67;'),
+        countStyle: 'min-width: 20px; height: 20px; padding: 0 6px; box-sizing: border-box; border-radius: 999px; font-size: 12px; line-height: 20px; ' + (on ? 'background: #31367a; color: #f6f3e4;' : 'background: #e6e8f5; color: #262a67;') };
+    });
+    const offers = D[this.state.tab].map((o) => ({ ...o, pillStyle: pill(o.k), hasNote: !!o.note }));
+    return { tabs, offers };
+  }
+}
+</script>
+</body>
+</html>

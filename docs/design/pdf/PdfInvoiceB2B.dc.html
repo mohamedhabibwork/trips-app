@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>PDF · Tax invoice B2B</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;family=Cairo:wght@400;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#ffffff}
+</style>
+</helmet>
+<div style="width: 794px; height: 1123px; box-sizing: border-box; padding: 48px; background: #ffffff; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif; font-size: 15px; line-height: 1.4; display: flex; flex-direction: column; gap: 16px">
+<header style="display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; padding-bottom: 14px; border-bottom: 2px solid #262a67">
+<img src="../assets/1fbce194fcb16bf54904c32c189fca31.svg" alt="Trips Enjoy" style="height: 40px; width: auto; display: block">
+<div style="text-align: right">
+<div style="font-size: 24px; font-weight: 700; line-height: 1.15">Tax Invoice</div>
+<div style="font-family: Cairo, sans-serif; font-size: 18px; font-weight: 700" dir="rtl" lang="ar">فاتورة ضريبية</div>
+<div style="font-size: 16px; font-weight: 600">B2B-ST-2026-000117</div>
+</div>
+</header>
+<section style="display: grid; grid-template-columns: repeat(3, 1fr); border: 1px solid #e3dfc9; border-radius: 8px">
+<sc-for list="{{meta}}" as="m" hint-placeholder-count="6">
+<div style="padding: 7px 12px; border-bottom: 1px solid #e3dfc9"><div style="font-size: 13px; color: #5b5f86">{{m.en}} · <span style="font-family: Cairo, sans-serif">{{m.ar}}</span></div><div style="font-weight: 600">{{m.v}}</div></div>
+</sc-for>
+</section>
+<section style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px">
+<sc-for list="{{parties}}" as="p" hint-placeholder-count="2">
+<div style="font-size: 14px; display: flex; gap: 12px; align-items: flex-start"><img src="{{p.logo}}" alt="" style="width: 44px; height: 44px; border-radius: 12px; object-fit: cover; flex-shrink: 0; display: block"><div><div style="font-size: 13px; font-weight: 600; color: #5b5f86">{{p.en}} · <span style="font-family: Cairo, sans-serif">{{p.ar}}</span></div><div style="font-size: 16px; font-weight: 700">{{p.name}}</div><div style="font-family: Cairo, sans-serif; font-weight: 600" dir="rtl" lang="ar">{{p.nameAr}}</div><div>VAT {{p.vat}} · CR {{p.cr}}</div><div>{{p.addr}}</div></div></div>
+</sc-for>
+</section>
+<table style="width: 100%; border-collapse: collapse; font-size: 13px">
+<thead>
+<tr style="color: #5b5f86; border-bottom: 1px solid #262a67; text-align: right">
+<th style="padding: 5px 6px 5px 0; text-align: left; font-weight: 600">Description · <span style="font-family: Cairo, sans-serif">الوصف</span></th>
+<th style="padding: 5px 6px; font-weight: 600">Qty</th>
+<th style="padding: 5px 6px; font-weight: 600">Unit</th>
+<th style="padding: 5px 6px; font-weight: 600">Discount</th>
+<th style="padding: 5px 6px; font-weight: 600">Taxable</th>
+<th style="padding: 5px 6px; font-weight: 600">VAT 15%</th>
+<th style="padding: 5px 0 5px 6px; font-weight: 600">Total</th>
+</tr>
+</thead>
+<tbody>
+<sc-for list="{{lines}}" as="l" hint-placeholder-count="4">
+<tr style="border-bottom: 1px solid #e3dfc9; text-align: right; vertical-align: top">
+<td style="padding: 7px 6px 7px 0; text-align: left"><div style="font-size: 14px; font-weight: 600">{{l.d}}</div><div style="color: #5b5f86">{{l.sub}}</div><div style="font-family: Cairo, sans-serif; color: #5b5f86" lang="ar">{{l.ar}}</div></td>
+<td style="padding: 7px 6px">{{l.q}}</td>
+<td style="padding: 7px 6px; white-space: nowrap">{{l.u}}</td>
+<td style="padding: 7px 6px; white-space: nowrap">{{l.disc}}</td>
+<td style="padding: 7px 6px; white-space: nowrap">{{l.tx}}</td>
+<td style="padding: 7px 6px; white-space: nowrap">{{l.v}}</td>
+<td style="padding: 7px 0 7px 6px; white-space: nowrap; font-weight: 600">{{l.t}}</td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+<section style="display: flex; gap: 24px; align-items: flex-start">
+<div style="flex: 1 1 0; font-size: 14px; display: flex; flex-direction: column; gap: 4px">
+<div><b>Amount in words:</b> One hundred twenty-five thousand seven hundred four Saudi riyals and twenty halalas</div>
+<div style="font-family: Cairo, sans-serif" dir="rtl" lang="ar">مائة وخمسة وعشرون ألفاً وسبعمائة وأربعة ريالات سعودية وعشرون هللة</div>
+<div><b>Payment terms:</b> Net 30 · due Thu 5 Nov 2026</div>
+<div><b>Bank:</b> Al Rajhi Bank · Sunrise Tours Co. · IBAN SA44 8000 0123 6080 1010 2207 · reference B2B-ST-2026-000117</div>
+<div style="color: #5b5f86">Includes 8 free teacher seats. Follows quote Q-ANS-0042 accepted Sun 4 Oct.</div>
+</div>
+<div style="flex: 0 0 290px">
+<sc-for list="{{totals}}" as="t" hint-placeholder-count="5">
+<div style="{{t.row}}"><span>{{t.en}}</span><span style="white-space: nowrap">{{t.v}}</span></div>
+</sc-for>
+</div>
+</section>
+<section style="display: flex; gap: 16px; align-items: center; border: 1px solid #e3dfc9; border-radius: 8px; padding: 12px">
+<img src="../assets/820ae1ed630eb3e04ea4d7ce91f50535.png" alt="ZATCA QR code for invoice B2B-ST-2026-000117" style="width: 104px; height: 104px; display: block">
+<div style="font-size: 13px; display: flex; flex-direction: column; gap: 2px; min-width: 0">
+<div style="font-size: 15px; font-weight: 700">Cleared by ZATCA · 6 Oct 2026, 10:42 <span style="font-family: Cairo, sans-serif; font-weight: 600">معتمدة</span></div>
+<div>UUID 3f9c2a71-8e4b-4d0f-9b6a-1c7e5d2a9f40</div>
+<div style="word-break: break-all">Hash nT6kq2W0yX8vR4Lm9cPfZ1aB7sHd3UeJ5oQgK0iVtYw=</div>
+<div style="color: #5b5f86">Issued electronically through Trips Enjoy · business.trips-enjoy.com</div>
+</div>
+</section>
+<footer style="margin-top: auto; padding-top: 10px; border-top: 1px solid #e3dfc9; display: flex; justify-content: space-between; gap: 16px; font-size: 13px; color: #5b5f86">
+<span>Trips Enjoy Co. · CR 1010998877 · VAT 311098765400003 · Prince Turki St, Al Aqiq, Riyadh 13511</span>
+<span style="white-space: nowrap">support@trips-enjoy.com · Page 1 / 1</span>
+</footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":794,"height":1123}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const meta = [
+      { en: 'Invoice number', ar: 'رقم الفاتورة', v: 'B2B-ST-2026-000117' },
+      { en: 'Issue date', ar: 'تاريخ الإصدار', v: 'Tue 6 Oct 2026 · 10:41' },
+      { en: 'Supply date', ar: 'تاريخ التوريد', v: 'Mon 26 – Wed 28 Oct 2026' },
+      { en: 'Buyer PO', ar: 'رقم أمر الشراء', v: 'PO-ANS-2291' },
+      { en: 'Due date', ar: 'تاريخ الاستحقاق', v: 'Thu 5 Nov 2026 · Net 30' },
+      { en: 'Currency', ar: 'العملة', v: 'SAR · Saudi riyal' }
+    ];
+    const parties = [
+      { en: 'SELLER', ar: 'البائع', name: 'Sunrise Tours Co.', nameAr: 'شركة شروق للسياحة', vat: '310245678900003', cr: '1010734512', addr: 'Olaya St, Al Olaya, Riyadh 12213', logo: '../assets/697a49af6be5a077ae1851c1a8b9dfcd.svg' },
+      { en: 'BUYER', ar: 'المشتري', name: 'Al Noor International School', nameAr: 'مدارس النور العالمية', vat: '300512349800003', cr: '1010458821', addr: 'King Abdullah Rd, Al Nakheel, Riyadh 12382', logo: '../assets/f622ae191805b644d9e8f7a2610bfe1b.svg' }
+    ];
+    const lines = [
+      { d: 'Grade 6 Jeddah trip · seats', sub: 'Riyadh ⇄ Jeddah, 3 days · early confirmation 5%', ar: 'مقاعد رحلة الصف السادس إلى جدة', q: '132', u: '720.00', disc: '4,752.00', tx: '90,288.00', v: '13,543.20', t: '103,831.20' },
+      { d: 'Fakieh Aquarium entry', sub: 'Program · per person', ar: 'دخول أكواريوم فقيه', q: '132', u: '85.00', disc: '0.00', tx: '11,220.00', v: '1,683.00', t: '12,903.00' },
+      { d: 'Al-Balad heritage walk, guided', sub: 'Program · per group of 35', ar: 'جولة البلد التاريخية بمرشد', q: '4', u: '600.00', disc: '0.00', tx: '2,400.00', v: '360.00', t: '2,760.00' },
+      { d: 'Dedicated coaches, 49 seats', sub: 'Return, with driver and moderator', ar: 'حافلات مخصصة ذهاباً وإياباً', q: '3', u: '1,800.00', disc: '0.00', tx: '5,400.00', v: '810.00', t: '6,210.00' }
+    ];
+    const r = 'display: flex; justify-content: space-between; gap: 12px; padding: 6px 0; border-bottom: 1px solid #e3dfc9;';
+    const totals = [
+      { en: 'Total before discount', v: '114,060.00', row: r },
+      { en: 'Discount', v: '−4,752.00', row: r },
+      { en: 'Taxable amount', v: '109,308.00', row: r + ' font-weight: 600;' },
+      { en: 'VAT 15%', v: '16,396.20', row: r },
+      { en: 'Total incl. VAT', v: '125,704.20 SAR', row: r + ' border-bottom: 2px solid #262a67; font-size: 17px; font-weight: 700;' }
+    ];
+    return { meta, parties, lines, totals };
+  }
+}
+</script>
+</body>
+</html>

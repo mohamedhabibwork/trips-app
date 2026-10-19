@@ -1,10 +1,13 @@
+import { COUPON_GENERIC_FAILURE_MESSAGE, computeRefundMinor } from "@trips-app/domain";
 import { BookingServiceError } from "../errors";
 import {
   calculateRefundAmountMinor,
+  computeBookingPricing,
   generateBookingReference,
   generateQrCodeToken,
 } from "../model";
 import { createBookingRepository, type ServiceDatabase } from "../repository";
+import type { BookingPricingDto } from "../schemas";
 import type { CancelBookingInput, CreateBookingInput } from "../types";
 
 export function createBookingService(deps: { db: ServiceDatabase }) {
@@ -49,36 +52,40 @@ export function createBookingService(deps: { db: ServiceDatabase }) {
           0,
         );
         const subtotalMinor = trip.basePriceMinor * passengersCount;
-        const grossMinor = subtotalMinor + programsTotalMinor;
 
         let couponId: string | null = null;
-        let couponCode: string | null = null;
-        let discountMinor = 0;
 
-        if (input.couponCode) {
-          const coupon = await txRepo.findCouponByCode(input.couponCode, trip.tenantId);
-          const now = new Date();
-          if (
-            !coupon ||
-            (coupon.tripId !== null && coupon.tripId !== trip.id) ||
-            (coupon.startsAt !== null && coupon.startsAt.getTime() > now.getTime()) ||
-            (coupon.expiresAt !== null && coupon.expiresAt.getTime() < now.getTime()) ||
-            (coupon.maxRedemptions !== null && coupon.redemptionsCount >= coupon.maxRedemptions) ||
-            grossMinor < coupon.minOrderMinor
-          ) {
-            throw new BookingServiceError("COUPON_INVALID", "Coupon is invalid or not applicable.");
-          }
-          couponId = coupon.id;
-          couponCode = coupon.code;
-          if (coupon.discountType === "percentage") {
-            const raw = Math.floor((grossMinor * coupon.discountValue) / 100);
-            discountMinor =
-              coupon.maxDiscountMinor !== null ? Math.min(raw, coupon.maxDiscountMinor) : raw;
-          } else {
-            discountMinor = Math.min(grossMinor, coupon.discountValue);
-          }
-          await txRepo.incrementCouponRedemption(coupon.id);
+        const pricing = computeBookingPricing({
+          subtotalMinor,
+          programsTotalMinor,
+          planTier: input.planTier ?? "free",
+          coupon: input.couponCode
+            ? ((await txRepo.findCouponByCode(input.couponCode, trip.tenantId)) ??
+              (await txRepo.findAnyCouponByCode(input.couponCode)))
+            : null,
+          tripId: trip.id,
+          tripTenantId: trip.tenantId,
+        });
+
+        if (input.couponCode && pricing.couponFailureReason) {
+          const generic =
+            pricing.couponFailureReason === "not_applicable"
+              ? COUPON_GENERIC_FAILURE_MESSAGE
+              : `Coupon rejected: ${pricing.couponFailureReason}.`;
+          throw new BookingServiceError("COUPON_INVALID", generic, {
+            couponFailureReason: pricing.couponFailureReason,
+          });
         }
+
+        if (pricing.couponCode) {
+          const coupon = await txRepo.findCouponByCode(input.couponCode!, trip.tenantId);
+          if (coupon) {
+            couponId = coupon.id;
+            await txRepo.incrementCouponRedemption(coupon.id);
+          }
+        }
+
+        const discountMinor = pricing.planDiscountMinor + pricing.couponDiscountMinor;
 
         const uniqueSeatLabels = [...new Set(input.seatLabels.map((s) => s.trim()))];
         if (input.vehicleId && uniqueSeatLabels.length > 0) {
@@ -104,8 +111,6 @@ export function createBookingService(deps: { db: ServiceDatabase }) {
         }
 
         const bookingReference = generateBookingReference();
-        const totalAmountMinor = Math.max(0, grossMinor - discountMinor);
-
         const booking = await txRepo.insertBooking({
           bookingReference,
           tenantId: trip.tenantId,
@@ -116,12 +121,12 @@ export function createBookingService(deps: { db: ServiceDatabase }) {
           passengers: input.passengers,
           selectedProgramIds: uniqueProgramIds,
           seatLabels: uniqueSeatLabels,
-          couponId,
-          couponCode,
+          couponId: pricing.couponCode ? couponId : null,
+          couponCode: pricing.couponCode,
           subtotalMinor,
           programsTotalMinor,
           discountMinor,
-          totalAmountMinor,
+          totalAmountMinor: pricing.totalAmountMinor,
           currencyCode: trip.currencyCode,
           paymentGateway: input.paymentGateway,
         });
@@ -169,7 +174,18 @@ export function createBookingService(deps: { db: ServiceDatabase }) {
 
         await txRepo.adjustTripConfirmedSeats(trip.id, passengersCount);
 
-        return { booking, boardingPasses };
+        const pricingDto: BookingPricingDto = {
+          subtotalMinor: pricing.subtotalMinor,
+          programsTotalMinor: pricing.programsTotalMinor,
+          planDiscountMinor: pricing.planDiscountMinor,
+          couponDiscountMinor: pricing.couponDiscountMinor,
+          totalAmountMinor: pricing.totalAmountMinor,
+          planTier: input.planTier ?? "free",
+          couponCode: pricing.couponCode,
+          couponFailureReason: null,
+        };
+
+        return { booking, boardingPasses, pricing: pricingDto };
       });
     },
 
@@ -201,6 +217,10 @@ export function createBookingService(deps: { db: ServiceDatabase }) {
       );
 
       await repo.releaseReservedSeats(booking.tripId, booking.vehicleId, booking.seatLabels);
+      // FR-CPN-06 / BRL-11: a cancelled booking frees its coupon redemption back to the pool.
+      if (booking.couponId) {
+        await repo.decrementCouponRedemption(booking.couponId);
+      }
       if (booking.selectedProgramIds.length > 0) {
         await repo.adjustProgramsBookedCount(booking.selectedProgramIds, -booking.passengersCount);
       }
@@ -232,6 +252,42 @@ export function createBookingService(deps: { db: ServiceDatabase }) {
       }
       const boardingPasses = await repo.findCheckInRecordsByBooking(booking.id);
       return { booking, boardingPasses };
+    },
+
+    /** Refund preview (D-07 tiers) without mutating anything. */
+    async refundPreview(
+      actor: { accountId: string; tenantId?: string | null; role: string },
+      bookingId: string,
+    ) {
+      const booking = await repo.findBookingById(bookingId);
+      if (!booking) {
+        throw new BookingServiceError("BOOKING_NOT_FOUND", "Booking not found.");
+      }
+      const isOwner = booking.travelerAccountId === actor.accountId;
+      const isTenantStaff = actor.tenantId && booking.tenantId === actor.tenantId;
+      const isAdmin = actor.role === "admin";
+      if (!isOwner && !isTenantStaff && !isAdmin) {
+        throw new BookingServiceError(
+          "FORBIDDEN_BOOKING_ACCESS",
+          "You do not have permission to preview this refund.",
+        );
+      }
+      const trip = await repo.findTripByBookingId(booking.tripId);
+      const now = new Date();
+      const { amountMinor, tier } = computeRefundMinor(
+        booking.totalAmountMinor,
+        trip?.startsAt ?? null,
+        now,
+      );
+      return {
+        bookingId: booking.id,
+        totalAmountMinor: booking.totalAmountMinor,
+        refundAmountMinor: amountMinor,
+        refundPercent: tier.refundPercent,
+        minHoursBeforeDeparture: tier.minHoursBeforeDeparture,
+        departureAt: trip?.startsAt ?? null,
+        couponReversed: booking.couponId !== null,
+      };
     },
 
     async listMyBookings(travelerAccountId: string) {

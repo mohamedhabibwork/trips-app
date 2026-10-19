@@ -36,7 +36,10 @@ interface SeatMapProps {
   seats: readonly SeatView[];
   /** Seats per row; the aisle sits after the first half. */
   columns: number;
+  /** The single picked seat (organization view). */
   selected: string | null;
+  /** Multi-select of picked seats (traveler booking wizard, SCR-TRV-04). */
+  selectedLabels?: readonly string[];
   onSelect: (label: string) => void;
   disabled?: boolean;
 }
@@ -58,7 +61,14 @@ export function SeatMapLegend() {
   );
 }
 
-export function SeatMap({ seats, columns, selected, onSelect, disabled = false }: SeatMapProps) {
+export function SeatMap({
+  seats,
+  columns,
+  selected,
+  selectedLabels,
+  onSelect,
+  disabled = false,
+}: SeatMapProps) {
   const { t } = useAuth();
   const aisleAfter = Math.ceil(columns / 2);
   const rows = new Map<number, SeatView[]>();
@@ -90,8 +100,14 @@ export function SeatMap({ seats, columns, selected, onSelect, disabled = false }
           {[...rowSeats]
             .sort((a, b) => a.colIndex - b.colIndex)
             .flatMap((seat, index) => {
-              const state: SeatState = seat.label === selected ? "selected" : seat.state;
-              const pickable = !disabled && (seat.state === "available" || state === "selected");
+              const state: SeatState =
+                seat.label === selected || selectedLabels?.includes(seat.label)
+                  ? "selected"
+                  : seat.state;
+              const pickable =
+                !disabled &&
+                ((seat.state === "available" && !selectedLabels?.includes(seat.label)) ||
+                  state === "selected");
               const button = (
                 <button
                   key={seat.label}

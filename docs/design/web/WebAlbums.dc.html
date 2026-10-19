@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Web · My albums</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+footer a:focus-visible{outline-color:#f89e23}
+.te-nav:hover{color:#c93a00}
+.te-tile:hover img{opacity:0.88}
+</style>
+</helmet>
+<div style="position: relative; min-height: 1000px; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif; display: flex; flex-direction: column">
+
+<header style="border-bottom: 1px solid #e3dfc9">
+<div style="max-width: 1200px; margin: 0 auto; box-sizing: border-box; padding: 14px 24px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 32px">
+<a href="WebHome.dc.html" aria-label="Trips Enjoy home" style="display: flex"><img src="../assets/1fbce194fcb16bf54904c32c189fca31.svg" alt="Trips Enjoy" style="height: 40px; width: auto"></a>
+<nav aria-label="Main" style="flex-grow: 1; display: flex; flex-wrap: wrap; gap: 4px 24px">
+<a href="WebExplore.dc.html" class="te-nav" style="padding: 10px 0; font-size: 15px; font-weight: 600; color: #262a67; text-decoration: none">Explore trips</a>
+<a href="WebBookings.dc.html" class="te-nav" style="padding: 10px 0; font-size: 15px; font-weight: 600; color: #262a67; text-decoration: none">My bookings</a>
+<a href="WebAlbums.dc.html" aria-current="page" class="te-nav" style="padding: 10px 0; font-size: 15px; font-weight: 700; color: #c93a00; text-decoration: none; border-bottom: 2px solid #fb8030">Albums</a>
+</nav>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px">
+<a href="WebHomeAr.dc.html" lang="ar" dir="rtl" style="height: 44px; padding: 0 12px; display: flex; align-items: center; font-family: Cairo, sans-serif; font-size: 15px; font-weight: 600; color: #262a67; text-decoration: none">العربية</a>
+<a href="WebProfile.dc.html" style="height: 48px; box-sizing: border-box; padding: 0 14px 0 4px; border-radius: 999px; background: #ffffff; display: flex; align-items: center; gap: 10px; color: #262a67; font-size: 15px; font-weight: 600; text-decoration: none"><img src="../assets/6c1d1b4ec8611e67e7f6f2ac68edcb50.svg" alt="" style="width: 40px; height: 40px; border-radius: 999px; object-fit: cover; display: block">Mariam<span style="padding: 2px 8px; border-radius: 999px; background: #f89e23; font-size: 12px; font-weight: 700">Explorer</span></a>
+</div>
+</div>
+</header>
+
+<main style="flex-grow: 1; width: 100%; max-width: 1200px; margin: 0 auto; box-sizing: border-box; padding: 32px 24px 48px; display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; flex-direction: column; gap: 2px"><h1 style="margin: 0; font-size: 32px; line-height: 40px; font-weight: 700">Albums</h1><span style="font-size: 15px; color: #5b5f86">Photos from your completed trips, shared by the trip photographer.</span></div>
+
+<sc-if value="{{isEmpty}}" hint-placeholder-val="{{false}}">
+<div style="padding: 56px 24px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center">
+<img src="../assets/607b02e363e185447ebb9acf4f00a536.svg" alt="" style="width: 160px; height: 160px; object-fit: contain; display: block">
+<h2 style="margin: 0; font-size: 22px; font-weight: 600">No completed trips yet</h2>
+<p style="margin: 0; max-width: 440px; font-size: 15px; line-height: 22px; color: #5b5f86">After your Siwa Oasis Escape on Thu 30 Oct, any album the photographer shares with you will appear here.</p>
+<a href="WebBookings.dc.html" style="height: 48px; padding: 0 20px; border-radius: 12px; background: #262a67; color: #f6f3e4; font-size: 15px; font-weight: 600; display: flex; align-items: center; text-decoration: none">See my bookings</a>
+</div>
+</sc-if>
+
+<sc-if value="{{hasAlbums}}" hint-placeholder-val="{{true}}">
+<div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start">
+<nav aria-label="Albums by trip" style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+<sc-for list="{{trips}}" as="t" hint-placeholder-count="2">
+<section style="padding: 16px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 8px">
+<div style="display: flex; justify-content: space-between; gap: 8px; align-items: baseline"><h2 style="margin: 0; font-size: 17px; font-weight: 600">{{t.name}}</h2><span style="font-size: 13px; color: #5b5f86; white-space: nowrap">{{t.count}}</span></div>
+<span style="font-size: 13px; color: #5b5f86">{{t.when}}</span>
+<sc-for list="{{t.albums}}" as="a" hint-placeholder-count="2">
+<button type="button" aria-pressed="{{a.on}}" onClick="{{a.pick}}" style="{{a.style}}"><span style="display: flex; flex-direction: column; gap: 2px; text-align: start"><span style="font-size: 15px; font-weight: 600">{{a.t}}</span><span style="font-size: 13px; color: #5b5f86">{{a.meta}}</span></span><span style="{{a.ps}}">{{a.privacy}}</span></button>
+</sc-for>
+<sc-for list="{{t.notes}}" as="n" hint-placeholder-count="1">
+<div style="padding: 10px 12px; border-radius: 12px; background: #f6f3e4; display: flex; gap: 10px; align-items: flex-start; font-size: 13px; line-height: 18px; color: #5b5f86"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 1px"><path d="{{n.icon}}"></path></svg><span><strong style="color: #262a67">{{n.t}}</strong> {{n.d}} <sc-if value="{{n.hasLink}}" hint-placeholder-val="{{false}}"><a href="ShWebNotFound.dc.html">Open</a></sc-if></span></div>
+</sc-for>
+</section>
+</sc-for>
+</nav>
+
+<section aria-labelledby="al-h" style="flex: 999 1 600px; min-width: 0; padding: 20px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; align-items: flex-start">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 14px; font-weight: 600; color: #5b5f86">{{cur.trip}}</span>
+<h2 id="al-h" style="margin: 0; font-size: 26px; line-height: 32px; font-weight: 700">{{cur.t}}</h2>
+<span style="font-size: 14px; color: #5b5f86">by Laila Fathy · {{cur.n}} photos · in upload order</span>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<sc-if value="{{cur.canShare}}" hint-placeholder-val="{{true}}"><button type="button" onClick="{{share}}" style="height: 44px; padding: 0 14px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12M7 9l5-5 5 5M5 14v5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-5"></path></svg>{{shareLabel}}</button></sc-if>
+</div>
+</div>
+<div style="{{cur.ruleStyle}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 1px"><path d="{{cur.ruleIcon}}"></path></svg><span>{{cur.rule}}</span></div>
+<div role="list" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); grid-auto-rows: 150px; gap: 8px">
+<sc-for list="{{tiles}}" as="p" hint-placeholder-count="12">
+<button type="button" role="listitem" class="te-tile" aria-label="{{p.aria}}" onClick="{{p.open}}" style="position: relative; padding: 0; border: 0; border-radius: 12px; overflow: hidden; background: #262a67; cursor: pointer; display: flex; align-items: center; justify-content: center">
+<sc-if value="{{p.hasImg}}" hint-placeholder-val="{{true}}"><img src="{{p.img}}" alt="" style="{{p.imgStyle}}"></sc-if>
+<sc-if value="{{p.noImg}}" hint-placeholder-val="{{false}}"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#b8bad6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1zM8.5 10a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM20 15l-5-5L5 20"></path></svg></sc-if>
+<span aria-hidden="true" style="position: absolute; right: 6px; bottom: 4px; font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.8)">© Laila Fathy</span>
+</button>
+</sc-for>
+</div>
+<span style="font-size: 13px; color: #5b5f86">Showing 12 of {{cur.n}} photos. Select a photo to see it full size.</span>
+</section>
+</div>
+</sc-if>
+</main>
+
+<sc-if value="{{showViewer}}" hint-placeholder-val="{{false}}">
+<div style="position: absolute; inset: 0; background: rgba(16,18,48,0.72); display: flex; align-items: flex-start; justify-content: center; padding: 96px 24px 24px; box-sizing: border-box">
+<div role="dialog" aria-modal="true" aria-labelledby="vw-h" style="width: 100%; max-width: 920px; border-radius: 20px; background: #ffffff; overflow: hidden; display: flex; flex-wrap: wrap">
+<div style="flex: 3 1 420px; min-width: 0; position: relative; height: 500px; background: #262a67; display: flex; align-items: center; justify-content: center">
+<sc-if value="{{big.hasImg}}" hint-placeholder-val="{{true}}"><img src="{{big.img}}" alt="{{big.alt}}" style="{{big.style}}"></sc-if>
+<sc-if value="{{big.noImg}}" hint-placeholder-val="{{false}}"><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#b8bad6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1zM8.5 10a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM20 15l-5-5L5 20"></path></svg></sc-if>
+<span aria-hidden="true" style="position: absolute; right: 3%; bottom: 3%; font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.3)">© Laila Fathy · Trips Enjoy</span>
+<button type="button" onClick="{{prev}}" aria-label="Previous photo" style="position: absolute; left: 12px; top: 50%; margin-top: -22px; width: 44px; height: 44px; border-radius: 999px; background: rgba(255,255,255,0.78); backdrop-filter: blur(24px) saturate(1.8); -webkit-backdrop-filter: blur(24px) saturate(1.8); border: 1px solid rgba(255,255,255,0.7); color: #262a67; cursor: pointer; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></button>
+<button type="button" onClick="{{next}}" aria-label="Next photo" style="position: absolute; right: 12px; top: 50%; margin-top: -22px; width: 44px; height: 44px; border-radius: 999px; background: rgba(255,255,255,0.78); backdrop-filter: blur(24px) saturate(1.8); -webkit-backdrop-filter: blur(24px) saturate(1.8); border: 1px solid rgba(255,255,255,0.7); color: #262a67; cursor: pointer; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg></button>
+</div>
+<div style="flex: 2 1 280px; min-width: 0; box-sizing: border-box; padding: 20px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 12px">
+<h2 id="vw-h" style="margin: 0; font-size: 20px; font-weight: 600">{{big.title}}</h2>
+<button type="button" onClick="{{close}}" aria-label="Close photo" style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 999px; border: 0; background: #f6f3e4; color: #262a67; cursor: pointer; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+</div>
+<span style="font-size: 14px; color: #5b5f86">{{cur.t}} · {{cur.privacy}}</span>
+<sc-if value="{{cur.canDownload}}" hint-placeholder-val="{{true}}">
+<button type="button" style="height: 48px; border: 0; border-radius: 12px; background: #262a67; color: #f6f3e4; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12M7 11l5 5 5-5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"></path></svg>Download watermarked copy</button>
+<span style="font-size: 13px; line-height: 18px; color: #5b5f86">Medium size with Laila Fathy's watermark. The original stays with the photographer.</span>
+</sc-if>
+<sc-if value="{{cur.noDownload}}" hint-placeholder-val="{{false}}">
+<div style="padding: 12px 14px; border-radius: 12px; background: #f6f3e4; display: flex; gap: 10px; align-items: flex-start; font-size: 14px; line-height: 20px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 1px"><path d="M6 11h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1zM8 11V7a4 4 0 0 1 8 0v4"></path></svg>Downloads are off for this album. You can view the photos here.</div>
+</sc-if>
+<a href="../mobile/TrvSupport.dc.html" style="align-self: flex-start; min-height: 44px; display: flex; align-items: center; gap: 6px; color: #b42318; font-size: 14px; font-weight: 600; text-decoration: none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9.5 17h-19zM12 10v4M12 17h.01"></path></svg>Report photo</a>
+</div>
+</div>
+</div>
+</sc-if>
+
+<footer style="background: #262a67; color: #f6f3e4">
+<div style="max-width: 1200px; margin: 0 auto; box-sizing: border-box; padding: 24px; display: flex; flex-wrap: wrap; gap: 16px 32px; align-items: center; justify-content: space-between; font-size: 13px; color: #b8bad6">
+<img src="../assets/6ea846350ba3adc0e289d47fa0612c3b.svg" alt="Trips Enjoy" style="height: 32px; width: auto">
+<span>© 2026 Trips Enjoy · Cairo, Egypt</span>
+<nav aria-label="Footer" style="display: flex; flex-wrap: wrap; gap: 20px"><a href="WebLegal.dc.html" style="color: #b8bad6">Privacy</a><a href="WebLegal.dc.html" style="color: #b8bad6">Terms</a><a href="WebBecomeProvider.dc.html" style="color: #b8bad6">Become a provider</a><a href="WebHomeAr.dc.html" lang="ar" dir="rtl" style="color: #b8bad6; font-family: Cairo, sans-serif">العربية</a></nav>
+</div>
+</footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1040},"state":{"editor":"enum","options":["albums","noCompletedTrips"],"default":"albums"}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { album: 0, open: -1, shared: false }; }
+  renderVals() {
+    const s = this.state;
+    const empty = this.props.state === 'noCompletedTrips';
+    const lock = 'M6 11h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1zM8 11V7a4 4 0 0 1 8 0v4';
+    const dl = 'M12 4v12M7 11l5 5 5-5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3';
+    const AL = [
+      { t: 'Montaza gardens', trip: 'Alexandria by the Sea · Sat 13 Sep', n: 120, privacy: 'Public', dl: true, share: true, tone: 'background: #e3f3ea; color: #1f7a4d;',
+        rule: 'Public album: you can download watermarked copies. Shares are logged to protect the people in the photos.', ruleIcon: dl, rt: 'background: #e3f3ea; color: #1f7a4d;' },
+      { t: 'Group photos on the Corniche', trip: 'Alexandria by the Sea · Sat 13 Sep', n: 24, privacy: 'Shared link', dl: false, share: true, tone: 'background: #e6e8f5; color: #262a67;',
+        rule: 'Shared-link album: downloads are off. Sharing the link is logged.', ruleIcon: lock, rt: 'background: #e6e8f5; color: #262a67;' },
+      { t: 'Waterfalls and dunes', trip: 'Wadi El Rayan Day Trip · Mon 6 Oct', n: 64, privacy: 'Selected travelers', dl: false, share: false, tone: 'background: #fdf0d5; color: #8a4b00;',
+        rule: 'Only travelers the photographer selected can see this album. Downloads and sharing are off.', ruleIcon: lock, rt: 'background: #fdf0d5; color: #8a4b00;' }
+    ];
+    const albumBtn = (i) => {
+      const a = AL[i], on = s.album === i;
+      return { t: a.t, meta: a.n + ' photos', privacy: a.privacy, on: on ? 'true' : 'false', pick: () => this.setState({ album: i, open: -1, shared: false }),
+        ps: 'padding: 2px 8px; border-radius: 999px; font-size: 12px; font-weight: 600; white-space: nowrap; ' + a.tone,
+        style: 'min-height: 56px; box-sizing: border-box; padding: 8px 12px; border-radius: 12px; font: inherit; color: #262a67; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 10px; ' + (on ? 'border: 2px solid #fb8030; background: #fff7f2;' : 'border: 1px solid #e3dfc9; background: #ffffff;') };
+    };
+    const eye = 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 11v5M12 8h.01';
+    const trips = [
+      { name: 'Alexandria by the Sea', when: 'Sat 13 Sep · Nile Horizon Tours', count: '2 albums', albums: [albumBtn(0), albumBtn(1)],
+        notes: [{ t: 'One album here is shared only with selected travelers.', d: 'You’re not on its list, so it stays hidden.', icon: eye, hasLink: false },
+          { t: 'Sunset at Qaitbay', d: 'is no longer available.', icon: lock, hasLink: true }] },
+      { name: 'Wadi El Rayan Day Trip', when: 'Mon 6 Oct · Nile Horizon Tours', count: '1 album', albums: [albumBtn(2)],
+        notes: [{ t: 'More photos coming.', d: 'Laila Fathy can publish albums until Mon 20 Oct, 14 days after the trip.', icon: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7v5l3 2', hasLink: false }] }
+    ];
+    const W = s.album === 2, A = W ? '../assets/6c681277de59192cae4171833ad9e5e7.svg' : '../assets/f307c5f03eb23299e4b0e9acc1833c87.svg', B = '../assets/79a6ce5310828e799852c7aef2cdc987.svg', C = W ? '../assets/073b7fe9ddee4e94c5d8ddaa41cbb4f4.svg' : '../assets/61261514261614e6b661d310c333264d.svg', D = W ? '../assets/dd052dab07949cd087d95323479af226.svg' : '../assets/b2bcb63d43641eb25576376d35060477.png';
+    const T = [[A, '20% 40%'], [D, '50% 30%'], [B, '30% 60%'], [C, '60% 50%'], [A, '70% 50%'], [C, '40% 50%'], [D, '80% 70%'], [B, '50% 50%'], [B, '80% 40%'], [A, '45% 85%'], [C, '10% 80%'], [D, '20% 20%']];
+    const a = AL[s.album];
+    const tiles = T.map(([img, pos], i) => ({ img, hasImg: !!img, noImg: !img, aria: 'Open photo ' + (i + 1) + ' of ' + a.n,
+      open: () => this.setState({ open: i }),
+      imgStyle: 'position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: ' + pos + ';' }));
+    const i = s.open, n = T.length;
+    const big = i >= 0 ? { img: T[i][0], hasImg: !!T[i][0], noImg: !T[i][0], title: 'Photo ' + (i + 1) + ' of ' + a.n, alt: a.t + ', photo ' + (i + 1),
+      style: 'position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: ' + T[i][1] + ';' } : { img: '', hasImg: false, noImg: true, title: '', alt: '', style: '' };
+    const cur = { t: a.t, trip: a.trip, n: String(a.n), privacy: a.privacy, canShare: a.share, canDownload: a.dl, noDownload: !a.dl, rule: a.rule, ruleIcon: a.ruleIcon,
+      ruleStyle: 'padding: 10px 14px; border-radius: 12px; display: flex; gap: 10px; align-items: flex-start; font-size: 14px; line-height: 20px; ' + a.rt };
+    return { trips, tiles, cur, big, isEmpty: empty, hasAlbums: !empty, showViewer: !empty && i >= 0,
+      close: () => this.setState({ open: -1 }), prev: () => this.setState({ open: (i - 1 + n) % n }), next: () => this.setState({ open: (i + 1) % n }),
+      share: () => this.setState({ shared: true }), shareLabel: s.shared ? 'Link copied · share logged' : 'Share' };
+  }
+}
+</script>
+</body>
+</html>

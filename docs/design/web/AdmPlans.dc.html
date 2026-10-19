@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Admin · Plan catalog</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="min-height: 1000px; display: flex; flex-wrap: wrap; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="flex: 1 1 248px; display: flex"><dc-import name="AdmNav" active="Plans" hint-size="248px,1000px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 20px">
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; color: #5b5f86">4 plan families · 12 live tiers · prices in SAR, VAT exclusive</span><h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Plans</h1></div>
+<button type="button" style="height: 48px; padding: 0 20px; border-radius: 12px; border: 0; background: #ff6c2e; color: #262a67; font: inherit; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Create tier</button>
+</div>
+
+<div role="tablist" aria-label="Plan family" style="display: flex; flex-wrap: wrap; gap: 4px; border-bottom: 1px solid #e3dfc9">
+<sc-for list="{{tabs}}" as="t" hint-placeholder-count="4"><button type="button" role="tab" aria-selected="{{t.sel}}" onClick="{{t.on}}" style="{{t.st}}">{{t.t}}</button></sc-for>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between">
+<p style="margin: 0; font-size: 15px; color: #5b5f86">{{famNote}}</p>
+<div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center">
+<a href="AdmAccessPolicy.dc.html" style="{{reqStyle}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{reqIcon}}"></path></svg>{{reqText}}</a>
+<span style="display: inline-flex; padding: 4px 12px; border-radius: 999px; background: #e6e8f5; font-size: 13px; font-weight: 600">Annual billing saves 17% · trials {{trial}}</span>
+</div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px">
+<sc-for list="{{tiers}}" as="p" hint-placeholder-count="3">
+<article style="{{p.card}}">
+<div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px">
+<div style="display: flex; flex-direction: column; gap: 2px"><h2 style="margin: 0; font-size: 22px; font-weight: 600">{{p.n}}</h2><span style="font-size: 13px; color: #5b5f86">{{p.tag}}</span></div>
+<span style="{{p.ss}}">{{p.s}}</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 30px; line-height: 36px; font-weight: 700">{{p.m}} <span style="font-size: 15px; font-weight: 500; color: #5b5f86">{{p.mu}}</span></span><span style="font-size: 14px; color: #5b5f86">{{p.a}}</span></div>
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: 12px; background: #f6f3e4; font-size: 14px"><span>Subscribers</span><span style="font-weight: 700">{{p.subs}}</span></div>
+<ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; font-size: 14px">
+<sc-for list="{{p.lim}}" as="l" hint-placeholder-count="5"><li style="display: flex; justify-content: space-between; gap: 12px; border-bottom: 1px solid #e3dfc9; padding-bottom: 6px"><span style="color: #5b5f86">{{l.k}}</span><span style="font-weight: 600; text-align: end">{{l.v}}</span></li></sc-for>
+</ul>
+<div style="display: flex; gap: 10px; margin-top: auto">
+<a href="AdmPlanEdit.dc.html" style="flex: 1 1 auto; height: 44px; border-radius: 12px; background: #262a67; color: #f6f3e4; font-size: 14px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px; text-decoration: none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16zM14 6l4 4"></path></svg>Edit tier</a>
+<button type="button" aria-label="{{p.arch}}" style="height: 44px; padding: 0 14px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer">Archive</button>
+</div>
+</article>
+</sc-for>
+</div>
+
+<div style="display: flex; gap: 12px; padding: 14px 16px; border-radius: 12px; background: #ffffff; font-size: 14px; line-height: 20px">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 1px"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 11v5M12 8h.01"></path></svg>
+<span>Archiving a tier hides it from new sign-ups. Current subscribers keep it until they change plan. Upgrades apply immediately and are prorated; downgrades apply at the next billing cycle. <a href="AdmSubs.dc.html" style="font-weight: 600">See subscriptions</a></span>
+</div>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { fam: 'Company' }; }
+  renderVals() {
+    const pill = (tone) => 'display: inline-flex; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; white-space: nowrap; ' + ({ ok: 'background: #e3f3ea; color: #1f7a4d;', info: 'background: #e6e8f5; color: #262a67;', live: 'background: #ffe7dc; color: #c93a00;' })[tone];
+    const fmt = (n) => n.toLocaleString('en-US');
+    const F = {
+      Company: { note: '297 paying organizations + 15 in trial. Gates trips, staff, vehicles, programs and platform hiring.', trial: '14 days', tiers: [
+        ['Starter', 'Small operators', 590, 95, [['Active trips / month', '5'], ['Employees', '5'], ['Vehicles per trip', '2'], ['Platform drivers & photographers', 'Own only'], ['Analytics', 'None']]],
+        ['Growth', 'Most popular', 1490, 164, [['Active trips / month', '20'], ['Employees', '20'], ['Vehicles per trip', '10'], ['Seat self-selection', 'Included'], ['Analytics', 'Basic']], true],
+        ['Enterprise', 'Large operators & schools', 3990, 38, [['Active trips / month', 'Unlimited'], ['Employees', 'Unlimited'], ['Vehicles per trip', 'Unlimited'], ['Custom branding', 'Included'], ['Analytics', 'Full + export']]]] },
+      Driver: { note: '904 paying platform drivers. Gates bookings, visibility and the Verified badge.', trial: '7 days', tiers: [
+        ['Basic', 'Getting started', 49, 292, [['Active bookings / month', '3'], ['Visibility', 'Standard'], ['Coupons', '3'], ['Verified badge', 'No'], ['Support', 'Standard']]],
+        ['Professional', 'Most popular', 149, 448, [['Active bookings / month', '10'], ['Visibility', 'Featured'], ['Coupons', '10'], ['Verified badge', 'Yes'], ['Support', 'Priority']], true],
+        ['Premium', 'Fleet owners', 299, 164, [['Active bookings / month', 'Unlimited'], ['Visibility', 'Top of search'], ['Coupons', 'Unlimited'], ['Reports', 'Full + export'], ['Support', 'Dedicated']]]] },
+      Photographer: { note: '338 paying platform photographers. Gates bookings, portfolio size, albums and privacy.', trial: '7 days', tiers: [
+        ['Basic', 'Getting started', 49, 67, [['Bookings / month', '3'], ['Portfolio photos', '10'], ['Albums per trip', '1'], ['Album privacy', 'Public only'], ['Watermarking', 'No']]],
+        ['Studio', 'Most popular', 99, 198, [['Bookings / month', '10'], ['Portfolio photos', '50'], ['Albums per trip', '5'], ['Album privacy', 'Public + link'], ['Watermarking', 'Yes']], true],
+        ['Pro', 'Full-time studios', 199, 73, [['Bookings / month', 'Unlimited'], ['Portfolio photos', 'Unlimited'], ['Albums per trip', 'Unlimited'], ['Album privacy', 'Selected travellers'], ['Watermarking', 'Yes']]]] },
+      User: { note: '48,200 travellers · 9,880 on Explorer or VIP. Gates discounts, child tracking and priority seats.', trial: '14 days', tiers: [
+        ['Free', 'Everyone starts here', 0, 38320, [['Program discount', '0%'], ['Priority seat selection', 'No'], ['Child tracking', 'No'], ['Ads', 'Shown'], ['Support', 'Standard']]],
+        ['Explorer', 'Most popular', 19, 7640, [['Program discount', '5%'], ['Priority seat selection', 'Yes'], ['Child tracking', 'Yes'], ['Ads', 'None'], ['Support', 'Priority']], true],
+        ['VIP', 'Frequent travellers', 49, 2240, [['Program discount', '10%'], ['Early access', 'Yes'], ['VIP-only programs', 'Yes'], ['Receipts', 'Full + export'], ['Support', 'Dedicated']]]] }
+    };
+    const fam = this.state.fam;
+    const tabs = Object.keys(F).map((t) => ({ t: t + ' plans', sel: t === fam ? 'true' : 'false', on: () => this.setState({ fam: t }),
+      st: 'height: 44px; padding: 0 14px; border: 0; background: transparent; font: inherit; font-size: 15px; cursor: pointer; color: #262a67; ' + (t === fam ? 'font-weight: 700; box-shadow: inset 0 -3px 0 #ff6c2e;' : 'font-weight: 500;') }));
+    const f = F[fam];
+    const tiers = f.tiers.map((t) => { const pop = !!t[5]; const annual = Math.round(t[2] * 12 * 0.83 / 10) * 10;
+      return { n: t[0], tag: t[1], m: t[2] === 0 ? 'Free' : fmt(t[2]), mu: t[2] === 0 ? '' : 'SAR / month', a: t[2] === 0 ? 'No billing' : fmt(annual) + ' SAR / year (save 17%)', subs: fmt(t[3]),
+        lim: t[4].map((x) => ({ k: x[0], v: x[1] })), s: pop ? 'Most popular' : 'Live', ss: pill(pop ? 'live' : 'ok'), arch: 'Archive ' + fam + ' ' + t[0],
+        card: 'background: #ffffff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 14px; ' + (pop ? 'border: 2px solid #fb8030;' : 'border: 2px solid transparent;') }; });
+    const req = fam !== 'User';
+    const reqStyle = 'display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 999px; font-size: 13px; font-weight: 600; text-decoration: none; ' + (req ? 'background: #ffe7dc; color: #c93a00;' : 'background: #e3f3ea; color: #1f7a4d;');
+    return { tabs, tiers, famNote: f.note, trial: f.trial, reqStyle, reqText: req ? 'Plan required to use the app' : 'Optional — Free plan',
+      reqIcon: req ? 'M6 11h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1zM8 11V7a4 4 0 0 1 8 0v4' : 'M5 12.5l4.5 4.5L19 7' };
+  }
+}
+</script>
+</body>
+</html>

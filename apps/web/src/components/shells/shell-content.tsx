@@ -1,14 +1,14 @@
-// What the shells share besides chrome: waiting for the session before showing a protected page,
-// knowing which sidebar section is open, and rendering the screen that a URL maps to.
+// What the shells share besides chrome: waiting for the session before showing a protected page
+// and knowing which sidebar section is open. (ScreenById lives in screen-by-id.tsx so this module
+// never imports the screen registry back.)
 import { useRouterState } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 
 import { useAuth, useAuthStatus } from "@/auth/auth-context";
 import { LoadingShell } from "@/auth/components/loading-shell";
 import { useHydrated } from "@/auth/hydration";
-import { matchWebRoute, surfaceForScreenId } from "@/navigation/web-routes";
+import { matchWebRoute } from "@/navigation/web-routes";
 import type { WebArea } from "@/navigation/web-routes";
-import { findScreenById } from "@/screens/registry";
 
 interface ShellContentProps {
   children: ReactNode;
@@ -37,19 +37,4 @@ export function usePathname(): string {
 export function useActiveSection(area: WebArea): string | undefined {
   const pathname = usePathname();
   return matchWebRoute(area, pathname)?.route.section;
-}
-
-interface ScreenByIdProps {
-  screenId: string;
-}
-
-/** Renders a registered screen, or a plain notice while its component does not exist yet. */
-export function ScreenById({ screenId }: ScreenByIdProps) {
-  const { t } = useAuth();
-  const entry = findScreenById(screenId);
-  if (!entry || entry.surface !== surfaceForScreenId(screenId)) {
-    return <p className="te-body">{t("component.shell.screenNotBuilt")}</p>;
-  }
-  const Screen = entry.component;
-  return <Screen />;
 }

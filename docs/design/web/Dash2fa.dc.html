@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Two-step verification</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; background: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24px">
+<img src="../assets/6ea846350ba3adc0e289d47fa0612c3b.svg" alt="Trips Enjoy" style="height: 48px; width: auto">
+<div style="width: 440px; box-sizing: border-box; background: #ffffff; color: #262a67; border-radius: 20px; padding: 32px; display: flex; flex-direction: column; gap: 20px; box-shadow: 0 8px 30px rgba(0,0,0,.4)">
+<span style="width: 48px; height: 48px; border-radius: 12px; background: #f6f3e4; display: flex; align-items: center; justify-content: center"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#262a67" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4-3 7-7 9-4-2-7-5-7-9V6z"></path></svg></span>
+<div style="display: flex; flex-direction: column; gap: 4px">
+<h1 style="margin: 0; font-size: 24px; line-height: 32px; font-weight: 600">Two-step verification</h1>
+<p style="margin: 0; font-size: 14px; line-height: 20px; color: #5b5f86">Enter the 6-digit code from your authenticator app for ops@trips-enjoy.com.</p>
+</div>
+<dc-import name="OtpField" digits="48291" length="{{six}}" hint-size="100%,60px"></dc-import>
+<label style="display: flex; align-items: center; gap: 8px; font-size: 14px"><input type="checkbox" style="width: 18px; height: 18px; accent-color: #262a67">Trust this browser for 30 days</label>
+<a href="AdmHome.dc.html" style="height: 48px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 16px; font-weight: 600; display: flex; align-items: center; justify-content: center; text-decoration: none">Verify and sign in</a>
+<div style="display: flex; justify-content: space-between; font-size: 14px"><a href="#" style="font-weight: 600">Text me a code instead</a><a href="#" style="font-weight: 600">Use a recovery code</a></div>
+</div>
+<a href="DashLogin.dc.html" style="color: #ff8655; font-size: 14px; font-weight: 600">Back to sign in</a>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+renderVals() { return { six: 6 }; }
+}
+</script>
+</body>
+</html>

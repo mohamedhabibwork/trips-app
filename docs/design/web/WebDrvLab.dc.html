@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Driver · Lab test required — web</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; background: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24px">
+<img src="../assets/6ea846350ba3adc0e289d47fa0612c3b.svg" alt="Trips Enjoy" style="height: 48px; width: auto">
+<div role="alertdialog" aria-labelledby="lab-h" style="width: 760px; box-sizing: border-box; background: #ffffff; color: #262a67; border-radius: 20px; padding: 40px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px; box-shadow: 0 8px 30px rgba(0,0,0,.4)">
+<div style="display: flex; flex-direction: column; gap: 16px">
+<span style="align-self: flex-start; padding: 4px 12px; border-radius: 999px; background: #fde8e6; color: #b42318; font-size: 13px; font-weight: 600">Driver account paused</span>
+<h1 id="lab-h" style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 600">Lab test required to keep driving</h1>
+<p style="margin: 0; font-size: 15px; line-height: 22px; color: #5b5f86">Requested by Trips Enjoy on 4 Oct. Trip offers, schedule and earnings are hidden until your result is approved.</p>
+<div style="padding: 14px; border-radius: 12px; background: #f6f3e4; display: flex; justify-content: space-between; align-items: center"><span style="display: flex; flex-direction: column"><span style="font-size: 13px; color: #5b5f86">Complete by</span><span style="font-size: 17px; font-weight: 600">Wed 7 Oct, 11:59 PM</span></span><span style="padding: 4px 10px; border-radius: 999px; background: #f89e23; font-size: 13px; font-weight: 700">3 days left</span></div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 12px; justify-content: center">
+<a href="../mobile/DrvLabBook.dc.html" style="height: 52px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 16px; font-weight: 600; display: flex; align-items: center; justify-content: center; text-decoration: none">Book at a partner lab</a>
+<a href="../mobile/DrvLabUpload.dc.html" style="height: 52px; box-sizing: border-box; border-radius: 12px; border: 1px solid #7b7fa6; color: #262a67; font-size: 16px; font-weight: 600; display: flex; align-items: center; justify-content: center; text-decoration: none">Upload an existing result</a>
+<p style="margin: 0; font-size: 13px; line-height: 18px; color: #5b5f86">Missing the deadline suspends your driver account. Need more time? <a href="../mobile/DrvSupport.dc.html" style="font-weight: 600">Contact support</a></p>
+<a href="WebSignIn.dc.html" style="font-size: 14px; font-weight: 600">Sign out</a>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

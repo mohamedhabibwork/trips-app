@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>OTP field</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>body{margin:0} .te-otp:focus-visible{outline:2px solid #262a67;outline-offset:2px}</style>
+</helmet>
+<div style="display: flex; flex-direction: column; gap: 8px; font-family: Outfit, Nunito, system-ui, sans-serif; color: #262a67">
+<div dir="ltr" style="position: relative">
+<div role="presentation" style="{{gridStyle}}">
+<sc-for list="{{boxes}}" as="b" hint-placeholder-count="6">
+<span style="{{b.style}}">{{b.ch}}</span>
+</sc-for>
+</div>
+<input class="te-otp" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="{{len}}" value="{{code}}" onChange="{{onInput}}" aria-label="{{aria}}" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: text; border: none">
+</div>
+<sc-if value="{{hasError}}" hint-placeholder-val="{{false}}">
+<span style="display: flex; gap: 6px; align-items: center; font-size: 13px; font-weight: 500; color: #b42318"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v5M12 16.5v.01"></path></svg>{{error}}</span>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"digits":{"editor":"text","default":"481"},"length":{"editor":"int","min":4,"max":8,"default":6},"error":{"editor":"text","default":""},"$preview":{"width":358,"height":64}}'>
+class Component extends DCLogic {
+constructor(p) { super(p); this.state = { code: null }; }
+renderVals() {
+const len = this.props.length ?? 6;
+const code = (this.state.code ?? this.props.digits ?? '').replace(/\D/g, '').slice(0, len);
+const err = this.props.error ?? '';
+const boxes = [];
+for (let i = 0; i < len; i++) {
+const active = i === code.length && !err;
+const border = err ? '1.5px solid #b42318' : active ? '2px solid #262a67' : '1px solid #7b7fa6';
+boxes.push({ ch: code[i] || '', style: 'height: 60px; display: flex; align-items: center; justify-content: center; border-radius: 8px; background: #ffffff; font-size: 24px; font-weight: 600; border: ' + border + ';' });
+}
+return { len, code, boxes, error: err, hasError: !!err, aria: len + '-digit verification code',
+gridStyle: 'display: grid; grid-template-columns: repeat(' + len + ', minmax(0, 1fr)); gap: 8px;',
+onInput: (e) => this.setState({ code: e.target.value }) };
+}
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Traveler · Organizer profile &amp; reviews</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="height: 100%; box-sizing: border-box; padding: 56px 16px 24px; display: flex; flex-direction: column; gap: 12px">
+
+<div style="display: flex; align-items: center; gap: 12px">
+<a href="TrvTrip.dc.html" aria-label="Back" style="width: 44px; height: 44px; border-radius: 999px; background: #ffffff; color: #262a67; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a>
+<h1 style="margin: 0; font-size: 22px; line-height: 28px; font-weight: 700">Organizer</h1>
+</div>
+
+<div style="display: flex; align-items: center; gap: 14px">
+<img src="../assets/697a49af6be5a077ae1851c1a8b9dfcd.svg" alt="" style="width: 64px; height: 64px; flex-shrink: 0; border-radius: 16px; object-fit: cover; display: block">
+<span style="display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 20px; line-height: 24px; font-weight: 700">Sunrise Tours Co.</span>
+<span style="display: flex; gap: 6px; align-items: center; font-size: 13px; color: #5b5f86">
+<span style="padding: 2px 8px; border-radius: 999px; background: #e3f3ea; color: #1f7a4d; font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 4px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5.5c0 4.4-3 8-7 9.5-4-1.5-7-5.1-7-9.5V6zM9 12l2 2 4-4"></path></svg>Verified</span>
+Riyadh · since 2019
+</span>
+</span>
+</div>
+
+<div style="display: flex; gap: 8px">
+<sc-for list="{{stats}}" as="s" hint-placeholder-count="3">
+<div style="flex: 1 1 0; padding: 10px 12px; border-radius: 12px; background: #ffffff; display: flex; flex-direction: column"><span style="font-size: 20px; line-height: 26px; font-weight: 700">{{s.v}}</span><span style="font-size: 12px; color: #5b5f86">{{s.l}}</span></div>
+</sc-for>
+</div>
+
+<p style="margin: 0; font-size: 15px; line-height: 21px">Group trips across Saudi Arabia. Every bus has a trained moderator, and parents can follow children live.</p>
+
+<div style="display: flex; flex-direction: column; gap: 8px">
+<h2 style="margin: 0; font-size: 18px; font-weight: 600">Upcoming trips</h2>
+<div style="border-radius: 20px; background: #ffffff; overflow: hidden">
+<sc-for list="{{trips}}" as="t" hint-placeholder-count="2">
+<a href="{{t.href}}" style="{{t.rowStyle}}">
+<span style="width: 40px; height: 40px; flex-shrink: 0; border-radius: 12px; background: #e6e8f5; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 14px"><span style="font-size: 15px; font-weight: 700">{{t.day}}</span><span style="font-size: 11px">Oct</span></span>
+<span style="flex-grow: 1; display: flex; flex-direction: column; line-height: 18px"><span style="font-size: 15px; font-weight: 600">{{t.title}}</span><span style="font-size: 13px; color: #5b5f86">{{t.meta}}</span></span>
+<span style="font-size: 14px; font-weight: 600; white-space: nowrap">{{t.price}} SAR</span>
+</a>
+</sc-for>
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 8px">
+<div style="display: flex; justify-content: space-between; align-items: baseline"><h2 style="margin: 0; font-size: 18px; font-weight: 600">Reviews · 4.8</h2><span style="font-size: 13px; color: #5b5f86">312 reviews</span></div>
+<sc-for list="{{reviews}}" as="r" hint-placeholder-count="2">
+<div style="padding: 12px 14px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 4px">
+<div style="display: flex; justify-content: space-between; align-items: center">
+<span style="font-size: 14px; font-weight: 600">{{r.name}}</span>
+<span role="img" aria-label="{{r.aria}}" style="display: flex; gap: 2px">
+<sc-for list="{{r.stars}}" as="st" hint-placeholder-count="5"><svg width="14" height="14" viewBox="0 0 24 24" fill="{{st.fill}}" stroke="#8a4b00" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"></path></svg></sc-for>
+</span>
+</div>
+<span style="font-size: 12px; color: #5b5f86">{{r.meta}}</span>
+<p style="margin: 0; font-size: 14px; line-height: 19px">{{r.text}}</p>
+</div>
+</sc-for>
+</div>
+
+<a href="TrvSupport.dc.html" style="margin-top: auto; align-self: center; min-height: 44px; display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 600"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9.5 17h-19zM12 10v4M12 17h.01"></path></svg>Report this organizer</a>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const stats = [{ v: '148', l: 'Trips run' }, { v: '4.8', l: 'Rating' }, { v: '98%', l: 'On time' }];
+    const T = [
+      { day: '16', title: 'AlUla Heritage Weekend', meta: 'Thu–Sat · from Riyadh · 23 left', price: '1,250', href: 'TrvTrip.dc.html' },
+      { day: '24', title: 'Red Sea Snorkel Day', meta: 'Fri · from Jeddah · 4 left', price: '320', href: 'TrvTrip.dc.html' }
+    ];
+    const trips = T.map((t, i) => ({ ...t, rowStyle: 'min-height: 60px; padding: 8px 14px; display: flex; align-items: center; gap: 12px; color: #262a67; text-decoration: none;' + (i ? ' border-top: 1px solid #e3dfc9;' : '') }));
+    const R = [
+      { name: 'Huda M.', n: 5, meta: 'Taif Rose Farms · Sat 27 Sep', text: 'Every child was checked back on the bus at each stop.' },
+      { name: 'Abdullah K.', n: 4, meta: 'Edge of the World · Sat 13 Sep', text: 'Great guides. Return ran late, but the app kept us updated.' }
+    ];
+    const reviews = R.map((r) => ({ ...r, aria: r.n + ' out of 5 stars', stars: [1, 2, 3, 4, 5].map((k) => ({ fill: k <= r.n ? '#f89e23' : 'none' })) }));
+    return { stats, trips, reviews };
+  }
+}
+</script>
+</body>
+</html>

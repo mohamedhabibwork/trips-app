@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Studio web · Album upload</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+.te-nav:focus-visible{outline:2px solid #f89e23;outline-offset:2px}
+.te-row:hover{background:#f6f3e4}
+.te-radio:focus-within{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="min-height: 1000px; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif; display: flex; flex-direction: column">
+
+<header style="background: #1a1c4b; color: #f6f3e4">
+<div style="box-sizing: border-box; padding: 12px 40px; display: flex; flex-wrap: wrap; align-items: center; gap: 16px 28px">
+<a href="PhoWebHome.dc.html" class="te-nav" style="display: flex; align-items: center; gap: 10px; text-decoration: none"><img src="../assets/6ea846350ba3adc0e289d47fa0612c3b.svg" alt="Trips Enjoy" style="height: 36px; width: auto"><span style="padding: 2px 10px; border-radius: 999px; background: #f89e23; color: #1a1c4b; font-size: 12px; font-weight: 700">Studio</span></a>
+<nav aria-label="Studio" style="display: flex; flex-wrap: wrap; gap: 4px; flex-grow: 1">
+<sc-for list="{{nav}}" as="n" hint-placeholder-count="8"><a href="{{n.href}}" class="te-nav" aria-current="{{n.cur}}" style="{{n.style}}">{{n.label}}</a></sc-for>
+</nav>
+<a href="PhoWebProfile.dc.html" class="te-nav" style="display: flex; align-items: center; gap: 10px; color: #f6f3e4; text-decoration: none">
+<span style="display: flex; flex-direction: column; align-items: flex-end"><span style="font-size: 14px; font-weight: 600">Noura Al-Shehri</span><span style="font-size: 12px; color: #b8bad6">Studio plan · Verified</span></span>
+<span style="width: 40px; height: 40px; border-radius: 999px; background: #31367a; color: #f89e23; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; overflow: hidden" aria-hidden="true"><img src="../assets/380d7985babc06d16544f4085cdec2d7.svg" alt="" style="width: 100%; height: 100%; object-fit: cover"></span>
+</a>
+</div>
+</header>
+
+<div style="box-sizing: border-box; width: 100%; max-width: 1440px; margin: 0 auto; padding: 24px 40px 40px; display: flex; flex-direction: column; gap: 20px">
+
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<nav aria-label="Breadcrumb" style="font-size: 14px; color: #5b5f86"><a href="PhoWebAlbums.dc.html">Albums</a> / Taif Rose Farms / New album</nav>
+<h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 700">Upload album · Taif Rose Farms</h1>
+<span style="font-size: 14px; color: #5b5f86">Sunrise Tours Co. · Sat 4 Oct · 172 travellers on 4 buses · album due Tue 7 Oct, 07:00</span>
+</div>
+<div style="display: flex; gap: 12px; align-items: center">
+<span style="padding: 4px 12px; border-radius: 999px; background: #e6e8f5; font-size: 13px; font-weight: 600">1 of 5 albums used on this trip</span>
+<span style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 999px; background: #fdf0d5; color: #8a4b00; font-size: 13px; font-weight: 700"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7v5l3 2"></path></svg>Draft · autosaved 09:38</span>
+</div>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start">
+
+<div style="flex: 3 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+
+<div style="padding: 28px 24px; border-radius: 20px; border: 2px dashed #7b7fa6; background: #ffffff; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 20px; text-align: center">
+<span style="width: 64px; height: 64px; border-radius: 999px; background: #e6e8f5; display: flex; align-items: center; justify-content: center"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"></path></svg></span>
+<span style="display: flex; flex-direction: column; gap: 4px; text-align: start">
+<span style="font-size: 20px; font-weight: 600">Drop photos or a whole folder here</span>
+<span style="font-size: 14px; color: #5b5f86">JPG, PNG or HEIC · up to 25 MB each · up to 1,000 photos per album</span>
+</span>
+<button style="height: 48px; padding: 0 20px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Choose files</button>
+</div>
+
+<section aria-labelledby="files-h" style="border-radius: 20px; background: #ffffff; overflow: hidden">
+<div style="padding: 16px 20px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px; border-bottom: 1px solid #e3dfc9">
+<h2 id="files-h" style="margin: 0; font-size: 18px; font-weight: 600">189 files</h2>
+<span style="font-size: 14px; color: #5b5f86">183 uploaded · 4 uploading · 2 need attention</span>
+<span style="flex-grow: 1"></span>
+<span role="progressbar" aria-label="Overall upload" aria-valuenow="97" aria-valuemin="0" aria-valuemax="100" style="flex: 0 1 220px; height: 8px; border-radius: 999px; background: #e3dfc9; display: flex; overflow: hidden"><span style="width: 97%; background: #262a67; border-radius: 999px"></span></span>
+</div>
+
+<div role="toolbar" aria-label="Organize selected photos" style="padding: 10px 20px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; background: #f6f3e4; border-bottom: 1px solid #e3dfc9">
+<span style="font-size: 14px; font-weight: 600; margin-inline-end: 8px">{{selCount}} selected · Tag as</span>
+<sc-for list="{{tags}}" as="t" hint-placeholder-count="5">
+<button aria-pressed="{{t.on}}" onClick="{{t.go}}" style="{{t.style}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12V4a1 1 0 0 1 1-1h8l9 9-9 9zM7.5 7.5h.01"></path></svg>{{t.label}}</button>
+</sc-for>
+<span style="flex-grow: 1"></span>
+<label for="sort" style="font-size: 13px; color: #5b5f86">Sort</label>
+<select id="sort" style="height: 40px; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; padding: 0 8px; font: inherit; font-size: 14px; color: #262a67"><option>Time taken</option><option>File name</option><option>Bus</option></select>
+<button style="height: 40px; padding: 0 12px; border: 0; border-radius: 12px; background: transparent; color: #b42318; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"></path></svg>Remove</button>
+</div>
+
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 760px; border-collapse: collapse; font-size: 14px">
+<thead><tr style="color: #5b5f86; font-size: 13px">
+<th scope="col" style="width: 40px; padding: 10px 0 10px 20px; text-align: start"><input type="checkbox" aria-label="Select all" style="width: 18px; height: 18px; margin: 0; accent-color: #262a67"></th>
+<th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Photo</th>
+<th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Size</th>
+<th scope="col" style="text-align: start; padding: 10px 12px; font-weight: 600">Tags</th>
+<th scope="col" style="text-align: start; padding: 10px 20px 10px 12px; font-weight: 600; width: 32%">Status</th>
+</tr></thead>
+<tbody>
+<sc-for list="{{rows}}" as="r" hint-placeholder-count="8">
+<tr class="te-row" style="border-top: 1px solid #e3dfc9">
+<td style="padding: 6px 0 6px 20px"><input type="checkbox" checked="{{r.sel}}" onChange="{{r.toggle}}" aria-label="{{r.selLabel}}" style="width: 18px; height: 18px; margin: 0; accent-color: #262a67"></td>
+<td style="padding: 6px 12px"><span style="display: flex; align-items: center; gap: 12px">
+<span style="position: relative; width: 48px; height: 36px; flex-shrink: 0; border-radius: 8px; overflow: hidden; background: #262a67; display: flex; align-items: center; justify-content: center">
+<sc-if value="{{r.hasImg}}" hint-placeholder-val="{{true}}"><img src="{{r.img}}" alt="" style="{{r.imgStyle}}"></sc-if>
+<sc-if value="{{r.noImg}}" hint-placeholder-val="{{false}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#b8bad6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1zM8.5 10a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM20 15l-5-5L5 20"></path></svg></sc-if>
+<sc-if value="{{r.isCover}}" hint-placeholder-val="{{false}}"><span style="position: absolute; left: 2px; bottom: 2px; padding: 0 4px; border-radius: 4px; background: #f89e23; color: #262a67; font-size: 9px; font-weight: 700">COVER</span></sc-if>
+</span>
+<span style="font-weight: 600">{{r.n}}</span></span></td>
+<td style="padding: 6px 12px; color: #5b5f86">{{r.size}}</td>
+<td style="padding: 6px 12px"><span style="display: flex; flex-wrap: wrap; gap: 4px"><sc-for list="{{r.tags}}" as="g" hint-placeholder-count="2"><span style="padding: 1px 8px; border-radius: 999px; background: #e6e8f5; font-size: 12px; font-weight: 600">{{g}}</span></sc-for></span></td>
+<td style="padding: 6px 20px 6px 12px">
+<sc-if value="{{r.isDone}}" hint-placeholder-val="{{true}}"><span style="display: inline-flex; align-items: center; gap: 4px; padding: 2px 10px; border-radius: 999px; background: #e3f3ea; color: #1f7a4d; font-size: 13px; font-weight: 600"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg>Uploaded · watermarked</span></sc-if>
+<sc-if value="{{r.isUp}}" hint-placeholder-val="{{false}}"><span style="display: flex; align-items: center; gap: 10px"><span role="progressbar" aria-label="{{r.n}} upload" aria-valuenow="{{r.p}}" aria-valuemin="0" aria-valuemax="100" style="flex-grow: 1; height: 6px; border-radius: 999px; background: #e3dfc9; display: flex; overflow: hidden"><span style="{{r.fill}}"></span></span><span style="font-size: 13px; font-weight: 600; color: #5b5f86">{{r.p}}%</span></span></sc-if>
+<sc-if value="{{r.isErr}}" hint-placeholder-val="{{false}}"><span style="display: flex; align-items: flex-start; gap: 6px; font-size: 13px; line-height: 18px; color: #b42318"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 1px"><path d="M12 3l9.5 17h-19zM12 10v4M12 17h.01"></path></svg><span>{{r.msg}} <button style="padding: 0; border: 0; background: transparent; color: #262a67; font: inherit; font-weight: 600; text-decoration: underline; cursor: pointer">{{r.action}}</button></span></span></sc-if>
+</td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+<div style="padding: 12px 20px; border-top: 1px solid #e3dfc9; font-size: 14px; color: #5b5f86">Showing 8 of 189 · <a href="#" style="font-weight: 600">Show all</a></div>
+</section>
+</div>
+
+<aside aria-labelledby="set-h" style="flex: 1 1 320px; min-width: 0; padding: 20px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 16px">
+<h2 id="set-h" style="margin: 0; font-size: 20px; font-weight: 600">Album settings</h2>
+
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="ttl" style="font-size: 14px; font-weight: 600">Title</label>
+<input id="ttl" value="Taif Rose Farms · Harvest morning" style="height: 48px; box-sizing: border-box; border-radius: 8px; border: 1px solid #7b7fa6; background: #ffffff; padding: 0 14px; font: inherit; font-size: 15px; color: #262a67">
+</div>
+
+<fieldset style="margin: 0; padding: 0; border: 0; display: flex; flex-direction: column; gap: 8px">
+<legend style="padding: 0 0 6px; font-size: 14px; font-weight: 600">Who can see it</legend>
+<sc-for list="{{privacy}}" as="p" hint-placeholder-count="3">
+<label class="te-radio" style="{{p.style}}">
+<input type="radio" name="priv" checked="{{p.on}}" disabled="{{p.locked}}" onChange="{{p.go}}" style="width: 18px; height: 18px; margin: 2px 0 0; accent-color: #262a67; flex-shrink: 0">
+<span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 15px; font-weight: 600">{{p.t}} <span style="{{p.bs}}">{{p.badge}}</span></span><span style="font-size: 13px; line-height: 18px; color: #5b5f86">{{p.d}}</span></span>
+</label>
+</sc-for>
+<span style="font-size: 13px; color: #5b5f86"><a href="PhoWebPrivacy.dc.html" style="font-weight: 600">Privacy and watermark settings</a> · <a href="../mobile/PhoPlanManage.dc.html" style="font-weight: 600">Selected people needs Pro</a></span>
+</fieldset>
+
+<div style="display: flex; align-items: center; gap: 12px">
+<span style="position: relative; width: 88px; height: 60px; flex-shrink: 0; border-radius: 8px; overflow: hidden; background: #262a67">
+<img src="../assets/cc51d7ccafd703646b5cfbed3b8222aa.svg" alt="Cover photo: Taif rose fields, with the watermark preview" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 60%">
+<sc-if value="{{wm}}" hint-placeholder-val="{{true}}"><img src="../assets/d8314577d8376991a72b92ec8ec2dadb.svg" alt="" style="position: absolute; right: 5px; bottom: 5px; width: 18px; height: 18px; object-fit: contain; opacity: 0.3"></sc-if>
+</span>
+<span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px"><span id="wm-l" style="font-size: 15px; font-weight: 600">Auto watermark</span><span style="font-size: 13px; color: #5b5f86">Symbol bottom-right · Studio</span><span style="font-size: 13px; color: #5b5f86">Cover: IMG_2201.JPG · <a href="#" style="font-weight: 600">Change</a></span></span>
+<button role="switch" aria-checked="{{wmAria}}" aria-labelledby="wm-l" onClick="{{toggleWm}}" style="{{wmTrack}}"><span style="width: 26px; height: 26px; border-radius: 999px; background: #ffffff; display: block"></span></button>
+</div>
+<div style="display: flex; align-items: center; gap: 12px">
+<span style="flex-grow: 1; display: flex; flex-direction: column"><span id="dl-l" style="font-size: 15px; font-weight: 600">Allow downloads</span><span style="font-size: 13px; color: #5b5f86">Full-size, watermarked</span></span>
+<button role="switch" aria-checked="{{dlAria}}" aria-labelledby="dl-l" onClick="{{toggleDl}}" style="{{dlTrack}}"><span style="width: 26px; height: 26px; border-radius: 999px; background: #ffffff; display: block"></span></button>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 8px">
+<a href="../mobile/PhoAlbumLive.dc.html" style="height: 48px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; text-decoration: none">Publish to 172 travellers</a>
+<button style="height: 48px; border-radius: 12px; border: 1px solid #7b7fa6; background: #ffffff; color: #262a67; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Save draft</button>
+</div>
+</aside>
+
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { sel: { 0: true, 1: true, 2: true }, tag: 'Bus 2', priv: 'link', wm: true, dl: true }; }
+  renderVals() {
+    const nav = [['Home', 'PhoWebHome'], ['Portfolio', 'PhoWebPortfolio'], ['Profile', 'PhoWebProfile'], ['Rates', 'PhoWebRates'], ['Deals', 'PhoWebDeals'], ['Albums', 'PhoWebAlbums'], ['Earnings', 'PhoWebEarnings'], ['Coupons', 'PhoWebCoupons']].map(([label, f]) => {
+      const on = label === 'Albums';
+      return { label, href: f + '.dc.html', cur: on ? 'page' : 'false',
+        style: 'height: 40px; padding: 0 14px; border-radius: 999px; display: flex; align-items: center; font-size: 15px; font-weight: 600; text-decoration: none; ' + (on ? 'background: #31367a; color: #f89e23;' : 'color: #f6f3e4;') };
+    });
+    const A = '../assets/cc51d7ccafd703646b5cfbed3b8222aa.svg', C = '../assets/79a6ce5310828e799852c7aef2cdc987.svg', S = '../assets/073b7fe9ddee4e94c5d8ddaa41cbb4f4.svg', N = '../assets/8e86331acb7080e5e12facebe9aa4069.svg', F = '../assets/dd052dab07949cd087d95323479af226.svg', H = '../assets/b2bcb63d43641eb25576376d35060477.png', M = '../assets/cafd59426799492e5f83c95087214500.svg';
+    const R = [
+      { n: 'IMG_2201.JPG', size: '8.2 MB', tags: ['Bus 2', 'Rose fields'], st: 'done', img: A, pos: '50% 60%', cover: true },
+      { n: 'IMG_2202.JPG', size: '7.9 MB', tags: ['Bus 2', 'Group'], st: 'done', img: C, pos: '50% 35%' },
+      { n: 'IMG_2205.JPG', size: '9.4 MB', tags: ['Bus 2'], st: 'done', img: S, pos: '40% 50%' },
+      { n: 'IMG_2209.JPG', size: '10.1 MB', tags: ['Distillery'], st: 'done', img: N, pos: '60% 50%' },
+      { n: 'IMG_2214.JPG', size: '11.4 MB', tags: ['Distillery'], st: 'up', p: 64, img: A, pos: '15% 80%' },
+      { n: 'IMG_2215.JPG', size: '9.8 MB', tags: [], st: 'up', p: 22, img: F, pos: '50% 60%' },
+      { n: 'IMG_2231.HEIC', size: '31.6 MB', tags: [], st: 'err', msg: 'Larger than 25 MB. Export at a smaller size, then', action: 'Replace file', img: H, pos: '70% 40%' },
+      { n: 'IMG_2240.JPG', size: '6.3 MB', tags: ['Bus 3'], st: 'err', msg: 'Upload stopped when the connection dropped.', action: 'Retry', img: M, pos: '65% 50%' }
+    ];
+    const sel = this.state.sel;
+    const rows = R.map((r, i) => ({ ...r, sel: !!sel[i], selLabel: 'Select ' + r.n, hasImg: !!r.img, noImg: !r.img, imgStyle: 'position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: ' + (r.pos || '50% 50%'), isCover: !!r.cover,
+      isDone: r.st === 'done', isUp: r.st === 'up', isErr: r.st === 'err', p: String(r.p || 0),
+      fill: 'width: ' + (r.p || 0) + '%; background: #262a67; border-radius: 999px',
+      toggle: () => this.setState({ sel: { ...this.state.sel, [i]: !this.state.sel[i] } }) }));
+    const selCount = Object.values(sel).filter(Boolean).length;
+    const tags = ['Bus 1', 'Bus 2', 'Bus 3', 'Bus 4'].map((label) => {
+      const on = this.state.tag === label;
+      return { label, on: on ? 'true' : 'false', go: () => this.setState({ tag: label }),
+        style: 'height: 36px; padding: 0 12px; border-radius: 999px; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; ' + (on ? 'background: #262a67; color: #f6f3e4; border: 1px solid #262a67;' : 'background: #ffffff; color: #262a67; border: 1px solid #7b7fa6;') };
+    });
+    const privacy = [
+      { id: 'public', t: 'Public', d: 'All 172 trip participants see it in the app', badge: '' },
+      { id: 'link', t: 'Shared link', d: 'Anyone with the link · expires after 30 days', badge: 'Studio+' },
+      { id: 'sel', t: 'Selected people', d: 'Choose names from the trip roster', badge: 'Pro', locked: true }
+    ].map((p) => {
+      const on = this.state.priv === p.id;
+      return { ...p, on, locked: !!p.locked, go: () => this.setState({ priv: p.id }),
+        bs: p.badge ? 'margin-inline-start: 4px; padding: 0 8px; border-radius: 999px; background: ' + (p.locked ? '#262a67; color: #f6f3e4;' : '#1a1c4b; color: #f89e23;') + ' font-size: 11px; font-weight: 700' : 'display: none',
+        style: 'padding: 12px; border-radius: 12px; display: flex; gap: 10px; align-items: flex-start; cursor: ' + (p.locked ? 'not-allowed; border: 1px dashed #7b7fa6; background: #f6f3e4;' : 'pointer; ' + (on ? 'border: 2px solid #fb8030; background: #ffffff;' : 'border: 2px solid #e3dfc9; background: #ffffff;')) };
+    });
+    const sw = (on) => 'width: 52px; height: 32px; flex-shrink: 0; border: 0; border-radius: 999px; padding: 3px; cursor: pointer; display: flex; ' + (on ? 'background: #262a67; justify-content: flex-end;' : 'background: #7b7fa6; justify-content: flex-start;');
+    const { wm, dl } = this.state;
+    return { nav, rows, selCount: String(selCount), tags, privacy, wm,
+      wmAria: wm ? 'true' : 'false', dlAria: dl ? 'true' : 'false', wmTrack: sw(wm), dlTrack: sw(dl),
+      toggleWm: () => this.setState({ wm: !this.state.wm }), toggleDl: () => this.setState({ dl: !this.state.dl }) };
+  }
+}
+</script>
+</body>
+</html>

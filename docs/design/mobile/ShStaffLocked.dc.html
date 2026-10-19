@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Staff · Company plan ended</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif">
+<div style="height: 100%; box-sizing: border-box; padding: 56px 16px 24px; display: flex; flex-direction: column; gap: 14px">
+
+<div style="display: flex; align-items: center; gap: 10px; font-size: 13px; color: #5b5f86">
+<img src="../assets/d8314577d8376991a72b92ec8ec2dadb.svg" alt="Trips Enjoy" style="width: 28px; height: 28px; object-fit: contain">
+<span style="flex-grow: 1; min-width: 0">Signed in as <strong style="color: #262a67">{{who.name}}</strong> · {{who.role}}</span>
+<a href="StaffOrgSwitch.dc.html" style="flex-shrink: 0; min-height: 44px; display: flex; align-items: center; font-size: 13px; font-weight: 600">Switch company</a>
+</div>
+
+<div style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: 12px; padding-top: 8px">
+<span style="position: relative; width: 88px; height: 88px; border-radius: 20px; display: flex; align-items: center; justify-content: center">
+<img src="../assets/697a49af6be5a077ae1851c1a8b9dfcd.svg" alt="Sunrise Tours Co. logo" style="width: 88px; height: 88px; border-radius: 20px; object-fit: cover">
+<span style="position: absolute; right: -8px; bottom: -8px; width: 36px; height: 36px; border-radius: 999px; background: #fdf0d5; color: #8a4b00; border: 3px solid #f6f3e4; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 11h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1zM8 11V7a4 4 0 0 1 8 0v4"></path></svg></span>
+</span>
+<h1 style="margin: 0; font-size: 24px; line-height: 30px; font-weight: 700">Sunrise Tours Co.’s subscription has ended</h1>
+<p style="margin: 0; font-size: 16px; line-height: 23px; color: #5b5f86">Trips Enjoy is paused for company staff until <strong style="color: #262a67">Mona Saleh (Owner)</strong> renews.</p>
+</div>
+
+<section aria-labelledby="works-h" style="padding: 14px 16px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 10px">
+<h2 id="works-h" style="margin: 0; font-size: 15px; font-weight: 600">What still works</h2>
+<div style="display: flex; gap: 10px; font-size: 14px; line-height: 20px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1f7a4d" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 1px"><path d="M5 12.5l4.5 4.5L19 7"></path></svg><span>Trips already sold still run. Travellers keep their bookings and tickets.</span></div>
+<div style="display: flex; gap: 10px; font-size: 14px; line-height: 20px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1f7a4d" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 1px"><path d="M5 12.5l4.5 4.5L19 7"></path></svg><span>Your assigned trips stay visible.</span></div>
+<a href="{{who.tripHref}}" style="padding: 10px 12px; border-radius: 12px; background: #f6f3e4; color: #262a67; text-decoration: none; display: flex; align-items: center; gap: 10px">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M6 4h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM4 11h16M8 18v2M16 18v2M8 14.5h.01M16 14.5h.01"></path></svg>
+<span style="flex-grow: 1; display: flex; flex-direction: column"><span style="font-size: 14px; font-weight: 600">{{who.trip}}</span><span style="font-size: 12px; color: #5b5f86">{{who.tripMeta}}</span></span>
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
+</a>
+<div style="display: flex; gap: 10px; font-size: 14px; line-height: 20px; color: #5b5f86"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 1px"><path d="M6 11h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1zM8 11V7a4 4 0 0 1 8 0v4"></path></svg><span>Paused: new trips, publishing and selling new seats.</span></div>
+</section>
+
+<div style="margin-top: auto; display: flex; flex-direction: column; gap: 8px">
+<sc-if value="{{notified}}" hint-placeholder-val="{{false}}">
+<p role="status" style="margin: 0; padding: 10px 12px; border-radius: 12px; background: #e3f3ea; color: #1f7a4d; font-size: 14px; font-weight: 600; display: flex; gap: 8px; align-items: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg>Mona was notified at 09:14 by app and email.</p>
+</sc-if>
+<button type="button" onClick="{{notify}}" aria-disabled="{{notifiedAria}}" style="{{notifyStyle}}">{{notifyLabel}}</button>
+<a href="ModOpsChat.dc.html" style="height: 52px; border-radius: 12px; background: #ffffff; border: 1px solid #7b7fa6; color: #262a67; font-size: 16px; font-weight: 600; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"></path></svg>Contact Sunrise Tours Co.</a>
+<a href="MobileSignOut.dc.html" style="height: 44px; color: #262a67; font-size: 15px; font-weight: 600; text-decoration: none; display: flex; align-items: center; justify-content: center">Sign out</a>
+</div>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"staff":{"editor":"enum","options":["driver","moderator","employee"],"default":"driver"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { sent: false }; }
+  renderVals() {
+    const W = {
+      driver: { name: 'Saeed Mubarak', role: 'Driver', trip: 'AlUla Heritage Weekend · Bus 1', tripMeta: 'Thu 16 – Sat 18 Oct · depart 06:30', tripHref: 'DrvOwnHome.dc.html' },
+      moderator: { name: 'Nadia Yusuf', role: 'Moderator', trip: 'AlUla Heritage Weekend · Bus 2', tripMeta: 'Thu 16 Oct · 43 passengers', tripHref: 'ModToday.dc.html' },
+      employee: { name: 'Yousef Amin', role: 'Operations', trip: 'AlUla Heritage Weekend · 4 buses', tripMeta: 'Thu 16 – Sat 18 Oct · 168 of 172 seats sold', tripHref: 'OrgEmployeeView.dc.html' }
+    };
+    const who = W[this.props.staff] || W.driver;
+    const s = this.state.sent;
+    return { who, notified: s, notifiedAria: s ? 'true' : 'false', notifyLabel: s ? 'Mona notified' : 'Notify Mona',
+      notify: () => this.setState({ sent: true }),
+      notifyStyle: 'height: 52px; border: 0; border-radius: 12px; font: inherit; font-size: 16px; font-weight: 700; cursor: pointer; ' + (s ? 'background: #e3dfc9; color: #5b5f86;' : 'background: #ff6c2e; color: #262a67;') };
+  }
+}
+</script>
+</body>
+</html>

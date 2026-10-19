@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Web · Choose seats</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f6f3e4}
+a{color:#c93a00}a:hover{color:#262a67}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #262a67;outline-offset:2px}
+footer a:focus-visible{outline-color:#f89e23}
+.te-seat:hover{box-shadow:0 0 0 2px #fb8030}
+</style>
+</helmet>
+<div style="min-height: 1000px; background: #f6f3e4; color: #262a67; font-family: Outfit, Nunito, system-ui, sans-serif; display: flex; flex-direction: column">
+
+<header style="border-bottom: 1px solid #e3dfc9">
+<div style="max-width: 1200px; margin: 0 auto; box-sizing: border-box; padding: 14px 24px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px">
+<a href="WebHome.dc.html" aria-label="Trips Enjoy home" style="display: flex"><img src="../assets/1fbce194fcb16bf54904c32c189fca31.svg" alt="Trips Enjoy" style="height: 40px; width: auto"></a>
+<span style="flex-grow: 1; display: flex; align-items: center; gap: 6px; font-size: 15px; font-weight: 600; color: #5b5f86"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 11h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1zM8 11V7a4 4 0 0 1 8 0v4"></path></svg>Secure booking</span>
+<sc-if value="{{showTimer}}" hint-placeholder-val="{{true}}">
+<span role="timer" aria-label="{{timerAria}}" style="{{timerStyle}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7v5l3 2"></path></svg>{{timerText}}</span>
+</sc-if>
+<a href="WebHomeAr.dc.html" lang="ar" dir="rtl" style="height: 44px; padding: 0 8px; display: flex; align-items: center; font-family: Cairo, sans-serif; font-size: 15px; font-weight: 600; color: #262a67; text-decoration: none">العربية</a>
+</div>
+</header>
+
+<main style="flex-grow: 1; width: 100%; max-width: 1200px; margin: 0 auto; box-sizing: border-box; padding: 24px 24px 48px; display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: center">
+<div style="display: flex; align-items: center; gap: 12px">
+<a href="WebTrip.dc.html" aria-label="Back to trip" style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 999px; background: #ffffff; color: #262a67; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a>
+<div style="display: flex; flex-direction: column"><h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 700">Choose seats</h1><span style="font-size: 14px; color: #5b5f86">Siwa Oasis Escape · Thu 30 Oct – Sat 1 Nov · Nile Horizon Tours</span></div>
+</div>
+<ol aria-label="Booking steps" style="margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; align-items: center; gap: 8px">
+<sc-for list="{{steps}}" as="s" hint-placeholder-count="3">
+<li aria-current="{{s.cur}}" style="{{s.style}}"><span style="{{s.dot}}">{{s.n}}</span>{{s.t}}</li>
+</sc-for>
+</ol>
+</div>
+
+<sc-if value="{{isExpired}}" hint-placeholder-val="{{false}}">
+<div role="alert" style="padding: 14px 18px; border-radius: 12px; background: #fde8e6; color: #b42318; display: flex; flex-wrap: wrap; gap: 12px 16px; align-items: center">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7v5l3 2"></path></svg>
+<span style="flex: 1 1 360px; font-size: 15px; line-height: 22px"><strong>Your 15-minute hold ended at 10:42, so seats 4A, 4B and 4C were released.</strong> Your travelers and programs are kept. Choose seats again to start a new hold.</span>
+</div>
+</sc-if>
+<sc-if value="{{isOffline}}" hint-placeholder-val="{{false}}">
+<div role="status" style="padding: 14px 18px; border-radius: 12px; background: #fdf0d5; color: #8a4b00; display: flex; flex-wrap: wrap; gap: 12px 16px; align-items: center">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3l18 18M8.5 16.5a5 5 0 0 1 7 0M5 13a10 10 0 0 1 4-2.6M12 20h.01M15 10.4A10 10 0 0 1 19 13M2 9.5a15 15 0 0 1 3.5-2.4M10.5 5.1A15 15 0 0 1 22 9.5"></path></svg>
+<span style="flex: 1 1 360px; font-size: 15px; line-height: 22px"><strong>Live seat updates are paused.</strong> We can't confirm which seats are free right now, so choosing is turned off. Your held seats stay yours until 10:42.</span>
+<button type="button" style="height: 44px; padding: 0 16px; border-radius: 12px; border: 1px solid #8a4b00; background: #ffffff; color: #8a4b00; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7"></path></svg>Reconnect</button>
+</div>
+</sc-if>
+
+<div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start">
+
+<sc-if value="{{isAssigned}}" hint-placeholder-val="{{false}}">
+<section aria-labelledby="as-h" style="flex: 999 1 560px; min-width: 0; padding: 32px; border-radius: 20px; background: #ffffff; display: flex; flex-wrap: wrap; gap: 24px; align-items: center">
+<span style="width: 72px; height: 72px; flex-shrink: 0; border-radius: 20px; background: #e6e8f5; display: flex; align-items: center; justify-content: center"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4h7a2 2 0 0 1 2 2v7H7zM5 13h12a2 2 0 0 1 2 2v2H5zM7 17v3M17 17v3"></path></svg></span>
+<div style="flex: 1 1 320px; display: flex; flex-direction: column; gap: 8px">
+<h2 id="as-h" style="margin: 0; font-size: 22px; font-weight: 600">Nile Horizon Tours assigns seats on this trip</h2>
+<p style="margin: 0; font-size: 16px; line-height: 24px; color: #5b5f86">You don't need to pick. Your group of 4 is booked on the trip, and your seats appear on your booking and ticket before departure. We'll message you when they're set.</p>
+</div>
+</section>
+</sc-if>
+
+<sc-if value="{{showMap}}" hint-placeholder-val="{{true}}">
+<section aria-labelledby="mp-h" style="flex: 999 1 560px; min-width: 0; padding: 20px; border-radius: 20px; background: #ffffff; display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; align-items: center">
+<h2 id="mp-h" style="margin: 0; font-size: 20px; font-weight: 600">Bus 2 · 49-seat coach</h2>
+<div role="tablist" aria-label="Seat view" style="display: flex; padding: 4px; border-radius: 999px; background: #f6f3e4">
+<sc-for list="{{views}}" as="v" hint-placeholder-count="2"><button type="button" role="tab" aria-selected="{{v.sel}}" onClick="{{v.pick}}" style="{{v.style}}">{{v.t}}</button></sc-for>
+</div>
+</div>
+<div role="radiogroup" aria-label="Vehicle" style="display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{buses}}" as="b" hint-placeholder-count="3"><button type="button" role="radio" aria-checked="{{b.sel}}" onClick="{{b.pick}}" style="{{b.style}}">{{b.t}} <span style="font-weight: 500; color: #5b5f86">· {{b.d}}</span></button></sc-for>
+</div>
+
+<sc-if value="{{isMapView}}" hint-placeholder-val="{{true}}">
+<div style="overflow-x: auto">
+<div role="group" aria-label="Seat map of Bus 2. Front of the bus is on the left. Rows 1 to 12, seats A and D are by the window." style="min-width: 700px; padding: 16px; border-radius: 12px; background: #f6f3e4; display: flex; gap: 12px; align-items: stretch">
+<div aria-hidden="true" style="width: 52px; flex-shrink: 0; border-radius: 12px 4px 4px 12px; background: #e3dfc9; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; font-size: 12px; font-weight: 600; color: #5b5f86"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 9v6M9 12h6"></path></svg>Front</div>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<sc-for list="{{lanes}}" as="ln" hint-placeholder-count="5">
+<sc-if value="{{ln.isSeat}}" hint-placeholder-val="{{true}}">
+<div style="display: flex; gap: 6px; align-items: center"><span aria-hidden="true" style="width: 14px; font-size: 12px; font-weight: 600; color: #5b5f86">{{ln.l}}</span>
+<sc-for list="{{ln.cells}}" as="c" hint-placeholder-count="12"><button type="button" class="te-seat" aria-label="{{c.aria}}" aria-pressed="{{c.pressed}}" aria-disabled="{{c.ad}}" onClick="{{c.pick}}" style="{{c.style}}">{{c.code}}</button></sc-for>
+</div>
+</sc-if>
+<sc-if value="{{ln.isAisle}}" hint-placeholder-val="{{false}}">
+<div aria-hidden="true" style="display: flex; gap: 6px; align-items: center; height: 22px"><span style="width: 14px"></span>
+<sc-for list="{{ln.cells}}" as="c" hint-placeholder-count="12"><span style="width: 44px; text-align: center; font-size: 11px; font-weight: 600; color: #5b5f86">{{c}}</span></sc-for>
+</div>
+</sc-if>
+</sc-for>
+</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{isListView}}" hint-placeholder-val="{{false}}">
+<div role="list" aria-label="Seats by row" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 8px">
+<sc-for list="{{listRows}}" as="r" hint-placeholder-count="12">
+<div role="listitem" style="padding: 10px 12px; border-radius: 12px; border: 1px solid #e3dfc9; display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 14px; font-weight: 600">Row {{r.n}}</span>
+<div style="display: flex; flex-wrap: wrap; gap: 6px">
+<sc-for list="{{r.seats}}" as="c" hint-placeholder-count="4"><button type="button" aria-pressed="{{c.pressed}}" aria-disabled="{{c.ad}}" onClick="{{c.pick}}" style="{{c.listStyle}}">{{c.code}} · {{c.word}}</button></sc-for>
+</div>
+</div>
+</sc-for>
+</div>
+</sc-if>
+
+<ul aria-label="Seat legend" style="margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 8px 18px">
+<sc-for list="{{legend}}" as="g" hint-placeholder-count="7"><li style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: #262a67"><span aria-hidden="true" style="{{g.s}}"></span>{{g.t}}</li></sc-for>
+</ul>
+</section>
+</sc-if>
+
+<aside aria-labelledby="gp-h" style="flex: 1 1 340px; min-width: 0; padding: 24px; border-radius: 20px; background: #ffffff; box-shadow: 0 10px 30px rgba(38,42,103,0.10); display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px"><h2 id="gp-h" style="margin: 0; font-size: 20px; font-weight: 600">Your group</h2><span aria-live="polite" style="font-size: 14px; font-weight: 600; color: #5b5f86">{{countText}}</span></div>
+<div style="display: flex; flex-direction: column; gap: 8px">
+<sc-for list="{{travelers}}" as="t" hint-placeholder-count="4">
+<div style="padding: 10px 12px; border-radius: 12px; border: 1px solid #e3dfc9; display: flex; align-items: center; gap: 12px">
+<span style="width: 36px; height: 36px; flex-shrink: 0; border-radius: 999px; background: #e6e8f5; overflow: hidden; display: block"><img src="{{t.av}}" alt="" style="width: 100%; height: 100%; border-radius: 999px; object-fit: cover; display: block"></span>
+<span style="flex-grow: 1; display: flex; flex-direction: column"><span style="font-size: 15px; font-weight: 600">{{t.n}}</span><span style="font-size: 13px; color: #5b5f86">{{t.d}}</span></span>
+<span style="{{t.chipStyle}}">{{t.seat}}</span>
+</div>
+</sc-for>
+</div>
+
+<sc-if value="{{showTaken}}" hint-placeholder-val="{{true}}">
+<div role="status" style="padding: 12px 14px; border-radius: 12px; background: #fdf0d5; color: #8a4b00; display: flex; gap: 10px; align-items: flex-start; font-size: 14px; line-height: 20px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 1px"><path d="M12 3l9.5 17h-19zM12 10v4M12 17h.01"></path></svg><span>Seat 5C was just booked by another traveler, so we took it off your choice. Pick one more seat.</span></div>
+</sc-if>
+<sc-if value="{{showPriority}}" hint-placeholder-val="{{true}}">
+<div style="padding: 12px 14px; border-radius: 12px; background: #e6e8f5; display: flex; gap: 10px; align-items: flex-start; font-size: 14px; line-height: 20px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 1px"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"></path></svg><span><strong>Priority seat choice is open for you.</strong> Explorer and VIP travelers choose first; Free-plan travelers choose after the priority window (length set by Trips Enjoy).</span></div>
+</sc-if>
+
+<sc-if value="{{canContinue}}" hint-placeholder-val="{{false}}">
+<a href="WebCheckout.dc.html" style="height: 52px; border-radius: 12px; background: #ff6c2e; color: #262a67; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none">{{ctaText}}<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+</sc-if>
+<sc-if value="{{cantContinue}}" hint-placeholder-val="{{true}}">
+<span role="button" aria-disabled="true" style="height: 52px; border-radius: 12px; background: #e3dfc9; color: #5b5f86; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center">{{ctaText}}</span>
+</sc-if>
+<sc-if value="{{showRestart}}" hint-placeholder-val="{{false}}">
+<button type="button" onClick="{{restart}}" style="height: 48px; border-radius: 12px; border: 0; background: #262a67; color: #f6f3e4; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Choose seats again</button>
+</sc-if>
+<span style="font-size: 13px; line-height: 18px; color: #5b5f86">Seats are held for 15 minutes while you finish booking. If the hold ends, the seats go back on sale and your travelers and programs stay in your cart.</span>
+</aside>
+</div>
+</main>
+
+<footer style="background: #262a67; color: #f6f3e4">
+<div style="max-width: 1200px; margin: 0 auto; box-sizing: border-box; padding: 24px; display: flex; flex-wrap: wrap; gap: 16px 32px; align-items: center; justify-content: space-between; font-size: 13px; color: #b8bad6">
+<img src="../assets/6ea846350ba3adc0e289d47fa0612c3b.svg" alt="Trips Enjoy" style="height: 32px; width: auto">
+<span>© 2026 Trips Enjoy · Cairo, Egypt</span>
+<nav aria-label="Footer" style="display: flex; flex-wrap: wrap; gap: 20px"><a href="WebLegal.dc.html" style="color: #b8bad6">Privacy</a><a href="WebLegal.dc.html" style="color: #b8bad6">Terms</a><a href="WebBecomeProvider.dc.html" style="color: #b8bad6">Become a provider</a><a href="WebHomeAr.dc.html" lang="ar" dir="rtl" style="color: #b8bad6; font-family: Cairo, sans-serif">العربية</a></nav>
+</div>
+</footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1000},"state":{"editor":"enum","options":["picking","assigned","expired","offline"],"default":"picking"}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { sel: ['4A', '4B', '4C'], view: 'map', bus: 2, restarted: false }; }
+  renderVals() {
+    const s = this.state;
+    const mode = this.props.state || 'picking';
+    const expired = mode === 'expired' && !s.restarted;
+    const offline = mode === 'offline';
+    const assigned = mode === 'assigned';
+    const locked = expired || offline;
+    const sel = expired ? [] : s.sel;
+    const need = 4;
+    const reserved = ['1A','1B','1C','1D','2A','2B','3C','3D','5A','5B','5C','6C','6D','7A','7B','7C','8D','9A','9B','10C','10D','11A','11B','11C','11D','12A'];
+    const held = ['2C','6A','9C'];
+    const statusOf = (code) => sel.indexOf(code) >= 0 ? 'mine' : reserved.indexOf(code) >= 0 ? 'reserved' : held.indexOf(code) >= 0 ? 'held' : 'free';
+    const look = {
+      free: 'background: #ffffff; border: 1px solid #7b7fa6; color: #262a67;',
+      mine: 'background: #ff6c2e; border: 2px solid #262a67; color: #262a67;',
+      held: 'background: #fdf0d5; border: 1px dashed #8a4b00; color: #8a4b00;',
+      reserved: 'background: #e3dfc9; border: 1px solid #e3dfc9; color: #5b5f86;',
+      'in': 'background: #e3f3ea; border: 1px solid #1f7a4d; color: #1f7a4d;',
+      out: 'background: #e6e8f5; border: 1px solid #e6e8f5; color: #262a67;',
+      cancelled: 'background: #ffffff; border: 1px dashed #7b7fa6; color: #5b5f86;'
+    };
+    const word = { free: 'available', mine: 'your seat', held: 'held', reserved: 'reserved' };
+    const pick = (code) => () => {
+      if (locked) return;
+      const st = statusOf(code);
+      if (st === 'mine') { this.setState({ sel: s.sel.filter((x) => x !== code) }); return; }
+      if (st !== 'free') return;
+      const next = s.sel.length >= need ? s.sel.slice(1).concat([code]) : s.sel.concat([code]);
+      this.setState({ sel: next });
+    };
+    const seat = (code) => {
+      const st = statusOf(code);
+      const usable = !locked && (st === 'free' || st === 'mine');
+      return { code, word: word[st], pressed: st === 'mine' ? 'true' : 'false', ad: usable ? 'false' : 'true', pick: pick(code),
+        aria: 'Seat ' + code + ', ' + word[st] + (code.slice(-1) === 'A' || code.slice(-1) === 'D' ? ', window' : ''),
+        style: 'width: 44px; height: 40px; box-sizing: border-box; padding: 0; border-radius: 8px; font: inherit; font-size: 12px; font-weight: 700; ' + (usable ? 'cursor: pointer; ' : 'cursor: default; ') + (locked && st === 'free' ? 'opacity: 0.55; ' : '') + look[st],
+        listStyle: 'min-height: 36px; padding: 0 10px; border-radius: 8px; font: inherit; font-size: 13px; font-weight: 600; ' + (usable ? 'cursor: pointer; ' : 'cursor: default; ') + look[st] };
+    };
+    const R = [1,2,3,4,5,6,7,8,9,10,11,12];
+    const lanes = ['A', 'B', '', 'C', 'D'].map((l) => l
+      ? { isSeat: true, isAisle: false, l, cells: R.map((r) => seat(r + l)) }
+      : { isSeat: false, isAisle: true, l: '', cells: R.map((r) => String(r)) });
+    const listRows = R.map((r) => ({ n: String(r), seats: ['A','B','C','D'].map((l) => seat(r + l)) }));
+    const views = [['map', 'Seat map'], ['list', 'List']].map(([id, t]) => {
+      const on = s.view === id;
+      return { t, sel: on ? 'true' : 'false', pick: () => this.setState({ view: id }),
+        style: 'min-height: 40px; padding: 0 16px; border: 0; border-radius: 999px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; ' + (on ? 'background: #262a67; color: #f6f3e4;' : 'background: transparent; color: #262a67;') };
+    });
+    const buses = [[1, 'Bus 1', 'Full'], [2, 'Bus 2', '14 free'], [3, 'Bus 3', '22 free']].map(([id, t, d]) => {
+      const on = s.bus === id;
+      return { t, d, sel: on ? 'true' : 'false', pick: () => { if (id !== 1) this.setState({ bus: id }); },
+        style: 'min-height: 44px; padding: 0 14px; border-radius: 12px; font: inherit; font-size: 14px; font-weight: 600; color: #262a67; cursor: pointer; ' + (on ? 'border: 2px solid #fb8030; background: #fff7f2;' : 'border: 1px solid #7b7fa6; background: #ffffff;') };
+    });
+    const sw = (k) => 'width: 22px; height: 20px; box-sizing: border-box; border-radius: 5px; ' + look[k];
+    const legend = [['free', 'Available'], ['mine', 'Your choice'], ['held', 'Held by someone else'], ['reserved', 'Reserved'], ['in', 'Checked in'], ['out', 'Checked out'], ['cancelled', 'Cancelled, free again']].map(([k, t]) => ({ t, s: sw(k) }));
+    const AVM = { MA: '../assets/6c1d1b4ec8611e67e7f6f2ac68edcb50.svg', KH: '../assets/efa256a2f8e91a9b7c53c0666efed019.svg', YK: '../assets/f265ad96f0a4653d686827dc8cddfe31.svg', SK: '../assets/dfa2765c8a511633e1838be374d89602.svg' };
+    const T = [['MA', 'Mariam Adel', 'Lead traveler'], ['KH', 'Karim Hassan', 'Adult'], ['YK', 'Youssef Karim', 'Child · 8'], ['SK', 'Salma Karim', 'Child · 5']];
+    const travelers = T.map(([i, n, d], k) => {
+      const seatCode = assigned ? 'Assigned later' : (sel[k] || 'No seat yet');
+      const has = !assigned && !!sel[k];
+      return { i, av: AVM[i], n, d, seat: seatCode,
+        chipStyle: 'padding: 4px 10px; border-radius: 999px; font-size: 13px; font-weight: 700; white-space: nowrap; ' + (has ? 'background: #ff6c2e; color: #262a67;' : 'background: #f6f3e4; color: #5b5f86;') };
+    });
+    const done = sel.length === need;
+    const left = need - sel.length;
+    const ok = assigned || (done && !locked);
+    const ctaText = assigned ? 'Continue to review' : ok ? 'Hold seats and continue' : locked ? (offline ? 'Seat choice paused' : 'Hold ended') : 'Choose ' + left + ' more seat' + (left === 1 ? '' : 's');
+    const timerText = expired ? 'Hold ended' : 'Seats held · 14:12';
+    return { steps: this.steps(), lanes, listRows, views, buses, legend, travelers,
+      isMapView: s.view === 'map', isListView: s.view === 'list',
+      isAssigned: assigned, showMap: !assigned, isExpired: expired, isOffline: offline,
+      showTimer: !assigned, timerText,
+      timerAria: expired ? 'Your seat hold has ended' : 'Your seats are held for 14 minutes 12 seconds',
+      timerStyle: 'padding: 8px 14px; border-radius: 999px; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px; font-variant-numeric: tabular-nums; ' + (expired ? 'background: #fde8e6; color: #b42318;' : 'background: #fdf0d5; color: #8a4b00;'),
+      countText: assigned ? '4 travelers' : sel.length + ' of 4 seats chosen',
+      showTaken: mode === 'picking' && !done, showPriority: mode === 'picking',
+      canContinue: ok, cantContinue: !ok, ctaText,
+      showRestart: expired, restart: () => this.setState({ restarted: true, sel: [] }) };
+  }
+  steps() {
+    return ['Travelers & programs', 'Seats', 'Review & pay'].map((t, i) => {
+      const done = i < 1, cur = i === 1;
+      return { t, n: done ? '✓' : String(i + 1), cur: cur ? 'step' : 'false',
+        style: 'display: flex; align-items: center; gap: 8px; padding: 6px 14px 6px 6px; border-radius: 999px; font-size: 14px; font-weight: 600; ' + (cur ? 'background: #262a67; color: #f6f3e4;' : 'background: #ffffff; color: #262a67;'),
+        dot: 'width: 26px; height: 26px; border-radius: 999px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; ' + (cur ? 'background: #ff6c2e; color: #262a67;' : done ? 'background: #e3f3ea; color: #1f7a4d;' : 'background: #e6e8f5; color: #262a67;') };
+    });
+  }
+}
+</script>
+</body>
+</html>
