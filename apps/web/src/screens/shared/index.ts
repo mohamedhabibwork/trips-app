@@ -138,14 +138,14 @@ export const SHARED_SCREENS: readonly ScreenEntry[] = [
     titleKey: "screen.registry.shared.receiptAndInvoiceView.title",
     surface: "shared",
     component: ScrShr12ReceiptAndInvoiceView,
-    loader: async ({ queryClient, orpc, auth }) => {
-      if (typeof window === "undefined" && !auth.accessToken()) return;
+    loader: async ({ queryClient, orpc, auth, params }) => {
+      if (!auth.accessToken() || !params.receiptId) return;
       try {
         await queryClient.ensureQueryData(
-          orpc.accounting.listLedgerEntries.queryOptions({ input: {} }),
+          orpc.payments.getReceipt.queryOptions({ input: { paymentId: params.receiptId } }),
         );
       } catch {
-        // Graceful handling for SSR
+        // A missing or foreign receipt is shown by the screen itself (not found or failed).
       }
     },
   },
