@@ -10,7 +10,7 @@ import { OtpInput } from "@/auth/components/otp-input";
 import { SubmitBanner } from "@/auth/components/submit-banner";
 import { toAuthErrorView } from "@/auth/errors";
 import { homeRouteForRole } from "@/auth/home-route";
-import { Button, Notice, StepLabel, TextButton } from "@/components/kit/controls";
+import { Button, Notice, StepLabel, TextButton, TextLink } from "@/components/kit/controls";
 import { CenteredPanel, Lead, PanelHeading } from "@/components/kit/layout";
 import { useCountdown } from "@/components/kit/use-countdown";
 import { pathFor } from "@/navigation/web-routes";
@@ -30,7 +30,9 @@ export function VerificationByCode() {
   const verifyMutation = useMutation(orpc.auth.verifyOtp.mutationOptions({ onSuccess }));
   const resendMutation = useMutation(orpc.auth.resendOtp.mutationOptions({ onSuccess }));
   const [code, setCode] = useState("");
-  const [target, setTarget] = useState("");
+  // null until the browser has read the destination left by the sign-up or sign-in step.
+  const [storedTarget, setStoredTarget] = useState<string | null>(null);
+  const target = storedTarget ?? "";
   const [submitting, setSubmitting] = useState(false);
   const [verified, setVerified] = useState(false);
   const [error, setError] = useState<AuthErrorView | null>(null);
@@ -39,18 +41,17 @@ export function VerificationByCode() {
 
   useEffect(() => {
     if (typeof sessionStorage === "undefined") return;
-    const saved = sessionStorage.getItem(TARGET_KEY);
-    if (saved) setTarget(saved);
+    setStoredTarget(sessionStorage.getItem(TARGET_KEY) ?? "");
   }, []);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (submitting || code.length !== CODE_LENGTH) return;
+    if (!target || submitting || code.length !== CODE_LENGTH) return;
     setSubmitting(true);
     setError(null);
     try {
       const result = (await verifyMutation.mutateAsync({
-        targetIdentifier: target || "pending-verification",
+        targetIdentifier: target,
         purpose: "registration",
         code,
         surface: "web",
@@ -82,6 +83,26 @@ export function VerificationByCode() {
     } catch (caught) {
       setError(toAuthErrorView(caught, { locale, procedure: "auth/resendOtp" }));
     }
+  }
+
+  if (storedTarget === null) {
+    return (
+      <CenteredPanel width={520}>
+        <PanelHeading>{t("screen.auth.otp.title")}</PanelHeading>
+      </CenteredPanel>
+    );
+  }
+
+  if (!target) {
+    return (
+      <CenteredPanel width={520}>
+        <PanelHeading>{t("screen.auth.otp.title")}</PanelHeading>
+        <Notice tone="info">{t("screen.public.signUp.verification.noDestination")}</Notice>
+        <TextLink to={pathFor("SCR-PUB-02")}>
+          {t("screen.public.signUp.verification.startSignUp")}
+        </TextLink>
+      </CenteredPanel>
+    );
   }
 
   return (

@@ -2944,10 +2944,10 @@ export const ar: AppMessages = {
   "screen.public.deletionGrace.title": "حسابك مجدول للحذف",
   "screen.public.deletionGrace.endsLabel": "تنتهي مهلة الاسترداد",
   "screen.public.deletionGrace.endsValue": "{date}، بعد {days} يومًا من طلبك",
+  "screen.public.deletionGrace.endsDaysOnly": "بعد {days} يومًا من طلبك",
   "screen.public.deletionGrace.body":
     "يؤدي تسجيل الدخول إلى استعادة حسابك وإلغاء طلب الحذف. لا تُلغى الحجوزات القادمة ولا تُسترد إلا عندما يصبح الحذف نهائيًا.",
   "screen.public.deletionGrace.continue": "المتابعة إلى الصفحة الرئيسية",
-  "screen.public.deletionGrace.restoreFailed": "تعذّرت استعادة حسابك. سجّل الدخول لاستعادته.",
   // apps/web/src/screens/public/account-recovery/password-reset.tsx
   "screen.public.passwordReset.step1": "الخطوة 1 من 2: الرمز",
   "screen.public.passwordReset.step2": "الخطوة 2 من 2: كلمة المرور الجديدة",
@@ -3022,11 +3022,11 @@ export const ar: AppMessages = {
   "screen.public.signIn.adminAuthenticator.title": "إعداد تطبيق المصادقة",
   "screen.public.signIn.adminAuthenticator.lead":
     "امسح الرمز في تطبيق المصادقة، ثم أدخل الرمز المكوّن من 6 أرقام الذي يظهر. تُفتح لوحة الإدارة بعد هذه الخطوة.",
-  "screen.public.signIn.adminAuthenticator.qrLabel": "رمز QR للإعداد",
-  "screen.public.signIn.adminAuthenticator.qrCode": "رمز QR",
-  "screen.public.signIn.adminAuthenticator.cannotScan": "لا يمكنك المسح؟",
-  "screen.public.signIn.adminAuthenticator.enterKey": "أدخل هذا المفتاح في تطبيقك:",
-  "screen.public.signIn.adminAuthenticator.keyMissing": "اطلب مفتاح الإعداد من مسؤول المنصة.",
+  "screen.public.signIn.adminAuthenticator.startOver":
+    "ابدأ من صفحة دخول المشرف. ستحصل على مفتاح إعداد جديد صالح لمدة 10 دقائق.",
+  "screen.public.signIn.adminAuthenticator.backToSignIn": "العودة إلى دخول المشرف",
+  "screen.public.signIn.adminAuthenticator.openInApp": "افتح في تطبيق المصادقة",
+  "screen.public.signIn.adminAuthenticator.enterKey": "أضف هذا المفتاح إلى تطبيق المصادقة:",
   "screen.public.signIn.adminAuthenticator.codeLabel": "رمز المصادقة",
   // apps/web/src/screens/public/sign-in/staff-code-set-up.tsx
   "screen.public.signIn.staffCodeSetUp.required": "مطلوب قبل فتح مساحة العمل",
@@ -3038,6 +3038,12 @@ export const ar: AppMessages = {
   "screen.public.signIn.staffCodeSetUp.sms": "رسالة نصية (SMS)",
   "screen.public.signIn.staffCodeSetUp.codeFromApp": "الرمز من تطبيقك",
   "screen.public.signIn.staffCodeSetUp.codeFromSms": "الرمز من الرسالة النصية",
+  "screen.public.signIn.staffCodeSetUp.smsTo": "رسالة نصية (SMS) إلى {phone}",
+  "screen.public.signIn.staffCodeSetUp.enterKey": "أضف هذا المفتاح إلى تطبيق المصادقة:",
+  "screen.public.signIn.staffCodeSetUp.openInApp": "افتح في تطبيق المصادقة",
+  "screen.public.signIn.staffCodeSetUp.startOver":
+    "سجّل الدخول مرة أخرى لتعيين الرمز. الإعداد صالح لمدة 10 دقائق.",
+  "screen.public.signIn.staffCodeSetUp.backToSignIn": "العودة إلى دخول الموظفين",
   "screen.public.signIn.staffCodeSetUp.confirm": "تأكيد",
   // apps/web/src/screens/public/sign-up/organization-sign-up.tsx
   "screen.public.signUp.organization.title": "سجّل مؤسستك",
@@ -3134,6 +3140,9 @@ export const ar: AppMessages = {
     "{count} حرفًا على الأقل. ستسجّل الدخول بها بعد الموافقة.",
   "screen.public.signUp.supplier.stepPhone": "الخطوة 2 من 2: الهاتف",
   // apps/web/src/screens/public/sign-up/verification-by-code.tsx
+  "screen.public.signUp.verification.noDestination":
+    "لا يوجد رمز بانتظارك هنا. تُرسل الرموز عند إنشاء حساب أو تسجيل الدخول.",
+  "screen.public.signUp.verification.startSignUp": "إنشاء حساب",
   "screen.public.signUp.verification.stepEmail": "الخطوة 1 من 2: البريد الإلكتروني",
   "screen.public.signUp.verification.stepPhone": "الخطوة 1 من 2: الهاتف",
   "screen.public.signUp.verification.changeNumber": "تغيير الرقم",

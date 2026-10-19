@@ -3017,11 +3017,10 @@ export const en = {
   "screen.public.deletionGrace.title": "Your account is scheduled for deletion",
   "screen.public.deletionGrace.endsLabel": "Grace period ends",
   "screen.public.deletionGrace.endsValue": "{date}, {days} days after your request",
+  "screen.public.deletionGrace.endsDaysOnly": "{days} days after your request",
   "screen.public.deletionGrace.body":
     "Signing in restores your account and cancels the deletion request. Future bookings are cancelled and refunded only when deletion becomes permanent.",
   "screen.public.deletionGrace.continue": "Continue to app home",
-  "screen.public.deletionGrace.restoreFailed":
-    "Your account could not be restored. Sign in to restore it.",
   // apps/web/src/screens/public/account-recovery/password-reset.tsx
   "screen.public.passwordReset.step1": "Step 1 of 2: code",
   "screen.public.passwordReset.step2": "Step 2 of 2: new password",
@@ -3099,11 +3098,11 @@ export const en = {
   "screen.public.signIn.adminAuthenticator.title": "Set up your authenticator",
   "screen.public.signIn.adminAuthenticator.lead":
     "Scan the code in your authenticator app, then enter the 6-digit code it shows. The admin console opens after this step.",
-  "screen.public.signIn.adminAuthenticator.qrLabel": "Set-up QR code",
-  "screen.public.signIn.adminAuthenticator.qrCode": "QR code",
-  "screen.public.signIn.adminAuthenticator.cannotScan": "Cannot scan?",
-  "screen.public.signIn.adminAuthenticator.enterKey": "Enter this key in your app:",
-  "screen.public.signIn.adminAuthenticator.keyMissing": "Ask a platform admin for your set-up key.",
+  "screen.public.signIn.adminAuthenticator.startOver":
+    "Start from the admin sign-in. It gives you a fresh set-up key, valid for 10 minutes.",
+  "screen.public.signIn.adminAuthenticator.backToSignIn": "Back to admin sign-in",
+  "screen.public.signIn.adminAuthenticator.openInApp": "Open in your authenticator app",
+  "screen.public.signIn.adminAuthenticator.enterKey": "Add this key to your authenticator app:",
   "screen.public.signIn.adminAuthenticator.codeLabel": "Authenticator code",
   // apps/web/src/screens/public/sign-in/staff-code-set-up.tsx
   "screen.public.signIn.staffCodeSetUp.required": "Required before the workspace opens",
@@ -3115,6 +3114,12 @@ export const en = {
   "screen.public.signIn.staffCodeSetUp.sms": "Text message (SMS)",
   "screen.public.signIn.staffCodeSetUp.codeFromApp": "Code from your app",
   "screen.public.signIn.staffCodeSetUp.codeFromSms": "Code from the text message",
+  "screen.public.signIn.staffCodeSetUp.smsTo": "Text message (SMS) to {phone}",
+  "screen.public.signIn.staffCodeSetUp.enterKey": "Add this key to your authenticator app:",
+  "screen.public.signIn.staffCodeSetUp.openInApp": "Open in your authenticator app",
+  "screen.public.signIn.staffCodeSetUp.startOver":
+    "Sign in again to set your code. The set-up is valid for 10 minutes.",
+  "screen.public.signIn.staffCodeSetUp.backToSignIn": "Back to staff sign-in",
   "screen.public.signIn.staffCodeSetUp.confirm": "Confirm",
   // apps/web/src/screens/public/sign-up/organization-sign-up.tsx
   "screen.public.signUp.organization.title": "Register your organization",
@@ -3215,6 +3220,9 @@ export const en = {
     "At least {count} characters. You sign in with it after approval.",
   "screen.public.signUp.supplier.stepPhone": "Step 2 of 2: phone",
   // apps/web/src/screens/public/sign-up/verification-by-code.tsx
+  "screen.public.signUp.verification.noDestination":
+    "There is no code waiting here. Codes are sent when you create an account or sign in.",
+  "screen.public.signUp.verification.startSignUp": "Create an account",
   "screen.public.signUp.verification.stepEmail": "Step 1 of 2: email",
   "screen.public.signUp.verification.stepPhone": "Step 1 of 2: phone",
   "screen.public.signUp.verification.changeNumber": "Change number",

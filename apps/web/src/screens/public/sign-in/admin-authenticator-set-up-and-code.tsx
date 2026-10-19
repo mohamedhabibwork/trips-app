@@ -1,70 +1,72 @@
-// SCR-PUB-10 Admin authenticator set-up (`/admin/sign-in/authenticator`): scan, then enter the
-// 6-digit code. The enrollment or challenge token is left in session storage by the sign-in step.
+// SCR-PUB-10 Admin authenticator set-up (`/admin/sign-in/authenticator`): add the key to an
+// authenticator app, then enter the 6-digit code. The set-up comes from the admin sign-in step
+// (SCR-PUB-09) in memory; without it the page sends the admin back to sign in.
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
-import type { AuthErrorView, SessionTokenPayload } from "@trips-app/auth";
+import type { AuthErrorView } from "@trips-app/auth";
 import { useState, type FormEvent } from "react";
 
+import { getAdminEnrollment, isOtpAuthUri, setAdminEnrollment } from "@/auth/admin-enrollment";
 import { useAuth } from "@/auth/auth-context";
 import { SubmitBanner } from "@/auth/components/submit-banner";
 import { toAuthErrorView } from "@/auth/errors";
-import { Button, StatusPill, TextField } from "@/components/kit/controls";
+import {
+  Button,
+  Notice,
+  StatusPill,
+  TextField,
+  TextLink,
+  linkClass,
+} from "@/components/kit/controls";
 import { CenteredPanel, Lead, PanelHeading } from "@/components/kit/layout";
+import { pathFor } from "@/navigation/web-routes";
 import { orpc } from "@/utils/orpc";
 
 const CODE_LENGTH = 6;
-const ENROLLMENT_TOKEN_KEY = "te:adminEnrollmentToken";
-const CHALLENGE_TOKEN_KEY = "te:adminChallengeToken";
-const SETUP_KEY_KEY = "te:adminTotpSetupKey";
 
-function readSession(key: string): string | null {
-  return typeof sessionStorage === "undefined" ? null : sessionStorage.getItem(key);
-}
-
-/** Second factor for admins. Set-up is required once; later sign-ins need the code only. */
+/** First admin sign-in: enrol the authenticator, then the code opens the console. */
 export function AdminAuthenticatorSetUpAndCode() {
   const { t, locale, signInWithSession } = useAuth();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const onSuccess = () => queryClient.invalidateQueries({ queryKey: orpc.auth.key() });
-  const enrollMutation = useMutation(orpc.auth.adminEnrollTotp.mutationOptions({ onSuccess }));
-  const verifyMutation = useMutation(orpc.auth.adminVerifyTotp.mutationOptions({ onSuccess }));
+  const enrollMutation = useMutation(
+    orpc.auth.adminEnrollTotp.mutationOptions({
+      onSuccess: () => queryClient.invalidateQueries({ queryKey: orpc.auth.key() }),
+    }),
+  );
+  const [enrollment] = useState(getAdminEnrollment);
   const [code, setCode] = useState("");
-  const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<AuthErrorView | null>(null);
-  const setupKey = readSession(SETUP_KEY_KEY);
+  const submitting = enrollMutation.isPending;
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (submitting || code.length !== CODE_LENGTH) return;
-    setSubmitting(true);
+    if (!enrollment || submitting || code.length !== CODE_LENGTH) return;
     setError(null);
     try {
-      const enrollmentToken = readSession(ENROLLMENT_TOKEN_KEY);
-      const result = (
-        enrollmentToken
-          ? await enrollMutation.mutateAsync({ enrollmentToken, totpCode: code })
-          : await verifyMutation.mutateAsync({
-              challengeToken: readSession(CHALLENGE_TOKEN_KEY) ?? "admin-challenge-token",
-              totpCode: code,
-            })
-      ) as { session?: SessionTokenPayload };
-      if (result.session) {
-        signInWithSession(result.session);
-        await navigate({ to: "/admin" });
-      }
+      const result = await enrollMutation.mutateAsync({
+        enrollmentToken: enrollment.enrollmentToken,
+        totpCode: code,
+      });
+      setAdminEnrollment(null);
+      signInWithSession(result.session);
+      await navigate({ to: "/admin" });
     } catch (caught) {
-      setError(
-        toAuthErrorView(caught, {
-          locale,
-          procedure: readSession(ENROLLMENT_TOKEN_KEY)
-            ? "auth/adminEnrollTotp"
-            : "auth/adminVerifyTotp",
-        }),
-      );
-    } finally {
-      setSubmitting(false);
+      setCode("");
+      setError(toAuthErrorView(caught, { locale, procedure: "auth/adminEnrollTotp" }));
     }
+  }
+
+  if (!enrollment) {
+    return (
+      <CenteredPanel width={620}>
+        <PanelHeading>{t("screen.public.signIn.adminAuthenticator.title")}</PanelHeading>
+        <Notice tone="info">{t("screen.public.signIn.adminAuthenticator.startOver")}</Notice>
+        <TextLink to={pathFor("SCR-PUB-09")}>
+          {t("screen.public.signIn.adminAuthenticator.backToSignIn")}
+        </TextLink>
+      </CenteredPanel>
+    );
   }
 
   return (
@@ -74,31 +76,18 @@ export function AdminAuthenticatorSetUpAndCode() {
       </StatusPill>
       <PanelHeading>{t("screen.public.signIn.adminAuthenticator.title")}</PanelHeading>
       <Lead>{t("screen.public.signIn.adminAuthenticator.lead")}</Lead>
-      <div className="flex flex-wrap items-center gap-6">
-        <div
-          role="img"
-          aria-label={t("screen.public.signIn.adminAuthenticator.qrLabel")}
-          className="flex size-[168px] flex-none items-center justify-center rounded-[var(--te-radius-md)] border-[1.5px] border-[var(--te-hairline)] bg-[var(--te-surface)] p-3 text-center text-[13px] text-[var(--te-ink-muted)]"
-        >
-          {t("screen.public.signIn.adminAuthenticator.qrCode")}
-        </div>
-        <div className="flex min-w-0 flex-1 flex-col gap-1.5 text-sm leading-5">
-          <span className="font-semibold">
-            {t("screen.public.signIn.adminAuthenticator.cannotScan")}
-          </span>
-          <span className="text-[var(--te-ink-muted)]">
-            {t("screen.public.signIn.adminAuthenticator.enterKey")}
-          </span>
-          {setupKey ? (
-            <span dir="ltr" className="font-mono text-base break-all">
-              {setupKey}
-            </span>
-          ) : (
-            <span className="text-[var(--te-ink-muted)]">
-              {t("screen.public.signIn.adminAuthenticator.keyMissing")}
-            </span>
-          )}
-        </div>
+      <div className="flex flex-col gap-1.5 rounded-[var(--te-radius-md)] border-[1.5px] border-[var(--te-hairline)] bg-[var(--te-surface)] p-4 text-sm leading-5">
+        <span className="font-semibold">
+          {t("screen.public.signIn.adminAuthenticator.enterKey")}
+        </span>
+        <span dir="ltr" className="font-mono text-base break-all select-all">
+          {enrollment.secret}
+        </span>
+        {isOtpAuthUri(enrollment.otpauthUri) ? (
+          <a href={enrollment.otpauthUri} className={linkClass()}>
+            {t("screen.public.signIn.adminAuthenticator.openInApp")}
+          </a>
+        ) : null}
       </div>
       <form className="flex flex-col gap-5" onSubmit={(event) => void handleSubmit(event)}>
         <TextField
