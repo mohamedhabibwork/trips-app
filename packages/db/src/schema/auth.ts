@@ -24,6 +24,7 @@ import {
   timestamp,
   uniqueIndex,
   uuid,
+  varchar,
 } from "drizzle-orm/pg-core";
 
 export const accounts = pgTable(
@@ -149,11 +150,11 @@ export const employeeMemberships = pgTable(
       .references(() => organizations.id, { onDelete: "cascade" })
       .notNull(),
     accountId: uuid("account_id").references(() => accounts.id, { onDelete: "set null" }),
-    invitedEmail: text("invited_email").notNull(),
-    invitedPhone: text("invited_phone"),
+    invitedEmail: varchar("invited_email", { length: 255 }).notNull(),
+    invitedPhone: varchar("invited_phone", { length: 20 }),
     roleTitle: text("role_title").default("Employee").notNull(),
     permissions: jsonb("permissions").$type<OrgPermissionMatrix>().notNull(),
-    inviteTokenHash: text("invite_token_hash").notNull(),
+    inviteTokenHash: varchar("invite_token_hash", { length: 255 }).notNull(),
     inviteExpiresAt: timestamp("invite_expires_at", { withTimezone: true }).notNull(),
     status: text("status")
       .$type<"invited" | "active" | "suspended" | "revoked">()

@@ -1,17 +1,13 @@
 import { ADMIN_SUB_ROLE_CATALOG, ROLE_AUTH_DEFAULTS } from "./roles-and-plans";
 import { DEFAULT_AUTH_SETTINGS } from "./settings";
 import type {
-  AccountRoleStatus,
-  AccountStatus,
   AdminSubRole,
   AuthSettingsData,
   OrgPermissionArea,
   OrgPermissionLevel,
   OrgPermissionMatrix,
   OtpAttemptState,
-  OtpChannel,
   OtpEvaluationResult,
-  OtpPurpose,
   RegistrationValidationInput,
   SignInLockoutEvaluation,
   UserRole,
@@ -30,31 +26,9 @@ export type {
   ValidationOutcome,
 } from "./types";
 
-export const ACCOUNT_STATUSES = [
-  "pending_verification",
-  "active",
-  "suspended",
-  "deletion_requested",
-  "deleted",
-] as const satisfies readonly AccountStatus[];
+import { ACCOUNT_ROLE_STATUSES, ACCOUNT_STATUSES, OTP_CHANNELS, OTP_PURPOSES } from "./types";
 
-export const ACCOUNT_ROLE_STATUSES = [
-  "pending_approval",
-  "active",
-  "paused",
-  "suspended",
-  "revoked",
-] as const satisfies readonly AccountRoleStatus[];
-
-export const OTP_CHANNELS = ["sms", "email"] as const satisfies readonly OtpChannel[];
-
-export const OTP_PURPOSES = [
-  "registration",
-  "sign_in",
-  "password_reset",
-  "contact_change",
-  "staff_2fa",
-] as const satisfies readonly OtpPurpose[];
+export { ACCOUNT_STATUSES, ACCOUNT_ROLE_STATUSES, OTP_CHANNELS, OTP_PURPOSES };
 
 const COMMON_BREACHED_PASSWORDS = new Set([
   "password123456",

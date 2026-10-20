@@ -4,7 +4,6 @@ import type {
   DriverApplicationSubmission,
   OrganizationApplicationSubmission,
   PhotographerApplicationSubmission,
-  SupplierApplicationType,
 } from "./types";
 
 export type {
@@ -16,21 +15,9 @@ export type {
   SupplierApplicationType,
 } from "./types";
 
-export const APPLICATION_STATES = [
-  "Submitted",
-  "Pending Review",
-  "Changes Requested",
-  "Approved",
-  "Rejected",
-  "Appealed",
-  "Closed",
-] as const satisfies readonly ApplicationState[];
+import { APPLICATION_STATES, SUPPLIER_APPLICATION_TYPES } from "./types";
 
-export const SUPPLIER_APPLICATION_TYPES = [
-  "organization",
-  "platform_driver",
-  "platform_photographer",
-] as const satisfies readonly SupplierApplicationType[];
+export { APPLICATION_STATES, SUPPLIER_APPLICATION_TYPES };
 
 export const ALLOWED_APPLICATION_TRANSITIONS: Record<
   ApplicationState,

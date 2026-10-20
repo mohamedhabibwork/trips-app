@@ -34,6 +34,8 @@ export type DatabaseConfig = {
 };
 
 export type Database = ReturnType<typeof createDb>;
+export type TransactionClient = Parameters<Parameters<Database["transaction"]>[0]>[0];
+export type ServiceDatabase = Database | TransactionClient;
 
 export interface LookupSeedSummary {
   lookupTypesSeeded: number;

@@ -1,18 +1,10 @@
 import type {
-  AdminSubRole,
   AdminSubRoleMetadata,
-  ClientSurface,
-  OrgPermissionArea,
-  OrgPermissionLevel,
   OrgPermissionMatrix,
   PermissionCatalogItem,
   PlanCatalogEntry,
-  PlanScope,
-  PrimarySignInMethod,
   RoleAuthPolicy,
-  SecondFactorRule,
   UserRole,
-  VerificationChannelRule,
 } from "./types";
 
 export type {
@@ -34,71 +26,29 @@ export type {
   VerificationChannelRule,
 } from "./types";
 
-export const USER_ROLES = [
-  "traveler",
-  "parent",
-  "platform_driver",
-  "org_driver",
-  "platform_photographer",
-  "org_photographer",
-  "organization_owner",
-  "organization_employee",
-  "moderator",
-  "admin",
-] as const satisfies readonly UserRole[];
+import {
+  ADMIN_SUB_ROLES,
+  CLIENT_SURFACES,
+  ORG_PERMISSION_AREAS,
+  ORG_PERMISSION_LEVELS,
+  PLAN_SCOPES,
+  PRIMARY_SIGN_IN_METHODS,
+  SECOND_FACTOR_RULES,
+  USER_ROLES,
+  VERIFICATION_CHANNEL_RULES,
+} from "./types";
 
-export const ADMIN_SUB_ROLES = [
-  "super_admin",
-  "operations",
-  "finance",
-] as const satisfies readonly AdminSubRole[];
-
-export const CLIENT_SURFACES = ["web", "mobile", "pwa"] as const satisfies readonly ClientSurface[];
-
-export const VERIFICATION_CHANNEL_RULES = [
-  "either_email_or_phone",
-  "both_email_and_phone",
-  "phone_only",
-  "invite_link_and_email",
-  "invite_link_and_phone",
-] as const satisfies readonly VerificationChannelRule[];
-
-export const PRIMARY_SIGN_IN_METHODS = [
-  "otp",
-  "password",
-  "staff_code",
-] as const satisfies readonly PrimarySignInMethod[];
-
-export const SECOND_FACTOR_RULES = [
-  "none",
-  "totp",
-  "sms_or_totp",
-  "staff_code",
-] as const satisfies readonly SecondFactorRule[];
-
-export const PLAN_SCOPES = [
-  "account",
-  "organization",
-  "none",
-] as const satisfies readonly PlanScope[];
-
-export const ORG_PERMISSION_AREAS = [
-  "trips",
-  "bookings",
-  "accounting",
-  "coupons",
-  "employees",
-  "fleet",
-  "subscription",
-  "tracking",
-  "settings",
-] as const satisfies readonly OrgPermissionArea[];
-
-export const ORG_PERMISSION_LEVELS = [
-  "none",
-  "view",
-  "manage",
-] as const satisfies readonly OrgPermissionLevel[];
+export {
+  USER_ROLES,
+  ADMIN_SUB_ROLES,
+  CLIENT_SURFACES,
+  VERIFICATION_CHANNEL_RULES,
+  PRIMARY_SIGN_IN_METHODS,
+  SECOND_FACTOR_RULES,
+  PLAN_SCOPES,
+  ORG_PERMISSION_AREAS,
+  ORG_PERMISSION_LEVELS,
+};
 
 export const DEFAULT_PERMISSION_CATALOG: readonly PermissionCatalogItem[] = [
   {

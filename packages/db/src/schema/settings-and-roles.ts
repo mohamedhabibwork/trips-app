@@ -22,7 +22,16 @@ import type {
   UserRole,
   VerificationChannelRule,
 } from "@trips-app/domain";
-import { boolean, integer, jsonb, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
+import {
+  boolean,
+  integer,
+  jsonb,
+  pgTable,
+  text,
+  timestamp,
+  uuid,
+  varchar,
+} from "drizzle-orm/pg-core";
 
 import { accounts, organizations } from "./auth";
 
@@ -144,22 +153,22 @@ export const organizationSettings = pgTable("organization_settings", {
   childTrackingEnabledByDefault: boolean("child_tracking_enabled_by_default")
     .default(false)
     .notNull(),
-  operationsContactPhone: text("operations_contact_phone"),
-  operationsContactEmail: text("operations_contact_email"),
-  safetyLeadName: text("safety_lead_name"),
-  safetyHotlinePhone: text("safety_hotline_phone"),
-  billingContactName: text("billing_contact_name"),
-  billingContactEmail: text("billing_contact_email"),
-  billingContactPhone: text("billing_contact_phone"),
-  billingAddress: text("billing_address"),
+  operationsContactPhone: varchar("operations_contact_phone", { length: 20 }),
+  operationsContactEmail: varchar("operations_contact_email", { length: 50 }),
+  safetyLeadName: varchar("safety_lead_name", { length: 100 }),
+  safetyHotlinePhone: varchar("safety_hotline_phone", { length: 20 }),
+  billingContactName: varchar("billing_contact_name", { length: 100 }),
+  billingContactEmail: varchar("billing_contact_email", { length: 50 }),
+  billingContactPhone: varchar("billing_contact_phone", { length: 20 }),
+  billingAddress: varchar("billing_address", { length: 300 }),
   invoiceLanguage: text("invoice_language").$type<SupportedLocale>().default("ar").notNull(),
-  taxNumber: text("tax_number"),
+  taxNumber: varchar("tax_number", { length: 50 }),
   b2bInvoicingEnabled: boolean("b2b_invoicing_enabled").default(true).notNull(),
   customBrandingEnabled: boolean("custom_branding_enabled").default(false).notNull(),
-  logoUrl: text("logo_url"),
-  primaryColorHex: text("primary_color_hex"),
-  secondaryColorHex: text("secondary_color_hex"),
-  crmProvider: text("crm_provider"),
+  logoUrl: varchar("logo_url", { length: 255 }),
+  primaryColorHex: varchar("primary_color_hex", { length: 7 }),
+  secondaryColorHex: varchar("secondary_color_hex", { length: 7 }),
+  crmProvider: varchar("crm_provider", { length: 100 }),
   webhookEndpoints: jsonb("webhook_endpoints")
     .$type<readonly OrganizationWebhookEndpoint[]>()
     .default([])

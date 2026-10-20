@@ -3,6 +3,88 @@
 import { createSchemaFactory } from "drizzle-orm/zod";
 import { z } from "zod/v4";
 
+import {
+  ACCOUNT_ROLE_STATUSES,
+  ACCOUNT_STATUSES,
+  ADMIN_SUB_ROLES,
+  ALBUM_SHARED_LINK_STATUSES,
+  APPLICATION_DOCUMENT_VERIFIED_STATUSES,
+  APPLICATION_STATES,
+  AVAILABILITY_BLOCK_TYPES,
+  BOOKING_STATUSES,
+  CHECK_IN_METHODS,
+  CHECK_IN_STATUSES,
+  CLIENT_SURFACES,
+  CONSENT_TYPES,
+  COUPON_DISCOUNT_TYPES,
+  COUPON_SCOPES,
+  COUPON_STATUSES,
+  CURRENCY_CODES,
+  DISPUTE_RESOLUTION_STATUSES,
+  DRIVER_LAB_TEST_KINDS,
+  DRIVER_LAB_TEST_STATUSES,
+  DRIVER_PLAN_TIERS,
+  DRIVER_PROFILE_SCOPES,
+  DRIVER_PROFILE_STATUSES,
+  EMPLOYEE_MEMBERSHIP_STATUSES,
+  LEDGER_ENTRY_DIRECTIONS,
+  LEDGER_ENTRY_STATUSES,
+  LEDGER_ENTRY_TYPES,
+  MEDIA_STORAGE_DISKS,
+  MODERATOR_ASSIGNMENT_STATUSES,
+  NEGOTIATION_OFFER_PARTIES,
+  NEGOTIATION_STATUSES,
+  NOTIFICATION_CATEGORIES,
+  NOTIFICATION_DELIVERY_CHANNELS,
+  ORGANIZATION_PLAN_TIERS,
+  ORGANIZATION_STATUSES,
+  ORG_PERMISSION_AREAS,
+  ORG_PERMISSION_LEVELS,
+  OTP_CHANNELS,
+  OTP_DELIVERY_STATUSES,
+  OTP_PURPOSES,
+  PARENT_CHILD_LINK_STATUSES,
+  PAYMENT_GATEWAY_CODES,
+  PAYMENT_PURPOSES,
+  PAYMENT_TRANSACTION_STATUSES,
+  PAYOUT_METHODS,
+  PHOTOGRAPHER_PLAN_TIERS,
+  PHOTOGRAPHER_PROFILE_STATUSES,
+  PLAN_CATALOG_STATUSES,
+  PLAN_SCOPES,
+  PLATFORM_SUPPLIER_ROLES,
+  PRIMARY_SIGN_IN_METHODS,
+  PRIVACY_REQUEST_STATUSES,
+  PRIVACY_REQUEST_TYPES,
+  SEAT_INVENTORY_STATUSES,
+  SECOND_FACTOR_RULES,
+  SUBSCRIPTION_BILLING_CYCLES,
+  SUBSCRIPTION_RECORD_STATUSES,
+  SUBSCRIPTION_ROLES,
+  SUBSCRIPTION_SCOPES,
+  SUPPLIER_APPLICATION_TYPES,
+  SUPPLIER_ROLES,
+  SUPPORTED_COUNTRY_CODES,
+  SUPPORTED_LOCALES,
+  TRACKING_ALERT_SEVERITIES,
+  TRACKING_EVENT_TYPES,
+  TRAVELER_PLAN_CODES,
+  TRIP_PHOTO_ALBUM_AUDIENCES,
+  TRIP_PHOTO_ALBUM_STATUSES,
+  TRIP_PROGRAM_STATUSES,
+  TRIP_PUBLISH_MODES,
+  TRIP_SEAT_ASSIGNMENT_MODES,
+  TRIP_STAFF_SOURCES,
+  TRIP_STATES,
+  UPLOADED_FILE_STATUSES,
+  USER_ROLES,
+  VEHICLE_REGISTRATION_STATUSES,
+  VEHICLE_STATUSES,
+  VEHICLE_TYPE_SCOPES,
+  VEHICLE_TYPE_STATUSES,
+  VERIFICATION_CHANNEL_RULES,
+} from "@trips-app/domain";
+
 import * as schema from "./schema";
 
 // Backend schemas import from "@trips-app/db/zod" only. That subpath exposes the factory and the table
@@ -12,6 +94,11 @@ export { schema };
 export const { createSelectSchema, createInsertSchema, createUpdateSchema } = createSchemaFactory({
   zodInstance: z,
   coerce: undefined,
+});
+
+export const lookupLocalizedTextSchema = z.object({
+  en: z.string(),
+  ar: z.string(),
 });
 
 export const seatLayoutCellSchema = z.object({
@@ -48,47 +135,435 @@ export const tripWizardStepsSchema = z.object({
   publish: z.boolean(),
 });
 
-// Privacy Requests
+export const bookingPassengerSchema = z.object({
+  id: z.string().trim().min(1),
+  fullName: z.string().trim().min(2).max(200),
+  isChild: z.boolean(),
+  age: z.number().int().min(0).max(120).nullable().optional(),
+  seatLabel: z.string().trim().min(1).max(16).nullable().optional(),
+  guardianPhoneE164: z.string().trim().min(7).max(24).nullable().optional(),
+});
+
+export const trackingCoordinatesSchema = z.object({
+  latitude: z.number().min(-90).max(90),
+  longitude: z.number().min(-180).max(180),
+  speedKmh: z.number().min(0).max(300).nullable().optional(),
+  headingDeg: z.number().min(0).max(360).nullable().optional(),
+});
+
+// ============================================================================
+// 1. Auth Schemas (12 tables)
+// ============================================================================
+
+// accounts
+export const selectAccountsSchema = createSelectSchema(schema.accounts);
+export const insertAccountsSchema = createInsertSchema(schema.accounts, {
+  preferredSignInMethod: () => z.enum(PRIMARY_SIGN_IN_METHODS),
+  staffSecondFactorMethod: () => z.enum(["sms", "totp"]).nullable().optional(),
+  countryCode: () => z.enum(SUPPORTED_COUNTRY_CODES),
+  preferredLanguage: () => z.enum(SUPPORTED_LOCALES),
+  travelerPlanTier: () => z.enum(TRAVELER_PLAN_CODES),
+  status: () => z.enum(ACCOUNT_STATUSES),
+  knownDeviceFingerprints: () => z.array(z.string()),
+});
+export const updateAccountsSchema = createUpdateSchema(schema.accounts, {
+  preferredSignInMethod: () => z.enum(PRIMARY_SIGN_IN_METHODS),
+  staffSecondFactorMethod: () => z.enum(["sms", "totp"]).nullable().optional(),
+  countryCode: () => z.enum(SUPPORTED_COUNTRY_CODES),
+  preferredLanguage: () => z.enum(SUPPORTED_LOCALES),
+  travelerPlanTier: () => z.enum(TRAVELER_PLAN_CODES),
+  status: () => z.enum(ACCOUNT_STATUSES),
+  knownDeviceFingerprints: () => z.array(z.string()),
+});
+export const selectAccountSchema = selectAccountsSchema;
+export const insertAccountSchema = insertAccountsSchema;
+export const updateAccountSchema = updateAccountsSchema;
+
+// organizations
+export const selectOrganizationsSchema = createSelectSchema(schema.organizations);
+export const insertOrganizationsSchema = createInsertSchema(schema.organizations, {
+  countryCode: () => z.enum(SUPPORTED_COUNTRY_CODES),
+  payoutMethod: () => z.enum(PAYOUT_METHODS),
+  planTier: () => z.enum(ORGANIZATION_PLAN_TIERS),
+  status: () => z.enum(ORGANIZATION_STATUSES),
+});
+export const updateOrganizationsSchema = createUpdateSchema(schema.organizations, {
+  countryCode: () => z.enum(SUPPORTED_COUNTRY_CODES),
+  payoutMethod: () => z.enum(PAYOUT_METHODS),
+  planTier: () => z.enum(ORGANIZATION_PLAN_TIERS),
+  status: () => z.enum(ORGANIZATION_STATUSES),
+});
+export const selectOrganizationSchema = selectOrganizationsSchema;
+export const insertOrganizationSchema = insertOrganizationsSchema;
+export const updateOrganizationSchema = updateOrganizationsSchema;
+
+// accountRoles
+export const selectAccountRolesSchema = createSelectSchema(schema.accountRoles);
+export const insertAccountRolesSchema = createInsertSchema(schema.accountRoles, {
+  role: () => z.enum(USER_ROLES),
+  adminSubRole: () => z.enum(ADMIN_SUB_ROLES).nullable().optional(),
+  status: () => z.enum(ACCOUNT_ROLE_STATUSES),
+});
+export const updateAccountRolesSchema = createUpdateSchema(schema.accountRoles, {
+  role: () => z.enum(USER_ROLES),
+  adminSubRole: () => z.enum(ADMIN_SUB_ROLES).nullable().optional(),
+  status: () => z.enum(ACCOUNT_ROLE_STATUSES),
+});
+export const selectAccountRoleSchema = selectAccountRolesSchema;
+export const insertAccountRoleSchema = insertAccountRolesSchema;
+export const updateAccountRoleSchema = updateAccountRolesSchema;
+
+// employeeMemberships
+export const selectEmployeeMembershipsSchema = createSelectSchema(schema.employeeMemberships);
+export const insertEmployeeMembershipsSchema = createInsertSchema(schema.employeeMemberships, {
+  permissions: () => z.record(z.enum(ORG_PERMISSION_AREAS), z.enum(ORG_PERMISSION_LEVELS)),
+  status: () => z.enum(EMPLOYEE_MEMBERSHIP_STATUSES),
+});
+export const updateEmployeeMembershipsSchema = createUpdateSchema(schema.employeeMemberships, {
+  permissions: () => z.record(z.enum(ORG_PERMISSION_AREAS), z.enum(ORG_PERMISSION_LEVELS)),
+  status: () => z.enum(EMPLOYEE_MEMBERSHIP_STATUSES),
+});
+export const selectEmployeeMembershipSchema = selectEmployeeMembershipsSchema;
+export const insertEmployeeMembershipSchema = insertEmployeeMembershipsSchema;
+export const updateEmployeeMembershipSchema = updateEmployeeMembershipsSchema;
+
+// moderatorAssignments
+export const selectModeratorAssignmentsSchema = createSelectSchema(schema.moderatorAssignments);
+export const insertModeratorAssignmentsSchema = createInsertSchema(schema.moderatorAssignments, {
+  status: () => z.enum(MODERATOR_ASSIGNMENT_STATUSES),
+});
+export const updateModeratorAssignmentsSchema = createUpdateSchema(schema.moderatorAssignments, {
+  status: () => z.enum(MODERATOR_ASSIGNMENT_STATUSES),
+});
+export const selectModeratorAssignmentSchema = selectModeratorAssignmentsSchema;
+export const insertModeratorAssignmentSchema = insertModeratorAssignmentsSchema;
+export const updateModeratorAssignmentSchema = updateModeratorAssignmentsSchema;
+
+// adminInvites
+export const selectAdminInvitesSchema = createSelectSchema(schema.adminInvites);
+export const insertAdminInvitesSchema = createInsertSchema(schema.adminInvites, {
+  subRole: () => z.enum(ADMIN_SUB_ROLES),
+});
+export const updateAdminInvitesSchema = createUpdateSchema(schema.adminInvites, {
+  subRole: () => z.enum(ADMIN_SUB_ROLES),
+});
+export const selectAdminInviteSchema = selectAdminInvitesSchema;
+export const insertAdminInviteSchema = insertAdminInvitesSchema;
+export const updateAdminInviteSchema = updateAdminInvitesSchema;
+
+// otpVerifications
+export const selectOtpVerificationsSchema = createSelectSchema(schema.otpVerifications);
+export const insertOtpVerificationsSchema = createInsertSchema(schema.otpVerifications, {
+  channel: () => z.enum(OTP_CHANNELS),
+  purpose: () => z.enum(OTP_PURPOSES),
+  deliveryStatus: () => z.enum(OTP_DELIVERY_STATUSES),
+});
+export const updateOtpVerificationsSchema = createUpdateSchema(schema.otpVerifications, {
+  channel: () => z.enum(OTP_CHANNELS),
+  purpose: () => z.enum(OTP_PURPOSES),
+  deliveryStatus: () => z.enum(OTP_DELIVERY_STATUSES),
+});
+export const selectOtpVerificationSchema = selectOtpVerificationsSchema;
+export const insertOtpVerificationSchema = insertOtpVerificationsSchema;
+export const updateOtpVerificationSchema = updateOtpVerificationsSchema;
+
+// authSessions
+export const selectAuthSessionsSchema = createSelectSchema(schema.authSessions);
+export const insertAuthSessionsSchema = createInsertSchema(schema.authSessions, {
+  activeRole: () => z.enum(USER_ROLES),
+  adminSubRole: () => z.enum(ADMIN_SUB_ROLES).nullable().optional(),
+  surface: () => z.enum(CLIENT_SURFACES),
+});
+export const updateAuthSessionsSchema = createUpdateSchema(schema.authSessions, {
+  activeRole: () => z.enum(USER_ROLES),
+  adminSubRole: () => z.enum(ADMIN_SUB_ROLES).nullable().optional(),
+  surface: () => z.enum(CLIENT_SURFACES),
+});
+export const selectAuthSessionSchema = selectAuthSessionsSchema;
+export const insertAuthSessionSchema = insertAuthSessionsSchema;
+export const updateAuthSessionSchema = updateAuthSessionsSchema;
+
+// notificationPreferences
+export const selectNotificationPreferencesSchema = createSelectSchema(
+  schema.notificationPreferences,
+);
+export const insertNotificationPreferencesSchema = createInsertSchema(
+  schema.notificationPreferences,
+);
+export const updateNotificationPreferencesSchema = createUpdateSchema(
+  schema.notificationPreferences,
+);
+export const selectNotificationPreferenceSchema = selectNotificationPreferencesSchema;
+export const insertNotificationPreferenceSchema = insertNotificationPreferencesSchema;
+export const updateNotificationPreferenceSchema = updateNotificationPreferencesSchema;
+
+// auditLogs
+export const selectAuditLogsSchema = createSelectSchema(schema.auditLogs);
+export const insertAuditLogsSchema = createInsertSchema(schema.auditLogs, {
+  actorRole: () => z.union([z.enum(USER_ROLES), z.literal("system")]),
+  beforeState: () => z.record(z.string(), z.unknown()).nullable().optional(),
+  afterState: () => z.record(z.string(), z.unknown()).nullable().optional(),
+});
+export const updateAuditLogsSchema = createUpdateSchema(schema.auditLogs, {
+  actorRole: () => z.union([z.enum(USER_ROLES), z.literal("system")]),
+  beforeState: () => z.record(z.string(), z.unknown()).nullable().optional(),
+  afterState: () => z.record(z.string(), z.unknown()).nullable().optional(),
+});
+export const selectAuditLogSchema = selectAuditLogsSchema;
+export const insertAuditLogSchema = insertAuditLogsSchema;
+export const updateAuditLogSchema = updateAuditLogsSchema;
+
+// idempotencyKeys
+export const selectIdempotencyKeysSchema = createSelectSchema(schema.idempotencyKeys);
+export const insertIdempotencyKeysSchema = createInsertSchema(schema.idempotencyKeys, {
+  responsePayload: () => z.unknown(),
+});
+export const updateIdempotencyKeysSchema = createUpdateSchema(schema.idempotencyKeys, {
+  responsePayload: () => z.unknown(),
+});
+export const selectIdempotencyKeySchema = selectIdempotencyKeysSchema;
+export const insertIdempotencyKeySchema = insertIdempotencyKeysSchema;
+export const updateIdempotencyKeySchema = updateIdempotencyKeysSchema;
+
+// privacyRequests
 export const selectPrivacyRequestsSchema = createSelectSchema(schema.privacyRequests);
 export const insertPrivacyRequestsSchema = createInsertSchema(schema.privacyRequests, {
-  requestType: () => z.enum(["data_export", "account_deletion"]),
-  status: () => z.enum(["pending", "processing", "completed", "cancelled"]),
+  requestType: () => z.enum(PRIVACY_REQUEST_TYPES),
+  status: () => z.enum(PRIVACY_REQUEST_STATUSES),
 });
 export const updatePrivacyRequestsSchema = createUpdateSchema(schema.privacyRequests, {
-  requestType: () => z.enum(["data_export", "account_deletion"]),
-  status: () => z.enum(["pending", "processing", "completed", "cancelled"]),
+  requestType: () => z.enum(PRIVACY_REQUEST_TYPES),
+  status: () => z.enum(PRIVACY_REQUEST_STATUSES),
 });
 export const selectPrivacyRequestSchema = selectPrivacyRequestsSchema;
 export const insertPrivacyRequestSchema = insertPrivacyRequestsSchema;
 export const updatePrivacyRequestSchema = updatePrivacyRequestsSchema;
 
-// Vehicle Types
+// ============================================================================
+// 2. Commerce Schemas (4 tables)
+// ============================================================================
+
+// bookings
+export const selectBookingsSchema = createSelectSchema(schema.bookings);
+export const insertBookingsSchema = createInsertSchema(schema.bookings, {
+  passengers: () => z.array(bookingPassengerSchema).min(1),
+  selectedProgramIds: () => z.array(z.uuid()),
+  seatLabels: () => z.array(z.string().trim().min(1)),
+  currencyCode: () => z.enum(CURRENCY_CODES),
+  status: () => z.enum(BOOKING_STATUSES),
+  paymentGateway: () => z.enum(PAYMENT_GATEWAY_CODES).nullable().optional(),
+});
+export const updateBookingsSchema = createUpdateSchema(schema.bookings, {
+  passengers: () => z.array(bookingPassengerSchema).min(1),
+  selectedProgramIds: () => z.array(z.uuid()),
+  seatLabels: () => z.array(z.string().trim().min(1)),
+  currencyCode: () => z.enum(CURRENCY_CODES),
+  status: () => z.enum(BOOKING_STATUSES),
+  paymentGateway: () => z.enum(PAYMENT_GATEWAY_CODES).nullable().optional(),
+});
+export const selectBookingSchema = selectBookingsSchema;
+export const insertBookingSchema = insertBookingsSchema;
+export const updateBookingSchema = updateBookingsSchema;
+
+// paymentTransactions
+export const selectPaymentTransactionsSchema = createSelectSchema(schema.paymentTransactions);
+export const insertPaymentTransactionsSchema = createInsertSchema(schema.paymentTransactions, {
+  purpose: () => z.enum(PAYMENT_PURPOSES),
+  gateway: () => z.enum(PAYMENT_GATEWAY_CODES),
+  currencyCode: () => z.enum(CURRENCY_CODES),
+  status: () => z.enum(PAYMENT_TRANSACTION_STATUSES),
+  disputeStatus: () => z.enum(DISPUTE_RESOLUTION_STATUSES).nullable().optional(),
+});
+export const updatePaymentTransactionsSchema = createUpdateSchema(schema.paymentTransactions, {
+  purpose: () => z.enum(PAYMENT_PURPOSES),
+  gateway: () => z.enum(PAYMENT_GATEWAY_CODES),
+  currencyCode: () => z.enum(CURRENCY_CODES),
+  status: () => z.enum(PAYMENT_TRANSACTION_STATUSES),
+  disputeStatus: () => z.enum(DISPUTE_RESOLUTION_STATUSES).nullable().optional(),
+});
+export const selectPaymentTransactionSchema = selectPaymentTransactionsSchema;
+export const insertPaymentTransactionSchema = insertPaymentTransactionsSchema;
+export const updatePaymentTransactionSchema = updatePaymentTransactionsSchema;
+
+// subscriptionRecords
+export const selectSubscriptionRecordsSchema = createSelectSchema(schema.subscriptionRecords);
+export const insertSubscriptionRecordsSchema = createInsertSchema(schema.subscriptionRecords, {
+  scope: () => z.enum(SUBSCRIPTION_SCOPES),
+  role: () => z.enum(SUBSCRIPTION_ROLES),
+  billingCycle: () => z.enum(SUBSCRIPTION_BILLING_CYCLES),
+  currencyCode: () => z.enum(CURRENCY_CODES),
+  status: () => z.enum(SUBSCRIPTION_RECORD_STATUSES),
+});
+export const updateSubscriptionRecordsSchema = createUpdateSchema(schema.subscriptionRecords, {
+  scope: () => z.enum(SUBSCRIPTION_SCOPES),
+  role: () => z.enum(SUBSCRIPTION_ROLES),
+  billingCycle: () => z.enum(SUBSCRIPTION_BILLING_CYCLES),
+  currencyCode: () => z.enum(CURRENCY_CODES),
+  status: () => z.enum(SUBSCRIPTION_RECORD_STATUSES),
+});
+export const selectSubscriptionRecordSchema = selectSubscriptionRecordsSchema;
+export const insertSubscriptionRecordSchema = insertSubscriptionRecordsSchema;
+export const updateSubscriptionRecordSchema = updateSubscriptionRecordsSchema;
+
+// accountingLedgerEntries
+export const selectAccountingLedgerEntriesSchema = createSelectSchema(
+  schema.accountingLedgerEntries,
+);
+export const insertAccountingLedgerEntriesSchema = createInsertSchema(
+  schema.accountingLedgerEntries,
+  {
+    entryType: () => z.enum(LEDGER_ENTRY_TYPES),
+    direction: () => z.enum(LEDGER_ENTRY_DIRECTIONS),
+    currencyCode: () => z.enum(CURRENCY_CODES),
+    status: () => z.enum(LEDGER_ENTRY_STATUSES),
+  },
+);
+export const updateAccountingLedgerEntriesSchema = createUpdateSchema(
+  schema.accountingLedgerEntries,
+  {
+    entryType: () => z.enum(LEDGER_ENTRY_TYPES),
+    direction: () => z.enum(LEDGER_ENTRY_DIRECTIONS),
+    currencyCode: () => z.enum(CURRENCY_CODES),
+    status: () => z.enum(LEDGER_ENTRY_STATUSES),
+  },
+);
+export const selectAccountingLedgerEntrySchema = selectAccountingLedgerEntriesSchema;
+export const insertAccountingLedgerEntrySchema = insertAccountingLedgerEntriesSchema;
+export const updateAccountingLedgerEntrySchema = updateAccountingLedgerEntriesSchema;
+
+// ============================================================================
+// 3. Execution Schemas (7 tables)
+// ============================================================================
+
+// checkInRecords
+export const selectCheckInRecordsSchema = createSelectSchema(schema.checkInRecords);
+export const insertCheckInRecordsSchema = createInsertSchema(schema.checkInRecords, {
+  status: () => z.enum(CHECK_IN_STATUSES),
+  method: () => z.enum(CHECK_IN_METHODS).nullable().optional(),
+});
+export const updateCheckInRecordsSchema = createUpdateSchema(schema.checkInRecords, {
+  status: () => z.enum(CHECK_IN_STATUSES),
+  method: () => z.enum(CHECK_IN_METHODS).nullable().optional(),
+});
+export const selectCheckInRecordSchema = selectCheckInRecordsSchema;
+export const insertCheckInRecordSchema = insertCheckInRecordsSchema;
+export const updateCheckInRecordSchema = updateCheckInRecordsSchema;
+
+// tripTrackingEvents
+export const selectTripTrackingEventsSchema = createSelectSchema(schema.tripTrackingEvents);
+export const insertTripTrackingEventsSchema = createInsertSchema(schema.tripTrackingEvents, {
+  eventType: () => z.enum(TRACKING_EVENT_TYPES),
+  coordinates: () => trackingCoordinatesSchema.nullable().optional(),
+  severity: () => z.enum(TRACKING_ALERT_SEVERITIES),
+});
+export const updateTripTrackingEventsSchema = createUpdateSchema(schema.tripTrackingEvents, {
+  eventType: () => z.enum(TRACKING_EVENT_TYPES),
+  coordinates: () => trackingCoordinatesSchema.nullable().optional(),
+  severity: () => z.enum(TRACKING_ALERT_SEVERITIES),
+});
+export const selectTripTrackingEventSchema = selectTripTrackingEventsSchema;
+export const insertTripTrackingEventSchema = insertTripTrackingEventsSchema;
+export const updateTripTrackingEventSchema = updateTripTrackingEventsSchema;
+
+// parentChildLinks
+export const selectParentChildLinksSchema = createSelectSchema(schema.parentChildLinks);
+export const insertParentChildLinksSchema = createInsertSchema(schema.parentChildLinks, {
+  status: () => z.enum(PARENT_CHILD_LINK_STATUSES),
+});
+export const updateParentChildLinksSchema = createUpdateSchema(schema.parentChildLinks, {
+  status: () => z.enum(PARENT_CHILD_LINK_STATUSES),
+});
+export const selectParentChildLinkSchema = selectParentChildLinksSchema;
+export const insertParentChildLinkSchema = insertParentChildLinksSchema;
+export const updateParentChildLinkSchema = updateParentChildLinksSchema;
+
+// tripPhotoAlbums
+export const selectTripPhotoAlbumsSchema = createSelectSchema(schema.tripPhotoAlbums);
+export const insertTripPhotoAlbumsSchema = createInsertSchema(schema.tripPhotoAlbums, {
+  photoUrls: () => z.array(z.string().trim().min(1)),
+  audience: () => z.enum(TRIP_PHOTO_ALBUM_AUDIENCES),
+  status: () => z.enum(TRIP_PHOTO_ALBUM_STATUSES),
+});
+export const updateTripPhotoAlbumsSchema = createUpdateSchema(schema.tripPhotoAlbums, {
+  photoUrls: () => z.array(z.string().trim().min(1)),
+  audience: () => z.enum(TRIP_PHOTO_ALBUM_AUDIENCES),
+  status: () => z.enum(TRIP_PHOTO_ALBUM_STATUSES),
+});
+export const selectTripPhotoAlbumSchema = selectTripPhotoAlbumsSchema;
+export const insertTripPhotoAlbumSchema = insertTripPhotoAlbumsSchema;
+export const updateTripPhotoAlbumSchema = updateTripPhotoAlbumsSchema;
+
+// albumSharedLinks
+export const selectAlbumSharedLinksSchema = createSelectSchema(schema.albumSharedLinks);
+export const insertAlbumSharedLinksSchema = createInsertSchema(schema.albumSharedLinks, {
+  status: () => z.enum(ALBUM_SHARED_LINK_STATUSES),
+});
+export const updateAlbumSharedLinksSchema = createUpdateSchema(schema.albumSharedLinks, {
+  status: () => z.enum(ALBUM_SHARED_LINK_STATUSES),
+});
+export const selectAlbumSharedLinkSchema = selectAlbumSharedLinksSchema;
+export const insertAlbumSharedLinkSchema = insertAlbumSharedLinksSchema;
+export const updateAlbumSharedLinkSchema = updateAlbumSharedLinksSchema;
+
+// driverLabTests
+export const selectDriverLabTestsSchema = createSelectSchema(schema.driverLabTests);
+export const insertDriverLabTestsSchema = createInsertSchema(schema.driverLabTests, {
+  status: () => z.enum(DRIVER_LAB_TEST_STATUSES),
+  testType: () => z.enum(DRIVER_LAB_TEST_KINDS),
+});
+export const updateDriverLabTestsSchema = createUpdateSchema(schema.driverLabTests, {
+  status: () => z.enum(DRIVER_LAB_TEST_STATUSES),
+  testType: () => z.enum(DRIVER_LAB_TEST_KINDS),
+});
+export const selectDriverLabTestSchema = selectDriverLabTestsSchema;
+export const insertDriverLabTestSchema = insertDriverLabTestsSchema;
+export const updateDriverLabTestSchema = updateDriverLabTestsSchema;
+
+// notificationMessages
+export const selectNotificationMessagesSchema = createSelectSchema(schema.notificationMessages);
+export const insertNotificationMessagesSchema = createInsertSchema(schema.notificationMessages, {
+  category: () => z.enum(NOTIFICATION_CATEGORIES),
+  channel: () => z.enum(NOTIFICATION_DELIVERY_CHANNELS),
+});
+export const updateNotificationMessagesSchema = createUpdateSchema(schema.notificationMessages, {
+  category: () => z.enum(NOTIFICATION_CATEGORIES),
+  channel: () => z.enum(NOTIFICATION_DELIVERY_CHANNELS),
+});
+export const selectNotificationMessageSchema = selectNotificationMessagesSchema;
+export const insertNotificationMessageSchema = insertNotificationMessagesSchema;
+export const updateNotificationMessageSchema = updateNotificationMessagesSchema;
+
+// ============================================================================
+// 4. Fleet Schemas (2 tables)
+// ============================================================================
+
+// vehicleTypes
 export const selectVehicleTypesSchema = createSelectSchema(schema.vehicleTypes);
 export const insertVehicleTypesSchema = createInsertSchema(schema.vehicleTypes, {
-  scope: () => z.enum(["platform", "organization"]),
-  status: () => z.enum(["active", "archived"]),
+  scope: () => z.enum(VEHICLE_TYPE_SCOPES),
+  status: () => z.enum(VEHICLE_TYPE_STATUSES),
   seatLayout: () => seatLayoutConfigSchema,
 });
 export const updateVehicleTypesSchema = createUpdateSchema(schema.vehicleTypes, {
-  scope: () => z.enum(["platform", "organization"]),
-  status: () => z.enum(["active", "archived"]),
+  scope: () => z.enum(VEHICLE_TYPE_SCOPES),
+  status: () => z.enum(VEHICLE_TYPE_STATUSES),
   seatLayout: () => seatLayoutConfigSchema,
 });
 export const selectVehicleTypeSchema = selectVehicleTypesSchema;
 export const insertVehicleTypeSchema = insertVehicleTypesSchema;
 export const updateVehicleTypeSchema = updateVehicleTypesSchema;
 
-// Vehicles
+// vehicles
 export const selectVehiclesSchema = createSelectSchema(schema.vehicles);
 export const insertVehiclesSchema = createInsertSchema(schema.vehicles, {
-  registrationStatus: () => z.enum(["valid", "pending_renewal", "expired"]),
-  status: () => z.enum(["active", "maintenance", "retired"]),
+  registrationStatus: () => z.enum(VEHICLE_REGISTRATION_STATUSES),
+  status: () => z.enum(VEHICLE_STATUSES),
   photoUrls: () => z.array(z.string().trim().min(1)),
   amenityCodes: () => z.array(z.string().trim().min(1)),
 });
 export const updateVehiclesSchema = createUpdateSchema(schema.vehicles, {
-  registrationStatus: () => z.enum(["valid", "pending_renewal", "expired"]),
-  status: () => z.enum(["active", "maintenance", "retired"]),
+  registrationStatus: () => z.enum(VEHICLE_REGISTRATION_STATUSES),
+  status: () => z.enum(VEHICLE_STATUSES),
   photoUrls: () => z.array(z.string().trim().min(1)),
   amenityCodes: () => z.array(z.string().trim().min(1)),
 });
@@ -96,23 +571,400 @@ export const selectVehicleSchema = selectVehiclesSchema;
 export const insertVehicleSchema = insertVehiclesSchema;
 export const updateVehicleSchema = updateVehiclesSchema;
 
-// Trips
+// ============================================================================
+// 5. Lookups Schemas (2 tables)
+// ============================================================================
+
+// lookupTypes
+export const selectLookupTypesSchema = createSelectSchema(schema.lookupTypes);
+export const insertLookupTypesSchema = createInsertSchema(schema.lookupTypes, {
+  name: () => lookupLocalizedTextSchema,
+  description: () => lookupLocalizedTextSchema.nullable().optional(),
+});
+export const updateLookupTypesSchema = createUpdateSchema(schema.lookupTypes, {
+  name: () => lookupLocalizedTextSchema,
+  description: () => lookupLocalizedTextSchema.nullable().optional(),
+});
+export const selectLookupTypeSchema = selectLookupTypesSchema;
+export const insertLookupTypeSchema = insertLookupTypesSchema;
+export const updateLookupTypeSchema = updateLookupTypesSchema;
+
+// lookups
+export const selectLookupsSchema = createSelectSchema(schema.lookups);
+export const insertLookupsSchema = createInsertSchema(schema.lookups, {
+  name: () => lookupLocalizedTextSchema,
+  description: () => lookupLocalizedTextSchema.nullable().optional(),
+});
+export const updateLookupsSchema = createUpdateSchema(schema.lookups, {
+  name: () => lookupLocalizedTextSchema,
+  description: () => lookupLocalizedTextSchema.nullable().optional(),
+});
+export const selectLookupSchema = selectLookupsSchema;
+export const insertLookupSchema = insertLookupsSchema;
+export const updateLookupSchema = updateLookupsSchema;
+
+// ============================================================================
+// 6. Media Schemas (1 table)
+// ============================================================================
+
+// uploadedFiles
+export const selectUploadedFilesSchema = createSelectSchema(schema.uploadedFiles);
+export const insertUploadedFilesSchema = createInsertSchema(schema.uploadedFiles, {
+  disk: () => z.enum(MEDIA_STORAGE_DISKS),
+  status: () => z.enum(UPLOADED_FILE_STATUSES),
+  metadata: () => z.record(z.string(), z.unknown()).nullable().optional(),
+});
+export const updateUploadedFilesSchema = createUpdateSchema(schema.uploadedFiles, {
+  disk: () => z.enum(MEDIA_STORAGE_DISKS),
+  status: () => z.enum(UPLOADED_FILE_STATUSES),
+  metadata: () => z.record(z.string(), z.unknown()).nullable().optional(),
+});
+export const selectUploadedFileSchema = selectUploadedFilesSchema;
+export const insertUploadedFileSchema = insertUploadedFilesSchema;
+export const updateUploadedFileSchema = updateUploadedFilesSchema;
+
+// ============================================================================
+// 7. Onboarding Schemas (5 tables)
+// ============================================================================
+
+// applications
+export const selectApplicationsSchema = createSelectSchema(schema.applications);
+export const insertApplicationsSchema = createInsertSchema(schema.applications, {
+  applicationType: () => z.enum(SUPPLIER_APPLICATION_TYPES),
+  state: () => z.enum(APPLICATION_STATES),
+  payload: () => z.record(z.string(), z.unknown()),
+  changesRequestedChecklist: () =>
+    z
+      .array(
+        z.object({
+          field: z.string(),
+          instruction: z.string(),
+          resolved: z.boolean().optional(),
+        }),
+      )
+      .nullable()
+      .optional(),
+});
+export const updateApplicationsSchema = createUpdateSchema(schema.applications, {
+  applicationType: () => z.enum(SUPPLIER_APPLICATION_TYPES),
+  state: () => z.enum(APPLICATION_STATES),
+  payload: () => z.record(z.string(), z.unknown()),
+  changesRequestedChecklist: () =>
+    z
+      .array(
+        z.object({
+          field: z.string(),
+          instruction: z.string(),
+          resolved: z.boolean().optional(),
+        }),
+      )
+      .nullable()
+      .optional(),
+});
+export const selectApplicationSchema = selectApplicationsSchema;
+export const insertApplicationSchema = insertApplicationsSchema;
+export const updateApplicationSchema = updateApplicationsSchema;
+
+// applicationDocuments
+export const selectApplicationDocumentsSchema = createSelectSchema(schema.applicationDocuments);
+export const insertApplicationDocumentsSchema = createInsertSchema(schema.applicationDocuments, {
+  verifiedStatus: () => z.enum(APPLICATION_DOCUMENT_VERIFIED_STATUSES),
+});
+export const updateApplicationDocumentsSchema = createUpdateSchema(schema.applicationDocuments, {
+  verifiedStatus: () => z.enum(APPLICATION_DOCUMENT_VERIFIED_STATUSES),
+});
+export const selectApplicationDocumentSchema = selectApplicationDocumentsSchema;
+export const insertApplicationDocumentSchema = insertApplicationDocumentsSchema;
+export const updateApplicationDocumentSchema = updateApplicationDocumentsSchema;
+
+// consentRecords
+export const selectConsentRecordsSchema = createSelectSchema(schema.consentRecords);
+export const insertConsentRecordsSchema = createInsertSchema(schema.consentRecords, {
+  consentType: () => z.enum(CONSENT_TYPES),
+});
+export const updateConsentRecordsSchema = createUpdateSchema(schema.consentRecords, {
+  consentType: () => z.enum(CONSENT_TYPES),
+});
+export const selectConsentRecordSchema = selectConsentRecordsSchema;
+export const insertConsentRecordSchema = insertConsentRecordsSchema;
+export const updateConsentRecordSchema = updateConsentRecordsSchema;
+
+// driverProfiles
+export const selectDriverProfilesSchema = createSelectSchema(schema.driverProfiles);
+export const insertDriverProfilesSchema = createInsertSchema(schema.driverProfiles, {
+  scope: () => z.enum(DRIVER_PROFILE_SCOPES),
+  serviceAreas: () => z.array(z.string().trim().min(1)),
+  planTier: () => z.enum(DRIVER_PLAN_TIERS).nullable().optional(),
+  status: () => z.enum(DRIVER_PROFILE_STATUSES),
+});
+export const updateDriverProfilesSchema = createUpdateSchema(schema.driverProfiles, {
+  scope: () => z.enum(DRIVER_PROFILE_SCOPES),
+  serviceAreas: () => z.array(z.string().trim().min(1)),
+  planTier: () => z.enum(DRIVER_PLAN_TIERS).nullable().optional(),
+  status: () => z.enum(DRIVER_PROFILE_STATUSES),
+});
+export const selectDriverProfileSchema = selectDriverProfilesSchema;
+export const insertDriverProfileSchema = insertDriverProfilesSchema;
+export const updateDriverProfileSchema = updateDriverProfilesSchema;
+
+// photographerProfiles
+export const selectPhotographerProfilesSchema = createSelectSchema(schema.photographerProfiles);
+export const insertPhotographerProfilesSchema = createInsertSchema(schema.photographerProfiles, {
+  scope: () => z.enum(DRIVER_PROFILE_SCOPES),
+  cameraBodies: () => z.array(z.string().trim().min(1)),
+  lenses: () => z.array(z.string().trim().min(1)),
+  serviceRegions: () => z.array(z.string().trim().min(1)),
+  specialties: () => z.array(z.string().trim().min(1)),
+  sampleAlbums: () => z.array(z.object({ title: z.string(), photoCount: z.number() })),
+  planTier: () => z.enum(PHOTOGRAPHER_PLAN_TIERS).nullable().optional(),
+  status: () => z.enum(PHOTOGRAPHER_PROFILE_STATUSES),
+});
+export const updatePhotographerProfilesSchema = createUpdateSchema(schema.photographerProfiles, {
+  scope: () => z.enum(DRIVER_PROFILE_SCOPES),
+  cameraBodies: () => z.array(z.string().trim().min(1)),
+  lenses: () => z.array(z.string().trim().min(1)),
+  serviceRegions: () => z.array(z.string().trim().min(1)),
+  specialties: () => z.array(z.string().trim().min(1)),
+  sampleAlbums: () => z.array(z.object({ title: z.string(), photoCount: z.number() })),
+  planTier: () => z.enum(PHOTOGRAPHER_PLAN_TIERS).nullable().optional(),
+  status: () => z.enum(PHOTOGRAPHER_PROFILE_STATUSES),
+});
+export const selectPhotographerProfileSchema = selectPhotographerProfilesSchema;
+export const insertPhotographerProfileSchema = insertPhotographerProfilesSchema;
+export const updatePhotographerProfileSchema = updatePhotographerProfilesSchema;
+
+// ============================================================================
+// 8. Operations Schemas (5 tables)
+// ============================================================================
+
+// tripPrograms
+export const selectTripProgramsSchema = createSelectSchema(schema.tripPrograms);
+export const insertTripProgramsSchema = createInsertSchema(schema.tripPrograms, {
+  currencyCode: () => z.enum(CURRENCY_CODES),
+  status: () => z.enum(TRIP_PROGRAM_STATUSES),
+  attachmentUrls: () => z.array(z.string().trim().min(1)),
+});
+export const updateTripProgramsSchema = createUpdateSchema(schema.tripPrograms, {
+  currencyCode: () => z.enum(CURRENCY_CODES),
+  status: () => z.enum(TRIP_PROGRAM_STATUSES),
+  attachmentUrls: () => z.array(z.string().trim().min(1)),
+});
+export const selectTripProgramSchema = selectTripProgramsSchema;
+export const insertTripProgramSchema = insertTripProgramsSchema;
+export const updateTripProgramSchema = updateTripProgramsSchema;
+
+// supplierAvailabilityBlocks
+export const selectSupplierAvailabilityBlocksSchema = createSelectSchema(
+  schema.supplierAvailabilityBlocks,
+);
+export const insertSupplierAvailabilityBlocksSchema = createInsertSchema(
+  schema.supplierAvailabilityBlocks,
+  {
+    supplierRole: () => z.enum(SUPPLIER_ROLES),
+    blockType: () => z.enum(AVAILABILITY_BLOCK_TYPES),
+  },
+);
+export const updateSupplierAvailabilityBlocksSchema = createUpdateSchema(
+  schema.supplierAvailabilityBlocks,
+  {
+    supplierRole: () => z.enum(SUPPLIER_ROLES),
+    blockType: () => z.enum(AVAILABILITY_BLOCK_TYPES),
+  },
+);
+export const selectSupplierAvailabilityBlockSchema = selectSupplierAvailabilityBlocksSchema;
+export const insertSupplierAvailabilityBlockSchema = insertSupplierAvailabilityBlocksSchema;
+export const updateSupplierAvailabilityBlockSchema = updateSupplierAvailabilityBlocksSchema;
+
+// supplierNegotiations
+export const selectSupplierNegotiationsSchema = createSelectSchema(schema.supplierNegotiations);
+export const insertSupplierNegotiationsSchema = createInsertSchema(schema.supplierNegotiations, {
+  supplierRole: () => z.enum(PLATFORM_SUPPLIER_ROLES),
+  status: () => z.enum(NEGOTIATION_STATUSES),
+  currencyCode: () => z.enum(CURRENCY_CODES),
+  lastOfferedBy: () => z.enum(NEGOTIATION_OFFER_PARTIES),
+});
+export const updateSupplierNegotiationsSchema = createUpdateSchema(schema.supplierNegotiations, {
+  supplierRole: () => z.enum(PLATFORM_SUPPLIER_ROLES),
+  status: () => z.enum(NEGOTIATION_STATUSES),
+  currencyCode: () => z.enum(CURRENCY_CODES),
+  lastOfferedBy: () => z.enum(NEGOTIATION_OFFER_PARTIES),
+});
+export const selectSupplierNegotiationSchema = selectSupplierNegotiationsSchema;
+export const insertSupplierNegotiationSchema = insertSupplierNegotiationsSchema;
+export const updateSupplierNegotiationSchema = updateSupplierNegotiationsSchema;
+
+// tripSeatInventory
+export const selectTripSeatInventorySchema = createSelectSchema(schema.tripSeatInventory);
+export const insertTripSeatInventorySchema = createInsertSchema(schema.tripSeatInventory, {
+  status: () => z.enum(SEAT_INVENTORY_STATUSES),
+});
+export const updateTripSeatInventorySchema = createUpdateSchema(schema.tripSeatInventory, {
+  status: () => z.enum(SEAT_INVENTORY_STATUSES),
+});
+export const selectTripSeatInventoryRecordSchema = selectTripSeatInventorySchema;
+export const insertTripSeatInventoryRecordSchema = insertTripSeatInventorySchema;
+export const updateTripSeatInventoryRecordSchema = updateTripSeatInventorySchema;
+
+// coupons
+export const selectCouponsSchema = createSelectSchema(schema.coupons);
+export const insertCouponsSchema = createInsertSchema(schema.coupons, {
+  scope: () => z.enum(COUPON_SCOPES),
+  discountType: () => z.enum(COUPON_DISCOUNT_TYPES),
+  currencyCode: () => z.enum(CURRENCY_CODES),
+  status: () => z.enum(COUPON_STATUSES),
+});
+export const updateCouponsSchema = createUpdateSchema(schema.coupons, {
+  scope: () => z.enum(COUPON_SCOPES),
+  discountType: () => z.enum(COUPON_DISCOUNT_TYPES),
+  currencyCode: () => z.enum(CURRENCY_CODES),
+  status: () => z.enum(COUPON_STATUSES),
+});
+export const selectCouponSchema = selectCouponsSchema;
+export const insertCouponSchema = insertCouponsSchema;
+export const updateCouponSchema = updateCouponsSchema;
+
+// ============================================================================
+// 9. Settings and Roles Schemas (6 tables)
+// ============================================================================
+
+// systemSettings
+export const selectSystemSettingsSchema = createSelectSchema(schema.systemSettings);
+export const insertSystemSettingsSchema = createInsertSchema(schema.systemSettings, {
+  markets: () => z.record(z.string(), z.unknown()),
+  operational: () => z.record(z.string(), z.unknown()),
+  refundPolicyTiers: () =>
+    z.array(
+      z.object({
+        minHoursBeforeDeparture: z.number(),
+        refundPercent: z.number(),
+      }),
+    ),
+  notifications: () => z.record(z.string(), z.unknown()),
+  maintenanceAndSupport: () => z.record(z.string(), z.unknown()),
+  featureFlags: () => z.record(z.string(), z.unknown()),
+});
+export const updateSystemSettingsSchema = createUpdateSchema(schema.systemSettings, {
+  markets: () => z.record(z.string(), z.unknown()),
+  operational: () => z.record(z.string(), z.unknown()),
+  refundPolicyTiers: () =>
+    z.array(
+      z.object({
+        minHoursBeforeDeparture: z.number(),
+        refundPercent: z.number(),
+      }),
+    ),
+  notifications: () => z.record(z.string(), z.unknown()),
+  maintenanceAndSupport: () => z.record(z.string(), z.unknown()),
+  featureFlags: () => z.record(z.string(), z.unknown()),
+});
+export const selectSystemSettingSchema = selectSystemSettingsSchema;
+export const insertSystemSettingSchema = insertSystemSettingsSchema;
+export const updateSystemSettingSchema = updateSystemSettingsSchema;
+
+// authSettings
+export const selectAuthSettingsSchema = createSelectSchema(schema.authSettings);
+export const insertAuthSettingsSchema = createInsertSchema(schema.authSettings, {
+  newDeviceAlertRoles: () => z.array(z.enum(USER_ROLES)),
+  roleAuthPolicies: () => z.record(z.string(), z.unknown()),
+});
+export const updateAuthSettingsSchema = createUpdateSchema(schema.authSettings, {
+  newDeviceAlertRoles: () => z.array(z.enum(USER_ROLES)),
+  roleAuthPolicies: () => z.record(z.string(), z.unknown()),
+});
+export const selectAuthSettingSchema = selectAuthSettingsSchema;
+export const insertAuthSettingSchema = insertAuthSettingsSchema;
+export const updateAuthSettingSchema = updateAuthSettingsSchema;
+
+// roleDefinitions
+export const selectRoleDefinitionsSchema = createSelectSchema(schema.roleDefinitions);
+export const insertRoleDefinitionsSchema = createInsertSchema(schema.roleDefinitions, {
+  role: () => z.enum(USER_ROLES),
+  allowedSurfaces: () => z.array(z.enum(CLIENT_SURFACES)),
+  requiredVerificationChannels: () => z.enum(VERIFICATION_CHANNEL_RULES),
+  allowedPrimaryMethods: () => z.array(z.enum(PRIMARY_SIGN_IN_METHODS)),
+  requiredSecondFactor: () => z.enum(SECOND_FACTOR_RULES),
+  planScope: () => z.enum(PLAN_SCOPES),
+  subRoles: () => z.array(z.record(z.string(), z.unknown())),
+});
+export const updateRoleDefinitionsSchema = createUpdateSchema(schema.roleDefinitions, {
+  role: () => z.enum(USER_ROLES),
+  allowedSurfaces: () => z.array(z.enum(CLIENT_SURFACES)),
+  requiredVerificationChannels: () => z.enum(VERIFICATION_CHANNEL_RULES),
+  allowedPrimaryMethods: () => z.array(z.enum(PRIMARY_SIGN_IN_METHODS)),
+  requiredSecondFactor: () => z.enum(SECOND_FACTOR_RULES),
+  planScope: () => z.enum(PLAN_SCOPES),
+  subRoles: () => z.array(z.record(z.string(), z.unknown())),
+});
+export const selectRoleDefinitionSchema = selectRoleDefinitionsSchema;
+export const insertRoleDefinitionSchema = insertRoleDefinitionsSchema;
+export const updateRoleDefinitionSchema = updateRoleDefinitionsSchema;
+
+// permissionCatalog
+export const selectPermissionCatalogSchema = createSelectSchema(schema.permissionCatalog);
+export const insertPermissionCatalogSchema = createInsertSchema(schema.permissionCatalog, {
+  area: () => z.enum(ORG_PERMISSION_AREAS),
+  allowedLevels: () => z.array(z.enum(ORG_PERMISSION_LEVELS)),
+  mappedScreens: () => z.array(z.string()),
+});
+export const updatePermissionCatalogSchema = createUpdateSchema(schema.permissionCatalog, {
+  area: () => z.enum(ORG_PERMISSION_AREAS),
+  allowedLevels: () => z.array(z.enum(ORG_PERMISSION_LEVELS)),
+  mappedScreens: () => z.array(z.string()),
+});
+export const selectPermissionCatalogItemSchema = selectPermissionCatalogSchema;
+export const insertPermissionCatalogItemSchema = insertPermissionCatalogSchema;
+export const updatePermissionCatalogItemSchema = updatePermissionCatalogSchema;
+
+// planCatalog
+export const selectPlanCatalogSchema = createSelectSchema(schema.planCatalog);
+export const insertPlanCatalogSchema = createInsertSchema(schema.planCatalog, {
+  role: () => z.enum(SUBSCRIPTION_ROLES),
+  currencyCode: () => z.enum(CURRENCY_CODES),
+  limits: () => z.record(z.string(), z.unknown()),
+  features: () => z.record(z.string(), z.unknown()),
+  status: () => z.enum(PLAN_CATALOG_STATUSES),
+});
+export const updatePlanCatalogSchema = createUpdateSchema(schema.planCatalog, {
+  role: () => z.enum(SUBSCRIPTION_ROLES),
+  currencyCode: () => z.enum(CURRENCY_CODES),
+  limits: () => z.record(z.string(), z.unknown()),
+  features: () => z.record(z.string(), z.unknown()),
+  status: () => z.enum(PLAN_CATALOG_STATUSES),
+});
+export const selectPlanCatalogEntrySchema = selectPlanCatalogSchema;
+export const insertPlanCatalogEntrySchema = insertPlanCatalogSchema;
+export const updatePlanCatalogEntrySchema = updatePlanCatalogSchema;
+
+// organizationSettings
+export const selectOrganizationSettingsSchema = createSelectSchema(schema.organizationSettings);
+export const insertOrganizationSettingsSchema = createInsertSchema(schema.organizationSettings, {
+  defaultLanguage: () => z.enum(SUPPORTED_LOCALES),
+  defaultCurrency: () => z.enum(CURRENCY_CODES),
+  invoiceLanguage: () => z.enum(SUPPORTED_LOCALES),
+  webhookEndpoints: () => z.array(z.record(z.string(), z.unknown())),
+});
+export const updateOrganizationSettingsSchema = createUpdateSchema(schema.organizationSettings, {
+  defaultLanguage: () => z.enum(SUPPORTED_LOCALES),
+  defaultCurrency: () => z.enum(CURRENCY_CODES),
+  invoiceLanguage: () => z.enum(SUPPORTED_LOCALES),
+  webhookEndpoints: () => z.array(z.record(z.string(), z.unknown())),
+});
+export const selectOrganizationSettingSchema = selectOrganizationSettingsSchema;
+export const insertOrganizationSettingSchema = insertOrganizationSettingsSchema;
+export const updateOrganizationSettingSchema = updateOrganizationSettingsSchema;
+
+// ============================================================================
+// 10. Trips Schemas (2 tables)
+// ============================================================================
+
+// trips
 export const selectTripsSchema = createSelectSchema(schema.trips);
 export const insertTripsSchema = createInsertSchema(schema.trips, {
-  language: () => z.enum(["ar", "en"]),
-  currencyCode: () => z.enum(["EGP", "SAR", "AED"]),
-  seatAssignmentMode: () => z.enum(["organization_assigned", "traveler_choice"]),
-  state: () =>
-    z.enum([
-      "draft",
-      "published",
-      "scheduled",
-      "Selection",
-      "in_progress",
-      "completed",
-      "cancelled",
-    ]),
-  publishMode: () => z.enum(["draft", "public", "targeted"]),
+  language: () => z.enum(SUPPORTED_LOCALES),
+  currencyCode: () => z.enum(CURRENCY_CODES),
+  seatAssignmentMode: () => z.enum(TRIP_SEAT_ASSIGNMENT_MODES),
+  state: () => z.enum(TRIP_STATES),
+  publishMode: () => z.enum(TRIP_PUBLISH_MODES),
   galleryImageUrls: () => z.array(z.string().trim().min(1)),
   origin: () => tripRoutePointSchema,
   destinations: () => z.array(tripRoutePointSchema),
@@ -120,20 +972,11 @@ export const insertTripsSchema = createInsertSchema(schema.trips, {
   wizardSteps: () => tripWizardStepsSchema,
 });
 export const updateTripsSchema = createUpdateSchema(schema.trips, {
-  language: () => z.enum(["ar", "en"]),
-  currencyCode: () => z.enum(["EGP", "SAR", "AED"]),
-  seatAssignmentMode: () => z.enum(["organization_assigned", "traveler_choice"]),
-  state: () =>
-    z.enum([
-      "draft",
-      "published",
-      "scheduled",
-      "Selection",
-      "in_progress",
-      "completed",
-      "cancelled",
-    ]),
-  publishMode: () => z.enum(["draft", "public", "targeted"]),
+  language: () => z.enum(SUPPORTED_LOCALES),
+  currencyCode: () => z.enum(CURRENCY_CODES),
+  seatAssignmentMode: () => z.enum(TRIP_SEAT_ASSIGNMENT_MODES),
+  state: () => z.enum(TRIP_STATES),
+  publishMode: () => z.enum(TRIP_PUBLISH_MODES),
   galleryImageUrls: () => z.array(z.string().trim().min(1)),
   origin: () => tripRoutePointSchema,
   destinations: () => z.array(tripRoutePointSchema),
@@ -144,329 +987,20 @@ export const selectTripSchema = selectTripsSchema;
 export const insertTripSchema = insertTripsSchema;
 export const updateTripSchema = updateTripsSchema;
 
-// Trip Vehicles
+// tripVehicles
 export const selectTripVehiclesSchema = createSelectSchema(schema.tripVehicles);
 export const insertTripVehiclesSchema = createInsertSchema(schema.tripVehicles, {
   seatLayoutSnapshot: () => seatLayoutConfigSchema,
-  driverSource: () => z.enum(["org_staff", "platform_supplier", "unassigned"]),
-  moderatorSource: () => z.enum(["org_staff", "platform_supplier", "unassigned"]),
-  photographerSource: () => z.enum(["org_staff", "platform_supplier", "unassigned"]),
+  driverSource: () => z.enum(TRIP_STAFF_SOURCES),
+  moderatorSource: () => z.enum(TRIP_STAFF_SOURCES),
+  photographerSource: () => z.enum(TRIP_STAFF_SOURCES),
 });
 export const updateTripVehiclesSchema = createUpdateSchema(schema.tripVehicles, {
   seatLayoutSnapshot: () => seatLayoutConfigSchema,
-  driverSource: () => z.enum(["org_staff", "platform_supplier", "unassigned"]),
-  moderatorSource: () => z.enum(["org_staff", "platform_supplier", "unassigned"]),
-  photographerSource: () => z.enum(["org_staff", "platform_supplier", "unassigned"]),
+  driverSource: () => z.enum(TRIP_STAFF_SOURCES),
+  moderatorSource: () => z.enum(TRIP_STAFF_SOURCES),
+  photographerSource: () => z.enum(TRIP_STAFF_SOURCES),
 });
 export const selectTripVehicleSchema = selectTripVehiclesSchema;
 export const insertTripVehicleSchema = insertTripVehiclesSchema;
 export const updateTripVehicleSchema = updateTripVehiclesSchema;
-
-// Trip Programs
-export const selectTripProgramsSchema = createSelectSchema(schema.tripPrograms);
-export const insertTripProgramsSchema = createInsertSchema(schema.tripPrograms, {
-  currencyCode: () => z.enum(["EGP", "SAR", "AED"]),
-  status: () => z.enum(["active", "cancelled"]),
-  attachmentUrls: () => z.array(z.string().trim().min(1)),
-});
-export const updateTripProgramsSchema = createUpdateSchema(schema.tripPrograms, {
-  currencyCode: () => z.enum(["EGP", "SAR", "AED"]),
-  status: () => z.enum(["active", "cancelled"]),
-  attachmentUrls: () => z.array(z.string().trim().min(1)),
-});
-
-// Supplier Availability Blocks
-export const selectSupplierAvailabilityBlocksSchema = createSelectSchema(
-  schema.supplierAvailabilityBlocks,
-);
-export const insertSupplierAvailabilityBlocksSchema = createInsertSchema(
-  schema.supplierAvailabilityBlocks,
-  {
-    supplierRole: () =>
-      z.enum(["platform_driver", "org_driver", "platform_photographer", "org_photographer"]),
-    blockType: () => z.enum(["available", "unavailable", "assigned_trip"]),
-  },
-);
-export const updateSupplierAvailabilityBlocksSchema = createUpdateSchema(
-  schema.supplierAvailabilityBlocks,
-  {
-    supplierRole: () =>
-      z.enum(["platform_driver", "org_driver", "platform_photographer", "org_photographer"]),
-    blockType: () => z.enum(["available", "unavailable", "assigned_trip"]),
-  },
-);
-
-// Supplier Negotiations
-export const selectSupplierNegotiationsSchema = createSelectSchema(schema.supplierNegotiations);
-export const insertSupplierNegotiationsSchema = createInsertSchema(schema.supplierNegotiations, {
-  supplierRole: () => z.enum(["platform_driver", "platform_photographer"]),
-  status: () =>
-    z.enum([
-      "pending_supplier",
-      "countered_by_supplier",
-      "countered_by_org",
-      "accepted",
-      "declined",
-      "expired",
-      "cancelled",
-    ]),
-  currencyCode: () => z.enum(["EGP", "SAR", "AED"]),
-  lastOfferedBy: () => z.enum(["organization", "supplier"]),
-});
-export const updateSupplierNegotiationsSchema = createUpdateSchema(schema.supplierNegotiations, {
-  supplierRole: () => z.enum(["platform_driver", "platform_photographer"]),
-  status: () =>
-    z.enum([
-      "pending_supplier",
-      "countered_by_supplier",
-      "countered_by_org",
-      "accepted",
-      "declined",
-      "expired",
-      "cancelled",
-    ]),
-  currencyCode: () => z.enum(["EGP", "SAR", "AED"]),
-  lastOfferedBy: () => z.enum(["organization", "supplier"]),
-});
-
-// Trip Seat Inventory
-export const selectTripSeatInventorySchema = createSelectSchema(schema.tripSeatInventory);
-export const insertTripSeatInventorySchema = createInsertSchema(schema.tripSeatInventory, {
-  status: () => z.enum(["available", "held", "reserved", "blocked"]),
-});
-export const updateTripSeatInventorySchema = createUpdateSchema(schema.tripSeatInventory, {
-  status: () => z.enum(["available", "held", "reserved", "blocked"]),
-});
-
-// Coupons
-export const selectCouponsSchema = createSelectSchema(schema.coupons);
-export const insertCouponsSchema = createInsertSchema(schema.coupons, {
-  scope: () => z.enum(["organization", "platform", "driver"]),
-  discountType: () => z.enum(["percentage", "fixed_amount"]),
-  currencyCode: () => z.enum(["EGP", "SAR", "AED"]),
-  status: () => z.enum(["active", "paused", "expired"]),
-});
-export const updateCouponsSchema = createUpdateSchema(schema.coupons, {
-  scope: () => z.enum(["organization", "platform", "driver"]),
-  discountType: () => z.enum(["percentage", "fixed_amount"]),
-  currencyCode: () => z.enum(["EGP", "SAR", "AED"]),
-  status: () => z.enum(["active", "paused", "expired"]),
-});
-
-// Bookings
-export const bookingPassengerSchema = z.object({
-  id: z.string().trim().min(1),
-  fullName: z.string().trim().min(2).max(200),
-  isChild: z.boolean(),
-  age: z.number().int().min(0).max(120).nullable().optional(),
-  seatLabel: z.string().trim().min(1).max(16).nullable().optional(),
-  guardianPhoneE164: z.string().trim().min(7).max(24).nullable().optional(),
-});
-export const selectBookingsSchema = createSelectSchema(schema.bookings);
-export const insertBookingsSchema = createInsertSchema(schema.bookings, {
-  passengers: () => z.array(bookingPassengerSchema).min(1),
-  selectedProgramIds: () => z.array(z.uuid()),
-  seatLabels: () => z.array(z.string().trim().min(1)),
-  currencyCode: () => z.enum(["EGP", "SAR", "AED"]),
-  status: () =>
-    z.enum(["pending_payment", "confirmed", "checked_in", "completed", "cancelled", "refunded"]),
-  paymentGateway: () => z.enum(["stripe", "paymob", "fawry"]).nullable().optional(),
-});
-export const updateBookingsSchema = createUpdateSchema(schema.bookings, {
-  passengers: () => z.array(bookingPassengerSchema).min(1),
-  selectedProgramIds: () => z.array(z.uuid()),
-  seatLabels: () => z.array(z.string().trim().min(1)),
-  currencyCode: () => z.enum(["EGP", "SAR", "AED"]),
-  status: () =>
-    z.enum(["pending_payment", "confirmed", "checked_in", "completed", "cancelled", "refunded"]),
-  paymentGateway: () => z.enum(["stripe", "paymob", "fawry"]).nullable().optional(),
-});
-
-// Payment Transactions
-export const selectPaymentTransactionsSchema = createSelectSchema(schema.paymentTransactions);
-export const insertPaymentTransactionsSchema = createInsertSchema(schema.paymentTransactions, {
-  purpose: () => z.enum(["trip_booking", "subscription_upgrade"]),
-  gateway: () => z.enum(["stripe", "paymob", "fawry"]),
-  currencyCode: () => z.enum(["EGP", "SAR", "AED"]),
-  status: () =>
-    z.enum(["pending", "requires_action", "succeeded", "failed", "refunded", "disputed"]),
-  disputeStatus: () =>
-    z.enum(["open", "resolved_refund", "resolved_merchant"]).nullable().optional(),
-});
-export const updatePaymentTransactionsSchema = createUpdateSchema(schema.paymentTransactions, {
-  purpose: () => z.enum(["trip_booking", "subscription_upgrade"]),
-  gateway: () => z.enum(["stripe", "paymob", "fawry"]),
-  currencyCode: () => z.enum(["EGP", "SAR", "AED"]),
-  status: () =>
-    z.enum(["pending", "requires_action", "succeeded", "failed", "refunded", "disputed"]),
-  disputeStatus: () =>
-    z.enum(["open", "resolved_refund", "resolved_merchant"]).nullable().optional(),
-});
-
-// Subscription Records
-export const selectSubscriptionRecordsSchema = createSelectSchema(schema.subscriptionRecords);
-export const insertSubscriptionRecordsSchema = createInsertSchema(schema.subscriptionRecords, {
-  scope: () => z.enum(["account", "organization"]),
-  role: () => z.enum(["traveler", "organization", "platform_driver", "platform_photographer"]),
-  billingCycle: () => z.enum(["monthly", "annual"]),
-  currencyCode: () => z.enum(["EGP", "SAR", "AED"]),
-  status: () => z.enum(["active", "trialing", "past_due", "cancelled"]),
-});
-export const updateSubscriptionRecordsSchema = createUpdateSchema(schema.subscriptionRecords, {
-  scope: () => z.enum(["account", "organization"]),
-  role: () => z.enum(["traveler", "organization", "platform_driver", "platform_photographer"]),
-  billingCycle: () => z.enum(["monthly", "annual"]),
-  currencyCode: () => z.enum(["EGP", "SAR", "AED"]),
-  status: () => z.enum(["active", "trialing", "past_due", "cancelled"]),
-});
-
-// Accounting Ledger Entries
-export const selectAccountingLedgerEntriesSchema = createSelectSchema(
-  schema.accountingLedgerEntries,
-);
-export const insertAccountingLedgerEntriesSchema = createInsertSchema(
-  schema.accountingLedgerEntries,
-  {
-    entryType: () =>
-      z.enum([
-        "booking_revenue",
-        "platform_commission",
-        "supplier_payout",
-        "refund_debit",
-        "payout_settlement",
-      ]),
-    direction: () => z.enum(["credit", "debit"]),
-    currencyCode: () => z.enum(["EGP", "SAR", "AED"]),
-    status: () => z.enum(["posted", "settled", "reconciliation_exception"]),
-  },
-);
-export const updateAccountingLedgerEntriesSchema = createUpdateSchema(
-  schema.accountingLedgerEntries,
-  {
-    entryType: () =>
-      z.enum([
-        "booking_revenue",
-        "platform_commission",
-        "supplier_payout",
-        "refund_debit",
-        "payout_settlement",
-      ]),
-    direction: () => z.enum(["credit", "debit"]),
-    currencyCode: () => z.enum(["EGP", "SAR", "AED"]),
-    status: () => z.enum(["posted", "settled", "reconciliation_exception"]),
-  },
-);
-
-// Check-In Records
-export const selectCheckInRecordsSchema = createSelectSchema(schema.checkInRecords);
-export const insertCheckInRecordsSchema = createInsertSchema(schema.checkInRecords, {
-  status: () => z.enum(["pending", "checked_in", "no_show"]),
-  method: () => z.enum(["qr_scan", "manual_override"]).nullable().optional(),
-});
-export const updateCheckInRecordsSchema = createUpdateSchema(schema.checkInRecords, {
-  status: () => z.enum(["pending", "checked_in", "no_show"]),
-  method: () => z.enum(["qr_scan", "manual_override"]).nullable().optional(),
-});
-
-// Trip Tracking Events
-export const trackingCoordinatesSchema = z.object({
-  latitude: z.number().min(-90).max(90),
-  longitude: z.number().min(-180).max(180),
-  speedKmh: z.number().min(0).max(300).nullable().optional(),
-  headingDeg: z.number().min(0).max(360).nullable().optional(),
-});
-export const selectTripTrackingEventsSchema = createSelectSchema(schema.tripTrackingEvents);
-export const insertTripTrackingEventsSchema = createInsertSchema(schema.tripTrackingEvents, {
-  eventType: () =>
-    z.enum([
-      "gps_ping",
-      "checkpoint_reached",
-      "child_boarded",
-      "child_disembarked",
-      "safety_alert",
-      "headcount_verified",
-    ]),
-  coordinates: () => trackingCoordinatesSchema.nullable().optional(),
-  severity: () => z.enum(["info", "warning", "critical"]),
-});
-export const updateTripTrackingEventsSchema = createUpdateSchema(schema.tripTrackingEvents, {
-  eventType: () =>
-    z.enum([
-      "gps_ping",
-      "checkpoint_reached",
-      "child_boarded",
-      "child_disembarked",
-      "safety_alert",
-      "headcount_verified",
-    ]),
-  coordinates: () => trackingCoordinatesSchema.nullable().optional(),
-  severity: () => z.enum(["info", "warning", "critical"]),
-});
-
-// Parent Child Links
-export const selectParentChildLinksSchema = createSelectSchema(schema.parentChildLinks);
-export const insertParentChildLinksSchema = createInsertSchema(schema.parentChildLinks, {
-  status: () => z.enum(["active", "revoked"]),
-});
-export const updateParentChildLinksSchema = createUpdateSchema(schema.parentChildLinks, {
-  status: () => z.enum(["active", "revoked"]),
-});
-
-// Trip Photo Albums
-export const selectTripPhotoAlbumsSchema = createSelectSchema(schema.tripPhotoAlbums);
-export const insertTripPhotoAlbumsSchema = createInsertSchema(schema.tripPhotoAlbums, {
-  photoUrls: () => z.array(z.string().trim().min(1)),
-  status: () => z.enum(["draft", "published", "archived"]),
-});
-export const updateTripPhotoAlbumsSchema = createUpdateSchema(schema.tripPhotoAlbums, {
-  photoUrls: () => z.array(z.string().trim().min(1)),
-  status: () => z.enum(["draft", "published", "archived"]),
-});
-
-// Driver Lab Tests
-export const selectDriverLabTestsSchema = createSelectSchema(schema.driverLabTests);
-export const insertDriverLabTestsSchema = createInsertSchema(schema.driverLabTests, {
-  status: () =>
-    z.enum(["requested", "booked", "result_uploaded", "verified_pass", "verified_fail", "expired"]),
-});
-export const updateDriverLabTestsSchema = createUpdateSchema(schema.driverLabTests, {
-  status: () =>
-    z.enum(["requested", "booked", "result_uploaded", "verified_pass", "verified_fail", "expired"]),
-});
-
-// Notification Messages
-export const selectNotificationMessagesSchema = createSelectSchema(schema.notificationMessages);
-export const insertNotificationMessagesSchema = createInsertSchema(schema.notificationMessages, {
-  category: () =>
-    z.enum(["bookings", "trip_updates", "promotions", "security", "safety", "operations"]),
-  channel: () => z.enum(["in_app", "email", "sms", "push"]),
-});
-export const updateNotificationMessagesSchema = createUpdateSchema(schema.notificationMessages, {
-  category: () =>
-    z.enum(["bookings", "trip_updates", "promotions", "security", "safety", "operations"]),
-  channel: () => z.enum(["in_app", "email", "sms", "push"]),
-});
-
-// Plan Catalog
-export const selectPlanCatalogSchema = createSelectSchema(schema.planCatalog);
-
-// Driver Profiles
-export const selectDriverProfilesSchema = createSelectSchema(schema.driverProfiles);
-export const updateDriverProfilesSchema = createUpdateSchema(schema.driverProfiles, {
-  scope: () => z.enum(["platform", "organization"]),
-  serviceAreas: () => z.array(z.string().trim().min(1)),
-  planTier: () => z.enum(["basic", "professional", "premium"]).nullable().optional(),
-  status: () => z.enum(["pending_approval", "active", "paused_lab_test", "suspended"]),
-});
-
-// Photographer Profiles
-export const selectPhotographerProfilesSchema = createSelectSchema(schema.photographerProfiles);
-export const updatePhotographerProfilesSchema = createUpdateSchema(schema.photographerProfiles, {
-  scope: () => z.enum(["platform", "organization"]),
-  cameraBodies: () => z.array(z.string().trim().min(1)),
-  lenses: () => z.array(z.string().trim().min(1)),
-  serviceRegions: () => z.array(z.string().trim().min(1)),
-  specialties: () => z.array(z.string().trim().min(1)),
-  planTier: () => z.enum(["basic", "studio", "pro"]).nullable().optional(),
-  status: () => z.enum(["pending_approval", "active", "suspended"]),
-});

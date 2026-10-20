@@ -16,6 +16,7 @@ import {
 const KNOWN_UNINDEXED_FOREIGN_KEYS = new Set([
   "admin_invites.invited_by_account_id",
   "admin_invites.accepted_by_account_id",
+  "album_shared_links.created_by_account_id",
   "applications.assigned_admin_account_id",
   "applications.reviewed_by_admin_account_id",
   "applications.appeal_decided_by_admin_account_id",
@@ -164,5 +165,42 @@ describe("Unit: Drizzle-Zod table schemas (@trips-app/db/zod)", () => {
     expect(typeof zodModule.selectTripVehiclesSchema.safeParse).toBe("function");
     expect(typeof zodModule.insertTripVehiclesSchema.safeParse).toBe("function");
     expect(typeof zodModule.updateTripVehiclesSchema.safeParse).toBe("function");
+  });
+
+  test("exports valid select, insert, and update schemas for every table in the schema and safeParse returns a valid result", async () => {
+    const zodModule = (await import("../src/zod")) as Record<string, unknown>;
+    const tableEntries = Object.entries(schema).filter((entry): entry is [string, PgTable] =>
+      is(entry[1], PgTable),
+    );
+    expect(tableEntries.length).toBeGreaterThanOrEqual(46);
+
+    for (const [tableKey] of tableEntries) {
+      const capitalized = tableKey.charAt(0).toUpperCase() + tableKey.slice(1);
+      const selectName = `select${capitalized}Schema`;
+      const insertName = `insert${capitalized}Schema`;
+      const updateName = `update${capitalized}Schema`;
+
+      const selectSchema = zodModule[selectName] as
+        | { safeParse?: (data: unknown) => { success: boolean } }
+        | undefined;
+      const insertSchema = zodModule[insertName] as
+        | { safeParse?: (data: unknown) => { success: boolean } }
+        | undefined;
+      const updateSchema = zodModule[updateName] as
+        | { safeParse?: (data: unknown) => { success: boolean } }
+        | undefined;
+
+      expect(typeof selectSchema?.safeParse).toBe("function");
+      expect(typeof insertSchema?.safeParse).toBe("function");
+      expect(typeof updateSchema?.safeParse).toBe("function");
+
+      const selectResult = selectSchema!.safeParse({});
+      const insertResult = insertSchema!.safeParse({});
+      const updateResult = updateSchema!.safeParse({});
+
+      expect(typeof selectResult.success).toBe("boolean");
+      expect(typeof insertResult.success).toBe("boolean");
+      expect(typeof updateResult.success).toBe("boolean");
+    }
   });
 });

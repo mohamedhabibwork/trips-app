@@ -9,4 +9,4 @@ export * from "./onboarding";
 export * from "./roles-and-plans";
 export * from "./settings";
 export * from "./traveler-pricing";
-export type * from "./types";
+export * from "./types";

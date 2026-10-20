@@ -1,57 +1,75 @@
 // Shared TypeScript interfaces and types for @trips-app/domain. No I/O.
 
-export type CurrencyCode = "EGP" | "SAR" | "AED";
+export const CURRENCY_CODES = ["EGP", "SAR", "AED"] as const;
+export type CurrencyCode = (typeof CURRENCY_CODES)[number];
 
 export type Money = {
   readonly amountMinor: number;
   readonly currency: CurrencyCode;
 };
 
-export type SupportedCountryCode = "EG" | "SA" | "AE";
-export type SupportedLocale = "ar" | "en";
-export type PaymentGatewayCode = "stripe" | "paymob" | "tap" | "fawry" | "stub"; // stub is for local dev/test only
+export const SUPPORTED_COUNTRY_CODES = ["EG", "SA", "AE"] as const;
+export type SupportedCountryCode = (typeof SUPPORTED_COUNTRY_CODES)[number];
 
-export type UserRole =
-  | "traveler"
-  | "parent"
-  | "platform_driver"
-  | "org_driver"
-  | "platform_photographer"
-  | "org_photographer"
-  | "organization_owner"
-  | "organization_employee"
-  | "moderator"
-  | "admin";
+export const SUPPORTED_LOCALES = ["ar", "en"] as const;
+export type SupportedLocale = (typeof SUPPORTED_LOCALES)[number];
 
-export type AdminSubRole = "super_admin" | "operations" | "finance";
+export const PAYMENT_GATEWAY_CODES = ["stripe", "paymob", "tap", "fawry", "stub"] as const;
+export type PaymentGatewayCode = (typeof PAYMENT_GATEWAY_CODES)[number];
 
-export type ClientSurface = "web" | "mobile" | "pwa";
+export const USER_ROLES = [
+  "traveler",
+  "parent",
+  "platform_driver",
+  "org_driver",
+  "platform_photographer",
+  "org_photographer",
+  "organization_owner",
+  "organization_employee",
+  "moderator",
+  "admin",
+] as const;
+export type UserRole = (typeof USER_ROLES)[number];
 
-export type VerificationChannelRule =
-  | "either_email_or_phone"
-  | "both_email_and_phone"
-  | "phone_only"
-  | "invite_link_and_email"
-  | "invite_link_and_phone";
+export const ADMIN_SUB_ROLES = ["super_admin", "operations", "finance"] as const;
+export type AdminSubRole = (typeof ADMIN_SUB_ROLES)[number];
 
-export type PrimarySignInMethod = "otp" | "password" | "staff_code";
+export const CLIENT_SURFACES = ["web", "mobile", "pwa"] as const;
+export type ClientSurface = (typeof CLIENT_SURFACES)[number];
 
-export type SecondFactorRule = "none" | "totp" | "sms_or_totp" | "staff_code";
+export const VERIFICATION_CHANNEL_RULES = [
+  "either_email_or_phone",
+  "both_email_and_phone",
+  "phone_only",
+  "invite_link_and_email",
+  "invite_link_and_phone",
+] as const;
+export type VerificationChannelRule = (typeof VERIFICATION_CHANNEL_RULES)[number];
 
-export type PlanScope = "account" | "organization" | "none";
+export const PRIMARY_SIGN_IN_METHODS = ["otp", "password", "staff_code"] as const;
+export type PrimarySignInMethod = (typeof PRIMARY_SIGN_IN_METHODS)[number];
 
-export type OrgPermissionArea =
-  | "trips"
-  | "bookings"
-  | "accounting"
-  | "coupons"
-  | "employees"
-  | "fleet"
-  | "subscription"
-  | "tracking"
-  | "settings";
+export const SECOND_FACTOR_RULES = ["none", "totp", "sms_or_totp", "staff_code"] as const;
+export type SecondFactorRule = (typeof SECOND_FACTOR_RULES)[number];
 
-export type OrgPermissionLevel = "none" | "view" | "manage";
+export const PLAN_SCOPES = ["account", "organization", "none"] as const;
+export type PlanScope = (typeof PLAN_SCOPES)[number];
+
+export const ORG_PERMISSION_AREAS = [
+  "trips",
+  "bookings",
+  "accounting",
+  "coupons",
+  "employees",
+  "fleet",
+  "subscription",
+  "tracking",
+  "settings",
+] as const;
+export type OrgPermissionArea = (typeof ORG_PERMISSION_AREAS)[number];
+
+export const ORG_PERMISSION_LEVELS = ["none", "view", "manage"] as const;
+export type OrgPermissionLevel = (typeof ORG_PERMISSION_LEVELS)[number];
 
 export type OrgPermissionMatrix = Record<OrgPermissionArea, OrgPermissionLevel>;
 
@@ -266,23 +284,58 @@ export interface OrganizationSettingsValidationResult {
   field?: string;
 }
 
-export type AccountStatus =
-  | "pending_verification"
-  | "active"
-  | "suspended"
-  | "deletion_requested"
-  | "deleted";
+export const ACCOUNT_STATUSES = [
+  "pending_verification",
+  "active",
+  "suspended",
+  "deletion_requested",
+  "deleted",
+] as const;
+export type AccountStatus = (typeof ACCOUNT_STATUSES)[number];
 
-export type AccountRoleStatus = "pending_approval" | "active" | "paused" | "suspended" | "revoked";
+export const ACCOUNT_ROLE_STATUSES = [
+  "pending_approval",
+  "active",
+  "paused",
+  "suspended",
+  "revoked",
+] as const;
+export type AccountRoleStatus = (typeof ACCOUNT_ROLE_STATUSES)[number];
 
-export type OtpChannel = "sms" | "email";
+export const OTP_CHANNELS = ["sms", "email"] as const;
+export type OtpChannel = (typeof OTP_CHANNELS)[number];
 
-export type OtpPurpose =
-  | "registration"
-  | "sign_in"
-  | "password_reset"
-  | "contact_change"
-  | "staff_2fa";
+export const OTP_PURPOSES = [
+  "registration",
+  "sign_in",
+  "password_reset",
+  "contact_change",
+  "staff_2fa",
+] as const;
+export type OtpPurpose = (typeof OTP_PURPOSES)[number];
+
+export const OTP_DELIVERY_STATUSES = ["sent", "retrying", "failed_fallback_available"] as const;
+export type OtpDeliveryStatus = (typeof OTP_DELIVERY_STATUSES)[number];
+
+export const ORGANIZATION_STATUSES = [
+  "pending_approval",
+  "active",
+  "suspended",
+  "deleted",
+] as const;
+export type OrganizationStatus = (typeof ORGANIZATION_STATUSES)[number];
+
+export const ORGANIZATION_PLAN_TIERS = ["starter", "growth", "enterprise"] as const;
+export type OrganizationPlanTier = (typeof ORGANIZATION_PLAN_TIERS)[number];
+
+export const PAYOUT_METHODS = ["bank_transfer", "mobile_wallet"] as const;
+export type PayoutMethod = (typeof PAYOUT_METHODS)[number];
+
+export const EMPLOYEE_MEMBERSHIP_STATUSES = ["invited", "active", "suspended", "revoked"] as const;
+export type EmployeeMembershipStatus = (typeof EMPLOYEE_MEMBERSHIP_STATUSES)[number];
+
+export const MODERATOR_ASSIGNMENT_STATUSES = ["assigned", "active", "expired", "revoked"] as const;
+export type ModeratorAssignmentStatus = (typeof MODERATOR_ASSIGNMENT_STATUSES)[number];
 
 export interface RegistrationValidationInput {
   role: UserRole;
@@ -336,16 +389,56 @@ export interface AccessTokenClaims {
   exp: number;
 }
 
-export type ApplicationState =
-  | "Submitted"
-  | "Pending Review"
-  | "Changes Requested"
-  | "Approved"
-  | "Rejected"
-  | "Appealed"
-  | "Closed";
+export const APPLICATION_STATES = [
+  "Submitted",
+  "Pending Review",
+  "Changes Requested",
+  "Approved",
+  "Rejected",
+  "Appealed",
+  "Closed",
+] as const;
+export type ApplicationState = (typeof APPLICATION_STATES)[number];
 
-export type SupplierApplicationType = "organization" | "platform_driver" | "platform_photographer";
+export const SUPPLIER_APPLICATION_TYPES = [
+  "organization",
+  "platform_driver",
+  "platform_photographer",
+] as const;
+export type SupplierApplicationType = (typeof SUPPLIER_APPLICATION_TYPES)[number];
+
+export const APPLICATION_DOCUMENT_VERIFIED_STATUSES = ["pending", "verified", "rejected"] as const;
+export type ApplicationDocumentVerifiedStatus =
+  (typeof APPLICATION_DOCUMENT_VERIFIED_STATUSES)[number];
+
+export const CONSENT_TYPES = [
+  "driver_lab_test",
+  "driver_background_check",
+  "child_tracking_guardian",
+  "terms_of_service",
+  "privacy_policy",
+] as const;
+export type ConsentType = (typeof CONSENT_TYPES)[number];
+
+export const DRIVER_PROFILE_SCOPES = ["platform", "organization"] as const;
+export type DriverProfileScope = (typeof DRIVER_PROFILE_SCOPES)[number];
+
+export const DRIVER_PLAN_TIERS = ["basic", "professional", "premium"] as const;
+export type DriverPlanTier = (typeof DRIVER_PLAN_TIERS)[number];
+
+export const DRIVER_PROFILE_STATUSES = [
+  "pending_approval",
+  "active",
+  "paused_lab_test",
+  "suspended",
+] as const;
+export type DriverProfileStatus = (typeof DRIVER_PROFILE_STATUSES)[number];
+
+export const PHOTOGRAPHER_PLAN_TIERS = ["basic", "studio", "pro"] as const;
+export type PhotographerPlanTier = (typeof PHOTOGRAPHER_PLAN_TIERS)[number];
+
+export const PHOTOGRAPHER_PROFILE_STATUSES = ["pending_approval", "active", "suspended"] as const;
+export type PhotographerProfileStatus = (typeof PHOTOGRAPHER_PROFILE_STATUSES)[number];
 
 export interface OrganizationApplicationSubmission {
   legalEntityName: string;
@@ -747,21 +840,38 @@ export interface LookupTypeSummaryDto extends LookupTypeDto {
  * Closed read-status vocabulary (design §11.4). `not_seeded` replaces the deleted static fallback:
  * an empty table is a visible, retryable state, never fabricated rows (LK-07).
  */
-export type LookupTypeReadStatus = "ok" | "type_not_found" | "not_seeded";
+export const LOOKUP_TYPE_READ_STATUSES = ["ok", "type_not_found", "not_seeded"] as const;
+export type LookupTypeReadStatus = (typeof LOOKUP_TYPE_READ_STATUSES)[number];
 
 /** Status of resolving one stored value against the table, across all four flag combinations. */
-export type LookupResolveStatus =
-  | "active"
-  | "inactive"
-  | "deleted"
-  | "not_found"
-  | "type_not_found";
+export const LOOKUP_RESOLVE_STATUSES = [
+  "active",
+  "inactive",
+  "deleted",
+  "not_found",
+  "type_not_found",
+] as const;
+export type LookupResolveStatus = (typeof LOOKUP_RESOLVE_STATUSES)[number];
 
 /** Verdict for one submitted code (LK-12). */
-export type LookupValidateReason = "ok" | "inactive" | "deleted" | "unknown_code" | "unknown_type";
+export const LOOKUP_VALIDATE_REASONS = [
+  "ok",
+  "inactive",
+  "deleted",
+  "unknown_code",
+  "unknown_type",
+] as const;
+export type LookupValidateReason = (typeof LOOKUP_VALIDATE_REASONS)[number];
 
 /** Compact form used by services on the write path (design §1, layering constraint). */
-export type LookupStatus = "active" | "inactive" | "deleted" | "unknown" | "unknown_type";
+export const LOOKUP_STATUSES = [
+  "active",
+  "inactive",
+  "deleted",
+  "unknown",
+  "unknown_type",
+] as const;
+export type LookupStatus = (typeof LOOKUP_STATUSES)[number];
 
 /** One entry of a `validate` response (LK-12). */
 export interface LookupValidateResult {
@@ -770,17 +880,41 @@ export interface LookupValidateResult {
   reason: LookupValidateReason;
 }
 
-export type TravelerPlanCode = "free" | "explorer" | "vip";
+export const TRAVELER_PLAN_CODES = ["free", "explorer", "vip"] as const;
+export type TravelerPlanCode = (typeof TRAVELER_PLAN_CODES)[number];
 
-export type PrivacyRequestType = "data_export" | "account_deletion";
-export type PrivacyRequestStatus = "pending" | "processing" | "completed" | "cancelled";
+export const PRIVACY_REQUEST_TYPES = ["data_export", "account_deletion"] as const;
+export type PrivacyRequestType = (typeof PRIVACY_REQUEST_TYPES)[number];
 
-export type VehicleTypeScope = "platform" | "organization";
-export type VehicleTypeStatus = "active" | "archived";
-export type VehicleRegistrationStatus = "valid" | "pending_renewal" | "expired";
-export type VehicleStatus = "active" | "maintenance" | "retired";
+export const PRIVACY_REQUEST_STATUSES = [
+  "pending",
+  "processing",
+  "completed",
+  "cancelled",
+] as const;
+export type PrivacyRequestStatus = (typeof PRIVACY_REQUEST_STATUSES)[number];
 
-export type SeatLayoutCellType = "seat" | "aisle" | "driver" | "moderator" | "door" | "empty";
+export const VEHICLE_TYPE_SCOPES = ["platform", "organization"] as const;
+export type VehicleTypeScope = (typeof VEHICLE_TYPE_SCOPES)[number];
+
+export const VEHICLE_TYPE_STATUSES = ["active", "archived"] as const;
+export type VehicleTypeStatus = (typeof VEHICLE_TYPE_STATUSES)[number];
+
+export const VEHICLE_REGISTRATION_STATUSES = ["valid", "pending_renewal", "expired"] as const;
+export type VehicleRegistrationStatus = (typeof VEHICLE_REGISTRATION_STATUSES)[number];
+
+export const VEHICLE_STATUSES = ["active", "maintenance", "retired"] as const;
+export type VehicleStatus = (typeof VEHICLE_STATUSES)[number];
+
+export const SEAT_LAYOUT_CELL_TYPES = [
+  "seat",
+  "aisle",
+  "driver",
+  "moderator",
+  "door",
+  "empty",
+] as const;
+export type SeatLayoutCellType = (typeof SEAT_LAYOUT_CELL_TYPES)[number];
 
 export interface SeatLayoutCell {
   row: number;
@@ -797,18 +931,25 @@ export interface SeatLayoutConfig {
   cells: readonly SeatLayoutCell[];
 }
 
-export type TripState =
-  | "draft"
-  | "published"
-  | "scheduled"
-  | "Selection"
-  | "in_progress"
-  | "completed"
-  | "cancelled";
+export const TRIP_STATES = [
+  "draft",
+  "published",
+  "scheduled",
+  "Selection",
+  "in_progress",
+  "completed",
+  "cancelled",
+] as const;
+export type TripState = (typeof TRIP_STATES)[number];
 
-export type TripSeatAssignmentMode = "organization_assigned" | "traveler_choice";
-export type TripPublishMode = "draft" | "public" | "targeted";
-export type TripStaffSource = "org_staff" | "platform_supplier" | "unassigned";
+export const TRIP_SEAT_ASSIGNMENT_MODES = ["organization_assigned", "traveler_choice"] as const;
+export type TripSeatAssignmentMode = (typeof TRIP_SEAT_ASSIGNMENT_MODES)[number];
+
+export const TRIP_PUBLISH_MODES = ["draft", "public", "targeted"] as const;
+export type TripPublishMode = (typeof TRIP_PUBLISH_MODES)[number];
+
+export const TRIP_STAFF_SOURCES = ["org_staff", "platform_supplier", "unassigned"] as const;
+export type TripStaffSource = (typeof TRIP_STAFF_SOURCES)[number];
 
 export interface TripRoutePoint {
   nameAr: string;
@@ -829,42 +970,58 @@ export interface TripWizardStepCompletion {
   publish: boolean;
 }
 
-export type TripProgramStatus = "active" | "cancelled";
+export const TRIP_PROGRAM_STATUSES = ["active", "cancelled"] as const;
+export type TripProgramStatus = (typeof TRIP_PROGRAM_STATUSES)[number];
 
-export type SupplierRole =
-  | "platform_driver"
-  | "org_driver"
-  | "platform_photographer"
-  | "org_photographer";
+export const SUPPLIER_ROLES = [
+  "platform_driver",
+  "org_driver",
+  "platform_photographer",
+  "org_photographer",
+] as const;
+export type SupplierRole = (typeof SUPPLIER_ROLES)[number];
 
-export type PlatformSupplierRole = "platform_driver" | "platform_photographer";
+export const PLATFORM_SUPPLIER_ROLES = ["platform_driver", "platform_photographer"] as const;
+export type PlatformSupplierRole = (typeof PLATFORM_SUPPLIER_ROLES)[number];
 
-export type AvailabilityBlockType = "available" | "unavailable" | "assigned_trip";
+export const AVAILABILITY_BLOCK_TYPES = ["available", "unavailable", "assigned_trip"] as const;
+export type AvailabilityBlockType = (typeof AVAILABILITY_BLOCK_TYPES)[number];
 
-export type NegotiationStatus =
-  | "pending_supplier"
-  | "countered_by_supplier"
-  | "countered_by_org"
-  | "accepted"
-  | "declined"
-  | "expired"
-  | "cancelled";
+export const NEGOTIATION_STATUSES = [
+  "pending_supplier",
+  "countered_by_supplier",
+  "countered_by_org",
+  "accepted",
+  "declined",
+  "expired",
+  "cancelled",
+] as const;
+export type NegotiationStatus = (typeof NEGOTIATION_STATUSES)[number];
 
-export type NegotiationOfferParty = "organization" | "supplier";
+export const NEGOTIATION_OFFER_PARTIES = ["organization", "supplier"] as const;
+export type NegotiationOfferParty = (typeof NEGOTIATION_OFFER_PARTIES)[number];
 
-export type SeatInventoryStatus = "available" | "held" | "reserved" | "blocked";
+export const SEAT_INVENTORY_STATUSES = ["available", "held", "reserved", "blocked"] as const;
+export type SeatInventoryStatus = (typeof SEAT_INVENTORY_STATUSES)[number];
 
-export type CouponScope = "organization" | "platform" | "driver";
-export type CouponDiscountType = "percentage" | "fixed_amount";
-export type CouponStatus = "active" | "paused" | "expired";
+export const COUPON_SCOPES = ["organization", "platform", "driver"] as const;
+export type CouponScope = (typeof COUPON_SCOPES)[number];
 
-export type BookingStatus =
-  | "pending_payment"
-  | "confirmed"
-  | "checked_in"
-  | "completed"
-  | "cancelled"
-  | "refunded";
+export const COUPON_DISCOUNT_TYPES = ["percentage", "fixed_amount"] as const;
+export type CouponDiscountType = (typeof COUPON_DISCOUNT_TYPES)[number];
+
+export const COUPON_STATUSES = ["active", "paused", "expired"] as const;
+export type CouponStatus = (typeof COUPON_STATUSES)[number];
+
+export const BOOKING_STATUSES = [
+  "pending_payment",
+  "confirmed",
+  "checked_in",
+  "completed",
+  "cancelled",
+  "refunded",
+] as const;
+export type BookingStatus = (typeof BOOKING_STATUSES)[number];
 
 export interface BookingPassenger {
   id: string;
@@ -875,39 +1032,84 @@ export interface BookingPassenger {
   guardianPhoneE164?: string | null;
 }
 
-export type PaymentPurpose = "trip_booking" | "subscription_upgrade";
-export type PaymentTransactionStatus =
-  | "pending"
-  | "requires_action"
-  | "succeeded"
-  | "failed"
-  | "refunded"
-  | "disputed";
-export type DisputeResolutionStatus = "open" | "resolved_refund" | "resolved_merchant";
+export const PAYMENT_PURPOSES = ["trip_booking", "subscription_upgrade"] as const;
+export type PaymentPurpose = (typeof PAYMENT_PURPOSES)[number];
 
-export type SubscriptionBillingCycle = "monthly" | "annual";
-export type SubscriptionRecordStatus = "active" | "trialing" | "past_due" | "cancelled";
+export const PAYMENT_TRANSACTION_STATUSES = [
+  "pending",
+  "requires_action",
+  "succeeded",
+  "failed",
+  "refunded",
+  "disputed",
+] as const;
+export type PaymentTransactionStatus = (typeof PAYMENT_TRANSACTION_STATUSES)[number];
 
-export type LedgerEntryType =
-  | "booking_revenue"
-  | "platform_commission"
-  | "supplier_payout"
-  | "refund_debit"
-  | "payout_settlement";
-export type LedgerEntryDirection = "credit" | "debit";
-export type LedgerEntryStatus = "posted" | "settled" | "reconciliation_exception";
+export const DISPUTE_RESOLUTION_STATUSES = [
+  "open",
+  "resolved_refund",
+  "resolved_merchant",
+] as const;
+export type DisputeResolutionStatus = (typeof DISPUTE_RESOLUTION_STATUSES)[number];
 
-export type CheckInStatus = "pending" | "checked_in" | "no_show";
-export type CheckInMethod = "qr_scan" | "manual_override";
+export const SUBSCRIPTION_SCOPES = ["account", "organization"] as const;
+export type SubscriptionScope = (typeof SUBSCRIPTION_SCOPES)[number];
 
-export type TrackingEventType =
-  | "gps_ping"
-  | "checkpoint_reached"
-  | "child_boarded"
-  | "child_disembarked"
-  | "safety_alert"
-  | "headcount_verified";
-export type TrackingAlertSeverity = "info" | "warning" | "critical";
+export const SUBSCRIPTION_ROLES = [
+  "traveler",
+  "organization",
+  "platform_driver",
+  "platform_photographer",
+] as const;
+export type SubscriptionRole = (typeof SUBSCRIPTION_ROLES)[number];
+
+export const SUBSCRIPTION_BILLING_CYCLES = ["monthly", "annual"] as const;
+export type SubscriptionBillingCycle = (typeof SUBSCRIPTION_BILLING_CYCLES)[number];
+
+export const SUBSCRIPTION_RECORD_STATUSES = [
+  "active",
+  "trialing",
+  "past_due",
+  "cancelled",
+] as const;
+export type SubscriptionRecordStatus = (typeof SUBSCRIPTION_RECORD_STATUSES)[number];
+
+export const PLAN_CATALOG_STATUSES = ["active", "retired"] as const;
+export type PlanCatalogStatus = (typeof PLAN_CATALOG_STATUSES)[number];
+
+export const LEDGER_ENTRY_TYPES = [
+  "booking_revenue",
+  "platform_commission",
+  "supplier_payout",
+  "refund_debit",
+  "payout_settlement",
+] as const;
+export type LedgerEntryType = (typeof LEDGER_ENTRY_TYPES)[number];
+
+export const LEDGER_ENTRY_DIRECTIONS = ["credit", "debit"] as const;
+export type LedgerEntryDirection = (typeof LEDGER_ENTRY_DIRECTIONS)[number];
+
+export const LEDGER_ENTRY_STATUSES = ["posted", "settled", "reconciliation_exception"] as const;
+export type LedgerEntryStatus = (typeof LEDGER_ENTRY_STATUSES)[number];
+
+export const CHECK_IN_STATUSES = ["pending", "checked_in", "no_show"] as const;
+export type CheckInStatus = (typeof CHECK_IN_STATUSES)[number];
+
+export const CHECK_IN_METHODS = ["qr_scan", "manual_override"] as const;
+export type CheckInMethod = (typeof CHECK_IN_METHODS)[number];
+
+export const TRACKING_EVENT_TYPES = [
+  "gps_ping",
+  "checkpoint_reached",
+  "child_boarded",
+  "child_disembarked",
+  "safety_alert",
+  "headcount_verified",
+] as const;
+export type TrackingEventType = (typeof TRACKING_EVENT_TYPES)[number];
+
+export const TRACKING_ALERT_SEVERITIES = ["info", "warning", "critical"] as const;
+export type TrackingAlertSeverity = (typeof TRACKING_ALERT_SEVERITIES)[number];
 
 export interface TrackingCoordinates {
   latitude: number;
@@ -916,27 +1118,47 @@ export interface TrackingCoordinates {
   headingDeg?: number | null;
 }
 
-export type ParentChildLinkStatus = "active" | "revoked";
+export const PARENT_CHILD_LINK_STATUSES = ["active", "revoked"] as const;
+export type ParentChildLinkStatus = (typeof PARENT_CHILD_LINK_STATUSES)[number];
 
-export type TripPhotoAlbumStatus = "draft" | "published" | "archived";
+export const TRIP_PHOTO_ALBUM_AUDIENCES = ["public", "selected_travelers"] as const;
+export type TripPhotoAlbumAudience = (typeof TRIP_PHOTO_ALBUM_AUDIENCES)[number];
 
-export type DriverLabTestStatus =
-  | "requested"
-  | "booked"
-  | "result_uploaded"
-  | "verified_pass"
-  | "verified_fail"
-  | "expired";
+export const TRIP_PHOTO_ALBUM_STATUSES = ["draft", "published", "archived"] as const;
+export type TripPhotoAlbumStatus = (typeof TRIP_PHOTO_ALBUM_STATUSES)[number];
+
+export const ALBUM_SHARED_LINK_STATUSES = ["active", "revoked"] as const;
+export type AlbumSharedLinkStatus = (typeof ALBUM_SHARED_LINK_STATUSES)[number];
+
+export const DRIVER_LAB_TEST_STATUSES = [
+  "requested",
+  "booked",
+  "result_uploaded",
+  "verified_pass",
+  "verified_fail",
+  "expired",
+] as const;
+export type DriverLabTestStatus = (typeof DRIVER_LAB_TEST_STATUSES)[number];
 
 /** What a requested lab test covers (SCR-ADM-14's test-type choice). */
-export type DriverLabTestKind = "drug_screening" | "medical_fitness" | "both";
+export const DRIVER_LAB_TEST_KINDS = ["drug_screening", "medical_fitness", "both"] as const;
+export type DriverLabTestKind = (typeof DRIVER_LAB_TEST_KINDS)[number];
 
-export type NotificationCategory =
-  | "bookings"
-  | "trip_updates"
-  | "promotions"
-  | "security"
-  | "safety"
-  | "operations";
+export const NOTIFICATION_CATEGORIES = [
+  "bookings",
+  "trip_updates",
+  "promotions",
+  "security",
+  "safety",
+  "operations",
+] as const;
+export type NotificationCategory = (typeof NOTIFICATION_CATEGORIES)[number];
 
-export type NotificationDeliveryChannel = "in_app" | "email" | "sms" | "push";
+export const NOTIFICATION_DELIVERY_CHANNELS = ["in_app", "email", "sms", "push"] as const;
+export type NotificationDeliveryChannel = (typeof NOTIFICATION_DELIVERY_CHANNELS)[number];
+
+export const MEDIA_STORAGE_DISKS = ["uploads", "documents", "temp"] as const;
+export type MediaStorageDisk = (typeof MEDIA_STORAGE_DISKS)[number];
+
+export const UPLOADED_FILE_STATUSES = ["pending", "linked", "expired", "deleted"] as const;
+export type UploadedFileStatus = (typeof UPLOADED_FILE_STATUSES)[number];

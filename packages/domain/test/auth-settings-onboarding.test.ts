@@ -94,7 +94,7 @@ describe("@trips-app/domain — Roles, Permissions, Plans & Settings", () => {
       validateRegistrationInput({
         role: "admin",
         surface: "web",
-        email: "hacker@example.com",
+        email: "hacker@trips-enjoy.com",
       }).valid,
     ).toBe(false);
   });
@@ -346,7 +346,9 @@ describe("@trips-app/domain — Roles, Permissions, Plans & Settings", () => {
     expect(encrypted).not.toContain("+201000000001");
     expect(decryptField(encrypted)).toBe("+201000000001");
 
-    expect(computeBlindIndex("User@Example.com")).toBe(computeBlindIndex("user@example.com"));
+    expect(computeBlindIndex("User@trips-enjoy.com")).toBe(
+      computeBlindIndex("user@trips-enjoy.com"),
+    );
 
     const hash = await hashPassword("SuperSecretPassword123!");
     expect(await verifyPassword("SuperSecretPassword123!", hash)).toBe(true);

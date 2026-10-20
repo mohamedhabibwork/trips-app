@@ -1,7 +1,7 @@
 import { and, eq, inArray, isNull, ne, or } from "drizzle-orm";
 
 import * as schema from "./schema";
-import type { Database } from "./types";
+import type { ServiceDatabase } from "./types";
 
 const UNLINKED_TTL_MS = 12 * 60 * 60 * 1000;
 
@@ -42,7 +42,7 @@ function extractStorageKeyFromUrl(url: string): string | null {
  * so the 12-hour unlinked cleanup worker retains the files permanently.
  */
 export async function linkUploadedFilesOnItemSave(
-  db: Database,
+  db: ServiceDatabase,
   input: LinkUploadedFilesOnItemSaveInput,
 ) {
   const now = input.now ?? new Date();

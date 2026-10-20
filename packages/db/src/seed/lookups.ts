@@ -9,7 +9,12 @@ import {
 import { eq } from "drizzle-orm";
 
 import { lookups, lookupTypes } from "../schema";
-import type { Database, LookupSeedSummary, LookupSeedVerification } from "../types";
+import type {
+  Database,
+  LookupSeedSummary,
+  LookupSeedVerification,
+  ServiceDatabase,
+} from "../types";
 
 export interface SeedLookupsOptions {
   actorAccountId?: string | null;
@@ -21,7 +26,7 @@ export interface SeedLookupsOptions {
  * relationships across both lookup_types and lookups.
  */
 export async function seedLookupsData(
-  db: Database,
+  db: ServiceDatabase,
   options?: SeedLookupsOptions,
 ): Promise<LookupSeedSummary> {
   const now = options?.now ?? new Date();

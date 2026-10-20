@@ -189,7 +189,7 @@ export async function seedDemoData(
 
     // 2. Organization Owners (3 Tiers: Enterprise, Growth, Starter)
     {
-      email: "owner@nilehorizon.eg",
+      email: "owner@trips-enjoy.com",
       phone: "+201000000011",
       fullName: "Hossam El-Shazly (Nile Horizon Owner)",
       locale: "ar",
@@ -210,7 +210,7 @@ export async function seedDemoData(
       secondFactorNote: `TOTP (${DEMO_SHARED_TOTP_SECRET}) or SMS OTP`,
     },
     {
-      email: "owner@redsea.eg",
+      email: "owner@trips-enjoy.com",
       phone: "+201000000012",
       fullName: "Mona Zaki (Red Sea Explorers Owner)",
       locale: "en",
@@ -231,7 +231,7 @@ export async function seedDemoData(
       secondFactorNote: "SMS OTP or TOTP",
     },
     {
-      email: "owner@sinaitrails.eg",
+      email: "owner@trips-enjoy.com",
       phone: "+201000000013",
       fullName: "Youssef Salem (Sinai Trails Owner)",
       locale: "ar",
@@ -254,7 +254,7 @@ export async function seedDemoData(
 
     // 3. Organization Employees (incl. Multi-Org Employee)
     {
-      email: "trips.emp@nilehorizon.eg",
+      email: "trips.emp@trips-enjoy.com",
       phone: "+201000000021",
       fullName: "Amira Fathy (Trips & Bookings Coordinator)",
       locale: "ar",
@@ -274,7 +274,7 @@ export async function seedDemoData(
       secondFactorNote: `TOTP (${DEMO_SHARED_TOTP_SECRET})`,
     },
     {
-      email: "finance.emp@nilehorizon.eg",
+      email: "finance.emp@trips-enjoy.com",
       phone: "+201000000022",
       fullName: "Sherif Kamel (Organization Accountant)",
       locale: "en",
@@ -318,7 +318,7 @@ export async function seedDemoData(
       secondFactorNote: "Multi-Org Switcher (FR-AUTH-07)",
     },
     {
-      email: "firstlogin.emp@redsea.eg",
+      email: "firstlogin.emp@trips-enjoy.com",
       phone: "+201000000024",
       fullName: "Wael Gamal (First-Sign-In Employee)",
       locale: "ar",
@@ -340,7 +340,7 @@ export async function seedDemoData(
 
     // 4. Travelers, Parent & Multi-Role User
     {
-      email: "traveler.free@example.com",
+      email: "traveler.free@trips-enjoy.com",
       phone: "+201000000031",
       fullName: "Omar Khaled (Free Traveler)",
       locale: "ar",
@@ -356,7 +356,7 @@ export async function seedDemoData(
       ],
     },
     {
-      email: "traveler.explorer@example.com",
+      email: "traveler.explorer@trips-enjoy.com",
       phone: "+201000000032",
       fullName: "Layla Ibrahim (Explorer Traveler)",
       locale: "en",
@@ -372,7 +372,7 @@ export async function seedDemoData(
       ],
     },
     {
-      email: "traveler.vip@example.com",
+      email: "traveler.vip@trips-enjoy.com",
       phone: "+201000000033",
       fullName: "Ziad Mahmoud (VIP Traveler)",
       locale: "ar",
@@ -388,7 +388,7 @@ export async function seedDemoData(
       ],
     },
     {
-      email: "parent.guardian@example.com",
+      email: "parent.guardian@trips-enjoy.com",
       phone: "+201000000034",
       fullName: "Dina Mostafa (Parent / Guardian)",
       locale: "ar",
@@ -408,7 +408,7 @@ export async function seedDemoData(
       ],
     },
     {
-      email: "multirole@example.com",
+      email: "multirole@trips-enjoy.com",
       phone: "+201000000035",
       fullName: "Hassan Samir (Traveler + Studio Photographer)",
       locale: "ar",
@@ -431,7 +431,7 @@ export async function seedDemoData(
 
     // 5. Drivers (Platform & Org-Owned)
     {
-      email: "driver.basic@example.com",
+      email: "driver.basic@trips-enjoy.com",
       phone: "+201000000041",
       fullName: "Mahmoud Said (Basic Platform Driver w/ Vehicle)",
       locale: "ar",
@@ -451,7 +451,7 @@ export async function seedDemoData(
       ],
     },
     {
-      email: "driver.pro@example.com",
+      email: "driver.pro@trips-enjoy.com",
       phone: "+201000000042",
       fullName: "Ibrahim Naguib (Professional Platform Driver, No Vehicle)",
       locale: "ar",
@@ -467,7 +467,7 @@ export async function seedDemoData(
       ],
     },
     {
-      email: "driver.labpause@example.com",
+      email: "driver.labpause@trips-enjoy.com",
       phone: "+201000000043",
       fullName: "Ashraf Tolba (Lab-Test Paused Platform Driver)",
       locale: "ar",
@@ -486,7 +486,7 @@ export async function seedDemoData(
       secondFactorNote: "Paused pending random lab test result (FR-DRV-03)",
     },
     {
-      email: "org.driver@nilehorizon.eg",
+      email: "org.driver@trips-enjoy.com",
       phone: "+201000000044",
       fullName: "Sayed Metwally (Nile Horizon Org Driver)",
       locale: "ar",
@@ -505,7 +505,7 @@ export async function seedDemoData(
 
     // 6. Photographers (Platform & Org-Owned)
     {
-      email: "photo.basic@example.com",
+      email: "photo.basic@trips-enjoy.com",
       phone: "+201000000051",
       fullName: "Farida Lotfy (Basic Platform Photographer)",
       locale: "ar",
@@ -521,7 +521,7 @@ export async function seedDemoData(
       ],
     },
     {
-      email: "photo.pro@example.com",
+      email: "photo.pro@trips-enjoy.com",
       phone: "+201000000052",
       fullName: "Tamer Hosny (Pro Platform Photographer)",
       locale: "en",
@@ -537,7 +537,7 @@ export async function seedDemoData(
       ],
     },
     {
-      email: "org.photo@nilehorizon.eg",
+      email: "org.photo@trips-enjoy.com",
       phone: "+201000000053",
       fullName: "Mariam Amin (Nile Horizon Org Photographer)",
       locale: "ar",
@@ -556,7 +556,7 @@ export async function seedDemoData(
 
     // 7. Vehicle Moderator (D-107)
     {
-      email: "moderator.bus1@nilehorizon.eg",
+      email: "moderator.bus1@trips-enjoy.com",
       phone: "+201000000061",
       fullName: "Khaled Soliman (Vehicle Moderator Bus #1)",
       locale: "ar",
@@ -576,7 +576,7 @@ export async function seedDemoData(
 
     // 8. Special Auth State Accounts (Edge Cases)
     {
-      email: "unverified@example.com",
+      email: "unverified@trips-enjoy.com",
       phone: "+201000000071",
       fullName: "Hanaa Adel (Pending OTP Verification)",
       locale: "ar",
@@ -593,7 +593,7 @@ export async function seedDemoData(
       secondFactorNote: `Active OTP Code: ${DEMO_UNVERIFIED_OTP_CODE}`,
     },
     {
-      email: "otppaused@example.com",
+      email: "otppaused@trips-enjoy.com",
       phone: "+201000000072",
       fullName: "Bassem Youssef (OTP Paused 15m)",
       locale: "ar",
@@ -610,7 +610,7 @@ export async function seedDemoData(
       secondFactorNote: "5 wrong OTP entries -> paused 15 minutes (BRL-20)",
     },
     {
-      email: "locked@example.com",
+      email: "locked@trips-enjoy.com",
       phone: "+201000000073",
       fullName: "Nader Fergany (Locked Out 15m)",
       locale: "ar",
@@ -629,7 +629,7 @@ export async function seedDemoData(
       secondFactorNote: "5 failed sign-ins -> locked 15 minutes (BRL-21)",
     },
     {
-      email: "suspended@example.com",
+      email: "suspended@trips-enjoy.com",
       phone: "+201000000074",
       fullName: "Gamal Reda (Suspended Account)",
       locale: "ar",
@@ -648,7 +648,7 @@ export async function seedDemoData(
       secondFactorNote: "Suspended account notice (SCR-PUB-15)",
     },
     {
-      email: "deleting@example.com",
+      email: "deleting@trips-enjoy.com",
       phone: "+201000000075",
       fullName: "Salma Rashwan (30-Day Deletion Grace)",
       locale: "en",
@@ -668,7 +668,7 @@ export async function seedDemoData(
 
     // 9. Applicant Accounts for the Onboarding Review Queue (SRS 7.5)
     {
-      email: "applicant.submitted@luxortours.eg",
+      email: "applicant.submitted@trips-enjoy.com",
       phone: "+201000000081",
       fullName: "Adel Imam (Submitted Org Applicant)",
       locale: "ar",
@@ -686,7 +686,7 @@ export async function seedDemoData(
       ],
     },
     {
-      email: "applicant.pending@aswanbus.eg",
+      email: "applicant.pending@trips-enjoy.com",
       phone: "+201000000082",
       fullName: "Hazem El-Beblawi (Pending Review Driver Applicant)",
       locale: "ar",
@@ -702,7 +702,7 @@ export async function seedDemoData(
       ],
     },
     {
-      email: "applicant.overdue@oasisphoto.eg",
+      email: "applicant.overdue@trips-enjoy.com",
       phone: "+201000000083",
       fullName: "Yasmin Sabri (Overdue SLA Photographer Applicant)",
       locale: "ar",
@@ -718,7 +718,7 @@ export async function seedDemoData(
       ],
     },
     {
-      email: "applicant.changes@dahabtrips.eg",
+      email: "applicant.changes@trips-enjoy.com",
       phone: "+201000000084",
       fullName: "Fadyerges (Changes Requested Org Applicant)",
       locale: "en",
@@ -736,7 +736,7 @@ export async function seedDemoData(
       ],
     },
     {
-      email: "applicant.rejected@desertdriver.eg",
+      email: "applicant.rejected@trips-enjoy.com",
       phone: "+201000000085",
       fullName: "Magdy Abdelghany (Rejected Driver Applicant)",
       locale: "ar",
@@ -752,7 +752,7 @@ export async function seedDemoData(
       ],
     },
     {
-      email: "applicant.appealed@alexandriaphoto.eg",
+      email: "applicant.appealed@trips-enjoy.com",
       phone: "+201000000086",
       fullName: "Nelly Karim (Appealed Photographer Applicant)",
       locale: "en",
@@ -768,7 +768,7 @@ export async function seedDemoData(
       ],
     },
     {
-      email: "applicant.closed@oldtrips.eg",
+      email: "applicant.closed@trips-enjoy.com",
       phone: "+201000000087",
       fullName: "Sameh Hussein (Closed Application Applicant)",
       locale: "ar",
@@ -880,7 +880,7 @@ export async function seedDemoData(
   const orgDefs = [
     {
       key: "nileHorizonEnterprise" as const,
-      ownerEmail: "owner@nilehorizon.eg",
+      ownerEmail: "owner@trips-enjoy.com",
       legalEntityName: "Nile Horizon Tourism SAE",
       displayNameEn: "Nile Horizon Tours",
       displayNameAr: "آفاق النيل للسياحة",
@@ -901,7 +901,7 @@ export async function seedDemoData(
       webhookEndpoints: [
         {
           id: "wh-nile-1",
-          url: "https://crm.nilehorizon.eg/webhooks/trips",
+          url: "https://crm.trips-enjoy.com/webhooks/trips",
           secretHash: hashSha256("whsec_demo_nile_horizon_secret"),
           events: ["booking.confirmed", "trip.completed", "invoice.issued"],
           enabled: true,
@@ -910,7 +910,7 @@ export async function seedDemoData(
     },
     {
       key: "redSeaGrowth" as const,
-      ownerEmail: "owner@redsea.eg",
+      ownerEmail: "owner@trips-enjoy.com",
       legalEntityName: "Red Sea Explorers Travel LLC",
       displayNameEn: "Red Sea Explorers",
       displayNameAr: "مستكشفو البحر الأحمر",
@@ -932,7 +932,7 @@ export async function seedDemoData(
     },
     {
       key: "sinaiStarter" as const,
-      ownerEmail: "owner@sinaitrails.eg",
+      ownerEmail: "owner@trips-enjoy.com",
       legalEntityName: "Sinai Trails Eco Adventures Co.",
       displayNameEn: "Sinai Trails",
       displayNameAr: "دروب سيناء",
@@ -1016,7 +1016,7 @@ export async function seedDemoData(
       countryCode: "EG",
       planTier: org.planTier,
       billingContactName: org.signatoryName,
-      billingContactEmail: `billing@${org.displayNameEn.toLowerCase().replace(/\s+/g, "")}.eg`,
+      billingContactEmail: `billing+${org.displayNameEn.toLowerCase().replace(/\s+/g, "")}@trips-enjoy.com`,
       billingContactPhone: "+201000000099",
       billingAddress: org.address,
       taxNumber: org.taxNumber,
@@ -1117,27 +1117,27 @@ export async function seedDemoData(
   }[] = [
     {
       tenantKey: "nileHorizonEnterprise",
-      accountEmail: "trips.emp@nilehorizon.eg",
-      invitedEmail: "trips.emp@nilehorizon.eg",
+      accountEmail: "trips.emp@trips-enjoy.com",
+      invitedEmail: "trips.emp@trips-enjoy.com",
       invitedPhone: "+201000000021",
       roleTitle: "Trip Coordinator",
       permissions: EMPLOYEE_ROLE_PRESETS.trip_coordinator!,
       inviteToken: "demo-emp-invite-token-1",
       status: "active",
       firstSignInCompletedAt: now,
-      invitedByEmail: "owner@nilehorizon.eg",
+      invitedByEmail: "owner@trips-enjoy.com",
     },
     {
       tenantKey: "nileHorizonEnterprise",
-      accountEmail: "finance.emp@nilehorizon.eg",
-      invitedEmail: "finance.emp@nilehorizon.eg",
+      accountEmail: "finance.emp@trips-enjoy.com",
+      invitedEmail: "finance.emp@trips-enjoy.com",
       invitedPhone: "+201000000022",
       roleTitle: "Senior Accountant",
       permissions: EMPLOYEE_ROLE_PRESETS.accountant!,
       inviteToken: "demo-emp-invite-token-2",
       status: "active",
       firstSignInCompletedAt: now,
-      invitedByEmail: "owner@nilehorizon.eg",
+      invitedByEmail: "owner@trips-enjoy.com",
     },
     {
       tenantKey: "nileHorizonEnterprise",
@@ -1149,7 +1149,7 @@ export async function seedDemoData(
       inviteToken: "demo-emp-invite-token-3a",
       status: "active",
       firstSignInCompletedAt: now,
-      invitedByEmail: "owner@nilehorizon.eg",
+      invitedByEmail: "owner@trips-enjoy.com",
     },
     {
       tenantKey: "redSeaGrowth",
@@ -1161,31 +1161,31 @@ export async function seedDemoData(
       inviteToken: "demo-emp-invite-token-3b",
       status: "active",
       firstSignInCompletedAt: now,
-      invitedByEmail: "owner@redsea.eg",
+      invitedByEmail: "owner@trips-enjoy.com",
     },
     {
       tenantKey: "redSeaGrowth",
-      accountEmail: "firstlogin.emp@redsea.eg",
-      invitedEmail: "firstlogin.emp@redsea.eg",
+      accountEmail: "firstlogin.emp@trips-enjoy.com",
+      invitedEmail: "firstlogin.emp@trips-enjoy.com",
       invitedPhone: "+201000000024",
       roleTitle: "Support Agent",
       permissions: EMPLOYEE_ROLE_PRESETS.support_agent!,
       inviteToken: "demo-emp-invite-token-4",
       status: "active",
       firstSignInCompletedAt: null,
-      invitedByEmail: "owner@redsea.eg",
+      invitedByEmail: "owner@trips-enjoy.com",
     },
     {
       tenantKey: "sinaiStarter",
       accountEmail: null,
-      invitedEmail: "invited.emp@sinaitrails.eg",
+      invitedEmail: "invited.emp@trips-enjoy.com",
       invitedPhone: "+201000000025",
       roleTitle: "Trip Coordinator",
       permissions: EMPLOYEE_ROLE_PRESETS.trip_coordinator!,
       inviteToken: "demo-emp-pending-invite-token",
       status: "invited",
       firstSignInCompletedAt: null,
-      invitedByEmail: "owner@sinaitrails.eg",
+      invitedByEmail: "owner@trips-enjoy.com",
     },
   ];
 
@@ -1264,7 +1264,7 @@ export async function seedDemoData(
   // Trips and vehicles live in a separate module, so the demo assignment reuses the ids it already
   // references when present and generates fresh ones otherwise.
   const moderatorTenantId = orgIds.nileHorizonEnterprise;
-  const moderatorAccountId = accountIdFor("moderator.bus1@nilehorizon.eg");
+  const moderatorAccountId = accountIdFor("moderator.bus1@trips-enjoy.com");
   const [existingModeratorAssignment] = await db
     .select({
       id: moderatorAssignments.id,
@@ -1306,14 +1306,14 @@ export async function seedDemoData(
       },
     });
 
-  // Upsert OTP records for unverified@example.com and otppaused@example.com
+  // Upsert OTP records for unverified@trips-enjoy.com and otppaused@trips-enjoy.com
   const unverifiedOtpId = await resolveId(
     db
       .select({ id: otpVerifications.id })
       .from(otpVerifications)
       .where(
         and(
-          eq(otpVerifications.accountId, accountIdFor("unverified@example.com")),
+          eq(otpVerifications.accountId, accountIdFor("unverified@trips-enjoy.com")),
           eq(otpVerifications.purpose, "registration"),
         ),
       )
@@ -1324,7 +1324,7 @@ export async function seedDemoData(
     .insert(otpVerifications)
     .values({
       id: unverifiedOtpId,
-      accountId: accountIdFor("unverified@example.com"),
+      accountId: accountIdFor("unverified@trips-enjoy.com"),
       targetIdentifier: "+201000000071",
       channel: "sms",
       purpose: "registration",
@@ -1354,7 +1354,7 @@ export async function seedDemoData(
       .from(otpVerifications)
       .where(
         and(
-          eq(otpVerifications.accountId, accountIdFor("otppaused@example.com")),
+          eq(otpVerifications.accountId, accountIdFor("otppaused@trips-enjoy.com")),
           eq(otpVerifications.purpose, "registration"),
         ),
       )
@@ -1365,7 +1365,7 @@ export async function seedDemoData(
     .insert(otpVerifications)
     .values({
       id: pausedOtpId,
-      accountId: accountIdFor("otppaused@example.com"),
+      accountId: accountIdFor("otppaused@trips-enjoy.com"),
       targetIdentifier: "+201000000072",
       channel: "sms",
       purpose: "registration",
@@ -1415,7 +1415,7 @@ export async function seedDemoData(
     codes.map((code) => lookupValue(typeCode, code));
 
   // Upsert Driver Consent & Driver Profiles
-  const driverConsentAccountId = accountIdFor("driver.basic@example.com");
+  const driverConsentAccountId = accountIdFor("driver.basic@trips-enjoy.com");
   const driverConsentId = await resolveId(
     db
       .select({ id: consentRecords.id })
@@ -1446,7 +1446,7 @@ export async function seedDemoData(
 
   const driverProfileRows = [
     {
-      accountEmail: "driver.basic@example.com",
+      accountEmail: "driver.basic@trips-enjoy.com",
       scope: "platform" as const,
       tenantKey: null,
       licenseCat: lookupValue("DRIVER_LICENSE_CATEGORY", "FIRST_DEGREE_BUS"),
@@ -1464,7 +1464,7 @@ export async function seedDemoData(
       activeLabPauseReason: null,
     },
     {
-      accountEmail: "driver.pro@example.com",
+      accountEmail: "driver.pro@trips-enjoy.com",
       scope: "platform" as const,
       tenantKey: null,
       licenseCat: lookupValue("DRIVER_LICENSE_CATEGORY", "FIRST_DEGREE_HEAVY_BUS"),
@@ -1482,7 +1482,7 @@ export async function seedDemoData(
       activeLabPauseReason: null,
     },
     {
-      accountEmail: "driver.labpause@example.com",
+      accountEmail: "driver.labpause@trips-enjoy.com",
       scope: "platform" as const,
       tenantKey: null,
       licenseCat: lookupValue("DRIVER_LICENSE_CATEGORY", "SECOND_DEGREE_COASTER"),
@@ -1500,7 +1500,7 @@ export async function seedDemoData(
       activeLabPauseReason: "Random drug & safety lab test ordered (deadline 3 days)",
     },
     {
-      accountEmail: "org.driver@nilehorizon.eg",
+      accountEmail: "org.driver@trips-enjoy.com",
       scope: "organization" as const,
       tenantKey: "nileHorizonEnterprise" as DemoOrgKey,
       licenseCat: lookupValue("DRIVER_LICENSE_CATEGORY", "FIRST_DEGREE_BUS"),
@@ -1561,7 +1561,7 @@ export async function seedDemoData(
   // Upsert Photographer Profiles
   const photoProfileRows = [
     {
-      accountEmail: "multirole@example.com",
+      accountEmail: "multirole@trips-enjoy.com",
       scope: "platform" as const,
       tenantKey: null,
       years: 6,
@@ -1578,7 +1578,7 @@ export async function seedDemoData(
       planTier: "studio" as const,
     },
     {
-      accountEmail: "photo.basic@example.com",
+      accountEmail: "photo.basic@trips-enjoy.com",
       scope: "platform" as const,
       tenantKey: null,
       years: 3,
@@ -1591,7 +1591,7 @@ export async function seedDemoData(
       planTier: "basic" as const,
     },
     {
-      accountEmail: "photo.pro@example.com",
+      accountEmail: "photo.pro@trips-enjoy.com",
       scope: "platform" as const,
       tenantKey: null,
       years: 10,
@@ -1608,7 +1608,7 @@ export async function seedDemoData(
       planTier: "pro" as const,
     },
     {
-      accountEmail: "org.photo@nilehorizon.eg",
+      accountEmail: "org.photo@trips-enjoy.com",
       scope: "organization" as const,
       tenantKey: "nileHorizonEnterprise" as DemoOrgKey,
       years: 4,
@@ -1674,7 +1674,7 @@ export async function seedDemoData(
     provisionedOrganizationKey?: DemoOrgKey;
   }[] = [
     {
-      applicantEmail: "applicant.submitted@luxortours.eg",
+      applicantEmail: "applicant.submitted@trips-enjoy.com",
       applicationType: "organization",
       state: "Submitted",
       slaDueAt: addWorkingDays(now, 2),
@@ -1687,7 +1687,7 @@ export async function seedDemoData(
       },
     },
     {
-      applicantEmail: "applicant.pending@aswanbus.eg",
+      applicantEmail: "applicant.pending@trips-enjoy.com",
       applicationType: "platform_driver",
       state: "Pending Review",
       slaDueAt: addWorkingDays(now, 2),
@@ -1700,7 +1700,7 @@ export async function seedDemoData(
       },
     },
     {
-      applicantEmail: "applicant.overdue@oasisphoto.eg",
+      applicantEmail: "applicant.overdue@trips-enjoy.com",
       applicationType: "platform_photographer",
       state: "Pending Review",
       slaDueAt: fiveDaysAgo, // Overdue > 2 working days (FR-ONB-03)
@@ -1712,7 +1712,7 @@ export async function seedDemoData(
       },
     },
     {
-      applicantEmail: "applicant.changes@dahabtrips.eg",
+      applicantEmail: "applicant.changes@trips-enjoy.com",
       applicationType: "organization",
       state: "Changes Requested",
       slaDueAt: addWorkingDays(now, 2),
@@ -1732,7 +1732,7 @@ export async function seedDemoData(
       changesDueAt: in14Days,
     },
     {
-      applicantEmail: "owner@nilehorizon.eg",
+      applicantEmail: "owner@trips-enjoy.com",
       applicationType: "organization",
       state: "Approved",
       slaDueAt: fiveDaysAgo,
@@ -1745,7 +1745,7 @@ export async function seedDemoData(
       provisionedOrganizationKey: "nileHorizonEnterprise",
     },
     {
-      applicantEmail: "applicant.rejected@desertdriver.eg",
+      applicantEmail: "applicant.rejected@trips-enjoy.com",
       applicationType: "platform_driver",
       state: "Rejected",
       slaDueAt: fiveDaysAgo,
@@ -1759,7 +1759,7 @@ export async function seedDemoData(
       reapplyBlockedUntil: in30Days,
     },
     {
-      applicantEmail: "applicant.appealed@alexandriaphoto.eg",
+      applicantEmail: "applicant.appealed@trips-enjoy.com",
       applicationType: "platform_photographer",
       state: "Appealed",
       slaDueAt: addWorkingDays(now, 2),
@@ -1776,7 +1776,7 @@ export async function seedDemoData(
       appealedAt: now,
     },
     {
-      applicantEmail: "applicant.closed@oldtrips.eg",
+      applicantEmail: "applicant.closed@trips-enjoy.com",
       applicationType: "organization",
       state: "Closed",
       slaDueAt: tenDaysAgo,
@@ -1945,7 +1945,7 @@ export async function seedDemoData(
       vipEarlyAccessUntil: null,
       hasStaffingGap: false,
       publishedAt: now,
-      createdByAccountId: accountIdFor("owner@nilehorizon.eg"),
+      createdByAccountId: accountIdFor("owner@trips-enjoy.com"),
       createdAt: now,
       updatedAt: now,
     })
@@ -1992,7 +1992,7 @@ export async function seedDemoData(
       seatCount: 9,
       seatLayout: cruiseSeatLayout,
       status: "active",
-      createdByAccountId: accountIdFor("owner@nilehorizon.eg"),
+      createdByAccountId: accountIdFor("owner@trips-enjoy.com"),
       createdAt: now,
       updatedAt: now,
     })
@@ -2026,7 +2026,7 @@ export async function seedDemoData(
       seatCount: 9,
       registrationStatus: "valid",
       registrationExpiry: in9Months,
-      createdByAccountId: accountIdFor("owner@nilehorizon.eg"),
+      createdByAccountId: accountIdFor("owner@trips-enjoy.com"),
       createdAt: now,
       updatedAt: now,
     })
@@ -2111,7 +2111,7 @@ export async function seedDemoData(
         bookedCount: 0,
         sortOrder: 1,
         status: "active",
-        createdByAccountId: accountIdFor("owner@nilehorizon.eg"),
+        createdByAccountId: accountIdFor("owner@trips-enjoy.com"),
         createdAt: now,
         updatedAt: now,
       },
@@ -2131,7 +2131,7 @@ export async function seedDemoData(
         bookedCount: 8,
         sortOrder: 2,
         status: "active",
-        createdByAccountId: accountIdFor("owner@nilehorizon.eg"),
+        createdByAccountId: accountIdFor("owner@trips-enjoy.com"),
         createdAt: now,
         updatedAt: now,
       },
@@ -2205,7 +2205,7 @@ export async function seedDemoData(
       publishMode: "public",
       hasStaffingGap: false,
       publishedAt: new Date(now.getTime() - 40 * 24 * 60 * 60 * 1000),
-      createdByAccountId: accountIdFor("owner@nilehorizon.eg"),
+      createdByAccountId: accountIdFor("owner@trips-enjoy.com"),
       createdAt: now,
       updatedAt: now,
     })
