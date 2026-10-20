@@ -171,7 +171,7 @@ function LandingHeader({ signedIn }: { signedIn: boolean }) {
 }
 
 /** The العربية link is the same locale switch the shell uses, so the SSR'd page flips with it. */
-function LanguageLink({ className }: { className?: string }) {
+function LanguageLink({ compact = false }: { compact?: boolean }) {
   const { locale, setLocale, t } = useAuth();
   const next = locale === "ar" ? "en" : "ar";
   return (
@@ -179,7 +179,11 @@ function LanguageLink({ className }: { className?: string }) {
       type="button"
       lang={next}
       onClick={() => setLocale(next)}
-      className={`inline-flex h-11 cursor-pointer items-center px-3 text-[15px] font-semibold text-[#262a67] hover:text-[#c93a00] ${className ?? ""}`}
+      className={
+        compact
+          ? "cursor-pointer border-0 bg-transparent p-0 text-[13px] font-normal text-[#b8bad6] hover:text-[#f89e23]"
+          : "inline-flex h-11 cursor-pointer items-center border-0 bg-transparent px-3 text-[15px] font-semibold text-[#262a67] hover:text-[#c93a00]"
+      }
     >
       {next === "ar" ? t("component.shell.language.arabic") : t("component.shell.language.english")}
     </button>
@@ -278,7 +282,7 @@ function SearchCard() {
             value={where}
             placeholder={t("screen.public.landing.search.wherePlaceholder")}
             onChange={(event) => setWhere(event.target.value)}
-            className="h-[52px] rounded-lg border border-[#7b7fa6] bg-white px-3.5 font-inherit text-base text-[#262a67]"
+            className="h-[52px] rounded-lg border border-[#7b7fa6] bg-white px-3.5 text-base text-[#262a67]"
           />
         </div>
         <div className="flex grow basis-[180px] flex-col gap-1.5">
@@ -289,7 +293,7 @@ function SearchCard() {
             id="landing-dates"
             type="text"
             placeholder={t("screen.public.landing.search.datesPlaceholder")}
-            className="h-[52px] rounded-lg border border-[#7b7fa6] bg-white px-3.5 font-inherit text-base text-[#262a67]"
+            className="h-[52px] rounded-lg border border-[#7b7fa6] bg-white px-3.5 text-base text-[#262a67]"
           />
         </div>
         <div className="flex grow basis-[180px] flex-col gap-1.5">
@@ -710,7 +714,7 @@ function LandingFooter() {
             <Link to={pathFor("SCR-PUB-20")} className={`${NAVY_MUTED} hover:text-[#f89e23]`}>
               {t("screen.public.landing.footer.terms")}
             </Link>
-            <LanguageLink className="!px-0 !text-[13px] !font-normal text-[#b8bad6] hover:!text-[#f89e23]" />
+            <LanguageLink compact />
           </span>
         </div>
       </div>
