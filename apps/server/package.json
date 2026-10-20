@@ -19,6 +19,7 @@
     "@mohamedhabibwork/notifykit": "catalog:",
     "@mohamedhabibwork/queuekit": "catalog:",
     "@mohamedhabibwork/storagekit": "catalog:",
+    "@orpc/json-schema": "^1.15.7",
     "@orpc/openapi": "catalog:",
     "@orpc/server": "catalog:",
     "@orpc/zod": "catalog:",

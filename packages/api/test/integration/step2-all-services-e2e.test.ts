@@ -150,12 +150,12 @@ describe("Integration: All 17 Remaining Services End-to-End (Operations, Commerc
   test("1. Operations Domain: Programs, Staffing, Availability, Negotiation, Seats, and Coupons end-to-end", async () => {
     const enterpriseTenantId = summary.ids.organizations.nileHorizonEnterprise;
     const ownerId = demoAccountId(summary, "owner@nilehorizon.eg");
-    const driverBasicId = demoAccountId(summary, "driver.basic@example.com");
+    const driverBasicId = demoAccountId(summary, "driver.basic@trips-enjoy.com");
     const orgDriverId = demoAccountId(summary, "org.driver@nilehorizon.eg");
     const orgPhotoId = demoAccountId(summary, "org.photo@nilehorizon.eg");
     const moderatorId = demoAccountId(summary, "moderator.bus1@nilehorizon.eg");
-    const vipTravelerId = demoAccountId(summary, "traveler.vip@example.com");
-    const freeTravelerId = demoAccountId(summary, "traveler.free@example.com");
+    const vipTravelerId = demoAccountId(summary, "traveler.vip@trips-enjoy.com");
+    const freeTravelerId = demoAccountId(summary, "traveler.free@trips-enjoy.com");
     const superAdminId = demoAccountId(summary, "superadmin@trips-enjoy.com");
 
     const ownerClient = makeClient({
@@ -805,7 +805,7 @@ describe("Integration: All 17 Remaining Services End-to-End (Operations, Commerc
     expect(overriddenSub.overrideNote).toBe("Enterprise strategic partner annual renewal");
 
     // 2H. Photographer Service: Profile, update profile, create album, upload photos, publish album
-    const photoProId = demoAccountId(summary, "photo.pro@example.com");
+    const photoProId = demoAccountId(summary, "photo.pro@trips-enjoy.com");
     const photoClient = makeClient({
       accountId: photoProId,
       sessionId: randomUUID(),

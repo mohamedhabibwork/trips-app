@@ -10,6 +10,7 @@ import { mapAvailabilityError } from "@trips-app/service-availability";
 import { mapBookingError } from "@trips-app/service-booking";
 import { mapCheckInError } from "@trips-app/service-check-in";
 import { mapCouponsError } from "@trips-app/service-coupons";
+import { mapDocumentsError } from "@trips-app/service-documents";
 import { mapDriverError } from "@trips-app/service-driver";
 import { mapEmployeesError } from "@trips-app/service-employees";
 import { mapFleetError } from "@trips-app/service-fleet";
@@ -32,8 +33,8 @@ import { mapTripsError } from "@trips-app/service-trips";
 
 import {
   createOpenAPISpecGenerateOptions,
-  encodeOpenAPIErrorResponse,
   ERROR_CATEGORIES,
+  encodeOpenAPIErrorResponse,
   generateOpenAPISpec,
   isApiResponseEnvelope,
   OPENAPI_SERVICE_TAGS,
@@ -44,7 +45,7 @@ import {
 import { appRouter } from "./routers/index";
 
 describe("oRPC OpenAPI 3.1 Specification & Standardized Envelope (@trips-app/api)", () => {
-  it("generates a complete OpenAPI 3.1.1 specification covering all 26 services and common schemas", async () => {
+  it("generates a complete OpenAPI 3.1.1 specification covering all 27 services and common schemas", async () => {
     const spec = await generateOpenAPISpec();
 
     expect(spec.openapi).toBe("3.1.1");
@@ -181,7 +182,12 @@ describe("oRPC OpenAPI 3.1 Specification & Standardized Envelope (@trips-app/api
     const unauthBody = (await wrappedUnauth.json()) as {
       success: false;
       data: null;
-      error: { code: string; category: string; status: number; message: string };
+      error: {
+        code: string;
+        category: string;
+        status: number;
+        message: string;
+      };
       requestId: string;
     };
     expect(isApiResponseEnvelope(unauthBody)).toBe(true);
@@ -246,7 +252,7 @@ describe("oRPC OpenAPI 3.1 Specification & Standardized Envelope (@trips-app/api
     expect(specJson.paths["/healthCheck"]).toBeDefined();
   });
 
-  it("verifies all 26 services map errors to the centralized SharedErrorCode catalog", () => {
+  it("verifies all 27 services map errors to the centralized SharedErrorCode catalog", () => {
     const serviceMappers = [
       ["accounting", mapAccountingError],
       ["admin", mapAdminError],
@@ -255,6 +261,7 @@ describe("oRPC OpenAPI 3.1 Specification & Standardized Envelope (@trips-app/api
       ["booking", mapBookingError],
       ["check-in", mapCheckInError],
       ["coupons", mapCouponsError],
+      ["documents", mapDocumentsError],
       ["driver", mapDriverError],
       ["employees", mapEmployeesError],
       ["fleet", mapFleetError],
@@ -276,7 +283,7 @@ describe("oRPC OpenAPI 3.1 Specification & Standardized Envelope (@trips-app/api
       ["trips", mapTripsError],
     ] as const;
 
-    expect(serviceMappers.length).toBe(26);
+    expect(serviceMappers.length).toBe(27);
 
     for (const [serviceId, mapError] of serviceMappers) {
       const mappedNotFound = mapError({

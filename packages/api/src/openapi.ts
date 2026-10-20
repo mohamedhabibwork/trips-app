@@ -53,6 +53,11 @@ export const OPENAPI_SERVICE_TAGS = [
     description: "Driver profile, compliance documents, and trip execution",
   },
   {
+    name: "documents",
+    description:
+      "PDF document rendering (invoices, tickets, itineraries, manifests, statements) and client email delivery",
+  },
+  {
     name: "employees",
     description: "Organization staff invitations, 9-area permission matrices, and roles",
   },

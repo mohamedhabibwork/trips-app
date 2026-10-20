@@ -153,7 +153,7 @@ describe("Integration: Two-Tier Seeder, Auth, Roles, Settings & Onboarding", () 
   test("4. Multi-Role Account Sign-In & Role Switcher (WF-ID-06, FR-AUTH-06)", async () => {
     const seed = await demoSeed();
     const login = await authService.signIn({
-      identifier: "multirole@example.com",
+      identifier: "multirole@trips-enjoy.com",
       method: "password",
       password: DEMO_DEFAULT_PASSWORD,
       requestedRole: "traveler",
@@ -165,7 +165,7 @@ describe("Integration: Two-Tier Seeder, Auth, Roles, Settings & Onboarding", () 
 
       const switched = await authService.switchRole(
         {
-          accountId: demoAccountId(seed, "multirole@example.com"),
+          accountId: demoAccountId(seed, "multirole@trips-enjoy.com"),
           sessionId: login.session.sessionId,
         },
         {
@@ -205,7 +205,7 @@ describe("Integration: Two-Tier Seeder, Auth, Roles, Settings & Onboarding", () 
     // Locked account throws RATE_LIMITED
     await expect(
       authService.signIn({
-        identifier: "locked@example.com",
+        identifier: "locked@trips-enjoy.com",
         method: "password",
         password: DEMO_DEFAULT_PASSWORD,
         surface: "web",
@@ -215,7 +215,7 @@ describe("Integration: Two-Tier Seeder, Auth, Roles, Settings & Onboarding", () 
     // Suspended account throws FORBIDDEN
     await expect(
       authService.signIn({
-        identifier: "suspended@example.com",
+        identifier: "suspended@trips-enjoy.com",
         method: "password",
         password: DEMO_DEFAULT_PASSWORD,
         surface: "web",
@@ -224,7 +224,7 @@ describe("Integration: Two-Tier Seeder, Auth, Roles, Settings & Onboarding", () 
 
     // Account in 30-day deletion grace period is automatically restored on sign-in (FR-AUTH-09, D-38)
     const restoredLogin = await authService.signIn({
-      identifier: "deleting@example.com",
+      identifier: "deleting@trips-enjoy.com",
       method: "password",
       password: DEMO_DEFAULT_PASSWORD,
       surface: "web",

@@ -48,7 +48,7 @@ beforeAll(async () => {
     .insert(schema.employeeMemberships)
     .values({
       tenantId: org.id,
-      invitedEmail: `qa+invite+${randomUUID().slice(0, 8)}@example.com`,
+      invitedEmail: `qa+invite+${randomUUID().slice(0, 8)}@trips-enjoy.com`,
       roleTitle: "Operations",
       permissions: {
         trips: "manage",

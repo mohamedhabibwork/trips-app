@@ -25,6 +25,7 @@ import { routes as accounting } from "@trips-app/service-accounting";
 import { routes as notifications } from "@trips-app/service-notifications";
 import { routes as traveler } from "@trips-app/service-traveler";
 import { routes as availability } from "@trips-app/service-availability";
+import { routes as documents } from "@trips-app/service-documents";
 
 export const serviceRouters = {
   auth,
@@ -53,4 +54,5 @@ export const serviceRouters = {
   notifications,
   traveler,
   availability,
+  documents,
 };

@@ -45,6 +45,7 @@ export const SERVICE_NAMES = [
   "notifications",
   "traveler",
   "availability",
+  "documents",
 ] as const;
 
 // Every service has these folders under src/, each with an index.ts. Purpose is written into that index.ts.
@@ -110,7 +111,7 @@ function integrationFiles(name: string): Record<string, string> {
     "src/routes/index.ts": `// oRPC procedures for ${titleOf(name)}. Validate input with schemas, call services, map errors.\n// Every service exposes at least one procedure. Build them on the local procedure in ./procedure.\nimport { procedure } from "./procedure";\n\nexport const routes = {\n\tstatus: procedure\n\t\t.route({\n\t\t\tmethod: "GET",\n\t\t\tpath: "/${name}/status",\n\t\t\toperationId: "${camelOf(name)}Status",\n\t\t\tsummary: "${titleOf(name)} service health status",\n\t\t\ttags: ["${name}"],\n\t\t})\n\t\thandler(() => ({ service: "${name}", status: "ok" as const })),\n};\n`,
     "src/routes/procedure.ts": `// Procedure for ${titleOf(name)}. Extends the shared publicProcedure from ${RPC_PACKAGE}; add this service's middleware and error definitions here.\nimport { createServiceErrorMiddleware, publicProcedure } from "${RPC_PACKAGE}";\n\nimport { map${pascal}Error } from "../errors";\n\nconst mapErrors = createServiceErrorMiddleware(map${pascal}Error, "${name}");\n\nexport const procedure = publicProcedure.use(mapErrors);\n`,
     "src/services/index.ts": `// Business logic for ${titleOf(name)}. Routes call this factory with context.db; repositories are created here.\nimport type { ServiceDatabase } from "../repository";\n\nexport function create${pascal}Service(_db: ServiceDatabase) {\n\treturn {};\n}\n`,
-    "src/repository/index.ts": `// Data access through @trips-app/db. Every tenant-owned query filters by tenant (DAT-01).\nexport type { Database as ServiceDatabase } from "@trips-app/db";\n`,
+    "src/repository/index.ts": `// Data access through @trips-app/db. Every tenant-owned query filters by tenant (DAT-01).\nexport type { ServiceDatabase } from "@trips-app/db";\n`,
   };
 }
 

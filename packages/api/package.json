@@ -23,6 +23,7 @@
     "@trips-app/service-booking": "workspace:*",
     "@trips-app/service-check-in": "workspace:*",
     "@trips-app/service-coupons": "workspace:*",
+    "@trips-app/service-documents": "workspace:*",
     "@trips-app/service-driver": "workspace:*",
     "@trips-app/service-employees": "workspace:*",
     "@trips-app/service-fleet": "workspace:*",

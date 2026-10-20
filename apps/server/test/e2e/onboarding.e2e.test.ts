@@ -48,7 +48,7 @@ async function payload(response: Response): Promise<Record<string, unknown>> {
 function identity(prefix = "qa+onb"): { email: string; phone: string } {
   const compact = randomUUID().replace(/-/g, "");
   return {
-    email: `${prefix}+${compact.slice(0, 12)}@example.com`,
+    email: `${prefix}+${compact.slice(0, 12)}@trips-enjoy.com`,
     phone: `+2015${compact.slice(12, 21)}`,
   };
 }

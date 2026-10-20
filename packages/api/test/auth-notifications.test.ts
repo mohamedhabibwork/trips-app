@@ -1,6 +1,6 @@
 // Integration: the auth service sends the right message for each flow (WF-ID-*, WF-NTF-01).
 // Runs against the real local Postgres with an injected recording notifier, so no mail or SMS leaves
-// the machine. Every account uses a `qa+<uuid>@example.com` address; `afterAll` removes them again.
+// the machine. Every account uses a `qa+<uuid>@trips-enjoy.com` address; `afterAll` removes them again.
 import { randomUUID } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
@@ -65,7 +65,7 @@ function eventsOf<T extends AuthNotificationEvent["type"]>(calls: RecordedCall[]
 function identity() {
   const id = randomUUID();
   const digits = id.replace(/\D/g, "").padEnd(8, "0").slice(0, 8);
-  return { email: `qa+${id}@example.com`, phone: `+2015${digits}` };
+  return { email: `qa+${id}@trips-enjoy.com`, phone: `+2015${digits}` };
 }
 
 describe("Integration: auth notifications", () => {
@@ -183,7 +183,7 @@ describe("Integration: auth notifications", () => {
     calls.length = 0;
 
     // Act and assert: an unknown identifier gets nothing
-    await service.requestPasswordReset({ identifier: `qa+${randomUUID()}@example.com` });
+    await service.requestPasswordReset({ identifier: `qa+${randomUUID()}@trips-enjoy.com` });
     expect(calls).toHaveLength(0);
 
     // Act and assert: a known identifier gets a code, then a notice after the change

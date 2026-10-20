@@ -81,7 +81,7 @@ describe("Integration: Step 1A & 1B Services (Employees, Traveler, Media, Fleet,
   test("1. Employees: invite, resend, accept, update 9-area permissions, suspend with session revocation (T-EMP-05), and enforce plan quota", async () => {
     const enterpriseTenantId = summary.ids.organizations.nileHorizonEnterprise;
     const ownerId = demoAccountId(summary, "owner@nilehorizon.eg");
-    const travelerAccountId = demoAccountId(summary, "traveler.explorer@example.com");
+    const travelerAccountId = demoAccountId(summary, "traveler.explorer@trips-enjoy.com");
 
     const ownerAuth = {
       accountId: ownerId,
@@ -178,7 +178,7 @@ describe("Integration: Step 1A & 1B Services (Employees, Traveler, Media, Fleet,
   });
 
   test("2. Traveler & Media: profile read/update (D-20), avatar linking via linkUploadedFilesOnItemSave, notifications, plan overview, and privacy requests", async () => {
-    const freeTravelerId = demoAccountId(summary, "traveler.free@example.com");
+    const freeTravelerId = demoAccountId(summary, "traveler.free@trips-enjoy.com");
     const actor = {
       accountId: freeTravelerId,
       role: "traveler" as const,
@@ -187,7 +187,7 @@ describe("Integration: Step 1A & 1B Services (Employees, Traveler, Media, Fleet,
     // 2a. Get profile returns decrypted email & phone
     const initialProfile = await travelerService.getProfile(actor);
     expect(initialProfile.accountId).toBe(freeTravelerId);
-    expect(initialProfile.email).toBe("traveler.free@example.com");
+    expect(initialProfile.email).toBe("traveler.free@trips-enjoy.com");
     expect(initialProfile.countryCode).toBe("EG");
 
     // 2b. Upload avatar via media service and confirm it starts as pending with 12h expiry
@@ -212,7 +212,7 @@ describe("Integration: Step 1A & 1B Services (Employees, Traveler, Media, Fleet,
       fullName: "Omar Khaled Updated",
       countryCode: "EG",
       preferredLanguage: "en",
-      email: "traveler.free@example.com",
+      email: "traveler.free@trips-enjoy.com",
       phoneE164: "+201000000031",
       avatarUrl: uploadRes.file.url,
       avatarFileId: uploadRes.file.id,
@@ -252,7 +252,7 @@ describe("Integration: Step 1A & 1B Services (Employees, Traveler, Media, Fleet,
       fullName: "Omar Khaled Mobile",
       countryCode: "EG",
       preferredLanguage: "ar",
-      email: "traveler.free@example.com",
+      email: "traveler.free@trips-enjoy.com",
       phoneE164: "+201000000031",
       avatarUrl: uploadRes.file.url,
       fileIds: [uploadRes.file.id],
@@ -295,8 +295,8 @@ describe("Integration: Step 1A & 1B Services (Employees, Traveler, Media, Fleet,
     const enterpriseOwnerId = demoAccountId(summary, "owner@nilehorizon.eg");
     const starterOwnerId = demoAccountId(summary, "owner@sinaitrails.eg");
     const opsAdminId = demoAccountId(summary, "ops.admin@trips-enjoy.com");
-    const freeTravelerId = demoAccountId(summary, "traveler.free@example.com");
-    const vipTravelerId = demoAccountId(summary, "traveler.vip@example.com");
+    const freeTravelerId = demoAccountId(summary, "traveler.free@trips-enjoy.com");
+    const vipTravelerId = demoAccountId(summary, "traveler.vip@trips-enjoy.com");
 
     const enterpriseActor = {
       accountId: enterpriseOwnerId,

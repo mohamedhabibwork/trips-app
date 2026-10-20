@@ -4,6 +4,7 @@ import { fromTypes, openapi } from "@elysia/openapi";
 import { cors } from "@elysiajs/cors";
 import { OpenAPIHandler } from "@orpc/openapi/fetch";
 import { OpenAPIReferencePlugin } from "@orpc/openapi/plugins";
+import { SmartCoercionPlugin } from "@orpc/json-schema";
 import { onError } from "@orpc/server";
 import { RPCHandler } from "@orpc/server/fetch";
 import { ZodToJsonSchemaConverter } from "@orpc/zod/zod4";
@@ -38,6 +39,11 @@ import type { OpenAPIDocumentation } from "./types";
 export type * from "./types";
 
 const rpcHandler = new RPCHandler(appRouter, {
+  plugins: [
+    new SmartCoercionPlugin({
+      schemaConverters: [new ZodToJsonSchemaConverter()],
+    }),
+  ],
   interceptors: [
     onError((error) => {
       logger.error("RPC handler error", error instanceof Error ? error : { cause: String(error) });
@@ -48,6 +54,9 @@ const rpcHandler = new RPCHandler(appRouter, {
 const apiHandler = new OpenAPIHandler(appRouter, {
   customErrorResponseBodyEncoder: (error) => encodeOpenAPIErrorResponse(error),
   plugins: [
+    new SmartCoercionPlugin({
+      schemaConverters: [new ZodToJsonSchemaConverter()],
+    }),
     new OpenAPIReferencePlugin({
       schemaConverters: [new ZodToJsonSchemaConverter()],
       specGenerateOptions: createOpenAPISpecGenerateOptions(),

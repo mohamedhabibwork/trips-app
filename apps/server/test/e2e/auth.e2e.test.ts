@@ -88,7 +88,7 @@ async function errorEnvelope(response: Response): Promise<{
 function identity(): { email: string; phone: string } {
   const compact = randomUUID().replace(/-/g, "");
   return {
-    email: `qa+${compact.slice(0, 12)}@example.com`,
+    email: `qa+${compact.slice(0, 12)}@trips-enjoy.com`,
     phone: `+2015${compact.slice(12, 21)}`,
   };
 }
@@ -359,7 +359,7 @@ describe("E2E auth: moderator staff code (SCR-PUB-19)", () => {
 
 describe("E2E auth: sign-in lockout (AC-2)", () => {
   test("five wrong passwords lock the account and the sixth call reports the countdown", async () => {
-    // A throwaway account: the seeded `locked@example.com` is never mutated.
+    // A throwaway account: the seeded `locked@trips-enjoy.com` is never mutated.
     const { email } = identity();
     const registration = await rpcCall(["auth", "registerTraveler"], {
       fullName: "QA Lockout",
