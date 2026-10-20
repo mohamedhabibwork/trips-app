@@ -1,11 +1,11 @@
 import { and, eq, isNull, or } from "@trips-app/db";
-import type { Database, Database as ServiceDatabase } from "@trips-app/db";
+import type { ServiceDatabase } from "@trips-app/db";
 import { schema } from "@trips-app/db/zod";
 import type { CheckInStatus, TrackingAlertSeverity } from "../model";
 
 export type { ServiceDatabase };
 
-export function createModeratorRepository(db: Database) {
+export function createModeratorRepository(db: ServiceDatabase) {
   return {
     async findTripById(tripId: string) {
       const [row] = await db

@@ -1,4 +1,8 @@
-import { COUPON_GENERIC_FAILURE_MESSAGE, computeRefundMinor } from "@trips-app/domain";
+import {
+  COUPON_GENERIC_FAILURE_MESSAGE,
+  PAYMENT_CONFIRM_TIMEOUT_SECONDS,
+  computeRefundMinor,
+} from "@trips-app/domain";
 import { BookingServiceError } from "../errors";
 import {
   calculateRefundAmountMinor,
@@ -23,10 +27,14 @@ export function createBookingService(deps: { db: ServiceDatabase }) {
         }
 
         const passengersCount = input.passengers.length;
-        if (
-          trip.totalCapacity > 0 &&
-          trip.confirmedSeatsCount + passengersCount > trip.totalCapacity
-        ) {
+        // Occupancy from live bookings, not the denormalized trips counters: confirmed seats
+        // always count, pendings count only within the D-30 confirm window (D-30) so abandoned
+        // payments never block new bookings. The row lock serializes concurrent creations.
+        const bookedSeats = await txRepo.sumActiveBookedPassengers(
+          trip.id,
+          new Date(Date.now() - PAYMENT_CONFIRM_TIMEOUT_SECONDS * 1000),
+        );
+        if (trip.totalCapacity > 0 && bookedSeats + passengersCount > trip.totalCapacity) {
           throw new BookingServiceError(
             "INSUFFICIENT_CAPACITY",
             "Not enough available seats on this trip.",
@@ -95,13 +103,34 @@ export function createBookingService(deps: { db: ServiceDatabase }) {
             uniqueSeatLabels,
           );
           const now = new Date();
+          // A "reserved" row only blocks while its booking still occupies the seat:
+          // paid states always, pendings within the D-30 window. Stale reservations from
+          // abandoned checkouts must not reject new bookings (same rule as the seat map).
+          const reservingBookingIds = [
+            ...new Set(
+              existingSeats
+                .filter((seat) => seat.status === "reserved" && seat.bookingId)
+                .map((seat) => seat.bookingId as string),
+            ),
+          ];
+          const blockingBookingIds = new Set(
+            await txRepo.findBlockingBookingIds(reservingBookingIds, now),
+          );
           for (const seat of existingSeats) {
             const heldByOther =
               seat.status === "held" &&
               seat.heldByAccountId !== travelerAccountId &&
               seat.holdExpiresAt &&
               seat.holdExpiresAt.getTime() > now.getTime();
-            if (seat.status === "reserved" || seat.status === "blocked" || heldByOther) {
+            // A "reserved" row only blocks while its booking still occupies the seat:
+            // paid states always, pendings within the D-30 window. Stale reservations
+            // from abandoned checkouts must not reject new bookings (same rule as the
+            // seat map).
+            const reservedByBlockingBooking =
+              seat.status === "reserved" &&
+              Boolean(seat.bookingId) &&
+              blockingBookingIds.has(seat.bookingId as string);
+            if (seat.status === "blocked" || heldByOther || reservedByBlockingBooking) {
               throw new BookingServiceError(
                 "SEAT_UNAVAILABLE",
                 `Seat ${seat.seatLabel} is unavailable.`,
@@ -172,7 +201,9 @@ export function createBookingService(deps: { db: ServiceDatabase }) {
           );
         }
 
-        await txRepo.adjustTripConfirmedSeats(trip.id, passengersCount);
+        // Seat counters are claimed when the payment succeeds (payments service), not at
+        // creation: unpaid bookings block only within the D-30 confirm window, so remaining
+        // seats must drop on "mark as paid", not before.
 
         const pricingDto: BookingPricingDto = {
           subtotalMinor: pricing.subtotalMinor,
@@ -193,44 +224,61 @@ export function createBookingService(deps: { db: ServiceDatabase }) {
       actor: { accountId: string; tenantId?: string | null; role: string },
       input: CancelBookingInput,
     ) {
-      const booking = await repo.findBookingById(input.bookingId);
-      if (!booking) {
-        throw new BookingServiceError("BOOKING_NOT_FOUND", "Booking not found.");
-      }
-      const isOwner = booking.travelerAccountId === actor.accountId;
-      const isTenantStaff = actor.tenantId && booking.tenantId === actor.tenantId;
-      const isAdmin = actor.role === "admin";
-      if (!isOwner && !isTenantStaff && !isAdmin) {
-        throw new BookingServiceError(
-          "FORBIDDEN_BOOKING_ACCESS",
-          "You do not have permission to cancel this booking.",
+      return deps.db.transaction(async (tx) => {
+        const txRepo = createBookingRepository(tx as unknown as ServiceDatabase);
+        const booking = await txRepo.findBookingById(input.bookingId);
+        if (!booking) {
+          throw new BookingServiceError("BOOKING_NOT_FOUND", "Booking not found.");
+        }
+        const isOwner = booking.travelerAccountId === actor.accountId;
+        const isTenantStaff = actor.tenantId && booking.tenantId === actor.tenantId;
+        const isAdmin = actor.role === "admin";
+        if (!isOwner && !isTenantStaff && !isAdmin) {
+          throw new BookingServiceError(
+            "FORBIDDEN_BOOKING_ACCESS",
+            "You do not have permission to cancel this booking.",
+          );
+        }
+        if (booking.status === "cancelled" || booking.status === "refunded") {
+          throw new BookingServiceError(
+            "BOOKING_ALREADY_CANCELLED",
+            "Booking is already cancelled.",
+          );
+        }
+
+        const trip = await txRepo.findTripById(booking.tripId);
+        const refundAmountMinor = calculateRefundAmountMinor(
+          booking.totalAmountMinor,
+          trip?.startsAt ?? null,
         );
-      }
-      if (booking.status === "cancelled" || booking.status === "refunded") {
-        throw new BookingServiceError("BOOKING_ALREADY_CANCELLED", "Booking is already cancelled.");
-      }
 
-      const trip = await repo.findTripById(booking.tripId);
-      const refundAmountMinor = calculateRefundAmountMinor(
-        booking.totalAmountMinor,
-        trip?.startsAt ?? null,
-      );
+        await txRepo.releaseReservedSeats(booking.tripId, booking.vehicleId, booking.seatLabels);
+        // FR-CPN-06 / BRL-11: a cancelled booking frees its coupon redemption back to the pool.
+        if (booking.couponId) {
+          await txRepo.decrementCouponRedemption(booking.couponId);
+        }
+        if (booking.selectedProgramIds.length > 0) {
+          await txRepo.adjustProgramsBookedCount(
+            booking.selectedProgramIds,
+            -booking.passengersCount,
+          );
+        }
+        // Only paid bookings hold confirmed-seat counters (claimed on payment success);
+        // cancelling a pending_payment booking releases nothing from the trips counters.
+        if (["confirmed", "checked_in", "completed"].includes(booking.status)) {
+          await txRepo.adjustTripConfirmedSeats(booking.tripId, -booking.passengersCount);
+        }
 
-      await repo.releaseReservedSeats(booking.tripId, booking.vehicleId, booking.seatLabels);
-      // FR-CPN-06 / BRL-11: a cancelled booking frees its coupon redemption back to the pool.
-      if (booking.couponId) {
-        await repo.decrementCouponRedemption(booking.couponId);
-      }
-      if (booking.selectedProgramIds.length > 0) {
-        await repo.adjustProgramsBookedCount(booking.selectedProgramIds, -booking.passengersCount);
-      }
-      await repo.adjustTripConfirmedSeats(booking.tripId, -booking.passengersCount);
-
-      const updated = await repo.markBookingCancelled(booking.id, input.reason, refundAmountMinor);
-      if (!updated) {
-        throw new BookingServiceError("BOOKING_NOT_FOUND", "Booking not found.");
-      }
-      return updated;
+        const updated = await txRepo.markBookingCancelled(
+          booking.id,
+          input.reason,
+          refundAmountMinor,
+        );
+        if (!updated) {
+          throw new BookingServiceError("BOOKING_NOT_FOUND", "Booking not found.");
+        }
+        return updated;
+      });
     },
 
     async getBooking(

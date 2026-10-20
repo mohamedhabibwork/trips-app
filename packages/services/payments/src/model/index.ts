@@ -1,17 +1,27 @@
-import type {
-  CurrencyCode,
-  DisputeResolutionStatus,
-  PaymentGatewayCode,
-  PaymentPurpose,
-  PaymentTransactionStatus,
+import {
+  CURRENCY_CODES,
+  type CurrencyCode,
+  DISPUTE_RESOLUTION_STATUSES,
+  type DisputeResolutionStatus,
+  PAYMENT_GATEWAY_CODES,
+  type PaymentGatewayCode,
+  PAYMENT_PURPOSES,
+  type PaymentPurpose,
+  PAYMENT_TRANSACTION_STATUSES,
+  type PaymentTransactionStatus,
 } from "@trips-app/domain";
 
-export type {
-  CurrencyCode,
-  DisputeResolutionStatus,
-  PaymentGatewayCode,
-  PaymentPurpose,
-  PaymentTransactionStatus,
+export {
+  CURRENCY_CODES,
+  type CurrencyCode,
+  DISPUTE_RESOLUTION_STATUSES,
+  type DisputeResolutionStatus,
+  PAYMENT_GATEWAY_CODES,
+  type PaymentGatewayCode,
+  PAYMENT_PURPOSES,
+  type PaymentPurpose,
+  PAYMENT_TRANSACTION_STATUSES,
+  type PaymentTransactionStatus,
 };
 
 export const FAWRY_EXPIRY_HOURS = 48;

@@ -1,13 +1,14 @@
 import { and, eq, inArray } from "@trips-app/db";
-import type { Database, Database as ServiceDatabase } from "@trips-app/db";
+import type { ServiceDatabase } from "@trips-app/db";
 import { schema } from "@trips-app/db/zod";
 import type { CheckInMethod, CheckInStatus } from "../model";
 
 export type { ServiceDatabase };
 
-export function createCheckInRepository(db: Database) {
+export function createCheckInRepository(db: ServiceDatabase) {
   return {
     async listManifest(tenantId: string, tripId: string, vehicleId?: string) {
+      let query = db.select().from(schema.checkInRecords).$dynamic();
       const conditions = [
         eq(schema.checkInRecords.tenantId, tenantId),
         eq(schema.checkInRecords.tripId, tripId),
@@ -15,10 +16,7 @@ export function createCheckInRepository(db: Database) {
       if (vehicleId) {
         conditions.push(eq(schema.checkInRecords.vehicleId, vehicleId));
       }
-      return db
-        .select()
-        .from(schema.checkInRecords)
-        .where(and(...conditions));
+      return query.where(and(...conditions));
     },
 
     async findByQrToken(qrCodeToken: string) {

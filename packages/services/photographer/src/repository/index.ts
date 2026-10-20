@@ -1,11 +1,9 @@
-import { desc, eq } from "@trips-app/db";
-import type { Database, Database as ServiceDatabase } from "@trips-app/db";
-import { schema } from "@trips-app/db/zod";
+import { and, desc, eq, gte, lte, schema, type ServiceDatabase } from "@trips-app/db";
 import type { UpdatePhotographerProfileInput } from "../types";
 
 export type { ServiceDatabase };
 
-export function createPhotographerRepository(db: Database) {
+export function createPhotographerRepository(db: ServiceDatabase) {
   return {
     async findProfileByAccountId(accountId: string) {
       const [row] = await db
@@ -95,25 +93,55 @@ export function createPhotographerRepository(db: Database) {
       return updated ?? null;
     },
 
-    async listAlbums(tripId?: string, photographerAccountId?: string) {
-      if (tripId) {
-        return db
-          .select()
-          .from(schema.tripPhotoAlbums)
-          .where(eq(schema.tripPhotoAlbums.tripId, tripId))
-          .orderBy(desc(schema.tripPhotoAlbums.createdAt));
+    async listAlbums(
+      filtersOrTripId?:
+        | string
+        | {
+            tripId?: string;
+            photographerAccountId?: string;
+            tenantId?: string;
+            status?: "draft" | "published";
+            dateRange?: { from?: Date; to?: Date };
+          },
+      photographerAccountId?: string,
+    ) {
+      let query = db.select().from(schema.tripPhotoAlbums).$dynamic();
+
+      const conditions = [];
+
+      if (typeof filtersOrTripId === "string") {
+        conditions.push(eq(schema.tripPhotoAlbums.tripId, filtersOrTripId));
+        if (photographerAccountId) {
+          conditions.push(eq(schema.tripPhotoAlbums.photographerAccountId, photographerAccountId));
+        }
+      } else if (filtersOrTripId) {
+        if (filtersOrTripId.tripId) {
+          conditions.push(eq(schema.tripPhotoAlbums.tripId, filtersOrTripId.tripId));
+        }
+        if (filtersOrTripId.photographerAccountId) {
+          conditions.push(
+            eq(schema.tripPhotoAlbums.photographerAccountId, filtersOrTripId.photographerAccountId),
+          );
+        }
+        if (filtersOrTripId.tenantId) {
+          conditions.push(eq(schema.tripPhotoAlbums.tenantId, filtersOrTripId.tenantId));
+        }
+        if (filtersOrTripId.status) {
+          conditions.push(eq(schema.tripPhotoAlbums.status, filtersOrTripId.status));
+        }
+        if (filtersOrTripId.dateRange?.from) {
+          conditions.push(gte(schema.tripPhotoAlbums.createdAt, filtersOrTripId.dateRange.from));
+        }
+        if (filtersOrTripId.dateRange?.to) {
+          conditions.push(lte(schema.tripPhotoAlbums.createdAt, filtersOrTripId.dateRange.to));
+        }
       }
-      if (photographerAccountId) {
-        return db
-          .select()
-          .from(schema.tripPhotoAlbums)
-          .where(eq(schema.tripPhotoAlbums.photographerAccountId, photographerAccountId))
-          .orderBy(desc(schema.tripPhotoAlbums.createdAt));
+
+      if (conditions.length > 0) {
+        query = query.where(and(...conditions));
       }
-      return db
-        .select()
-        .from(schema.tripPhotoAlbums)
-        .orderBy(desc(schema.tripPhotoAlbums.createdAt));
+      query = query.orderBy(desc(schema.tripPhotoAlbums.createdAt));
+      return query;
     },
   };
 }

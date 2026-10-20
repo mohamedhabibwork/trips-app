@@ -1,17 +1,27 @@
 import {
+  BOOKING_STATUSES,
   computePlanDiscountMinor,
   DEFAULT_SYSTEM_SETTINGS,
   evaluateCouponFailure,
+  PAYMENT_CONFIRM_TIMEOUT_SECONDS,
+  TRAVELER_PLAN_CODES,
+  type BookingPassenger,
+  type BookingStatus,
+  type CurrencyCode,
+  type PaymentGatewayCode,
   type TravelerPlanCode,
 } from "@trips-app/domain";
-import type {
-  BookingPassenger,
-  BookingStatus,
-  CurrencyCode,
-  PaymentGatewayCode,
-} from "@trips-app/domain";
 
-export type { BookingPassenger, BookingStatus, CurrencyCode, PaymentGatewayCode };
+export {
+  BOOKING_STATUSES,
+  PAYMENT_CONFIRM_TIMEOUT_SECONDS,
+  TRAVELER_PLAN_CODES,
+  type BookingPassenger,
+  type BookingStatus,
+  type CurrencyCode,
+  type PaymentGatewayCode,
+  type TravelerPlanCode,
+};
 
 export function generateBookingReference(): string {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";

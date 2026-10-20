@@ -1,5 +1,6 @@
 // Data access through @trips-app/db. Every tenant-owned query filters by tenant (DAT-01).
-import { and, desc, type Database, eq, schema } from "@trips-app/db";
+import { and, desc, eq, schema } from "@trips-app/db";
+import type { ServiceDatabase } from "@trips-app/db";
 
 import type {
   CurrencyCode,
@@ -8,25 +9,27 @@ import type {
   PlatformSupplierRole,
 } from "../model";
 
-export type { Database as ServiceDatabase } from "@trips-app/db";
+export type { ServiceDatabase };
 
 const { organizations, planCatalog, supplierNegotiations, trips, tripVehicles } = schema;
 
-export function createNegotiationRepository(db: Database) {
+export function createNegotiationRepository(db: ServiceDatabase) {
   return {
     async findOrganizationPlan(tenantId: string) {
-      const [org] = await db
-        .select()
+      const [row] = await db
+        .select({
+          org: organizations,
+          plan: planCatalog,
+        })
         .from(organizations)
+        .leftJoin(
+          planCatalog,
+          and(eq(planCatalog.role, "organization"), eq(planCatalog.tier, organizations.planTier)),
+        )
         .where(eq(organizations.id, tenantId))
         .limit(1);
-      if (!org) return null;
-      const [plan] = await db
-        .select()
-        .from(planCatalog)
-        .where(and(eq(planCatalog.role, "organization"), eq(planCatalog.tier, org.planTier)))
-        .limit(1);
-      return { org, plan: plan ?? null };
+      if (!row) return null;
+      return { org: row.org, plan: row.plan };
     },
 
     async findTripForTenant(tenantId: string, tripId: string) {
@@ -126,8 +129,14 @@ export function createNegotiationRepository(db: Database) {
 
     async listForTenant(
       tenantId: string,
-      filters?: { tripId?: string; status?: NegotiationStatus },
+      filters?: {
+        tripId?: string;
+        status?: NegotiationStatus;
+        limit?: number;
+        offset?: number;
+      },
     ) {
+      let query = db.select().from(supplierNegotiations).$dynamic();
       const conditions = [eq(supplierNegotiations.tenantId, tenantId)];
       if (filters?.tripId) {
         conditions.push(eq(supplierNegotiations.tripId, filters.tripId));
@@ -135,17 +144,22 @@ export function createNegotiationRepository(db: Database) {
       if (filters?.status) {
         conditions.push(eq(supplierNegotiations.status, filters.status));
       }
-      return db
-        .select()
-        .from(supplierNegotiations)
-        .where(and(...conditions))
-        .orderBy(desc(supplierNegotiations.createdAt));
+      query = query.where(and(...conditions)).orderBy(desc(supplierNegotiations.createdAt));
+      if (filters?.limit !== undefined) query = query.limit(filters.limit);
+      if (filters?.offset !== undefined) query = query.offset(filters.offset);
+      return query;
     },
 
     async listForSupplier(
       supplierAccountId: string,
-      filters?: { tripId?: string; status?: NegotiationStatus },
+      filters?: {
+        tripId?: string;
+        status?: NegotiationStatus;
+        limit?: number;
+        offset?: number;
+      },
     ) {
+      let query = db.select().from(supplierNegotiations).$dynamic();
       const conditions = [eq(supplierNegotiations.supplierAccountId, supplierAccountId)];
       if (filters?.tripId) {
         conditions.push(eq(supplierNegotiations.tripId, filters.tripId));
@@ -153,11 +167,10 @@ export function createNegotiationRepository(db: Database) {
       if (filters?.status) {
         conditions.push(eq(supplierNegotiations.status, filters.status));
       }
-      return db
-        .select()
-        .from(supplierNegotiations)
-        .where(and(...conditions))
-        .orderBy(desc(supplierNegotiations.createdAt));
+      query = query.where(and(...conditions)).orderBy(desc(supplierNegotiations.createdAt));
+      if (filters?.limit !== undefined) query = query.limit(filters.limit);
+      if (filters?.offset !== undefined) query = query.offset(filters.offset);
+      return query;
     },
   };
 }

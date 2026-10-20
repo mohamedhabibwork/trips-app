@@ -2,13 +2,16 @@
 import {
   accountPublicColumns,
   and,
-  type Database,
   desc,
   eq,
   inArray,
   linkUploadedFilesOnItemSave,
+  lt,
   lte,
+  ne,
   schema,
+  type ServiceDatabase,
+  sql,
 } from "@trips-app/db";
 
 import {
@@ -20,7 +23,7 @@ import {
   type UserRole,
 } from "../model";
 
-export type { Database as ServiceDatabase } from "@trips-app/db";
+export type { ServiceDatabase } from "@trips-app/db";
 
 const {
   accountRoles,
@@ -35,7 +38,7 @@ const {
   photographerProfiles,
 } = schema;
 
-export function createOnboardingRepository(db: Database) {
+export function createOnboardingRepository(db: ServiceDatabase) {
   return {
     async findAccountById(id: string) {
       const [row] = await db
@@ -96,20 +99,33 @@ export function createOnboardingRepository(db: Database) {
       applicantAccountId: string,
       applicationType?: SupplierApplicationType,
     ) {
-      const rows = await db
+      const conditions = [eq(applications.applicantAccountId, applicantAccountId)];
+      if (applicationType) {
+        conditions.push(eq(applications.applicationType, applicationType));
+      }
+
+      const [row] = await db
         .select()
         .from(applications)
-        .where(eq(applications.applicantAccountId, applicantAccountId))
-        .orderBy(desc(applications.createdAt));
+        .$dynamic()
+        .where(and(...conditions))
+        .orderBy(desc(applications.createdAt))
+        .limit(1);
 
-      if (applicationType) {
-        return rows.find((r) => r.applicationType === applicationType) ?? null;
-      }
-      return rows[0] ?? null;
+      return row ?? null;
     },
 
     async findApplicationById(id: string) {
       const [row] = await db.select().from(applications).where(eq(applications.id, id)).limit(1);
+      return row ?? null;
+    },
+
+    async findApplicationByIdForUpdate(id: string) {
+      const [row] = await db
+        .select()
+        .from(applications)
+        .where(eq(applications.id, id))
+        .for("update");
       return row ?? null;
     },
 
@@ -120,21 +136,25 @@ export function createOnboardingRepository(db: Database) {
       duplicateHoldOnly?: boolean;
       now?: Date;
     }) {
-      const rows = await db.select().from(applications).orderBy(desc(applications.createdAt));
+      const conditions = [];
+      if (filter?.state) {
+        conditions.push(eq(applications.state, filter.state));
+      }
+      if (filter?.applicationType) {
+        conditions.push(eq(applications.applicationType, filter.applicationType));
+      }
+      if (filter?.duplicateHoldOnly) {
+        conditions.push(sql`(${applications.payload}->>'duplicateHold' = 'true')`);
+      }
+      if (filter?.overdueOnly) {
+        const refNow = filter.now ?? new Date();
+        conditions.push(eq(applications.state, "Pending Review"));
+        conditions.push(lt(applications.slaDueAt, refNow));
+      }
 
-      return rows.filter((row) => {
-        if (filter?.state && row.state !== filter.state) return false;
-        if (filter?.applicationType && row.applicationType !== filter.applicationType) return false;
-        if (filter?.duplicateHoldOnly) {
-          const isHold = Boolean((row.payload as Record<string, unknown>)?.duplicateHold);
-          if (!isHold) return false;
-        }
-        if (filter?.overdueOnly) {
-          const refNow = filter.now ?? new Date();
-          return row.state === "Pending Review" && row.slaDueAt.getTime() < refNow.getTime();
-        }
-        return true;
-      });
+      const qb = db.select().from(applications).$dynamic();
+      const query = conditions.length > 0 ? qb.where(and(...conditions)) : qb;
+      return query.orderBy(desc(applications.createdAt));
     },
 
     async findDuplicateOrganizations(params: {
@@ -150,19 +170,27 @@ export function createOnboardingRepository(db: Database) {
         matchedField: "commercialRegNumber" | "taxNumber";
       }[] = [];
 
-      const orgApps = await db
-        .select()
-        .from(applications)
-        .where(eq(applications.applicationType, "organization"));
+      const orgAppConditions = [
+        eq(applications.applicationType, "organization"),
+        ne(applications.state, "Rejected"),
+        ne(applications.state, "Closed"),
+      ];
+      if (params.excludeApplicantAccountId) {
+        orgAppConditions.push(
+          ne(applications.applicantAccountId, params.excludeApplicantAccountId),
+        );
+      }
+
+      const [orgApps, existingOrgs] = await Promise.all([
+        db
+          .select()
+          .from(applications)
+          .$dynamic()
+          .where(and(...orgAppConditions)),
+        db.select().from(organizations).where(ne(organizations.status, "deleted")),
+      ] as const);
 
       for (const app of orgApps) {
-        if (
-          params.excludeApplicantAccountId &&
-          app.applicantAccountId === params.excludeApplicantAccountId
-        ) {
-          continue;
-        }
-        if (app.state === "Rejected" || app.state === "Closed") continue;
         const p = app.payload as Record<string, unknown>;
         const appCr = String(p?.commercialRegNumber ?? "")
           .trim()
@@ -186,7 +214,6 @@ export function createOnboardingRepository(db: Database) {
         }
       }
 
-      const existingOrgs = await db.select().from(organizations);
       for (const org of existingOrgs) {
         if (org.status === "deleted") continue;
         try {
@@ -271,31 +298,33 @@ export function createOnboardingRepository(db: Database) {
         expiresAt?: string;
       }[],
     ) {
-      if (docs.length === 0) return [];
-      const inserted = await db
-        .insert(applicationDocuments)
-        .values(
-          docs.map((d) => ({
-            applicationId,
-            documentType: d.documentType,
-            storageKey: d.storageKey,
-            mimeType: d.mimeType,
-            fileSizeBytes: d.fileSizeBytes,
-            expiresAt: d.expiresAt ? new Date(d.expiresAt) : null,
-          })),
-        )
-        .returning();
+      return db.transaction(async (tx) => {
+        if (docs.length === 0) return [];
+        const inserted = await tx
+          .insert(applicationDocuments)
+          .values(
+            docs.map((d) => ({
+              applicationId,
+              documentType: d.documentType,
+              storageKey: d.storageKey,
+              mimeType: d.mimeType,
+              fileSizeBytes: d.fileSizeBytes,
+              expiresAt: d.expiresAt ? new Date(d.expiresAt) : null,
+            })),
+          )
+          .returning();
 
-      const storageKeys = [...new Set(docs.map((d) => d.storageKey).filter(Boolean))];
-      if (storageKeys.length > 0) {
-        await linkUploadedFilesOnItemSave(db, {
-          entityType: "application",
-          entityId: applicationId,
-          storageKeys,
-        });
-      }
+        const storageKeys = [...new Set(docs.map((d) => d.storageKey).filter(Boolean))];
+        if (storageKeys.length > 0) {
+          await linkUploadedFilesOnItemSave(tx, {
+            entityType: "application",
+            entityId: applicationId,
+            storageKeys,
+          });
+        }
 
-      return inserted;
+        return inserted;
+      });
     },
 
     async listDocumentsForApplication(applicationId: string) {
@@ -552,38 +581,36 @@ export function createOnboardingRepository(db: Database) {
       tenantId: string,
       supplierRole?: "org_driver" | "org_photographer",
     ) {
-      const roleRows = await db
+      const roleConditions = [
+        eq(accountRoles.tenantId, tenantId),
+        ne(accountRoles.status, "revoked"),
+      ];
+      if (supplierRole) {
+        roleConditions.push(eq(accountRoles.role, supplierRole));
+      } else {
+        roleConditions.push(inArray(accountRoles.role, ["org_driver", "org_photographer"]));
+      }
+
+      const filteredRoles: (typeof accountRoles.$inferSelect)[] = await db
         .select()
         .from(accountRoles)
-        .where(eq(accountRoles.tenantId, tenantId))
+        .$dynamic()
+        .where(and(...roleConditions))
         .orderBy(desc(accountRoles.createdAt));
-
-      const filteredRoles = roleRows.filter((row) => {
-        if (row.role !== "org_driver" && row.role !== "org_photographer") return false;
-        if (row.status === "revoked") return false;
-        if (supplierRole && row.role !== supplierRole) return false;
-        return true;
-      });
 
       if (filteredRoles.length === 0) return [];
 
       const accountIds = [...new Set(filteredRoles.map((r) => r.accountId))];
-      const accountList = await db
-        .select(accountPublicColumns)
-        .from(accounts)
-        .where(inArray(accounts.id, accountIds));
+      const [accountList, drivers, photographers] = await Promise.all([
+        db.select(accountPublicColumns).from(accounts).where(inArray(accounts.id, accountIds)),
+        db.select().from(driverProfiles).where(eq(driverProfiles.owningTenantId, tenantId)),
+        db
+          .select()
+          .from(photographerProfiles)
+          .where(eq(photographerProfiles.owningTenantId, tenantId)),
+      ] as const);
       const accountMap = new Map(accountList.map((a) => [a.id, a]));
-
-      const drivers = await db
-        .select()
-        .from(driverProfiles)
-        .where(eq(driverProfiles.owningTenantId, tenantId));
       const driverMap = new Map(drivers.map((d) => [d.accountId, d]));
-
-      const photographers = await db
-        .select()
-        .from(photographerProfiles)
-        .where(eq(photographerProfiles.owningTenantId, tenantId));
       const photographerMap = new Map(photographers.map((p) => [p.accountId, p]));
 
       return filteredRoles.map((roleRow) => {

@@ -46,7 +46,11 @@ import type {
 } from "../schemas/dtos";
 import type { OnboardingRequestMeta } from "../types";
 
-export function createOnboardingService(db: ServiceDatabase) {
+export function createOnboardingService(dbOrDeps: ServiceDatabase | { db: ServiceDatabase }) {
+  const db =
+    typeof dbOrDeps === "object" && "db" in dbOrDeps && dbOrDeps.db
+      ? dbOrDeps.db
+      : (dbOrDeps as ServiceDatabase);
   const repo = createOnboardingRepository(db);
 
   async function assertNotBlockedByRecentRejection(
@@ -75,25 +79,28 @@ export function createOnboardingService(db: ServiceDatabase) {
     }
   }
 
-  async function dispatchApplicantStatusNotification(params: {
-    actorAccountId: string;
-    actorRole: UserRole | "system";
-    applicantAccountId: string;
-    applicationId: string;
-    applicationType: SupplierApplicationType;
-    nextState: ApplicationState;
-    template:
-      | "application_submitted"
-      | "application_approved"
-      | "application_changes_requested"
-      | "application_rejected"
-      | "application_appealed"
-      | "application_closed";
-    reasonCode?: string | null;
-    notes?: string | null;
-    meta?: OnboardingRequestMeta;
-  }) {
-    await repo.writeAuditLog({
+  async function dispatchApplicantStatusNotification(
+    params: {
+      actorAccountId: string;
+      actorRole: UserRole | "system";
+      applicantAccountId: string;
+      applicationId: string;
+      applicationType: SupplierApplicationType;
+      nextState: ApplicationState;
+      template:
+        | "application_submitted"
+        | "application_approved"
+        | "application_changes_requested"
+        | "application_rejected"
+        | "application_appealed"
+        | "application_closed";
+      reasonCode?: string | null;
+      notes?: string | null;
+      meta?: OnboardingRequestMeta;
+    },
+    targetRepo: ReturnType<typeof createOnboardingRepository> = repo,
+  ) {
+    await targetRepo.writeAuditLog({
       actorAccountId: params.actorAccountId,
       actorRole: params.actorRole,
       action: "onboarding.notification.dispatched",
@@ -912,186 +919,194 @@ export function createOnboardingService(db: ServiceDatabase) {
       input: ApproveApplicationInput,
       meta?: OnboardingRequestMeta,
     ) {
-      const app = await repo.findApplicationById(input.applicationId);
-      if (!app) {
-        throw new OnboardingServiceError("NOT_FOUND", "Application not found.");
-      }
+      return db.transaction(async (tx) => {
+        const txRepo = createOnboardingRepository(tx as unknown as ServiceDatabase);
+        const app = await txRepo.findApplicationByIdForUpdate(input.applicationId);
+        if (!app) {
+          throw new OnboardingServiceError("NOT_FOUND", "Application not found.");
+        }
 
-      if (!canTransitionApplicationState(app.state, "Approved")) {
-        throw new OnboardingServiceError(
-          "PRECONDITION_FAILED",
-          `Cannot transition application from "${app.state}" to "Approved".`,
+        if (!canTransitionApplicationState(app.state, "Approved")) {
+          throw new OnboardingServiceError(
+            "PRECONDITION_FAILED",
+            `Cannot transition application from "${app.state}" to "Approved".`,
+          );
+        }
+
+        const now = new Date();
+        let provisionedOrganizationId: string | null = null;
+
+        if (app.applicationType === "organization") {
+          const p = app.payload as Record<string, unknown>;
+          const countryCode = ((p.countryCode as string) ?? "EG") as SupportedCountryCode;
+          // The organization id is generated up front so its default settings are built against the
+          // real tenant id instead of a placeholder.
+          const organizationId = randomUUID();
+          const defaultSettings = createDefaultOrganizationSettings({
+            tenantId: organizationId,
+            countryCode,
+            planTier: "starter",
+            billingContactName: (p.billingContactName as string) ?? null,
+            billingContactEmail: (p.billingContactEmail as string) ?? null,
+            billingContactPhone: (p.billingContactPhone as string) ?? null,
+            billingAddress: (p.billingAddress as string) ?? null,
+            invoiceLanguage: ((p.invoiceLanguage as string) ?? "ar") as SupportedLocale,
+            taxNumber: (p.taxNumber as string) ?? null,
+            safetyLeadName: (p.safetyLeadName as string) ?? null,
+            safetyHotlinePhone: (p.safetyHotlinePhone as string) ?? null,
+          });
+
+          const { organization } = await txRepo.createOrganizationAndSettings({
+            id: organizationId,
+            ownerAccountId: app.applicantAccountId,
+            legalEntityName: (p.legalEntityName as string) ?? "Approved Organization",
+            displayNameEn:
+              (p.displayNameEn as string) ??
+              (p.legalEntityName as string) ??
+              "Approved Organization",
+            displayNameAr:
+              (p.displayNameAr as string) ?? (p.legalEntityName as string) ?? "منظمة معتمدة",
+            commercialRegNumberEncrypted: encryptField(
+              (p.commercialRegNumber as string) ?? "CR-DEFAULT",
+            ),
+            taxNumberEncrypted: encryptField((p.taxNumber as string) ?? "TX-DEFAULT"),
+            tourismLicenseNumberEncrypted: encryptField(
+              (p.tourismLicenseNumber as string) ?? "TL-DEFAULT",
+            ),
+            tourismLicenseExpiry: p.tourismLicenseExpiry
+              ? new Date(p.tourismLicenseExpiry as string)
+              : new Date(now.getTime() + 365 * 24 * 60 * 60 * 1000),
+            countryCode,
+            headquartersAddress: (p.headquartersAddress as string) ?? "Cairo, Egypt",
+            signatoryFullName: (p.signatoryFullName as string) ?? "Authorized Signatory",
+            signatoryNationalIdEncrypted: encryptField(
+              (p.signatoryNationalId as string) ?? "00000000000000",
+            ),
+            signatoryRoleTitle: (p.signatoryRoleTitle as string) ?? "Managing Director",
+            payoutMethod: ((p.payoutMethod as string) ?? "bank_transfer") as
+              | "bank_transfer"
+              | "mobile_wallet",
+            payoutIbanEncrypted: encryptField((p.payoutIbanOrWallet as string) ?? "EG000000"),
+            childSafetyOptIn: Boolean(p.childSafetyProgramOptIn),
+            defaultSettings,
+          });
+
+          provisionedOrganizationId = organization.id;
+
+          await txRepo.upsertAccountRole({
+            accountId: app.applicantAccountId,
+            role: "organization_owner",
+            tenantId: organization.id,
+            planTier: "starter",
+            status: "active",
+            approvedAt: now,
+          });
+        } else if (app.applicationType === "platform_driver") {
+          const p = app.payload as Record<string, unknown>;
+          await txRepo.upsertDriverProfile({
+            accountId: app.applicantAccountId,
+            scope: "platform",
+            nationalIdEncrypted: encryptField((p.nationalId as string) ?? "00000000000000"),
+            licenseNumberEncrypted: encryptField((p.licenseNumber as string) ?? "DRV-LIC"),
+            licenseCategory: (p.licenseCategory as string) ?? "First Degree Bus",
+            licenseExpiry: p.licenseExpiry
+              ? new Date(p.licenseExpiry as string)
+              : new Date(now.getTime() + 365 * 24 * 60 * 60 * 1000),
+            yearsOfExperience: Number(p.yearsOfExperience ?? 3),
+            serviceAreas: Array.isArray(p.serviceAreas) ? (p.serviceAreas as string[]) : ["Cairo"],
+            hasOwnVehicle: Boolean(p.hasOwnVehicle),
+            vehicleMakeModel: (p.vehicleMakeModel as string) ?? null,
+            vehicleYear: p.vehicleYear ? Number(p.vehicleYear) : null,
+            vehiclePlateNumber: (p.vehiclePlateNumber as string) ?? null,
+            vehicleSeatCapacity: p.vehicleSeatCapacity ? Number(p.vehicleSeatCapacity) : null,
+            insurancePolicyNumber: (p.insurancePolicyNumber as string) ?? null,
+            insuranceExpiry: p.insuranceExpiry ? new Date(p.insuranceExpiry as string) : null,
+            planTier: "basic",
+            status: "active",
+          });
+
+          await txRepo.upsertAccountRole({
+            accountId: app.applicantAccountId,
+            role: "platform_driver",
+            planTier: "basic",
+            status: "active",
+            approvedAt: now,
+          });
+        } else if (app.applicationType === "platform_photographer") {
+          const p = app.payload as Record<string, unknown>;
+          await txRepo.upsertPhotographerProfile({
+            accountId: app.applicantAccountId,
+            scope: "platform",
+            nationalIdEncrypted: encryptField((p.nationalId as string) ?? "00000000000000"),
+            yearsOfExperience: Number(p.yearsOfExperience ?? 2),
+            cameraBodies: Array.isArray(p.cameraBodies)
+              ? (p.cameraBodies as string[])
+              : ["Professional Camera"],
+            lenses: Array.isArray(p.lenses) ? (p.lenses as string[]) : [],
+            hasDroneLicense: Boolean(p.hasDroneLicense),
+            serviceRegions: Array.isArray(p.serviceRegions)
+              ? (p.serviceRegions as string[])
+              : ["Cairo"],
+            specialties: Array.isArray(p.specialties) ? (p.specialties as string[]) : ["Trips"],
+            portfolioPhotoCount: Number(p.portfolioPhotoCount ?? 8),
+            sampleAlbums: [],
+            planTier: "basic",
+            status: "active",
+          });
+
+          await txRepo.upsertAccountRole({
+            accountId: app.applicantAccountId,
+            role: "platform_photographer",
+            planTier: "basic",
+            status: "active",
+            approvedAt: now,
+          });
+        }
+
+        const reviewer = await txRepo.findAccountById(actor.accountId);
+        const reviewerAccountId = reviewer ? actor.accountId : null;
+
+        const updated = await txRepo.updateApplication(app.id, {
+          state: "Approved",
+          reviewedByAdminAccountId: reviewerAccountId,
+          reviewedAt: now,
+          decisionReasonCode: input.decisionReasonCode,
+          decisionNotes: input.decisionNotes ?? null,
+          provisionedOrganizationId,
+        });
+
+        await txRepo.writeAuditLog({
+          actorAccountId: reviewerAccountId,
+          actorRole: "admin",
+          tenantId: provisionedOrganizationId,
+          action: "onboarding.application.approved",
+          targetEntityType: "application",
+          targetEntityId: app.id,
+          reason: input.decisionNotes ?? input.decisionReasonCode,
+          beforeState: { state: app.state },
+          afterState: { state: "Approved", provisionedOrganizationId },
+          ipAddress: meta?.ipAddress,
+          requestId: meta?.requestId,
+        });
+
+        await dispatchApplicantStatusNotification(
+          {
+            actorAccountId: actor.accountId,
+            actorRole: "admin",
+            applicantAccountId: app.applicantAccountId,
+            applicationId: app.id,
+            applicationType: app.applicationType,
+            nextState: "Approved",
+            template: "application_approved",
+            reasonCode: input.decisionReasonCode,
+            notes: input.decisionNotes ?? null,
+            meta,
+          },
+          txRepo,
         );
-      }
 
-      const now = new Date();
-      let provisionedOrganizationId: string | null = null;
-
-      if (app.applicationType === "organization") {
-        const p = app.payload as Record<string, unknown>;
-        const countryCode = ((p.countryCode as string) ?? "EG") as SupportedCountryCode;
-        // The organization id is generated up front so its default settings are built against the
-        // real tenant id instead of a placeholder.
-        const organizationId = randomUUID();
-        const defaultSettings = createDefaultOrganizationSettings({
-          tenantId: organizationId,
-          countryCode,
-          planTier: "starter",
-          billingContactName: (p.billingContactName as string) ?? null,
-          billingContactEmail: (p.billingContactEmail as string) ?? null,
-          billingContactPhone: (p.billingContactPhone as string) ?? null,
-          billingAddress: (p.billingAddress as string) ?? null,
-          invoiceLanguage: ((p.invoiceLanguage as string) ?? "ar") as SupportedLocale,
-          taxNumber: (p.taxNumber as string) ?? null,
-          safetyLeadName: (p.safetyLeadName as string) ?? null,
-          safetyHotlinePhone: (p.safetyHotlinePhone as string) ?? null,
-        });
-
-        const { organization } = await repo.createOrganizationAndSettings({
-          id: organizationId,
-          ownerAccountId: app.applicantAccountId,
-          legalEntityName: (p.legalEntityName as string) ?? "Approved Organization",
-          displayNameEn:
-            (p.displayNameEn as string) ?? (p.legalEntityName as string) ?? "Approved Organization",
-          displayNameAr:
-            (p.displayNameAr as string) ?? (p.legalEntityName as string) ?? "منظمة معتمدة",
-          commercialRegNumberEncrypted: encryptField(
-            (p.commercialRegNumber as string) ?? "CR-DEFAULT",
-          ),
-          taxNumberEncrypted: encryptField((p.taxNumber as string) ?? "TX-DEFAULT"),
-          tourismLicenseNumberEncrypted: encryptField(
-            (p.tourismLicenseNumber as string) ?? "TL-DEFAULT",
-          ),
-          tourismLicenseExpiry: p.tourismLicenseExpiry
-            ? new Date(p.tourismLicenseExpiry as string)
-            : new Date(now.getTime() + 365 * 24 * 60 * 60 * 1000),
-          countryCode,
-          headquartersAddress: (p.headquartersAddress as string) ?? "Cairo, Egypt",
-          signatoryFullName: (p.signatoryFullName as string) ?? "Authorized Signatory",
-          signatoryNationalIdEncrypted: encryptField(
-            (p.signatoryNationalId as string) ?? "00000000000000",
-          ),
-          signatoryRoleTitle: (p.signatoryRoleTitle as string) ?? "Managing Director",
-          payoutMethod: ((p.payoutMethod as string) ?? "bank_transfer") as
-            | "bank_transfer"
-            | "mobile_wallet",
-          payoutIbanEncrypted: encryptField((p.payoutIbanOrWallet as string) ?? "EG000000"),
-          childSafetyOptIn: Boolean(p.childSafetyProgramOptIn),
-          defaultSettings,
-        });
-
-        provisionedOrganizationId = organization.id;
-
-        await repo.upsertAccountRole({
-          accountId: app.applicantAccountId,
-          role: "organization_owner",
-          tenantId: organization.id,
-          planTier: "starter",
-          status: "active",
-          approvedAt: now,
-        });
-      } else if (app.applicationType === "platform_driver") {
-        const p = app.payload as Record<string, unknown>;
-        await repo.upsertDriverProfile({
-          accountId: app.applicantAccountId,
-          scope: "platform",
-          nationalIdEncrypted: encryptField((p.nationalId as string) ?? "00000000000000"),
-          licenseNumberEncrypted: encryptField((p.licenseNumber as string) ?? "DRV-LIC"),
-          licenseCategory: (p.licenseCategory as string) ?? "First Degree Bus",
-          licenseExpiry: p.licenseExpiry
-            ? new Date(p.licenseExpiry as string)
-            : new Date(now.getTime() + 365 * 24 * 60 * 60 * 1000),
-          yearsOfExperience: Number(p.yearsOfExperience ?? 3),
-          serviceAreas: Array.isArray(p.serviceAreas) ? (p.serviceAreas as string[]) : ["Cairo"],
-          hasOwnVehicle: Boolean(p.hasOwnVehicle),
-          vehicleMakeModel: (p.vehicleMakeModel as string) ?? null,
-          vehicleYear: p.vehicleYear ? Number(p.vehicleYear) : null,
-          vehiclePlateNumber: (p.vehiclePlateNumber as string) ?? null,
-          vehicleSeatCapacity: p.vehicleSeatCapacity ? Number(p.vehicleSeatCapacity) : null,
-          insurancePolicyNumber: (p.insurancePolicyNumber as string) ?? null,
-          insuranceExpiry: p.insuranceExpiry ? new Date(p.insuranceExpiry as string) : null,
-          planTier: "basic",
-          status: "active",
-        });
-
-        await repo.upsertAccountRole({
-          accountId: app.applicantAccountId,
-          role: "platform_driver",
-          planTier: "basic",
-          status: "active",
-          approvedAt: now,
-        });
-      } else if (app.applicationType === "platform_photographer") {
-        const p = app.payload as Record<string, unknown>;
-        await repo.upsertPhotographerProfile({
-          accountId: app.applicantAccountId,
-          scope: "platform",
-          nationalIdEncrypted: encryptField((p.nationalId as string) ?? "00000000000000"),
-          yearsOfExperience: Number(p.yearsOfExperience ?? 2),
-          cameraBodies: Array.isArray(p.cameraBodies)
-            ? (p.cameraBodies as string[])
-            : ["Professional Camera"],
-          lenses: Array.isArray(p.lenses) ? (p.lenses as string[]) : [],
-          hasDroneLicense: Boolean(p.hasDroneLicense),
-          serviceRegions: Array.isArray(p.serviceRegions)
-            ? (p.serviceRegions as string[])
-            : ["Cairo"],
-          specialties: Array.isArray(p.specialties) ? (p.specialties as string[]) : ["Trips"],
-          portfolioPhotoCount: Number(p.portfolioPhotoCount ?? 8),
-          sampleAlbums: [],
-          planTier: "basic",
-          status: "active",
-        });
-
-        await repo.upsertAccountRole({
-          accountId: app.applicantAccountId,
-          role: "platform_photographer",
-          planTier: "basic",
-          status: "active",
-          approvedAt: now,
-        });
-      }
-
-      const reviewer = await repo.findAccountById(actor.accountId);
-      const reviewerAccountId = reviewer ? actor.accountId : null;
-
-      const updated = await repo.updateApplication(app.id, {
-        state: "Approved",
-        reviewedByAdminAccountId: reviewerAccountId,
-        reviewedAt: now,
-        decisionReasonCode: input.decisionReasonCode,
-        decisionNotes: input.decisionNotes ?? null,
-        provisionedOrganizationId,
+        return updated!;
       });
-
-      await repo.writeAuditLog({
-        actorAccountId: reviewerAccountId,
-        actorRole: "admin",
-        tenantId: provisionedOrganizationId,
-        action: "onboarding.application.approved",
-        targetEntityType: "application",
-        targetEntityId: app.id,
-        reason: input.decisionNotes ?? input.decisionReasonCode,
-        beforeState: { state: app.state },
-        afterState: { state: "Approved", provisionedOrganizationId },
-        ipAddress: meta?.ipAddress,
-        requestId: meta?.requestId,
-      });
-
-      await dispatchApplicantStatusNotification({
-        actorAccountId: actor.accountId,
-        actorRole: "admin",
-        applicantAccountId: app.applicantAccountId,
-        applicationId: app.id,
-        applicationType: app.applicationType,
-        nextState: "Approved",
-        template: "application_approved",
-        reasonCode: input.decisionReasonCode,
-        notes: input.decisionNotes ?? null,
-        meta,
-      });
-
-      return updated!;
     },
 
     async requestApplicationChanges(
@@ -1164,64 +1179,67 @@ export function createOnboardingService(db: ServiceDatabase) {
       input: RejectApplicationInput,
       meta?: OnboardingRequestMeta,
     ) {
-      const app = await repo.findApplicationById(input.applicationId);
-      if (!app) {
-        throw new OnboardingServiceError("NOT_FOUND", "Application not found.");
-      }
+      return db.transaction(async (tx) => {
+        const txRepo = createOnboardingRepository(tx as unknown as ServiceDatabase);
+        const app = await txRepo.findApplicationByIdForUpdate(input.applicationId);
+        if (!app) {
+          throw new OnboardingServiceError("NOT_FOUND", "Application not found.");
+        }
 
-      if (!canTransitionApplicationState(app.state, "Rejected")) {
-        throw new OnboardingServiceError(
-          "PRECONDITION_FAILED",
-          `Cannot transition application from "${app.state}" to "Rejected".`,
-        );
-      }
+        if (!canTransitionApplicationState(app.state, "Rejected")) {
+          throw new OnboardingServiceError(
+            "PRECONDITION_FAILED",
+            `Cannot transition application from "${app.state}" to "Rejected".`,
+          );
+        }
 
-      const reviewer = await repo.findAccountById(actor.accountId);
-      const reviewerAccountId = reviewer ? actor.accountId : null;
+        const reviewer = await txRepo.findAccountById(actor.accountId);
+        const reviewerAccountId = reviewer ? actor.accountId : null;
 
-      const now = new Date();
-      const reapplyBlockedUntil = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000); // FR-ONB-05: 30-day block
+        const now = new Date();
+        const reapplyBlockedUntil = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000); // FR-ONB-05: 30-day block
 
-      const updated = await repo.updateApplication(app.id, {
-        state: "Rejected",
-        reviewedByAdminAccountId: reviewerAccountId,
-        reviewedAt: now,
-        decisionReasonCode: input.decisionReasonCode,
-        decisionNotes: input.decisionNotes,
-        rejectedAt: now,
-        reapplyBlockedUntil,
-      });
-
-      await repo.writeAuditLog({
-        actorAccountId: reviewerAccountId,
-        actorRole: "admin",
-        action: "onboarding.application.rejected",
-        targetEntityType: "application",
-        targetEntityId: app.id,
-        reason: input.decisionNotes,
-        beforeState: { state: app.state },
-        afterState: {
+        const updated = await txRepo.updateApplication(app.id, {
           state: "Rejected",
-          reapplyBlockedUntil: reapplyBlockedUntil.toISOString(),
-        },
-        ipAddress: meta?.ipAddress,
-        requestId: meta?.requestId,
-      });
+          reviewedByAdminAccountId: reviewerAccountId,
+          reviewedAt: now,
+          decisionReasonCode: input.decisionReasonCode,
+          decisionNotes: input.decisionNotes,
+          rejectedAt: now,
+          reapplyBlockedUntil,
+        });
 
-      await dispatchApplicantStatusNotification({
-        actorAccountId: actor.accountId,
-        actorRole: "admin",
-        applicantAccountId: app.applicantAccountId,
-        applicationId: app.id,
-        applicationType: app.applicationType,
-        nextState: "Rejected",
-        template: "application_rejected",
-        reasonCode: input.decisionReasonCode,
-        notes: input.decisionNotes,
-        meta,
-      });
+        await txRepo.writeAuditLog({
+          actorAccountId: reviewerAccountId,
+          actorRole: "admin",
+          action: "onboarding.application.rejected",
+          targetEntityType: "application",
+          targetEntityId: app.id,
+          reason: input.decisionNotes,
+          beforeState: { state: app.state },
+          afterState: {
+            state: "Rejected",
+            reapplyBlockedUntil: reapplyBlockedUntil.toISOString(),
+          },
+          ipAddress: meta?.ipAddress,
+          requestId: meta?.requestId,
+        });
 
-      return updated!;
+        await dispatchApplicantStatusNotification({
+          actorAccountId: actor.accountId,
+          actorRole: "admin",
+          applicantAccountId: app.applicantAccountId,
+          applicationId: app.id,
+          applicationType: app.applicationType,
+          nextState: "Rejected",
+          template: "application_rejected",
+          reasonCode: input.decisionReasonCode,
+          notes: input.decisionNotes,
+          meta,
+        });
+
+        return updated!;
+      });
     },
 
     async decideAppeal(

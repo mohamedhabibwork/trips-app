@@ -1,5 +1,6 @@
 // Business logic for Trips. Routes call this factory with context.db; repositories are created here.
 import { TripsServiceError } from "../errors";
+import { PAYMENT_CONFIRM_TIMEOUT_SECONDS } from "@trips-app/domain";
 import {
   canCancelTripState,
   canTransitionTripState,
@@ -143,12 +144,13 @@ export function createTripsService(db: ServiceDatabase) {
 
   function toPublicTripSummaryDto(
     row: NonNullable<Awaited<ReturnType<typeof repo.findPublicTripById>>>,
+    /** Live occupancy (pending + confirmed passengers); falls back to the trips-table
+     * counters when not provided (browse list). */
+    liveOccupiedSeats?: number,
   ): PublicTripSummaryDto {
     const { trip, organizerNameAr, organizerNameEn } = row;
-    const remainingSeatsCount = Math.max(
-      0,
-      trip.totalCapacity - trip.confirmedSeatsCount - trip.heldSeatsCount,
-    );
+    const confirmedSeatsCount = liveOccupiedSeats ?? trip.confirmedSeatsCount;
+    const remainingSeatsCount = Math.max(0, trip.totalCapacity - confirmedSeatsCount);
     return {
       id: trip.id,
       tenantId: trip.tenantId,
@@ -173,7 +175,7 @@ export function createTripsService(db: ServiceDatabase) {
       basePriceMinor: trip.basePriceMinor,
       currencyCode: trip.currencyCode,
       totalCapacity: trip.totalCapacity,
-      confirmedSeatsCount: trip.confirmedSeatsCount,
+      confirmedSeatsCount,
       remainingSeatsCount,
       childTrackingEnabled: trip.childTrackingEnabled,
       state: trip.state,
@@ -341,16 +343,20 @@ export function createTripsService(db: ServiceDatabase) {
             seatLayoutSnapshot: v.vehicleType.seatLayout,
           }));
 
-          await repo.replaceTripVehicles(actor.activeTenantId, existing.id, snapshots);
+          const { updated, vehicles } = await db.transaction(async (tx) => {
+            const txRepo = createTripsRepository(tx);
+            await txRepo.replaceTripVehicles(actor.activeTenantId, existing.id, snapshots);
 
-          const totalCapacity = snapshots.reduce((sum, item) => sum + item.seatCountSnapshot, 0);
-          const updated = await repo.updateTripForTenant(actor.activeTenantId, existing.id, {
-            totalCapacity,
-            hasStaffingGap: true,
-            wizardSteps: { ...currentWizardSteps, vehicles: true },
-            updatedByAccountId: actor.accountId,
+            const totalCapacity = snapshots.reduce((sum, item) => sum + item.seatCountSnapshot, 0);
+            const upd = await txRepo.updateTripForTenant(actor.activeTenantId, existing.id, {
+              totalCapacity,
+              hasStaffingGap: true,
+              wizardSteps: { ...currentWizardSteps, vehicles: true },
+              updatedByAccountId: actor.accountId,
+            });
+            const v = await txRepo.listTripVehiclesForTrips(actor.activeTenantId, [existing.id]);
+            return { updated: upd, vehicles: v };
           });
-          const vehicles = await repo.listTripVehiclesForTrips(actor.activeTenantId, [existing.id]);
           return toOrganizationTripDto(updated!, vehicles);
         }
 
@@ -754,8 +760,20 @@ export function createTripsService(db: ServiceDatabase) {
         return true;
       });
 
+      // Availability from live bookings, same rule as the detail view and the booking
+      // capacity guard: confirmed seats always count, pendings only within the D-30 window.
+      const liveOccupied = await repo.sumActiveBookedPassengersByTrips(
+        eligible.map(({ trip }) => trip.id),
+        new Date(Date.now() - PAYMENT_CONFIRM_TIMEOUT_SECONDS * 1000),
+      );
+
       return {
-        items: eligible.map(toPublicTripSummaryDto),
+        items: eligible.map(({ trip, organizerNameAr, organizerNameEn }) =>
+          toPublicTripSummaryDto(
+            { trip, organizerNameAr, organizerNameEn },
+            liveOccupied.get(trip.id) ?? 0,
+          ),
+        ),
       };
     },
 
@@ -795,8 +813,15 @@ export function createTripsService(db: ServiceDatabase) {
         throw new TripsServiceError("RESOURCE_NOT_FOUND", "Trip not found.");
       }
 
+      // Availability from live bookings so the seats shown match what createBooking accepts
+      // (D-30 pendings only; abandoned payments must not make a trip look full).
+      const liveOccupiedSeats = await repo.sumActiveBookedPassengers(
+        input.tripId,
+        new Date(Date.now() - PAYMENT_CONFIRM_TIMEOUT_SECONDS * 1000),
+      );
+
       return {
-        trip: toPublicTripSummaryDto(row),
+        trip: toPublicTripSummaryDto(row, liveOccupiedSeats),
       };
     },
   };

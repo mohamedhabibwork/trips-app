@@ -1,6 +1,7 @@
 // Entities and aggregates with their invariants. No I/O.
 import {
   findPlanCatalogEntry,
+  SEAT_INVENTORY_STATUSES,
   type SeatInventoryStatus,
   type SeatLayoutConfig,
   type TravelerPlanCode,
@@ -9,18 +10,12 @@ import {
 
 export {
   findPlanCatalogEntry,
+  SEAT_INVENTORY_STATUSES,
   type SeatInventoryStatus,
   type SeatLayoutConfig,
   type TravelerPlanCode,
   type UserRole,
 };
-
-export const SEAT_INVENTORY_STATUSES = [
-  "available",
-  "held",
-  "reserved",
-  "blocked",
-] as const satisfies readonly SeatInventoryStatus[];
 
 export const DEFAULT_SEAT_HOLD_MINUTES = 15;
 

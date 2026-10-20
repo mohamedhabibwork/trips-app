@@ -44,26 +44,29 @@ export function createPlansService(deps: { db: ServiceDatabase }) {
       const priceMinor =
         input.billingCycle === "annual" ? plan.annualPriceMinor : plan.monthlyPriceMinor;
 
-      const record = await repo.insertSubscriptionRecord({
-        scope: "organization",
-        accountId: null,
-        tenantId,
-        planId: plan.id,
-        role: plan.role,
-        tier: plan.tier,
-        billingCycle: input.billingCycle,
-        priceMinor,
-        currencyCode: plan.currencyCode,
-        currentPeriodStart: now,
-        currentPeriodEnd: computeSubscriptionPeriodEnd(now, input.billingCycle),
-        updatedByAccountId: actorAccountId,
+      return deps.db.transaction(async (tx) => {
+        const txRepo = createPlansRepository(tx as unknown as ServiceDatabase);
+        const record = await txRepo.insertSubscriptionRecord({
+          scope: "organization",
+          accountId: null,
+          tenantId,
+          planId: plan.id,
+          role: plan.role,
+          tier: plan.tier,
+          billingCycle: input.billingCycle,
+          priceMinor,
+          currencyCode: plan.currencyCode,
+          currentPeriodStart: now,
+          currentPeriodEnd: computeSubscriptionPeriodEnd(now, input.billingCycle),
+          updatedByAccountId: actorAccountId,
+        });
+
+        if (plan.tier === "starter" || plan.tier === "growth" || plan.tier === "enterprise") {
+          await txRepo.updateOrganizationTier(tenantId, plan.tier);
+        }
+
+        return record;
       });
-
-      if (plan.tier === "starter" || plan.tier === "growth" || plan.tier === "enterprise") {
-        await repo.updateOrganizationTier(tenantId, plan.tier);
-      }
-
-      return record;
     },
 
     async changeAccountPlan(accountId: string, input: ChangePlanInput) {
@@ -82,29 +85,32 @@ export function createPlansService(deps: { db: ServiceDatabase }) {
       const priceMinor =
         input.billingCycle === "annual" ? plan.annualPriceMinor : plan.monthlyPriceMinor;
 
-      const record = await repo.insertSubscriptionRecord({
-        scope: "account",
-        accountId,
-        tenantId: null,
-        planId: plan.id,
-        role: plan.role,
-        tier: plan.tier,
-        billingCycle: input.billingCycle,
-        priceMinor,
-        currencyCode: plan.currencyCode,
-        currentPeriodStart: now,
-        currentPeriodEnd: computeSubscriptionPeriodEnd(now, input.billingCycle),
-        updatedByAccountId: accountId,
+      return deps.db.transaction(async (tx) => {
+        const txRepo = createPlansRepository(tx as unknown as ServiceDatabase);
+        const record = await txRepo.insertSubscriptionRecord({
+          scope: "account",
+          accountId,
+          tenantId: null,
+          planId: plan.id,
+          role: plan.role,
+          tier: plan.tier,
+          billingCycle: input.billingCycle,
+          priceMinor,
+          currencyCode: plan.currencyCode,
+          currentPeriodStart: now,
+          currentPeriodEnd: computeSubscriptionPeriodEnd(now, input.billingCycle),
+          updatedByAccountId: accountId,
+        });
+
+        if (
+          plan.role === "traveler" &&
+          (plan.tier === "free" || plan.tier === "explorer" || plan.tier === "vip")
+        ) {
+          await txRepo.updateTravelerTier(accountId, plan.tier);
+        }
+
+        return record;
       });
-
-      if (
-        plan.role === "traveler" &&
-        (plan.tier === "free" || plan.tier === "explorer" || plan.tier === "vip")
-      ) {
-        await repo.updateTravelerTier(accountId, plan.tier);
-      }
-
-      return record;
     },
 
     async adminOverrideSubscription(adminAccountId: string, input: AdminOverrideSubscriptionInput) {

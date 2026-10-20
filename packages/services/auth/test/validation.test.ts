@@ -16,7 +16,7 @@ describe("Unit: auth validation schemas & error mapping (@trips-app/service-auth
     expect(
       registerTravelerSchema.safeParse({
         fullName: "Salma Hassan",
-        email: "salma@example.com",
+        email: "salma@trips-enjoy.com",
         preferredSignInMethod: "otp",
       }).success,
     ).toBe(true);
@@ -24,20 +24,20 @@ describe("Unit: auth validation schemas & error mapping (@trips-app/service-auth
       registerSupplierAccountSchema.safeParse({
         role: "organization_owner",
         fullName: "Tarek Mansour",
-        email: "tarek@example.com",
+        email: "tarek@trips-enjoy.com",
         phone: "+201012345678",
         password: "StrongPassword!2026",
       }).success,
     ).toBe(true);
     expect(
       verifyOtpSchema.safeParse({
-        targetIdentifier: "salma@example.com",
+        targetIdentifier: "salma@trips-enjoy.com",
         code: "123456",
       }).success,
     ).toBe(true);
     expect(
       signInSchema.safeParse({
-        identifier: "salma@example.com",
+        identifier: "salma@trips-enjoy.com",
         method: "otp",
         otpCode: "123456",
       }).success,

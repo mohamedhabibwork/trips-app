@@ -1,5 +1,15 @@
 // Data access through @trips-app/db. Every tenant-owned query filters by tenant (DAT-01).
-import { and, type Database, desc, eq, isNull, lte, schema } from "@trips-app/db";
+import {
+  and,
+  count,
+  desc,
+  eq,
+  inArray,
+  isNull,
+  lte,
+  schema,
+  type ServiceDatabase,
+} from "@trips-app/db";
 
 import type {
   AccountRoleStatus,
@@ -14,7 +24,7 @@ import type {
   UserRole,
 } from "../model";
 
-export type { Database as ServiceDatabase } from "@trips-app/db";
+export type { ServiceDatabase } from "@trips-app/db";
 
 const {
   accounts,
@@ -33,7 +43,7 @@ const {
   roleDefinitions,
 } = schema;
 
-export function createAuthRepository(db: Database) {
+export function createAuthRepository(db: ServiceDatabase) {
   return {
     async getAuthSettingsRow() {
       const [row] = await db
@@ -72,10 +82,8 @@ export function createAuthRepository(db: Database) {
     async listPlanCatalog(
       role?: "traveler" | "organization" | "platform_driver" | "platform_photographer",
     ) {
-      if (role) {
-        return db.select().from(planCatalog).where(eq(planCatalog.role, role));
-      }
-      return db.select().from(planCatalog);
+      const qb = db.select().from(planCatalog).$dynamic();
+      return role ? qb.where(eq(planCatalog.role, role)) : qb;
     },
 
     async findAccountById(id: string) {
@@ -383,11 +391,16 @@ export function createAuthRepository(db: Database) {
     },
 
     async countActiveEmployeesForTenant(tenantId: string) {
-      const rows = await db
-        .select()
+      const [row] = await db
+        .select({ value: count() })
         .from(employeeMemberships)
-        .where(eq(employeeMemberships.tenantId, tenantId));
-      return rows.filter((r) => r.status === "invited" || r.status === "active").length;
+        .where(
+          and(
+            eq(employeeMemberships.tenantId, tenantId),
+            inArray(employeeMemberships.status, ["invited", "active"]),
+          ),
+        );
+      return Number(row?.value ?? 0);
     },
 
     async createEmployeeInvite(values: {

@@ -19,7 +19,7 @@ const PERMANENT_FAILURE: SendResult = {
 };
 
 const RECIPIENT = {
-  email: "ada@example.com",
+  email: "ada@trips-enjoy.com",
   phone: "+201000000000",
   name: "Ada",
   locale: "en" as const,
@@ -66,7 +66,7 @@ describe("createAuthNotifier", () => {
     // Assert
     expect(outcomes).toEqual([{ channel: "email", status: "sent", provider: "test", attempts: 1 }]);
     expect(sink.emails).toHaveLength(1);
-    expect(sink.emails[0]?.to).toBe("ada@example.com");
+    expect(sink.emails[0]?.to).toBe("ada@trips-enjoy.com");
     expect(sink.emails[0]?.text).toContain("123456");
     expect(sink.smses).toHaveLength(0);
   });
@@ -202,7 +202,7 @@ describe("createAuthNotifier", () => {
     const output = logged.join("\n");
     expect(output).toContain("Notification delivery failed");
     expect(output).not.toContain("123456");
-    expect(output).not.toContain("ada@example.com");
-    expect(output).toContain("a***@example.com");
+    expect(output).not.toContain("ada@trips-enjoy.com");
+    expect(output).toContain("a***@trips-enjoy.com");
   });
 });

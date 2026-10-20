@@ -1,13 +1,13 @@
 // Data access through @trips-app/db. Every tenant-owned query filters by tenant (DAT-01).
-import { and, asc, type Database, eq, inArray, lte, schema, sql } from "@trips-app/db";
+import { and, asc, eq, inArray, lte, schema, type ServiceDatabase, sql } from "@trips-app/db";
 
 import type { SeatInventoryStatus, SeatLayoutConfig } from "../model";
 
-export type { Database as ServiceDatabase } from "@trips-app/db";
+export type { ServiceDatabase } from "@trips-app/db";
 
 const { accounts, bookings, trips, tripSeatInventory, tripVehicles } = schema;
 
-export function createSeatsRepository(db: Database) {
+export function createSeatsRepository(db: ServiceDatabase) {
   return {
     async findTripById(tripId: string) {
       const [row] = await db.select().from(trips).where(eq(trips.id, tripId)).limit(1);
@@ -79,14 +79,64 @@ export function createSeatsRepository(db: Database) {
         );
     },
 
-    async listSeats(tripId: string, vehicleId: string) {
-      return db
-        .select()
-        .from(tripSeatInventory)
+    /** Free seats still marked "reserved" for bookings that no longer occupy them:
+     * cancelled/refunded bookings, or pendings past the D-30 confirm window. Without this,
+     * abandoned checkouts block the seat map forever (the seats show all taken). */
+    async releaseStaleReservations(tripId: string, pendingCutoff: Date, now: Date) {
+      await db
+        .update(tripSeatInventory)
+        .set({
+          status: "available",
+          bookingId: null,
+          heldByAccountId: null,
+          holdExpiresAt: null,
+          updatedAt: now,
+        })
         .where(
-          and(eq(tripSeatInventory.tripId, tripId), eq(tripSeatInventory.vehicleId, vehicleId)),
-        )
-        .orderBy(asc(tripSeatInventory.rowIndex), asc(tripSeatInventory.colIndex));
+          and(
+            eq(tripSeatInventory.tripId, tripId),
+            eq(tripSeatInventory.status, "reserved"),
+            sql`${tripSeatInventory.bookingId} in (
+              select ${bookings.id} from ${bookings}
+              where ${bookings.id} = ${tripSeatInventory.bookingId}
+                and (
+                  ${bookings.status} in ('cancelled', 'refunded')
+                  or (${bookings.status} = 'pending_payment'
+                      and ${bookings.createdAt} < ${pendingCutoff})
+                )
+            )`,
+          ),
+        );
+    },
+
+    async listSeats(
+      tripId: string,
+      vehicleId: string,
+      filters?: {
+        status?: SeatInventoryStatus;
+        isPriority?: boolean;
+        isAccessible?: boolean;
+      },
+    ) {
+      let query = db.select().from(tripSeatInventory).$dynamic();
+
+      const conditions = [
+        eq(tripSeatInventory.tripId, tripId),
+        eq(tripSeatInventory.vehicleId, vehicleId),
+      ];
+      if (filters?.status) {
+        conditions.push(eq(tripSeatInventory.status, filters.status));
+      }
+      if (filters?.isPriority !== undefined) {
+        conditions.push(eq(tripSeatInventory.isPriority, filters.isPriority));
+      }
+      if (filters?.isAccessible !== undefined) {
+        conditions.push(eq(tripSeatInventory.isAccessible, filters.isAccessible));
+      }
+
+      query = query.where(and(...conditions));
+      query = query.orderBy(asc(tripSeatInventory.rowIndex), asc(tripSeatInventory.colIndex));
+      return query;
     },
 
     async holdSeatsAtomically(
@@ -216,24 +266,31 @@ export function createSeatsRepository(db: Database) {
     },
 
     async syncTripSeatCounts(tripId: string) {
-      const [counts] = await db
-        .select({
-          heldCount: sql<number>`count(*) filter (where ${tripSeatInventory.status} = 'held')::int`,
-          reservedCount: sql<number>`count(*) filter (where ${tripSeatInventory.status} = 'reserved')::int`,
-        })
-        .from(tripSeatInventory)
-        .where(eq(tripSeatInventory.tripId, tripId));
-      const [bookingSum] = await db
-        .select({
-          bookedPassengers: sql<number>`coalesce(sum(${bookings.passengersCount}), 0)::int`,
-        })
-        .from(bookings)
-        .where(
-          and(
-            eq(bookings.tripId, tripId),
-            inArray(bookings.status, ["pending_payment", "confirmed"]),
+      const [countsResult, bookingSumResult] = await Promise.all([
+        db
+          .select({
+            heldCount: sql<number>`count(*) filter (where ${tripSeatInventory.status} = 'held')::int`,
+            reservedCount: sql<number>`count(*) filter (where ${tripSeatInventory.status} = 'reserved')::int`,
+          })
+          .from(tripSeatInventory)
+          .where(eq(tripSeatInventory.tripId, tripId)),
+        db
+          .select({
+            bookedPassengers: sql<number>`coalesce(sum(${bookings.passengersCount}), 0)::int`,
+          })
+          .from(bookings)
+          .where(
+            and(
+              eq(bookings.tripId, tripId),
+              // Paid states only: pendings claim no confirmed seats (payments service bumps
+              // the counter on mark-as-paid), so the resync must not resurrect them here.
+              inArray(bookings.status, ["confirmed", "checked_in", "completed"]),
+            ),
           ),
-        );
+      ] as const);
+
+      const [counts] = countsResult;
+      const [bookingSum] = bookingSumResult;
       const reservedCount = Number(counts?.reservedCount ?? 0);
       const bookedPassengers = Number(bookingSum?.bookedPassengers ?? 0);
       await db

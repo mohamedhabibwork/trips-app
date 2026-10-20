@@ -1,7 +1,5 @@
-// Data access through @trips-app/db. Every tenant-owned query filters by tenant (DAT-01).
 import {
   and,
-  type Database,
   desc,
   eq,
   ilike,
@@ -11,6 +9,7 @@ import {
   ne,
   or,
   schema,
+  type ServiceDatabase,
 } from "@trips-app/db";
 
 import type {
@@ -22,11 +21,11 @@ import type {
   VehicleTypeStatus,
 } from "../model";
 
-export type { Database as ServiceDatabase } from "@trips-app/db";
+export type { ServiceDatabase } from "@trips-app/db";
 
 const { auditLogs, trips, tripVehicles, vehicles, vehicleTypes } = schema;
 
-export function createFleetRepository(db: Database) {
+export function createFleetRepository(db: ServiceDatabase) {
   return {
     async listVehicleTypesForTenant(
       tenantId: string,
@@ -234,49 +233,51 @@ export function createFleetRepository(db: Database) {
       createdByAccountId: string;
       fileIds?: readonly string[];
     }) {
-      const now = new Date();
-      const [created] = await db
-        .insert(vehicles)
-        .values({
-          tenantId: values.tenantId,
-          vehicleTypeId: values.vehicleTypeId,
-          plateNumber: values.plateNumber,
-          plateNumberNormalized: values.plateNumberNormalized,
-          model: values.model,
-          manufacturingYear: values.manufacturingYear,
-          seatCount: values.seatCount,
-          registrationStatus: values.registrationStatus,
-          registrationExpiry: values.registrationExpiry,
-          registrationDocumentUrl: values.registrationDocumentUrl,
-          photoUrls: values.photoUrls,
-          amenityCodes: values.amenityCodes,
-          status: values.status,
-          notes: values.notes,
-          createdByAccountId: values.createdByAccountId,
-          createdAt: now,
-          updatedAt: now,
-        })
-        .returning();
+      return db.transaction(async (tx) => {
+        const now = new Date();
+        const [created] = await tx
+          .insert(vehicles)
+          .values({
+            tenantId: values.tenantId,
+            vehicleTypeId: values.vehicleTypeId,
+            plateNumber: values.plateNumber,
+            plateNumberNormalized: values.plateNumberNormalized,
+            model: values.model,
+            manufacturingYear: values.manufacturingYear,
+            seatCount: values.seatCount,
+            registrationStatus: values.registrationStatus,
+            registrationExpiry: values.registrationExpiry,
+            registrationDocumentUrl: values.registrationDocumentUrl,
+            photoUrls: values.photoUrls,
+            amenityCodes: values.amenityCodes,
+            status: values.status,
+            notes: values.notes,
+            createdByAccountId: values.createdByAccountId,
+            createdAt: now,
+            updatedAt: now,
+          })
+          .returning();
 
-      const allUrls = [values.registrationDocumentUrl, ...values.photoUrls].filter(
-        (u): u is string => Boolean(u),
-      );
+        const allUrls = [values.registrationDocumentUrl, ...values.photoUrls].filter(
+          (u): u is string => Boolean(u),
+        );
 
-      if (allUrls.length > 0 || (values.fileIds && values.fileIds.length > 0)) {
-        await linkUploadedFilesOnItemSave(db, {
-          entityType: "vehicle",
-          entityId: created!.id,
-          tenantId: values.tenantId,
-          uploaderAccountId: values.createdByAccountId,
-          fileIds: values.fileIds,
-          urls: allUrls,
-          storageKeys: allUrls,
-          replaceExistingForEntity: true,
-          now,
-        });
-      }
+        if (allUrls.length > 0 || (values.fileIds && values.fileIds.length > 0)) {
+          await linkUploadedFilesOnItemSave(tx, {
+            entityType: "vehicle",
+            entityId: created!.id,
+            tenantId: values.tenantId,
+            uploaderAccountId: values.createdByAccountId,
+            fileIds: values.fileIds,
+            urls: allUrls,
+            storageKeys: allUrls,
+            replaceExistingForEntity: true,
+            now,
+          });
+        }
 
-      return created!;
+        return created!;
+      });
     },
 
     async updateVehicle(
@@ -300,42 +301,44 @@ export function createFleetRepository(db: Database) {
         fileIds?: readonly string[];
       },
     ) {
-      const now = new Date();
-      const { updatedByAccountId, fileIds, ...patch } = values;
-      const [updated] = await db
-        .update(vehicles)
-        .set({
-          ...patch,
-          updatedAt: now,
-        })
-        .where(and(eq(vehicles.id, vehicleId), eq(vehicles.tenantId, tenantId)))
-        .returning();
+      return db.transaction(async (tx) => {
+        const now = new Date();
+        const { updatedByAccountId, fileIds, ...patch } = values;
+        const [updated] = await tx
+          .update(vehicles)
+          .set({
+            ...patch,
+            updatedAt: now,
+          })
+          .where(and(eq(vehicles.id, vehicleId), eq(vehicles.tenantId, tenantId)))
+          .returning();
 
-      if (!updated) return null;
+        if (!updated) return null;
 
-      if (
-        values.registrationDocumentUrl !== undefined ||
-        values.photoUrls !== undefined ||
-        fileIds !== undefined
-      ) {
-        const allUrls = [updated.registrationDocumentUrl, ...(updated.photoUrls ?? [])].filter(
-          (u): u is string => Boolean(u),
-        );
+        if (
+          values.registrationDocumentUrl !== undefined ||
+          values.photoUrls !== undefined ||
+          fileIds !== undefined
+        ) {
+          const allUrls = [updated.registrationDocumentUrl, ...(updated.photoUrls ?? [])].filter(
+            (u): u is string => Boolean(u),
+          );
 
-        await linkUploadedFilesOnItemSave(db, {
-          entityType: "vehicle",
-          entityId: updated.id,
-          tenantId,
-          uploaderAccountId: updatedByAccountId,
-          fileIds,
-          urls: allUrls,
-          storageKeys: allUrls,
-          replaceExistingForEntity: true,
-          now,
-        });
-      }
+          await linkUploadedFilesOnItemSave(tx, {
+            entityType: "vehicle",
+            entityId: updated.id,
+            tenantId,
+            uploaderAccountId: updatedByAccountId,
+            fileIds,
+            urls: allUrls,
+            storageKeys: allUrls,
+            replaceExistingForEntity: true,
+            now,
+          });
+        }
 
-      return updated;
+        return updated;
+      });
     },
 
     async retireVehicleAndDetachFromDraftTrips(

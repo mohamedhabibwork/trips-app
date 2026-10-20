@@ -1,11 +1,25 @@
-import { and, desc, eq, inArray, or, sql } from "@trips-app/db";
-import type { Database, Database as ServiceDatabase } from "@trips-app/db";
-import { schema } from "@trips-app/db/zod";
-import type { BookingPassenger, CurrencyCode, PaymentGatewayCode } from "../model";
+import {
+  and,
+  desc,
+  eq,
+  gte,
+  inArray,
+  lte,
+  or,
+  schema,
+  type ServiceDatabase,
+  sql,
+} from "@trips-app/db";
+import {
+  PAYMENT_CONFIRM_TIMEOUT_SECONDS,
+  type BookingPassenger,
+  type CurrencyCode,
+  type PaymentGatewayCode,
+} from "../model";
 
 export type { ServiceDatabase };
 
-export function createBookingRepository(db: Database) {
+export function createBookingRepository(db: ServiceDatabase) {
   return {
     async findTripById(tripId: string) {
       const [row] = await db
@@ -23,6 +37,29 @@ export function createBookingRepository(db: Database) {
         .where(eq(schema.trips.id, tripId))
         .for("update");
       return row ?? null;
+    },
+
+    /** Seats taken by live bookings: confirmed always, pending payment only within its D-30
+     * confirm window (older pendings are expired, so they must not block new bookings). */
+    async sumActiveBookedPassengers(tripId: string, pendingCutoff: Date) {
+      const [row] = await db
+        .select({
+          total: sql<number>`coalesce(sum(${schema.bookings.passengersCount}), 0)::int`,
+        })
+        .from(schema.bookings)
+        .where(
+          and(
+            eq(schema.bookings.tripId, tripId),
+            or(
+              eq(schema.bookings.status, "confirmed"),
+              and(
+                eq(schema.bookings.status, "pending_payment"),
+                sql`${schema.bookings.createdAt} >= ${pendingCutoff}`,
+              ),
+            ),
+          ),
+        );
+      return Number(row?.total ?? 0);
     },
 
     async findActiveProgramsByIds(tripId: string, programIds: string[]) {
@@ -121,6 +158,31 @@ export function createBookingRepository(db: Database) {
         .for("update");
     },
 
+    /** Of the given booking ids, the ones whose seat reservations still occupy their
+     * seats: paid states always, pendings within the D-30 confirm window. */
+    async findBlockingBookingIds(bookingIds: string[], now: Date) {
+      if (bookingIds.length === 0) return [];
+      const rows = await db
+        .select({ id: schema.bookings.id })
+        .from(schema.bookings)
+        .where(
+          and(
+            inArray(schema.bookings.id, bookingIds),
+            or(
+              inArray(schema.bookings.status, ["confirmed", "checked_in", "completed"]),
+              and(
+                eq(schema.bookings.status, "pending_payment"),
+                gte(
+                  schema.bookings.createdAt,
+                  new Date(now.getTime() - PAYMENT_CONFIRM_TIMEOUT_SECONDS * 1000),
+                ),
+              ),
+            ),
+          ),
+        );
+      return rows.map((row) => row.id);
+    },
+
     async reserveSeatLabels(
       tenantId: string,
       tripId: string,
@@ -130,13 +192,17 @@ export function createBookingRepository(db: Database) {
     ) {
       if (seatLabels.length === 0) return;
       const existing = await this.findSeatInventoryForLabels(tripId, vehicleId, seatLabels);
-      const byLabel = new Map(existing.map((r) => [r.seatLabel, r]));
+      const existingByLabel = new Map(existing.map((r) => [r.seatLabel, r]));
+      const existingIds = existing.map((r) => r.id);
+      const missingLabels = seatLabels.filter((label) => !existingByLabel.has(label));
       const now = new Date();
 
-      for (const label of seatLabels) {
-        const row = byLabel.get(label);
-        if (row) {
-          await db
+      const operations: Promise<unknown>[] = [];
+
+      // 1. Bulk update existing seat inventory rows in 1 query
+      if (existingIds.length > 0) {
+        operations.push(
+          db
             .update(schema.tripSeatInventory)
             .set({
               status: "reserved",
@@ -145,18 +211,29 @@ export function createBookingRepository(db: Database) {
               holdExpiresAt: null,
               updatedAt: now,
             })
-            .where(eq(schema.tripSeatInventory.id, row.id));
-        } else {
-          await db.insert(schema.tripSeatInventory).values({
-            tenantId,
-            tripId,
-            vehicleId,
-            seatLabel: label,
-            status: "reserved",
-            bookingId,
-            updatedAt: now,
-          });
-        }
+            .where(inArray(schema.tripSeatInventory.id, existingIds)),
+        );
+      }
+
+      // 2. Bulk insert missing seat inventory rows in 1 query
+      if (missingLabels.length > 0) {
+        operations.push(
+          db.insert(schema.tripSeatInventory).values(
+            missingLabels.map((label) => ({
+              tenantId,
+              tripId,
+              vehicleId,
+              seatLabel: label,
+              status: "reserved" as const,
+              bookingId,
+              updatedAt: now,
+            })),
+          ),
+        );
+      }
+
+      if (operations.length > 0) {
+        await Promise.all(operations);
       }
     },
 
@@ -260,23 +337,72 @@ export function createBookingRepository(db: Database) {
         .where(eq(schema.checkInRecords.bookingId, bookingId));
     },
 
-    async listTravelerBookings(travelerAccountId: string) {
-      return db
-        .select()
-        .from(schema.bookings)
-        .where(eq(schema.bookings.travelerAccountId, travelerAccountId))
-        .orderBy(desc(schema.bookings.createdAt));
+    async listTravelerBookings(
+      travelerAccountId: string,
+      filters?: {
+        status?: string;
+        dateRange?: { from?: Date; to?: Date };
+      },
+    ) {
+      let query = db.select().from(schema.bookings).$dynamic();
+
+      const conditions = [eq(schema.bookings.travelerAccountId, travelerAccountId)];
+      if (filters?.status) {
+        conditions.push(eq(schema.bookings.status, filters.status as any));
+      }
+      if (filters?.dateRange?.from) {
+        conditions.push(gte(schema.bookings.createdAt, filters.dateRange.from));
+      }
+      if (filters?.dateRange?.to) {
+        conditions.push(lte(schema.bookings.createdAt, filters.dateRange.to));
+      }
+
+      query = query.where(and(...conditions));
+      query = query.orderBy(desc(schema.bookings.createdAt));
+      return query;
     },
 
-    async listOrganizationBookings(tenantId: string, tripId?: string) {
-      const condition = tripId
-        ? and(eq(schema.bookings.tenantId, tenantId), eq(schema.bookings.tripId, tripId))
-        : eq(schema.bookings.tenantId, tenantId);
-      return db
-        .select()
-        .from(schema.bookings)
-        .where(condition)
-        .orderBy(desc(schema.bookings.createdAt));
+    async listOrganizationBookings(
+      tenantId: string,
+      filtersOrTripId?:
+        | string
+        | {
+            tripId?: string;
+            status?: string;
+            travelerAccountId?: string;
+            dateRange?: { from?: Date; to?: Date };
+          },
+    ) {
+      const tripId =
+        typeof filtersOrTripId === "string" ? filtersOrTripId : filtersOrTripId?.tripId;
+      const status = typeof filtersOrTripId === "object" ? filtersOrTripId?.status : undefined;
+      const travelerAccountId =
+        typeof filtersOrTripId === "object" ? filtersOrTripId?.travelerAccountId : undefined;
+      const dateRange =
+        typeof filtersOrTripId === "object" ? filtersOrTripId?.dateRange : undefined;
+
+      let query = db.select().from(schema.bookings).$dynamic();
+
+      const conditions = [eq(schema.bookings.tenantId, tenantId)];
+      if (tripId) {
+        conditions.push(eq(schema.bookings.tripId, tripId));
+      }
+      if (status) {
+        conditions.push(eq(schema.bookings.status, status as any));
+      }
+      if (travelerAccountId) {
+        conditions.push(eq(schema.bookings.travelerAccountId, travelerAccountId));
+      }
+      if (dateRange?.from) {
+        conditions.push(gte(schema.bookings.createdAt, dateRange.from));
+      }
+      if (dateRange?.to) {
+        conditions.push(lte(schema.bookings.createdAt, dateRange.to));
+      }
+
+      query = query.where(and(...conditions));
+      query = query.orderBy(desc(schema.bookings.createdAt));
+      return query;
     },
 
     async markBookingCancelled(bookingId: string, reason: string, refundAmountMinor: number) {

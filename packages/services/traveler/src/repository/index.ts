@@ -1,12 +1,12 @@
 // Data access through @trips-app/db. Every tenant-owned query filters by tenant (DAT-01).
 import {
   and,
-  type Database,
   desc,
   eq,
   linkUploadedFilesOnItemSave,
   ne,
   schema,
+  type ServiceDatabase,
 } from "@trips-app/db";
 
 import type {
@@ -17,11 +17,11 @@ import type {
   UserRole,
 } from "../model";
 
-export type { Database as ServiceDatabase } from "@trips-app/db";
+export type { ServiceDatabase } from "@trips-app/db";
 
 const { accounts, auditLogs, notificationPreferences, planCatalog, privacyRequests } = schema;
 
-export function createTravelerRepository(db: Database) {
+export function createTravelerRepository(db: ServiceDatabase) {
   return {
     async findAccountById(accountId: string) {
       const [row] = await db.select().from(accounts).where(eq(accounts.id, accountId)).limit(1);
@@ -63,49 +63,51 @@ export function createTravelerRepository(db: Database) {
         fileIds?: readonly string[];
       },
     ) {
-      const now = new Date();
-      const [updated] = await db
-        .update(accounts)
-        .set({
-          fullName: values.fullName,
-          emailNormalized: values.emailNormalized,
-          emailBlindIndex: values.emailBlindIndex,
-          emailEncrypted: values.emailEncrypted,
-          phoneE164: values.phoneE164,
-          phoneBlindIndex: values.phoneBlindIndex,
-          phoneEncrypted: values.phoneEncrypted,
-          countryCode: values.countryCode,
-          ...(values.preferredLanguage !== undefined
-            ? { preferredLanguage: values.preferredLanguage }
-            : {}),
-          ...(values.avatarUrl !== undefined ? { avatarUrl: values.avatarUrl } : {}),
-          updatedAt: now,
-        })
-        .where(eq(accounts.id, accountId))
-        .returning();
+      return db.transaction(async (tx) => {
+        const now = new Date();
+        const [updated] = await tx
+          .update(accounts)
+          .set({
+            fullName: values.fullName,
+            emailNormalized: values.emailNormalized,
+            emailBlindIndex: values.emailBlindIndex,
+            emailEncrypted: values.emailEncrypted,
+            phoneE164: values.phoneE164,
+            phoneBlindIndex: values.phoneBlindIndex,
+            phoneEncrypted: values.phoneEncrypted,
+            countryCode: values.countryCode,
+            ...(values.preferredLanguage !== undefined
+              ? { preferredLanguage: values.preferredLanguage }
+              : {}),
+            ...(values.avatarUrl !== undefined ? { avatarUrl: values.avatarUrl } : {}),
+            updatedAt: now,
+          })
+          .where(eq(accounts.id, accountId))
+          .returning();
 
-      if (
-        values.avatarUrl !== undefined ||
-        values.avatarFileId !== undefined ||
-        values.fileIds !== undefined
-      ) {
-        const resolvedFileIds = [
-          ...(values.avatarFileId ? [values.avatarFileId] : []),
-          ...(values.fileIds ?? []),
-        ];
-        await linkUploadedFilesOnItemSave(db, {
-          entityType: "profile",
-          entityId: accountId,
-          uploaderAccountId: accountId,
-          fileIds: [...new Set(resolvedFileIds)],
-          urls: values.avatarUrl ? [values.avatarUrl] : [],
-          storageKeys: values.avatarUrl ? [values.avatarUrl] : [],
-          replaceExistingForEntity: true,
-          now,
-        });
-      }
+        if (
+          values.avatarUrl !== undefined ||
+          values.avatarFileId !== undefined ||
+          values.fileIds !== undefined
+        ) {
+          const resolvedFileIds = [
+            ...(values.avatarFileId ? [values.avatarFileId] : []),
+            ...(values.fileIds ?? []),
+          ];
+          await linkUploadedFilesOnItemSave(tx, {
+            entityType: "profile",
+            entityId: accountId,
+            uploaderAccountId: accountId,
+            fileIds: [...new Set(resolvedFileIds)],
+            urls: values.avatarUrl ? [values.avatarUrl] : [],
+            storageKeys: values.avatarUrl ? [values.avatarUrl] : [],
+            replaceExistingForEntity: true,
+            now,
+          });
+        }
 
-      return updated ?? null;
+        return updated ?? null;
+      });
     },
 
     async findNotificationPreferences(accountId: string) {
@@ -150,39 +152,55 @@ export function createTravelerRepository(db: Database) {
       reason: string | null;
       scheduledPurgeAt: Date | null;
     }) {
-      const now = new Date();
-      const [created] = await db
-        .insert(privacyRequests)
-        .values({
-          accountId: values.accountId,
-          requestType: values.requestType,
-          status: "pending",
-          reason: values.reason,
-          scheduledPurgeAt: values.scheduledPurgeAt,
-          createdAt: now,
-          updatedAt: now,
-        })
-        .returning();
-
-      if (values.requestType === "account_deletion") {
-        await db
-          .update(accounts)
-          .set({
-            status: "deletion_requested",
-            deletionRequestedAt: now,
+      return db.transaction(async (tx) => {
+        const now = new Date();
+        const [created] = await tx
+          .insert(privacyRequests)
+          .values({
+            accountId: values.accountId,
+            requestType: values.requestType,
+            status: "pending",
+            reason: values.reason,
+            scheduledPurgeAt: values.scheduledPurgeAt,
+            createdAt: now,
             updatedAt: now,
           })
-          .where(eq(accounts.id, values.accountId));
-      }
+          .returning();
 
-      return created!;
+        if (values.requestType === "account_deletion") {
+          await tx
+            .update(accounts)
+            .set({
+              status: "deletion_requested",
+              deletionRequestedAt: now,
+              updatedAt: now,
+            })
+            .where(eq(accounts.id, values.accountId));
+        }
+
+        return created!;
+      });
     },
 
-    async listPrivacyRequests(accountId: string) {
+    async listPrivacyRequests(
+      accountId: string,
+      filter?: {
+        requestType?: PrivacyRequestType;
+        status?: typeof privacyRequests.$inferSelect.status;
+      },
+    ) {
+      const conditions = [eq(privacyRequests.accountId, accountId)];
+      if (filter?.requestType) {
+        conditions.push(eq(privacyRequests.requestType, filter.requestType));
+      }
+      if (filter?.status) {
+        conditions.push(eq(privacyRequests.status, filter.status));
+      }
       return db
         .select()
         .from(privacyRequests)
-        .where(eq(privacyRequests.accountId, accountId))
+        .$dynamic()
+        .where(and(...conditions))
         .orderBy(desc(privacyRequests.createdAt));
     },
 

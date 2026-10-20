@@ -1,10 +1,32 @@
-import type {
-  CurrencyCode,
-  SubscriptionBillingCycle,
-  SubscriptionRecordStatus,
+import {
+  CURRENCY_CODES,
+  type CurrencyCode,
+  PLAN_CATALOG_STATUSES,
+  type PlanCatalogStatus,
+  SUBSCRIPTION_BILLING_CYCLES,
+  type SubscriptionBillingCycle,
+  SUBSCRIPTION_RECORD_STATUSES,
+  type SubscriptionRecordStatus,
+  SUBSCRIPTION_ROLES,
+  type SubscriptionRole,
+  SUBSCRIPTION_SCOPES,
+  type SubscriptionScope,
 } from "@trips-app/domain";
 
-export type { CurrencyCode, SubscriptionBillingCycle, SubscriptionRecordStatus };
+export {
+  CURRENCY_CODES,
+  type CurrencyCode,
+  PLAN_CATALOG_STATUSES,
+  type PlanCatalogStatus,
+  SUBSCRIPTION_BILLING_CYCLES,
+  type SubscriptionBillingCycle,
+  SUBSCRIPTION_RECORD_STATUSES,
+  type SubscriptionRecordStatus,
+  SUBSCRIPTION_ROLES,
+  type SubscriptionRole,
+  SUBSCRIPTION_SCOPES,
+  type SubscriptionScope,
+};
 
 export function computeSubscriptionPeriodEnd(
   start: Date,

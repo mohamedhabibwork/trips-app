@@ -1,21 +1,56 @@
 // Zod schemas that validate input at the boundary.
-import { createInsertSchema, createUpdateSchema, schema } from "@trips-app/db/zod";
+import {
+  insertApplicationDocumentsSchema,
+  insertApplicationsSchema,
+  insertConsentRecordsSchema,
+  insertDriverProfilesSchema,
+  insertOrganizationsSchema,
+  insertPhotographerProfilesSchema,
+  selectApplicationDocumentsSchema,
+  selectApplicationsSchema,
+  selectConsentRecordsSchema,
+  selectDriverProfilesSchema,
+  selectPhotographerProfilesSchema,
+  updateApplicationDocumentsSchema,
+  updateApplicationsSchema,
+  updateConsentRecordsSchema,
+  updateDriverProfilesSchema,
+  updatePhotographerProfilesSchema,
+} from "@trips-app/db/zod";
 import { z } from "zod/v4";
 
-import { APPLICATION_STATES, SUPPLIER_APPLICATION_TYPES } from "../../model";
+import {
+  APPLICATION_STATES,
+  PAYOUT_METHODS,
+  SUPPLIER_APPLICATION_TYPES,
+  SUPPORTED_COUNTRY_CODES,
+  SUPPORTED_LOCALES,
+} from "../../model";
+
+// Table Base Schemas
+export const applicationSelectSchema = selectApplicationsSchema;
+export const applicationInsertSchema = insertApplicationsSchema;
+export const applicationUpdateSchema = updateApplicationsSchema;
+
+export const applicationDocumentSelectSchema = selectApplicationDocumentsSchema;
+export const applicationDocumentInsertSchema = insertApplicationDocumentsSchema;
+export const applicationDocumentUpdateSchema = updateApplicationDocumentsSchema;
+
+export const consentRecordSelectSchema = selectConsentRecordsSchema;
+export const consentRecordInsertSchema = insertConsentRecordsSchema;
+export const consentRecordUpdateSchema = updateConsentRecordsSchema;
+
+export const driverProfileSelectSchema = selectDriverProfilesSchema;
+export const driverProfileInsertSchema = insertDriverProfilesSchema;
+export const driverProfileUpdateSchema = updateDriverProfilesSchema;
+
+export const photographerProfileSelectSchema = selectPhotographerProfilesSchema;
+export const photographerProfileInsertSchema = insertPhotographerProfilesSchema;
+export const photographerProfileUpdateSchema = updatePhotographerProfilesSchema;
 
 const SUPPORTED_MIME_TYPES = ["application/pdf", "image/jpeg", "image/png", "image/webp"] as const;
 
-export const documentUploadInputSchema = createInsertSchema(schema.applicationDocuments, {
-  documentType: (col) => col.min(2).max(80),
-  storageKey: (col) => col.min(3).max(255),
-  mimeType: () => z.enum(SUPPORTED_MIME_TYPES),
-  fileSizeBytes: (col) =>
-    col
-      .int()
-      .min(1)
-      .max(15 * 1024 * 1024),
-})
+export const documentUploadInputSchema = insertApplicationDocumentsSchema
   .pick({
     documentType: true,
     storageKey: true,
@@ -23,32 +58,42 @@ export const documentUploadInputSchema = createInsertSchema(schema.applicationDo
     fileSizeBytes: true,
   })
   .extend({
+    documentType: z.string().min(2).max(80),
+    storageKey: z.string().min(3).max(255),
+    mimeType: z.enum(SUPPORTED_MIME_TYPES),
+    fileSizeBytes: z
+      .number()
+      .int()
+      .min(1)
+      .max(15 * 1024 * 1024),
     expiresAt: z.string().datetime().optional(),
   });
 
-const organizationBaseInsertSchema = createInsertSchema(schema.organizations, {
-  legalEntityName: (col) => col.min(2).max(160),
-  displayNameEn: (col) => col.min(2).max(120),
-  displayNameAr: (col) => col.min(2).max(120),
-  countryCode: () => z.enum(["EG", "SA", "AE"]),
-  headquartersAddress: (col) => col.min(5).max(300),
-  signatoryFullName: (col) => col.min(2).max(120),
-  signatoryRoleTitle: (col) => col.min(2).max(80),
-  payoutMethod: () => z.enum(["bank_transfer", "mobile_wallet"]),
-}).pick({
-  legalEntityName: true,
-  displayNameEn: true,
-  displayNameAr: true,
-  countryCode: true,
-  headquartersAddress: true,
-  signatoryFullName: true,
-  signatoryRoleTitle: true,
-  payoutMethod: true,
-});
+const organizationBaseInsertSchema = insertOrganizationsSchema
+  .pick({
+    legalEntityName: true,
+    displayNameEn: true,
+    displayNameAr: true,
+    countryCode: true,
+    headquartersAddress: true,
+    signatoryFullName: true,
+    signatoryRoleTitle: true,
+    payoutMethod: true,
+  })
+  .extend({
+    legalEntityName: z.string().min(2).max(160),
+    displayNameEn: z.string().min(2).max(120),
+    displayNameAr: z.string().min(2).max(120),
+    countryCode: z.enum(SUPPORTED_COUNTRY_CODES),
+    headquartersAddress: z.string().min(5).max(300),
+    signatoryFullName: z.string().min(2).max(120),
+    signatoryRoleTitle: z.string().min(2).max(80),
+    payoutMethod: z.enum(PAYOUT_METHODS),
+  });
 
 export const submitOrganizationApplicationSchema = organizationBaseInsertSchema.extend({
-  countryCode: z.enum(["EG", "SA", "AE"]).default("EG"),
-  payoutMethod: z.enum(["bank_transfer", "mobile_wallet"]).default("bank_transfer"),
+  countryCode: z.enum(SUPPORTED_COUNTRY_CODES).default("EG"),
+  payoutMethod: z.enum(PAYOUT_METHODS).default("bank_transfer"),
   commercialRegNumber: z.string().min(2).max(80),
   taxNumber: z.string().min(2).max(80),
   tourismLicenseNumber: z.string().min(2).max(80),
@@ -59,7 +104,7 @@ export const submitOrganizationApplicationSchema = organizationBaseInsertSchema.
   billingContactEmail: z.email(),
   billingContactPhone: z.string().min(8).max(25),
   billingAddress: z.string().min(5).max(300),
-  invoiceLanguage: z.enum(["ar", "en"]).default("ar"),
+  invoiceLanguage: z.enum(SUPPORTED_LOCALES).default("ar"),
   childSafetyProgramOptIn: z.boolean().default(false),
   safetyLeadName: z.string().optional().nullable(),
   safetyHotlinePhone: z.string().optional().nullable(),
@@ -67,23 +112,25 @@ export const submitOrganizationApplicationSchema = organizationBaseInsertSchema.
   documents: z.array(documentUploadInputSchema).min(1),
 });
 
-const driverProfileBaseInsertSchema = createInsertSchema(schema.driverProfiles, {
-  licenseCategory: (col) => col.min(2).max(60),
-  yearsOfExperience: (col) => col.int().min(1).max(60),
-  serviceAreas: () => z.array(z.string().min(2)).min(1),
-  vehicleYear: (col) => col.int().min(2000).max(2035),
-  vehicleSeatCapacity: (col) => col.int().min(1).max(80),
-}).pick({
-  licenseCategory: true,
-  yearsOfExperience: true,
-  serviceAreas: true,
-  hasOwnVehicle: true,
-  vehicleMakeModel: true,
-  vehicleYear: true,
-  vehiclePlateNumber: true,
-  vehicleSeatCapacity: true,
-  insurancePolicyNumber: true,
-});
+const driverProfileBaseInsertSchema = insertDriverProfilesSchema
+  .pick({
+    licenseCategory: true,
+    yearsOfExperience: true,
+    serviceAreas: true,
+    hasOwnVehicle: true,
+    vehicleMakeModel: true,
+    vehicleYear: true,
+    vehiclePlateNumber: true,
+    vehicleSeatCapacity: true,
+    insurancePolicyNumber: true,
+  })
+  .extend({
+    licenseCategory: z.string().min(2).max(60),
+    yearsOfExperience: z.number().int().min(1).max(60),
+    serviceAreas: z.array(z.string().min(2)).min(1),
+    vehicleYear: z.number().int().min(2000).max(2035).optional().nullable(),
+    vehicleSeatCapacity: z.number().int().min(1).max(80).optional().nullable(),
+  });
 
 export const submitDriverApplicationSchema = driverProfileBaseInsertSchema.extend({
   nationalId: z.string().min(6).max(30),
@@ -104,24 +151,26 @@ const sampleAlbumItemSchema = z.object({
   photoCount: z.number().int().min(1),
 });
 
-const photographerProfileBaseInsertSchema = createInsertSchema(schema.photographerProfiles, {
-  yearsOfExperience: (col) => col.int().min(0).max(60),
-  cameraBodies: () => z.array(z.string().min(2)).min(1),
-  lenses: () => z.array(z.string().min(2)),
-  serviceRegions: () => z.array(z.string().min(2)).min(1),
-  specialties: () => z.array(z.string().min(2)).min(1),
-  portfolioPhotoCount: (col) => col.int().min(1).max(200),
-  sampleAlbums: () => z.array(sampleAlbumItemSchema),
-}).pick({
-  yearsOfExperience: true,
-  cameraBodies: true,
-  lenses: true,
-  hasDroneLicense: true,
-  serviceRegions: true,
-  specialties: true,
-  portfolioPhotoCount: true,
-  sampleAlbums: true,
-});
+const photographerProfileBaseInsertSchema = insertPhotographerProfilesSchema
+  .pick({
+    yearsOfExperience: true,
+    cameraBodies: true,
+    lenses: true,
+    hasDroneLicense: true,
+    serviceRegions: true,
+    specialties: true,
+    portfolioPhotoCount: true,
+    sampleAlbums: true,
+  })
+  .extend({
+    yearsOfExperience: z.number().int().min(0).max(60),
+    cameraBodies: z.array(z.string().min(2)).min(1),
+    lenses: z.array(z.string().min(2)),
+    serviceRegions: z.array(z.string().min(2)).min(1),
+    specialties: z.array(z.string().min(2)).min(1),
+    portfolioPhotoCount: z.number().int().min(1).max(200),
+    sampleAlbums: z.array(sampleAlbumItemSchema),
+  });
 
 export const submitPhotographerApplicationSchema = photographerProfileBaseInsertSchema.extend({
   nationalId: z.string().min(6).max(30),
@@ -201,10 +250,7 @@ export const getApplicationDetailSchema = z.object({
   applicationId: z.uuid(),
 });
 
-export const verifyApplicationDocumentSchema = createUpdateSchema(schema.applicationDocuments, {
-  verifiedStatus: () => z.enum(["verified", "rejected"]),
-  rejectionNote: (col) => col.max(500),
-})
+export const verifyApplicationDocumentSchema = updateApplicationDocumentsSchema
   .pick({
     verifiedStatus: true,
     rejectionNote: true,
@@ -213,6 +259,7 @@ export const verifyApplicationDocumentSchema = createUpdateSchema(schema.applica
     applicationId: z.uuid(),
     documentId: z.uuid(),
     verifiedStatus: z.enum(["verified", "rejected"]),
+    rejectionNote: z.string().max(500).optional().nullable(),
   });
 
 export const openApplicationDocumentSchema = z.object({
@@ -221,10 +268,7 @@ export const openApplicationDocumentSchema = z.object({
   reason: z.string().max(300).optional(),
 });
 
-export const approveApplicationSchema = createUpdateSchema(schema.applications, {
-  decisionReasonCode: (col) => col.min(2).max(80),
-  decisionNotes: (col) => col.max(1000),
-})
+export const approveApplicationSchema = updateApplicationsSchema
   .pick({
     decisionNotes: true,
   })

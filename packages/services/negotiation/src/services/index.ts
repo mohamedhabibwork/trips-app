@@ -163,23 +163,26 @@ export function createNegotiationService(db: ServiceDatabase) {
             "Waiting for the counterparty to respond to your latest offer.",
           );
         }
-        const updated = await repo.updateNegotiation(existing.id, {
-          status: "accepted",
-          agreedPriceMinor: existing.currentOfferMinor,
-          notes: input.notes?.trim() ?? existing.notes,
-          respondedAt: now,
-        });
+        return db.transaction(async (tx) => {
+          const txRepo = createNegotiationRepository(tx as unknown as ServiceDatabase);
+          const updated = await txRepo.updateNegotiation(existing.id, {
+            status: "accepted",
+            agreedPriceMinor: existing.currentOfferMinor,
+            notes: input.notes?.trim() ?? existing.notes,
+            respondedAt: now,
+          });
 
-        if (existing.vehicleId) {
-          await repo.assignAcceptedSupplierToVehicle(
-            existing.tenantId,
-            existing.tripId,
-            existing.vehicleId,
-            existing.supplierRole,
-            existing.supplierAccountId,
-          );
-        }
-        return toDto(updated!);
+          if (existing.vehicleId) {
+            await txRepo.assignAcceptedSupplierToVehicle(
+              existing.tenantId,
+              existing.tripId,
+              existing.vehicleId,
+              existing.supplierRole,
+              existing.supplierAccountId,
+            );
+          }
+          return toDto(updated!);
+        });
       }
 
       // action === "counter"

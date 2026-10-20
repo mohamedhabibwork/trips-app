@@ -2,17 +2,18 @@
 import {
   findPlanCatalogEntry,
   hashSha256,
+  TRIP_STAFF_SOURCES,
   type TripStaffSource,
   type UserRole,
 } from "@trips-app/domain";
 
-export { findPlanCatalogEntry, hashSha256, type TripStaffSource, type UserRole };
-
-export const TRIP_STAFF_SOURCES = [
-  "org_staff",
-  "platform_supplier",
-  "unassigned",
-] as const satisfies readonly TripStaffSource[];
+export {
+  findPlanCatalogEntry,
+  hashSha256,
+  TRIP_STAFF_SOURCES,
+  type TripStaffSource,
+  type UserRole,
+};
 
 export function computeTripStaffingGap(
   vehicles: readonly {

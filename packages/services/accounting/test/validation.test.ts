@@ -35,4 +35,12 @@ describe("Unit: accounting validation schemas & error mapping (@trips-app/servic
     const err = new AccountingServiceError("INSUFFICIENT_SETTLEMENT_BALANCE", "Balance exceeded");
     expect(mapAccountingError(err).code).toBe("CONFLICT");
   });
+
+  test("createAccountingRepository accepts TransactionClient / ServiceDatabase", async () => {
+    const { createAccountingRepository } = await import("../src/repository");
+    const mockTx = {} as import("@trips-app/db").TransactionClient;
+    const repo = createAccountingRepository(mockTx);
+    expect(typeof repo.listEntriesByTenant).toBe("function");
+    expect(typeof repo.insertLedgerEntries).toBe("function");
+  });
 });

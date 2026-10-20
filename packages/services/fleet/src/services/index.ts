@@ -399,40 +399,45 @@ export function createFleetService(db: ServiceDatabase) {
         );
       }
 
-      const created = await repo.insertVehicle({
-        tenantId: actor.activeTenantId,
-        vehicleTypeId: vehicleType.id,
-        plateNumber: input.plateNumber.trim(),
-        plateNumberNormalized,
-        model: input.model.trim(),
-        manufacturingYear: input.manufacturingYear,
-        seatCount: input.seatCount,
-        registrationStatus: input.registrationStatus ?? "valid",
-        registrationExpiry: input.registrationExpiry ? new Date(input.registrationExpiry) : null,
-        registrationDocumentUrl: input.registrationDocumentUrl ?? null,
-        photoUrls: input.photoUrls ?? [],
-        amenityCodes: normalizeAmenityCodes(rawAmenities),
-        status: input.status ?? "active",
-        notes: input.notes?.trim() ?? null,
-        createdByAccountId: actor.accountId,
-        fileIds: input.fileIds,
-      });
+      const created = await db.transaction(async (tx) => {
+        const txRepo = createFleetRepository(tx);
+        const cr = await txRepo.insertVehicle({
+          tenantId: actor.activeTenantId,
+          vehicleTypeId: vehicleType.id,
+          plateNumber: input.plateNumber.trim(),
+          plateNumberNormalized,
+          model: input.model.trim(),
+          manufacturingYear: input.manufacturingYear,
+          seatCount: input.seatCount,
+          registrationStatus: input.registrationStatus ?? "valid",
+          registrationExpiry: input.registrationExpiry ? new Date(input.registrationExpiry) : null,
+          registrationDocumentUrl: input.registrationDocumentUrl ?? null,
+          photoUrls: input.photoUrls ?? [],
+          amenityCodes: normalizeAmenityCodes(rawAmenities),
+          status: input.status ?? "active",
+          notes: input.notes?.trim() ?? null,
+          createdByAccountId: actor.accountId,
+          fileIds: input.fileIds,
+        });
 
-      await repo.writeAuditLog({
-        actorAccountId: actor.accountId,
-        actorRole: actor.role,
-        tenantId: actor.activeTenantId,
-        action: "fleet.vehicle.created",
-        targetEntityType: "vehicle",
-        targetEntityId: created.id,
-        afterState: {
-          plateNumber: created.plateNumber,
-          vehicleTypeId: created.vehicleTypeId,
-          seatCount: created.seatCount,
-          status: created.status,
-        },
-        ipAddress: actor.ipAddress,
-        requestId: actor.requestId,
+        await txRepo.writeAuditLog({
+          actorAccountId: actor.accountId,
+          actorRole: actor.role,
+          tenantId: actor.activeTenantId,
+          action: "fleet.vehicle.created",
+          targetEntityType: "vehicle",
+          targetEntityId: cr.id,
+          afterState: {
+            plateNumber: cr.plateNumber,
+            vehicleTypeId: cr.vehicleTypeId,
+            seatCount: cr.seatCount,
+            status: cr.status,
+          },
+          ipAddress: actor.ipAddress,
+          requestId: actor.requestId,
+        });
+
+        return cr;
       });
 
       return this.getVehicle(actor, { vehicleId: created.id });

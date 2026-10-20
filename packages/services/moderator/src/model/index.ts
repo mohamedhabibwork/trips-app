@@ -1,6 +1,20 @@
-import type { CheckInMethod, CheckInStatus, TrackingAlertSeverity } from "@trips-app/domain";
+import {
+  CHECK_IN_METHODS,
+  CHECK_IN_STATUSES,
+  TRACKING_ALERT_SEVERITIES,
+  type CheckInMethod,
+  type CheckInStatus,
+  type TrackingAlertSeverity,
+} from "@trips-app/domain";
 
-export type { CheckInMethod, CheckInStatus, TrackingAlertSeverity };
+export {
+  CHECK_IN_METHODS,
+  CHECK_IN_STATUSES,
+  TRACKING_ALERT_SEVERITIES,
+  type CheckInMethod,
+  type CheckInStatus,
+  type TrackingAlertSeverity,
+};
 
 export interface ModeratorAssignmentSummary {
   tenantId: string;

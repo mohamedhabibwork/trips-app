@@ -1,48 +1,34 @@
 // Entities and aggregates with their invariants. No I/O.
 import {
+  COUPON_DISCOUNT_TYPES,
+  COUPON_SCOPES,
+  COUPON_STATUSES,
+  CURRENCY_CODES,
+  findPlanCatalogEntry,
+  type Money,
+  money,
   type CouponDiscountType,
   type CouponScope,
   type CouponStatus,
   type CurrencyCode,
-  findPlanCatalogEntry,
-  type Money,
-  money,
   type UserRole,
 } from "@trips-app/domain";
 
 export {
+  COUPON_DISCOUNT_TYPES,
+  COUPON_SCOPES,
+  COUPON_STATUSES,
+  CURRENCY_CODES,
+  CURRENCY_CODES as SUPPORTED_CURRENCIES,
+  findPlanCatalogEntry,
+  type Money,
+  money,
   type CouponDiscountType,
   type CouponScope,
   type CouponStatus,
   type CurrencyCode,
-  findPlanCatalogEntry,
-  type Money,
-  money,
   type UserRole,
 };
-
-export const COUPON_SCOPES = [
-  "organization",
-  "platform",
-  "driver",
-] as const satisfies readonly CouponScope[];
-
-export const COUPON_DISCOUNT_TYPES = [
-  "percentage",
-  "fixed_amount",
-] as const satisfies readonly CouponDiscountType[];
-
-export const COUPON_STATUSES = [
-  "active",
-  "paused",
-  "expired",
-] as const satisfies readonly CouponStatus[];
-
-export const SUPPORTED_CURRENCIES = [
-  "EGP",
-  "SAR",
-  "AED",
-] as const satisfies readonly CurrencyCode[];
 
 export function normalizeCouponCode(raw: string): string {
   return raw.trim().toUpperCase().replace(/\s+/g, "");

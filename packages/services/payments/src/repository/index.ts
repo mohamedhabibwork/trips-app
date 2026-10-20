@@ -1,5 +1,5 @@
-import { and, desc, eq, lt, or } from "@trips-app/db";
-import type { Database, Database as ServiceDatabase } from "@trips-app/db";
+import { and, desc, eq, gte, inArray, lt, lte, or, sql } from "@trips-app/db";
+import type { ServiceDatabase } from "@trips-app/db";
 import { schema } from "@trips-app/db/zod";
 import type {
   CurrencyCode,
@@ -11,7 +11,7 @@ import type {
 
 export type { ServiceDatabase };
 
-export function createPaymentsRepository(db: Database) {
+export function createPaymentsRepository(db: ServiceDatabase) {
   return {
     async findBookingById(bookingId: string) {
       const [row] = await db
@@ -84,7 +84,12 @@ export function createPaymentsRepository(db: Database) {
           paidAt: now,
           updatedAt: now,
         })
-        .where(eq(schema.paymentTransactions.id, paymentId))
+        .where(
+          and(
+            eq(schema.paymentTransactions.id, paymentId),
+            inArray(schema.paymentTransactions.status, ["pending", "requires_action"]),
+          ),
+        )
         .returning();
       return updated ?? null;
     },
@@ -114,6 +119,20 @@ export function createPaymentsRepository(db: Database) {
       await db.update(schema.bookings).set(patch).where(eq(schema.bookings.id, bookingId));
     },
 
+    /** Claim (delta > 0) or release (delta < 0) confirmed seats on the trip when a
+     * booking crosses a payment boundary — this is what makes remaining seats move
+     * on "mark as paid" / refund instead of at booking creation. */
+    async adjustTripConfirmedSeats(tripId: string, delta: number) {
+      if (delta === 0) return;
+      await db
+        .update(schema.trips)
+        .set({
+          confirmedSeatsCount: sql`GREATEST(0, ${schema.trips.confirmedSeatsCount} + ${delta})`,
+          updatedAt: new Date(),
+        })
+        .where(eq(schema.trips.id, tripId));
+    },
+
     async insertRevenueLedgerEntry(values: {
       tenantId: string;
       tripId: string | null;
@@ -139,6 +158,13 @@ export function createPaymentsRepository(db: Database) {
         invoiceNumber: values.invoiceNumber,
         description: values.description,
       });
+    },
+
+    async insertRevenueLedgerEntries(
+      entries: Array<typeof schema.accountingLedgerEntries.$inferInsert>,
+    ) {
+      if (entries.length === 0) return [];
+      return db.insert(schema.accountingLedgerEntries).values(entries).returning();
     },
 
     async insertRefundLedgerEntry(values: {
@@ -206,12 +232,23 @@ export function createPaymentsRepository(db: Database) {
       return updated ?? null;
     },
 
-    async listPaymentsForPayer(payerAccountId: string) {
-      return db
-        .select()
-        .from(schema.paymentTransactions)
-        .where(eq(schema.paymentTransactions.payerAccountId, payerAccountId))
-        .orderBy(desc(schema.paymentTransactions.createdAt));
+    async listPaymentsForPayer(
+      payerAccountId: string,
+      filters?: {
+        status?: PaymentTransactionStatus;
+        limit?: number;
+        offset?: number;
+      },
+    ) {
+      let query = db.select().from(schema.paymentTransactions).$dynamic();
+      const conditions = [eq(schema.paymentTransactions.payerAccountId, payerAccountId)];
+      if (filters?.status) {
+        conditions.push(eq(schema.paymentTransactions.status, filters.status));
+      }
+      query = query.where(and(...conditions)).orderBy(desc(schema.paymentTransactions.createdAt));
+      if (filters?.limit !== undefined) query = query.limit(filters.limit);
+      if (filters?.offset !== undefined) query = query.offset(filters.offset);
+      return query;
     },
 
     /**
@@ -246,12 +283,35 @@ export function createPaymentsRepository(db: Database) {
       return row ?? null;
     },
 
-    async listPaymentsForTenant(tenantId: string) {
-      return db
-        .select()
-        .from(schema.paymentTransactions)
-        .where(eq(schema.paymentTransactions.tenantId, tenantId))
-        .orderBy(desc(schema.paymentTransactions.createdAt));
+    async listPaymentsForTenant(
+      tenantId: string,
+      filters?: {
+        status?: PaymentTransactionStatus;
+        purpose?: PaymentPurpose;
+        from?: Date;
+        to?: Date;
+        limit?: number;
+        offset?: number;
+      },
+    ) {
+      let query = db.select().from(schema.paymentTransactions).$dynamic();
+      const conditions = [eq(schema.paymentTransactions.tenantId, tenantId)];
+      if (filters?.status) {
+        conditions.push(eq(schema.paymentTransactions.status, filters.status));
+      }
+      if (filters?.purpose) {
+        conditions.push(eq(schema.paymentTransactions.purpose, filters.purpose));
+      }
+      if (filters?.from) {
+        conditions.push(gte(schema.paymentTransactions.createdAt, filters.from));
+      }
+      if (filters?.to) {
+        conditions.push(lte(schema.paymentTransactions.createdAt, filters.to));
+      }
+      query = query.where(and(...conditions)).orderBy(desc(schema.paymentTransactions.createdAt));
+      if (filters?.limit !== undefined) query = query.limit(filters.limit);
+      if (filters?.offset !== undefined) query = query.offset(filters.offset);
+      return query;
     },
   };
 }

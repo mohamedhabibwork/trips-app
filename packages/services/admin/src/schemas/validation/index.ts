@@ -1,5 +1,24 @@
 // Zod schemas that validate input at the boundary.
+import {
+  insertAuthSettingsSchema,
+  insertSystemSettingsSchema,
+  selectAuthSettingsSchema,
+  selectSystemSettingsSchema,
+  updateAuthSettingsSchema as dbUpdateAuthSettingsSchema,
+  updateSystemSettingsSchema as dbUpdateSystemSettingsSchema,
+} from "@trips-app/db/zod";
 import { z } from "zod/v4";
+
+import { SUPPORTED_COUNTRY_CODES } from "../../model";
+
+// Table schemas for systemSettings and authSettings
+export const systemSettingsSelectSchema = selectSystemSettingsSchema;
+export const systemSettingsInsertSchema = insertSystemSettingsSchema;
+export const systemSettingsUpdateSchema = dbUpdateSystemSettingsSchema;
+
+export const authSettingsSelectSchema = selectAuthSettingsSchema;
+export const authSettingsInsertSchema = insertAuthSettingsSchema;
+export const authSettingsUpdateSchema = dbUpdateAuthSettingsSchema;
 
 export const featureFlagsPatchSchema = z.object({
   p1_foundation: z.boolean().optional(),
@@ -31,19 +50,14 @@ export const maintenanceSettingsPatchSchema = z.object({
 });
 
 export const previewSystemSettingsChangeSchema = z.object({
-  marketCountryCode: z.enum(["EG", "SA", "AE"]).optional(),
+  marketCountryCode: z.enum(SUPPORTED_COUNTRY_CODES).optional(),
   marketEnabled: z.boolean().optional(),
   featureFlags: featureFlagsPatchSchema.optional(),
   operational: operationalSettingsPatchSchema.optional(),
   maintenanceAndSupport: maintenanceSettingsPatchSchema.optional(),
 });
 
-export const updateSystemSettingsSchema = z.object({
-  marketCountryCode: z.enum(["EG", "SA", "AE"]).optional(),
-  marketEnabled: z.boolean().optional(),
-  featureFlags: featureFlagsPatchSchema.optional(),
-  operational: operationalSettingsPatchSchema.optional(),
-  maintenanceAndSupport: maintenanceSettingsPatchSchema.optional(),
+export const updateSystemSettingsSchema = previewSystemSettingsChangeSchema.extend({
   secondApproverAdminAccountId: z.uuid().optional(),
   reason: z.string().min(5).max(500),
 });

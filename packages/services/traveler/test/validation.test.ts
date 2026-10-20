@@ -23,7 +23,7 @@ describe("Unit: traveler validation schemas, model constants & error mapping (@t
         fullName: "Nour El-Din",
         countryCode: "EG",
         preferredLanguage: "ar",
-        email: "nour@example.com",
+        email: "nour@trips-enjoy.com",
       }).success,
     ).toBe(true);
 

@@ -90,32 +90,35 @@ export function createDriverService(deps: { db: ServiceDatabase }) {
     },
 
     async adminReviewLabTest(adminAccountId: string, input: AdminReviewLabTestInput) {
-      const test = await repo.findLabTestById(input.labTestId);
-      if (!test) {
-        throw new DriverServiceError("LAB_TEST_NOT_FOUND", "Lab test not found.");
-      }
-      const passed = input.decision === "verified_pass";
-      const validUntil = passed
-        ? new Date(Date.now() + DEFAULT_LAB_VALIDITY_DAYS * 24 * 60 * 60 * 1000)
-        : null;
+      return deps.db.transaction(async (tx) => {
+        const txRepo = createDriverRepository(tx as unknown as ServiceDatabase);
+        const test = await txRepo.findLabTestById(input.labTestId);
+        if (!test) {
+          throw new DriverServiceError("LAB_TEST_NOT_FOUND", "Lab test not found.");
+        }
+        const passed = input.decision === "verified_pass";
+        const validUntil = passed
+          ? new Date(Date.now() + DEFAULT_LAB_VALIDITY_DAYS * 24 * 60 * 60 * 1000)
+          : null;
 
-      const updated = await repo.reviewLabTest(test.id, {
-        status: input.decision,
-        reviewedByAdminAccountId: adminAccountId,
-        reviewNotes: input.reviewNotes ?? null,
-        validUntil,
+        const updated = await txRepo.reviewLabTest(test.id, {
+          status: input.decision,
+          reviewedByAdminAccountId: adminAccountId,
+          reviewNotes: input.reviewNotes ?? null,
+          validUntil,
+        });
+        if (!updated) {
+          throw new DriverServiceError("LAB_TEST_NOT_FOUND", "Lab test not found.");
+        }
+
+        await txRepo.syncDriverLabStatus(
+          test.driverAccountId,
+          passed,
+          validUntil,
+          passed ? null : (input.reviewNotes ?? "Failed lab test verification"),
+        );
+        return updated;
       });
-      if (!updated) {
-        throw new DriverServiceError("LAB_TEST_NOT_FOUND", "Lab test not found.");
-      }
-
-      await repo.syncDriverLabStatus(
-        test.driverAccountId,
-        passed,
-        validUntil,
-        passed ? null : (input.reviewNotes ?? "Failed lab test verification"),
-      );
-      return updated;
     },
 
     async listAssignedTrips(driverAccountId: string) {

@@ -1,13 +1,13 @@
 // Data access through @trips-app/db. Every tenant-owned query filters by tenant (DAT-01).
-import { count, type Database, eq, schema } from "@trips-app/db";
+import { and, count, eq, schema, type ServiceDatabase } from "@trips-app/db";
 
 import type { SystemSettingsData, UserRole } from "../model";
 
-export type { Database as ServiceDatabase } from "@trips-app/db";
+export type { ServiceDatabase } from "@trips-app/db";
 
 const { accountRoles, accounts, auditLogs, organizations, systemSettings } = schema;
 
-export function createAdminRepository(db: Database) {
+export function createAdminRepository(db: ServiceDatabase) {
   return {
     async getSystemSettingsRow() {
       const [row] = await db
@@ -58,27 +58,42 @@ export function createAdminRepository(db: Database) {
         const [row] = await query;
         return row?.value ?? 0;
       };
+      const [totalAccounts, activeAccounts, totalOrganizations, activeOrganizations] =
+        await Promise.all([
+          countOf(db.select({ value: count() }).from(accounts)),
+          countOf(
+            db.select({ value: count() }).from(accounts).where(eq(accounts.status, "active")),
+          ),
+          countOf(db.select({ value: count() }).from(organizations)),
+          countOf(
+            db
+              .select({ value: count() })
+              .from(organizations)
+              .where(eq(organizations.status, "active")),
+          ),
+        ]);
       return {
-        totalAccounts: await countOf(db.select({ value: count() }).from(accounts)),
-        activeAccounts: await countOf(
-          db.select({ value: count() }).from(accounts).where(eq(accounts.status, "active")),
-        ),
-        totalOrganizations: await countOf(db.select({ value: count() }).from(organizations)),
-        activeOrganizations: await countOf(
-          db
-            .select({ value: count() })
-            .from(organizations)
-            .where(eq(organizations.status, "active")),
-        ),
+        totalAccounts,
+        activeAccounts,
+        totalOrganizations,
+        activeOrganizations,
       };
     },
 
     async findAdminRoleForAccount(accountId: string) {
-      const rows = await db
+      const [row] = await db
         .select()
         .from(accountRoles)
-        .where(eq(accountRoles.accountId, accountId));
-      return rows.find((r) => r.role === "admin" && r.status === "active") ?? null;
+        .$dynamic()
+        .where(
+          and(
+            eq(accountRoles.accountId, accountId),
+            eq(accountRoles.role, "admin"),
+            eq(accountRoles.status, "active"),
+          ),
+        )
+        .limit(1);
+      return row ?? null;
     },
 
     async writeAuditLog(entry: {

@@ -12,8 +12,13 @@ import type {
   UpdateProgramInput,
 } from "../types";
 
-export function createProgramsService(db: ServiceDatabase) {
-  const repo = createProgramsRepository(db);
+export function createProgramsService(
+  dbOrDeps:
+    | ServiceDatabase
+    | { db: ServiceDatabase; repo?: ReturnType<typeof createProgramsRepository> },
+) {
+  const db = "db" in dbOrDeps ? dbOrDeps.db : dbOrDeps;
+  const repo = "repo" in dbOrDeps && dbOrDeps.repo ? dbOrDeps.repo : createProgramsRepository(db);
 
   function toProgramDto(
     row: NonNullable<Awaited<ReturnType<typeof repo.findProgramByIdForTenant>>>,

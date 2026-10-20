@@ -1,3 +1,3 @@
-import type { ParentChildLinkStatus } from "@trips-app/domain";
+import { PARENT_CHILD_LINK_STATUSES, type ParentChildLinkStatus } from "@trips-app/domain";
 
-export type { ParentChildLinkStatus };
+export { PARENT_CHILD_LINK_STATUSES, type ParentChildLinkStatus };

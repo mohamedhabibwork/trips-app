@@ -106,7 +106,7 @@ describe("renderAuthMessage", () => {
 
 describe("maskContact", () => {
   test("masks an email address but keeps the domain", () => {
-    expect(maskContact("ada@example.com")).toBe("a***@example.com");
+    expect(maskContact("ada@trips-enjoy.com")).toBe("a***@trips-enjoy.com");
   });
 
   test("keeps only the last four digits of a phone number", () => {

@@ -1,31 +1,25 @@
 // Entities and aggregates with their invariants. No I/O.
 import {
+  CURRENCY_CODES,
   type CurrencyCode,
   findPlanCatalogEntry,
   type Money,
   money,
   type PlanLimits,
+  TRIP_PROGRAM_STATUSES,
   type TripProgramStatus,
   type UserRole,
 } from "@trips-app/domain";
 
 export {
+  CURRENCY_CODES,
+  CURRENCY_CODES as SUPPORTED_CURRENCIES,
   type CurrencyCode,
   findPlanCatalogEntry,
   type Money,
   money,
   type PlanLimits,
+  TRIP_PROGRAM_STATUSES,
   type TripProgramStatus,
   type UserRole,
 };
-
-export const TRIP_PROGRAM_STATUSES = [
-  "active",
-  "cancelled",
-] as const satisfies readonly TripProgramStatus[];
-
-export const SUPPORTED_CURRENCIES = [
-  "EGP",
-  "SAR",
-  "AED",
-] as const satisfies readonly CurrencyCode[];

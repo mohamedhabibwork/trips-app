@@ -48,6 +48,7 @@ export {
   ROLE_AUTH_DEFAULTS,
   type RoleAuthPolicy,
   signAccessToken,
+  SUPPORTED_LOCALES,
   USER_ROLES,
   type UserRole,
   validatePasswordPolicy,

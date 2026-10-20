@@ -1,12 +1,9 @@
-import type { DriverLabTestKind } from "@trips-app/domain";
-import { desc, eq } from "@trips-app/db";
-import type { Database, Database as ServiceDatabase } from "@trips-app/db";
-import { schema } from "@trips-app/db/zod";
-import type { UpdateDriverProfileInput } from "../types";
+import { and, desc, eq, gte, lte, schema, type ServiceDatabase } from "@trips-app/db";
+import type { DriverLabTestKind, UpdateDriverProfileInput } from "../types";
 
 export type { ServiceDatabase };
 
-export function createDriverRepository(db: Database) {
+export function createDriverRepository(db: ServiceDatabase) {
   return {
     async findProfileByAccountId(accountId: string) {
       const [row] = await db
@@ -29,12 +26,33 @@ export function createDriverRepository(db: Database) {
       return updated ?? null;
     },
 
-    async listLabTestsByDriver(driverAccountId: string) {
-      return db
-        .select()
-        .from(schema.driverLabTests)
-        .where(eq(schema.driverLabTests.driverAccountId, driverAccountId))
-        .orderBy(desc(schema.driverLabTests.createdAt));
+    async listLabTestsByDriver(
+      driverAccountId: string,
+      filters?: {
+        status?: string;
+        testType?: DriverLabTestKind;
+        dateRange?: { from?: Date; to?: Date };
+      },
+    ) {
+      let query = db.select().from(schema.driverLabTests).$dynamic();
+
+      const conditions = [eq(schema.driverLabTests.driverAccountId, driverAccountId)];
+      if (filters?.status) {
+        conditions.push(eq(schema.driverLabTests.status, filters.status as any));
+      }
+      if (filters?.testType) {
+        conditions.push(eq(schema.driverLabTests.testType, filters.testType));
+      }
+      if (filters?.dateRange?.from) {
+        conditions.push(gte(schema.driverLabTests.createdAt, filters.dateRange.from));
+      }
+      if (filters?.dateRange?.to) {
+        conditions.push(lte(schema.driverLabTests.createdAt, filters.dateRange.to));
+      }
+
+      query = query.where(and(...conditions));
+      query = query.orderBy(desc(schema.driverLabTests.createdAt));
+      return query;
     },
 
     async findLabTestById(labTestId: string) {
@@ -136,11 +154,48 @@ export function createDriverRepository(db: Database) {
         .where(eq(schema.driverProfiles.accountId, driverAccountId));
     },
 
-    async listAssignedTripVehicles(driverAccountId: string) {
+    async listAssignedTripVehicles(
+      driverAccountId: string,
+      filters?: {
+        tripId?: string;
+        tenantId?: string;
+      },
+    ) {
+      let query = db.select().from(schema.tripVehicles).$dynamic();
+
+      const conditions = [eq(schema.tripVehicles.driverAccountId, driverAccountId)];
+      if (filters?.tripId) {
+        conditions.push(eq(schema.tripVehicles.tripId, filters.tripId));
+      }
+      if (filters?.tenantId) {
+        conditions.push(eq(schema.tripVehicles.tenantId, filters.tenantId));
+      }
+
+      query = query.where(and(...conditions));
+      return query;
+    },
+
+    async insertLabTestRequestsBatch(
+      requests: Array<{
+        driverAccountId: string;
+        requestedByAdminAccountId: string;
+        deadlineAt: Date;
+        testType: DriverLabTestKind;
+      }>,
+    ) {
+      if (requests.length === 0) return [];
       return db
-        .select()
-        .from(schema.tripVehicles)
-        .where(eq(schema.tripVehicles.driverAccountId, driverAccountId));
+        .insert(schema.driverLabTests)
+        .values(
+          requests.map((r) => ({
+            driverAccountId: r.driverAccountId,
+            requestedByAdminAccountId: r.requestedByAdminAccountId,
+            status: "requested" as const,
+            testType: r.testType,
+            deadlineAt: r.deadlineAt,
+          })),
+        )
+        .returning();
     },
   };
 }

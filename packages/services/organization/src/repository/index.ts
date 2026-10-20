@@ -1,14 +1,44 @@
 // Data access through @trips-app/db. Every tenant-owned query filters by tenant (DAT-01).
-import { type Database, eq, linkUploadedFilesOnItemSave, schema } from "@trips-app/db";
+import { and, desc, eq, ilike, linkUploadedFilesOnItemSave, or, schema } from "@trips-app/db";
+import type { ServiceDatabase } from "@trips-app/db";
 
 import type { OrganizationSettingsData, OrganizationWebhookEndpoint, UserRole } from "../model";
 
-export type { Database as ServiceDatabase } from "@trips-app/db";
+export type { ServiceDatabase };
 
 const { auditLogs, organizations, organizationSettings } = schema;
 
-export function createOrganizationRepository(db: Database) {
+export function createOrganizationRepository(db: ServiceDatabase) {
   return {
+    async listOrganizations(filters?: {
+      countryCode?: typeof organizations.$inferSelect.countryCode;
+      planTier?: typeof organizations.$inferSelect.planTier;
+      status?: typeof organizations.$inferSelect.status;
+      search?: string;
+      limit?: number;
+      offset?: number;
+    }) {
+      let query = db.select().from(organizations).$dynamic();
+      const conditions = [];
+      if (filters?.countryCode) conditions.push(eq(organizations.countryCode, filters.countryCode));
+      if (filters?.planTier) conditions.push(eq(organizations.planTier, filters.planTier));
+      if (filters?.status) conditions.push(eq(organizations.status, filters.status));
+      if (filters?.search) {
+        conditions.push(
+          or(
+            ilike(organizations.displayNameEn, `%${filters.search}%`),
+            ilike(organizations.displayNameAr, `%${filters.search}%`),
+            ilike(organizations.legalEntityName, `%${filters.search}%`),
+          )!,
+        );
+      }
+      if (conditions.length > 0) query = query.where(and(...conditions));
+      query = query.orderBy(desc(organizations.createdAt));
+      if (filters?.limit !== undefined) query = query.limit(filters.limit);
+      if (filters?.offset !== undefined) query = query.offset(filters.offset);
+      return query;
+    },
+
     async findOrganizationByTenantId(tenantId: string) {
       const [row] = await db
         .select()
@@ -31,36 +61,38 @@ export function createOrganizationRepository(db: Database) {
       tenantId: string,
       values: OrganizationSettingsData & { updatedByAccountId?: string | null },
     ) {
-      const now = new Date();
-      const [upserted] = await db
-        .insert(organizationSettings)
-        .values({
-          ...values,
-          tenantId,
-          updatedByAccountId: values.updatedByAccountId ?? null,
-          updatedAt: now,
-        })
-        .onConflictDoUpdate({
-          target: organizationSettings.tenantId,
-          set: {
+      return db.transaction(async (tx) => {
+        const now = new Date();
+        const [upserted] = await tx
+          .insert(organizationSettings)
+          .values({
             ...values,
+            tenantId,
             updatedByAccountId: values.updatedByAccountId ?? null,
             updatedAt: now,
-          },
-        })
-        .returning();
+          })
+          .onConflictDoUpdate({
+            target: organizationSettings.tenantId,
+            set: {
+              ...values,
+              updatedByAccountId: values.updatedByAccountId ?? null,
+              updatedAt: now,
+            },
+          })
+          .returning();
 
-      await linkUploadedFilesOnItemSave(db, {
-        entityType: "organization",
-        entityId: tenantId,
-        tenantId,
-        urls: [values.logoUrl],
-        storageKeys: values.logoUrl ? [values.logoUrl] : [],
-        replaceExistingForEntity: true,
-        now,
+        await linkUploadedFilesOnItemSave(tx, {
+          entityType: "organization",
+          entityId: tenantId,
+          tenantId,
+          urls: [values.logoUrl],
+          storageKeys: values.logoUrl ? [values.logoUrl] : [],
+          replaceExistingForEntity: true,
+          now,
+        });
+
+        return upserted!;
       });
-
-      return upserted!;
     },
 
     async updateOrganizationDisplayNames(

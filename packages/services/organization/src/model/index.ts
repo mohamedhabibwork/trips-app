@@ -6,6 +6,7 @@ export {
   hashSha256,
   type OrganizationSettingsData,
   type OrganizationWebhookEndpoint,
+  SUPPORTED_LOCALES,
   type SupportedLocale,
   type UserRole,
   validateOrganizationSettingsAgainstPlan,

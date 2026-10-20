@@ -1,27 +1,29 @@
 // Data access through @trips-app/db. Every tenant-owned query filters by tenant (DAT-01).
-import { and, type Database, eq, schema } from "@trips-app/db";
+import { and, eq, schema, type ServiceDatabase, sql } from "@trips-app/db";
 
 import type { TripStaffSource } from "../model";
 
-export type { Database as ServiceDatabase } from "@trips-app/db";
+export type { ServiceDatabase } from "@trips-app/db";
 
 const { moderatorAssignments, organizations, planCatalog, trips, tripVehicles, vehicles } = schema;
 
-export function createStaffingRepository(db: Database) {
+export function createStaffingRepository(db: ServiceDatabase) {
   return {
     async findOrganizationPlan(tenantId: string) {
-      const [org] = await db
-        .select()
+      const [row] = await db
+        .select({
+          org: organizations,
+          plan: planCatalog,
+        })
         .from(organizations)
+        .leftJoin(
+          planCatalog,
+          and(eq(planCatalog.role, "organization"), eq(planCatalog.tier, organizations.planTier)),
+        )
         .where(eq(organizations.id, tenantId))
         .limit(1);
-      if (!org) return null;
-      const [plan] = await db
-        .select()
-        .from(planCatalog)
-        .where(and(eq(planCatalog.role, "organization"), eq(planCatalog.tier, org.planTier)))
-        .limit(1);
-      return { org, plan: plan ?? null };
+      if (!row) return null;
+      return { org: row.org, plan: row.plan };
     },
 
     async findTripForTenant(tenantId: string, tripId: string) {
@@ -33,8 +35,15 @@ export function createStaffingRepository(db: Database) {
       return row ?? null;
     },
 
-    async listTripVehiclesForTrip(tenantId: string, tripId: string) {
-      return db
+    async listTripVehiclesForTrip(
+      tenantId: string,
+      tripId: string,
+      filters?: {
+        vehicleId?: string;
+        driverSource?: TripStaffSource;
+      },
+    ) {
+      let query = db
         .select({
           tripVehicle: tripVehicles,
           plateNumber: vehicles.plateNumber,
@@ -42,16 +51,51 @@ export function createStaffingRepository(db: Database) {
         })
         .from(tripVehicles)
         .leftJoin(vehicles, eq(tripVehicles.vehicleId, vehicles.id))
-        .where(and(eq(tripVehicles.tenantId, tenantId), eq(tripVehicles.tripId, tripId)));
+        .$dynamic();
+
+      const conditions = [eq(tripVehicles.tenantId, tenantId), eq(tripVehicles.tripId, tripId)];
+      if (filters?.vehicleId) {
+        conditions.push(eq(tripVehicles.vehicleId, filters.vehicleId));
+      }
+      if (filters?.driverSource) {
+        conditions.push(eq(tripVehicles.driverSource, filters.driverSource));
+      }
+
+      query = query.where(and(...conditions));
+      return query;
+    },
+
+    async listModeratorAssignments(
+      tenantId: string,
+      filters?: {
+        tripId?: string;
+        vehicleId?: string;
+        accountId?: string;
+        status?: typeof moderatorAssignments.$inferSelect.status;
+      },
+    ) {
+      let query = db.select().from(moderatorAssignments).$dynamic();
+
+      const conditions = [eq(moderatorAssignments.tenantId, tenantId)];
+      if (filters?.tripId) {
+        conditions.push(eq(moderatorAssignments.tripId, filters.tripId));
+      }
+      if (filters?.vehicleId) {
+        conditions.push(eq(moderatorAssignments.vehicleId, filters.vehicleId));
+      }
+      if (filters?.accountId) {
+        conditions.push(eq(moderatorAssignments.accountId, filters.accountId));
+      }
+      if (filters?.status) {
+        conditions.push(eq(moderatorAssignments.status, filters.status));
+      }
+
+      query = query.where(and(...conditions));
+      return query;
     },
 
     async listModeratorAssignmentsForTrip(tenantId: string, tripId: string) {
-      return db
-        .select()
-        .from(moderatorAssignments)
-        .where(
-          and(eq(moderatorAssignments.tenantId, tenantId), eq(moderatorAssignments.tripId, tripId)),
-        );
+      return this.listModeratorAssignments(tenantId, { tripId });
     },
 
     async updateVehicleStaffAssignment(
@@ -85,20 +129,11 @@ export function createStaffingRepository(db: Database) {
     },
 
     async updateTripStaffingGap(tenantId: string, tripId: string, hasStaffingGap: boolean) {
-      const [tripRow] = await db
-        .select()
-        .from(trips)
-        .where(and(eq(trips.id, tripId), eq(trips.tenantId, tenantId)))
-        .limit(1);
-      if (!tripRow) return null;
       const [updated] = await db
         .update(trips)
         .set({
           hasStaffingGap,
-          wizardSteps: {
-            ...tripRow.wizardSteps,
-            staffing: true,
-          },
+          wizardSteps: sql`coalesce(${trips.wizardSteps}, '{}'::jsonb) || '{"staffing": true}'::jsonb`,
           updatedAt: new Date(),
         })
         .where(and(eq(trips.id, tripId), eq(trips.tenantId, tenantId)))

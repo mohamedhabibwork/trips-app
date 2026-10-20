@@ -1,16 +1,25 @@
-import { and, desc, eq } from "@trips-app/db";
-import type { Database, Database as ServiceDatabase } from "@trips-app/db";
+import { and, desc, eq, gte, lte } from "@trips-app/db";
+import type { ServiceDatabase } from "@trips-app/db";
 import { schema } from "@trips-app/db/zod";
 import type { CurrencyCode, LedgerEntryStatus } from "../model";
 
 export type { ServiceDatabase };
 
-export function createAccountingRepository(db: Database) {
+export function createAccountingRepository(db: ServiceDatabase) {
   return {
     async listEntriesByTenant(
       tenantId: string,
-      filters?: { tripId?: string; status?: LedgerEntryStatus },
+      filters?: {
+        tripId?: string;
+        status?: LedgerEntryStatus;
+        from?: Date;
+        to?: Date;
+        limit?: number;
+        offset?: number;
+      },
     ) {
+      let query = db.select().from(schema.accountingLedgerEntries).$dynamic();
+
       const conditions = [eq(schema.accountingLedgerEntries.tenantId, tenantId)];
       if (filters?.tripId) {
         conditions.push(eq(schema.accountingLedgerEntries.tripId, filters.tripId));
@@ -18,11 +27,19 @@ export function createAccountingRepository(db: Database) {
       if (filters?.status) {
         conditions.push(eq(schema.accountingLedgerEntries.status, filters.status));
       }
-      return db
-        .select()
-        .from(schema.accountingLedgerEntries)
+      if (filters?.from) {
+        conditions.push(gte(schema.accountingLedgerEntries.occurredAt, filters.from));
+      }
+      if (filters?.to) {
+        conditions.push(lte(schema.accountingLedgerEntries.occurredAt, filters.to));
+      }
+
+      query = query
         .where(and(...conditions))
         .orderBy(desc(schema.accountingLedgerEntries.occurredAt));
+      if (filters?.limit !== undefined) query = query.limit(filters.limit);
+      if (filters?.offset !== undefined) query = query.offset(filters.offset);
+      return query;
     },
 
     async insertPayoutSettlement(values: {
@@ -50,6 +67,11 @@ export function createAccountingRepository(db: Database) {
       return created!;
     },
 
+    async insertLedgerEntries(entries: Array<typeof schema.accountingLedgerEntries.$inferInsert>) {
+      if (entries.length === 0) return [];
+      return db.insert(schema.accountingLedgerEntries).values(entries).returning();
+    },
+
     async findEntryById(entryId: string) {
       const [row] = await db
         .select()
@@ -71,12 +93,16 @@ export function createAccountingRepository(db: Database) {
       return updated ?? null;
     },
 
-    async listAllReconciliationExceptions() {
-      return db
+    async listAllReconciliationExceptions(pagination?: { limit?: number; offset?: number }) {
+      let query = db
         .select()
         .from(schema.accountingLedgerEntries)
+        .$dynamic()
         .where(eq(schema.accountingLedgerEntries.status, "reconciliation_exception"))
         .orderBy(desc(schema.accountingLedgerEntries.occurredAt));
+      if (pagination?.limit !== undefined) query = query.limit(pagination.limit);
+      if (pagination?.offset !== undefined) query = query.offset(pagination.offset);
+      return query;
     },
   };
 }

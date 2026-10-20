@@ -1,4 +1,6 @@
 // Business logic for Seats. Routes call this factory with context.db; repositories are created here.
+import { PAYMENT_CONFIRM_TIMEOUT_SECONDS } from "@trips-app/domain";
+
 import { SeatsServiceError } from "../errors";
 import { DEFAULT_SEAT_HOLD_MINUTES, findPlanCatalogEntry } from "../model";
 import { createSeatsRepository, type ServiceDatabase } from "../repository";
@@ -40,6 +42,11 @@ export function createSeatsService(db: ServiceDatabase) {
       targetVehicle.seatLayoutSnapshot,
     );
     await repo.releaseExpiredHolds(trip.id, new Date());
+    await repo.releaseStaleReservations(
+      trip.id,
+      new Date(Date.now() - PAYMENT_CONFIRM_TIMEOUT_SECONDS * 1000),
+      new Date(),
+    );
     await repo.syncTripSeatCounts(trip.id);
 
     const seats = await repo.listSeats(trip.id, targetVehicle.vehicleId);

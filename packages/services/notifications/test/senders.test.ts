@@ -3,7 +3,7 @@ import { describe, expect, test } from "bun:test";
 import { createEmailSender, createTwilioSmsSender } from "../src/services";
 
 const MESSAGE = {
-  to: "ada@example.com",
+  to: "ada@trips-enjoy.com",
   subject: "Subject",
   text: "Plain body",
   html: "<p>Html body</p>",
@@ -39,7 +39,7 @@ describe("createEmailSender", () => {
     // Assert
     expect(result).toMatchObject({ ok: true, provider: "email" });
     expect(sent[0]).toEqual({
-      to: "ada@example.com",
+      to: "ada@trips-enjoy.com",
       notification: { title: "Subject", body: "Plain body" },
       native: { html: "<p>Html body</p>", text: "Plain body" },
     });

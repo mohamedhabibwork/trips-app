@@ -20,3 +20,4 @@ export type AdminReviewLabTestInput = z.infer<typeof adminReviewLabTestSchema>;
 export type DriverProfileDto = z.infer<typeof driverProfileDtoSchema>;
 export type DriverLabTestDto = z.infer<typeof driverLabTestDtoSchema>;
 export type DriverAssignedTripVehicleDto = z.infer<typeof driverAssignedTripVehicleDtoSchema>;
+export type { DriverLabTestKind } from "@trips-app/domain";

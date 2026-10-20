@@ -1,12 +1,27 @@
+// Zod schemas that validate input at the boundary.
+// Derived from @trips-app/db/zod table definitions.
+import {
+  insertPaymentTransactionsSchema,
+  selectPaymentTransactionsSchema,
+  updatePaymentTransactionsSchema,
+} from "@trips-app/db/zod";
 import { z } from "zod/v4";
 
-export const createPaymentIntentSchema = z.object({
-  bookingId: z.uuid().nullable().optional(),
-  purpose: z.enum(["trip_booking", "subscription_upgrade"]).default("trip_booking"),
-  gateway: z.enum(["stripe", "paymob", "tap", "fawry"]),
-  amountMinor: z.number().int().min(100).max(500_000_000).optional(),
-  currencyCode: z.enum(["EGP", "SAR", "AED"]).default("EGP"),
-});
+export const paymentTransactionSelectSchema = selectPaymentTransactionsSchema;
+export const paymentTransactionInsertSchema = insertPaymentTransactionsSchema;
+export const paymentTransactionUpdateSchema = updatePaymentTransactionsSchema;
+
+export const createPaymentIntentSchema = insertPaymentTransactionsSchema
+  .pick({
+    bookingId: true,
+    gateway: true,
+  })
+  .extend({
+    bookingId: z.uuid().nullable().optional(),
+    purpose: z.enum(["trip_booking", "subscription_upgrade"]).default("trip_booking"),
+    amountMinor: z.number().int().min(100).max(500_000_000).optional(),
+    currencyCode: insertPaymentTransactionsSchema.shape.currencyCode.default("EGP"),
+  });
 
 export const confirmPaymentSchema = z.object({
   paymentId: z.uuid(),
@@ -29,7 +44,7 @@ export const resolveDisputeSchema = z.object({
 });
 
 export const processGatewayCallbackSchema = z.object({
-  gateway: z.enum(["stripe", "paymob", "tap", "fawry"]),
+  gateway: insertPaymentTransactionsSchema.shape.gateway,
   providerReference: z.string().trim().min(4).max(120),
   outcome: z.enum(["succeeded", "failed"]),
   /** Gateway event id; repeated deliveries must be idempotent (FR-PAY-02). */

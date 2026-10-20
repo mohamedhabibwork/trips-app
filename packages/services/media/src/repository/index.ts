@@ -1,7 +1,5 @@
-// Data access through @trips-app/db. Every tenant-owned query filters by tenant (DAT-01).
 import {
   and,
-  type Database,
   desc,
   eq,
   inArray,
@@ -11,16 +9,17 @@ import {
   lte,
   or,
   schema,
+  type ServiceDatabase,
 } from "@trips-app/db";
 
 import type { UploadedFileStatus } from "../model";
 
-export type { Database as ServiceDatabase, LinkUploadedFilesOnItemSaveInput } from "@trips-app/db";
+export type { ServiceDatabase, LinkUploadedFilesOnItemSaveInput } from "@trips-app/db";
 
 export type UploadedFileRow = typeof schema.uploadedFiles.$inferSelect;
 export type NewUploadedFileRow = typeof schema.uploadedFiles.$inferInsert;
 
-export function createMediaRepository(db: Database) {
+export function createMediaRepository(db: ServiceDatabase) {
   return {
     async insertUploadedFile(input: NewUploadedFileRow): Promise<UploadedFileRow> {
       const [created] = await db.insert(schema.uploadedFiles).values(input).returning();

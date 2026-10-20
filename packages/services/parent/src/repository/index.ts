@@ -1,10 +1,10 @@
 import { and, desc, eq, isNull, or } from "@trips-app/db";
-import type { Database, Database as ServiceDatabase } from "@trips-app/db";
+import type { ServiceDatabase } from "@trips-app/db";
 import { schema } from "@trips-app/db/zod";
 
 export type { ServiceDatabase };
 
-export function createParentRepository(db: Database) {
+export function createParentRepository(db: ServiceDatabase) {
   return {
     async listLinksByParent(parentAccountId: string) {
       return db

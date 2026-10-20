@@ -38,7 +38,11 @@ function safeDecryptOrFallback(encrypted: string | null, fallback: string | null
   return fallback;
 }
 
-export function createTravelerService(db: ServiceDatabase) {
+export function createTravelerService(dbOrDeps: ServiceDatabase | { db: ServiceDatabase }) {
+  const db =
+    typeof dbOrDeps === "object" && "db" in dbOrDeps && dbOrDeps.db
+      ? dbOrDeps.db
+      : (dbOrDeps as ServiceDatabase);
   const repo = createTravelerRepository(db);
 
   async function resolveNotificationPreferences(
@@ -133,17 +137,6 @@ export function createTravelerService(db: ServiceDatabase) {
       if (nextRawEmail) {
         emailNormalized = normalizeEmail(nextRawEmail);
         emailBlindIndex = computeBlindIndex(emailNormalized);
-        const duplicateEmail = await repo.findOtherAccountByEmailBlindIndex(
-          actor.accountId,
-          emailBlindIndex,
-        );
-        if (duplicateEmail) {
-          throw new TravelerServiceError(
-            "DUPLICATE_RESOURCE",
-            "An account with this email already exists.",
-            { field: "email" },
-          );
-        }
         emailEncrypted = encryptField(emailNormalized);
       }
 
@@ -153,79 +146,98 @@ export function createTravelerService(db: ServiceDatabase) {
       if (nextRawPhone) {
         phoneE164 = normalizePhoneE164(nextRawPhone);
         phoneBlindIndex = computeBlindIndex(phoneE164);
-        const duplicatePhone = await repo.findOtherAccountByPhoneBlindIndex(
-          actor.accountId,
-          phoneBlindIndex,
-        );
-        if (duplicatePhone) {
-          throw new TravelerServiceError(
-            "DUPLICATE_RESOURCE",
-            "An account with this phone number already exists.",
-            { field: "phoneE164" },
-          );
-        }
         phoneEncrypted = encryptField(phoneE164);
       }
 
-      const updated = await repo.updateAccountProfile(actor.accountId, {
-        fullName,
-        emailNormalized,
-        emailBlindIndex,
-        emailEncrypted,
-        phoneE164,
-        phoneBlindIndex,
-        phoneEncrypted,
-        countryCode: input.countryCode,
-        preferredLanguage: input.preferredLanguage,
-        avatarUrl: input.avatarUrl,
-        avatarFileId: input.avatarFileId,
-        fileIds: input.fileIds,
-      });
-
-      if (!updated) {
-        throw new TravelerServiceError("RESOURCE_NOT_FOUND", "Traveler account not found.");
+      const [duplicateEmail, duplicatePhone] = await Promise.all([
+        emailBlindIndex
+          ? repo.findOtherAccountByEmailBlindIndex(actor.accountId, emailBlindIndex)
+          : null,
+        phoneBlindIndex
+          ? repo.findOtherAccountByPhoneBlindIndex(actor.accountId, phoneBlindIndex)
+          : null,
+      ]);
+      if (duplicateEmail) {
+        throw new TravelerServiceError(
+          "DUPLICATE_RESOURCE",
+          "An account with this email already exists.",
+          { field: "email" },
+        );
+      }
+      if (duplicatePhone) {
+        throw new TravelerServiceError(
+          "DUPLICATE_RESOURCE",
+          "An account with this phone number already exists.",
+          { field: "phoneE164" },
+        );
       }
 
-      if (input.notificationPreferences) {
-        const currentPrefs = await resolveNotificationPreferences(actor.accountId);
-        await repo.upsertNotificationPreferences(actor.accountId, {
-          bookingsPush: input.notificationPreferences.bookingsPush ?? currentPrefs.bookingsPush,
-          bookingsSms: input.notificationPreferences.bookingsSms ?? currentPrefs.bookingsSms,
-          bookingsEmail: input.notificationPreferences.bookingsEmail ?? currentPrefs.bookingsEmail,
-          tripUpdatesPush:
-            input.notificationPreferences.tripUpdatesPush ?? currentPrefs.tripUpdatesPush,
-          tripUpdatesSms:
-            input.notificationPreferences.tripUpdatesSms ?? currentPrefs.tripUpdatesSms,
-          tripUpdatesEmail:
-            input.notificationPreferences.tripUpdatesEmail ?? currentPrefs.tripUpdatesEmail,
-          promotionsPush:
-            input.notificationPreferences.promotionsPush ?? currentPrefs.promotionsPush,
-          promotionsSms: input.notificationPreferences.promotionsSms ?? currentPrefs.promotionsSms,
-          promotionsEmail:
-            input.notificationPreferences.promotionsEmail ?? currentPrefs.promotionsEmail,
+      const updated = await db.transaction(async (tx) => {
+        const txRepo = createTravelerRepository(tx as unknown as ServiceDatabase);
+        const upd = await txRepo.updateAccountProfile(actor.accountId, {
+          fullName,
+          emailNormalized,
+          emailBlindIndex,
+          emailEncrypted,
+          phoneE164,
+          phoneBlindIndex,
+          phoneEncrypted,
+          countryCode: input.countryCode,
+          preferredLanguage: input.preferredLanguage,
+          avatarUrl: input.avatarUrl,
+          avatarFileId: input.avatarFileId,
+          fileIds: input.fileIds,
         });
-      }
 
-      await repo.writeAuditLog({
-        actorAccountId: actor.accountId,
-        actorRole: actor.role,
-        action: "traveler.profile.updated",
-        targetEntityType: "account",
-        targetEntityId: actor.accountId,
-        beforeState: {
-          fullName: account.fullName,
-          countryCode: account.countryCode,
-          preferredLanguage: account.preferredLanguage,
-          avatarUrl: account.avatarUrl,
-        },
-        afterState: {
-          fullName: updated.fullName,
-          countryCode: updated.countryCode,
-          preferredLanguage: updated.preferredLanguage,
-          avatarUrl: updated.avatarUrl,
-        },
-        ipAddress: actor.ipAddress,
-        requestId: actor.requestId,
+        if (!upd) {
+          throw new TravelerServiceError("RESOURCE_NOT_FOUND", "Traveler account not found.");
+        }
+
+        if (input.notificationPreferences) {
+          const currentPrefs = await resolveNotificationPreferences(actor.accountId);
+          await txRepo.upsertNotificationPreferences(actor.accountId, {
+            bookingsPush: input.notificationPreferences.bookingsPush ?? currentPrefs.bookingsPush,
+            bookingsSms: input.notificationPreferences.bookingsSms ?? currentPrefs.bookingsSms,
+            bookingsEmail:
+              input.notificationPreferences.bookingsEmail ?? currentPrefs.bookingsEmail,
+            tripUpdatesPush:
+              input.notificationPreferences.tripUpdatesPush ?? currentPrefs.tripUpdatesPush,
+            tripUpdatesSms:
+              input.notificationPreferences.tripUpdatesSms ?? currentPrefs.tripUpdatesSms,
+            tripUpdatesEmail:
+              input.notificationPreferences.tripUpdatesEmail ?? currentPrefs.tripUpdatesEmail,
+            promotionsPush:
+              input.notificationPreferences.promotionsPush ?? currentPrefs.promotionsPush,
+            promotionsSms:
+              input.notificationPreferences.promotionsSms ?? currentPrefs.promotionsSms,
+            promotionsEmail:
+              input.notificationPreferences.promotionsEmail ?? currentPrefs.promotionsEmail,
+          });
+        }
+
+        await txRepo.writeAuditLog({
+          actorAccountId: actor.accountId,
+          actorRole: actor.role,
+          action: "traveler.profile.updated",
+          targetEntityType: "account",
+          targetEntityId: actor.accountId,
+          beforeState: {
+            fullName: account.fullName,
+            countryCode: account.countryCode,
+            preferredLanguage: account.preferredLanguage,
+            avatarUrl: account.avatarUrl,
+          },
+          afterState: {
+            fullName: upd.fullName,
+            countryCode: upd.countryCode,
+            preferredLanguage: upd.preferredLanguage,
+            avatarUrl: upd.avatarUrl,
+          },
+          ipAddress: actor.ipAddress,
+          requestId: actor.requestId,
+        });
+
+        return upd;
       });
 
       const notificationPreferences = await resolveNotificationPreferences(actor.accountId);
@@ -347,43 +359,46 @@ export function createTravelerService(db: ServiceDatabase) {
           ? new Date(Date.now() + DELETION_GRACE_DAYS * MS_PER_DAY)
           : null;
 
-      const created = await repo.createPrivacyRequest({
-        accountId: actor.accountId,
-        requestType: input.requestType,
-        reason: input.reason ?? null,
-        scheduledPurgeAt,
-      });
+      return db.transaction(async (tx) => {
+        const txRepo = createTravelerRepository(tx as unknown as ServiceDatabase);
+        const created = await txRepo.createPrivacyRequest({
+          accountId: actor.accountId,
+          requestType: input.requestType,
+          reason: input.reason ?? null,
+          scheduledPurgeAt,
+        });
 
-      await repo.writeAuditLog({
-        actorAccountId: actor.accountId,
-        actorRole: actor.role,
-        action:
-          input.requestType === "account_deletion"
-            ? "traveler.privacy.account_deletion_requested"
-            : "traveler.privacy.data_export_requested",
-        targetEntityType: "privacy_request",
-        targetEntityId: created.id,
-        reason: input.reason ?? null,
-        afterState: {
+        await txRepo.writeAuditLog({
+          actorAccountId: actor.accountId,
+          actorRole: actor.role,
+          action:
+            input.requestType === "account_deletion"
+              ? "traveler.privacy.account_deletion_requested"
+              : "traveler.privacy.data_export_requested",
+          targetEntityType: "privacy_request",
+          targetEntityId: created.id,
+          reason: input.reason ?? null,
+          afterState: {
+            requestType: created.requestType,
+            status: created.status,
+            scheduledPurgeAt: created.scheduledPurgeAt?.toISOString() ?? null,
+          },
+          ipAddress: actor.ipAddress,
+          requestId: actor.requestId,
+        });
+
+        return {
+          id: created.id,
+          accountId: created.accountId,
           requestType: created.requestType,
           status: created.status,
-          scheduledPurgeAt: created.scheduledPurgeAt?.toISOString() ?? null,
-        },
-        ipAddress: actor.ipAddress,
-        requestId: actor.requestId,
+          reason: created.reason,
+          downloadUrl: created.downloadUrl,
+          scheduledPurgeAt: created.scheduledPurgeAt,
+          completedAt: created.completedAt,
+          createdAt: created.createdAt,
+        };
       });
-
-      return {
-        id: created.id,
-        accountId: created.accountId,
-        requestType: created.requestType,
-        status: created.status,
-        reason: created.reason,
-        downloadUrl: created.downloadUrl,
-        scheduledPurgeAt: created.scheduledPurgeAt,
-        completedAt: created.completedAt,
-        createdAt: created.createdAt,
-      };
     },
   };
 }

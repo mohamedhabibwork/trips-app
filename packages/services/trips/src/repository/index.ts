@@ -1,7 +1,6 @@
 // Data access through @trips-app/db. Every tenant-owned query filters by tenant (DAT-01).
 import {
   and,
-  type Database,
   desc,
   eq,
   gte,
@@ -12,6 +11,7 @@ import {
   ne,
   or,
   schema,
+  type ServiceDatabase,
   sql,
 } from "@trips-app/db";
 
@@ -28,7 +28,7 @@ import type {
   UserRole,
 } from "../model";
 
-export type { Database as ServiceDatabase } from "@trips-app/db";
+export type { ServiceDatabase } from "@trips-app/db";
 
 const {
   accounts,
@@ -41,7 +41,7 @@ const {
   vehicleTypes,
 } = schema;
 
-export function createTripsRepository(db: Database) {
+export function createTripsRepository(db: ServiceDatabase) {
   return {
     async findOrganizationByTenantId(tenantId: string) {
       const [row] = await db
@@ -96,8 +96,12 @@ export function createTripsRepository(db: Database) {
         state?: TripState;
         search?: string;
         hasStaffingGap?: boolean;
+        dateRange?: { from?: Date; to?: Date };
+        pagination?: { limit?: number; offset?: number };
       },
     ) {
+      let query = db.select().from(trips).$dynamic();
+
       const conditions = [eq(trips.tenantId, tenantId)];
       if (filters?.state) {
         conditions.push(eq(trips.state, filters.state));
@@ -109,12 +113,24 @@ export function createTripsRepository(db: Database) {
         const pattern = `%${filters.search}%`;
         conditions.push(or(ilike(trips.titleAr, pattern), ilike(trips.titleEn, pattern))!);
       }
+      if (filters?.dateRange?.from) {
+        conditions.push(gte(trips.startsAt, filters.dateRange.from));
+      }
+      if (filters?.dateRange?.to) {
+        conditions.push(lte(trips.startsAt, filters.dateRange.to));
+      }
 
-      return db
-        .select()
-        .from(trips)
-        .where(and(...conditions))
-        .orderBy(desc(trips.createdAt));
+      query = query.where(and(...conditions));
+      query = query.orderBy(desc(trips.createdAt));
+
+      if (filters?.pagination?.limit) {
+        query = query.limit(filters.pagination.limit);
+      }
+      if (filters?.pagination?.offset) {
+        query = query.offset(filters.pagination.offset);
+      }
+
+      return query;
     },
 
     async listTripVehiclesForTrips(tenantId: string, tripIds: readonly string[]) {
@@ -158,49 +174,51 @@ export function createTripsRepository(db: Database) {
       createdByAccountId: string;
       fileIds?: readonly string[];
     }) {
-      const now = new Date();
-      const [created] = await db
-        .insert(trips)
-        .values({
-          tenantId: values.tenantId,
-          titleAr: values.titleAr,
-          titleEn: values.titleEn,
-          descriptionAr: values.descriptionAr,
-          descriptionEn: values.descriptionEn,
-          categoryLookupCode: values.categoryLookupCode,
-          language: values.language,
-          coverImageUrl: values.coverImageUrl,
-          galleryImageUrls: values.galleryImageUrls,
-          timezone: "Africa/Cairo",
-          currencyCode: "EGP",
-          state: "draft",
-          publishMode: "draft",
-          wizardSteps: values.wizardSteps,
-          hasStaffingGap: true,
-          createdByAccountId: values.createdByAccountId,
-          createdAt: now,
-          updatedAt: now,
-        })
-        .returning();
+      return db.transaction(async (tx) => {
+        const now = new Date();
+        const [created] = await tx
+          .insert(trips)
+          .values({
+            tenantId: values.tenantId,
+            titleAr: values.titleAr,
+            titleEn: values.titleEn,
+            descriptionAr: values.descriptionAr,
+            descriptionEn: values.descriptionEn,
+            categoryLookupCode: values.categoryLookupCode,
+            language: values.language,
+            coverImageUrl: values.coverImageUrl,
+            galleryImageUrls: values.galleryImageUrls,
+            timezone: "Africa/Cairo",
+            currencyCode: "EGP",
+            state: "draft",
+            publishMode: "draft",
+            wizardSteps: values.wizardSteps,
+            hasStaffingGap: true,
+            createdByAccountId: values.createdByAccountId,
+            createdAt: now,
+            updatedAt: now,
+          })
+          .returning();
 
-      const allUrls = [values.coverImageUrl, ...values.galleryImageUrls].filter((u): u is string =>
-        Boolean(u),
-      );
-      if (allUrls.length > 0 || (values.fileIds && values.fileIds.length > 0)) {
-        await linkUploadedFilesOnItemSave(db, {
-          entityType: "trip",
-          entityId: created!.id,
-          tenantId: values.tenantId,
-          uploaderAccountId: values.createdByAccountId,
-          fileIds: values.fileIds,
-          urls: allUrls,
-          storageKeys: allUrls,
-          replaceExistingForEntity: true,
-          now,
-        });
-      }
+        const allUrls = [values.coverImageUrl, ...values.galleryImageUrls].filter(
+          (u): u is string => Boolean(u),
+        );
+        if (allUrls.length > 0 || (values.fileIds && values.fileIds.length > 0)) {
+          await linkUploadedFilesOnItemSave(tx, {
+            entityType: "trip",
+            entityId: created!.id,
+            tenantId: values.tenantId,
+            uploaderAccountId: values.createdByAccountId,
+            fileIds: values.fileIds,
+            urls: allUrls,
+            storageKeys: allUrls,
+            replaceExistingForEntity: true,
+            now,
+          });
+        }
 
-      return created!;
+        return created!;
+      });
     },
 
     async updateTripForTenant(
@@ -240,41 +258,43 @@ export function createTripsRepository(db: Database) {
         fileIds?: readonly string[];
       },
     ) {
-      const now = new Date();
-      const { updatedByAccountId, fileIds, ...dbPatch } = patch;
-      const [updated] = await db
-        .update(trips)
-        .set({
-          ...dbPatch,
-          updatedAt: now,
-        })
-        .where(and(eq(trips.id, tripId), eq(trips.tenantId, tenantId)))
-        .returning();
+      return db.transaction(async (tx) => {
+        const now = new Date();
+        const { updatedByAccountId, fileIds, ...dbPatch } = patch;
+        const [updated] = await tx
+          .update(trips)
+          .set({
+            ...dbPatch,
+            updatedAt: now,
+          })
+          .where(and(eq(trips.id, tripId), eq(trips.tenantId, tenantId)))
+          .returning();
 
-      if (!updated) return null;
+        if (!updated) return null;
 
-      if (
-        patch.coverImageUrl !== undefined ||
-        patch.galleryImageUrls !== undefined ||
-        fileIds !== undefined
-      ) {
-        const allUrls = [updated.coverImageUrl, ...(updated.galleryImageUrls ?? [])].filter(
-          (u): u is string => Boolean(u),
-        );
-        await linkUploadedFilesOnItemSave(db, {
-          entityType: "trip",
-          entityId: updated.id,
-          tenantId,
-          uploaderAccountId: updatedByAccountId,
-          fileIds,
-          urls: allUrls,
-          storageKeys: allUrls,
-          replaceExistingForEntity: true,
-          now,
-        });
-      }
+        if (
+          patch.coverImageUrl !== undefined ||
+          patch.galleryImageUrls !== undefined ||
+          fileIds !== undefined
+        ) {
+          const allUrls = [updated.coverImageUrl, ...(updated.galleryImageUrls ?? [])].filter(
+            (u): u is string => Boolean(u),
+          );
+          await linkUploadedFilesOnItemSave(tx, {
+            entityType: "trip",
+            entityId: updated.id,
+            tenantId,
+            uploaderAccountId: updatedByAccountId,
+            fileIds,
+            urls: allUrls,
+            storageKeys: allUrls,
+            replaceExistingForEntity: true,
+            now,
+          });
+        }
 
-      return updated;
+        return updated;
+      });
     },
 
     async replaceTripVehicles(
@@ -286,30 +306,32 @@ export function createTripsRepository(db: Database) {
         seatLayoutSnapshot: SeatLayoutConfig;
       }[],
     ) {
-      const now = new Date();
-      await db
-        .delete(tripVehicles)
-        .where(and(eq(tripVehicles.tenantId, tenantId), eq(tripVehicles.tripId, tripId)));
+      return db.transaction(async (tx) => {
+        const now = new Date();
+        await tx
+          .delete(tripVehicles)
+          .where(and(eq(tripVehicles.tenantId, tenantId), eq(tripVehicles.tripId, tripId)));
 
-      if (snapshots.length === 0) return [];
+        if (snapshots.length === 0) return [];
 
-      return db
-        .insert(tripVehicles)
-        .values(
-          snapshots.map((item) => ({
-            tenantId,
-            tripId,
-            vehicleId: item.vehicleId,
-            seatCountSnapshot: item.seatCountSnapshot,
-            seatLayoutSnapshot: item.seatLayoutSnapshot,
-            driverSource: "unassigned" as const,
-            moderatorSource: "unassigned" as const,
-            photographerSource: "unassigned" as const,
-            createdAt: now,
-            updatedAt: now,
-          })),
-        )
-        .returning();
+        return tx
+          .insert(tripVehicles)
+          .values(
+            snapshots.map((item) => ({
+              tenantId,
+              tripId,
+              vehicleId: item.vehicleId,
+              seatCountSnapshot: item.seatCountSnapshot,
+              seatLayoutSnapshot: item.seatLayoutSnapshot,
+              driverSource: "unassigned" as const,
+              moderatorSource: "unassigned" as const,
+              photographerSource: "unassigned" as const,
+              createdAt: now,
+              updatedAt: now,
+            })),
+          )
+          .returning();
+      });
     },
 
     async updateTripVehicleStaffing(
@@ -346,7 +368,19 @@ export function createTripsRepository(db: Database) {
       search?: string;
       categoryLookupCode?: string;
       maxPriceMinor?: number;
+      dateRange?: { from?: Date; to?: Date };
+      pagination?: { limit?: number; offset?: number };
     }) {
+      let query = db
+        .select({
+          trip: trips,
+          organizerNameAr: organizations.displayNameAr,
+          organizerNameEn: organizations.displayNameEn,
+        })
+        .from(trips)
+        .innerJoin(organizations, eq(trips.tenantId, organizations.id))
+        .$dynamic();
+
       const conditions = [
         inArray(trips.state, ["published", "scheduled", "Selection"]),
         ne(trips.publishMode, "draft"),
@@ -363,17 +397,24 @@ export function createTripsRepository(db: Database) {
         const pattern = `%${filters.search}%`;
         conditions.push(or(ilike(trips.titleAr, pattern), ilike(trips.titleEn, pattern))!);
       }
+      if (filters?.dateRange?.from) {
+        conditions.push(gte(trips.startsAt, filters.dateRange.from));
+      }
+      if (filters?.dateRange?.to) {
+        conditions.push(lte(trips.startsAt, filters.dateRange.to));
+      }
 
-      return db
-        .select({
-          trip: trips,
-          organizerNameAr: organizations.displayNameAr,
-          organizerNameEn: organizations.displayNameEn,
-        })
-        .from(trips)
-        .innerJoin(organizations, eq(trips.tenantId, organizations.id))
-        .where(and(...conditions))
-        .orderBy(desc(trips.publishedAt), desc(trips.createdAt));
+      query = query.where(and(...conditions));
+      query = query.orderBy(desc(trips.publishedAt), desc(trips.createdAt));
+
+      if (filters?.pagination?.limit) {
+        query = query.limit(filters.pagination.limit);
+      }
+      if (filters?.pagination?.offset) {
+        query = query.offset(filters.pagination.offset);
+      }
+
+      return query;
     },
 
     async findPublicTripById(tripId: string) {
@@ -388,6 +429,56 @@ export function createTripsRepository(db: Database) {
         .where(eq(trips.id, tripId))
         .limit(1);
       return row ?? null;
+    },
+
+    /** Seats taken by live bookings: confirmed always, pending payment only within its D-30
+     * confirm window — matches the booking service's capacity check, so what travelers see
+     * as available is what the booking will accept (the trips-table counters can be stale). */
+    async sumActiveBookedPassengers(tripId: string, pendingCutoff: Date) {
+      const [row] = await db
+        .select({
+          total: sql<number>`coalesce(sum(${schema.bookings.passengersCount}), 0)::int`,
+        })
+        .from(schema.bookings)
+        .where(
+          and(
+            eq(schema.bookings.tripId, tripId),
+            or(
+              eq(schema.bookings.status, "confirmed"),
+              and(
+                eq(schema.bookings.status, "pending_payment"),
+                sql`${schema.bookings.createdAt} >= ${pendingCutoff}`,
+              ),
+            ),
+          ),
+        );
+      return Number(row?.total ?? 0);
+    },
+
+    /** Batched variant of sumActiveBookedPassengers for list surfaces (browse/landing):
+     * live occupancy per trip so the cards match the detail view and the booking guard. */
+    async sumActiveBookedPassengersByTrips(tripIds: string[], pendingCutoff: Date) {
+      if (tripIds.length === 0) return new Map<string, number>();
+      const rows = await db
+        .select({
+          tripId: schema.bookings.tripId,
+          total: sql<number>`coalesce(sum(${schema.bookings.passengersCount}), 0)::int`,
+        })
+        .from(schema.bookings)
+        .where(
+          and(
+            inArray(schema.bookings.tripId, tripIds),
+            or(
+              eq(schema.bookings.status, "confirmed"),
+              and(
+                eq(schema.bookings.status, "pending_payment"),
+                sql`${schema.bookings.createdAt} >= ${pendingCutoff}`,
+              ),
+            ),
+          ),
+        )
+        .groupBy(schema.bookings.tripId);
+      return new Map(rows.map((row) => [row.tripId, Number(row.total)]));
     },
 
     async writeAuditLog(entry: {

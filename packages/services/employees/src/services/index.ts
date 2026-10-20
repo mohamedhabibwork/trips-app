@@ -81,7 +81,11 @@ function toEmployeeDto(
   };
 }
 
-export function createEmployeesService(db: ServiceDatabase) {
+export function createEmployeesService(dbOrDeps: ServiceDatabase | { db: ServiceDatabase }) {
+  const db =
+    typeof dbOrDeps === "object" && "db" in dbOrDeps && dbOrDeps.db
+      ? dbOrDeps.db
+      : (dbOrDeps as ServiceDatabase);
   const repo = createEmployeesRepository(db);
 
   function requireTenantId(activeTenantId: string | null | undefined): string {
@@ -102,24 +106,17 @@ export function createEmployeesService(db: ServiceDatabase) {
         throw new EmployeesServiceError("TENANT_NOT_FOUND", "Organization resource not found.");
       }
 
-      const items = await repo.listByTenant(tenantId);
-      const usedCount = items.filter(
-        ({ row }) => row.status === "invited" || row.status === "active",
-      ).length;
+      const [items, usedCount] = await Promise.all([
+        repo.listByTenant(tenantId, {
+          status: input?.status,
+          search: input?.search,
+        }),
+        repo.countActiveOrInvitedForTenant(tenantId),
+      ]);
 
-      const searchTerm = input?.search?.trim().toLowerCase() ?? "";
-      const filtered = items
-        .filter(({ row, fullName }) => {
-          if (input?.status && row.status !== input.status) return false;
-          if (searchTerm.length > 0) {
-            const matchEmail = row.invitedEmail.toLowerCase().includes(searchTerm);
-            const matchName = (fullName ?? "").toLowerCase().includes(searchTerm);
-            const matchRole = row.roleTitle.toLowerCase().includes(searchTerm);
-            if (!matchEmail && !matchName && !matchRole) return false;
-          }
-          return true;
-        })
-        .map(({ row, fullName, avatarUrl }) => toEmployeeDto(row, fullName, avatarUrl));
+      const filtered = items.map(({ row, fullName, avatarUrl }) =>
+        toEmployeeDto(row, fullName, avatarUrl),
+      );
 
       const plan = findPlanCatalogEntry("organization", org.planTier);
       return {
@@ -389,35 +386,38 @@ export function createEmployeesService(db: ServiceDatabase) {
         throw new EmployeesServiceError("TENANT_NOT_FOUND", "Organization resource not found.");
       }
 
-      const updated = await repo.acceptMembershipInvite(membership.id, actor.accountId, now);
-      if (!updated) {
-        throw new EmployeesServiceError("RESOURCE_NOT_FOUND", "Employee invitation not found.");
-      }
+      return db.transaction(async (tx) => {
+        const txRepo = createEmployeesRepository(tx as unknown as ServiceDatabase);
+        const updated = await txRepo.acceptMembershipInvite(membership.id, actor.accountId, now);
+        if (!updated) {
+          throw new EmployeesServiceError("RESOURCE_NOT_FOUND", "Employee invitation not found.");
+        }
 
-      await repo.ensureEmployeeAccountRole(actor.accountId, membership.tenantId, org.planTier);
+        await txRepo.ensureEmployeeAccountRole(actor.accountId, membership.tenantId, org.planTier);
 
-      await repo.writeAuditLog({
-        actorAccountId: actor.accountId,
-        actorRole: actor.activeRole,
-        tenantId: membership.tenantId,
-        action: "employee.invite_accepted",
-        targetEntityType: "employee_membership",
-        targetEntityId: updated.id,
-        beforeState: { status: membership.status },
-        afterState: { status: updated.status, accountId: actor.accountId },
-        ipAddress: meta?.ipAddress,
-        requestId: meta?.requestId,
+        await txRepo.writeAuditLog({
+          actorAccountId: actor.accountId,
+          actorRole: actor.activeRole,
+          tenantId: membership.tenantId,
+          action: "employee.invite_accepted",
+          targetEntityType: "employee_membership",
+          targetEntityId: updated.id,
+          beforeState: { status: membership.status },
+          afterState: { status: updated.status, accountId: actor.accountId },
+          ipAddress: meta?.ipAddress,
+          requestId: meta?.requestId,
+        });
+
+        const hydrated = await txRepo.findByIdAndTenant(updated.id, membership.tenantId);
+        return {
+          employee: toEmployeeDto(
+            hydrated?.row ?? updated,
+            hydrated?.fullName ?? null,
+            hydrated?.avatarUrl ?? null,
+          ),
+          tenantId: membership.tenantId,
+        };
       });
-
-      const hydrated = await repo.findByIdAndTenant(updated.id, membership.tenantId);
-      return {
-        employee: toEmployeeDto(
-          hydrated?.row ?? updated,
-          hydrated?.fullName ?? null,
-          hydrated?.avatarUrl ?? null,
-        ),
-        tenantId: membership.tenantId,
-      };
     },
 
     async updatePermissions(
@@ -489,43 +489,46 @@ export function createEmployeesService(db: ServiceDatabase) {
         });
       }
 
-      const updated = await repo.updateMembershipByTenant(input.membershipId, tenantId, {
-        status: input.status,
-      });
-      if (!updated) {
-        throw new EmployeesServiceError("RESOURCE_NOT_FOUND", "Employee membership not found.");
-      }
-
-      let revokedSessionsCount = 0;
-      if (updated.accountId) {
-        await repo.updateEmployeeAccountRoleStatus(updated.accountId, tenantId, input.status);
-        if (input.status === "suspended" || input.status === "revoked") {
-          revokedSessionsCount = await repo.revokeActiveTenantSessionsForAccount(
-            updated.accountId,
-            tenantId,
-            input.reason ?? `Employee membership ${input.status}`,
-          );
+      return db.transaction(async (tx) => {
+        const txRepo = createEmployeesRepository(tx as unknown as ServiceDatabase);
+        const updated = await txRepo.updateMembershipByTenant(input.membershipId, tenantId, {
+          status: input.status,
+        });
+        if (!updated) {
+          throw new EmployeesServiceError("RESOURCE_NOT_FOUND", "Employee membership not found.");
         }
-      }
 
-      await repo.writeAuditLog({
-        actorAccountId: actor.accountId,
-        actorRole: actor.activeRole,
-        tenantId,
-        action: `employee.status.${input.status}`,
-        targetEntityType: "employee_membership",
-        targetEntityId: updated.id,
-        reason: input.reason ?? null,
-        beforeState: { status: found.row.status },
-        afterState: { status: updated.status, revokedSessionsCount },
-        ipAddress: meta?.ipAddress,
-        requestId: meta?.requestId,
+        let revokedSessionsCount = 0;
+        if (updated.accountId) {
+          await txRepo.updateEmployeeAccountRoleStatus(updated.accountId, tenantId, input.status);
+          if (input.status === "suspended" || input.status === "revoked") {
+            revokedSessionsCount = await txRepo.revokeActiveTenantSessionsForAccount(
+              updated.accountId,
+              tenantId,
+              input.reason ?? `Employee membership ${input.status}`,
+            );
+          }
+        }
+
+        await txRepo.writeAuditLog({
+          actorAccountId: actor.accountId,
+          actorRole: actor.activeRole,
+          tenantId,
+          action: `employee.status.${input.status}`,
+          targetEntityType: "employee_membership",
+          targetEntityId: updated.id,
+          reason: input.reason ?? null,
+          beforeState: { status: found.row.status },
+          afterState: { status: updated.status, revokedSessionsCount },
+          ipAddress: meta?.ipAddress,
+          requestId: meta?.requestId,
+        });
+
+        return {
+          employee: toEmployeeDto(updated, found.fullName, found.avatarUrl),
+          revokedSessionsCount,
+        };
       });
-
-      return {
-        employee: toEmployeeDto(updated, found.fullName, found.avatarUrl),
-        revokedSessionsCount,
-      };
     },
   };
 }

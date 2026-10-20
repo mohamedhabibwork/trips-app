@@ -1,14 +1,25 @@
 // Data access through @trips-app/db. Every tenant-owned query filters by tenant (DAT-01).
-import { and, type Database, desc, eq, inArray, isNull, schema } from "@trips-app/db";
+import {
+  and,
+  count,
+  desc,
+  eq,
+  ilike,
+  inArray,
+  isNull,
+  or,
+  schema,
+  type ServiceDatabase,
+} from "@trips-app/db";
 
 import type { EmployeeMembershipStatus, OrgPermissionMatrix, UserRole } from "../model";
 
-export type { Database as ServiceDatabase } from "@trips-app/db";
+export type { ServiceDatabase } from "@trips-app/db";
 
 const { accountRoles, accounts, auditLogs, authSessions, employeeMemberships, organizations } =
   schema;
 
-export function createEmployeesRepository(db: Database) {
+export function createEmployeesRepository(db: ServiceDatabase) {
   return {
     async findOrganizationByTenantId(tenantId: string) {
       const [row] = await db
@@ -19,68 +30,56 @@ export function createEmployeesRepository(db: Database) {
       return row ?? null;
     },
 
-    async listByTenant(tenantId: string) {
-      const rows = await db
-        .select()
-        .from(employeeMemberships)
-        .where(eq(employeeMemberships.tenantId, tenantId))
-        .orderBy(desc(employeeMemberships.createdAt));
-
-      const accountIds = rows
-        .map((r) => r.accountId)
-        .filter((id): id is string => typeof id === "string" && id.length > 0);
-
-      const accountMap = new Map<string, { fullName: string; avatarUrl: string | null }>();
-      if (accountIds.length > 0) {
-        const accRows = await db
-          .select({
-            id: accounts.id,
-            fullName: accounts.fullName,
-            avatarUrl: accounts.avatarUrl,
-          })
-          .from(accounts)
-          .where(inArray(accounts.id, accountIds));
-        for (const acc of accRows) {
-          accountMap.set(acc.id, { fullName: acc.fullName, avatarUrl: acc.avatarUrl });
-        }
+    async listByTenant(
+      tenantId: string,
+      filter?: {
+        status?: EmployeeMembershipStatus;
+        search?: string;
+      },
+    ) {
+      const conditions = [eq(employeeMemberships.tenantId, tenantId)];
+      if (filter?.status) {
+        conditions.push(eq(employeeMemberships.status, filter.status));
+      }
+      const search = filter?.search?.trim();
+      if (search) {
+        const pattern = `%${search}%`;
+        conditions.push(
+          or(
+            ilike(employeeMemberships.invitedEmail, pattern),
+            ilike(employeeMemberships.roleTitle, pattern),
+            ilike(accounts.fullName, pattern),
+          )!,
+        );
       }
 
-      return rows.map((row) => {
-        const acc = row.accountId ? accountMap.get(row.accountId) : undefined;
-        return {
-          row,
-          fullName: acc?.fullName ?? null,
-          avatarUrl: acc?.avatarUrl ?? null,
-        };
-      });
+      return db
+        .select({
+          row: employeeMemberships,
+          fullName: accounts.fullName,
+          avatarUrl: accounts.avatarUrl,
+        })
+        .from(employeeMemberships)
+        .leftJoin(accounts, eq(employeeMemberships.accountId, accounts.id))
+        .$dynamic()
+        .where(and(...conditions))
+        .orderBy(desc(employeeMemberships.createdAt));
     },
 
     async findByIdAndTenant(membershipId: string, tenantId: string) {
-      const [row] = await db
-        .select()
+      const [result] = await db
+        .select({
+          row: employeeMemberships,
+          fullName: accounts.fullName,
+          avatarUrl: accounts.avatarUrl,
+        })
         .from(employeeMemberships)
+        .leftJoin(accounts, eq(employeeMemberships.accountId, accounts.id))
         .where(
           and(eq(employeeMemberships.id, membershipId), eq(employeeMemberships.tenantId, tenantId)),
         )
         .limit(1);
-      if (!row) return null;
-
-      let fullName: string | null = null;
-      let avatarUrl: string | null = null;
-      if (row.accountId) {
-        const [acc] = await db
-          .select({
-            fullName: accounts.fullName,
-            avatarUrl: accounts.avatarUrl,
-          })
-          .from(accounts)
-          .where(eq(accounts.id, row.accountId))
-          .limit(1);
-        fullName = acc?.fullName ?? null;
-        avatarUrl = acc?.avatarUrl ?? null;
-      }
-
-      return { row, fullName, avatarUrl };
+      return result ?? null;
     },
 
     async findByEmailAndTenant(invitedEmail: string, tenantId: string) {
@@ -107,11 +106,16 @@ export function createEmployeesRepository(db: Database) {
     },
 
     async countActiveOrInvitedForTenant(tenantId: string) {
-      const rows = await db
-        .select({ status: employeeMemberships.status })
+      const [row] = await db
+        .select({ value: count() })
         .from(employeeMemberships)
-        .where(eq(employeeMemberships.tenantId, tenantId));
-      return rows.filter((r) => r.status === "invited" || r.status === "active").length;
+        .where(
+          and(
+            eq(employeeMemberships.tenantId, tenantId),
+            inArray(employeeMemberships.status, ["invited", "active"]),
+          ),
+        );
+      return Number(row?.value ?? 0);
     },
 
     async createMembership(values: {

@@ -1,5 +1,6 @@
 // Entities and aggregates with their invariants. No I/O.
 import {
+  CURRENCY_CODES,
   type CurrencyCode,
   DEFAULT_PLAN_CATALOG,
   findPlanCatalogEntry,
@@ -9,18 +10,24 @@ import {
   type PlanFeatures,
   type PlanLimits,
   type SeatLayoutConfig,
+  SUPPORTED_LOCALES,
   type SupportedLocale,
   type TravelerPlanCode,
+  TRIP_PUBLISH_MODES,
   type TripPublishMode,
   type TripRoutePoint,
+  TRIP_SEAT_ASSIGNMENT_MODES,
   type TripSeatAssignmentMode,
+  TRIP_STAFF_SOURCES,
   type TripStaffSource,
+  TRIP_STATES,
   type TripState,
   type TripWizardStepCompletion,
   type UserRole,
 } from "@trips-app/domain";
 
 export {
+  CURRENCY_CODES,
   type CurrencyCode,
   DEFAULT_PLAN_CATALOG,
   findPlanCatalogEntry,
@@ -30,26 +37,21 @@ export {
   type PlanFeatures,
   type PlanLimits,
   type SeatLayoutConfig,
+  SUPPORTED_LOCALES,
   type SupportedLocale,
   type TravelerPlanCode,
+  TRIP_PUBLISH_MODES,
   type TripPublishMode,
   type TripRoutePoint,
+  TRIP_SEAT_ASSIGNMENT_MODES,
   type TripSeatAssignmentMode,
+  TRIP_STAFF_SOURCES,
   type TripStaffSource,
+  TRIP_STATES,
   type TripState,
   type TripWizardStepCompletion,
   type UserRole,
 };
-
-export const TRIP_STATES = [
-  "draft",
-  "published",
-  "scheduled",
-  "Selection",
-  "in_progress",
-  "completed",
-  "cancelled",
-] as const satisfies readonly TripState[];
 
 export const PUBLIC_DISCOVERABLE_TRIP_STATES = [
   "published",
@@ -64,29 +66,7 @@ export const CANCELLABLE_TRIP_STATES = [
   "Selection",
 ] as const satisfies readonly TripState[];
 
-export const TRIP_SEAT_ASSIGNMENT_MODES = [
-  "organization_assigned",
-  "traveler_choice",
-] as const satisfies readonly TripSeatAssignmentMode[];
-
-export const TRIP_PUBLISH_MODES = [
-  "draft",
-  "public",
-  "targeted",
-] as const satisfies readonly TripPublishMode[];
-
-export const TRIP_STAFF_SOURCES = [
-  "org_staff",
-  "platform_supplier",
-  "unassigned",
-] as const satisfies readonly TripStaffSource[];
-
-export const SUPPORTED_CURRENCIES = [
-  "EGP",
-  "SAR",
-  "AED",
-] as const satisfies readonly CurrencyCode[];
-export const SUPPORTED_LOCALES = ["ar", "en"] as const satisfies readonly SupportedLocale[];
+export const SUPPORTED_CURRENCIES = CURRENCY_CODES;
 
 export const DEFAULT_WIZARD_STEPS: TripWizardStepCompletion = {
   basics: false,

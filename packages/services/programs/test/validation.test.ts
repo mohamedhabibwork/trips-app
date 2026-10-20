@@ -57,4 +57,15 @@ describe("Unit: programs validation schemas, plan limits & error mapping (@trips
     const err = new ProgramsServiceError("PLAN_LIMIT_EXCEEDED", "Too many programs");
     expect(mapProgramsError(err).code).toBe("PLAN_LIMIT_EXCEEDED");
   });
+
+  test("createProgramsRepository accepts ServiceDatabase and instantiates repository methods", async () => {
+    const { createProgramsRepository } = await import("../src/repository");
+    const mockDb = {} as import("@trips-app/db").TransactionClient;
+    const repo = createProgramsRepository(mockDb);
+    expect(typeof repo.findOrganizationPlan).toBe("function");
+    expect(typeof repo.findTripForTenant).toBe("function");
+    expect(typeof repo.insertProgram).toBe("function");
+    expect(typeof repo.listProgramsForTrip).toBe("function");
+    expect(typeof repo.listPublicProgramsForTrip).toBe("function");
+  });
 });

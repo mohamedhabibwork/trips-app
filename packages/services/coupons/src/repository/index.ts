@@ -1,27 +1,30 @@
 // Data access through @trips-app/db. Every tenant-owned query filters by tenant (DAT-01).
-import { and, desc, type Database, eq, schema, sql } from "@trips-app/db";
+import { and, desc, eq, schema, sql } from "@trips-app/db";
+import type { ServiceDatabase } from "@trips-app/db";
 
 import type { CouponDiscountType, CouponScope, CouponStatus, CurrencyCode } from "../model";
 
-export type { Database as ServiceDatabase } from "@trips-app/db";
+export type { ServiceDatabase };
 
 const { coupons, organizations, planCatalog, trips } = schema;
 
-export function createCouponsRepository(db: Database) {
+export function createCouponsRepository(db: ServiceDatabase) {
   return {
     async findOrganizationPlan(tenantId: string) {
-      const [org] = await db
-        .select()
+      const [row] = await db
+        .select({
+          org: organizations,
+          plan: planCatalog,
+        })
         .from(organizations)
+        .leftJoin(
+          planCatalog,
+          and(eq(planCatalog.role, "organization"), eq(planCatalog.tier, organizations.planTier)),
+        )
         .where(eq(organizations.id, tenantId))
         .limit(1);
-      if (!org) return null;
-      const [plan] = await db
-        .select()
-        .from(planCatalog)
-        .where(and(eq(planCatalog.role, "organization"), eq(planCatalog.tier, org.planTier)))
-        .limit(1);
-      return { org, plan: plan ?? null };
+      if (!row) return null;
+      return { org: row.org, plan: row.plan };
     },
 
     async countActiveCouponsForTenant(tenantId: string) {
@@ -87,24 +90,39 @@ export function createCouponsRepository(db: Database) {
       return updated ?? null;
     },
 
-    async listForTenant(tenantId: string, status?: CouponStatus) {
+    async listForTenant(
+      tenantId: string,
+      filtersOrStatus?: CouponStatus | { status?: CouponStatus; limit?: number; offset?: number },
+    ) {
+      const status =
+        typeof filtersOrStatus === "string" ? filtersOrStatus : filtersOrStatus?.status;
+      const limit = typeof filtersOrStatus === "object" ? filtersOrStatus?.limit : undefined;
+      const offset = typeof filtersOrStatus === "object" ? filtersOrStatus?.offset : undefined;
+
+      let query = db.select().from(coupons).$dynamic();
       const conditions = [eq(coupons.tenantId, tenantId)];
       if (status) conditions.push(eq(coupons.status, status));
-      return db
-        .select()
-        .from(coupons)
-        .where(and(...conditions))
-        .orderBy(desc(coupons.createdAt));
+      query = query.where(and(...conditions)).orderBy(desc(coupons.createdAt));
+      if (limit !== undefined) query = query.limit(limit);
+      if (offset !== undefined) query = query.offset(offset);
+      return query;
     },
 
-    async listPlatformCoupons(status?: CouponStatus) {
+    async listPlatformCoupons(
+      filtersOrStatus?: CouponStatus | { status?: CouponStatus; limit?: number; offset?: number },
+    ) {
+      const status =
+        typeof filtersOrStatus === "string" ? filtersOrStatus : filtersOrStatus?.status;
+      const limit = typeof filtersOrStatus === "object" ? filtersOrStatus?.limit : undefined;
+      const offset = typeof filtersOrStatus === "object" ? filtersOrStatus?.offset : undefined;
+
+      let query = db.select().from(coupons).$dynamic();
       const conditions = [eq(coupons.scope, "platform")];
       if (status) conditions.push(eq(coupons.status, status));
-      return db
-        .select()
-        .from(coupons)
-        .where(and(...conditions))
-        .orderBy(desc(coupons.createdAt));
+      query = query.where(and(...conditions)).orderBy(desc(coupons.createdAt));
+      if (limit !== undefined) query = query.limit(limit);
+      if (offset !== undefined) query = query.offset(offset);
+      return query;
     },
   };
 }

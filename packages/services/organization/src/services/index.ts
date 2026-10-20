@@ -17,8 +17,14 @@ import type {
 } from "../schemas/dtos";
 import type { OrganizationRequestMeta } from "../types";
 
-export function createOrganizationService(db: ServiceDatabase) {
-  const repo = createOrganizationRepository(db);
+export function createOrganizationService(
+  dbOrDeps:
+    | ServiceDatabase
+    | { db: ServiceDatabase; repo?: ReturnType<typeof createOrganizationRepository> },
+) {
+  const db = "db" in dbOrDeps ? dbOrDeps.db : dbOrDeps;
+  const repo =
+    "repo" in dbOrDeps && dbOrDeps.repo ? dbOrDeps.repo : createOrganizationRepository(db);
 
   function assertTenantMatch(
     actorTenantId: string | null | undefined,
@@ -40,12 +46,15 @@ export function createOrganizationService(db: ServiceDatabase) {
       input?: GetOrganizationSettingsInput,
     ) {
       const tenantId = assertTenantMatch(actor.activeTenantId, input?.tenantId);
-      const org = await repo.findOrganizationByTenantId(tenantId);
+      const [org, existingSettings] = await Promise.all([
+        repo.findOrganizationByTenantId(tenantId),
+        repo.findSettingsByTenantId(tenantId),
+      ]);
       if (!org || org.status === "deleted") {
         throw new OrganizationServiceError("NOT_FOUND", "Organization resource not found.");
       }
 
-      let settings = await repo.findSettingsByTenantId(tenantId);
+      let settings = existingSettings;
       if (!settings) {
         const defaults = createDefaultOrganizationSettings({
           tenantId,
@@ -84,7 +93,10 @@ export function createOrganizationService(db: ServiceDatabase) {
       meta?: OrganizationRequestMeta,
     ) {
       const tenantId = assertTenantMatch(actor.activeTenantId, input.tenantId);
-      const org = await repo.findOrganizationByTenantId(tenantId);
+      const [org, fetchedSettings] = await Promise.all([
+        repo.findOrganizationByTenantId(tenantId),
+        repo.findSettingsByTenantId(tenantId),
+      ]);
       if (!org || org.status === "deleted") {
         throw new OrganizationServiceError("NOT_FOUND", "Organization resource not found.");
       }
@@ -103,7 +115,7 @@ export function createOrganizationService(db: ServiceDatabase) {
       }
 
       const existing =
-        (await repo.findSettingsByTenantId(tenantId)) ??
+        fetchedSettings ??
         createDefaultOrganizationSettings({
           tenantId,
           countryCode: org.countryCode,
@@ -126,13 +138,6 @@ export function createOrganizationService(db: ServiceDatabase) {
           "Safety lead name and hotline phone are required when enabling child tracking (D-68).",
           { field: !nextSafetyLead ? "safetyLeadName" : "safetyHotlinePhone" },
         );
-      }
-
-      if (input.displayNameEn || input.displayNameAr) {
-        await repo.updateOrganizationDisplayNames(tenantId, {
-          displayNameEn: input.displayNameEn,
-          displayNameAr: input.displayNameAr,
-        });
       }
 
       const merged = {
@@ -183,19 +188,31 @@ export function createOrganizationService(db: ServiceDatabase) {
         updatedByAccountId: actor.accountId,
       };
 
-      const saved = await repo.upsertOrganizationSettings(tenantId, merged);
+      const saved = await db.transaction(async (tx) => {
+        const txRepo = createOrganizationRepository(tx);
+        if (input.displayNameEn || input.displayNameAr) {
+          await txRepo.updateOrganizationDisplayNames(tenantId, {
+            displayNameEn: input.displayNameEn,
+            displayNameAr: input.displayNameAr,
+          });
+        }
 
-      await repo.writeAuditLog({
-        actorAccountId: actor.accountId,
-        actorRole: actor.activeRole,
-        tenantId,
-        action: "organization.settings.updated",
-        targetEntityType: "organization_settings",
-        targetEntityId: tenantId,
-        beforeState: existing as unknown as Record<string, unknown>,
-        afterState: saved as unknown as Record<string, unknown>,
-        ipAddress: meta?.ipAddress,
-        requestId: meta?.requestId,
+        const s = await txRepo.upsertOrganizationSettings(tenantId, merged);
+
+        await txRepo.writeAuditLog({
+          actorAccountId: actor.accountId,
+          actorRole: actor.activeRole,
+          tenantId,
+          action: "organization.settings.updated",
+          targetEntityType: "organization_settings",
+          targetEntityId: tenantId,
+          beforeState: existing as unknown as Record<string, unknown>,
+          afterState: s as unknown as Record<string, unknown>,
+          ipAddress: meta?.ipAddress,
+          requestId: meta?.requestId,
+        });
+
+        return s;
       });
 
       return saved;
@@ -207,13 +224,16 @@ export function createOrganizationService(db: ServiceDatabase) {
       meta?: OrganizationRequestMeta,
     ) {
       const tenantId = assertTenantMatch(actor.activeTenantId, input.tenantId);
-      const org = await repo.findOrganizationByTenantId(tenantId);
+      const [org, fetchedSettings] = await Promise.all([
+        repo.findOrganizationByTenantId(tenantId),
+        repo.findSettingsByTenantId(tenantId),
+      ]);
       if (!org || org.status === "deleted") {
         throw new OrganizationServiceError("NOT_FOUND", "Organization resource not found.");
       }
 
       const existing =
-        (await repo.findSettingsByTenantId(tenantId)) ??
+        fetchedSettings ??
         (await repo.upsertOrganizationSettings(
           tenantId,
           createDefaultOrganizationSettings({
@@ -260,18 +280,21 @@ export function createOrganizationService(db: ServiceDatabase) {
         });
       }
 
-      await repo.updateWebhookEndpoints(tenantId, nextEndpoints, actor.accountId);
+      await db.transaction(async (tx) => {
+        const txRepo = createOrganizationRepository(tx);
+        await txRepo.updateWebhookEndpoints(tenantId, nextEndpoints, actor.accountId);
 
-      await repo.writeAuditLog({
-        actorAccountId: actor.accountId,
-        actorRole: actor.activeRole,
-        tenantId,
-        action: "organization.webhooks.configured",
-        targetEntityType: "organization_settings",
-        targetEntityId: tenantId,
-        afterState: { endpointCount: nextEndpoints.length },
-        ipAddress: meta?.ipAddress,
-        requestId: meta?.requestId,
+        await txRepo.writeAuditLog({
+          actorAccountId: actor.accountId,
+          actorRole: actor.activeRole,
+          tenantId,
+          action: "organization.webhooks.configured",
+          targetEntityType: "organization_settings",
+          targetEntityId: tenantId,
+          afterState: { endpointCount: nextEndpoints.length },
+          ipAddress: meta?.ipAddress,
+          requestId: meta?.requestId,
+        });
       });
 
       return {

@@ -117,7 +117,7 @@ export function createPaymentsService(deps: { db: ServiceDatabase }) {
         );
       }
 
-      const confirmed = await applySuccessfulPayment(repo, payment);
+      const confirmed = await applySuccessfulPayment(deps.db, payment);
       if (!confirmed) {
         throw new PaymentsServiceError("PAYMENT_NOT_FOUND", "Payment transaction not found.");
       }
@@ -147,7 +147,7 @@ export function createPaymentsService(deps: { db: ServiceDatabase }) {
         return { payment, alreadyProcessed: true };
       }
       if (decision.action === "apply_success") {
-        const settled = await applySuccessfulPayment(repo, payment);
+        const settled = await applySuccessfulPayment(deps.db, payment);
         return { payment: settled ?? payment, alreadyProcessed: false };
       }
       const failed = await repo.markPaymentFailed(payment.id);
@@ -210,22 +210,30 @@ export function createPaymentsService(deps: { db: ServiceDatabase }) {
         );
       }
 
-      const updated = await repo.markPaymentRefunded(payment.id, refundAmount);
-      if (payment.bookingId) {
-        await repo.updateBookingStatus(payment.bookingId, "refunded", refundAmount);
-      }
-      if (payment.tenantId) {
-        const booking = payment.bookingId ? await repo.findBookingById(payment.bookingId) : null;
-        await repo.insertRefundLedgerEntry({
-          tenantId: payment.tenantId,
-          tripId: booking?.tripId ?? null,
-          bookingId: payment.bookingId,
-          refundAmountMinor: refundAmount,
-          currencyCode: payment.currencyCode,
-          description: input.reason ?? `Refund for ${payment.providerReference}`,
-        });
-      }
-      return updated!;
+      return deps.db.transaction(async (tx) => {
+        const txRepo = createPaymentsRepository(tx as unknown as ServiceDatabase);
+        const updated = await txRepo.markPaymentRefunded(payment.id, refundAmount);
+        if (payment.bookingId) {
+          await txRepo.updateBookingStatus(payment.bookingId, "refunded", refundAmount);
+        }
+        if (payment.tenantId) {
+          const booking = payment.bookingId
+            ? await txRepo.findBookingById(payment.bookingId)
+            : null;
+          if (booking && ["confirmed", "checked_in", "completed"].includes(booking.status)) {
+            await txRepo.adjustTripConfirmedSeats(booking.tripId, -booking.passengersCount);
+          }
+          await txRepo.insertRefundLedgerEntry({
+            tenantId: payment.tenantId,
+            tripId: booking?.tripId ?? null,
+            bookingId: payment.bookingId,
+            refundAmountMinor: refundAmount,
+            currencyCode: payment.currencyCode,
+            description: input.reason ?? `Refund for ${payment.providerReference}`,
+          });
+        }
+        return updated!;
+      });
     },
 
     async openDispute(accountId: string, input: OpenDisputeInput) {
@@ -321,28 +329,39 @@ export type PaymentsService = ReturnType<typeof createPaymentsService>;
 
 /** Shared success path for both the direct confirm and the gateway callback. */
 async function applySuccessfulPayment(
-  repo: ReturnType<typeof createPaymentsRepository>,
-  payment: NonNullable<Awaited<ReturnType<typeof repo.findPaymentById>>>,
+  db: ServiceDatabase,
+  payment: NonNullable<
+    Awaited<ReturnType<ReturnType<typeof createPaymentsRepository>["findPaymentById"]>>
+  >,
 ) {
-  const confirmed = await repo.markPaymentSucceeded(payment.id);
-  if (payment.bookingId && payment.tenantId) {
-    const booking = await repo.findBookingById(payment.bookingId);
-    await repo.updateBookingStatus(payment.bookingId, "confirmed");
-    const commissionMinor = Math.floor(
-      (payment.amountMinor * DEFAULT_PLATFORM_COMMISSION_BPS) / 10000,
-    );
-    const netMinor = payment.amountMinor - commissionMinor;
-    await repo.insertRevenueLedgerEntry({
-      tenantId: payment.tenantId,
-      tripId: booking?.tripId ?? null,
-      bookingId: payment.bookingId,
-      grossAmountMinor: payment.amountMinor,
-      commissionAmountMinor: commissionMinor,
-      netAmountMinor: netMinor,
-      currencyCode: payment.currencyCode,
-      invoiceNumber: invoiceNumberFor(payment.providerReference),
-      description: `Booking payment ${booking?.bookingReference ?? payment.bookingId}`,
-    });
-  }
-  return confirmed;
+  return db.transaction(async (tx) => {
+    const txRepo = createPaymentsRepository(tx as unknown as ServiceDatabase);
+    const confirmed = await txRepo.markPaymentSucceeded(payment.id);
+    if (!confirmed) {
+      return (await txRepo.findPaymentById(payment.id)) ?? payment;
+    }
+    if (payment.bookingId && payment.tenantId) {
+      const booking = await txRepo.findBookingById(payment.bookingId);
+      await txRepo.updateBookingStatus(payment.bookingId, "confirmed");
+      if (booking) {
+        await txRepo.adjustTripConfirmedSeats(booking.tripId, booking.passengersCount);
+      }
+      const commissionMinor = Math.floor(
+        (payment.amountMinor * DEFAULT_PLATFORM_COMMISSION_BPS) / 10000,
+      );
+      const netMinor = payment.amountMinor - commissionMinor;
+      await txRepo.insertRevenueLedgerEntry({
+        tenantId: payment.tenantId,
+        tripId: booking?.tripId ?? null,
+        bookingId: payment.bookingId,
+        grossAmountMinor: payment.amountMinor,
+        commissionAmountMinor: commissionMinor,
+        netAmountMinor: netMinor,
+        currencyCode: payment.currencyCode,
+        invoiceNumber: invoiceNumberFor(payment.providerReference),
+        description: `Booking payment ${booking?.bookingReference ?? payment.bookingId}`,
+      });
+    }
+    return confirmed;
+  });
 }

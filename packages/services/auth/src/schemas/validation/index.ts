@@ -1,4 +1,27 @@
 // Zod schemas that validate input at the boundary.
+import {
+  insertAccountsSchema,
+  insertAdminInvitesSchema,
+  insertAuthSessionsSchema,
+  insertAuthSettingsSchema,
+  insertEmployeeMembershipsSchema,
+  insertModeratorAssignmentsSchema,
+  insertOtpVerificationsSchema,
+  selectAccountsSchema,
+  selectAdminInvitesSchema,
+  selectAuthSessionsSchema,
+  selectAuthSettingsSchema,
+  selectEmployeeMembershipsSchema,
+  selectModeratorAssignmentsSchema,
+  selectOtpVerificationsSchema,
+  updateAccountsSchema,
+  updateAdminInvitesSchema,
+  updateAuthSessionsSchema,
+  updateAuthSettingsSchema as dbUpdateAuthSettingsSchema,
+  updateEmployeeMembershipsSchema,
+  updateModeratorAssignmentsSchema,
+  updateOtpVerificationsSchema,
+} from "@trips-app/db/zod";
 import { z } from "zod/v4";
 
 import {
@@ -8,8 +31,38 @@ import {
   OTP_CHANNELS,
   OTP_PURPOSES,
   PRIMARY_SIGN_IN_METHODS,
+  SUPPORTED_LOCALES,
   USER_ROLES,
 } from "../../model";
+
+// Table Base Schemas
+export const accountSelectSchema = selectAccountsSchema;
+export const accountInsertSchema = insertAccountsSchema;
+export const accountUpdateSchema = updateAccountsSchema;
+
+export const authSessionSelectSchema = selectAuthSessionsSchema;
+export const authSessionInsertSchema = insertAuthSessionsSchema;
+export const authSessionUpdateSchema = updateAuthSessionsSchema;
+
+export const otpVerificationSelectSchema = selectOtpVerificationsSchema;
+export const otpVerificationInsertSchema = insertOtpVerificationsSchema;
+export const otpVerificationUpdateSchema = updateOtpVerificationsSchema;
+
+export const adminInviteSelectSchema = selectAdminInvitesSchema;
+export const adminInviteInsertSchema = insertAdminInvitesSchema;
+export const adminInviteUpdateSchema = updateAdminInvitesSchema;
+
+export const employeeMembershipSelectSchema = selectEmployeeMembershipsSchema;
+export const employeeMembershipInsertSchema = insertEmployeeMembershipsSchema;
+export const employeeMembershipUpdateSchema = updateEmployeeMembershipsSchema;
+
+export const moderatorAssignmentSelectSchema = selectModeratorAssignmentsSchema;
+export const moderatorAssignmentInsertSchema = insertModeratorAssignmentsSchema;
+export const moderatorAssignmentUpdateSchema = updateModeratorAssignmentsSchema;
+
+export const authSettingSelectSchema = selectAuthSettingsSchema;
+export const authSettingInsertSchema = insertAuthSettingsSchema;
+export const authSettingUpdateSchema = dbUpdateAuthSettingsSchema;
 
 export const orgPermissionMatrixSchema = z.object({
   trips: z.enum(ORG_PERMISSION_LEVELS).default("none"),
@@ -31,40 +84,59 @@ export const getPlanCatalogSchema = z
   })
   .optional();
 
-export const registerTravelerSchema = z.object({
-  fullName: z.string().min(2).max(120),
-  email: z.email().optional().nullable(),
-  phone: z.string().min(8).max(20).optional().nullable(),
-  password: z.string().min(12).max(128).optional().nullable(),
-  preferredSignInMethod: z.enum(["otp", "password"]).default("otp"),
-  preferredLanguage: z.enum(["ar", "en"]).default("ar"),
-  surface: z.enum(CLIENT_SURFACES).default("web"),
-  enableParentRole: z.boolean().default(false),
-});
+export const registerTravelerSchema = insertAccountsSchema
+  .pick({
+    fullName: true,
+  })
+  .extend({
+    fullName: z.string().min(2).max(120),
+    email: z.email().optional().nullable(),
+    phone: z.string().min(8).max(20).optional().nullable(),
+    password: z.string().min(12).max(128).optional().nullable(),
+    preferredSignInMethod: z.enum(["otp", "password"]).default("otp"),
+    preferredLanguage: z.enum(SUPPORTED_LOCALES).default("ar"),
+    surface: z.enum(CLIENT_SURFACES).default("web"),
+    enableParentRole: z.boolean().default(false),
+  });
 
-export const registerSupplierAccountSchema = z.object({
-  role: z.enum(["platform_driver", "platform_photographer", "organization_owner"]),
-  fullName: z.string().min(2).max(120),
-  email: z.email(),
-  phone: z.string().min(8).max(20),
-  password: z.string().min(12).max(128),
-  preferredLanguage: z.enum(["ar", "en"]).default("ar"),
-  surface: z.enum(CLIENT_SURFACES).default("web"),
-});
+export const registerSupplierAccountSchema = insertAccountsSchema
+  .pick({
+    fullName: true,
+  })
+  .extend({
+    role: z.enum(["platform_driver", "platform_photographer", "organization_owner"]),
+    fullName: z.string().min(2).max(120),
+    email: z.email(),
+    phone: z.string().min(8).max(20),
+    password: z.string().min(12).max(128),
+    preferredLanguage: z.enum(SUPPORTED_LOCALES).default("ar"),
+    surface: z.enum(CLIENT_SURFACES).default("web"),
+  });
 
-export const verifyOtpSchema = z.object({
-  targetIdentifier: z.string().min(3),
-  purpose: z.enum(OTP_PURPOSES).default("registration"),
-  code: z.string().regex(/^\d{6}$/, "OTP code must be 6 digits"),
-  surface: z.enum(CLIENT_SURFACES).default("web"),
-});
+export const verifyOtpSchema = insertOtpVerificationsSchema
+  .pick({
+    targetIdentifier: true,
+    purpose: true,
+  })
+  .extend({
+    targetIdentifier: z.string().min(3),
+    purpose: z.enum(OTP_PURPOSES).default("registration"),
+    code: z.string().regex(/^\d{6}$/, "OTP code must be 6 digits"),
+    surface: z.enum(CLIENT_SURFACES).default("web"),
+  });
 
-export const resendOtpSchema = z.object({
-  targetIdentifier: z.string().min(3),
-  channel: z.enum(OTP_CHANNELS).optional(),
-  purpose: z.enum(OTP_PURPOSES).default("registration"),
-  useFallbackChannel: z.boolean().default(false),
-});
+export const resendOtpSchema = insertOtpVerificationsSchema
+  .pick({
+    targetIdentifier: true,
+    channel: true,
+    purpose: true,
+  })
+  .extend({
+    targetIdentifier: z.string().min(3),
+    channel: z.enum(OTP_CHANNELS).optional(),
+    purpose: z.enum(OTP_PURPOSES).default("registration"),
+    useFallbackChannel: z.boolean().default(false),
+  });
 
 export const signInSchema = z.object({
   identifier: z.string().min(3),
@@ -100,11 +172,16 @@ export const adminVerifyTotpSchema = z.object({
   totpCode: z.string().regex(/^\d{6}$/),
 });
 
-export const adminInviteStaffSchema = z.object({
-  email: z.email(),
-  fullName: z.string().min(2).max(120),
-  subRole: z.enum(ADMIN_SUB_ROLES),
-});
+export const adminInviteStaffSchema = insertAdminInvitesSchema
+  .pick({
+    fullName: true,
+    subRole: true,
+  })
+  .extend({
+    email: z.email(),
+    fullName: z.string().min(2).max(120),
+    subRole: z.enum(ADMIN_SUB_ROLES),
+  });
 
 export const adminAcceptInviteSchema = z.object({
   inviteToken: z.string().min(8),
@@ -134,21 +211,25 @@ export const staffVerifySecondFactorSchema = z.object({
   tenantId: z.uuid().optional(),
 });
 
-export const inviteEmployeeSchema = z.object({
-  email: z.email(),
-  phone: z.string().min(8).max(20).optional(),
-  roleTitle: z.string().min(2).max(100),
-  preset: z
-    .enum([
-      "operations_manager",
-      "trip_coordinator",
-      "accountant",
-      "fleet_supervisor",
-      "support_agent",
-    ])
-    .optional(),
-  permissions: orgPermissionMatrixSchema.optional(),
-});
+export const inviteEmployeeSchema = insertEmployeeMembershipsSchema
+  .pick({
+    roleTitle: true,
+  })
+  .extend({
+    email: z.email(),
+    phone: z.string().min(8).max(20).optional(),
+    roleTitle: z.string().min(2).max(100),
+    preset: z
+      .enum([
+        "operations_manager",
+        "trip_coordinator",
+        "accountant",
+        "fleet_supervisor",
+        "support_agent",
+      ])
+      .optional(),
+    permissions: orgPermissionMatrixSchema.optional(),
+  });
 
 export const acceptEmployeeInviteSchema = z.object({
   inviteToken: z.string().min(8),
@@ -227,17 +308,31 @@ export const restoreAccountFromDeletionSchema = z.object({
   otpCode: z.string().optional(),
 });
 
-export const updateAuthSettingsSchema = z.object({
-  otpExpirySeconds: z.number().int().min(60).max(900).optional(),
-  otpResendCooldownSeconds: z.number().int().min(30).max(300).optional(),
-  otpMaxWrongAttempts: z.number().int().min(3).max(10).optional(),
-  otpPauseDurationSeconds: z.number().int().min(300).max(3600).optional(),
-  maxFailedSignInAttempts: z.number().int().min(3).max(10).optional(),
-  lockoutDurationSeconds: z.number().int().min(300).max(3600).optional(),
-  passwordMinLength: z.number().int().min(12).max(64).optional(),
-  breachedPasswordCheckEnabled: z.boolean().optional(),
-  accessTokenTtlSeconds: z.number().int().min(300).max(3600).optional(),
-  webSessionMaxSeconds: z.number().int().min(3600).max(86400).optional(),
-  deletionGraceDays: z.number().int().min(7).max(90).optional(),
-  reason: z.string().min(5).max(500),
-});
+export const updateAuthSettingsSchema = dbUpdateAuthSettingsSchema
+  .pick({
+    otpExpirySeconds: true,
+    otpResendCooldownSeconds: true,
+    otpMaxWrongAttempts: true,
+    otpPauseDurationSeconds: true,
+    maxFailedSignInAttempts: true,
+    lockoutDurationSeconds: true,
+    passwordMinLength: true,
+    breachedPasswordCheckEnabled: true,
+    accessTokenTtlSeconds: true,
+    webSessionMaxSeconds: true,
+    deletionGraceDays: true,
+  })
+  .extend({
+    otpExpirySeconds: z.number().int().min(60).max(900).optional(),
+    otpResendCooldownSeconds: z.number().int().min(30).max(300).optional(),
+    otpMaxWrongAttempts: z.number().int().min(3).max(10).optional(),
+    otpPauseDurationSeconds: z.number().int().min(300).max(3600).optional(),
+    maxFailedSignInAttempts: z.number().int().min(3).max(10).optional(),
+    lockoutDurationSeconds: z.number().int().min(300).max(3600).optional(),
+    passwordMinLength: z.number().int().min(12).max(64).optional(),
+    breachedPasswordCheckEnabled: z.boolean().optional(),
+    accessTokenTtlSeconds: z.number().int().min(300).max(3600).optional(),
+    webSessionMaxSeconds: z.number().int().min(3600).max(86400).optional(),
+    deletionGraceDays: z.number().int().min(7).max(90).optional(),
+    reason: z.string().min(5).max(500),
+  });

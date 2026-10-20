@@ -1,10 +1,11 @@
 // Zod schemas that validate input at the boundary.
-// Derived from @trips-app/db/zod table definitions (see .claude/rules/drizzle-zod-schemas.md).
 import {
-  createInsertSchema,
-  createSelectSchema,
-  createUpdateSchema,
-  schema,
+  insertTripsSchema,
+  insertTripVehiclesSchema,
+  selectTripsSchema,
+  selectTripVehiclesSchema,
+  updateTripsSchema,
+  updateTripVehiclesSchema,
 } from "@trips-app/db/zod";
 import { z } from "zod/v4";
 
@@ -30,49 +31,97 @@ export const moneyInputSchema = z.object({
   currency: z.enum(SUPPORTED_CURRENCIES),
 });
 
-export const tripSelectSchema = createSelectSchema(schema.trips);
+export const tripInsertBaseSchema = insertTripsSchema
+  .pick({
+    titleAr: true,
+    titleEn: true,
+    descriptionAr: true,
+    descriptionEn: true,
+    categoryLookupCode: true,
+    language: true,
+    coverImageUrl: true,
+    galleryImageUrls: true,
+    timezone: true,
+    origin: true,
+    destinations: true,
+    seatAssignmentMode: true,
+    seatPriorityWindowHours: true,
+    basePriceMinor: true,
+    currencyCode: true,
+    publishMode: true,
+    targetedAudienceIds: true,
+    state: true,
+  })
+  .extend({
+    titleAr: z.string().trim().min(1).max(200),
+    titleEn: z.string().trim().min(1).max(200),
+    descriptionAr: z.string().trim().max(4000).optional(),
+    descriptionEn: z.string().trim().max(4000).optional(),
+    categoryLookupCode: z.string().trim().min(1).max(120),
+    language: z.enum(SUPPORTED_LOCALES).default("ar"),
+    coverImageUrl: z.string().trim().max(2048).nullable().optional(),
+    galleryImageUrls: z.array(z.string().trim().min(1).max(2048)).max(20).optional(),
+    timezone: z.string().trim().min(1).max(80).default("Africa/Cairo"),
+    origin: tripRoutePointSchema,
+    destinations: z.array(tripRoutePointSchema).min(1).max(20),
+    seatAssignmentMode: z.enum(TRIP_SEAT_ASSIGNMENT_MODES).default("organization_assigned"),
+    seatPriorityWindowHours: z.number().int().min(0).max(720).default(0),
+    basePriceMinor: z.number().int().min(0).max(100_000_000),
+    currencyCode: z.enum(SUPPORTED_CURRENCIES).default("EGP"),
+    publishMode: z.enum(TRIP_PUBLISH_MODES).default("draft"),
+    targetedAudienceIds: z.array(z.uuid()).max(500).default([]),
+    state: z.enum(TRIP_STATES).default("draft"),
+  });
 
-export const tripInsertBaseSchema = createInsertSchema(schema.trips, {
-  titleAr: (column) => column.trim().min(1).max(200),
-  titleEn: (column) => column.trim().min(1).max(200),
-  descriptionAr: (column) => column.trim().max(4000),
-  descriptionEn: (column) => column.trim().max(4000),
-  categoryLookupCode: (column) => column.trim().min(1).max(120),
-  language: () => z.enum(SUPPORTED_LOCALES),
-  coverImageUrl: (column) => column.trim().max(2048),
-  galleryImageUrls: () => z.array(z.string().trim().min(1).max(2048)).max(20),
-  timezone: (column) => column.trim().min(1).max(80),
-  origin: () => tripRoutePointSchema,
-  destinations: () => z.array(tripRoutePointSchema).min(1).max(20),
-  seatAssignmentMode: () => z.enum(TRIP_SEAT_ASSIGNMENT_MODES),
-  seatPriorityWindowHours: (column) => column.int().min(0).max(720),
-  basePriceMinor: (column) => column.int().min(0).max(100_000_000),
-  currencyCode: () => z.enum(SUPPORTED_CURRENCIES),
-  publishMode: () => z.enum(TRIP_PUBLISH_MODES),
-  targetedAudienceIds: () => z.array(z.uuid()).max(500),
-  state: () => z.enum(TRIP_STATES),
-});
+export const tripUpdateBaseSchema = updateTripsSchema
+  .pick({
+    titleAr: true,
+    titleEn: true,
+    descriptionAr: true,
+    descriptionEn: true,
+    categoryLookupCode: true,
+    language: true,
+    coverImageUrl: true,
+    galleryImageUrls: true,
+    timezone: true,
+    origin: true,
+    destinations: true,
+    seatAssignmentMode: true,
+    seatPriorityWindowHours: true,
+    basePriceMinor: true,
+    currencyCode: true,
+    publishMode: true,
+    targetedAudienceIds: true,
+    state: true,
+  })
+  .extend({
+    titleAr: z.string().trim().min(1).max(200).optional(),
+    titleEn: z.string().trim().min(1).max(200).optional(),
+    descriptionAr: z.string().trim().max(4000).optional(),
+    descriptionEn: z.string().trim().max(4000).optional(),
+    categoryLookupCode: z.string().trim().min(1).max(120).optional(),
+    language: z.enum(SUPPORTED_LOCALES).optional(),
+    coverImageUrl: z.string().trim().max(2048).nullable().optional(),
+    galleryImageUrls: z.array(z.string().trim().min(1).max(2048)).max(20).optional(),
+    timezone: z.string().trim().min(1).max(80).optional(),
+    origin: tripRoutePointSchema.optional(),
+    destinations: z.array(tripRoutePointSchema).min(1).max(20).optional(),
+    seatAssignmentMode: z.enum(TRIP_SEAT_ASSIGNMENT_MODES).optional(),
+    seatPriorityWindowHours: z.number().int().min(0).max(720).optional(),
+    basePriceMinor: z.number().int().min(0).max(100_000_000).optional(),
+    currencyCode: z.enum(SUPPORTED_CURRENCIES).optional(),
+    publishMode: z.enum(TRIP_PUBLISH_MODES).optional(),
+    targetedAudienceIds: z.array(z.uuid()).max(500).optional(),
+    state: z.enum(TRIP_STATES).optional(),
+  });
 
-export const tripUpdateBaseSchema = createUpdateSchema(schema.trips, {
-  titleAr: (column) => column.trim().min(1).max(200),
-  titleEn: (column) => column.trim().min(1).max(200),
-  descriptionAr: (column) => column.trim().max(4000),
-  descriptionEn: (column) => column.trim().max(4000),
-  categoryLookupCode: (column) => column.trim().min(1).max(120),
-  language: () => z.enum(SUPPORTED_LOCALES),
-  coverImageUrl: (column) => column.trim().max(2048),
-  galleryImageUrls: () => z.array(z.string().trim().min(1).max(2048)).max(20),
-  timezone: (column) => column.trim().min(1).max(80),
-  origin: () => tripRoutePointSchema,
-  destinations: () => z.array(tripRoutePointSchema).min(1).max(20),
-  seatAssignmentMode: () => z.enum(TRIP_SEAT_ASSIGNMENT_MODES),
-  seatPriorityWindowHours: (column) => column.int().min(0).max(720),
-  basePriceMinor: (column) => column.int().min(0).max(100_000_000),
-  currencyCode: () => z.enum(SUPPORTED_CURRENCIES),
-  publishMode: () => z.enum(TRIP_PUBLISH_MODES),
-  targetedAudienceIds: () => z.array(z.uuid()).max(500),
-  state: () => z.enum(TRIP_STATES),
-});
+export const tripSelectSchema = selectTripsSchema;
+export const tripInsertSchema = tripInsertBaseSchema;
+export const tripUpdateSchema = tripUpdateBaseSchema;
+
+export const tripVehicleSelectSchema = selectTripVehiclesSchema;
+export const tripVehicleInsertSchema = insertTripVehiclesSchema;
+export const tripVehicleUpdateSchema = updateTripVehiclesSchema;
 
 export const createDraftTripInputSchema = tripInsertBaseSchema
   .pick({
@@ -119,15 +168,25 @@ export const wizardStepVehiclesSchema = z.object({
   vehicleIds: z.array(z.uuid()).min(1).max(50),
 });
 
-export const tripVehicleStaffAssignmentSchema = z.object({
-  vehicleId: z.uuid(),
-  driverSource: z.enum(TRIP_STAFF_SOURCES),
-  driverAccountId: z.uuid().nullable().optional(),
-  moderatorSource: z.enum(TRIP_STAFF_SOURCES),
-  moderatorAccountId: z.uuid().nullable().optional(),
-  photographerSource: z.enum(TRIP_STAFF_SOURCES).optional(),
-  photographerAccountId: z.uuid().nullable().optional(),
-});
+export const tripVehicleStaffAssignmentSchema = insertTripVehiclesSchema
+  .pick({
+    vehicleId: true,
+    driverSource: true,
+    driverAccountId: true,
+    moderatorSource: true,
+    moderatorAccountId: true,
+    photographerSource: true,
+    photographerAccountId: true,
+  })
+  .extend({
+    vehicleId: z.uuid(),
+    driverSource: z.enum(TRIP_STAFF_SOURCES),
+    driverAccountId: z.uuid().nullable().optional(),
+    moderatorSource: z.enum(TRIP_STAFF_SOURCES),
+    moderatorAccountId: z.uuid().nullable().optional(),
+    photographerSource: z.enum(TRIP_STAFF_SOURCES).optional(),
+    photographerAccountId: z.uuid().nullable().optional(),
+  });
 
 export const wizardStepStaffingSchema = z.object({
   tripId: z.uuid(),

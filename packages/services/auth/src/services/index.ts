@@ -111,7 +111,14 @@ function summarizeDelivery(outcomes: readonly { status: InviteDelivery }[]): Inv
   return "skipped";
 }
 
-export function createAuthService(db: ServiceDatabase, deps: AuthServiceDeps = {}) {
+export function createAuthService(
+  dbOrDeps: ServiceDatabase | { db: ServiceDatabase },
+  deps: AuthServiceDeps = {},
+) {
+  const db =
+    typeof dbOrDeps === "object" && "db" in dbOrDeps && dbOrDeps.db
+      ? dbOrDeps.db
+      : (dbOrDeps as ServiceDatabase);
   const repo = createAuthRepository(db);
   const notifier = deps.notifier ?? SILENT_NOTIFIER;
   const webBaseUrl = (deps.webBaseUrl ?? DEFAULT_WEB_BASE_URL).replace(/\/$/, "");
@@ -188,16 +195,19 @@ export function createAuthService(db: ServiceDatabase, deps: AuthServiceDeps = {
     return { normalized: normalizePhoneE164(identifier), channel: "sms" };
   }
 
-  async function issueOtpCode(params: {
-    accountId?: string | null;
-    targetIdentifier: string;
-    channel: OtpChannel;
-    purpose: OtpPurpose;
-    authSettings: AuthSettingsData;
-  }): Promise<OtpDispatchResult> {
+  async function issueOtpCode(
+    params: {
+      accountId?: string | null;
+      targetIdentifier: string;
+      channel: OtpChannel;
+      purpose: OtpPurpose;
+      authSettings: AuthSettingsData;
+    },
+    targetRepo: ReturnType<typeof createAuthRepository> = repo,
+  ): Promise<OtpDispatchResult> {
     const code = generateNumericOtp(6);
     const expiresAt = new Date(Date.now() + params.authSettings.otpExpirySeconds * 1000);
-    const created = await repo.createOtpVerification({
+    const created = await targetRepo.createOtpVerification({
       accountId: params.accountId ?? null,
       targetIdentifier: params.targetIdentifier,
       channel: params.channel,
@@ -207,9 +217,9 @@ export function createAuthService(db: ServiceDatabase, deps: AuthServiceDeps = {
       deliveryStatus: "sent",
     });
 
-    const deliveryStatus = await deliverOtpCode(params, code);
+    const deliveryStatus = await deliverOtpCode(params, code, targetRepo);
     if (deliveryStatus === "failed_fallback_available") {
-      await repo.updateOtpVerification(created.id, { deliveryStatus });
+      await targetRepo.updateOtpVerification(created.id, { deliveryStatus });
     }
 
     return {
@@ -237,10 +247,11 @@ export function createAuthService(db: ServiceDatabase, deps: AuthServiceDeps = {
       authSettings: AuthSettingsData;
     },
     code: string,
+    targetRepo: ReturnType<typeof createAuthRepository> = repo,
   ): Promise<OtpDispatchResult["deliveryStatus"]> {
     if (!params.accountId) return "sent";
 
-    const account = await repo.findAccountById(params.accountId);
+    const account = await targetRepo.findAccountById(params.accountId);
     const recipient: NotificationRecipient = {
       accountId: params.accountId,
       name: account?.fullName,
@@ -485,71 +496,80 @@ export function createAuthService(db: ServiceDatabase, deps: AuthServiceDeps = {
         }
       }
 
-      const account = await repo.createAccount({
-        emailNormalized: emailNorm,
-        emailBlindIndex: emailNorm ? computeBlindIndex(emailNorm) : null,
-        emailEncrypted: emailNorm ? encryptField(emailNorm) : null,
-        phoneE164: phoneNorm,
-        phoneBlindIndex: phoneNorm ? computeBlindIndex(phoneNorm) : null,
-        phoneEncrypted: phoneNorm ? encryptField(phoneNorm) : null,
-        passwordHash,
-        passwordChangedAt: passwordHash ? new Date() : null,
-        preferredSignInMethod: input.preferredSignInMethod,
-        fullName: input.fullName,
-        preferredLanguage: input.preferredLanguage,
-        status: "pending_verification",
-      });
+      return db.transaction(async (tx) => {
+        const txRepo = createAuthRepository(tx as unknown as ServiceDatabase);
+        const account = await txRepo.createAccount({
+          emailNormalized: emailNorm,
+          emailBlindIndex: emailNorm ? computeBlindIndex(emailNorm) : null,
+          emailEncrypted: emailNorm ? encryptField(emailNorm) : null,
+          phoneE164: phoneNorm,
+          phoneBlindIndex: phoneNorm ? computeBlindIndex(phoneNorm) : null,
+          phoneEncrypted: phoneNorm ? encryptField(phoneNorm) : null,
+          passwordHash,
+          passwordChangedAt: passwordHash ? new Date() : null,
+          preferredSignInMethod: input.preferredSignInMethod,
+          fullName: input.fullName,
+          preferredLanguage: input.preferredLanguage,
+          status: "pending_verification",
+        });
 
-      await repo.createAccountRole({
-        accountId: account.id,
-        role: "traveler",
-        planTier: "free",
-        status: "active",
-        approvedAt: new Date(),
-      });
-
-      if (input.enableParentRole) {
-        await repo.createAccountRole({
+        await txRepo.createAccountRole({
           accountId: account.id,
-          role: "parent",
+          role: "traveler",
           planTier: "free",
           status: "active",
           approvedAt: new Date(),
         });
-      }
 
-      const otpDispatches: OtpDispatchResult[] = [];
-      if (phoneNorm) {
-        otpDispatches.push(
-          await issueOtpCode({
+        if (input.enableParentRole) {
+          await txRepo.createAccountRole({
             accountId: account.id,
-            targetIdentifier: phoneNorm,
-            channel: "sms",
-            purpose: "registration",
-            authSettings: settings,
-          }),
-        );
-      }
-      if (emailNorm) {
-        otpDispatches.push(
-          await issueOtpCode({
-            accountId: account.id,
-            targetIdentifier: emailNorm,
-            channel: "email",
-            purpose: "registration",
-            authSettings: settings,
-          }),
-        );
-      }
+            role: "parent",
+            planTier: "free",
+            status: "active",
+            approvedAt: new Date(),
+          });
+        }
 
-      return {
-        accountId: account.id,
-        status: account.status,
-        roles: input.enableParentRole ? ["traveler", "parent"] : ["traveler"],
-        defaultPlanTier: "free",
-        verificationRequired: "either_email_or_phone" as const,
-        otpDispatches,
-      };
+        const otpDispatches: OtpDispatchResult[] = [];
+        if (phoneNorm) {
+          otpDispatches.push(
+            await issueOtpCode(
+              {
+                accountId: account.id,
+                targetIdentifier: phoneNorm,
+                channel: "sms",
+                purpose: "registration",
+                authSettings: settings,
+              },
+              txRepo,
+            ),
+          );
+        }
+        if (emailNorm) {
+          otpDispatches.push(
+            await issueOtpCode(
+              {
+                accountId: account.id,
+                targetIdentifier: emailNorm,
+                channel: "email",
+                purpose: "registration",
+                authSettings: settings,
+              },
+              txRepo,
+            ),
+          );
+        }
+
+        return {
+          accountId: account.id,
+          status: account.status,
+          roles: input.enableParentRole ? ["traveler", "parent"] : ["traveler"],
+          defaultPlanTier: "free",
+          verificationRequired: "either_email_or_phone" as const,
+          otpDispatches,
+        };
+      });
     },
 
     async registerSupplierAccount(input: RegisterSupplierAccountInput, _meta?: AuthRequestMeta) {
@@ -579,8 +599,10 @@ export function createAuthService(db: ServiceDatabase, deps: AuthServiceDeps = {
       const emailNorm = normalizeEmail(input.email);
       const phoneNorm = normalizePhoneE164(input.phone);
 
-      const existingByEmail = await repo.findAccountByEmailBlindIndex(computeBlindIndex(emailNorm));
-      const existingByPhone = await repo.findAccountByPhoneBlindIndex(computeBlindIndex(phoneNorm));
+      const [existingByEmail, existingByPhone] = await Promise.all([
+        repo.findAccountByEmailBlindIndex(computeBlindIndex(emailNorm)),
+        repo.findAccountByPhoneBlindIndex(computeBlindIndex(phoneNorm)),
+      ]);
 
       if (existingByEmail && existingByPhone && existingByEmail.id !== existingByPhone.id) {
         throw new AuthServiceError(
@@ -589,72 +611,81 @@ export function createAuthService(db: ServiceDatabase, deps: AuthServiceDeps = {
         );
       }
 
-      let account = existingByEmail ?? existingByPhone;
-      const passwordHash = await hashPassword(input.password);
+      return db.transaction(async (tx) => {
+        const txRepo = createAuthRepository(tx as unknown as ServiceDatabase);
+        let account = existingByEmail ?? existingByPhone;
+        const passwordHash = await hashPassword(input.password);
 
-      if (!account) {
-        account = await repo.createAccount({
-          emailNormalized: emailNorm,
-          emailBlindIndex: computeBlindIndex(emailNorm),
-          emailEncrypted: encryptField(emailNorm),
-          phoneE164: phoneNorm,
-          phoneBlindIndex: computeBlindIndex(phoneNorm),
-          phoneEncrypted: encryptField(phoneNorm),
-          passwordHash,
-          passwordChangedAt: new Date(),
-          preferredSignInMethod: "password",
-          fullName: input.fullName,
-          preferredLanguage: input.preferredLanguage,
-          status: "pending_verification",
-        });
+        if (!account) {
+          account = await txRepo.createAccount({
+            emailNormalized: emailNorm,
+            emailBlindIndex: computeBlindIndex(emailNorm),
+            emailEncrypted: encryptField(emailNorm),
+            phoneE164: phoneNorm,
+            phoneBlindIndex: computeBlindIndex(phoneNorm),
+            phoneEncrypted: encryptField(phoneNorm),
+            passwordHash,
+            passwordChangedAt: new Date(),
+            preferredSignInMethod: "password",
+            fullName: input.fullName,
+            preferredLanguage: input.preferredLanguage,
+            status: "pending_verification",
+          });
 
-        // Per BRL-06, platform_driver and platform_photographer also retain a Traveler profile
-        if (input.role === "platform_driver" || input.role === "platform_photographer") {
-          await repo.createAccountRole({
+          // Per BRL-06, platform_driver and platform_photographer also retain a Traveler profile
+          if (input.role === "platform_driver" || input.role === "platform_photographer") {
+            await txRepo.createAccountRole({
+              accountId: account.id,
+              role: "traveler",
+              planTier: "free",
+              status: "active",
+              approvedAt: new Date(),
+            });
+          }
+        }
+
+        const existingRoles = await txRepo.listRolesForAccount(account.id);
+        if (!existingRoles.some((r) => r.role === input.role)) {
+          const defaultPlan = ROLE_AUTH_DEFAULTS[input.role].defaultPlanTier;
+          await txRepo.createAccountRole({
             accountId: account.id,
-            role: "traveler",
-            planTier: "free",
-            status: "active",
-            approvedAt: new Date(),
+            role: input.role,
+            planTier: defaultPlan,
+            status: "pending_approval",
           });
         }
-      }
 
-      const existingRoles = await repo.listRolesForAccount(account.id);
-      if (!existingRoles.some((r) => r.role === input.role)) {
-        const defaultPlan = ROLE_AUTH_DEFAULTS[input.role].defaultPlanTier;
-        await repo.createAccountRole({
+        const otpDispatches: OtpDispatchResult[] = [
+          await issueOtpCode(
+            {
+              accountId: account.id,
+              targetIdentifier: emailNorm,
+              channel: "email",
+              purpose: "registration",
+              authSettings: settings,
+            },
+            txRepo,
+          ),
+          await issueOtpCode(
+            {
+              accountId: account.id,
+              targetIdentifier: phoneNorm,
+              channel: "sms",
+              purpose: "registration",
+              authSettings: settings,
+            },
+            txRepo,
+          ),
+        ];
+
+        return {
           accountId: account.id,
           role: input.role,
-          planTier: defaultPlan,
-          status: "pending_approval",
-        });
-      }
-
-      const otpDispatches: OtpDispatchResult[] = [
-        await issueOtpCode({
-          accountId: account.id,
-          targetIdentifier: emailNorm,
-          channel: "email",
-          purpose: "registration",
-          authSettings: settings,
-        }),
-        await issueOtpCode({
-          accountId: account.id,
-          targetIdentifier: phoneNorm,
-          channel: "sms",
-          purpose: "registration",
-          authSettings: settings,
-        }),
-      ];
-
-      return {
-        accountId: account.id,
-        role: input.role,
-        status: account.status,
-        verificationRequired: "both_email_and_phone" as const,
-        otpDispatches,
-      };
+          status: account.status,
+          verificationRequired: "both_email_and_phone" as const,
+          otpDispatches,
+        };
+      });
     },
 
     async verifyOtp(input: VerifyOtpInput, meta?: AuthRequestMeta) {
@@ -1278,50 +1309,53 @@ export function createAuthService(db: ServiceDatabase, deps: AuthServiceDeps = {
       const phoneNorm = normalizePhoneE164(input.phone);
       const passwordHash = await hashPassword(input.password);
 
-      const account = await repo.createAccount({
-        emailNormalized: invite.emailNormalized,
-        emailBlindIndex: computeBlindIndex(invite.emailNormalized),
-        emailEncrypted: encryptField(invite.emailNormalized),
-        phoneE164: phoneNorm,
-        phoneBlindIndex: computeBlindIndex(phoneNorm),
-        phoneEncrypted: encryptField(phoneNorm),
-        emailVerifiedAt: now,
-        phoneVerifiedAt: now,
-        passwordHash,
-        passwordChangedAt: now,
-        preferredSignInMethod: "password",
-        fullName: invite.fullName,
-        preferredLanguage: "ar",
-        status: "active",
+      return db.transaction(async (tx) => {
+        const txRepo = createAuthRepository(tx as unknown as ServiceDatabase);
+        const account = await txRepo.createAccount({
+          emailNormalized: invite.emailNormalized,
+          emailBlindIndex: computeBlindIndex(invite.emailNormalized),
+          emailEncrypted: encryptField(invite.emailNormalized),
+          phoneE164: phoneNorm,
+          phoneBlindIndex: computeBlindIndex(phoneNorm),
+          phoneEncrypted: encryptField(phoneNorm),
+          emailVerifiedAt: now,
+          phoneVerifiedAt: now,
+          passwordHash,
+          passwordChangedAt: now,
+          preferredSignInMethod: "password",
+          fullName: invite.fullName,
+          preferredLanguage: "ar",
+          status: "active",
+        });
+
+        await txRepo.createAccountRole({
+          accountId: account.id,
+          role: "admin",
+          adminSubRole: invite.subRole,
+          status: "active",
+          approvedAt: now,
+        });
+
+        await txRepo.markAdminInviteAccepted(invite.id, account.id);
+
+        await txRepo.writeAuditLog({
+          actorAccountId: account.id,
+          actorRole: "admin",
+          action: "admin.invite.accepted",
+          targetEntityType: "account",
+          targetEntityId: account.id,
+          afterState: { subRole: invite.subRole },
+          ipAddress: meta?.ipAddress,
+          requestId: meta?.requestId,
+        });
+
+        return {
+          accountId: account.id,
+          email: invite.emailNormalized,
+          subRole: invite.subRole,
+          nextStep: "admin_sign_in_and_enroll_totp" as const,
+        };
       });
-
-      await repo.createAccountRole({
-        accountId: account.id,
-        role: "admin",
-        adminSubRole: invite.subRole,
-        status: "active",
-        approvedAt: now,
-      });
-
-      await repo.markAdminInviteAccepted(invite.id, account.id);
-
-      await repo.writeAuditLog({
-        actorAccountId: account.id,
-        actorRole: "admin",
-        action: "admin.invite.accepted",
-        targetEntityType: "account",
-        targetEntityId: account.id,
-        afterState: { subRole: invite.subRole },
-        ipAddress: meta?.ipAddress,
-        requestId: meta?.requestId,
-      });
-
-      return {
-        accountId: account.id,
-        email: invite.emailNormalized,
-        subRole: invite.subRole,
-        nextStep: "admin_sign_in_and_enroll_totp" as const,
-      };
     },
 
     async adminResetTotp(
@@ -1750,56 +1784,59 @@ export function createAuthService(db: ServiceDatabase, deps: AuthServiceDeps = {
       const phoneNorm = normalizePhoneE164(input.phone);
       const passwordHash = await hashPassword(input.password);
 
-      let account = await repo.findAccountByEmailBlindIndex(computeBlindIndex(emailNorm));
-      if (!account) {
-        account = await repo.createAccount({
-          emailNormalized: emailNorm,
-          emailBlindIndex: computeBlindIndex(emailNorm),
-          emailEncrypted: encryptField(emailNorm),
-          phoneE164: phoneNorm,
-          phoneBlindIndex: computeBlindIndex(phoneNorm),
-          phoneEncrypted: encryptField(phoneNorm),
-          emailVerifiedAt: now,
-          phoneVerifiedAt: now,
-          passwordHash,
-          passwordChangedAt: now,
-          preferredSignInMethod: "password",
-          fullName: input.fullName,
-          preferredLanguage: "ar",
+      return db.transaction(async (tx) => {
+        const txRepo = createAuthRepository(tx as unknown as ServiceDatabase);
+        let account = await txRepo.findAccountByEmailBlindIndex(computeBlindIndex(emailNorm));
+        if (!account) {
+          account = await txRepo.createAccount({
+            emailNormalized: emailNorm,
+            emailBlindIndex: computeBlindIndex(emailNorm),
+            emailEncrypted: encryptField(emailNorm),
+            phoneE164: phoneNorm,
+            phoneBlindIndex: computeBlindIndex(phoneNorm),
+            phoneEncrypted: encryptField(phoneNorm),
+            emailVerifiedAt: now,
+            phoneVerifiedAt: now,
+            passwordHash,
+            passwordChangedAt: now,
+            preferredSignInMethod: "password",
+            fullName: input.fullName,
+            preferredLanguage: "ar",
+            status: "active",
+          });
+        }
+
+        await txRepo.createAccountRole({
+          accountId: account.id,
+          role: "organization_employee",
+          tenantId: invite.tenantId,
+          status: "active",
+          approvedAt: now,
+        });
+
+        await txRepo.updateEmployeeMembership(invite.id, {
+          accountId: account.id,
           status: "active",
         });
-      }
 
-      await repo.createAccountRole({
-        accountId: account.id,
-        role: "organization_employee",
-        tenantId: invite.tenantId,
-        status: "active",
-        approvedAt: now,
+        await txRepo.writeAuditLog({
+          actorAccountId: account.id,
+          actorRole: "organization_employee",
+          tenantId: invite.tenantId,
+          action: "organization.employee.invite_accepted",
+          targetEntityType: "employee_membership",
+          targetEntityId: invite.id,
+          ipAddress: meta?.ipAddress,
+          requestId: meta?.requestId,
+        });
+
+        return {
+          accountId: account.id,
+          tenantId: invite.tenantId,
+          email: emailNorm,
+          nextStep: "staff_sign_in_and_setup_2fa" as const,
+        };
       });
-
-      await repo.updateEmployeeMembership(invite.id, {
-        accountId: account.id,
-        status: "active",
-      });
-
-      await repo.writeAuditLog({
-        actorAccountId: account.id,
-        actorRole: "organization_employee",
-        tenantId: invite.tenantId,
-        action: "organization.employee.invite_accepted",
-        targetEntityType: "employee_membership",
-        targetEntityId: invite.id,
-        ipAddress: meta?.ipAddress,
-        requestId: meta?.requestId,
-      });
-
-      return {
-        accountId: account.id,
-        tenantId: invite.tenantId,
-        email: emailNorm,
-        nextStep: "staff_sign_in_and_setup_2fa" as const,
-      };
     },
 
     // 6. Vehicle Moderator Sign-In (SCR-PUB-19, FR-MOD-05, D-107)
