@@ -10,6 +10,7 @@ import { ORGANIZATION_SCREENS } from "@/screens/organization";
 import { PUBLIC_SCREENS } from "@/screens/public";
 import { SHARED_SCREENS } from "@/screens/shared";
 import { TRAVELER_SCREENS } from "@/screens/traveler";
+import { STUDIO_SCREENS } from "@/screens/studio";
 import { ALL_SCREENS } from "@/screens/registry";
 import { orpc } from "@/utils/orpc";
 
@@ -47,7 +48,7 @@ describe("Milestone 6: Global AST Barrier & Source Purity Audit", () => {
         actor: token
           ? {
               accountId: "acc-user-1",
-              email: "user@example.com",
+              email: "user@trips-enjoy.com",
               activeRole: "admin",
               role: "admin",
             }
@@ -147,23 +148,23 @@ describe("Milestone 6: Global AST Barrier & Source Purity Audit", () => {
     });
   });
 
-  describe("Screen Registry Completeness: 131 Screens with Typed Loaders", () => {
-    test("ADMIN_SCREENS contains 33 registered screens and all define typed loaders", () => {
-      expect(ADMIN_SCREENS.length).toBe(33);
+  describe("Screen Registry Completeness: 172 Screens with Typed Loaders", () => {
+    test("ADMIN_SCREENS contains 46 registered screens and all define typed loaders", () => {
+      expect(ADMIN_SCREENS.length).toBe(46);
       for (const screen of ADMIN_SCREENS) {
         expect(typeof screen.loader).toBe("function");
       }
     });
 
-    test("ORGANIZATION_SCREENS contains 42 registered screens and all define typed loaders", () => {
-      expect(ORGANIZATION_SCREENS.length).toBe(42);
+    test("ORGANIZATION_SCREENS contains 70 registered screens and all define typed loaders", () => {
+      expect(ORGANIZATION_SCREENS.length).toBe(70);
       for (const screen of ORGANIZATION_SCREENS) {
         expect(typeof screen.loader).toBe("function");
       }
     });
 
-    test("PUBLIC_SCREENS contains 19 registered screens and all define typed loaders", () => {
-      expect(PUBLIC_SCREENS.length).toBe(19);
+    test("PUBLIC_SCREENS contains 22 registered screens and all define typed loaders", () => {
+      expect(PUBLIC_SCREENS.length).toBe(22);
       for (const screen of PUBLIC_SCREENS) {
         expect(typeof screen.loader).toBe("function");
       }
@@ -183,8 +184,15 @@ describe("Milestone 6: Global AST Barrier & Source Purity Audit", () => {
       }
     });
 
-    test("ALL_SCREENS contains all 131 screens and every single screen entry defines a typed loader", () => {
-      expect(ALL_SCREENS.length).toBe(131);
+    test("STUDIO_SCREENS contains 12 registered screens (11 routed + watermark settings) and all define typed loaders", () => {
+      expect(STUDIO_SCREENS.length).toBe(12);
+      for (const screen of STUDIO_SCREENS) {
+        expect(typeof screen.loader).toBe("function");
+      }
+    });
+
+    test("ALL_SCREENS contains all 187 screens and every single screen entry defines a typed loader", () => {
+      expect(ALL_SCREENS.length).toBe(187);
       for (const screen of ALL_SCREENS) {
         expect(typeof screen.loader).toBe("function");
       }
@@ -192,7 +200,7 @@ describe("Milestone 6: Global AST Barrier & Source Purity Audit", () => {
   });
 
   describe("SSR Loader Safety: Unauthenticated Guard Verification", () => {
-    test("All 33 admin screen loaders enforce unauthenticated SSR safety guards", async () => {
+    test("All 46 admin screen loaders enforce unauthenticated SSR safety guards", async () => {
       const ensureSpy = mock(async () => ({}));
       const prefetchSpy = mock(async () => {});
       const mockQueryClient = {
@@ -217,7 +225,7 @@ describe("Milestone 6: Global AST Barrier & Source Purity Audit", () => {
       expect(prefetchSpy).not.toHaveBeenCalled();
     });
 
-    test("All 42 organization screen loaders enforce unauthenticated SSR safety guards", async () => {
+    test("All 70 organization screen loaders enforce unauthenticated SSR safety guards", async () => {
       const ensureSpy = mock(async () => ({}));
       const prefetchSpy = mock(async () => {});
       const mockQueryClient = {
@@ -238,6 +246,31 @@ describe("Milestone 6: Global AST Barrier & Source Purity Audit", () => {
       }
 
       // Zero RPC queries may leak on unauthenticated SSR across organization screens
+      expect(ensureSpy).not.toHaveBeenCalled();
+      expect(prefetchSpy).not.toHaveBeenCalled();
+    });
+
+    test("All 12 studio screen loaders enforce unauthenticated SSR safety guards", async () => {
+      const ensureSpy = mock(async () => ({}));
+      const prefetchSpy = mock(async () => {});
+      const mockQueryClient = {
+        ensureQueryData: ensureSpy,
+        prefetchQuery: prefetchSpy,
+      } as unknown as QueryClient;
+
+      const unauthAuth = createMockAuth(null);
+
+      for (const screen of STUDIO_SCREENS) {
+        await screen.loader!({
+          queryClient: mockQueryClient,
+          orpc,
+          auth: unauthAuth,
+          params: {},
+          search: {},
+        });
+      }
+
+      // Zero RPC queries may leak on unauthenticated SSR across studio screens
       expect(ensureSpy).not.toHaveBeenCalled();
       expect(prefetchSpy).not.toHaveBeenCalled();
     });
@@ -324,7 +357,7 @@ describe("Milestone 6: Global AST Barrier & Source Purity Audit", () => {
   });
 
   describe("SSR Loader Resilience: Graceful Handling of Exceptions", () => {
-    test("All 131 screen loaders absorb server errors gracefully without unhandled rejections", async () => {
+    test("All 187 screen loaders absorb server errors gracefully without unhandled rejections", async () => {
       const rejectingQueryClient = {
         ensureQueryData: mock(async () => {
           throw new Error("RPC Network Timeout / 500 Internal Error");

@@ -7,9 +7,10 @@ import { authController } from "@/auth/instance";
 import type { SessionController } from "@/auth/session-controller";
 import { ADMIN_SCREENS_PART_1 } from "@/screens/admin/entries-part-1";
 import { ADMIN_SCREENS_PART_2 } from "@/screens/admin/entries-part-2";
+import { ADMIN_SCREENS_PART_3 } from "@/screens/admin/entries-part-3";
 import { createQueryClient, orpc } from "@/utils/orpc";
 
-describe("Milestone 4: Admin Surface Screens Migration (SCR-ADM-01..33)", () => {
+describe("Milestone 4: Admin Surface Screens Migration (SCR-ADM-01..46)", () => {
   function createMockAuth(token: string | null = null): SessionController {
     return {
       ...authController,
@@ -20,7 +21,7 @@ describe("Milestone 4: Admin Surface Screens Migration (SCR-ADM-01..33)", () => 
         actor: token
           ? {
               accountId: "acc-admin-1",
-              email: "admin@example.com",
+              email: "admin@trips-enjoy.com",
               activeRole: "admin",
               role: "admin",
             }
@@ -82,20 +83,29 @@ describe("Milestone 4: Admin Surface Screens Migration (SCR-ADM-01..33)", () => 
   });
 
   describe("Screen Registry & Loaders Definition", () => {
-    test("Registry contains all 33 admin screens (Part 1: 16, Part 2: 17)", () => {
+    test("Registry contains all 46 admin screens (Part 1: 16, Part 2: 17, Part 3: 13)", () => {
       expect(ADMIN_SCREENS_PART_1.length).toBe(16);
       expect(ADMIN_SCREENS_PART_2.length).toBe(17);
-      const allScreens = [...ADMIN_SCREENS_PART_1, ...ADMIN_SCREENS_PART_2];
-      expect(allScreens.length).toBe(33);
+      expect(ADMIN_SCREENS_PART_3.length).toBe(13);
+      const allScreens = [
+        ...ADMIN_SCREENS_PART_1,
+        ...ADMIN_SCREENS_PART_2,
+        ...ADMIN_SCREENS_PART_3,
+      ];
+      expect(allScreens.length).toBe(46);
 
-      for (let i = 1; i <= 33; i++) {
+      for (let i = 1; i <= 46; i++) {
         const expectedId = `SCR-ADM-${String(i).padStart(2, "0")}`;
         expect(allScreens.some((s) => s.id === expectedId)).toBe(true);
       }
     });
 
     test("Every admin screen defines a typed loader function", () => {
-      const allScreens = [...ADMIN_SCREENS_PART_1, ...ADMIN_SCREENS_PART_2];
+      const allScreens = [
+        ...ADMIN_SCREENS_PART_1,
+        ...ADMIN_SCREENS_PART_2,
+        ...ADMIN_SCREENS_PART_3,
+      ];
       for (const screen of allScreens) {
         expect(typeof screen.loader).toBe("function");
       }
@@ -103,7 +113,7 @@ describe("Milestone 4: Admin Surface Screens Migration (SCR-ADM-01..33)", () => 
   });
 
   describe("SSR Loader Safety: Unauthenticated Requests", () => {
-    test("All 33 admin loaders skip RPC prefetch on unauthenticated SSR", async () => {
+    test("All 46 admin loaders skip RPC prefetch on unauthenticated SSR", async () => {
       const ensureSpy = mock(async () => ({}));
       const mockQueryClient = {
         ensureQueryData: ensureSpy,
@@ -111,7 +121,11 @@ describe("Milestone 4: Admin Surface Screens Migration (SCR-ADM-01..33)", () => 
       } as unknown as QueryClient;
 
       const unauthAuth = createMockAuth(null);
-      const allScreens = [...ADMIN_SCREENS_PART_1, ...ADMIN_SCREENS_PART_2];
+      const allScreens = [
+        ...ADMIN_SCREENS_PART_1,
+        ...ADMIN_SCREENS_PART_2,
+        ...ADMIN_SCREENS_PART_3,
+      ];
 
       for (const screen of allScreens) {
         await screen.loader!({
@@ -197,7 +211,11 @@ describe("Milestone 4: Admin Surface Screens Migration (SCR-ADM-01..33)", () => 
       } as unknown as QueryClient;
 
       const auth = createMockAuth("admin-access-token");
-      const allScreens = [...ADMIN_SCREENS_PART_1, ...ADMIN_SCREENS_PART_2];
+      const allScreens = [
+        ...ADMIN_SCREENS_PART_1,
+        ...ADMIN_SCREENS_PART_2,
+        ...ADMIN_SCREENS_PART_3,
+      ];
 
       for (const screen of allScreens) {
         await expect(

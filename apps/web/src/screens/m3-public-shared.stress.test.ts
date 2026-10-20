@@ -19,7 +19,12 @@ describe("Empirical Challenger: Milestone 3 Public & Shared Migration Stress Tes
       getSnapshot: () => ({
         status: token ? "authenticated" : "anonymous",
         actor: token
-          ? { accountId: "acc-123", email: "test@example.com", activeRole: "admin", role: "admin" }
+          ? {
+              accountId: "acc-123",
+              email: "test@trips-enjoy.com",
+              activeRole: "admin",
+              role: "admin",
+            }
           : null,
         record: null,
       }),
@@ -319,18 +324,18 @@ describe("Empirical Challenger: Milestone 3 Public & Shared Migration Stress Tes
 
     test("verificationTargets keeps the server order and falls back to email then phone", () => {
       // Arrange
-      const account = { email: "owner@example.test", phone: "+201000000000" };
+      const account = { email: "owner@trips-enjoy.com", phone: "+201000000000" };
 
       // Act
       const fromServer = verificationTargets(
-        [{ targetIdentifier: "owner@example.test" }, { targetIdentifier: "+201000000000" }],
+        [{ targetIdentifier: "owner@trips-enjoy.com" }, { targetIdentifier: "+201000000000" }],
         account,
       );
       const fallback = verificationTargets(undefined, account);
 
       // Assert
-      expect(fromServer).toEqual(["owner@example.test", "+201000000000"]);
-      expect(fallback).toEqual(["owner@example.test", "+201000000000"]);
+      expect(fromServer).toEqual(["owner@trips-enjoy.com", "+201000000000"]);
+      expect(fallback).toEqual(["owner@trips-enjoy.com", "+201000000000"]);
     });
 
     test("date helpers turn a date input into ISO and reject expired or malformed dates", () => {

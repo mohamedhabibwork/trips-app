@@ -7,9 +7,11 @@ import { authController } from "@/auth/instance";
 import type { SessionController } from "@/auth/session-controller";
 import { ORGANIZATION_SCREENS_PART_A } from "@/screens/organization/entries-part-1";
 import { ORGANIZATION_SCREENS_PART_B } from "@/screens/organization/entries-part-2";
+import { ORGANIZATION_SCREENS_PART_C } from "@/screens/organization/entries-part-3";
+import { ORGANIZATION_SCREENS_PART_D } from "@/screens/organization/entries-part-4";
 import { createQueryClient, orpc } from "@/utils/orpc";
 
-describe("Milestone 5: Organization Surface Screens Migration (SCR-ORG-01..42)", () => {
+describe("Milestone 5: Organization Surface Screens Migration (SCR-ORG-01..42 plus the second design batch)", () => {
   function createMockAuth(token: string | null = null): SessionController {
     return {
       ...authController,
@@ -20,7 +22,7 @@ describe("Milestone 5: Organization Surface Screens Migration (SCR-ORG-01..42)",
         actor: token
           ? {
               accountId: "acc-org-owner",
-              email: "owner@organization.com",
+              email: "owner@trips-enjoy.com",
               activeRole: "organization",
               role: "organization",
               activeTenantId: "tenant-org-1",
@@ -83,11 +85,16 @@ describe("Milestone 5: Organization Surface Screens Migration (SCR-ORG-01..42)",
   });
 
   describe("Screen Registry & Loaders Definition", () => {
-    test("Registry contains all 42 organization screens (Part A: 21, Part B: 21)", () => {
+    test("Registry contains all 70 organization screens (Part A: 21, Part B: 21, Part C: 14, Part D: 14)", () => {
       expect(ORGANIZATION_SCREENS_PART_A.length).toBe(21);
       expect(ORGANIZATION_SCREENS_PART_B.length).toBe(21);
-      const allScreens = [...ORGANIZATION_SCREENS_PART_A, ...ORGANIZATION_SCREENS_PART_B];
-      expect(allScreens.length).toBe(42);
+      const allScreens = [
+        ...ORGANIZATION_SCREENS_PART_A,
+        ...ORGANIZATION_SCREENS_PART_B,
+        ...ORGANIZATION_SCREENS_PART_C,
+        ...ORGANIZATION_SCREENS_PART_D,
+      ];
+      expect(allScreens.length).toBe(70);
 
       for (let i = 1; i <= 42; i++) {
         const expectedId = `SCR-ORG-${String(i).padStart(2, "0")}`;
@@ -96,7 +103,12 @@ describe("Milestone 5: Organization Surface Screens Migration (SCR-ORG-01..42)",
     });
 
     test("Every organization screen defines a typed loader function", () => {
-      const allScreens = [...ORGANIZATION_SCREENS_PART_A, ...ORGANIZATION_SCREENS_PART_B];
+      const allScreens = [
+        ...ORGANIZATION_SCREENS_PART_A,
+        ...ORGANIZATION_SCREENS_PART_B,
+        ...ORGANIZATION_SCREENS_PART_C,
+        ...ORGANIZATION_SCREENS_PART_D,
+      ];
       for (const screen of allScreens) {
         expect(typeof screen.loader).toBe("function");
       }
@@ -104,7 +116,7 @@ describe("Milestone 5: Organization Surface Screens Migration (SCR-ORG-01..42)",
   });
 
   describe("SSR Loader Safety: Unauthenticated Requests", () => {
-    test("All 42 organization loaders skip RPC prefetch on unauthenticated SSR", async () => {
+    test("All 70 organization loaders skip RPC prefetch on unauthenticated SSR", async () => {
       const ensureSpy = mock(async () => ({}));
       const prefetchSpy = mock(async () => {});
       const mockQueryClient = {
@@ -113,7 +125,12 @@ describe("Milestone 5: Organization Surface Screens Migration (SCR-ORG-01..42)",
       } as unknown as QueryClient;
 
       const unauthAuth = createMockAuth(null);
-      const allScreens = [...ORGANIZATION_SCREENS_PART_A, ...ORGANIZATION_SCREENS_PART_B];
+      const allScreens = [
+        ...ORGANIZATION_SCREENS_PART_A,
+        ...ORGANIZATION_SCREENS_PART_B,
+        ...ORGANIZATION_SCREENS_PART_C,
+        ...ORGANIZATION_SCREENS_PART_D,
+      ];
 
       for (const screen of allScreens) {
         await screen.loader!({
@@ -208,7 +225,12 @@ describe("Milestone 5: Organization Surface Screens Migration (SCR-ORG-01..42)",
       } as unknown as QueryClient;
 
       const auth = createMockAuth("org-access-token");
-      const allScreens = [...ORGANIZATION_SCREENS_PART_A, ...ORGANIZATION_SCREENS_PART_B];
+      const allScreens = [
+        ...ORGANIZATION_SCREENS_PART_A,
+        ...ORGANIZATION_SCREENS_PART_B,
+        ...ORGANIZATION_SCREENS_PART_C,
+        ...ORGANIZATION_SCREENS_PART_D,
+      ];
 
       for (const screen of allScreens) {
         await expect(

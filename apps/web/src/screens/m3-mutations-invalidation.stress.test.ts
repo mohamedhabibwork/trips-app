@@ -16,7 +16,7 @@ describe("Empirical Challenger: M3 Mutation Options & Query Key Invalidation Str
         actor: token
           ? {
               accountId: "acc-user-1",
-              email: "user@example.com",
+              email: "user@trips-enjoy.com",
               activeRole: "admin",
               role: "admin",
             }

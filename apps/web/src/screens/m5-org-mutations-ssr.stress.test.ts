@@ -6,10 +6,17 @@ import type { QueryClient } from "@tanstack/react-query";
 import type { SessionController } from "@/auth/session-controller";
 import { ORGANIZATION_SCREENS_PART_A } from "@/screens/organization/entries-part-1";
 import { ORGANIZATION_SCREENS_PART_B } from "@/screens/organization/entries-part-2";
+import { ORGANIZATION_SCREENS_PART_C } from "@/screens/organization/entries-part-3";
+import { ORGANIZATION_SCREENS_PART_D } from "@/screens/organization/entries-part-4";
 import { createQueryClient, orpc } from "@/utils/orpc";
 
 describe("Empirical Challenger: M5 Organization Surface SSR, Mutations & Cache Invalidation Stress-Test", () => {
-  const ALL_ORG_SCREENS = [...ORGANIZATION_SCREENS_PART_A, ...ORGANIZATION_SCREENS_PART_B];
+  const ALL_ORG_SCREENS = [
+    ...ORGANIZATION_SCREENS_PART_A,
+    ...ORGANIZATION_SCREENS_PART_B,
+    ...ORGANIZATION_SCREENS_PART_C,
+    ...ORGANIZATION_SCREENS_PART_D,
+  ];
 
   function createMockAuth(token: string | null | undefined = null): SessionController {
     return {
@@ -531,7 +538,7 @@ describe("Empirical Challenger: M5 Organization Surface SSR, Mutations & Cache I
   /* Task 4: Stress-Test Unauthenticated SSR Behavior in Organization Screens   */
   /* -------------------------------------------------------------------------- */
   describe("Task 4: Unauthenticated SSR Behavior in Organization Screen Loaders", () => {
-    test("All 42 organization screen loaders return immediately and perform ZERO RPC fetches when auth token is null", async () => {
+    test("All 70 organization screen loaders return immediately and perform ZERO RPC fetches when auth token is null", async () => {
       const ensureSpy = mock(async () => ({}));
       const prefetchSpy = mock(async () => {});
       const mockQc = {
@@ -556,7 +563,7 @@ describe("Empirical Challenger: M5 Organization Surface SSR, Mutations & Cache I
       expect(prefetchSpy).toHaveBeenCalledTimes(0);
     });
 
-    test("All 42 organization screen loaders return immediately when auth token is empty string or undefined", async () => {
+    test("All 70 organization screen loaders return immediately when auth token is empty string or undefined", async () => {
       const ensureSpy = mock(async () => ({}));
       const prefetchSpy = mock(async () => {});
       const mockQc = {
@@ -593,7 +600,7 @@ describe("Empirical Challenger: M5 Organization Surface SSR, Mutations & Cache I
       expect(prefetchSpy).toHaveBeenCalledTimes(0);
     });
 
-    test("All 42 organization loaders handle 401 Unauthorized RPC rejections gracefully without unhandled rejections", async () => {
+    test("All 70 organization loaders handle 401 Unauthorized RPC rejections gracefully without unhandled rejections", async () => {
       const failingQc = {
         ensureQueryData: mock(async () => {
           const err = new Error("401 Unauthorized: Session Token Expired");
@@ -622,7 +629,7 @@ describe("Empirical Challenger: M5 Organization Surface SSR, Mutations & Cache I
       }
     });
 
-    test("All 42 organization loaders handle 403 Forbidden and 500 Server Errors gracefully without crashing SSR", async () => {
+    test("All 70 organization loaders handle 403 Forbidden and 500 Server Errors gracefully without crashing SSR", async () => {
       const error500Qc = {
         ensureQueryData: mock(async () => {
           throw new Error("500 Internal Server Error: Database Connection Pool Exhausted");
@@ -647,7 +654,7 @@ describe("Empirical Challenger: M5 Organization Surface SSR, Mutations & Cache I
       }
     });
 
-    test("All 42 organization loaders survive extreme / adversarial params and search payloads", async () => {
+    test("All 70 organization loaders survive extreme / adversarial params and search payloads", async () => {
       const qc = {
         ensureQueryData: mock(async () => ({})),
         prefetchQuery: mock(async () => {}),
@@ -687,7 +694,7 @@ describe("Empirical Challenger: M5 Organization Surface SSR, Mutations & Cache I
   /* -------------------------------------------------------------------------- */
   /* Static AST Audit: Zero client. and Zero Imports of client in Org Screens   */
   /* -------------------------------------------------------------------------- */
-  describe("Static AST Audit Across All 42 Organization Screens", () => {
+  describe("Static AST Audit Across All 70 Organization Screens", () => {
     const orgDir = join(import.meta.dir, "organization");
     const orgFiles = getTsxFiles(orgDir);
 
@@ -734,8 +741,8 @@ describe("Empirical Challenger: M5 Organization Surface SSR, Mutations & Cache I
       expect(violations).toEqual([]);
     });
 
-    test("All 42 organization screens are registered with non-empty slug, titleKey, surface: 'organization'", () => {
-      expect(ALL_ORG_SCREENS.length).toBe(42);
+    test("All 70 organization screens are registered with non-empty slug, titleKey, surface: 'organization'", () => {
+      expect(ALL_ORG_SCREENS.length).toBe(70);
 
       for (const screen of ALL_ORG_SCREENS) {
         expect(screen.surface).toBe("organization");

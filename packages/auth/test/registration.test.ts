@@ -109,7 +109,7 @@ describe("Unit: the locale → market map (G2, data not logic)", () => {
 describe("Unit: toRegistrationPayload (G3)", () => {
   const form = {
     fullName: "Sara",
-    email: "sara@example.com",
+    email: "sara@trips-enjoy.com",
     phone: "+201500000000",
     password: "DemoPassword123!",
     preferredLanguage: "ar" as const,
@@ -132,7 +132,7 @@ describe("Unit: toRegistrationPayload (G3)", () => {
     const payload = toRegistrationPayload(form);
 
     expect(payload.fullName).toBe("Sara");
-    expect(payload.email).toBe("sara@example.com");
+    expect(payload.email).toBe("sara@trips-enjoy.com");
     expect(payload.phone).toBe("+201500000000");
     expect(payload.password).toBe("DemoPassword123!");
     expect(payload.surface).toBe("web");

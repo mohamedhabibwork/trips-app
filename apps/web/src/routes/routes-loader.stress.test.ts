@@ -21,7 +21,12 @@ describe("Empirical Challenger: SSR Loader Integration & Auth Safety Stress Test
       getSnapshot: () => ({
         status: token ? "authenticated" : "anonymous",
         actor: token
-          ? { accountId: "acc-123", email: "test@example.com", activeRole: "admin", role: "admin" }
+          ? {
+              accountId: "acc-123",
+              email: "test@trips-enjoy.com",
+              activeRole: "admin",
+              role: "admin",
+            }
           : null,
         record: null,
       }),
@@ -46,8 +51,8 @@ describe("Empirical Challenger: SSR Loader Integration & Auth Safety Stress Test
     {
       name: "/studio",
       route: StudioRoute,
-      screenSurface: "organization",
-      screenSlug: "staffing-board",
+      screenSurface: "studio",
+      screenSlug: "studio-home",
     },
   ];
 

@@ -6,10 +6,15 @@ import type { QueryClient } from "@tanstack/react-query";
 import type { SessionController } from "@/auth/session-controller";
 import { ADMIN_SCREENS_PART_1 } from "@/screens/admin/entries-part-1";
 import { ADMIN_SCREENS_PART_2 } from "@/screens/admin/entries-part-2";
+import { ADMIN_SCREENS_PART_3 } from "@/screens/admin/entries-part-3";
 import { createQueryClient, orpc } from "@/utils/orpc";
 
 describe("Empirical Challenger: M4 Admin Surface SSR, Mutations & Cache Invalidation Stress-Test", () => {
-  const ALL_ADMIN_SCREENS = [...ADMIN_SCREENS_PART_1, ...ADMIN_SCREENS_PART_2];
+  const ALL_ADMIN_SCREENS = [
+    ...ADMIN_SCREENS_PART_1,
+    ...ADMIN_SCREENS_PART_2,
+    ...ADMIN_SCREENS_PART_3,
+  ];
 
   function createMockAuth(token: string | null | undefined = null): SessionController {
     return {
@@ -20,7 +25,7 @@ describe("Empirical Challenger: M4 Admin Surface SSR, Mutations & Cache Invalida
         actor: token
           ? {
               accountId: "acc-admin-99",
-              email: "admin@trips.local",
+              email: "admin@trips-enjoy.com",
               activeRole: "admin",
               role: "admin",
             }
@@ -371,7 +376,7 @@ describe("Empirical Challenger: M4 Admin Surface SSR, Mutations & Cache Invalida
   /* Task 4: Stress-Test Unauthenticated SSR Behavior in Admin Screen Loaders   */
   /* -------------------------------------------------------------------------- */
   describe("Task 4: Unauthenticated SSR Behavior in Admin Screen Loaders", () => {
-    test("All 33 admin screen loaders return immediately and perform ZERO RPC fetches when auth token is null", async () => {
+    test("All 46 admin screen loaders return immediately and perform ZERO RPC fetches when auth token is null", async () => {
       const ensureSpy = mock(async () => ({}));
       const prefetchSpy = mock(async () => {});
       const mockQc = {
@@ -396,7 +401,7 @@ describe("Empirical Challenger: M4 Admin Surface SSR, Mutations & Cache Invalida
       expect(prefetchSpy).toHaveBeenCalledTimes(0);
     });
 
-    test("All 33 admin screen loaders return immediately when auth token is empty string or undefined", async () => {
+    test("All 46 admin screen loaders return immediately when auth token is empty string or undefined", async () => {
       const ensureSpy = mock(async () => ({}));
       const prefetchSpy = mock(async () => {});
       const mockQc = {
@@ -433,7 +438,7 @@ describe("Empirical Challenger: M4 Admin Surface SSR, Mutations & Cache Invalida
       expect(prefetchSpy).toHaveBeenCalledTimes(0);
     });
 
-    test("All 33 admin loaders handle 401 Unauthorized RPC rejections gracefully without unhandled promise rejections", async () => {
+    test("All 46 admin loaders handle 401 Unauthorized RPC rejections gracefully without unhandled promise rejections", async () => {
       const failingQc = {
         ensureQueryData: mock(async () => {
           const err = new Error("401 Unauthorized: Session Expired");
@@ -464,7 +469,7 @@ describe("Empirical Challenger: M4 Admin Surface SSR, Mutations & Cache Invalida
       }
     });
 
-    test("All 33 admin loaders handle 403 Forbidden and 500 Server Errors gracefully without crashing SSR", async () => {
+    test("All 46 admin loaders handle 403 Forbidden and 500 Server Errors gracefully without crashing SSR", async () => {
       const error500Qc = {
         ensureQueryData: mock(async () => {
           throw new Error("500 Internal Server Error: Database Deadlock");
@@ -489,7 +494,7 @@ describe("Empirical Challenger: M4 Admin Surface SSR, Mutations & Cache Invalida
       }
     });
 
-    test("All 33 admin loaders survive extreme / adversarial params and search payloads", async () => {
+    test("All 46 admin loaders survive extreme / adversarial params and search payloads", async () => {
       const qc = {
         ensureQueryData: mock(async () => ({})),
         prefetchQuery: mock(async () => {}),
@@ -535,7 +540,7 @@ describe("Empirical Challenger: M4 Admin Surface SSR, Mutations & Cache Invalida
   /* -------------------------------------------------------------------------- */
   /* Static AST Audit: Zero client. and Zero Imports of client in Admin Screens */
   /* -------------------------------------------------------------------------- */
-  describe("Static AST Audit Across All 33 Admin Screens", () => {
+  describe("Static AST Audit Across All 46 Admin Screens", () => {
     const adminDir = join(import.meta.dir, "admin");
     const adminFiles = getTsxFiles(adminDir);
 
@@ -567,8 +572,8 @@ describe("Empirical Challenger: M4 Admin Surface SSR, Mutations & Cache Invalida
       expect(violations).toEqual([]);
     });
 
-    test("All 33 admin screens are registered with non-empty slug, titleKey, surface: 'admin'", () => {
-      expect(ALL_ADMIN_SCREENS.length).toBe(33);
+    test("All 46 admin screens are registered with non-empty slug, titleKey, surface: 'admin'", () => {
+      expect(ALL_ADMIN_SCREENS.length).toBe(46);
 
       for (const screen of ALL_ADMIN_SCREENS) {
         expect(screen.surface).toBe("admin");
