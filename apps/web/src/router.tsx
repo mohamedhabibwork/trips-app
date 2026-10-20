@@ -3,9 +3,10 @@ import { setupRouterSsrQueryIntegration } from "@tanstack/react-router-ssr-query
 
 import { authController } from "./auth/instance";
 import Loader from "./components/loader";
+import { routeTree } from "./routeTree.gen";
 import { ScrShr03NotFound } from "./screens/shared/scr-shr-03-not-found";
 import { ScrShr05ServerError } from "./screens/shared/scr-shr-05-server-error";
-import { routeTree } from "./routeTree.gen";
+import { initAnalytics, trackEvent } from "./utils/analytics";
 import { createQueryClient, orpc } from "./utils/orpc";
 
 export const getRouter = () => {
@@ -30,6 +31,16 @@ export const getRouter = () => {
   setupRouterSsrQueryIntegration({
     router,
     queryClient,
+  });
+
+  // Analytics is browser-only and no-ops on the server, so both calls are safe here. Every
+  // resolved route logs a page_view (SCR coverage comes free — one hook, all routes).
+  void initAnalytics();
+  router.subscribe("onResolved", () => {
+    trackEvent("page_view", {
+      page_path: router.state.location.pathname,
+      page_title: document.title,
+    });
   });
 
   return router;

@@ -35,7 +35,12 @@ export function createQueryClient() {
 }
 
 // One link for the whole app: dynamic bearer headers + the reactive refresh of R2 (ARCHITECTURE §4.2).
-const link = buildAuthLink({ controller: authController, baseUrl: ENV.VITE_SERVER_URL });
+// No client-side request-validation contract: importing the server router would drag the whole
+// backend stack (db, services, node:crypto) into the browser bundle. The server still validates.
+const link = buildAuthLink({
+  controller: authController,
+  baseUrl: ENV.VITE_SERVER_URL,
+});
 
 export const client: AppRouterClient = createORPCClient(link);
 

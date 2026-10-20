@@ -58,7 +58,7 @@ export const Route = createRootRouteWithContext<RouterAppContext>()({
 
 // Dashboard layouts draw their own chrome; every other page sits in the public shell. The admin
 // sign-in pages use its navy variant (SCR-PUB-09, SCR-PUB-10).
-const DASHBOARD_LAYOUTS = new Set(["/business", "/admin", "/traveler"]);
+const DASHBOARD_LAYOUTS = new Set(["/business", "/admin", "/traveler", "/studio"]);
 const INVERSE_PAGES = new Set(["/admin_/sign-in", "/admin_/sign-in_/authenticator"]);
 
 function PageFrame() {

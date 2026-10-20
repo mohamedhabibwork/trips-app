@@ -4,7 +4,7 @@ import { join, relative } from "node:path";
 
 import { ALL_SCREENS, findScreenById } from "@/screens/registry";
 
-import { ADMIN_NAV, ORGANIZATION_NAV } from "./shell-nav";
+import { ADMIN_NAV, ORGANIZATION_NAV, STUDIO_NAV } from "./shell-nav";
 import { WEB_ROUTES, matchWebRoute, pathFor, surfaceForScreenId, webRouteById } from "./web-routes";
 
 // Shared screens that are components mounted inside pages, not pages with a URL.
@@ -19,6 +19,8 @@ const COMPONENT_ONLY = new Set([
   "SCR-SHR-14",
   "SCR-SHR-15",
   "SCR-SHR-16",
+  // The canvas folds watermark settings (SCR-PHO-10) into the album privacy page.
+  "SCR-PHO-10",
 ]);
 
 describe("web route table", () => {
@@ -132,7 +134,7 @@ describe("pathFor", () => {
 
 describe("shell navigation", () => {
   test("every sidebar item opens a page in its own section", () => {
-    for (const navItem of [...ORGANIZATION_NAV, ...ADMIN_NAV]) {
+    for (const navItem of [...ORGANIZATION_NAV, ...ADMIN_NAV, ...STUDIO_NAV]) {
       expect(webRouteById(navItem.screenId)?.section).toBe(navItem.section);
     }
   });
@@ -179,6 +181,13 @@ describe("file routes", () => {
 
   test("public pages that need a session use the signed-in guard", () => {
     for (const route of WEB_ROUTES.filter((candidate) => candidate.signedIn)) {
+      if (route.area === "studio") {
+        // The studio layout guards its whole area with the surface guard.
+        expect(readFileSync(join(ROUTES_DIR, "studio.tsx"), "utf8")).toContain(
+          'requireSurface("studio")',
+        );
+        continue;
+      }
       expect(routes.get(route.path)).toContain("beforeLoad: requireSignedIn(");
     }
   });

@@ -6,6 +6,8 @@
 //   2. `buildAuthLink` — the RPCLink the app uses, with a dynamic bearer and one reactive replay.
 import type { ClientContext } from "@orpc/client";
 import { RPCLink } from "@orpc/client/fetch";
+import type { AnyContractRouter } from "@orpc/contract";
+import { RequestValidationPlugin } from "@orpc/contract/plugins";
 import { SessionExpiredError, needsRefreshOnError } from "@trips-app/auth";
 
 import type { RpcCall, SessionController } from "./session-controller";
@@ -89,6 +91,8 @@ export function buildAuthLink<T extends ClientContext = ClientContext>(options: 
   controller: SessionController;
   baseUrl: string;
   fetchImpl?: typeof fetch;
+  /** Contract (or unlazied router) validated against before any request leaves the client. */
+  contract?: AnyContractRouter;
 }): RPCLink<T> {
   const doFetch = options.fetchImpl ?? globalThis.fetch.bind(globalThis);
 
@@ -121,6 +125,7 @@ export function buildAuthLink<T extends ClientContext = ClientContext>(options: 
   };
 
   return new RPCLink<T>({
+    plugins: options.contract ? [new RequestValidationPlugin<T>(options.contract)] : [],
     url: `${options.baseUrl.replace(/\/$/, "")}/rpc`,
     headers: () => {
       const token = options.controller.accessToken();

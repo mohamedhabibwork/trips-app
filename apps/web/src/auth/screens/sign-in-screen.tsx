@@ -3,12 +3,13 @@
 // One identifier field plus an OTP/password selector. The OTP branch is a local step machine:
 // `auth/signIn` (method otp) → `auth/signIn` (method otp + otpCode), exactly as AC-2 describes.
 import { useNavigate } from "@tanstack/react-router";
-import { sanitizeReturnTo } from "@trips-app/auth";
 import type { AuthErrorView, SessionTokenPayload } from "@trips-app/auth";
+import { sanitizeReturnTo } from "@trips-app/auth";
 import { useState } from "react";
 
 import { Button, Segmented, TextLink } from "@/components/kit/controls";
 import { pathFor } from "@/navigation/web-routes";
+import { trackEvent } from "@/utils/analytics";
 
 import { client } from "../../utils/orpc";
 import { useAuth } from "../auth-context";
@@ -53,7 +54,9 @@ export function SignInScreen({ returnTo }: { returnTo?: string }) {
 
   const goHome = async (session: SessionTokenPayload): Promise<void> => {
     signInWithSession(session);
-    await navigate({ to: sanitizeReturnTo(returnTo, homeRouteForRole(session.activeRole)) });
+    await navigate({
+      to: sanitizeReturnTo(returnTo, homeRouteForRole(session.activeRole)),
+    });
   };
 
   const submitCredentials = async (): Promise<void> => {
@@ -67,8 +70,9 @@ export function SignInScreen({ returnTo }: { returnTo?: string }) {
         surface: "web",
       })) as unknown as SignInResult;
 
-      if (result.step === "otp_required" && result.otpDispatch) {
-        setStep({ kind: "otp", dispatch: result.otpDispatch });
+      if (result.step === "authenticated" && result.session) {
+        trackEvent("sign_in", { method });
+        await goHome(result.session);
         return;
       }
       if (result.step === "authenticated" && result.session) {
@@ -98,6 +102,7 @@ export function SignInScreen({ returnTo }: { returnTo?: string }) {
       })) as unknown as SignInResult;
 
       if (result.step === "authenticated" && result.session) {
+        trackEvent("sign_in", { method: "otp" });
         await goHome(result.session);
         return;
       }
@@ -109,7 +114,10 @@ export function SignInScreen({ returnTo }: { returnTo?: string }) {
         return;
       }
       setError(
-        toAuthErrorView(new Error("Unexpected sign-in result."), { locale, procedure: PROCEDURE }),
+        toAuthErrorView(new Error("Unexpected sign-in result."), {
+          locale,
+          procedure: PROCEDURE,
+        }),
       );
     } catch (caught) {
       setError(toAuthErrorView(caught, { locale, procedure: PROCEDURE }));

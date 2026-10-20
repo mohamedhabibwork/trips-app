@@ -234,7 +234,7 @@ describe("Unit: R4 — no refresh on the auth procedures", () => {
     });
 
     await expect(
-      harnessed.rpc(["auth", "signIn"], { identifier: "sara@example.com" }),
+      harnessed.rpc(["auth", "signIn"], { identifier: "sara@trips-enjoy.com" }),
     ).rejects.toBeDefined();
 
     expect(harnessed.calls.length).toBe(1);

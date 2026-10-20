@@ -1,14 +1,14 @@
 import { AdminHome } from "@/screens/admin/home/admin-home";
 import { OrgButtonLink } from "@/screens/organization/common/org-link";
 import { LiveOperations } from "@/screens/organization/operations/live-operations";
-import { StaffingBoard } from "@/screens/organization/staffing/staffing-board";
 import { WorkspaceHome } from "@/screens/organization/workspace/workspace-home";
 import type { SurfaceInfo } from "@/types";
 import { t } from "@trips-app/i18n";
 
 export type { SurfaceInfo } from "@/types";
 
-// Shared page for a surface. Connects /admin, /business, /crew, and /studio directly to their workspace & operations screens.
+// Shared page for a surface. Connects /admin, /business, and /crew directly to their workspace &
+// operations screens; /studio has its own shell and screens under routes/studio.
 export function SurfacePage({ surface }: { surface: SurfaceInfo }) {
   return (
     <div className="mx-auto w-full max-w-[1280px] px-4 py-8 md:px-12">
@@ -24,7 +24,6 @@ export function SurfacePage({ surface }: { surface: SurfaceInfo }) {
         </div>
       ) : null}
       {surface.id === "crew" ? <LiveOperations /> : null}
-      {surface.id === "studio" ? <StaffingBoard /> : null}
     </div>
   );
 }

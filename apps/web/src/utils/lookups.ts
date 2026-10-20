@@ -8,6 +8,7 @@ import type {
 } from "@trips-app/api";
 
 import { orpc } from "./orpc";
+import { serverQueryOptions } from "./server-rpc";
 
 export type {
   LookupItemDto,
@@ -84,7 +85,9 @@ export type ListLookupTypesInput = {
  * Reusable Query Options builders for TanStack Query / SSR Loaders.
  */
 export function lookupTypesQueryOptions(options?: ListLookupTypesInput) {
-  return orpc.lookups.listTypes.queryOptions({ input: options ?? {} });
+  return serverQueryOptions(orpc.lookups.listTypes, "lookups/listTypes", {
+    input: options ?? {},
+  });
 }
 
 export function ensureLookupTypes(queryClient: QueryClient, options?: ListLookupTypesInput) {
@@ -99,7 +102,7 @@ export function lookupTypeByCodeQueryOptions(
   code: LookupTypeCode | string,
   options?: { parentLookupCode?: string },
 ) {
-  return orpc.lookups.getTypeByCode.queryOptions({
+  return serverQueryOptions(orpc.lookups.getTypeByCode, "lookups/getTypeByCode", {
     input: {
       code: normalizeLookupCode(code),
       parentLookupCode: options?.parentLookupCode
@@ -127,7 +130,7 @@ export function prefetchLookupTypeByCode(
 
 export function lookupsByTypeCodesQueryOptions(codes: readonly (LookupTypeCode | string)[]) {
   const normalizedCodes = codes.map((c) => normalizeLookupCode(c));
-  return orpc.lookups.getByTypeCodes.queryOptions({
+  return serverQueryOptions(orpc.lookups.getByTypeCodes, "lookups/getByTypeCodes", {
     input: { codes: normalizedCodes },
   });
 }
@@ -147,7 +150,7 @@ export function prefetchLookupsByTypeCodes(
 }
 
 export function lookupByCodeQueryOptions(code: string, typeCode?: LookupTypeCode | string) {
-  return orpc.lookups.getByCode.queryOptions({
+  return serverQueryOptions(orpc.lookups.getByCode, "lookups/getByCode", {
     input: {
       code: normalizeLookupCode(code),
       typeCode: typeCode ? normalizeLookupCode(typeCode) : undefined,

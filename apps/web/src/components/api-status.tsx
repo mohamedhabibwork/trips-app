@@ -1,11 +1,14 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 
 import { orpc } from "@/utils/orpc";
+import { serverQueryOptions } from "@/utils/server-rpc";
 import { t } from "@trips-app/i18n";
 
 // Reads the API status that the route loader prefetched on the server (see utils/api-status.ts).
 export function ApiStatus() {
-  const healthCheck = useSuspenseQuery(orpc.healthCheck.queryOptions());
+  const healthCheck = useSuspenseQuery(
+    serverQueryOptions(orpc.healthCheck, "healthCheck", { input: undefined }),
+  );
   const isConnected = healthCheck.data === "OK";
 
   return (

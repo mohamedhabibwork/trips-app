@@ -2,6 +2,7 @@ import { ADMIN_SCREENS } from "./admin";
 import { ORGANIZATION_SCREENS } from "./organization";
 import { PUBLIC_SCREENS } from "./public";
 import { SHARED_SCREENS } from "./shared";
+import { STUDIO_SCREENS } from "./studio";
 import { TRAVELER_SCREENS } from "./traveler";
 import type { ScreenEntry, ScreenSurface } from "./types";
 import { t } from "@trips-app/i18n";
@@ -13,6 +14,7 @@ export const ALL_SCREENS: readonly ScreenEntry[] = [
   ...ORGANIZATION_SCREENS,
   ...ADMIN_SCREENS,
   ...TRAVELER_SCREENS,
+  ...STUDIO_SCREENS,
 ];
 
 export const SURFACE_LABELS: Readonly<Record<ScreenSurface, string>> = {
@@ -30,6 +32,9 @@ export const SURFACE_LABELS: Readonly<Record<ScreenSurface, string>> = {
   },
   get traveler() {
     return t("screen.registry.surface.travelerApp");
+  },
+  get studio() {
+    return t("screen.registry.surface.studio");
   },
 };
 

@@ -6,7 +6,7 @@
 // have no path; they are mounted inside other pages.
 import type { ScreenSurface } from "@/screens/types";
 
-export type WebArea = "public" | "organization" | "admin" | "traveler";
+export type WebArea = "public" | "organization" | "admin" | "traveler" | "studio";
 
 export interface WebRoute {
   /** Screen ID from the design canvases, e.g. `SCR-ORG-04`. */
@@ -28,6 +28,7 @@ export interface WebRoute {
 
 export const ORGANIZATION_BASE = "/business";
 export const ADMIN_BASE = "/admin";
+export const STUDIO_BASE = "/studio";
 
 const org = (id: string, path: string, section: string): WebRoute => ({
   id,
@@ -55,6 +56,15 @@ const trv = (id: string, path: string): WebRoute => ({
   signedIn: true,
 });
 
+/** Photographer studio: signed-in photographers, framed by the studio top-bar shell. */
+const stu = (id: string, path: string, section: string): WebRoute => ({
+  id,
+  path: `${STUDIO_BASE}${path}`,
+  area: "studio",
+  section,
+  signedIn: true,
+});
+
 export const WEB_ROUTES: readonly WebRoute[] = [
   // Public site, sign-up and sign-in (SCR-PUB)
   pub("SCR-PUB-01", "/"),
@@ -76,6 +86,9 @@ export const WEB_ROUTES: readonly WebRoute[] = [
   signedIn("SCR-PUB-17", "/application-status"),
   signedIn("SCR-PUB-18", "/application-status/appeal"),
   pub("SCR-PUB-19", "/crew/sign-in"),
+  pub("SCR-PUB-20", "/legal"),
+  pub("SCR-PUB-21", "/organizers/$orgSlug"),
+  pub("SCR-PUB-22", "/for-business"),
 
   // Shared pages (SCR-SHR). 01, 08–10 and 13–16 are components, not pages.
   pub("SCR-SHR-02", "/forbidden"),
@@ -131,6 +144,38 @@ export const WEB_ROUTES: readonly WebRoute[] = [
   org("SCR-ORG-41", "/reports/trips/$tripId", "reports"),
   org("SCR-ORG-42", "/reports/child-safety", "reports"),
 
+  // Second design batch (docs/design/web/Org*.dc.html artboards beyond the spec)
+  org("SCR-ORG-43", "/analytics", "analytics"),
+  org("SCR-ORG-44", "/analytics/trips/$tripId", "analytics"),
+  org("SCR-ORG-45", "/analytics/customers", "analytics"),
+  org("SCR-ORG-46", "/analytics/providers", "analytics"),
+  org("SCR-ORG-47", "/analytics/pages", "analytics"),
+  org("SCR-ORG-57", "/integrations/api-keys", "integrations"),
+  org("SCR-ORG-58", "/integrations/webhooks", "integrations"),
+  org("SCR-ORG-59", "/integrations/webhooks/new", "integrations"),
+  org("SCR-ORG-60", "/integrations/webhooks/$endpointId", "integrations"),
+  org("SCR-ORG-61", "/settings/organizations", "settings"),
+  org("SCR-ORG-62", "/workspace", "home"),
+  org("SCR-ORG-63", "/support", "support"),
+  org("SCR-ORG-64", "/roles", "employees"),
+  org("SCR-ORG-65", "/trips/$tripId/roster", "trips"),
+
+  // Third design batch: CRM and billing artboards (SCR-ORG-48..56, 66..70)
+  org("SCR-ORG-48", "/crm/campaigns", "crm"),
+  org("SCR-ORG-49", "/crm/campaigns/new", "crm"),
+  org("SCR-ORG-50", "/crm/customers", "crm"),
+  org("SCR-ORG-51", "/crm/customers/$customerId", "crm"),
+  org("SCR-ORG-52", "/crm/leads", "crm"),
+  org("SCR-ORG-53", "/crm/leads/$leadId", "crm"),
+  org("SCR-ORG-54", "/crm/inbox", "crm"),
+  org("SCR-ORG-55", "/crm/reviews", "crm"),
+  org("SCR-ORG-56", "/crm/segments", "crm"),
+  org("SCR-ORG-66", "/plan", "subscription"),
+  org("SCR-ORG-67", "/plan/checkout", "subscription"),
+  org("SCR-ORG-68", "/plan/ended", "subscription"),
+  org("SCR-ORG-69", "/invoices/$invoiceId", "invoices"),
+  org("SCR-ORG-70", "/accounting/settlements/$settlementId", "accounting"),
+
   // Admin console (SCR-ADM)
   admin("SCR-ADM-01", "", "home"),
   admin("SCR-ADM-02", "/applications", "applications"),
@@ -166,6 +211,21 @@ export const WEB_ROUTES: readonly WebRoute[] = [
   admin("SCR-ADM-32", "/platform", "platform"),
   admin("SCR-ADM-33", "/platform/health", "platform"),
 
+  // Second admin design batch (docs/design/web Adm* artboards beyond the spec)
+  admin("SCR-ADM-34", "/analytics", "analytics"),
+  admin("SCR-ADM-35", "/analytics/companies", "analytics"),
+  admin("SCR-ADM-36", "/analytics/providers", "analytics"),
+  admin("SCR-ADM-37", "/analytics/trips", "analytics"),
+  admin("SCR-ADM-38", "/analytics/pages", "analytics"),
+  admin("SCR-ADM-39", "/countries", "platform"),
+  admin("SCR-ADM-40", "/moderation", "platform"),
+  admin("SCR-ADM-41", "/support", "platform"),
+  admin("SCR-ADM-42", "/webhooks", "platform"),
+  admin("SCR-ADM-43", "/invoices", "money"),
+  admin("SCR-ADM-44", "/invoices/$invoiceId", "money"),
+  admin("SCR-ADM-45", "/plans/access-policy", "plans"),
+  admin("SCR-ADM-46", "/trips/$tripId", "trips"),
+
   // Traveler app (SCR-TRV). 01, 02 and 17 are public; the rest need a signed-in traveler.
   pub("SCR-TRV-01", "/trips"),
   pub("SCR-TRV-02", "/trips/$tripId"),
@@ -188,6 +248,19 @@ export const WEB_ROUTES: readonly WebRoute[] = [
   trv("SCR-TRV-19", "/profile"),
   trv("SCR-TRV-20", "/privacy"),
   trv("SCR-TRV-21", "/become-supplier"),
+
+  // Photographer studio (SCR-PHO). 10 (watermark settings) is a component of 09, not a page.
+  stu("SCR-PHO-01", "", "home"),
+  stu("SCR-PHO-02", "/portfolio", "portfolio"),
+  stu("SCR-PHO-03", "/profile", "profile"),
+  stu("SCR-PHO-04", "/rates", "rates"),
+  stu("SCR-PHO-05", "/deals", "deals"),
+  stu("SCR-PHO-06", "/briefs/$tripId", "deals"),
+  stu("SCR-PHO-07", "/albums", "albums"),
+  stu("SCR-PHO-08", "/albums/$albumId", "albums"),
+  stu("SCR-PHO-09", "/albums/$albumId/privacy", "albums"),
+  stu("SCR-PHO-11", "/earnings", "earnings"),
+  stu("SCR-PHO-12", "/coupons", "coupons"),
 ];
 
 const BY_ID = new Map(WEB_ROUTES.filter((route) => !route.alias).map((route) => [route.id, route]));
@@ -272,5 +345,6 @@ export function surfaceForScreenId(id: string): ScreenSurface {
   if (id.startsWith("SCR-ADM")) return "admin";
   if (id.startsWith("SCR-SHR")) return "shared";
   if (id.startsWith("SCR-TRV")) return "traveler";
+  if (id.startsWith("SCR-PHO")) return "studio";
   return "public";
 }
