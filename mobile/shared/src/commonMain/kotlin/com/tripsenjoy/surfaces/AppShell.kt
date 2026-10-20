@@ -14,6 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import com.tripsenjoy.analytics.AnalyticsTracker
 import com.tripsenjoy.auth.AuthGate
 import com.tripsenjoy.auth.AuthProvider
 import com.tripsenjoy.auth.AuthStrings
@@ -94,7 +95,10 @@ private fun SignedInShell(
                     actions = {
                         TeGlassButton(
                             label = AuthStrings.t("auth.account.menu", locale),
-                            onClick = { menuOpen = true },
+                            onClick = {
+                                AnalyticsTracker.trackAction("account_menu_open", mapOf("role" to role.name))
+                                menuOpen = true
+                            },
                             icon = IconName.User,
                         )
                     },
@@ -118,7 +122,14 @@ private fun SignedInShell(
                 TeGlassTabBar(
                     tabs = tabs,
                     selectedIndex = if (tab == ShellTab.ROLE) 0 else 1,
-                    onSelect = { index -> tab = if (index == 0) ShellTab.ROLE else ShellTab.TRAVELER },
+                    onSelect = { index ->
+                        val next = if (index == 0) ShellTab.ROLE else ShellTab.TRAVELER
+                        AnalyticsTracker.trackAction(
+                            "tab_switch",
+                            mapOf("role" to role.name, "tab" to next.name),
+                        )
+                        tab = next
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = TripsSideGutter, vertical = spacing.space2),
@@ -132,10 +143,12 @@ private fun SignedInShell(
                 locale = locale,
                 onSignOut = {
                     menuOpen = false
+                    AnalyticsTracker.trackAction("sign_out", mapOf("role" to role.name, "all_devices" to "false"))
                     scope.launch { session.signOut(allDevices = false) }
                 },
                 onSignOutAll = {
                     menuOpen = false
+                    AnalyticsTracker.trackAction("sign_out", mapOf("role" to role.name, "all_devices" to "true"))
                     scope.launch { session.signOut(allDevices = true) }
                 },
                 onDismiss = { menuOpen = false },

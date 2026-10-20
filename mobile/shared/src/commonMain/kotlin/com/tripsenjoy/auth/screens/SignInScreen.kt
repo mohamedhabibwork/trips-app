@@ -13,6 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import com.tripsenjoy.analytics.AnalyticsTracker
 import com.tripsenjoy.auth.AuthErrorMapper
 import com.tripsenjoy.auth.AuthErrorRecovery
 import com.tripsenjoy.auth.AuthErrorView
@@ -74,8 +75,13 @@ fun SignInScreen(
             state = state,
             expired = expired,
             modifier = modifier,
-            onSubmit = { submitSignIn(config, state, session, scope, locale) },
+            onSubmit = {
+                // The identifier itself is never logged (no PII); only the sign-in method.
+                AnalyticsTracker.trackAction("sign_in_submit", mapOf("method" to state.method.name))
+                submitSignIn(config, state, session, scope, locale)
+            },
             onRegister = {
+                AnalyticsTracker.trackAction("register_open", mapOf("role" to (config.registrationRole ?: "unknown")))
                 state.error = null
                 state.step = SignInStep.Register
             },

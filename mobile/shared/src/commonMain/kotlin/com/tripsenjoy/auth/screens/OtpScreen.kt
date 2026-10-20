@@ -12,6 +12,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import com.tripsenjoy.analytics.AnalyticsTracker
 import com.tripsenjoy.auth.AuthErrorMapper
 import com.tripsenjoy.auth.AuthErrorRecovery
 import com.tripsenjoy.auth.AuthErrorView
@@ -119,6 +120,8 @@ fun OtpScreen(
             },
             onClick = {
                 if (busy || code.length < length) return@TeButton
+                // The code itself is never logged (no PII); only the purpose.
+                AnalyticsTracker.trackAction("otp_submit", mapOf("purpose" to purpose))
                 scope.launch {
                     busy = true
                     error = null
@@ -180,6 +183,7 @@ fun OtpScreen(
                 },
                 onClick = {
                     if (busy || countdown > 0L) return@TeButton
+                    AnalyticsTracker.trackAction("otp_resend", mapOf("purpose" to purpose))
                     scope.launch {
                         busy = true
                         error = null

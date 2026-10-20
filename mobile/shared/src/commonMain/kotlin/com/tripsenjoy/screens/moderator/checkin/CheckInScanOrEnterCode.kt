@@ -5,6 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import com.tripsenjoy.analytics.AnalyticsTracker
 import com.tripsenjoy.screens.LocalScreenNavigator
 import com.tripsenjoy.screens.moderator.ModeratorRoutes
 import com.tripsenjoy.screens.moderator.common.LocalModeratorSession
@@ -73,6 +74,11 @@ private fun CheckInForm() {
         onClick = {
             session.prefilledCode = ""
             val result = session.checkIn(code)
+            // Outcome only (confirmed / invalid); the scanned code is never logged.
+            AnalyticsTracker.trackAction(
+                "traveler_checked_in",
+                mapOf("outcome" to if (result == ModCheckInResult.Invalid) "invalid" else "confirmed"),
+            )
             if (result == ModCheckInResult.Invalid) {
                 codeError = "This code does not match a booking for this trip."
             } else {

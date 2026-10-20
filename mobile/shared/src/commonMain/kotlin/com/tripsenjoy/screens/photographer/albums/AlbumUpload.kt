@@ -5,6 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import com.tripsenjoy.analytics.AnalyticsTracker
 import com.tripsenjoy.screens.LocalScreenNavigator
 import com.tripsenjoy.screens.ScreenNavigator
 import com.tripsenjoy.screens.moderator.common.icon
@@ -85,6 +86,10 @@ private fun AlbumUploadContent(nav: ScreenNavigator) {
     TeButton(
         text = "Save album and set privacy",
         onClick = {
+            AnalyticsTracker.trackAction(
+                "album_uploaded",
+                mapOf("entity_type" to "photo_album", "batch_size" to files.size.toString()),
+            )
             session.createAndUploadAlbum(albumTitle, files.map { it.name })
             nav.replace(PhotoScreenId.ALBUM_PRIVACY)
         },

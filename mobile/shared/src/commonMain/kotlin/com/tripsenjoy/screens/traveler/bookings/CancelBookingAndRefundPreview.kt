@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import com.tripsenjoy.analytics.AnalyticsTracker
 import com.tripsenjoy.auth.LocalAuthApiOrNull
 import com.tripsenjoy.screens.LocalScreenNavigator
 import com.tripsenjoy.screens.traveler.common.AmountPlaceholder
@@ -66,7 +67,7 @@ fun CancelBookingAndRefundPreview() {
                     val bookingId = TravelerBookingState.selectedBookingId ?: "booking-1"
                     if (client != null) {
                         scope.launch {
-                            runCatching {
+                            val outcome = runCatching {
                                 client.call(
                                     "booking/cancelBooking",
                                     buildJsonObject {
@@ -75,6 +76,12 @@ fun CancelBookingAndRefundPreview() {
                                     },
                                     JsonElement.serializer(),
                                 )
+                            }
+                            if (outcome.isSuccess) {
+                                AnalyticsTracker.trackAction("booking_cancelled", mapOf("entity_type" to "trip_booking"))
+                                AnalyticsTracker.trackAction("refund_requested", mapOf("entity_type" to "trip_booking"))
+                            } else {
+                                AnalyticsTracker.trackAction("booking_cancel_failed", mapOf("step" to "cancellation"))
                             }
                             nav.back()
                         }

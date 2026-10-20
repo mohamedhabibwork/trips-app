@@ -6,6 +6,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import com.tripsenjoy.analytics.AnalyticsTracker
 import com.tripsenjoy.auth.LocalAuthApiOrNull
 import com.tripsenjoy.screens.traveler.bookings.TravelerBookingState
 import com.tripsenjoy.screens.traveler.common.AmountPlaceholder
@@ -39,12 +40,18 @@ fun BookingConfirmed() {
     LaunchedEffect(api) {
         val client = api ?: return@LaunchedEffect
         TravelerBookingState.lastPaymentId?.let { paymentId ->
-            runCatching {
+            val confirmOutcome = runCatching {
                 client.call(
                     "payments/confirmPayment",
                     buildJsonObject { put("paymentId", paymentId) },
                     JsonElement.serializer(),
                 )
+            }
+            // Coarse resolution only; the payment id itself is never logged.
+            if (confirmOutcome.isSuccess) {
+                AnalyticsTracker.trackAction("payment_succeeded", mapOf("entity_type" to "trip_booking"))
+            } else {
+                AnalyticsTracker.trackAction("payment_unresolved", mapOf("step" to "confirmation"))
             }
         }
         val bookingId = TravelerBookingState.selectedBookingId ?: return@LaunchedEffect

@@ -32,7 +32,7 @@ class TravelerAndTripsRepositoryTest {
                       "json": {
                         "accountId": "usr-01",
                         "fullName": "Layla Mansour",
-                        "email": "layla@example.com",
+                        "email": "layla@trips-enjoy.com",
                         "phoneE164": "+201012345678",
                         "countryCode": "EG",
                         "preferredLanguage": "ar",
@@ -62,7 +62,7 @@ class TravelerAndTripsRepositoryTest {
                       "json": {
                         "accountId": "usr-01",
                         "fullName": "Layla M.",
-                        "email": "layla@example.com",
+                        "email": "layla@trips-enjoy.com",
                         "phoneE164": "+201012345678",
                         "countryCode": "EG",
                         "preferredLanguage": "en",

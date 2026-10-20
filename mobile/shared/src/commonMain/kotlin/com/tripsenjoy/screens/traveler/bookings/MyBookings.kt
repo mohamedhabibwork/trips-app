@@ -41,6 +41,8 @@ internal object TravelerBookingState {
     var selectedSeatLabel: String = "1A"
     var couponCode: String? = null
     var lastPaymentId: String? = null
+    var lastPaymentGateway: String? = null
+    var lastPaymentProviderReference: String? = null
     var selectedAlbumId: String? = null
 }
 

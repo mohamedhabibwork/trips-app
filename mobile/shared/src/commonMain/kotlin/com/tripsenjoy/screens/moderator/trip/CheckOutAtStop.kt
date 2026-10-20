@@ -5,6 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import com.tripsenjoy.analytics.AnalyticsTracker
 import com.tripsenjoy.screens.moderator.common.LocalModeratorSession
 import com.tripsenjoy.screens.moderator.common.ModEmptyBlock
 import com.tripsenjoy.screens.moderator.common.ModField
@@ -59,6 +60,7 @@ private fun CheckOutMain() {
                 onClick = {
                     stop?.let { selectedStop ->
                         status = session.checkOut(traveler.id, selectedStop)
+                        AnalyticsTracker.trackAction("traveler_checked_out", mapOf("entity_type" to "trip_stop"))
                     }
                 },
             )

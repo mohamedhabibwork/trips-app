@@ -33,7 +33,7 @@ fun VerificationByCode() {
     StatePreview(namedStates = listOf(PublicViewState.Loading), copy = verificationCopy) {
         TePageHeader(
             title = "Verify your account",
-            description = "Enter the 6-digit code sent to m***@example.com.",
+            description = "Enter the 6-digit code sent to m***@trips-enjoy.com.",
         )
         TeOtpInput(
             value = code,

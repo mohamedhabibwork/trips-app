@@ -6,6 +6,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import com.tripsenjoy.analytics.AnalyticsTracker
 import com.tripsenjoy.auth.LocalAuthApiOrNull
 import com.tripsenjoy.screens.moderator.common.icon
 import com.tripsenjoy.screens.traveler.bookings.TravelerBookingState
@@ -59,6 +60,8 @@ fun BookingStep2SeatSelection() {
                 onSelect = { seatId ->
                     selectedSeat = seatId
                     TravelerBookingState.selectedSeatLabel = seatId
+                    // Seat labels ("1A") are coarse layout identifiers, not user data.
+                    AnalyticsTracker.trackAction("booking_seat_selected", mapOf("step" to "seats"))
                 },
                 ariaLabel = "Seat map. Choose a seat, or use the seat list.",
             )

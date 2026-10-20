@@ -5,6 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import com.tripsenjoy.analytics.AnalyticsTracker
 import com.tripsenjoy.screens.LocalScreenNavigator
 import com.tripsenjoy.screens.ScreenNavigator
 import com.tripsenjoy.screens.moderator.common.icon
@@ -81,7 +82,10 @@ private fun PrivacyContent(nav: ScreenNavigator) {
             ScreenNote(text = "A 32-character token is created when you create the link.")
             TeButton(
                 text = if (linkCreated) "Link created" else "Create link",
-                onClick = { linkCreated = true },
+                onClick = {
+                    linkCreated = true
+                    AnalyticsTracker.trackAction("album_link_created", mapOf("entity_type" to "photo_album"))
+                },
                 variant = TeButtonVariant.Secondary,
                 enabled = !linkCreated,
             )
@@ -120,6 +124,11 @@ private fun PrivacyContent(nav: ScreenNavigator) {
     TeButton(
         text = "Save privacy",
         onClick = {
+            // The coarse mode and publish flag only, never album ids or titles.
+            AnalyticsTracker.trackAction(
+                "album_privacy_saved",
+                mapOf("mode" to privacy.value, "publish" to publish.toString()),
+            )
             session.publishAlbum(privacy.value, publish)
             nav.back()
         },

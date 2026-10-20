@@ -6,6 +6,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import com.tripsenjoy.analytics.AnalyticsTracker
 import com.tripsenjoy.auth.LocalAuthApiOrNull
 import com.tripsenjoy.screens.traveler.bookings.TravelerBookingState
 import com.tripsenjoy.screens.traveler.common.AmountPlaceholder
@@ -36,6 +37,8 @@ fun PaymentFailedRetry() {
     LaunchedEffect(api) {
         val client = api ?: return@LaunchedEffect
         val bookingId = TravelerBookingState.selectedBookingId ?: return@LaunchedEffect
+        // The screen itself is the failure resolution point (SCR-TRV-08); emit once per entry.
+        AnalyticsTracker.trackAction("payment_failed", mapOf("entity_type" to "trip_booking"))
         runCatching {
             val detail = client.call(
                 "booking/getBooking",

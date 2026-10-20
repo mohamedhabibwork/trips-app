@@ -114,12 +114,12 @@ class AuthRepositoryTest {
     fun `signIn stores the record and sends the documented input field names`() = runTest {
         val harness = harness { authenticatedResponse() }
 
-        val outcome = harness.repository.signIn(identifier = "sara@example.com", method = "password", password = "secret")
+        val outcome = harness.repository.signIn(identifier = "sara@trips-enjoy.com", method = "password", password = "secret")
 
         assertTrue(outcome is SignInOutcome.Authenticated)
         assertEquals(jwt, harness.store.accessToken())
         val call = harness.callsTo("auth/signIn").single()
-        assertTrue(call.body.contains("\"identifier\":\"sara@example.com\""), call.body)
+        assertTrue(call.body.contains("\"identifier\":\"sara@trips-enjoy.com\""), call.body)
         assertTrue(call.body.contains("\"method\":\"password\""), call.body)
         assertTrue(call.body.contains("\"password\":\"secret\""), call.body)
         assertTrue(call.body.contains("\"surface\":\"mobile\""), call.body)
@@ -146,7 +146,7 @@ class AuthRepositoryTest {
                 .replace("\n", "") to HttpStatusCode.OK
         }
 
-        val outcome = harness.repository.signIn(identifier = "driver@example.com", method = "password", password = "secret")
+        val outcome = harness.repository.signIn(identifier = "driver@trips-enjoy.com", method = "password", password = "secret")
 
         assertTrue(outcome is SignInOutcome.PendingApproval)
         assertEquals("acct-9", (outcome as SignInOutcome.PendingApproval).accountId)
@@ -182,10 +182,10 @@ class AuthRepositoryTest {
         }
         harness.repository.surface = AuthRepository.SURFACE_PWA
 
-        harness.repository.moderatorSignIn(identifier = "mod@example.com", staffCode = "849201")
+        harness.repository.moderatorSignIn(identifier = "mod@trips-enjoy.com", staffCode = "849201")
 
         val call = harness.callsTo("auth/moderatorSignIn").single()
-        assertTrue(call.body.contains("\"identifier\":\"mod@example.com\""), call.body)
+        assertTrue(call.body.contains("\"identifier\":\"mod@trips-enjoy.com\""), call.body)
         assertTrue(call.body.contains("\"staffCode\":\"849201\""), call.body)
         assertTrue(call.body.contains("\"surface\":\"pwa\""), call.body)
     }
@@ -197,7 +197,7 @@ class AuthRepositoryTest {
                 .replace("\n", "") to HttpStatusCode.OK
         }
 
-        val outcome = harness.repository.adminSignIn("admin@example.com", "password")
+        val outcome = harness.repository.adminSignIn("admin@trips-enjoy.com", "password")
 
         assertEquals("challenge-1", (outcome as AdminSignInOutcome.TotpRequired).challengeToken)
         assertNull(harness.store.accessToken())
@@ -210,7 +210,7 @@ class AuthRepositoryTest {
                 .replace("\n", "") to HttpStatusCode.OK
         }
 
-        val outcome = harness.repository.staffSignIn("owner@example.com", "password")
+        val outcome = harness.repository.staffSignIn("owner@trips-enjoy.com", "password")
 
         val required = outcome as StaffSignInOutcome.SecondFactorRequired
         assertEquals("challenge-2", required.challengeToken)
@@ -222,7 +222,7 @@ class AuthRepositoryTest {
         val harness = harness {
             """{"json":{"accountId":"acct-7","role":"platform_driver","status":"pending_approval",
             "verificationRequired":"both_email_and_phone","otpDispatches":[
-              {"channel":"email","targetIdentifier":"driver@example.com","expiresAt":"2023-11-14T22:20:00.000Z","resendAvailableInSeconds":45,"fallbackChannelAvailable":false},
+              {"channel":"email","targetIdentifier":"driver@trips-enjoy.com","expiresAt":"2023-11-14T22:20:00.000Z","resendAvailableInSeconds":45,"fallbackChannelAvailable":false},
               {"channel":"sms","targetIdentifier":"+201500000000","expiresAt":"2023-11-14T22:20:00.000Z","resendAvailableInSeconds":45,"fallbackChannelAvailable":false}
             ]}}""".replace("\n", "") to HttpStatusCode.OK
         }
@@ -230,7 +230,7 @@ class AuthRepositoryTest {
         val outcome = harness.repository.registerSupplierAccount(
             role = AuthRepository.ROLE_PLATFORM_DRIVER,
             fullName = "Omar Hassan",
-            email = "driver@example.com",
+            email = "driver@trips-enjoy.com",
             phone = "+201500000000",
             password = "averylongpassword",
         )
@@ -240,7 +240,7 @@ class AuthRepositoryTest {
         val call = harness.callsTo("auth/registerSupplierAccount").single()
         assertTrue(call.body.contains("\"role\":\"platform_driver\""), call.body)
         assertTrue(call.body.contains("\"surface\":\"mobile\""), call.body)
-        assertTrue(call.body.contains("\"email\":\"driver@example.com\""), call.body)
+        assertTrue(call.body.contains("\"email\":\"driver@trips-enjoy.com\""), call.body)
         assertTrue(call.body.contains("\"phone\":\"+201500000000\""), call.body)
         assertTrue(call.body.contains("\"password\":\"averylongpassword\""), call.body)
 
@@ -262,7 +262,7 @@ class AuthRepositoryTest {
         harness.repository.registerSupplierAccount(
             role = AuthRepository.ROLE_PLATFORM_PHOTOGRAPHER,
             fullName = "Nour Adel",
-            email = "photo@example.com",
+            email = "photo@trips-enjoy.com",
             phone = "+201500000001",
             password = "averylongpassword",
         )
@@ -302,7 +302,7 @@ class AuthRepositoryTest {
             harness.repository.registerSupplierAccount(
                 role = AuthRepository.ROLE_ORGANIZATION_OWNER,
                 fullName = "Org Owner",
-                email = "owner@example.com",
+                email = "owner@trips-enjoy.com",
                 phone = "+201500000000",
                 password = "averylongpassword",
             )
@@ -323,7 +323,7 @@ class AuthRepositoryTest {
         }
 
         val error = assertFailsWith<ApiException> {
-            harness.repository.signIn(identifier = "sara@example.com", method = "password", password = "secret")
+            harness.repository.signIn(identifier = "sara@trips-enjoy.com", method = "password", password = "secret")
         }
 
         val details = error.details
@@ -430,7 +430,7 @@ class AuthRepositoryTest {
 
         val error = assertFailsWith<ApiException> {
             harness.repository.authed(AuthRepository.PROC_SIGN_IN) {
-                harness.repository.signIn(identifier = "sara@example.com", method = "password", password = "wrong")
+                harness.repository.signIn(identifier = "sara@trips-enjoy.com", method = "password", password = "wrong")
             }
         }
 
@@ -580,7 +580,7 @@ class AuthRepositoryTest {
     @Test
     fun `no token is ever sent in a URL`() = runTest {
         val harness = harness { authenticatedResponse() }
-        harness.repository.signIn(identifier = "sara@example.com", method = "password", password = "secret")
+        harness.repository.signIn(identifier = "sara@trips-enjoy.com", method = "password", password = "secret")
 
         for (call in harness.calls) {
             assertTrue(!call.path.contains("refresh-1"), "refresh token leaked into the path")
@@ -599,7 +599,7 @@ class AuthRepositoryTest {
                 .replace("\n", "") to HttpStatusCode.OK
         }
 
-        val outcome = harness.repository.signIn(identifier = "driver@example.com", method = "password", password = "secret")
+        val outcome = harness.repository.signIn(identifier = "driver@trips-enjoy.com", method = "password", password = "secret")
 
         assertTrue(outcome is SignInOutcome.PendingApproval)
         assertEquals("acct-1", (outcome as SignInOutcome.PendingApproval).accountId)
@@ -615,7 +615,7 @@ class AuthRepositoryTest {
 
         val result = harness.repository.submitDriverApplication(
             fullName = "Karim Driver",
-            email = "karim@example.com",
+            email = "karim@trips-enjoy.com",
             phone = "+201012345678",
             ownsVehicle = true,
             vehiclePlateNumber = "ABC-1234",
@@ -659,7 +659,7 @@ class AuthRepositoryTest {
         }
         val result = harness.repository.submitPhotographerApplication(
             fullName = "Nour Studio",
-            email = "nour@example.com",
+            email = "nour@trips-enjoy.com",
             phone = "+201099887766",
             portfolioPhotoCount = 8,
             cameraEquipmentSummary = "Sony A7 IV",

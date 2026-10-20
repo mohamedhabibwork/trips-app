@@ -1,7 +1,12 @@
 package com.tripsenjoy.screens.traveler.booking
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import com.tripsenjoy.analytics.AnalyticsTracker
 import com.tripsenjoy.auth.LocalAuthApiOrNull
 import com.tripsenjoy.screens.LocalScreenNavigator
 import com.tripsenjoy.screens.moderator.common.icon
@@ -20,6 +25,7 @@ import com.tripsenjoy.ui.components.BadgeTone
 import com.tripsenjoy.ui.components.IconName
 import com.tripsenjoy.ui.components.TeBadge
 import com.tripsenjoy.ui.components.TeButton
+import com.tripsenjoy.ui.components.TeCheckbox
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonPrimitive
@@ -35,6 +41,10 @@ fun BookingStep4PaymentHandoff() {
     val nav = LocalScreenNavigator.current
     val api = LocalAuthApiOrNull.current
     val scope = rememberCoroutineScope()
+    // "stub" is the dev dry-run gateway (NFR-SEC-12): the pending screen can settle it locally
+    // through the mock gateway callback instead of a real provider page.
+    var selectedGateway by remember { mutableStateOf("paymob") }
+    val gateways = listOf("paymob", "stripe", "tap", "fawry", "stub")
     ScreenPage(title = "Booking step 4: payment handoff") {
         BookingStepper(currentId = "payment", completedIds = setOf("travelers", "seats", "summary"))
         StatePreview(listedStates = setOf(TravelerScreenState.Loading, TravelerScreenState.Error)) {
@@ -44,9 +54,19 @@ fun BookingStep4PaymentHandoff() {
                 LabelValue(label = "Hold time left", value = "15:00")
             }
             ScreenSection(header = "Payment methods") {
-                LabelValue(label = "International cards and wallets", value = "Stripe")
-                LabelValue(label = "Local cards", value = "Paymob or Tap")
-                LabelValue(label = "Cash in Egypt", value = "Fawry")
+                gateways.forEach { gateway ->
+                    TeCheckbox(
+                        checked = selectedGateway == gateway,
+                        onCheckedChange = { checked -> if (checked) selectedGateway = gateway },
+                        label = when (gateway) {
+                            "paymob" -> "Local card (Paymob)"
+                            "stripe" -> "International cards and wallets (Stripe)"
+                            "tap" -> "Local card (Tap)"
+                            "fawry" -> "Cash in Egypt (Fawry)"
+                            else -> "Dev stub gateway (dev only)"
+                        },
+                    )
+                }
             }
             ScreenNote(text = "You pay on the payment provider's page. Trips Enjoy never receives card details.")
             TeButton(
@@ -56,7 +76,12 @@ fun BookingStep4PaymentHandoff() {
                     val tripId = TripsBrowseRepository.selectedTripId ?: "00000000-0000-0000-0000-000000000001"
                     if (client != null) {
                         scope.launch {
-                            runCatching {
+                            // Only the coarse gateway goes out; never amounts tied to a person or payment ids.
+                            AnalyticsTracker.trackAction(
+                                "payment_initiated",
+                                mapOf("gateway" to selectedGateway, "entity_type" to "trip_booking"),
+                            )
+                            val outcome = runCatching {
                                 val res = client.call(
                                     "booking/createBooking",
                                     buildJsonObject {
@@ -87,7 +112,7 @@ fun BookingStep4PaymentHandoff() {
                                             },
                                         )
                                         TravelerBookingState.couponCode?.let { put("couponCode", it) }
-                                        put("paymentGateway", "paymob")
+                                        put("paymentGateway", selectedGateway)
                                     },
                                     JsonElement.serializer(),
                                 ).jsonObject
@@ -100,12 +125,21 @@ fun BookingStep4PaymentHandoff() {
                                         buildJsonObject {
                                             put("bookingId", bookingId)
                                             put("purpose", "trip_booking")
-                                            put("gateway", "paymob")
+                                            put("gateway", selectedGateway)
                                         },
                                         JsonElement.serializer(),
                                     ).jsonObject
                                     TravelerBookingState.lastPaymentId = payment["id"]?.jsonPrimitive?.contentOrNull
+                                    TravelerBookingState.lastPaymentGateway =
+                                        payment["gateway"]?.jsonPrimitive?.contentOrNull ?: selectedGateway
+                                    TravelerBookingState.lastPaymentProviderReference =
+                                        payment["providerReference"]?.jsonPrimitive?.contentOrNull
                                 }
+                            }
+                            if (outcome.isSuccess) {
+                                AnalyticsTracker.trackAction("booking_created", mapOf("entity_type" to "trip_booking"))
+                            } else {
+                                AnalyticsTracker.trackAction("booking_creation_failed", mapOf("step" to "handoff"))
                             }
                             nav.replace("SCR-TRV-07")
                         }

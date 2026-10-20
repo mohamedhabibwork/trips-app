@@ -12,6 +12,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import com.tripsenjoy.analytics.AnalyticsTracker
 import com.tripsenjoy.auth.AuthConventions
 import com.tripsenjoy.auth.AuthErrorMapper
 import com.tripsenjoy.auth.AuthErrorRecovery
@@ -306,6 +307,11 @@ fun RegisterScreen(
             },
             onClick = {
                 if (busy) return@TeButton
+                // No PII: only the chosen role/channel shape, not the name, email or phone.
+                AnalyticsTracker.trackAction(
+                    "register_submit",
+                    mapOf("role" to (config.registrationRole ?: "unknown"), "supplier" to supplierChoice.name),
+                )
                 val validation = validateRegistration(
                     fullName = fullName,
                     email = email,

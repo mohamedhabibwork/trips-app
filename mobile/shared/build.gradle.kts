@@ -547,6 +547,11 @@ kotlin {
         }
         androidMain.dependencies {
             implementation(libs.ktor.client.okhttp)
+            // Firebase Analytics for com.tripsenjoy.analytics.AnalyticsTracker. The BoM platform
+            // pins the version (same BoM as :androidApp); the analytics artifact itself has no
+            // version in the catalog on purpose.
+            implementation(project.dependencies.platform(libs.firebase.bom))
+            implementation(libs.firebase.analytics)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)

@@ -5,6 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import com.tripsenjoy.analytics.AnalyticsTracker
 import com.tripsenjoy.screens.LocalScreenNavigator
 import com.tripsenjoy.screens.moderator.common.LocalModeratorSession
 import com.tripsenjoy.screens.moderator.common.ModField
@@ -88,7 +89,17 @@ private fun IncidentForm() {
         text = "Send incident",
         enabled = categoryLabel != null && note.isNotBlank(),
         onClick = {
-            categoryLabel?.let { label -> status = session.reportIncident(label) }
+            categoryLabel?.let { label ->
+                status = session.reportIncident(label)
+                // The category and delivery outcome only; the note text is never logged.
+                AnalyticsTracker.trackAction(
+                    "incident_reported",
+                    mapOf(
+                        "outcome" to if (status == ModSubmitStatus.Sent) "sent" else "queued_offline",
+                        "entity_type" to "incident",
+                    ),
+                )
+            }
         },
     )
     status?.let { result -> IncidentResult(result) }

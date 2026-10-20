@@ -7,11 +7,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import com.tripsenjoy.analytics.AnalyticsTracker
 import com.tripsenjoy.ui.components.TeButton
 import com.tripsenjoy.ui.components.TeButtonVariant
 import com.tripsenjoy.ui.components.TePageHeader
@@ -24,6 +26,24 @@ fun ScreenBrowser(title: String, screens: List<ScreenEntry>, modifier: Modifier 
     var openId by remember { mutableStateOf<String?>(null) }
     val open = screens.firstOrNull { it.id == openId }
     val spacing = TripsEnjoyTheme.spacing
+
+    // Central screen tracking for the browser-style surfaces: the list itself counts as the
+    // surface's home screen; each opened screen emits its own screen_view.
+    LaunchedEffect(openId) {
+        if (openId == null) {
+            AnalyticsTracker.trackScreen(
+                screenName = title,
+                params = mapOf("screen_title" to title, "surface" to "browser"),
+            )
+        } else {
+            open?.let {
+                AnalyticsTracker.trackScreen(
+                    screenName = it.id,
+                    params = mapOf("screen_title" to it.title, "surface" to title),
+                )
+            }
+        }
+    }
 
     Column(
         modifier = modifier.fillMaxSize().padding(spacing.space4),

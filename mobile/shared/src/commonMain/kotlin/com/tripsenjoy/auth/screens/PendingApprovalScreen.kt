@@ -64,7 +64,7 @@ fun PendingApprovalScreen(
     // Driver / photographer submission state when no application has been filed yet
     val effectiveRole = role ?: session?.config?.registrationRole ?: AuthRepository.ROLE_PLATFORM_DRIVER
     var fullName by remember { mutableStateOf("Supplier Applicant") }
-    var email by remember { mutableStateOf(if (contact.contains("@")) contact else "applicant@example.com") }
+    var email by remember { mutableStateOf(if (contact.contains("@")) contact else "applicant@trips-enjoy.com") }
     var phone by remember { mutableStateOf(if (contact.startsWith("+")) contact else "+201012345678") }
     var ownsVehicle by remember { mutableStateOf(true) }
     var plateNumber by remember { mutableStateOf("ABC-1234") }

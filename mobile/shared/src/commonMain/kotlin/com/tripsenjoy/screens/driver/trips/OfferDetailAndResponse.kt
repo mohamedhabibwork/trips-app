@@ -5,6 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import com.tripsenjoy.analytics.AnalyticsTracker
 import com.tripsenjoy.screens.LocalScreenNavigator
 import com.tripsenjoy.screens.driver.DriverRoutes
 import com.tripsenjoy.screens.driver.common.DrvErrorBlock
@@ -119,12 +120,16 @@ private fun OfferResponse(offer: DrvOffer) {
     TeButton(
         text = "Accept offer",
         enabled = canAccept,
-        onClick = { session.answerOffer(offer.id, OfferStatus.Accepted) },
+        onClick = {
+            AnalyticsTracker.trackAction("offer_accepted", mapOf("entity_type" to "driver_offer"))
+            session.answerOffer(offer.id, OfferStatus.Accepted)
+        },
     )
     TeButton(
         text = "Send counter-offer",
         enabled = canCounter,
         onClick = {
+            AnalyticsTracker.trackAction("offer_countered", mapOf("entity_type" to "driver_offer"))
             session.answerOffer(offer.id, OfferStatus.Countered, counterMinor)
             nav.back()
         },
@@ -142,6 +147,7 @@ private fun OfferResponse(offer: DrvOffer) {
         title = "Reject this offer?",
         primaryLabel = "Reject offer",
         onPrimary = {
+            AnalyticsTracker.trackAction("offer_rejected", mapOf("entity_type" to "driver_offer"))
             session.answerOffer(offer.id, OfferStatus.Declined)
             confirmReject = false
             nav.back()

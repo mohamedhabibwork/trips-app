@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import com.tripsenjoy.analytics.AnalyticsTracker
 import com.tripsenjoy.auth.LocalAuthApiOrNull
 import com.tripsenjoy.screens.traveler.bookings.TravelerBookingState
 import com.tripsenjoy.screens.traveler.common.AmountPlaceholder
@@ -73,6 +74,11 @@ fun BookingStep3CouponAndOrderSummary() {
                                         },
                                         JsonElement.serializer(),
                                     )
+                                }.onSuccess {
+                                    // The code itself is never logged; only the action.
+                                    AnalyticsTracker.trackAction("coupon_applied", mapOf("entity_type" to "coupon"))
+                                }.onFailure {
+                                    AnalyticsTracker.trackAction("coupon_apply_failed", mapOf("step" to "summary"))
                                 }
                             }
                         }
