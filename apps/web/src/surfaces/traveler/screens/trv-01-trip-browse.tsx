@@ -7,6 +7,7 @@ import { useAuth } from "@/auth/auth-context";
 import { Notice, TextField } from "@/components/kit/controls";
 import { formatDateRange, formatMinorAmount } from "@/components/kit/format";
 import { pathFor } from "@/navigation/web-routes";
+import { serverQueryOptions } from "@/utils/server-rpc";
 import { orpc } from "@/utils/orpc";
 import { TripCard, type TripCardView } from "@/surfaces/traveler/components/cards";
 import { ScreenEmpty, ScreenError, ScreenLoading } from "@/surfaces/traveler/components/states";
@@ -18,7 +19,9 @@ export function Trv01TripBrowse() {
   const { t, locale } = useAuth();
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
-  const tripsQuery = useQuery(orpc.trips.browsePublicTrips.queryOptions({ input: {} }));
+  const tripsQuery = useQuery(
+    serverQueryOptions(orpc.trips.browsePublicTrips, "trips/browsePublicTrips", { input: {} }),
+  );
 
   // The server already hides VIP early-access trips from non-VIP viewers, so a trip listed here is
   // bookable by this viewer; the badge is only cosmetic and not derivable from the public DTO.

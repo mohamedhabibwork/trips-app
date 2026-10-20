@@ -5,6 +5,7 @@ import { useState } from "react";
 
 import { useAuth } from "@/auth/auth-context";
 import { Button, ChoiceGroup, ChoiceRow, Notice } from "@/components/kit/controls";
+import { serverQueryOptions, serverMutationOptions } from "@/utils/server-rpc";
 import { orpc } from "@/utils/orpc";
 
 import { Overlay } from "./overlay";
@@ -48,13 +49,19 @@ export function RoleSwitcher({ onClose }: RoleSwitcherProps) {
   const queryClient = useQueryClient();
   const signedIn = status === "authenticated";
   const rolesQuery = useQuery({
-    ...orpc.auth.listMyRolesAndOrganizations.queryOptions({ input: undefined }),
+    ...serverQueryOptions(
+      orpc.auth.listMyRolesAndOrganizations,
+      "auth/listMyRolesAndOrganizations",
+      { input: undefined },
+    ),
     enabled: signedIn,
   });
   const onSuccess = () => queryClient.invalidateQueries({ queryKey: orpc.auth.key() });
-  const switchRoleMutation = useMutation(orpc.auth.switchRole.mutationOptions({ onSuccess }));
+  const switchRoleMutation = useMutation(
+    serverMutationOptions(orpc.auth.switchRole, "auth/switchRole", { onSuccess }),
+  );
   const switchOrgMutation = useMutation(
-    orpc.auth.switchOrganization.mutationOptions({ onSuccess }),
+    serverMutationOptions(orpc.auth.switchOrganization, "auth/switchOrganization", { onSuccess }),
   );
 
   const roles = (rolesQuery.data?.roles ?? [])

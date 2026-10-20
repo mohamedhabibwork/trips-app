@@ -8,6 +8,7 @@ import { useAuth } from "@/auth/auth-context";
 import { Segmented } from "@/components/kit/controls";
 import { formatDateRange, formatMinorAmount } from "@/components/kit/format";
 import { pathFor } from "@/navigation/web-routes";
+import { serverQueryOptions } from "@/utils/server-rpc";
 import { orpc } from "@/utils/orpc";
 import { BookingCard, type BookingCardView } from "@/surfaces/traveler/components/cards";
 import { ScreenEmpty, ScreenError, ScreenLoading } from "@/surfaces/traveler/components/states";
@@ -23,7 +24,9 @@ export function Trv10MyBookings() {
   const planTier = usePlanTier();
   const [tab, setTab] = useState<"upcoming" | "past">("upcoming");
 
-  const bookingsQuery = useQuery(orpc.booking.listMyBookings.queryOptions({ input: undefined }));
+  const bookingsQuery = useQuery(
+    serverQueryOptions(orpc.booking.listMyBookings, "booking/listMyBookings", { input: undefined }),
+  );
 
   if (bookingsQuery.isPending) {
     return (
@@ -107,7 +110,9 @@ function BookingCardItem({
   const { locale } = useAuth();
   const navigate = useNavigate();
   const tripQuery = useQuery({
-    ...orpc.trips.getPublicTripDetail.queryOptions({ input: { tripId: booking.tripId } }),
+    ...serverQueryOptions(orpc.trips.getPublicTripDetail, "trips/getPublicTripDetail", {
+      input: { tripId: booking.tripId },
+    }),
     retry: false,
   });
   const trip = tripQuery.data?.trip ?? null;

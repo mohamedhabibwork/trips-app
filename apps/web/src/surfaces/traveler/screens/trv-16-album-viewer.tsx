@@ -8,6 +8,7 @@ import { useState } from "react";
 import { useAuth } from "@/auth/auth-context";
 import { Button, Notice, StatusPill } from "@/components/kit/controls";
 import { client, orpc } from "@/utils/orpc";
+import { serverQueryOptions, serverRpc } from "@/utils/server-rpc";
 import { ScreenError, ScreenLoading, ScreenNotFound } from "@/surfaces/traveler/components/states";
 import { TRAVELER_PAGE_CLASS, pick } from "@/surfaces/traveler/util";
 import { TeIcon } from "@trips-app/ui/components/te-icon";
@@ -19,14 +20,26 @@ export function Trv16AlbumViewer({ albumId: albumIdProp }: { albumId?: string } 
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const [shareToken, setShareToken] = useState<string | null>(null);
 
-  const albumQuery = useQuery(orpc.traveler.albums.getAlbum.queryOptions({ input: { albumId } }));
+  const albumQuery = useQuery(
+    serverQueryOptions(orpc.traveler.albums.getAlbum, "traveler/albums/getAlbum", {
+      input: { albumId },
+    }),
+  );
 
   const createLink = useMutation({
-    mutationFn: () => client.traveler.albums.createSharedLink({ albumId }),
+    mutationFn: () =>
+      serverRpc<Awaited<ReturnType<typeof client.traveler.albums.createSharedLink>>>(
+        "traveler/albums/createSharedLink",
+        { albumId },
+      ),
     onSuccess: (result) => setShareToken(result.link.token),
   });
   const revokeLink = useMutation({
-    mutationFn: () => client.traveler.albums.revokeSharedLink({ token: shareToken ?? "" }),
+    mutationFn: () =>
+      serverRpc<Awaited<ReturnType<typeof client.traveler.albums.revokeSharedLink>>>(
+        "traveler/albums/revokeSharedLink",
+        { token: shareToken ?? "" },
+      ),
     onSuccess: () => setShareToken(null),
   });
 

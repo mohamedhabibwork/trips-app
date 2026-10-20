@@ -1,8 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { findScreen } from "@/screens/registry";
+import { pageHead } from "@/navigation/seo";
 import { Landing } from "@/screens/public/landing/landing";
 import { loadApiStatus } from "@/utils/api-status";
+import { serverQueryOptions } from "@/utils/server-rpc";
 
 /** `/` — the landing page (SCR-PUB-01): prefetches the API status and the public trips. */
 export const Route = createFileRoute("/")({
@@ -10,7 +12,9 @@ export const Route = createFileRoute("/")({
     await Promise.all([
       loadApiStatus({ context }),
       context.queryClient.ensureQueryData(
-        context.orpc.trips.browsePublicTrips.queryOptions({ input: {} }),
+        serverQueryOptions(context.orpc.trips.browsePublicTrips, "trips/browsePublicTrips", {
+          input: {},
+        }),
       ),
     ]);
     const screen = findScreen("public", "landing");
@@ -24,5 +28,6 @@ export const Route = createFileRoute("/")({
       });
     }
   },
+  head: pageHead("SCR-PUB-01"),
   component: Landing,
 });

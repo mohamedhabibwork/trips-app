@@ -6,6 +6,7 @@ import { useState } from "react";
 
 import { useAuth } from "@/auth/auth-context";
 import { Button, Notice } from "@/components/kit/controls";
+import { serverQueryOptions } from "@/utils/server-rpc";
 import { orpc } from "@/utils/orpc";
 import { ScreenError, ScreenLoading, ScreenNotFound } from "@/surfaces/traveler/components/states";
 import { TRAVELER_PAGE_CLASS, pick } from "@/surfaces/traveler/util";
@@ -17,7 +18,13 @@ export function Trv17SharedAlbum({ token: tokenProp }: { token?: string } = {}) 
   const [downloadPrompted, setDownloadPrompted] = useState(false);
 
   const albumQuery = useQuery(
-    orpc.traveler.albums.resolveSharedLink.queryOptions({ input: { token } }),
+    serverQueryOptions(
+      orpc.traveler.albums.resolveSharedLink,
+      "traveler/albums/resolveSharedLink",
+      {
+        input: { token },
+      },
+    ),
   );
 
   if (albumQuery.isPending) {

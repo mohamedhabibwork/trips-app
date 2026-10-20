@@ -10,6 +10,7 @@ import { useAuth } from "@/auth/auth-context";
 import { DropZone, buttonClass } from "@/components/kit/controls";
 import { PhoneColumn } from "@/components/kit/layout";
 import { orpc } from "@/utils/orpc";
+import { serverQueryOptions, serverMutationOptions } from "@/utils/server-rpc";
 
 import { SignInRequired } from "./sign-in-required";
 
@@ -46,11 +47,11 @@ export function ScrShr16DocumentAndPhotoUpload() {
   const queryClient = useQueryClient();
   const signedIn = status === "authenticated";
   const filesQuery = useQuery({
-    ...orpc.media.listFiles.queryOptions({ input: {} }),
+    ...serverQueryOptions(orpc.media.listFiles, "media/listFiles", { input: {} }),
     enabled: signedIn,
   });
   const uploadMutation = useMutation(
-    orpc.media.uploadFile.mutationOptions({
+    serverMutationOptions(orpc.media.uploadFile, "media/uploadFile", {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: orpc.media.key() });
       },

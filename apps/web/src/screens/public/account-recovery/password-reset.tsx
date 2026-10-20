@@ -14,7 +14,9 @@ import { toAuthErrorView } from "@/auth/errors";
 import { Button, StepLabel, TextButton, TextField, buttonClass } from "@/components/kit/controls";
 import { CenteredPanel, Lead, PanelHeading } from "@/components/kit/layout";
 import { pathFor } from "@/navigation/web-routes";
+import { trackEvent } from "@/utils/analytics";
 import { orpc } from "@/utils/orpc";
+import { serverMutationOptions, serverQueryOptions } from "@/utils/server-rpc";
 
 const MIN_PASSWORD_LENGTH = 12;
 const CODE_LENGTH = 6;
@@ -46,14 +48,28 @@ export function PasswordReset() {
   const queryClient = useQueryClient();
   const onSuccess = () => queryClient.invalidateQueries({ queryKey: orpc.auth.key() });
   const requestResetMutation = useMutation(
-    orpc.auth.requestPasswordReset.mutationOptions({ onSuccess }),
+    serverMutationOptions(orpc.auth.requestPasswordReset, "auth/requestPasswordReset", {
+      onSuccess: () => {
+        trackEvent("password_reset_requested", { surface: "public" });
+        onSuccess();
+      },
+      onError: () => trackEvent("password_reset_request_failed", { surface: "public" }),
+    }),
   );
   const confirmResetMutation = useMutation(
-    orpc.auth.confirmPasswordReset.mutationOptions({ onSuccess }),
+    serverMutationOptions(orpc.auth.confirmPasswordReset, "auth/confirmPasswordReset", {
+      onSuccess: () => {
+        trackEvent("password_reset_completed", { surface: "public" });
+        onSuccess();
+      },
+      onError: () => trackEvent("password_reset_failed", { surface: "public" }),
+    }),
   );
   // The breached-list check runs on the server when the platform enables it; the rule is shown as a
   // note (not ticked) only then.
-  const settingsQuery = useQuery(orpc.auth.getAuthSettings.queryOptions({ input: undefined }));
+  const settingsQuery = useQuery(
+    serverQueryOptions(orpc.auth.getAuthSettings, "auth/getAuthSettings", { input: undefined }),
+  );
   const breachCheck = settingsQuery.data?.breachedPasswordCheckEnabled === true;
   const [step, setStep] = useState<Step>("identify");
   const [identifier, setIdentifier] = useState("");

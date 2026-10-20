@@ -10,6 +10,7 @@ import { Button, Notice, StatusPill, TextField } from "@/components/kit/controls
 import { formatMinorAmount } from "@/components/kit/format";
 import { pathFor } from "@/navigation/web-routes";
 import { client, orpc } from "@/utils/orpc";
+import { serverQueryOptions, serverRpc } from "@/utils/server-rpc";
 import {
   formatHoldTime,
   holdSecondsLeft,
@@ -43,36 +44,50 @@ export function Trv05BookingReview({ tripId: tripIdProp }: { tripId?: string } =
   );
   const holdExpired = Boolean(search.holdUntil) && secondsLeft <= 0;
 
-  const tripQuery = useQuery(orpc.trips.getPublicTripDetail.queryOptions({ input: { tripId } }));
+  const tripQuery = useQuery(
+    serverQueryOptions(orpc.trips.getPublicTripDetail, "trips/getPublicTripDetail", {
+      input: { tripId },
+    }),
+  );
   const programsQuery = useQuery(
-    orpc.programs.listPublicTripPrograms.queryOptions({ input: { tripId } }),
+    serverQueryOptions(orpc.programs.listPublicTripPrograms, "programs/listPublicTripPrograms", {
+      input: { tripId },
+    }),
   );
 
+  // The gateway is fixed when the payment intent is created (the pay screen cannot change it).
+  // Dev uses the stub dry-run gateway (NFR-SEC-12) so the flow settles through /mock-gateway/pay.
+  const paymentGateway = import.meta.env.DEV ? "stub" : "paymob";
   const createBooking = useMutation({
     mutationFn: async () => {
       const trip = tripQuery.data?.trip;
       if (!trip) throw new Error("missing trip");
-      const booking = await client.booking.createBooking({
-        tripId,
-        vehicleId: search.vehicle ?? null,
-        passengers: Array.from({ length: travelers }, (_, index) => ({
-          id: `p-${index + 1}`,
-          fullName:
-            index === 0
-              ? (profile.data?.fullName ?? t("screen.traveler.wizard.leadTraveler"))
-              : t("screen.traveler.wizard.additionalTraveler", { index: index + 1 }),
-          isChild: false,
-        })),
-        selectedProgramIds,
-        seatLabels,
-        couponCode: coupon,
-        paymentGateway: "paymob",
-        planTier: wizardTier(profile.data?.travelerPlanTier),
-      });
-      const payment = await client.payments.createPaymentIntent({
+      const booking = await serverRpc<Awaited<ReturnType<typeof client.booking.createBooking>>>(
+        "booking/createBooking",
+        {
+          tripId,
+          vehicleId: search.vehicle ?? null,
+          passengers: Array.from({ length: travelers }, (_, index) => ({
+            id: `p-${index + 1}`,
+            fullName:
+              index === 0
+                ? (profile.data?.fullName ?? t("screen.traveler.wizard.leadTraveler"))
+                : t("screen.traveler.wizard.additionalTraveler", { index: index + 1 }),
+            isChild: false,
+          })),
+          selectedProgramIds,
+          seatLabels,
+          couponCode: coupon,
+          paymentGateway,
+          planTier: wizardTier(profile.data?.travelerPlanTier),
+        },
+      );
+      const payment = await serverRpc<
+        Awaited<ReturnType<typeof client.payments.createPaymentIntent>>
+      >("payments/createPaymentIntent", {
         bookingId: booking.booking.id,
         purpose: "trip_booking",
-        gateway: "paymob",
+        gateway: paymentGateway,
         currencyCode: "EGP",
       });
       return { bookingId: booking.booking.id, paymentId: payment.id };
@@ -135,8 +150,11 @@ export function Trv05BookingReview({ tripId: tripIdProp }: { tripId?: string } =
     if (!code) return;
     setCouponError(null);
     setCouponAccepted(false);
-    client.coupons
-      .validateCoupon({ code, tripId, subtotalMinor: subtotalMinor + programsTotalMinor })
+    serverRpc<Awaited<ReturnType<typeof client.coupons.validateCoupon>>>("coupons/validateCoupon", {
+      code,
+      tripId,
+      subtotalMinor: subtotalMinor + programsTotalMinor,
+    })
       .then(() => {
         setCoupon(code);
         setCouponAccepted(true);

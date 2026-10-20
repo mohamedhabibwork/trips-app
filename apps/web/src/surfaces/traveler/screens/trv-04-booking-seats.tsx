@@ -8,6 +8,7 @@ import { useState } from "react";
 import { useAuth } from "@/auth/auth-context";
 import { Button, Notice } from "@/components/kit/controls";
 import { pathFor } from "@/navigation/web-routes";
+import { serverQueryOptions, serverRpc } from "@/utils/server-rpc";
 import { client, orpc } from "@/utils/orpc";
 import { SeatMap, SeatMapLegend, type SeatView } from "@/screens/shared/seat-map";
 import { holdSecondsLeft, seatPriorityState } from "@/surfaces/traveler/booking-wizard";
@@ -29,8 +30,14 @@ export function Trv04BookingSeats({ tripId: tripIdProp }: { tripId?: string } = 
   const [holdError, setHoldError] = useState<string | null>(null);
   const [holding, setHolding] = useState(false);
 
-  const tripQuery = useQuery(orpc.trips.getPublicTripDetail.queryOptions({ input: { tripId } }));
-  const seatsQuery = useQuery(orpc.seats.getSeatMap.queryOptions({ input: { tripId } }));
+  const tripQuery = useQuery(
+    serverQueryOptions(orpc.trips.getPublicTripDetail, "trips/getPublicTripDetail", {
+      input: { tripId },
+    }),
+  );
+  const seatsQuery = useQuery(
+    serverQueryOptions(orpc.seats.getSeatMap, "seats/getSeatMap", { input: { tripId } }),
+  );
 
   if (tripQuery.isPending || seatsQuery.isPending) {
     return (
@@ -85,11 +92,14 @@ export function Trv04BookingSeats({ tripId: tripIdProp }: { tripId?: string } = 
     setHolding(true);
     setHoldError(null);
     try {
-      const hold = await client.seats.holdSeats({
-        tripId,
-        vehicleId: map.vehicleId,
-        seatLabels: selectedSeats,
-      });
+      const hold = await serverRpc<Awaited<ReturnType<typeof client.seats.holdSeats>>>(
+        "seats/holdSeats",
+        {
+          tripId,
+          vehicleId: map.vehicleId,
+          seatLabels: selectedSeats,
+        },
+      );
       const search2 = {
         travelers: search.travelers,
         programs: search.programs,

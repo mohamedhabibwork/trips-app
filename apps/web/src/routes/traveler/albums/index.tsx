@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { requireSignedIn } from "@/auth/guard";
 
+import { pageHead } from "@/navigation/seo";
 import { screenLoader } from "@/navigation/load-screen";
 import { Trv15HistoryAlbums } from "@/surfaces/traveler/screens/trv-15-history-albums";
 
@@ -9,5 +10,6 @@ import { Trv15HistoryAlbums } from "@/surfaces/traveler/screens/trv-15-history-a
 export const Route = createFileRoute("/traveler/albums/")({
   beforeLoad: requireSignedIn(),
   loader: screenLoader("SCR-TRV-15"),
+  head: pageHead("SCR-TRV-15"),
   component: Trv15HistoryAlbums,
 });

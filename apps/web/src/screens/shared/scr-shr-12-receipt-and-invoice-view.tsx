@@ -4,14 +4,16 @@
 import { useQuery } from "@tanstack/react-query";
 import { useRouter, useRouterState } from "@tanstack/react-router";
 import { TeIcon } from "@trips-app/ui/components/te-icon";
-import type { ReactNode } from "react";
+import { type ReactNode, useState } from "react";
 
 import { useAuth } from "@/auth/auth-context";
 import { Button, Notice, TextButton } from "@/components/kit/controls";
 import { formatDate, formatMinorAmount } from "@/components/kit/format";
 import { PhoneColumn } from "@/components/kit/layout";
 import { matchWebRoute } from "@/navigation/web-routes";
+import { downloadReceiptPdf } from "@/utils/receipt-pdf";
 import { orpc } from "@/utils/orpc";
+import { serverQueryOptions } from "@/utils/server-rpc";
 
 import { SignInRequired } from "./sign-in-required";
 
@@ -68,12 +70,15 @@ function lineLabel(
 export function ScrShr12ReceiptAndInvoiceView() {
   const { t, locale, status } = useAuth();
   const router = useRouter();
+  const [pdfSaving, setPdfSaving] = useState(false);
   const receiptId = useRouterState({
     select: (state) => matchWebRoute("public", state.location.pathname)?.params.receiptId,
   });
   const signedIn = status === "authenticated";
   const receiptQuery = useQuery({
-    ...orpc.payments.getReceipt.queryOptions({ input: { paymentId: receiptId ?? "" } }),
+    ...serverQueryOptions(orpc.payments.getReceipt, "payments/getReceipt", {
+      input: { paymentId: receiptId ?? "" },
+    }),
     enabled: signedIn && Boolean(receiptId),
     retry: false,
   });
@@ -110,6 +115,34 @@ export function ScrShr12ReceiptAndInvoiceView() {
   }
 
   const money = (minor: number) => formatMinorAmount(minor, receipt.currencyCode, locale);
+
+  const downloadPdf = async () => {
+    if (pdfSaving) return;
+    setPdfSaving(true);
+    try {
+      await downloadReceiptPdf({
+        invoiceNumber: receipt.invoiceNumber,
+        issuedAt: formatDate(receipt.issuedAt, locale),
+        billedToName: receipt.billedToName,
+        currencyCode: receipt.currencyCode,
+        lines: receipt.lines
+          .filter((line) => line.amountMinor !== 0)
+          .map((line) => ({
+            label: lineLabel(line, locale, t),
+            amount: money(line.amountMinor),
+            negative: line.amountMinor < 0,
+          })),
+        subtotal: money(receipt.subtotalMinor),
+        total: money(receipt.totalMinor),
+        refunded: receipt.refundedMinor > 0 ? money(receipt.refundedMinor) : null,
+      });
+    } catch {
+      // PDF export is best-effort; fall back to the browser print dialog (save as PDF).
+      window.print();
+    } finally {
+      setPdfSaving(false);
+    }
+  };
 
   return (
     <PhoneColumn className="gap-3.5">
@@ -166,8 +199,8 @@ export function ScrShr12ReceiptAndInvoiceView() {
           <Row label={t("screen.shared.receipt.refunded")} value={money(-receipt.refundedMinor)} />
         ) : null}
       </Card>
-      <Button className="mt-auto print:hidden" onClick={() => window.print()}>
-        {t("screen.shared.receipt.download")}
+      <Button className="mt-auto print:hidden" disabled={pdfSaving} onClick={downloadPdf}>
+        {pdfSaving ? t("screen.shared.receipt.downloading") : t("screen.shared.receipt.download")}
       </Button>
     </PhoneColumn>
   );

@@ -7,6 +7,7 @@ import { useAuth } from "@/auth/auth-context";
 import { Button, Notice, Segmented, StatusPill } from "@/components/kit/controls";
 import { formatDate, formatMinorAmount } from "@/components/kit/format";
 import { client, orpc } from "@/utils/orpc";
+import { serverQueryOptions, serverRpc } from "@/utils/server-rpc";
 import { PlanBadge } from "@/surfaces/traveler/components/cards";
 import { ScreenError, ScreenLoading } from "@/surfaces/traveler/components/states";
 import { useTravelerProfile } from "@/surfaces/traveler/plan-tier";
@@ -19,12 +20,21 @@ export function Trv18Plans() {
   const [cycle, setCycle] = useState<"monthly" | "annual">("monthly");
 
   const plansQuery = useQuery(
-    orpc.traveler.account.getPlanComparison.queryOptions({ input: undefined }),
+    serverQueryOptions(
+      orpc.traveler.account.getPlanComparison,
+      "traveler/account/getPlanComparison",
+      {
+        input: undefined,
+      },
+    ),
   );
 
   const upgrade = useMutation({
     mutationFn: (targetTier: "explorer" | "vip") =>
-      client.traveler.account.upgradePlan({ targetTier, billingCycle: cycle }),
+      serverRpc<Awaited<ReturnType<typeof client.traveler.account.upgradePlan>>>(
+        "traveler/account/upgradePlan",
+        { targetTier, billingCycle: cycle },
+      ),
     onSuccess: (result) => {
       toast.success(
         t("screen.traveler.plan.upgraded", {
@@ -39,7 +49,10 @@ export function Trv18Plans() {
 
   const downgrade = useMutation({
     mutationFn: (targetTier: "free" | "explorer") =>
-      client.traveler.account.downgradePlan({ targetTier }),
+      serverRpc<Awaited<ReturnType<typeof client.traveler.account.downgradePlan>>>(
+        "traveler/account/downgradePlan",
+        { targetTier },
+      ),
     onSuccess: (result) => {
       toast.success(
         t("screen.traveler.plan.downgradeScheduled", {
@@ -54,7 +67,10 @@ export function Trv18Plans() {
 
   const startTrial = useMutation({
     mutationFn: (targetTier: "explorer" | "vip") =>
-      client.traveler.account.startTrial({ targetTier }),
+      serverRpc<Awaited<ReturnType<typeof client.traveler.account.startTrial>>>(
+        "traveler/account/startTrial",
+        { targetTier },
+      ),
     onSuccess: (result) => {
       toast.success(
         t("screen.traveler.plan.trialStarted", {

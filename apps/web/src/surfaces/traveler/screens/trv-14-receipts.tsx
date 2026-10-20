@@ -8,6 +8,7 @@ import { Notice } from "@/components/kit/controls";
 import { formatDateTime, formatMinorAmount } from "@/components/kit/format";
 import { pathFor } from "@/navigation/web-routes";
 import { client, orpc } from "@/utils/orpc";
+import { serverQueryOptions, serverRpc } from "@/utils/server-rpc";
 import { ScreenEmpty, ScreenError, ScreenLoading } from "@/surfaces/traveler/components/states";
 import { usePlanTier } from "@/surfaces/traveler/plan-tier";
 import { TRAVELER_PAGE_CLASS, pick } from "@/surfaces/traveler/util";
@@ -22,7 +23,9 @@ export function Trv14Receipts() {
   const [exportTarget, setExportTarget] = useState<string | null>(null);
 
   const receiptsQuery = useQuery(
-    orpc.traveler.receipts.listMine.queryOptions({ input: undefined }),
+    serverQueryOptions(orpc.traveler.receipts.listMine, "traveler/receipts/listMine", {
+      input: undefined,
+    }),
   );
 
   if (receiptsQuery.isPending) {
@@ -48,8 +51,10 @@ export function Trv14Receipts() {
       setExportTarget(receiptId);
       return;
     }
-    client.traveler.receipts
-      .export({ receiptId })
+    serverRpc<Awaited<ReturnType<typeof client.traveler.receipts.export>>>(
+      "traveler/receipts/export",
+      { receiptId },
+    )
       .then((result) => {
         toast.success(
           t("screen.traveler.receipts.exported", { number: result.receipt.invoiceNumber }),

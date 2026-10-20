@@ -19,6 +19,10 @@ import { DeletionGracePeriod } from "./account-recovery/deletion-grace-period";
 import { ApplicationStatusAndChangesResponse } from "./account-recovery/application-status-and-changes-response";
 import { AppealARejection } from "./account-recovery/appeal-a-rejection";
 import { ModeratorSignInWithStaffCode } from "./sign-in/moderator-sign-in-with-staff-code";
+import { Legal } from "./legal/legal";
+import { OrganizerPage } from "./organizer-page/organizer-page";
+import { ForBusiness } from "./for-business/for-business";
+import { serverQueryOptions } from "@/utils/server-rpc";
 
 export const PUBLIC_SCREENS: readonly ScreenEntry[] = [
   {
@@ -29,7 +33,11 @@ export const PUBLIC_SCREENS: readonly ScreenEntry[] = [
     component: Landing,
     loader: async ({ queryClient, orpc }) => {
       try {
-        await queryClient.ensureQueryData(orpc.trips.browsePublicTrips.queryOptions({ input: {} }));
+        await queryClient.ensureQueryData(
+          serverQueryOptions(orpc.trips.browsePublicTrips, "trips/browsePublicTrips", {
+            input: {},
+          }),
+        );
       } catch {
         // Graceful handling for SSR
       }
@@ -196,7 +204,9 @@ export const PUBLIC_SCREENS: readonly ScreenEntry[] = [
     loader: async ({ queryClient, orpc }) => {
       try {
         await queryClient.ensureQueryData(
-          orpc.auth.getAuthSettings.queryOptions({ input: undefined }),
+          serverQueryOptions(orpc.auth.getAuthSettings, "auth/getAuthSettings", {
+            input: undefined,
+          }),
         );
       } catch {
         // Graceful handling for SSR
@@ -214,9 +224,13 @@ export const PUBLIC_SCREENS: readonly ScreenEntry[] = [
       const appId = search?.applicationId ? String(search.applicationId) : undefined;
       try {
         await queryClient.ensureQueryData(
-          orpc.onboarding.getApplicationStatus.queryOptions({
-            input: appId ? { applicationId: appId } : {},
-          }),
+          serverQueryOptions(
+            orpc.onboarding.getApplicationStatus,
+            "onboarding/getApplicationStatus",
+            {
+              input: appId ? { applicationId: appId } : {},
+            },
+          ),
         );
       } catch {
         // Graceful handling for SSR
@@ -234,9 +248,13 @@ export const PUBLIC_SCREENS: readonly ScreenEntry[] = [
       const appId = search?.applicationId ? String(search.applicationId) : undefined;
       try {
         await queryClient.ensureQueryData(
-          orpc.onboarding.getApplicationStatus.queryOptions({
-            input: appId ? { applicationId: appId } : {},
-          }),
+          serverQueryOptions(
+            orpc.onboarding.getApplicationStatus,
+            "onboarding/getApplicationStatus",
+            {
+              input: appId ? { applicationId: appId } : {},
+            },
+          ),
         );
       } catch {
         // Graceful handling for SSR
@@ -252,5 +270,42 @@ export const PUBLIC_SCREENS: readonly ScreenEntry[] = [
     loader: async ({ auth }) => {
       if (typeof window === "undefined" && !auth.accessToken()) return;
     },
+  },
+  {
+    id: "SCR-PUB-20",
+    slug: "legal",
+    titleKey: "screen.registry.public.legal.title",
+    surface: "public",
+    component: Legal,
+    // Static policy content: nothing to prefetch.
+    loader: async () => {},
+  },
+  {
+    id: "SCR-PUB-21",
+    slug: "organizer-page",
+    titleKey: "screen.registry.public.organizerPage.title",
+    surface: "public",
+    component: OrganizerPage,
+    // The organizer profile derives from the public trip rows; there is no organizer procedure.
+    loader: async ({ queryClient, orpc }) => {
+      try {
+        await queryClient.ensureQueryData(
+          serverQueryOptions(orpc.trips.browsePublicTrips, "trips/browsePublicTrips", {
+            input: {},
+          }),
+        );
+      } catch {
+        // Graceful handling for SSR
+      }
+    },
+  },
+  {
+    id: "SCR-PUB-22",
+    slug: "for-business",
+    titleKey: "screen.registry.public.forBusiness.title",
+    surface: "public",
+    component: ForBusiness,
+    // Static marketing content: nothing to prefetch.
+    loader: async () => {},
   },
 ];

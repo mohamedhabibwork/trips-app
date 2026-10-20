@@ -7,6 +7,7 @@ import { useAuth } from "@/auth/auth-context";
 import { Button, Notice, SelectField, TextField } from "@/components/kit/controls";
 import { PageIntro, PageMain, Panel, PanelTitle, TwoColumns } from "@/components/kit/layout";
 import { orpc } from "@/utils/orpc";
+import { serverRpc } from "@/utils/server-rpc";
 
 import { uploadApplicationDocuments } from "../common/application-documents";
 import { CountrySelect } from "../common/country-select";
@@ -63,29 +64,32 @@ export function OrganizationSignUp() {
         password: String(formData.get("password") ?? ""),
       },
       async () =>
-        orpc.onboarding.submitOrganizationApplication.call({
-          legalEntityName: legalName,
-          displayNameAr: legalName,
-          displayNameEn: legalName,
-          commercialRegNumber: read("commercialRegistration"),
-          taxNumber: read("taxNumber"),
-          tourismLicenseNumber: read("tourismLicenseNumber"),
-          tourismLicenseExpiry: expiryIso,
-          countryCode,
-          headquartersAddress: read("headquartersAddress"),
-          signatoryFullName: ownerName,
-          signatoryNationalId: read("ownerNationalId"),
-          signatoryRoleTitle: read("ownerRoleTitle"),
-          payoutMethod,
-          payoutIbanOrWallet: read("payoutAccount"),
-          billingContactName: ownerName,
-          billingContactEmail: read("billingEmail"),
-          billingContactPhone: ownerPhone,
-          billingAddress: read("billingAddress"),
-          invoiceLanguage: locale,
-          childSafetyProgramOptIn: false,
-          documents: await uploadApplicationDocuments(files, "commercial_registry"),
-        }),
+        serverRpc<Awaited<ReturnType<typeof orpc.onboarding.submitOrganizationApplication.call>>>(
+          "onboarding/submitOrganizationApplication",
+          {
+            legalEntityName: legalName,
+            displayNameAr: legalName,
+            displayNameEn: legalName,
+            commercialRegNumber: read("commercialRegistration"),
+            taxNumber: read("taxNumber"),
+            tourismLicenseNumber: read("tourismLicenseNumber"),
+            tourismLicenseExpiry: expiryIso,
+            countryCode,
+            headquartersAddress: read("headquartersAddress"),
+            signatoryFullName: ownerName,
+            signatoryNationalId: read("ownerNationalId"),
+            signatoryRoleTitle: read("ownerRoleTitle"),
+            payoutMethod,
+            payoutIbanOrWallet: read("payoutAccount"),
+            billingContactName: ownerName,
+            billingContactEmail: read("billingEmail"),
+            billingContactPhone: ownerPhone,
+            billingAddress: read("billingAddress"),
+            invoiceLanguage: locale,
+            childSafetyProgramOptIn: false,
+            documents: await uploadApplicationDocuments(files, "commercial_registry"),
+          },
+        ),
     );
   }
 

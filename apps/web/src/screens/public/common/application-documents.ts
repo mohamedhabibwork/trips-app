@@ -2,6 +2,7 @@
 // document rows the onboarding procedures expect. Every storage key and size comes from the upload
 // response, so a review always points at a file that exists. Needs a signed-in session.
 import { orpc } from "@/utils/orpc";
+import { serverRpc } from "@/utils/server-rpc";
 
 import type { OnboardingDocumentType } from "../../onboarding-state";
 
@@ -77,7 +78,9 @@ export async function uploadApplicationDocuments(
   for (const file of files) {
     const mimeType = applicationMimeType(file);
     if (!mimeType) throw new Error(`Unsupported file type: ${file.name}`);
-    const { file: uploaded } = await orpc.media.uploadFile.call({
+    const { file: uploaded } = await serverRpc<
+      Awaited<ReturnType<typeof orpc.media.uploadFile.call>>
+    >("media/uploadFile", {
       originalFilename: file.name,
       mimeType,
       contentBase64: await readFileAsBase64(file),

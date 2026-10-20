@@ -10,6 +10,7 @@ import { formatDate } from "@/components/kit/format";
 import { ActionRow, CenteredPanel, FactBox, Lead, PanelHeading } from "@/components/kit/layout";
 import { pathFor } from "@/navigation/web-routes";
 import { orpc } from "@/utils/orpc";
+import { serverQueryOptions } from "@/utils/server-rpc";
 
 /** A valid ISO date from the search string, or null. */
 export function readGraceEnd(value: unknown): Date | null {
@@ -21,7 +22,9 @@ export function readGraceEnd(value: unknown): Date | null {
 export function DeletionGracePeriod() {
   const { t, locale, status, signOut } = useAuth();
   const navigate = useNavigate();
-  const settingsQuery = useQuery(orpc.auth.getAuthSettings.queryOptions({ input: undefined }));
+  const settingsQuery = useQuery(
+    serverQueryOptions(orpc.auth.getAuthSettings, "auth/getAuthSettings", { input: undefined }),
+  );
   const days = settingsQuery.data?.deletionGraceDays;
   const graceEnd = useRouterState({
     select: (state) => readGraceEnd((state.location.search as Record<string, unknown>).graceEndsAt),

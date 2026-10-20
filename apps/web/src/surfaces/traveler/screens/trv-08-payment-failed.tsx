@@ -6,6 +6,7 @@ import { useNavigate, useParams } from "@tanstack/react-router";
 import { useAuth } from "@/auth/auth-context";
 import { Button, Notice, StatusPill } from "@/components/kit/controls";
 import { pathFor } from "@/navigation/web-routes";
+import { serverQueryOptions } from "@/utils/server-rpc";
 import { orpc } from "@/utils/orpc";
 import { ScreenError, ScreenLoading, ScreenNotFound } from "@/surfaces/traveler/components/states";
 import { TRAVELER_PAGE_CLASS } from "@/surfaces/traveler/util";
@@ -16,7 +17,9 @@ export function Trv08PaymentFailed({ bookingId: bookingIdProp }: { bookingId?: s
   const bookingId = bookingIdProp ?? routeParams.bookingId ?? "";
   const navigate = useNavigate();
 
-  const bookingQuery = useQuery(orpc.booking.getBooking.queryOptions({ input: { bookingId } }));
+  const bookingQuery = useQuery(
+    serverQueryOptions(orpc.booking.getBooking, "booking/getBooking", { input: { bookingId } }),
+  );
 
   if (bookingQuery.isPending) {
     return (

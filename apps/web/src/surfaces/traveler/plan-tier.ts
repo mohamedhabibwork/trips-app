@@ -3,6 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { orpc } from "@/utils/orpc";
+import { serverQueryOptions } from "@/utils/server-rpc";
 
 export type PlanTier = "free" | "explorer" | "vip";
 
@@ -18,7 +19,7 @@ export const PLAN_TIER_RANK: Readonly<Record<PlanTier, number>> = {
  */
 export function useTravelerProfile() {
   return useQuery({
-    ...orpc.traveler.getProfile.queryOptions({ input: undefined }),
+    ...serverQueryOptions(orpc.traveler.getProfile, "traveler/getProfile", { input: undefined }),
     enabled: typeof window !== "undefined",
     retry: false,
   });

@@ -15,6 +15,7 @@ import { ScrShr13RoleAndOrganizationSwitcher } from "./scr-shr-13-role-and-organ
 import { ScrShr14OtpEntry } from "./scr-shr-14-otp-entry";
 import { ScrShr15SeatMap } from "./scr-shr-15-seat-map";
 import { ScrShr16DocumentAndPhotoUpload } from "./scr-shr-16-document-and-photo-upload";
+import { serverQueryOptions } from "@/utils/server-rpc";
 
 export const SHARED_SCREENS: readonly ScreenEntry[] = [
   {
@@ -126,7 +127,11 @@ export const SHARED_SCREENS: readonly ScreenEntry[] = [
     loader: async ({ queryClient, orpc, auth }) => {
       if (typeof window === "undefined" && !auth.accessToken()) return;
       try {
-        await queryClient.ensureQueryData(orpc.notifications.listInbox.queryOptions({ input: {} }));
+        await queryClient.ensureQueryData(
+          serverQueryOptions(orpc.notifications.listInbox, "notifications/listInbox", {
+            input: {},
+          }),
+        );
       } catch {
         // Graceful handling for SSR
       }
@@ -142,7 +147,9 @@ export const SHARED_SCREENS: readonly ScreenEntry[] = [
       if (!auth.accessToken() || !params.receiptId) return;
       try {
         await queryClient.ensureQueryData(
-          orpc.payments.getReceipt.queryOptions({ input: { paymentId: params.receiptId } }),
+          serverQueryOptions(orpc.payments.getReceipt, "payments/getReceipt", {
+            input: { paymentId: params.receiptId },
+          }),
         );
       } catch {
         // A missing or foreign receipt is shown by the screen itself (not found or failed).
@@ -160,10 +167,18 @@ export const SHARED_SCREENS: readonly ScreenEntry[] = [
       try {
         await Promise.allSettled([
           queryClient.ensureQueryData(
-            orpc.auth.listMyRolesAndOrganizations.queryOptions({ input: undefined }),
+            serverQueryOptions(
+              orpc.auth.listMyRolesAndOrganizations,
+              "auth/listMyRolesAndOrganizations",
+              { input: undefined },
+            ),
           ),
           queryClient.ensureQueryData(
-            orpc.organization.getOrganizationSettings.queryOptions({ input: {} }),
+            serverQueryOptions(
+              orpc.organization.getOrganizationSettings,
+              "organization/getOrganizationSettings",
+              { input: {} },
+            ),
           ),
         ]);
       } catch {
@@ -190,12 +205,16 @@ export const SHARED_SCREENS: readonly ScreenEntry[] = [
     loader: async ({ queryClient, orpc }) => {
       try {
         const trips = await queryClient.ensureQueryData(
-          orpc.trips.browsePublicTrips.queryOptions({ input: {} }),
+          serverQueryOptions(orpc.trips.browsePublicTrips, "trips/browsePublicTrips", {
+            input: {},
+          }),
         );
         const firstTrip = trips?.items?.[0];
         if (firstTrip) {
           await queryClient.ensureQueryData(
-            orpc.seats.getSeatMap.queryOptions({ input: { tripId: firstTrip.id } }),
+            serverQueryOptions(orpc.seats.getSeatMap, "seats/getSeatMap", {
+              input: { tripId: firstTrip.id },
+            }),
           );
         }
       } catch {
@@ -212,7 +231,9 @@ export const SHARED_SCREENS: readonly ScreenEntry[] = [
     loader: async ({ queryClient, orpc, auth }) => {
       if (typeof window === "undefined" && !auth.accessToken()) return;
       try {
-        await queryClient.ensureQueryData(orpc.media.listFiles.queryOptions({ input: {} }));
+        await queryClient.ensureQueryData(
+          serverQueryOptions(orpc.media.listFiles, "media/listFiles", { input: {} }),
+        );
       } catch {
         // Graceful handling for SSR
       }

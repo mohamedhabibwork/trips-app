@@ -4,6 +4,7 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { orpc } from "@/utils/orpc";
+import { serverQueryOptions } from "@/utils/server-rpc";
 
 import type { PlanTier } from "./plan-tier";
 
@@ -55,7 +56,7 @@ export function estimatePricing(options: {
 /** The traveler profile for wizard plan pricing; client-only (see plan-tier.ts). */
 export function useWizardProfile() {
   return useQuery({
-    ...orpc.traveler.getProfile.queryOptions({ input: undefined }),
+    ...serverQueryOptions(orpc.traveler.getProfile, "traveler/getProfile", { input: undefined }),
     enabled: typeof window !== "undefined",
     retry: false,
   });

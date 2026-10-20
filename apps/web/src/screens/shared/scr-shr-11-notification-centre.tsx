@@ -8,6 +8,7 @@ import { cn } from "@trips-app/ui/lib/utils";
 import { useAuth } from "@/auth/auth-context";
 import { Button, Notice, TextButton, linkClass } from "@/components/kit/controls";
 import { formatDateTime } from "@/components/kit/format";
+import { serverQueryOptions, serverMutationOptions } from "@/utils/server-rpc";
 import { orpc } from "@/utils/orpc";
 
 import { SignInRequired } from "./sign-in-required";
@@ -23,13 +24,17 @@ export function ScrShr11NotificationCentre() {
   const queryClient = useQueryClient();
   const signedIn = status === "authenticated";
   const inboxQuery = useQuery({
-    ...orpc.notifications.listInbox.queryOptions({ input: {} }),
+    ...serverQueryOptions(orpc.notifications.listInbox, "notifications/listInbox", { input: {} }),
     enabled: signedIn,
   });
   const onSuccess = () => queryClient.invalidateQueries({ queryKey: orpc.notifications.key() });
-  const markReadMutation = useMutation(orpc.notifications.markRead.mutationOptions({ onSuccess }));
+  const markReadMutation = useMutation(
+    serverMutationOptions(orpc.notifications.markRead, "notifications/markRead", { onSuccess }),
+  );
   const markAllMutation = useMutation(
-    orpc.notifications.markAllRead.mutationOptions({ onSuccess }),
+    serverMutationOptions(orpc.notifications.markAllRead, "notifications/markAllRead", {
+      onSuccess,
+    }),
   );
 
   const items = [...(inboxQuery.data ?? [])].sort(

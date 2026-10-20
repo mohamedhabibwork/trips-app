@@ -17,7 +17,9 @@ import {
   TwoColumns,
 } from "@/components/kit/layout";
 import { pathFor } from "@/navigation/web-routes";
+import { trackEvent } from "@/utils/analytics";
 import { orpc } from "@/utils/orpc";
+import { serverMutationOptions, serverQueryOptions } from "@/utils/server-rpc";
 
 import { getApplicantApplicationId, setApplicantApplicationId } from "../../onboarding-state";
 import { uploadApplicationDocuments } from "../common/application-documents";
@@ -80,17 +82,33 @@ export function ApplicationStatusView({ applicationIdProp }: { applicationIdProp
   const queryClient = useQueryClient();
   const storedId = applicationIdProp ?? getApplicantApplicationId() ?? undefined;
   const statusQuery = useQuery({
-    ...orpc.onboarding.getApplicationStatus.queryOptions({
+    ...serverQueryOptions(orpc.onboarding.getApplicationStatus, "onboarding/getApplicationStatus", {
       input: storedId ? { applicationId: storedId } : {},
     }),
     enabled: authStatus === "authenticated",
   });
   const invalidate = () => queryClient.invalidateQueries({ queryKey: orpc.onboarding.key() });
   const resubmitMutation = useMutation(
-    orpc.onboarding.resubmitApplication.mutationOptions({ onSuccess: invalidate }),
+    serverMutationOptions(orpc.onboarding.resubmitApplication, "onboarding/resubmitApplication", {
+      onSuccess: () => {
+        trackEvent("application_resubmitted", { surface: "public" });
+        invalidate();
+      },
+      onError: () => trackEvent("application_resubmit_failed", { surface: "public" }),
+    }),
   );
   const extensionMutation = useMutation(
-    orpc.onboarding.requestChangesExtension.mutationOptions({ onSuccess: invalidate }),
+    serverMutationOptions(
+      orpc.onboarding.requestChangesExtension,
+      "onboarding/requestChangesExtension",
+      {
+        onSuccess: () => {
+          trackEvent("changes_extension_requested", { surface: "public" });
+          invalidate();
+        },
+        onError: () => trackEvent("changes_extension_request_failed", { surface: "public" }),
+      },
+    ),
   );
   const [files, setFiles] = useState<readonly File[]>([]);
   const [feedback, setFeedback] = useState<string | null>(null);

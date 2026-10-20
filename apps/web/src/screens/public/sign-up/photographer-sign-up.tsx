@@ -6,6 +6,7 @@ import { useAuth } from "@/auth/auth-context";
 import { Button, Notice, TextField } from "@/components/kit/controls";
 import { PageIntro, PageMain, Panel, PanelTitle, TwoColumns } from "@/components/kit/layout";
 import { orpc } from "@/utils/orpc";
+import { serverRpc } from "@/utils/server-rpc";
 
 import { uploadApplicationDocuments } from "../common/application-documents";
 import { CountrySelect } from "../common/country-select";
@@ -80,16 +81,19 @@ export function PhotographerSignUp() {
         password: String(formData.get("password") ?? ""),
       },
       async () =>
-        orpc.onboarding.submitPhotographerApplication.call({
-          nationalId: read("nationalId"),
-          yearsOfExperience: Number(read("yearsOfExperience")),
-          cameraBodies: splitList(read("cameraBodies")),
-          lenses: splitList(read("lenses")),
-          serviceRegions: [country],
-          specialties: splitList(read("specialties")),
-          portfolioPhotoCount: files.length,
-          documents: await uploadApplicationDocuments(files, "portfolio_sample"),
-        }),
+        serverRpc<Awaited<ReturnType<typeof orpc.onboarding.submitPhotographerApplication.call>>>(
+          "onboarding/submitPhotographerApplication",
+          {
+            nationalId: read("nationalId"),
+            yearsOfExperience: Number(read("yearsOfExperience")),
+            cameraBodies: splitList(read("cameraBodies")),
+            lenses: splitList(read("lenses")),
+            serviceRegions: [country],
+            specialties: splitList(read("specialties")),
+            portfolioPhotoCount: files.length,
+            documents: await uploadApplicationDocuments(files, "portfolio_sample"),
+          },
+        ),
     );
   }
 

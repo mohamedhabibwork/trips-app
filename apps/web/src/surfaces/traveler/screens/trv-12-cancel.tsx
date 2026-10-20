@@ -10,6 +10,7 @@ import { Button, Notice, StatusPill, TextAreaField } from "@/components/kit/cont
 import { formatDateTime, formatMinorAmount } from "@/components/kit/format";
 import { pathFor } from "@/navigation/web-routes";
 import { client, orpc } from "@/utils/orpc";
+import { serverQueryOptions, serverRpc } from "@/utils/server-rpc";
 import { ScreenError, ScreenLoading } from "@/surfaces/traveler/components/states";
 import { TRAVELER_PAGE_CLASS } from "@/surfaces/traveler/util";
 
@@ -21,11 +22,15 @@ export function Trv12CancelBooking({ bookingId: bookingIdProp }: { bookingId?: s
   const [reason, setReason] = useState("");
   const [confirming, setConfirming] = useState(false);
 
-  const previewQuery = useQuery(orpc.booking.refundPreview.queryOptions({ input: { bookingId } }));
+  const previewQuery = useQuery(
+    serverQueryOptions(orpc.booking.refundPreview, "booking/refundPreview", {
+      input: { bookingId },
+    }),
+  );
 
   const cancel = useMutation({
     mutationFn: async () =>
-      client.booking.cancelBooking({
+      serverRpc<Awaited<ReturnType<typeof client.booking.cancelBooking>>>("booking/cancelBooking", {
         bookingId,
         reason: reason.trim() || t("screen.traveler.cancel.defaultReason"),
       }),

@@ -5,6 +5,7 @@ import { useNavigate } from "@tanstack/react-router";
 
 import { useAuth } from "@/auth/auth-context";
 import { formatMinorAmount } from "@/components/kit/format";
+import { serverQueryOptions, serverMutationOptions } from "@/utils/server-rpc";
 import { orpc } from "@/utils/orpc";
 
 import { SignInRequired } from "./sign-in-required";
@@ -23,11 +24,13 @@ export function ScrShr01PlanLimitUpgradePrompt() {
   const queryClient = useQueryClient();
   const signedIn = status === "authenticated";
   const catalogQuery = useQuery({
-    ...orpc.plans.getCatalog.queryOptions({ input: { role: "organization" } }),
+    ...serverQueryOptions(orpc.plans.getCatalog, "plans/getCatalog", {
+      input: { role: "organization" },
+    }),
     enabled: signedIn,
   });
   const upgradeMutation = useMutation(
-    orpc.plans.changeOrganizationPlan.mutationOptions({
+    serverMutationOptions(orpc.plans.changeOrganizationPlan, "plans/changeOrganizationPlan", {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: orpc.plans.key() });
       },

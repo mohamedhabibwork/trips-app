@@ -6,6 +6,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { useAuth } from "@/auth/auth-context";
 import { Notice } from "@/components/kit/controls";
 import { pathFor } from "@/navigation/web-routes";
+import { serverQueryOptions } from "@/utils/server-rpc";
 import { orpc } from "@/utils/orpc";
 import { ScreenEmpty, ScreenError, ScreenLoading } from "@/surfaces/traveler/components/states";
 import { TRAVELER_PAGE_CLASS, pick } from "@/surfaces/traveler/util";
@@ -14,7 +15,9 @@ export function Trv15HistoryAlbums() {
   const { t, locale } = useAuth();
   const navigate = useNavigate();
   const albumsQuery = useQuery(
-    orpc.traveler.albums.listMyAlbums.queryOptions({ input: undefined }),
+    serverQueryOptions(orpc.traveler.albums.listMyAlbums, "traveler/albums/listMyAlbums", {
+      input: undefined,
+    }),
   );
 
   if (albumsQuery.isPending) {

@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { requireAnonymous } from "@/auth/guard";
 import { SignUpScreen } from "@/auth/screens/sign-up-screen";
+import { pageHead } from "@/navigation/seo";
 
 interface SignUpSearch {
   returnTo?: string;
@@ -13,6 +14,7 @@ export const Route = createFileRoute("/sign-up/")({
     returnTo: typeof search.returnTo === "string" ? search.returnTo : undefined,
   }),
   beforeLoad: requireAnonymous("traveler"),
+  head: pageHead("SCR-PUB-02"),
   component: SignUpRoute,
 });
 

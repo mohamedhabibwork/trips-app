@@ -24,6 +24,7 @@ import {
 import { CenteredPanel, Lead, PanelHeading } from "@/components/kit/layout";
 import { pathFor } from "@/navigation/web-routes";
 import { orpc } from "@/utils/orpc";
+import { serverMutationOptions } from "@/utils/server-rpc";
 
 import { maskDestination } from "../../shared/otp-entry-panel";
 
@@ -37,7 +38,7 @@ export function StaffCodeSetUp() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const setupMutation = useMutation(
-    orpc.auth.staffSetupSecondFactor.mutationOptions({
+    serverMutationOptions(orpc.auth.staffSetupSecondFactor, "auth/staffSetupSecondFactor", {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: orpc.auth.key() });
       },

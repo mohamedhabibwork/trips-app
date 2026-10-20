@@ -7,6 +7,7 @@ import { useAuth } from "@/auth/auth-context";
 import { Button, Notice, TextField } from "@/components/kit/controls";
 import { formatMinorAmount } from "@/components/kit/format";
 import { pathFor } from "@/navigation/web-routes";
+import { serverQueryOptions } from "@/utils/server-rpc";
 import { orpc } from "@/utils/orpc";
 import { estimatePricing, parseProgramIds, wizardTier } from "@/surfaces/traveler/booking-wizard";
 import { useTravelerProfile } from "@/surfaces/traveler/plan-tier";
@@ -26,9 +27,15 @@ export function Trv03BookingPrograms({ tripId: tripIdProp }: { tripId?: string }
   const [selected, setSelected] = useState<string[]>(parseProgramIds(search.programs));
   const [quantityError, setQuantityError] = useState<string | null>(null);
 
-  const tripQuery = useQuery(orpc.trips.getPublicTripDetail.queryOptions({ input: { tripId } }));
+  const tripQuery = useQuery(
+    serverQueryOptions(orpc.trips.getPublicTripDetail, "trips/getPublicTripDetail", {
+      input: { tripId },
+    }),
+  );
   const programsQuery = useQuery(
-    orpc.programs.listPublicTripPrograms.queryOptions({ input: { tripId } }),
+    serverQueryOptions(orpc.programs.listPublicTripPrograms, "programs/listPublicTripPrograms", {
+      input: { tripId },
+    }),
   );
 
   if (tripQuery.isPending || programsQuery.isPending) {
@@ -88,9 +95,19 @@ export function Trv03BookingPrograms({ tripId: tripIdProp }: { tripId?: string }
     );
   }
 
+  // Seats already held by pending bookings count against availability, same as the server
+  // availability calc: remaining = totalCapacity - confirmed - held.
+  const maxTravelers = trip.totalCapacity > 0 ? Math.max(0, trip.remainingSeatsCount) : 20;
+  const soldOut = trip.totalCapacity > 0 && maxTravelers <= 0;
+
+  const tripData = trip;
   function changeTravelers(value: number) {
     if (!Number.isInteger(value) || value < 1 || value > 20) {
       setQuantityError(t("screen.traveler.wizard.invalidTravelers"));
+      return;
+    }
+    if (tripData.totalCapacity > 0 && value > maxTravelers) {
+      setQuantityError(t("screen.traveler.wizard.maxTravelers", { count: maxTravelers }));
       return;
     }
     setQuantityError(null);
@@ -99,6 +116,10 @@ export function Trv03BookingPrograms({ tripId: tripIdProp }: { tripId?: string }
 
   const tripForNav = trip;
   function goNext() {
+    if (tripForNav.totalCapacity > 0 && travelers > maxTravelers) {
+      setQuantityError(t("screen.traveler.wizard.maxTravelers", { count: maxTravelers }));
+      return;
+    }
     const params = {
       travelers,
       programs: selected.join(","),
@@ -127,10 +148,13 @@ export function Trv03BookingPrograms({ tripId: tripIdProp }: { tripId?: string }
         label={t("screen.traveler.wizard.travelers")}
         type="number"
         min={1}
-        max={20}
+        max={Math.max(1, maxTravelers)}
         value={travelers}
+        disabled={soldOut}
         onChange={(event) => changeTravelers(Number(event.target.value))}
-        errors={quantityError ? [quantityError] : []}
+        errors={
+          soldOut ? [t("screen.traveler.wizard.tripSoldOut")] : quantityError ? [quantityError] : []
+        }
       />
 
       <ul className="m-0 flex list-none flex-col gap-2 p-0">
@@ -202,7 +226,7 @@ export function Trv03BookingPrograms({ tripId: tripIdProp }: { tripId?: string }
           <span>{t("screen.traveler.wizard.estimatedTotal")}</span>
           <span>{formatMinorAmount(pricing.estimatedTotalMinor, trip.currencyCode, locale)}</span>
         </div>
-        <Button block onClick={goNext} className="mt-2">
+        <Button block onClick={goNext} disabled={soldOut} className="mt-2">
           {t("screen.traveler.common.continue")}
         </Button>
       </div>

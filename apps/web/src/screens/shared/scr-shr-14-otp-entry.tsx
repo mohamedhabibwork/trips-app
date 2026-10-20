@@ -13,6 +13,7 @@ import { PhoneColumn } from "@/components/kit/layout";
 import { useCountdown } from "@/components/kit/use-countdown";
 import { pathFor } from "@/navigation/web-routes";
 import { orpc } from "@/utils/orpc";
+import { serverMutationOptions } from "@/utils/server-rpc";
 
 import { OtpEntryPanel, maskDestination } from "./otp-entry-panel";
 
@@ -23,8 +24,12 @@ export function ScrShr14OtpEntry() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const onSuccess = () => queryClient.invalidateQueries({ queryKey: orpc.auth.key() });
-  const verifyMutation = useMutation(orpc.auth.verifyOtp.mutationOptions({ onSuccess }));
-  const resendMutation = useMutation(orpc.auth.resendOtp.mutationOptions({ onSuccess }));
+  const verifyMutation = useMutation(
+    serverMutationOptions(orpc.auth.verifyOtp, "auth/verifyOtp", { onSuccess }),
+  );
+  const resendMutation = useMutation(
+    serverMutationOptions(orpc.auth.resendOtp, "auth/resendOtp", { onSuccess }),
+  );
   const [code, setCode] = useState("");
   const [target, setTarget] = useState("");
   const [verified, setVerified] = useState(false);

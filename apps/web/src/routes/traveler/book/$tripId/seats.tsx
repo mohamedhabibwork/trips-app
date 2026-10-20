@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { requireSignedIn } from "@/auth/guard";
 
+import { pageHead } from "@/navigation/seo";
 import { screenLoader } from "@/navigation/load-screen";
 import { Trv04BookingSeats } from "@/surfaces/traveler/screens/trv-04-booking-seats";
 
@@ -9,6 +10,7 @@ import { Trv04BookingSeats } from "@/surfaces/traveler/screens/trv-04-booking-se
 export const Route = createFileRoute("/traveler/book/$tripId/seats")({
   beforeLoad: requireSignedIn(),
   loader: screenLoader("SCR-TRV-04"),
+  head: pageHead("SCR-TRV-04"),
   component: Trv04BookingSeats,
   validateSearch: (search: Record<string, unknown>) => ({
     travelers: typeof search.travelers === "number" ? search.travelers : undefined,

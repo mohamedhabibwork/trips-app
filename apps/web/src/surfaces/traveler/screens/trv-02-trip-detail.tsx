@@ -7,6 +7,7 @@ import { useAuth, useAuthStatus } from "@/auth/auth-context";
 import { Button, Notice, StatusPill } from "@/components/kit/controls";
 import { formatDateRange, formatDateTime, formatMinorAmount } from "@/components/kit/format";
 import { pathFor } from "@/navigation/web-routes";
+import { serverQueryOptions } from "@/utils/server-rpc";
 import { orpc } from "@/utils/orpc";
 import { ScreenError, ScreenLoading, ScreenNotFound } from "@/surfaces/traveler/components/states";
 import { TRAVELER_PAGE_CLASS, pick } from "@/surfaces/traveler/util";
@@ -21,9 +22,15 @@ export function Trv02TripDetail({ tripId: tripIdProp }: { tripId?: string } = {}
   const { t, locale } = useAuth();
   const status = useAuthStatus();
   const navigate = useNavigate();
-  const tripQuery = useQuery(orpc.trips.getPublicTripDetail.queryOptions({ input: { tripId } }));
+  const tripQuery = useQuery(
+    serverQueryOptions(orpc.trips.getPublicTripDetail, "trips/getPublicTripDetail", {
+      input: { tripId },
+    }),
+  );
   const programsQuery = useQuery(
-    orpc.programs.listPublicTripPrograms.queryOptions({ input: { tripId } }),
+    serverQueryOptions(orpc.programs.listPublicTripPrograms, "programs/listPublicTripPrograms", {
+      input: { tripId },
+    }),
   );
 
   if (tripQuery.isPending)

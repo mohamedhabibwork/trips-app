@@ -7,6 +7,7 @@ import { Link } from "@tanstack/react-router";
 import { useAuth } from "@/auth/auth-context";
 import { Button, Notice, SelectField, TextField } from "@/components/kit/controls";
 import { client } from "@/utils/orpc";
+import { serverRpc } from "@/utils/server-rpc";
 import { ScreenLoading } from "@/surfaces/traveler/components/states";
 import { useTravelerProfile } from "@/surfaces/traveler/plan-tier";
 import { TRAVELER_PAGE_CLASS } from "@/surfaces/traveler/util";
@@ -48,13 +49,16 @@ export function Trv19Profile() {
 
   const save = useMutation({
     mutationFn: () =>
-      client.traveler.updateProfile({
-        fullName: fullName.trim(),
-        countryCode: (countryCode.trim().toUpperCase() || "EG") as "EG" | "SA" | "AE",
-        phoneE164: phone.trim() || null,
-        preferredLanguage: locale === "ar" ? "ar" : "en",
-        notificationPreferences: prefs as Record<string, string[]>,
-      }),
+      serverRpc<Awaited<ReturnType<typeof client.traveler.updateProfile>>>(
+        "traveler/updateProfile",
+        {
+          fullName: fullName.trim(),
+          countryCode: (countryCode.trim().toUpperCase() || "EG") as "EG" | "SA" | "AE",
+          phoneE164: phone.trim() || null,
+          preferredLanguage: locale === "ar" ? "ar" : "en",
+          notificationPreferences: prefs as Record<string, string[]>,
+        },
+      ),
     onSuccess: () => {
       toast.success(t("screen.traveler.profile.saved"));
       void profile.refetch();

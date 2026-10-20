@@ -3,6 +3,7 @@ import { isSurfaceId } from "@trips-app/auth";
 import type { SurfaceId } from "@trips-app/auth";
 
 import { ScrShr02PermissionDenied } from "@/screens/shared/scr-shr-02-permission-denied";
+import { pageHead } from "@/navigation/seo";
 
 interface ForbiddenSearch {
   from?: SurfaceId;
@@ -15,6 +16,7 @@ interface ForbiddenSearch {
  * following the link home must still work.
  */
 export const Route = createFileRoute("/forbidden")({
+  head: pageHead("SCR-SHR-02"),
   validateSearch: (search: Record<string, unknown>): ForbiddenSearch => ({
     from: isSurfaceId(search.from) ? search.from : undefined,
   }),

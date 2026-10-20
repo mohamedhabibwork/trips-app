@@ -8,6 +8,7 @@ import { useAuth } from "@/auth/auth-context";
 import { Button, Notice } from "@/components/kit/controls";
 import { formatDateRange, formatMinorAmount } from "@/components/kit/format";
 import { pathFor } from "@/navigation/web-routes";
+import { serverQueryOptions } from "@/utils/server-rpc";
 import { orpc } from "@/utils/orpc";
 import { BookingStatusPill } from "@/surfaces/traveler/components/cards";
 import { ScreenError, ScreenLoading, ScreenNotFound } from "@/surfaces/traveler/components/states";
@@ -25,9 +26,11 @@ export function Trv11BookingDetail({ bookingId: bookingIdProp }: { bookingId?: s
   const bookingId = bookingIdProp ?? routeParams.bookingId ?? "";
   const navigate = useNavigate();
 
-  const bookingQuery = useQuery(orpc.booking.getBooking.queryOptions({ input: { bookingId } }));
+  const bookingQuery = useQuery(
+    serverQueryOptions(orpc.booking.getBooking, "booking/getBooking", { input: { bookingId } }),
+  );
   const tripQuery = useQuery({
-    ...orpc.trips.getPublicTripDetail.queryOptions({
+    ...serverQueryOptions(orpc.trips.getPublicTripDetail, "trips/getPublicTripDetail", {
       input: { tripId: bookingQuery.data?.booking?.tripId ?? "" },
     }),
     enabled: Boolean(bookingQuery.data?.booking?.tripId),

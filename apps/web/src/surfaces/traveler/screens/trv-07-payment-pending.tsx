@@ -7,6 +7,7 @@ import { useAuth } from "@/auth/auth-context";
 import { Button, Notice, StatusPill } from "@/components/kit/controls";
 import { pathFor } from "@/navigation/web-routes";
 import { client, orpc } from "@/utils/orpc";
+import { serverQueryOptions, serverRpc } from "@/utils/server-rpc";
 import { ScreenError, ScreenLoading, ScreenNotFound } from "@/surfaces/traveler/components/states";
 import { TRAVELER_PAGE_CLASS } from "@/surfaces/traveler/util";
 
@@ -17,18 +18,23 @@ export function Trv07PaymentPending({ bookingId: bookingIdProp }: { bookingId?: 
   const search = useSearch({ from: "/traveler/bookings/$bookingId/payment" });
   const navigate = useNavigate();
 
-  const bookingQuery = useQuery(orpc.booking.getBooking.queryOptions({ input: { bookingId } }));
+  const bookingQuery = useQuery(
+    serverQueryOptions(orpc.booking.getBooking, "booking/getBooking", { input: { bookingId } }),
+  );
 
   // "Check status": asks the gateway adapter to settle the mock payment once (idempotent, FR-PAY-02)
   // and re-reads the booking.
   const checkStatus = useMutation({
     mutationFn: async () => {
       if (search.paymentId) {
-        await client.payments
-          .confirmPayment({ paymentId: search.paymentId })
-          .catch(() => undefined);
+        serverRpc("payments/confirmPayment", { paymentId: search.paymentId }).catch(
+          () => undefined,
+        );
       }
-      return client.booking.getBooking({ bookingId });
+      return serverRpc<Awaited<ReturnType<typeof client.booking.getBooking>>>(
+        "booking/getBooking",
+        { bookingId },
+      );
     },
     onSuccess: (detail) => {
       const status = detail.booking?.status;

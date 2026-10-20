@@ -14,7 +14,9 @@ import { Button, Notice, StepLabel, TextButton, TextLink } from "@/components/ki
 import { CenteredPanel, Lead, PanelHeading } from "@/components/kit/layout";
 import { useCountdown } from "@/components/kit/use-countdown";
 import { pathFor } from "@/navigation/web-routes";
+import { trackEvent } from "@/utils/analytics";
 import { orpc } from "@/utils/orpc";
+import { serverMutationOptions } from "@/utils/server-rpc";
 
 import { maskDestination } from "../../shared/otp-entry-panel";
 
@@ -27,8 +29,23 @@ export function VerificationByCode() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const onSuccess = () => queryClient.invalidateQueries({ queryKey: orpc.auth.key() });
-  const verifyMutation = useMutation(orpc.auth.verifyOtp.mutationOptions({ onSuccess }));
-  const resendMutation = useMutation(orpc.auth.resendOtp.mutationOptions({ onSuccess }));
+  const verifyMutation = useMutation(
+    serverMutationOptions(orpc.auth.verifyOtp, "auth/verifyOtp", {
+      onSuccess: () => {
+        trackEvent("otp_verified", { surface: "public" });
+        onSuccess();
+      },
+      onError: () => trackEvent("otp_verification_failed", { surface: "public" }),
+    }),
+  );
+  const resendMutation = useMutation(
+    serverMutationOptions(orpc.auth.resendOtp, "auth/resendOtp", {
+      onSuccess: () => {
+        trackEvent("otp_resent", { surface: "public" });
+        onSuccess();
+      },
+    }),
+  );
   const [code, setCode] = useState("");
   // null until the browser has read the destination left by the sign-up or sign-in step.
   const [storedTarget, setStoredTarget] = useState<string | null>(null);

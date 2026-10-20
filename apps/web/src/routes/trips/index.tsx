@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { screenLoader } from "@/navigation/load-screen";
 import { Trv01TripBrowse } from "@/surfaces/traveler/screens/trv-01-trip-browse";
+import { pageHead } from "@/navigation/seo";
 
 /** `/trips` — SCR-TRV-01. */
 export const Route = createFileRoute("/trips/")({
@@ -10,5 +11,6 @@ export const Route = createFileRoute("/trips/")({
     q: typeof search.q === "string" && search.q.trim() ? search.q.trim() : undefined,
   }),
   loader: screenLoader("SCR-TRV-01"),
+  head: pageHead("SCR-TRV-01"),
   component: Trv01TripBrowse,
 });

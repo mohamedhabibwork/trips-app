@@ -21,6 +21,7 @@ import {
 import { CenteredPanel, Lead, PanelHeading } from "@/components/kit/layout";
 import { pathFor } from "@/navigation/web-routes";
 import { orpc } from "@/utils/orpc";
+import { serverMutationOptions } from "@/utils/server-rpc";
 
 const CODE_LENGTH = 6;
 
@@ -30,7 +31,7 @@ export function AdminAuthenticatorSetUpAndCode() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const enrollMutation = useMutation(
-    orpc.auth.adminEnrollTotp.mutationOptions({
+    serverMutationOptions(orpc.auth.adminEnrollTotp, "auth/adminEnrollTotp", {
       onSuccess: () => queryClient.invalidateQueries({ queryKey: orpc.auth.key() }),
     }),
   );

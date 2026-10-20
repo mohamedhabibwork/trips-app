@@ -7,6 +7,7 @@ import { useState } from "react";
 import { useAuth } from "@/auth/auth-context";
 import { Button, Notice, StatusPill, TextAreaField } from "@/components/kit/controls";
 import { client } from "@/utils/orpc";
+import { serverRpc } from "@/utils/server-rpc";
 import { TRAVELER_PAGE_CLASS } from "@/surfaces/traveler/util";
 import { toast } from "sonner";
 
@@ -20,11 +21,14 @@ export function Trv20Privacy() {
 
   const request = useMutation({
     mutationFn: (requestType: RequestKind) =>
-      client.traveler.requestPrivacyAction({
-        requestType,
-        reason: reason.trim() || null,
-        confirmedUnderstood: true,
-      }),
+      serverRpc<Awaited<ReturnType<typeof client.traveler.requestPrivacyAction>>>(
+        "traveler/requestPrivacyAction",
+        {
+          requestType,
+          reason: reason.trim() || null,
+          confirmedUnderstood: true,
+        },
+      ),
     onSuccess: (_result, requestType) => {
       setSubmitted(requestType);
       setPending(null);

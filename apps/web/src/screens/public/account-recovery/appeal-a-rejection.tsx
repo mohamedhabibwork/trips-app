@@ -8,7 +8,9 @@ import { useAuth } from "@/auth/auth-context";
 import { Button, Notice, TextAreaField, TextLink } from "@/components/kit/controls";
 import { ActionRow, PageIntro, PageMain, Panel } from "@/components/kit/layout";
 import { pathFor } from "@/navigation/web-routes";
+import { trackEvent } from "@/utils/analytics";
 import { orpc } from "@/utils/orpc";
+import { serverMutationOptions, serverQueryOptions } from "@/utils/server-rpc";
 
 import { getApplicantApplicationId, setApplicantApplicationId } from "../../onboarding-state";
 import { uploadApplicationDocuments } from "../common/application-documents";
@@ -22,16 +24,18 @@ export function AppealARejection() {
   const queryClient = useQueryClient();
   const storedId = getApplicantApplicationId() ?? undefined;
   const statusQuery = useQuery({
-    ...orpc.onboarding.getApplicationStatus.queryOptions({
+    ...serverQueryOptions(orpc.onboarding.getApplicationStatus, "onboarding/getApplicationStatus", {
       input: storedId ? { applicationId: storedId } : {},
     }),
     enabled: authStatus === "authenticated",
   });
   const appealMutation = useMutation(
-    orpc.onboarding.submitAppeal.mutationOptions({
+    serverMutationOptions(orpc.onboarding.submitAppeal, "onboarding/submitAppeal", {
       onSuccess: () => {
+        trackEvent("appeal_submitted", { surface: "public" });
         queryClient.invalidateQueries({ queryKey: orpc.onboarding.key() });
       },
+      onError: () => trackEvent("appeal_submit_failed", { surface: "public" }),
     }),
   );
   const [statement, setStatement] = useState("");

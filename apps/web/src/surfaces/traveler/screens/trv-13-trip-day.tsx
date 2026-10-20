@@ -6,6 +6,7 @@ import { useParams } from "@tanstack/react-router";
 import { useAuth } from "@/auth/auth-context";
 import { Notice, StatusPill } from "@/components/kit/controls";
 import { formatDateTime } from "@/components/kit/format";
+import { serverQueryOptions } from "@/utils/server-rpc";
 import { orpc } from "@/utils/orpc";
 import { ScreenError, ScreenLoading, ScreenNotFound } from "@/surfaces/traveler/components/states";
 import { TRAVELER_PAGE_CLASS, pick } from "@/surfaces/traveler/util";
@@ -16,7 +17,9 @@ export function Trv13TripDay({ bookingId: bookingIdProp }: { bookingId?: string 
   const bookingId = bookingIdProp ?? routeParams.bookingId ?? "";
 
   const tripDayQuery = useQuery(
-    orpc.traveler.tripDay.getMyTripDay.queryOptions({ input: { bookingId } }),
+    serverQueryOptions(orpc.traveler.tripDay.getMyTripDay, "traveler/tripDay/getMyTripDay", {
+      input: { bookingId },
+    }),
   );
 
   if (tripDayQuery.isPending) {

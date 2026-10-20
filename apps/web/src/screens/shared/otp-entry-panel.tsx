@@ -15,7 +15,7 @@ export function isCodeComplete(code: string): boolean {
   return code.length === OTP_CODE_LENGTH;
 }
 
-/** "a***@example.com" or "+20***00": enough to recognise, not enough to read. */
+/** "a***@trips-enjoy.com" or "+20***00": enough to recognise, not enough to read. */
 export function maskDestination(raw: string): string {
   const trimmed = raw.trim();
   if (!trimmed) return "***";

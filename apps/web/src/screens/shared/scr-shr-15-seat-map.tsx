@@ -8,6 +8,7 @@ import { Button, Notice } from "@/components/kit/controls";
 import { formatDateTime } from "@/components/kit/format";
 import { PhoneColumn } from "@/components/kit/layout";
 import { orpc } from "@/utils/orpc";
+import { serverQueryOptions, serverMutationOptions } from "@/utils/server-rpc";
 
 import { SeatMap, SeatMapLegend, type SeatView } from "./seat-map";
 import { SignInRequired } from "./sign-in-required";
@@ -24,14 +25,18 @@ export function ScrShr15SeatMap() {
   const { t, locale, status } = useAuth();
   const signedIn = status === "authenticated";
   const queryClient = useQueryClient();
-  const tripsQuery = useQuery(orpc.trips.browsePublicTrips.queryOptions({ input: {} }));
+  const tripsQuery = useQuery(
+    serverQueryOptions(orpc.trips.browsePublicTrips, "trips/browsePublicTrips", { input: {} }),
+  );
   const trip = tripsQuery.data?.items?.[0];
   const seatMapQuery = useQuery({
-    ...orpc.seats.getSeatMap.queryOptions({ input: { tripId: trip?.id ?? "" } }),
+    ...serverQueryOptions(orpc.seats.getSeatMap, "seats/getSeatMap", {
+      input: { tripId: trip?.id ?? "" },
+    }),
     enabled: signedIn && Boolean(trip?.id),
   });
   const holdMutation = useMutation(
-    orpc.seats.holdSeats.mutationOptions({
+    serverMutationOptions(orpc.seats.holdSeats, "seats/holdSeats", {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: orpc.seats.key() });
       },

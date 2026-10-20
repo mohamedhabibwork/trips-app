@@ -1,14 +1,17 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { serverQueryOptions } from "@/utils/server-rpc";
 
 import { requireSurface } from "@/auth/guard";
 import { GuardedSurface } from "@/components/guarded-surface";
 import { findScreen } from "@/screens/registry";
+import { pageHead } from "@/navigation/seo";
 import { CREW_SURFACE } from "@/surfaces/crew";
 import { loadApiStatus } from "@/utils/api-status";
 
 /** `/crew` — vehicle moderators (AC-6). Loader prefetches status and LiveOperations queries safely. */
 export const Route = createFileRoute("/crew")({
   beforeLoad: requireSurface("crew"),
+  head: pageHead("SCR-ORG-40"),
   loader: async ({ context, location }) => {
     await loadApiStatus({ context });
 
@@ -32,10 +35,14 @@ export const Route = createFileRoute("/crew")({
     // Prefetch for LiveOperations queries when authenticated
     await Promise.allSettled([
       context.queryClient.prefetchQuery(
-        context.orpc.trips.listOrganizationTrips.queryOptions({ input: {} }),
+        serverQueryOptions(
+          context.orpc.trips.listOrganizationTrips,
+          "trips/listOrganizationTrips",
+          { input: {} },
+        ),
       ),
       context.queryClient.prefetchQuery(
-        context.orpc.fleet.listVehicles.queryOptions({ input: {} }),
+        serverQueryOptions(context.orpc.fleet.listVehicles, "fleet/listVehicles", { input: {} }),
       ),
     ]);
   },

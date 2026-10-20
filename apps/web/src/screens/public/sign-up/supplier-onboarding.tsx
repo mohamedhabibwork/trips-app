@@ -13,6 +13,7 @@ import { CenteredPanel } from "@/components/kit/layout";
 import { useCountdown } from "@/components/kit/use-countdown";
 import { pathFor } from "@/navigation/web-routes";
 import { orpc } from "@/utils/orpc";
+import { serverRpc } from "@/utils/server-rpc";
 
 import { setApplicantApplicationId, setApplicantRole } from "../../onboarding-state";
 import { OtpEntryPanel, maskDestination } from "../../shared/otp-entry-panel";
@@ -92,7 +93,9 @@ export function useSupplierOnboarding(role: SupplierRole, failedKey: string): Su
         await submitApplication();
         return;
       }
-      const registered = await orpc.auth.registerSupplierAccount.call({
+      const registered = await serverRpc<
+        Awaited<ReturnType<typeof orpc.auth.registerSupplierAccount.call>>
+      >("auth/registerSupplierAccount", {
         role,
         fullName: account.fullName,
         email: account.email,
@@ -117,12 +120,15 @@ export function useSupplierOnboarding(role: SupplierRole, failedKey: string): Su
     setSubmitting(true);
     setCodeError(null);
     try {
-      const result = await orpc.auth.verifyOtp.call({
-        targetIdentifier: target,
-        purpose: "registration",
-        code,
-        surface: "web",
-      });
+      const result = await serverRpc<Awaited<ReturnType<typeof orpc.auth.verifyOtp.call>>>(
+        "auth/verifyOtp",
+        {
+          targetIdentifier: target,
+          purpose: "registration",
+          code,
+          surface: "web",
+        },
+      );
       setCode("");
       if (result.session) {
         signInWithSession(result.session);
@@ -145,11 +151,14 @@ export function useSupplierOnboarding(role: SupplierRole, failedKey: string): Su
     if (!target) return;
     setCodeError(null);
     try {
-      const next = await orpc.auth.resendOtp.call({
-        targetIdentifier: target,
-        channel: target.includes("@") ? "email" : "sms",
-        purpose: "registration",
-      });
+      const next = await serverRpc<Awaited<ReturnType<typeof orpc.auth.resendOtp.call>>>(
+        "auth/resendOtp",
+        {
+          targetIdentifier: target,
+          channel: target.includes("@") ? "email" : "sms",
+          purpose: "registration",
+        },
+      );
       restartResend(next.resendAvailableInSeconds ?? 0);
     } catch (caught) {
       setCodeError(toAuthErrorView(caught, { locale, procedure: "auth/resendOtp" }));

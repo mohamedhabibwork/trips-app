@@ -5,6 +5,7 @@ import { useNavigate } from "@tanstack/react-router";
 
 import { useAuth } from "@/auth/auth-context";
 import { Notice, StatusPill } from "@/components/kit/controls";
+import { serverQueryOptions } from "@/utils/server-rpc";
 import { orpc } from "@/utils/orpc";
 import { ScreenLoading } from "@/surfaces/traveler/components/states";
 import { TRAVELER_PAGE_CLASS } from "@/surfaces/traveler/util";
@@ -20,7 +21,9 @@ export function Trv21BecomeSupplier() {
   const navigate = useNavigate();
 
   const statusQuery = useQuery({
-    ...orpc.onboarding.getApplicationStatus.queryOptions({ input: {} }),
+    ...serverQueryOptions(orpc.onboarding.getApplicationStatus, "onboarding/getApplicationStatus", {
+      input: {},
+    }),
     enabled: typeof window !== "undefined",
     retry: false,
   });

@@ -11,18 +11,22 @@ import { useCountdown } from "@/components/kit/use-countdown";
 import { formatMinorAmount } from "@/components/kit/format";
 import { pathFor } from "@/navigation/web-routes";
 import { client, orpc } from "@/utils/orpc";
+import { serverQueryOptions, serverRpc } from "@/utils/server-rpc";
 import { formatHoldTime, holdSecondsLeft } from "@/surfaces/traveler/booking-wizard";
 import { ScreenError, ScreenLoading, ScreenNotFound } from "@/surfaces/traveler/components/states";
 import { TRAVELER_PAGE_CLASS } from "@/surfaces/traveler/util";
 
-const GATEWAYS = [
-  { value: "stripe", labelKey: "screen.traveler.pay.gateway.stripe" },
-  { value: "paymob", labelKey: "screen.traveler.pay.gateway.paymob" },
-  { value: "tap", labelKey: "screen.traveler.pay.gateway.tap" },
-  { value: "fawry", labelKey: "screen.traveler.pay.gateway.fawry" },
-] as const;
+// The gateway is fixed when the payment intent is created (booking review, TRV-05); this screen
+// only opens the handoff, so the method list is read-only and reflects the payment's gateway.
+const GATEWAY_LABELS: Record<GatewayValue, string> = {
+  stripe: "screen.traveler.pay.gateway.stripe",
+  paymob: "screen.traveler.pay.gateway.paymob",
+  tap: "screen.traveler.pay.gateway.tap",
+  fawry: "screen.traveler.pay.gateway.fawry",
+  stub: "screen.traveler.pay.gateway.stub",
+};
 
-type GatewayValue = (typeof GATEWAYS)[number]["value"];
+type GatewayValue = "stripe" | "paymob" | "tap" | "fawry" | "stub";
 
 export function Trv06PaymentHandoff({ bookingId: bookingIdProp }: { bookingId?: string } = {}) {
   const { t, locale } = useAuth();
@@ -30,7 +34,6 @@ export function Trv06PaymentHandoff({ bookingId: bookingIdProp }: { bookingId?: 
   const bookingId = bookingIdProp ?? routeParams.bookingId ?? "";
   const search = useSearch({ from: "/traveler/bookings/$bookingId/pay" });
   const navigate = useNavigate();
-  const [gateway, setGateway] = useState<GatewayValue>("paymob");
   const [handoffError, setHandoffError] = useState<string | null>(null);
 
   const holdExpiry =
@@ -39,14 +42,22 @@ export function Trv06PaymentHandoff({ bookingId: bookingIdProp }: { bookingId?: 
       : null;
   const [secondsLeft] = useCountdown(holdSecondsLeft(holdExpiry));
 
-  const bookingQuery = useQuery(orpc.booking.getBooking.queryOptions({ input: { bookingId } }));
+  const bookingQuery = useQuery(
+    serverQueryOptions(orpc.booking.getBooking, "booking/getBooking", { input: { bookingId } }),
+  );
   const paymentQuery = useQuery({
-    ...orpc.payments.listPayments.queryOptions({ input: undefined }),
+    ...serverQueryOptions(orpc.payments.listPayments, "payments/listPayments", {
+      input: undefined,
+    }),
     enabled: typeof window !== "undefined",
   });
 
   const handoff = useMutation({
-    mutationFn: async (paymentId: string) => client.payments.getGatewayHandoff({ paymentId }),
+    mutationFn: async (paymentId: string) =>
+      serverRpc<Awaited<ReturnType<typeof client.payments.getGatewayHandoff>>>(
+        "payments/getGatewayHandoff",
+        { paymentId },
+      ),
     onSuccess: (result) => {
       window.open(result.redirectUrl, "_blank", "noopener");
       void navigate({
@@ -83,6 +94,7 @@ export function Trv06PaymentHandoff({ bookingId: bookingIdProp }: { bookingId?: 
   const holdRunning = holdExpiry !== null && secondsLeft > 0;
   const holdExpired = holdExpiry !== null && secondsLeft <= 0;
   const payment = (paymentQuery.data ?? []).find((item) => item.id === search.paymentId);
+  const gateway = (payment?.gateway as GatewayValue | undefined) ?? "paymob";
 
   return (
     <div className={TRAVELER_PAGE_CLASS}>
@@ -111,16 +123,17 @@ export function Trv06PaymentHandoff({ bookingId: bookingIdProp }: { bookingId?: 
         <legend className="mb-2 text-[15px] font-semibold">
           {t("screen.traveler.pay.methodLabel")}
         </legend>
-        {GATEWAYS.map((option) => (
-          <label key={option.value} className="flex cursor-pointer items-center gap-3 text-[15px]">
+        {(Object.keys(GATEWAY_LABELS) as GatewayValue[]).map((value) => (
+          <label key={value} className="flex items-center gap-3 text-[15px] opacity-80">
             <input
               type="radio"
               name="gateway"
-              checked={gateway === option.value}
-              onChange={() => setGateway(option.value)}
+              disabled
+              checked={gateway === value}
+              onChange={() => undefined}
               className="size-5"
             />
-            {t(option.labelKey)}
+            {t(GATEWAY_LABELS[value])}
           </label>
         ))}
       </fieldset>

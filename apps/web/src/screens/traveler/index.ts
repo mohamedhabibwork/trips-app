@@ -21,6 +21,7 @@ import { Trv18Plans } from "@/surfaces/traveler/screens/trv-18-plans";
 import { Trv19Profile } from "@/surfaces/traveler/screens/trv-19-profile";
 import { Trv20Privacy } from "@/surfaces/traveler/screens/trv-20-privacy";
 import { Trv21BecomeSupplier } from "@/surfaces/traveler/screens/trv-21-become-supplier";
+import { serverQueryOptions } from "@/utils/server-rpc";
 
 export const TRAVELER_SCREENS: readonly ScreenEntry[] = [
   {
@@ -31,7 +32,11 @@ export const TRAVELER_SCREENS: readonly ScreenEntry[] = [
     component: Trv01TripBrowse,
     loader: async ({ queryClient, orpc }) => {
       try {
-        await queryClient.ensureQueryData(orpc.trips.browsePublicTrips.queryOptions({ input: {} }));
+        await queryClient.ensureQueryData(
+          serverQueryOptions(orpc.trips.browsePublicTrips, "trips/browsePublicTrips", {
+            input: {},
+          }),
+        );
       } catch {
         // The screen's query renders its own error state.
       }
@@ -49,10 +54,16 @@ export const TRAVELER_SCREENS: readonly ScreenEntry[] = [
       try {
         await Promise.allSettled([
           queryClient.ensureQueryData(
-            orpc.trips.getPublicTripDetail.queryOptions({ input: { tripId } }),
+            serverQueryOptions(orpc.trips.getPublicTripDetail, "trips/getPublicTripDetail", {
+              input: { tripId },
+            }),
           ),
           queryClient.ensureQueryData(
-            orpc.programs.listPublicTripPrograms.queryOptions({ input: { tripId } }),
+            serverQueryOptions(
+              orpc.programs.listPublicTripPrograms,
+              "programs/listPublicTripPrograms",
+              { input: { tripId } },
+            ),
           ),
         ]);
       } catch {
@@ -211,7 +222,11 @@ export const TRAVELER_SCREENS: readonly ScreenEntry[] = [
       if (!token) return;
       try {
         await queryClient.ensureQueryData(
-          orpc.traveler.albums.resolveSharedLink.queryOptions({ input: { token } }),
+          serverQueryOptions(
+            orpc.traveler.albums.resolveSharedLink,
+            "traveler/albums/resolveSharedLink",
+            { input: { token } },
+          ),
         );
       } catch {
         // A revoked or unknown token renders as the screen's not-found state.
@@ -229,9 +244,17 @@ export const TRAVELER_SCREENS: readonly ScreenEntry[] = [
       try {
         await Promise.allSettled([
           queryClient.ensureQueryData(
-            orpc.traveler.account.getPlanComparison.queryOptions({ input: undefined }),
+            serverQueryOptions(
+              orpc.traveler.account.getPlanComparison,
+              "traveler/account/getPlanComparison",
+              { input: undefined },
+            ),
           ),
-          queryClient.ensureQueryData(orpc.traveler.getProfile.queryOptions({ input: undefined })),
+          queryClient.ensureQueryData(
+            serverQueryOptions(orpc.traveler.getProfile, "traveler/getProfile", {
+              input: undefined,
+            }),
+          ),
         ]);
       } catch {
         // The screen's queries render their own error state.

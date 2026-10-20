@@ -6,6 +6,7 @@ import { useAuth } from "@/auth/auth-context";
 import { Button, CheckField, Notice, TextField } from "@/components/kit/controls";
 import { PageIntro, PageMain, Panel, PanelTitle, TwoColumns } from "@/components/kit/layout";
 import { orpc } from "@/utils/orpc";
+import { serverRpc } from "@/utils/server-rpc";
 
 import { uploadApplicationDocuments } from "../common/application-documents";
 import { CountrySelect } from "../common/country-select";
@@ -81,24 +82,27 @@ export function PlatformDriverSignUp() {
           ...(await uploadApplicationDocuments(files.registration, "vehicle_registration")),
           ...(await uploadApplicationDocuments(files.insurance, "insurance_certificate")),
         ];
-        return orpc.onboarding.submitDriverApplication.call({
-          nationalId: read("nationalId"),
-          licenseNumber: read("licenseNumber"),
-          licenseCategory: read("licenseCategory"),
-          licenseExpiry: licenseIso,
-          yearsOfExperience: Number(read("yearsOfExperience")),
-          serviceAreas: [country],
-          hasOwnVehicle: true,
-          vehicleMakeModel: read("model"),
-          vehiclePlateNumber: read("plate"),
-          // The artboard asks only for plate and model; the rest is completed during review.
-          vehicleYear: null,
-          vehicleSeatCapacity: null,
-          labResultSubmittedAt: labIso,
-          labTestConsentSigned: labConsent,
-          backgroundCheckConsentSigned: backgroundConsent,
-          documents,
-        });
+        return serverRpc<Awaited<ReturnType<typeof orpc.onboarding.submitDriverApplication.call>>>(
+          "onboarding/submitDriverApplication",
+          {
+            nationalId: read("nationalId"),
+            licenseNumber: read("licenseNumber"),
+            licenseCategory: read("licenseCategory"),
+            licenseExpiry: licenseIso,
+            yearsOfExperience: Number(read("yearsOfExperience")),
+            serviceAreas: [country],
+            hasOwnVehicle: true,
+            vehicleMakeModel: read("model"),
+            vehiclePlateNumber: read("plate"),
+            // The artboard asks only for plate and model; the rest is completed during review.
+            vehicleYear: null,
+            vehicleSeatCapacity: null,
+            labResultSubmittedAt: labIso,
+            labTestConsentSigned: labConsent,
+            backgroundCheckConsentSigned: backgroundConsent,
+            documents,
+          },
+        );
       },
     );
   }
