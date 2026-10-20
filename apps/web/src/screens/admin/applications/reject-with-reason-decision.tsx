@@ -6,6 +6,8 @@ import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
 import { getSelectedAdminApplicationId } from "@/screens/onboarding-state";
+import { trackEvent } from "@/utils/analytics";
+import { serverMutationOptions, serverQueryOptions } from "@/utils/server-rpc";
 import { orpc } from "@/utils/orpc";
 
 import {
@@ -106,17 +108,19 @@ export function RejectWithReasonDecision() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const detailQuery = useQuery({
-    ...orpc.onboarding.getApplicationDetail.queryOptions({
+    ...serverQueryOptions(orpc.onboarding.getApplicationDetail, "onboarding/getApplicationDetail", {
       input: { applicationId: applicationId ?? "" },
     }),
     enabled: authStatus === "authenticated" && Boolean(applicationId),
   });
 
   const rejectMutation = useMutation(
-    orpc.onboarding.rejectApplication.mutationOptions({
+    serverMutationOptions(orpc.onboarding.rejectApplication, "onboarding/rejectApplication", {
       onSuccess: () => {
+        trackEvent("application_rejected", { surface: "admin" });
         void queryClient.invalidateQueries({ queryKey: orpc.onboarding.key() });
       },
+      onError: () => trackEvent("application_reject_failed", { surface: "admin" }),
     }),
   );
 

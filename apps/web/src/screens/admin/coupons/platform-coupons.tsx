@@ -4,6 +4,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
+import { serverMutationOptions, serverQueryOptions } from "@/utils/server-rpc";
 import { orpc } from "@/utils/orpc";
 
 import { AdminButton, AdminLink } from "../common/admin-actions";
@@ -60,12 +61,14 @@ export function PlatformCoupons() {
   const { status: authStatus } = useAuth();
   const queryClient = useQueryClient();
   const couponsQuery = useQuery({
-    ...orpc.coupons.listPlatformCoupons.queryOptions({ input: {} }),
+    ...serverQueryOptions(orpc.coupons.listPlatformCoupons, "coupons/listPlatformCoupons", {
+      input: {},
+    }),
     enabled: authStatus === "authenticated",
   });
 
   const revokeMutation = useMutation(
-    orpc.coupons.updateStatus.mutationOptions({
+    serverMutationOptions(orpc.coupons.updateStatus, "coupons/updateStatus", {
       onSuccess: () => {
         void queryClient.invalidateQueries({ queryKey: orpc.coupons.key() });
       },

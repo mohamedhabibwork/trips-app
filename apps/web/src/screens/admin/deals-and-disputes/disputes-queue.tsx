@@ -7,6 +7,7 @@ import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
+import { serverQueryOptions } from "@/utils/server-rpc";
 
 import { AdminLink } from "../common/admin-actions";
 import { AdminSelect, type AdminOption } from "../common/admin-form";
@@ -152,7 +153,11 @@ export function DisputesQueue() {
   const [ageFilter, setAgeFilter] = useState("any");
 
   const exceptionsQuery = useQuery({
-    ...orpc.accounting.listAdminReconciliationExceptions.queryOptions(),
+    ...serverQueryOptions(
+      orpc.accounting.listAdminReconciliationExceptions,
+      "accounting/listAdminReconciliationExceptions",
+      { input: undefined },
+    ),
     enabled: authStatus === "authenticated",
   });
 

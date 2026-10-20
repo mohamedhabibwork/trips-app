@@ -6,7 +6,9 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
+import { trackEvent } from "@/utils/analytics";
 import { orpc } from "@/utils/orpc";
+import { serverQueryOptions, serverMutationOptions } from "@/utils/server-rpc";
 
 import { AdminButton } from "../common/admin-actions";
 import { AdminEmpty, AdminQueryState } from "../common/admin-states";
@@ -61,16 +63,24 @@ export function PayoutRuns() {
   const [isCreating, setIsCreating] = useState(false);
 
   const ledgerQuery = useQuery({
-    ...orpc.accounting.listLedgerEntries.queryOptions({ input: {} }),
+    ...serverQueryOptions(orpc.accounting.listLedgerEntries, "accounting/listLedgerEntries", {
+      input: {},
+    }),
     enabled: authStatus === "authenticated",
   });
   const createPayoutMutation = useMutation(
-    orpc.accounting.createPayoutSettlement.mutationOptions({
-      onSuccess: () => {
-        setIsCreating(false);
-        void queryClient.invalidateQueries({ queryKey: orpc.accounting.key() });
+    serverMutationOptions(
+      orpc.accounting.createPayoutSettlement,
+      "accounting/createPayoutSettlement",
+      {
+        onSuccess: () => {
+          trackEvent("payout_settlement_created", { surface: "admin" });
+          setIsCreating(false);
+          void queryClient.invalidateQueries({ queryKey: orpc.accounting.key() });
+        },
+        onError: () => trackEvent("payout_settlement_create_failed", { surface: "admin" }),
       },
-    }),
+    ),
   );
 
   const payouts = (ledgerQuery.data ?? []).filter(

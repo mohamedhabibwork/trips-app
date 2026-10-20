@@ -1,13 +1,16 @@
 import { Outlet, createFileRoute } from "@tanstack/react-router";
+import { serverQueryOptions } from "@/utils/server-rpc";
 
 import { requireSurface } from "@/auth/guard";
 import { AdminShell } from "@/components/shells/admin-shell";
 import { findScreen } from "@/screens/registry";
+import { pageHead } from "@/navigation/seo";
 import { loadApiStatus } from "@/utils/api-status";
 
 /** `/admin` — platform admins only (AC-6). Loader prefetches status and AdminHome queries safely. */
 export const Route = createFileRoute("/admin")({
   beforeLoad: requireSurface("admin"),
+  head: pageHead("SCR-ADM-01"),
   loader: async ({ context, location }) => {
     await loadApiStatus({ context });
 
@@ -31,13 +34,23 @@ export const Route = createFileRoute("/admin")({
     // Prefetch for AdminHome queries when authenticated
     await Promise.allSettled([
       context.queryClient.prefetchQuery(
-        context.orpc.onboarding.listReviewQueue.queryOptions({ input: {} }),
+        serverQueryOptions(context.orpc.onboarding.listReviewQueue, "onboarding/listReviewQueue", {
+          input: {},
+        }),
       ),
       context.queryClient.prefetchQuery(
-        context.orpc.accounting.listAdminReconciliationExceptions.queryOptions(),
+        serverQueryOptions(
+          context.orpc.accounting.listAdminReconciliationExceptions,
+          "accounting/listAdminReconciliationExceptions",
+          { input: undefined },
+        ),
       ),
       context.queryClient.prefetchQuery(
-        context.orpc.coupons.listPlatformCoupons.queryOptions({ input: {} }),
+        serverQueryOptions(
+          context.orpc.coupons.listPlatformCoupons,
+          "coupons/listPlatformCoupons",
+          { input: {} },
+        ),
       ),
     ]);
   },

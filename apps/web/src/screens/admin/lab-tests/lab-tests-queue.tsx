@@ -6,6 +6,7 @@ import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
+import { serverQueryOptions } from "@/utils/server-rpc";
 
 import { AdminLink } from "../common/admin-actions";
 import { AdminCheckbox, AdminTabs, type AdminTab } from "../common/admin-form";
@@ -43,7 +44,7 @@ export function LabTestsQueue() {
   const [overdueOnly, setOverdueOnly] = useState(false);
 
   const queueQuery = useQuery({
-    ...orpc.onboarding.listReviewQueue.queryOptions({
+    ...serverQueryOptions(orpc.onboarding.listReviewQueue, "onboarding/listReviewQueue", {
       input: { applicationType: "platform_driver" },
     }),
     enabled: authStatus === "authenticated",

@@ -11,6 +11,8 @@ import {
   getSelectedAdminApplicationId,
   setSelectedAdminApplicationId,
 } from "@/screens/onboarding-state";
+import { trackEvent } from "@/utils/analytics";
+import { serverMutationOptions, serverQueryOptions } from "@/utils/server-rpc";
 import { orpc } from "@/utils/orpc";
 
 import {
@@ -105,14 +107,16 @@ export function ApplicationReviewDetail() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const queueQuery = useQuery({
-    ...orpc.onboarding.listReviewQueue.queryOptions({ input: {} }),
+    ...serverQueryOptions(orpc.onboarding.listReviewQueue, "onboarding/listReviewQueue", {
+      input: {},
+    }),
     enabled: authStatus === "authenticated",
   });
   // Without an id in the URL or the session, review the first application in the queue.
   const applicationId = routeId ?? queueQuery.data?.[0]?.id ?? null;
 
   const detailQuery = useQuery({
-    ...orpc.onboarding.getApplicationDetail.queryOptions({
+    ...serverQueryOptions(orpc.onboarding.getApplicationDetail, "onboarding/getApplicationDetail", {
       input: { applicationId: applicationId ?? "" },
     }),
     enabled: authStatus === "authenticated" && Boolean(applicationId),
@@ -121,12 +125,33 @@ export function ApplicationReviewDetail() {
   const invalidateOnboarding = () => {
     void queryClient.invalidateQueries({ queryKey: orpc.onboarding.key() });
   };
-  const openDocMutation = useMutation(orpc.onboarding.openApplicationDocument.mutationOptions({}));
+  const openDocMutation = useMutation(
+    serverMutationOptions(
+      orpc.onboarding.openApplicationDocument,
+      "onboarding/openApplicationDocument",
+    ),
+  );
   const verifyDocMutation = useMutation(
-    orpc.onboarding.verifyApplicationDocument.mutationOptions({ onSuccess: invalidateOnboarding }),
+    serverMutationOptions(
+      orpc.onboarding.verifyApplicationDocument,
+      "onboarding/verifyApplicationDocument",
+      {
+        onSuccess: () => {
+          trackEvent("application_document_verified", { surface: "admin" });
+          invalidateOnboarding();
+        },
+        onError: () => trackEvent("application_document_verify_failed", { surface: "admin" }),
+      },
+    ),
   );
   const approveMutation = useMutation(
-    orpc.onboarding.approveApplication.mutationOptions({ onSuccess: invalidateOnboarding }),
+    serverMutationOptions(orpc.onboarding.approveApplication, "onboarding/approveApplication", {
+      onSuccess: () => {
+        trackEvent("application_approved", { surface: "admin" });
+        invalidateOnboarding();
+      },
+      onError: () => trackEvent("application_approve_failed", { surface: "admin" }),
+    }),
   );
 
   const detail = detailQuery.data;

@@ -7,6 +7,7 @@ import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
+import { serverQueryOptions } from "@/utils/server-rpc";
 
 import { AdminLink } from "../common/admin-actions";
 import { AdminSelect, type AdminOption } from "../common/admin-form";
@@ -50,11 +51,17 @@ export function PlatformFinancialView() {
   const enabled = authStatus === "authenticated";
 
   const couponsQuery = useQuery({
-    ...orpc.coupons.listPlatformCoupons.queryOptions({ input: {} }),
+    ...serverQueryOptions(orpc.coupons.listPlatformCoupons, "coupons/listPlatformCoupons", {
+      input: {},
+    }),
     enabled,
   });
   const dealsQuery = useQuery({
-    ...orpc.negotiation.listOrganizationNegotiations.queryOptions({ input: {} }),
+    ...serverQueryOptions(
+      orpc.negotiation.listOrganizationNegotiations,
+      "negotiation/listOrganizationNegotiations",
+      { input: {} },
+    ),
     enabled,
   });
 

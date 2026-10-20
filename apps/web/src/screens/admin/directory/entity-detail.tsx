@@ -7,6 +7,7 @@ import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
+import { serverQueryOptions } from "@/utils/server-rpc";
 
 import { AdminButton, AdminLink, useAdminParam } from "../common/admin-actions";
 import { AdminTabs, type AdminTab } from "../common/admin-form";
@@ -146,7 +147,7 @@ export function EntityDetail() {
   const [tab, setTab] = useState<DetailTab>("profile");
 
   const detailQuery = useQuery({
-    ...orpc.onboarding.getApplicationDetail.queryOptions({
+    ...serverQueryOptions(orpc.onboarding.getApplicationDetail, "onboarding/getApplicationDetail", {
       input: { applicationId: entityId ?? "" },
     }),
     enabled: authStatus === "authenticated" && Boolean(entityId),

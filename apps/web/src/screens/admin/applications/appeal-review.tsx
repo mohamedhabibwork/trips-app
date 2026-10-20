@@ -7,6 +7,8 @@ import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
 import { getSelectedAdminApplicationId } from "@/screens/onboarding-state";
+import { trackEvent } from "@/utils/analytics";
+import { serverMutationOptions, serverQueryOptions } from "@/utils/server-rpc";
 import { orpc } from "@/utils/orpc";
 
 import {
@@ -96,23 +98,27 @@ export function AppealReview() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const appealsQuery = useQuery({
-    ...orpc.onboarding.listReviewQueue.queryOptions({ input: { state: "Appealed" } }),
+    ...serverQueryOptions(orpc.onboarding.listReviewQueue, "onboarding/listReviewQueue", {
+      input: { state: "Appealed" },
+    }),
     enabled: authStatus === "authenticated",
   });
   const applicationId = routeId ?? appealsQuery.data?.[0]?.id ?? null;
 
   const detailQuery = useQuery({
-    ...orpc.onboarding.getApplicationDetail.queryOptions({
+    ...serverQueryOptions(orpc.onboarding.getApplicationDetail, "onboarding/getApplicationDetail", {
       input: { applicationId: applicationId ?? "" },
     }),
     enabled: authStatus === "authenticated" && Boolean(applicationId),
   });
 
   const decideAppealMutation = useMutation(
-    orpc.onboarding.decideAppeal.mutationOptions({
+    serverMutationOptions(orpc.onboarding.decideAppeal, "onboarding/decideAppeal", {
       onSuccess: () => {
+        trackEvent("appeal_decided", { surface: "admin" });
         void queryClient.invalidateQueries({ queryKey: orpc.onboarding.key() });
       },
+      onError: () => trackEvent("appeal_decision_failed", { surface: "admin" }),
     }),
   );
 

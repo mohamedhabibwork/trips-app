@@ -7,6 +7,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { t } from "@trips-app/i18n";
 
 import { orpc } from "@/utils/orpc";
+import { serverMutationOptions } from "@/utils/server-rpc";
 
 import { AdminButton } from "../common/admin-actions";
 import { AdminInput, AdminSelect, type AdminOption } from "../common/admin-form";
@@ -56,7 +57,7 @@ export function AdminStaffAccounts() {
   const [rows, setRows] = useState<readonly StaffRow[]>([]);
 
   const inviteMutation = useMutation(
-    orpc.auth.adminInviteStaff.mutationOptions({
+    serverMutationOptions(orpc.auth.adminInviteStaff, "auth/adminInviteStaff", {
       onSuccess: (result, input) => {
         void queryClient.invalidateQueries({ queryKey: orpc.auth.key() });
         setRows((current) => [
@@ -76,7 +77,7 @@ export function AdminStaffAccounts() {
     }),
   );
   const resetMutation = useMutation(
-    orpc.auth.adminResetTotp.mutationOptions({
+    serverMutationOptions(orpc.auth.adminResetTotp, "auth/adminResetTotp", {
       onSuccess: () => {
         void queryClient.invalidateQueries({ queryKey: orpc.auth.key() });
       },

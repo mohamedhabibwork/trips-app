@@ -7,6 +7,7 @@ import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
 import { setSelectedAdminApplicationId } from "@/screens/onboarding-state";
+import { serverQueryOptions } from "@/utils/server-rpc";
 import { orpc } from "@/utils/orpc";
 
 import { AdminLink } from "../common/admin-actions";
@@ -127,7 +128,7 @@ export function ApplicationQueue() {
   const applicationType = TYPE_FILTER[typeFilter];
   const state = STATE_FILTER[stateFilter];
   const queueQuery = useQuery({
-    ...orpc.onboarding.listReviewQueue.queryOptions({
+    ...serverQueryOptions(orpc.onboarding.listReviewQueue, "onboarding/listReviewQueue", {
       input: {
         ...(applicationType ? { applicationType } : {}),
         ...(state ? { state } : {}),

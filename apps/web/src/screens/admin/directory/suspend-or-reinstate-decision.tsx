@@ -6,7 +6,9 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
+import { trackEvent } from "@/utils/analytics";
 import { orpc } from "@/utils/orpc";
+import { serverQueryOptions, serverMutationOptions } from "@/utils/server-rpc";
 
 import { AdminButton, AdminLink, useAdminNavigate, useAdminParam } from "../common/admin-actions";
 import { AdminCheckbox, AdminTextarea } from "../common/admin-form";
@@ -70,7 +72,7 @@ export function SuspendOrReinstateDecision() {
   const [acknowledged, setAcknowledged] = useState(false);
 
   const detailQuery = useQuery({
-    ...orpc.onboarding.getApplicationDetail.queryOptions({
+    ...serverQueryOptions(orpc.onboarding.getApplicationDetail, "onboarding/getApplicationDetail", {
       input: { applicationId: entityId ?? "" },
     }),
     enabled: authStatus === "authenticated" && Boolean(entityId),
@@ -84,10 +86,22 @@ export function SuspendOrReinstateDecision() {
     if (entityId) await goTo("SCR-ADM-08", { entityId });
   };
   const suspendMutation = useMutation(
-    orpc.auth.suspendAccount.mutationOptions({ onSuccess: onDecided }),
+    serverMutationOptions(orpc.auth.suspendAccount, "auth/suspendAccount", {
+      onSuccess: () => {
+        trackEvent("account_suspended", { surface: "admin" });
+        onDecided();
+      },
+      onError: () => trackEvent("account_suspend_failed", { surface: "admin" }),
+    }),
   );
   const reinstateMutation = useMutation(
-    orpc.auth.reinstateAccount.mutationOptions({ onSuccess: onDecided }),
+    serverMutationOptions(orpc.auth.reinstateAccount, "auth/reinstateAccount", {
+      onSuccess: () => {
+        trackEvent("account_reinstated", { surface: "admin" });
+        onDecided();
+      },
+      onError: () => trackEvent("account_reinstate_failed", { surface: "admin" }),
+    }),
   );
 
   if (!entityId) {

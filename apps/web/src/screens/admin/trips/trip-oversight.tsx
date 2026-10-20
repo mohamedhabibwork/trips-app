@@ -6,7 +6,9 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
+import { trackEvent } from "@/utils/analytics";
 import { orpc } from "@/utils/orpc";
+import { serverMutationOptions, serverQueryOptions } from "@/utils/server-rpc";
 
 import { AdminButton } from "../common/admin-actions";
 import { AdminInput, AdminSelect, AdminTextarea, type AdminOption } from "../common/admin-form";
@@ -101,16 +103,18 @@ export function TripOversight() {
   const [reason, setReason] = useState("");
 
   const tripsQuery = useQuery({
-    ...orpc.trips.browsePublicTrips.queryOptions({ input: {} }),
+    ...serverQueryOptions(orpc.trips.browsePublicTrips, "trips/browsePublicTrips", { input: {} }),
     enabled: authStatus === "authenticated",
   });
 
   const cancelMutation = useMutation(
-    orpc.trips.cancel.mutationOptions({
+    serverMutationOptions(orpc.trips.cancel, "trips/cancel", {
       onSuccess: () => {
+        trackEvent("trip_cancelled", { surface: "admin" });
         setReason("");
         void queryClient.invalidateQueries({ queryKey: orpc.trips.key() });
       },
+      onError: () => trackEvent("trip_cancel_failed", { surface: "admin" }),
     }),
   );
 

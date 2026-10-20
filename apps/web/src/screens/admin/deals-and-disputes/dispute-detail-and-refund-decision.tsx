@@ -6,7 +6,9 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
+import { trackEvent } from "@/utils/analytics";
 import { orpc } from "@/utils/orpc";
+import { serverQueryOptions, serverMutationOptions } from "@/utils/server-rpc";
 
 import { AdminButton, AdminLink, useAdminNavigate, useAdminParam } from "../common/admin-actions";
 import { AdminInput, AdminRadioGroup, AdminTextarea } from "../common/admin-form";
@@ -107,10 +109,12 @@ function DisputeDecision({ dispute, locale }: { dispute: Dispute; locale: string
   const [errors, setErrors] = useState<DecisionErrors>({});
 
   const refundMutation = useMutation(
-    orpc.payments.refundPayment.mutationOptions({
+    serverMutationOptions(orpc.payments.refundPayment, "payments/refundPayment", {
       onSuccess: () => {
+        trackEvent("refund_processed", { surface: "admin", entity_type: "dispute" });
         void queryClient.invalidateQueries({ queryKey: orpc.payments.key() });
       },
+      onError: () => trackEvent("refund_failed", { surface: "admin", entity_type: "dispute" }),
     }),
   );
 
@@ -247,7 +251,11 @@ export function DisputeDetailAndRefundDecision() {
   const { status: authStatus, locale } = useAuth();
   const disputeId = useAdminParam("disputeId", getSelectedAdminDisputeId);
   const exceptionsQuery = useQuery({
-    ...orpc.accounting.listAdminReconciliationExceptions.queryOptions(),
+    ...serverQueryOptions(
+      orpc.accounting.listAdminReconciliationExceptions,
+      "accounting/listAdminReconciliationExceptions",
+      { input: undefined },
+    ),
     enabled: authStatus === "authenticated",
   });
 

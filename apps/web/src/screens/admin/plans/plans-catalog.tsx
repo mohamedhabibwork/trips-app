@@ -5,6 +5,7 @@ import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
+import { serverQueryOptions } from "@/utils/server-rpc";
 
 import { AdminButton, AdminLink } from "../common/admin-actions";
 import { setSelectedAdminPlanId } from "../common/admin-selection";
@@ -22,7 +23,7 @@ interface PlanRow {
 export function PlansCatalog() {
   const { status: authStatus, locale } = useAuth();
   const catalogQuery = useQuery({
-    ...orpc.plans.getCatalog.queryOptions({ input: {} }),
+    ...serverQueryOptions(orpc.plans.getCatalog, "plans/getCatalog", { input: {} }),
     enabled: authStatus === "authenticated",
   });
 

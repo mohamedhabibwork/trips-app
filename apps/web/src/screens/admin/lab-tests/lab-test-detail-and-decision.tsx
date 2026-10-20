@@ -5,6 +5,7 @@ import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
+import { serverQueryOptions, serverMutationOptions } from "@/utils/server-rpc";
 
 import { AdminButton, AdminLink, useAdminNavigate, useAdminParam } from "../common/admin-actions";
 import { getSelectedAdminLabTestId } from "../common/admin-selection";
@@ -61,7 +62,7 @@ export function LabTestDetailAndDecision() {
   const labTestId = useAdminParam("labTestId", getSelectedAdminLabTestId);
 
   const queueQuery = useQuery({
-    ...orpc.onboarding.listReviewQueue.queryOptions({
+    ...serverQueryOptions(orpc.onboarding.listReviewQueue, "onboarding/listReviewQueue", {
       input: { applicationType: "platform_driver" },
     }),
     enabled: authStatus === "authenticated",
@@ -69,14 +70,14 @@ export function LabTestDetailAndDecision() {
   const found = (queueQuery.data ?? []).find((item) => item.id === labTestId);
 
   const detailQuery = useQuery({
-    ...orpc.onboarding.getApplicationDetail.queryOptions({
+    ...serverQueryOptions(orpc.onboarding.getApplicationDetail, "onboarding/getApplicationDetail", {
       input: { applicationId: found?.id ?? "" },
     }),
     enabled: authStatus === "authenticated" && Boolean(found),
   });
 
   const reviewMutation = useMutation(
-    orpc.driver.adminReviewLabTest.mutationOptions({
+    serverMutationOptions(orpc.driver.adminReviewLabTest, "driver/adminReviewLabTest", {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: orpc.driver.key() });
         queryClient.invalidateQueries({ queryKey: orpc.onboarding.key() });

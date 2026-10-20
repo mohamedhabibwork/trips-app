@@ -7,6 +7,7 @@ import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
+import { serverQueryOptions } from "@/utils/server-rpc";
 
 import { AdminLink } from "../common/admin-actions";
 import { AdminSelect, type AdminOption } from "../common/admin-form";
@@ -109,7 +110,9 @@ export function RevenueDashboard() {
 
   const role = ROLE_FILTER[roleFilter];
   const catalogQuery = useQuery({
-    ...orpc.plans.getCatalog.queryOptions({ input: role ? { role } : {} }),
+    ...serverQueryOptions(orpc.plans.getCatalog, "plans/getCatalog", {
+      input: role ? { role } : {},
+    }),
     enabled: authStatus === "authenticated",
   });
 

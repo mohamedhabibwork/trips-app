@@ -6,6 +6,7 @@ import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
+import { serverMutationOptions, serverQueryOptions } from "@/utils/server-rpc";
 
 import { AdminButton, AdminLink, useAdminNavigate, useAdminParam } from "../common/admin-actions";
 import { AdminCheckbox, AdminInput, AdminSelect } from "../common/admin-form";
@@ -60,14 +61,14 @@ export function PlanEditor() {
   const [flags, setFlags] = useState<FlagDraft>({});
 
   const catalogQuery = useQuery({
-    ...orpc.plans.getCatalog.queryOptions({ input: {} }),
+    ...serverQueryOptions(orpc.plans.getCatalog, "plans/getCatalog", { input: {} }),
     enabled: authStatus === "authenticated",
   });
   const catalog = catalogQuery.data ?? [];
   const plan = catalog.find((entry) => entry.id === planId);
 
   const updateSettingsMutation = useMutation(
-    orpc.admin.updateSystemSettings.mutationOptions({
+    serverMutationOptions(orpc.admin.updateSystemSettings, "admin/updateSystemSettings", {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: orpc.admin.key() });
       },

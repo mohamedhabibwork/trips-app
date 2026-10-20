@@ -16,6 +16,7 @@ import { AuditLog } from "./platform/audit-log";
 import { NotificationTemplates } from "./platform/notification-templates";
 import { FeatureFlagsAndPlatformConfiguration } from "./platform/feature-flags-and-platform-configuration";
 import { OperationsHealthDashboard } from "./operations/operations-health-dashboard";
+import { serverQueryOptions } from "@/utils/server-rpc";
 
 export const ADMIN_SCREENS_PART_2: readonly ScreenEntry[] = [
   {
@@ -28,8 +29,14 @@ export const ADMIN_SCREENS_PART_2: readonly ScreenEntry[] = [
       if (typeof window === "undefined" && !auth.accessToken()) return;
       try {
         await Promise.allSettled([
-          queryClient.ensureQueryData(orpc.onboarding.listReviewQueue.queryOptions({ input: {} })),
-          queryClient.ensureQueryData(orpc.plans.getCatalog.queryOptions({ input: {} })),
+          queryClient.ensureQueryData(
+            serverQueryOptions(orpc.onboarding.listReviewQueue, "onboarding/listReviewQueue", {
+              input: {},
+            }),
+          ),
+          queryClient.ensureQueryData(
+            serverQueryOptions(orpc.plans.getCatalog, "plans/getCatalog", { input: {} }),
+          ),
         ]);
       } catch {
         // Gracefully ignore SSR errors
@@ -45,7 +52,9 @@ export const ADMIN_SCREENS_PART_2: readonly ScreenEntry[] = [
     loader: async ({ queryClient, orpc, auth }) => {
       if (typeof window === "undefined" && !auth.accessToken()) return;
       try {
-        await queryClient.ensureQueryData(orpc.plans.getCatalog.queryOptions({ input: {} }));
+        await queryClient.ensureQueryData(
+          serverQueryOptions(orpc.plans.getCatalog, "plans/getCatalog", { input: {} }),
+        );
       } catch {
         // Gracefully ignore SSR errors
       }
@@ -61,7 +70,9 @@ export const ADMIN_SCREENS_PART_2: readonly ScreenEntry[] = [
       if (typeof window === "undefined" && !auth.accessToken()) return;
       try {
         await queryClient.ensureQueryData(
-          orpc.coupons.listPlatformCoupons.queryOptions({ input: {} }),
+          serverQueryOptions(orpc.coupons.listPlatformCoupons, "coupons/listPlatformCoupons", {
+            input: {},
+          }),
         );
       } catch {
         // Gracefully ignore SSR errors
@@ -88,7 +99,11 @@ export const ADMIN_SCREENS_PART_2: readonly ScreenEntry[] = [
       if (typeof window === "undefined" && !auth.accessToken()) return;
       try {
         await queryClient.ensureQueryData(
-          orpc.negotiation.listOrganizationNegotiations.queryOptions({ input: {} }),
+          serverQueryOptions(
+            orpc.negotiation.listOrganizationNegotiations,
+            "negotiation/listOrganizationNegotiations",
+            { input: {} },
+          ),
         );
       } catch {
         // Gracefully ignore SSR errors
@@ -105,7 +120,11 @@ export const ADMIN_SCREENS_PART_2: readonly ScreenEntry[] = [
       if (typeof window === "undefined" && !auth.accessToken()) return;
       try {
         await queryClient.ensureQueryData(
-          orpc.negotiation.listOrganizationNegotiations.queryOptions({ input: {} }),
+          serverQueryOptions(
+            orpc.negotiation.listOrganizationNegotiations,
+            "negotiation/listOrganizationNegotiations",
+            { input: {} },
+          ),
         );
       } catch {
         // Gracefully ignore SSR errors
@@ -122,7 +141,11 @@ export const ADMIN_SCREENS_PART_2: readonly ScreenEntry[] = [
       if (typeof window === "undefined" && !auth.accessToken()) return;
       try {
         await queryClient.ensureQueryData(
-          orpc.accounting.listAdminReconciliationExceptions.queryOptions(),
+          serverQueryOptions(
+            orpc.accounting.listAdminReconciliationExceptions,
+            "accounting/listAdminReconciliationExceptions",
+            { input: undefined },
+          ),
         );
       } catch {
         // Gracefully ignore SSR errors
@@ -139,7 +162,11 @@ export const ADMIN_SCREENS_PART_2: readonly ScreenEntry[] = [
       if (typeof window === "undefined" && !auth.accessToken()) return;
       try {
         await queryClient.ensureQueryData(
-          orpc.accounting.listAdminReconciliationExceptions.queryOptions(),
+          serverQueryOptions(
+            orpc.accounting.listAdminReconciliationExceptions,
+            "accounting/listAdminReconciliationExceptions",
+            { input: undefined },
+          ),
         );
       } catch {
         // Gracefully ignore SSR errors
@@ -156,9 +183,17 @@ export const ADMIN_SCREENS_PART_2: readonly ScreenEntry[] = [
       if (typeof window === "undefined" && !auth.accessToken()) return;
       try {
         await Promise.allSettled([
-          queryClient.ensureQueryData(orpc.coupons.listPlatformCoupons.queryOptions({ input: {} })),
           queryClient.ensureQueryData(
-            orpc.negotiation.listOrganizationNegotiations.queryOptions({ input: {} }),
+            serverQueryOptions(orpc.coupons.listPlatformCoupons, "coupons/listPlatformCoupons", {
+              input: {},
+            }),
+          ),
+          queryClient.ensureQueryData(
+            serverQueryOptions(
+              orpc.negotiation.listOrganizationNegotiations,
+              "negotiation/listOrganizationNegotiations",
+              { input: {} },
+            ),
           ),
         ]);
       } catch {
@@ -176,7 +211,9 @@ export const ADMIN_SCREENS_PART_2: readonly ScreenEntry[] = [
       if (typeof window === "undefined" && !auth.accessToken()) return;
       try {
         await queryClient.ensureQueryData(
-          orpc.accounting.listLedgerEntries.queryOptions({ input: {} }),
+          serverQueryOptions(orpc.accounting.listLedgerEntries, "accounting/listLedgerEntries", {
+            input: {},
+          }),
         );
       } catch {
         // Gracefully ignore SSR errors
@@ -193,7 +230,11 @@ export const ADMIN_SCREENS_PART_2: readonly ScreenEntry[] = [
       if (typeof window === "undefined" && !auth.accessToken()) return;
       try {
         await queryClient.ensureQueryData(
-          orpc.accounting.listAdminReconciliationExceptions.queryOptions(),
+          serverQueryOptions(
+            orpc.accounting.listAdminReconciliationExceptions,
+            "accounting/listAdminReconciliationExceptions",
+            { input: undefined },
+          ),
         );
       } catch {
         // Gracefully ignore SSR errors
@@ -210,7 +251,9 @@ export const ADMIN_SCREENS_PART_2: readonly ScreenEntry[] = [
       if (typeof window === "undefined" && !auth.accessToken()) return;
       try {
         await queryClient.ensureQueryData(
-          orpc.accounting.listLedgerEntries.queryOptions({ input: {} }),
+          serverQueryOptions(orpc.accounting.listLedgerEntries, "accounting/listLedgerEntries", {
+            input: {},
+          }),
         );
       } catch {
         // Gracefully ignore SSR errors
@@ -226,7 +269,11 @@ export const ADMIN_SCREENS_PART_2: readonly ScreenEntry[] = [
     loader: async ({ queryClient, orpc, auth }) => {
       if (typeof window === "undefined" && !auth.accessToken()) return;
       try {
-        await queryClient.ensureQueryData(orpc.trips.browsePublicTrips.queryOptions({ input: {} }));
+        await queryClient.ensureQueryData(
+          serverQueryOptions(orpc.trips.browsePublicTrips, "trips/browsePublicTrips", {
+            input: {},
+          }),
+        );
       } catch {
         // Gracefully ignore SSR errors
       }
@@ -263,7 +310,11 @@ export const ADMIN_SCREENS_PART_2: readonly ScreenEntry[] = [
     loader: async ({ queryClient, orpc, auth }) => {
       if (typeof window === "undefined" && !auth.accessToken()) return;
       try {
-        await queryClient.ensureQueryData(orpc.admin.getSystemSettings.queryOptions());
+        await queryClient.ensureQueryData(
+          serverQueryOptions(orpc.admin.getSystemSettings, "admin/getSystemSettings", {
+            input: undefined,
+          }),
+        );
       } catch {
         // Gracefully ignore SSR errors
       }
@@ -279,8 +330,16 @@ export const ADMIN_SCREENS_PART_2: readonly ScreenEntry[] = [
       if (typeof window === "undefined" && !auth.accessToken()) return;
       try {
         await Promise.allSettled([
-          queryClient.ensureQueryData(orpc.trips.browsePublicTrips.queryOptions({ input: {} })),
-          queryClient.ensureQueryData(orpc.notifications.listInbox.queryOptions({ input: {} })),
+          queryClient.ensureQueryData(
+            serverQueryOptions(orpc.trips.browsePublicTrips, "trips/browsePublicTrips", {
+              input: {},
+            }),
+          ),
+          queryClient.ensureQueryData(
+            serverQueryOptions(orpc.notifications.listInbox, "notifications/listInbox", {
+              input: {},
+            }),
+          ),
         ]);
       } catch {
         // Gracefully ignore SSR errors

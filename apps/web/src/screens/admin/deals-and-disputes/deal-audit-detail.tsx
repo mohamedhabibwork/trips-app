@@ -6,6 +6,7 @@ import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
+import { serverQueryOptions } from "@/utils/server-rpc";
 
 import { AdminLink, useAdminParam } from "../common/admin-actions";
 import { getSelectedAdminDealId } from "../common/admin-selection";
@@ -192,7 +193,11 @@ export function DealAuditDetail() {
   const { status: authStatus, locale } = useAuth();
   const dealId = useAdminParam("dealId", getSelectedAdminDealId);
   const dealsQuery = useQuery({
-    ...orpc.negotiation.listOrganizationNegotiations.queryOptions({ input: {} }),
+    ...serverQueryOptions(
+      orpc.negotiation.listOrganizationNegotiations,
+      "negotiation/listOrganizationNegotiations",
+      { input: {} },
+    ),
     enabled: authStatus === "authenticated",
   });
 

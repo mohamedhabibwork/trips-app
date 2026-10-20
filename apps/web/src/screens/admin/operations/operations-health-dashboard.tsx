@@ -9,6 +9,7 @@ import { TeIcon } from "@trips-app/ui/components/te-icon";
 
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
+import { serverQueryOptions } from "@/utils/server-rpc";
 
 import { AdminSelect, type AdminOption } from "../common/admin-form";
 import { AdminEmpty, AdminQueryState } from "../common/admin-states";
@@ -92,11 +93,11 @@ export function OperationsHealthDashboard() {
   const now = useNow();
 
   const tripsQuery = useQuery({
-    ...orpc.trips.browsePublicTrips.queryOptions({ input: {} }),
+    ...serverQueryOptions(orpc.trips.browsePublicTrips, "trips/browsePublicTrips", { input: {} }),
     enabled: authStatus === "authenticated",
   });
   const notificationsQuery = useQuery({
-    ...orpc.notifications.listInbox.queryOptions({ input: {} }),
+    ...serverQueryOptions(orpc.notifications.listInbox, "notifications/listInbox", { input: {} }),
     enabled: authStatus === "authenticated",
   });
 

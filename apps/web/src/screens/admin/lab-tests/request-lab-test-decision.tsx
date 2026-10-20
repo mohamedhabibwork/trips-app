@@ -6,6 +6,7 @@ import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
+import { serverQueryOptions, serverMutationOptions } from "@/utils/server-rpc";
 
 import { AdminButton, AdminLink, useAdminNavigate } from "../common/admin-actions";
 import { AdminRadioGroup, AdminSelect, type AdminOption } from "../common/admin-form";
@@ -89,14 +90,14 @@ export function RequestLabTestDecision() {
   const [days, setDays] = useState(DEFAULT_DEADLINE_DAYS);
 
   const queueQuery = useQuery({
-    ...orpc.onboarding.listReviewQueue.queryOptions({
+    ...serverQueryOptions(orpc.onboarding.listReviewQueue, "onboarding/listReviewQueue", {
       input: { applicationType: "platform_driver" },
     }),
     enabled: authStatus === "authenticated",
   });
 
   const requestMutation = useMutation(
-    orpc.driver.adminRequestLabTest.mutationOptions({
+    serverMutationOptions(orpc.driver.adminRequestLabTest, "driver/adminRequestLabTest", {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: orpc.driver.key() });
         queryClient.invalidateQueries({ queryKey: orpc.onboarding.key() });

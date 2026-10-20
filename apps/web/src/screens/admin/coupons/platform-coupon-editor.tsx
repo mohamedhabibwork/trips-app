@@ -5,6 +5,8 @@ import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { t } from "@trips-app/i18n";
 
+import { trackEvent } from "@/utils/analytics";
+import { serverMutationOptions } from "@/utils/server-rpc";
 import { orpc } from "@/utils/orpc";
 
 import { AdminButton, AdminLink, useAdminNavigate } from "../common/admin-actions";
@@ -111,10 +113,12 @@ export function PlatformCouponEditor() {
   const [errors, setErrors] = useState<FieldErrors>({});
 
   const createMutation = useMutation(
-    orpc.coupons.createPlatformCoupon.mutationOptions({
+    serverMutationOptions(orpc.coupons.createPlatformCoupon, "coupons/createPlatformCoupon", {
       onSuccess: () => {
+        trackEvent("platform_coupon_created", { surface: "admin" });
         void queryClient.invalidateQueries({ queryKey: orpc.coupons.key() });
       },
+      onError: () => trackEvent("platform_coupon_create_failed", { surface: "admin" }),
     }),
   );
 

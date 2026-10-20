@@ -6,6 +6,7 @@ import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
+import { serverQueryOptions } from "@/utils/server-rpc";
 
 import { AdminButton, AdminLink, type AdminScreenId } from "../common/admin-actions";
 import { AdminAlert, AdminGrid, AdminKpi, AdminPage } from "../common/admin-ui";
@@ -56,15 +57,23 @@ function KpiValue({ card, query }: { card: QueueCard; query: QueryLike | null })
 export function AdminHome() {
   const { status: authStatus } = useAuth();
   const queueQuery = useQuery({
-    ...orpc.onboarding.listReviewQueue.queryOptions({ input: {} }),
+    ...serverQueryOptions(orpc.onboarding.listReviewQueue, "onboarding/listReviewQueue", {
+      input: {},
+    }),
     enabled: authStatus === "authenticated",
   });
   const exceptionsQuery = useQuery({
-    ...orpc.accounting.listAdminReconciliationExceptions.queryOptions(),
+    ...serverQueryOptions(
+      orpc.accounting.listAdminReconciliationExceptions,
+      "accounting/listAdminReconciliationExceptions",
+      { input: undefined },
+    ),
     enabled: authStatus === "authenticated",
   });
   const couponsQuery = useQuery({
-    ...orpc.coupons.listPlatformCoupons.queryOptions({ input: {} }),
+    ...serverQueryOptions(orpc.coupons.listPlatformCoupons, "coupons/listPlatformCoupons", {
+      input: {},
+    }),
     enabled: authStatus === "authenticated",
   });
 

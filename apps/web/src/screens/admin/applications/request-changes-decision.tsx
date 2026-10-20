@@ -7,6 +7,7 @@ import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
 import { getSelectedAdminApplicationId } from "@/screens/onboarding-state";
+import { serverMutationOptions, serverQueryOptions } from "@/utils/server-rpc";
 import { orpc } from "@/utils/orpc";
 
 import {
@@ -85,18 +86,22 @@ export function RequestChangesDecision() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const detailQuery = useQuery({
-    ...orpc.onboarding.getApplicationDetail.queryOptions({
+    ...serverQueryOptions(orpc.onboarding.getApplicationDetail, "onboarding/getApplicationDetail", {
       input: { applicationId: applicationId ?? "" },
     }),
     enabled: authStatus === "authenticated" && Boolean(applicationId),
   });
 
   const requestChangesMutation = useMutation(
-    orpc.onboarding.requestApplicationChanges.mutationOptions({
-      onSuccess: () => {
-        void queryClient.invalidateQueries({ queryKey: orpc.onboarding.key() });
+    serverMutationOptions(
+      orpc.onboarding.requestApplicationChanges,
+      "onboarding/requestApplicationChanges",
+      {
+        onSuccess: () => {
+          void queryClient.invalidateQueries({ queryKey: orpc.onboarding.key() });
+        },
       },
-    }),
+    ),
   );
 
   const trimmedMessage = message.trim();

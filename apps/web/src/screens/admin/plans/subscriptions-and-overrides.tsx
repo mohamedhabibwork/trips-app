@@ -5,7 +5,9 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
+import { trackEvent } from "@/utils/analytics";
 import { orpc } from "@/utils/orpc";
+import { serverMutationOptions, serverQueryOptions } from "@/utils/server-rpc";
 
 import { AdminLink } from "../common/admin-actions";
 import { AdminInput, AdminSelect, type AdminOption } from "../common/admin-form";
@@ -60,19 +62,23 @@ export function SubscriptionsAndOverrides() {
   const [renewalFilter, setRenewalFilter] = useState("");
 
   const queueQuery = useQuery({
-    ...orpc.onboarding.listReviewQueue.queryOptions({ input: {} }),
+    ...serverQueryOptions(orpc.onboarding.listReviewQueue, "onboarding/listReviewQueue", {
+      input: {},
+    }),
     enabled: authStatus === "authenticated",
   });
   const catalogQuery = useQuery({
-    ...orpc.plans.getCatalog.queryOptions({ input: {} }),
+    ...serverQueryOptions(orpc.plans.getCatalog, "plans/getCatalog", { input: {} }),
     enabled: authStatus === "authenticated",
   });
 
   const overrideMutation = useMutation(
-    orpc.plans.adminOverrideSubscription.mutationOptions({
+    serverMutationOptions(orpc.plans.adminOverrideSubscription, "plans/adminOverrideSubscription", {
       onSuccess: () => {
+        trackEvent("subscription_override_applied", { surface: "admin" });
         void queryClient.invalidateQueries({ queryKey: orpc.plans.key() });
       },
+      onError: () => trackEvent("subscription_override_failed", { surface: "admin" }),
     }),
   );
 

@@ -7,6 +7,8 @@ const ADMIN_DEAL_KEY = "trips.admin.selectedDealId";
 const ADMIN_DISPUTE_KEY = "trips.admin.selectedDisputeId";
 const ADMIN_COUPON_KEY = "trips.admin.selectedCouponId";
 const ADMIN_PLAN_KEY = "trips.admin.selectedPlanId";
+const ADMIN_INVOICE_KEY = "trips.admin.selectedInvoiceId";
+const ADMIN_TRIP_KEY = "trips.admin.selectedTripId";
 
 function readStorage(key: string): string | null {
   if (typeof window === "undefined") return null;
@@ -43,3 +45,7 @@ export const getSelectedAdminCouponId = () => readStorage(ADMIN_COUPON_KEY);
 export const setSelectedAdminCouponId = (id: string | null) => writeStorage(ADMIN_COUPON_KEY, id);
 export const getSelectedAdminPlanId = () => readStorage(ADMIN_PLAN_KEY);
 export const setSelectedAdminPlanId = (id: string | null) => writeStorage(ADMIN_PLAN_KEY, id);
+export const getSelectedAdminInvoiceId = () => readStorage(ADMIN_INVOICE_KEY);
+export const setSelectedAdminInvoiceId = (id: string | null) => writeStorage(ADMIN_INVOICE_KEY, id);
+export const getSelectedAdminTripId = () => readStorage(ADMIN_TRIP_KEY);
+export const setSelectedAdminTripId = (id: string | null) => writeStorage(ADMIN_TRIP_KEY, id);

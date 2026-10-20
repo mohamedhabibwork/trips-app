@@ -15,6 +15,7 @@ import { LabTestDetailAndDecision } from "./lab-tests/lab-test-detail-and-decisi
 import { RequestLabTestDecision } from "./lab-tests/request-lab-test-decision";
 import { PlansCatalog } from "./plans/plans-catalog";
 import { PlanEditor } from "./plans/plan-editor";
+import { serverQueryOptions } from "@/utils/server-rpc";
 
 export const ADMIN_SCREENS_PART_1: readonly ScreenEntry[] = [
   {
@@ -27,11 +28,23 @@ export const ADMIN_SCREENS_PART_1: readonly ScreenEntry[] = [
       if (typeof window === "undefined" && !auth.accessToken()) return;
       try {
         await Promise.allSettled([
-          queryClient.prefetchQuery(orpc.onboarding.listReviewQueue.queryOptions({ input: {} })),
           queryClient.prefetchQuery(
-            orpc.accounting.listAdminReconciliationExceptions.queryOptions(),
+            serverQueryOptions(orpc.onboarding.listReviewQueue, "onboarding/listReviewQueue", {
+              input: {},
+            }),
           ),
-          queryClient.prefetchQuery(orpc.coupons.listPlatformCoupons.queryOptions({ input: {} })),
+          queryClient.prefetchQuery(
+            serverQueryOptions(
+              orpc.accounting.listAdminReconciliationExceptions,
+              "accounting/listAdminReconciliationExceptions",
+              { input: undefined },
+            ),
+          ),
+          queryClient.prefetchQuery(
+            serverQueryOptions(orpc.coupons.listPlatformCoupons, "coupons/listPlatformCoupons", {
+              input: {},
+            }),
+          ),
         ]);
       } catch {
         // Gracefully ignore SSR errors
@@ -48,7 +61,9 @@ export const ADMIN_SCREENS_PART_1: readonly ScreenEntry[] = [
       if (typeof window === "undefined" && !auth.accessToken()) return;
       try {
         await queryClient.ensureQueryData(
-          orpc.onboarding.listReviewQueue.queryOptions({ input: {} }),
+          serverQueryOptions(orpc.onboarding.listReviewQueue, "onboarding/listReviewQueue", {
+            input: {},
+          }),
         );
       } catch {
         // Gracefully ignore SSR errors
@@ -67,11 +82,17 @@ export const ADMIN_SCREENS_PART_1: readonly ScreenEntry[] = [
         const appId = (search.applicationId as string) ?? (params.applicationId as string);
         if (appId) {
           await queryClient.ensureQueryData(
-            orpc.onboarding.getApplicationDetail.queryOptions({ input: { applicationId: appId } }),
+            serverQueryOptions(
+              orpc.onboarding.getApplicationDetail,
+              "onboarding/getApplicationDetail",
+              { input: { applicationId: appId } },
+            ),
           );
         } else {
           await queryClient.ensureQueryData(
-            orpc.onboarding.listReviewQueue.queryOptions({ input: {} }),
+            serverQueryOptions(orpc.onboarding.listReviewQueue, "onboarding/listReviewQueue", {
+              input: {},
+            }),
           );
         }
       } catch {
@@ -91,7 +112,11 @@ export const ADMIN_SCREENS_PART_1: readonly ScreenEntry[] = [
         const appId = (search.applicationId as string) ?? (params.applicationId as string);
         if (appId) {
           await queryClient.ensureQueryData(
-            orpc.onboarding.getApplicationDetail.queryOptions({ input: { applicationId: appId } }),
+            serverQueryOptions(
+              orpc.onboarding.getApplicationDetail,
+              "onboarding/getApplicationDetail",
+              { input: { applicationId: appId } },
+            ),
           );
         }
       } catch {
@@ -111,7 +136,11 @@ export const ADMIN_SCREENS_PART_1: readonly ScreenEntry[] = [
         const appId = (search.applicationId as string) ?? (params.applicationId as string);
         if (appId) {
           await queryClient.ensureQueryData(
-            orpc.onboarding.getApplicationDetail.queryOptions({ input: { applicationId: appId } }),
+            serverQueryOptions(
+              orpc.onboarding.getApplicationDetail,
+              "onboarding/getApplicationDetail",
+              { input: { applicationId: appId } },
+            ),
           );
         }
       } catch {
@@ -131,11 +160,17 @@ export const ADMIN_SCREENS_PART_1: readonly ScreenEntry[] = [
         const appId = (search.applicationId as string) ?? (params.applicationId as string);
         if (appId) {
           await queryClient.ensureQueryData(
-            orpc.onboarding.getApplicationDetail.queryOptions({ input: { applicationId: appId } }),
+            serverQueryOptions(
+              orpc.onboarding.getApplicationDetail,
+              "onboarding/getApplicationDetail",
+              { input: { applicationId: appId } },
+            ),
           );
         } else {
           await queryClient.ensureQueryData(
-            orpc.onboarding.listReviewQueue.queryOptions({ input: { state: "Appealed" } }),
+            serverQueryOptions(orpc.onboarding.listReviewQueue, "onboarding/listReviewQueue", {
+              input: { state: "Appealed" },
+            }),
           );
         }
       } catch {
@@ -153,7 +188,9 @@ export const ADMIN_SCREENS_PART_1: readonly ScreenEntry[] = [
       if (typeof window === "undefined" && !auth.accessToken()) return;
       try {
         await queryClient.ensureQueryData(
-          orpc.onboarding.listReviewQueue.queryOptions({ input: {} }),
+          serverQueryOptions(orpc.onboarding.listReviewQueue, "onboarding/listReviewQueue", {
+            input: {},
+          }),
         );
       } catch {
         // Gracefully ignore SSR errors
@@ -172,7 +209,11 @@ export const ADMIN_SCREENS_PART_1: readonly ScreenEntry[] = [
       if (!entityId) return;
       try {
         await queryClient.ensureQueryData(
-          orpc.onboarding.getApplicationDetail.queryOptions({ input: { applicationId: entityId } }),
+          serverQueryOptions(
+            orpc.onboarding.getApplicationDetail,
+            "onboarding/getApplicationDetail",
+            { input: { applicationId: entityId } },
+          ),
         );
       } catch {
         // Gracefully ignore SSR errors
@@ -191,7 +232,11 @@ export const ADMIN_SCREENS_PART_1: readonly ScreenEntry[] = [
       if (!entityId) return;
       try {
         await queryClient.ensureQueryData(
-          orpc.onboarding.getApplicationDetail.queryOptions({ input: { applicationId: entityId } }),
+          serverQueryOptions(
+            orpc.onboarding.getApplicationDetail,
+            "onboarding/getApplicationDetail",
+            { input: { applicationId: entityId } },
+          ),
         );
       } catch {
         // Gracefully ignore SSR errors
@@ -229,7 +274,7 @@ export const ADMIN_SCREENS_PART_1: readonly ScreenEntry[] = [
       if (typeof window === "undefined" && !auth.accessToken()) return;
       try {
         await queryClient.ensureQueryData(
-          orpc.onboarding.listReviewQueue.queryOptions({
+          serverQueryOptions(orpc.onboarding.listReviewQueue, "onboarding/listReviewQueue", {
             input: { applicationType: "platform_driver" },
           }),
         );
@@ -250,11 +295,15 @@ export const ADMIN_SCREENS_PART_1: readonly ScreenEntry[] = [
         const appId = (search.applicationId as string) ?? (params.applicationId as string);
         if (appId) {
           await queryClient.ensureQueryData(
-            orpc.onboarding.getApplicationDetail.queryOptions({ input: { applicationId: appId } }),
+            serverQueryOptions(
+              orpc.onboarding.getApplicationDetail,
+              "onboarding/getApplicationDetail",
+              { input: { applicationId: appId } },
+            ),
           );
         } else {
           await queryClient.ensureQueryData(
-            orpc.onboarding.listReviewQueue.queryOptions({
+            serverQueryOptions(orpc.onboarding.listReviewQueue, "onboarding/listReviewQueue", {
               input: { applicationType: "platform_driver" },
             }),
           );
@@ -274,7 +323,7 @@ export const ADMIN_SCREENS_PART_1: readonly ScreenEntry[] = [
       if (typeof window === "undefined" && !auth.accessToken()) return;
       try {
         await queryClient.ensureQueryData(
-          orpc.onboarding.listReviewQueue.queryOptions({
+          serverQueryOptions(orpc.onboarding.listReviewQueue, "onboarding/listReviewQueue", {
             input: { applicationType: "platform_driver" },
           }),
         );
@@ -292,7 +341,9 @@ export const ADMIN_SCREENS_PART_1: readonly ScreenEntry[] = [
     loader: async ({ queryClient, orpc, auth }) => {
       if (typeof window === "undefined" && !auth.accessToken()) return;
       try {
-        await queryClient.ensureQueryData(orpc.plans.getCatalog.queryOptions({ input: {} }));
+        await queryClient.ensureQueryData(
+          serverQueryOptions(orpc.plans.getCatalog, "plans/getCatalog", { input: {} }),
+        );
       } catch {
         // Gracefully ignore SSR errors
       }
@@ -307,7 +358,9 @@ export const ADMIN_SCREENS_PART_1: readonly ScreenEntry[] = [
     loader: async ({ queryClient, orpc, auth }) => {
       if (typeof window === "undefined" && !auth.accessToken()) return;
       try {
-        await queryClient.ensureQueryData(orpc.plans.getCatalog.queryOptions({ input: {} }));
+        await queryClient.ensureQueryData(
+          serverQueryOptions(orpc.plans.getCatalog, "plans/getCatalog", { input: {} }),
+        );
       } catch {
         // Gracefully ignore SSR errors
       }

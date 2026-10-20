@@ -7,6 +7,7 @@ import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
+import { serverQueryOptions, serverMutationOptions } from "@/utils/server-rpc";
 
 import { AdminButton, AdminLink } from "../common/admin-actions";
 import { AdminInput, AdminSelect, type AdminOption } from "../common/admin-form";
@@ -56,16 +57,24 @@ export function DealAuditList() {
   const [dateFilter, setDateFilter] = useState("");
 
   const dealsQuery = useQuery({
-    ...orpc.negotiation.listOrganizationNegotiations.queryOptions({ input: {} }),
+    ...serverQueryOptions(
+      orpc.negotiation.listOrganizationNegotiations,
+      "negotiation/listOrganizationNegotiations",
+      { input: {} },
+    ),
     enabled: authStatus === "authenticated",
   });
 
   const flagMutation = useMutation(
-    orpc.accounting.flagReconciliationException.mutationOptions({
-      onSuccess: () => {
-        void queryClient.invalidateQueries({ queryKey: orpc.accounting.key() });
+    serverMutationOptions(
+      orpc.accounting.flagReconciliationException,
+      "accounting/flagReconciliationException",
+      {
+        onSuccess: () => {
+          void queryClient.invalidateQueries({ queryKey: orpc.accounting.key() });
+        },
       },
-    }),
+    ),
   );
 
   const allRows: readonly DealRow[] = (dealsQuery.data?.items ?? []).map((deal) => {

@@ -7,7 +7,9 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
+import { trackEvent } from "@/utils/analytics";
 import { orpc } from "@/utils/orpc";
+import { serverMutationOptions, serverQueryOptions } from "@/utils/server-rpc";
 
 import { AdminButton } from "../common/admin-actions";
 import { AdminInput, AdminTextarea } from "../common/admin-form";
@@ -88,18 +90,22 @@ export function FeatureFlagsAndPlatformConfiguration() {
   const [approverId, setApproverId] = useState("");
 
   const settingsQuery = useQuery({
-    ...orpc.admin.getSystemSettings.queryOptions(),
+    ...serverQueryOptions(orpc.admin.getSystemSettings, "admin/getSystemSettings", {
+      input: undefined,
+    }),
     enabled: authStatus === "authenticated",
   });
 
   const updateSettingsMutation = useMutation(
-    orpc.admin.updateSystemSettings.mutationOptions({
+    serverMutationOptions(orpc.admin.updateSystemSettings, "admin/updateSystemSettings", {
       onSuccess: () => {
+        trackEvent("platform_settings_updated", { surface: "admin" });
         setDraft({});
         setReason("");
         setApproverId("");
         void queryClient.invalidateQueries({ queryKey: orpc.admin.key() });
       },
+      onError: () => trackEvent("platform_settings_update_failed", { surface: "admin" }),
     }),
   );
 

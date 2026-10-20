@@ -8,6 +8,7 @@ import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
+import { serverQueryOptions, serverMutationOptions } from "@/utils/server-rpc";
 
 import { AdminButton } from "../common/admin-actions";
 import { AdminInput } from "../common/admin-form";
@@ -63,17 +64,23 @@ export function SettlementsTracker() {
   const [reference, setReference] = useState("");
 
   const ledgerQuery = useQuery({
-    ...orpc.accounting.listLedgerEntries.queryOptions({ input: {} }),
+    ...serverQueryOptions(orpc.accounting.listLedgerEntries, "accounting/listLedgerEntries", {
+      input: {},
+    }),
     enabled: authStatus === "authenticated",
   });
   const settlementMutation = useMutation(
-    orpc.accounting.createPayoutSettlement.mutationOptions({
-      onSuccess: () => {
-        setReference("");
-        setSelectedId(null);
-        void queryClient.invalidateQueries({ queryKey: orpc.accounting.key() });
+    serverMutationOptions(
+      orpc.accounting.createPayoutSettlement,
+      "accounting/createPayoutSettlement",
+      {
+        onSuccess: () => {
+          setReference("");
+          setSelectedId(null);
+          void queryClient.invalidateQueries({ queryKey: orpc.accounting.key() });
+        },
       },
-    }),
+    ),
   );
 
   const rows: readonly SettlementRow[] = (ledgerQuery.data ?? []).map((entry) => {
