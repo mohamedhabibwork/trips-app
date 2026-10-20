@@ -1,12 +1,12 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { Outlet, createFileRoute } from "@tanstack/react-router";
+import { serverQueryOptions } from "@/utils/server-rpc";
 
 import { requireSurface } from "@/auth/guard";
-import { GuardedSurface } from "@/components/guarded-surface";
+import { StudioShell } from "@/components/shells/studio-shell";
 import { findScreen } from "@/screens/registry";
-import { STUDIO_SURFACE } from "@/surfaces/studio";
 import { loadApiStatus } from "@/utils/api-status";
 
-/** `/studio` — photographers (platform and organization). Loader prefetches status and StaffingBoard queries safely. */
+/** `/studio` — photographers (SCR-PHO, docs/design/web/PhoWeb*). Loader prefetches status and the studio home queries safely. */
 export const Route = createFileRoute("/studio")({
   beforeLoad: requireSurface("studio"),
   loader: async ({ context, location }) => {
@@ -17,7 +17,7 @@ export const Route = createFileRoute("/studio")({
       return;
     }
 
-    const screen = findScreen("organization", "staffing-board");
+    const screen = findScreen("studio", "studio-home");
     if (screen?.loader) {
       await screen.loader({
         queryClient: context.queryClient,
@@ -29,12 +29,25 @@ export const Route = createFileRoute("/studio")({
       return;
     }
 
-    // Prefetch for StaffingBoard queries when authenticated
+    // Prefetch for the studio home queries when authenticated
     await Promise.allSettled([
       context.queryClient.prefetchQuery(
-        context.orpc.trips.listOrganizationTrips.queryOptions({ input: {} }),
+        serverQueryOptions(context.orpc.photographer.getProfile, "photographer/getProfile", {
+          input: undefined,
+        }),
+      ),
+      context.queryClient.prefetchQuery(
+        serverQueryOptions(
+          context.orpc.negotiation.listSupplierOffers,
+          "negotiation/listSupplierOffers",
+          { input: {} },
+        ),
       ),
     ]);
   },
-  component: () => <GuardedSurface surface={STUDIO_SURFACE} />,
+  component: () => (
+    <StudioShell>
+      <Outlet />
+    </StudioShell>
+  ),
 });
