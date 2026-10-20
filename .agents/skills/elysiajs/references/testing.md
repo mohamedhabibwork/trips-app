@@ -65,7 +65,7 @@ it("should create user", async () => {
       },
       body: JSON.stringify({
         name: "Jane Doe",
-        email: "jane@example.com",
+        email: "jane@trips-enjoy.com",
       }),
     }),
   );

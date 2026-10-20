@@ -1093,7 +1093,7 @@ evlog: {
 | Pattern      | Example Input           | Masked Output     |
 | ------------ | ----------------------- | ----------------- |
 | `creditCard` | `4111111111111111`      | `****1111`        |
-| `email`      | `alice@example.com`     | `a***@***.com`    |
+| `email`      | `alice@trips-enjoy.com` | `a***@***.com`    |
 | `ipv4`       | `192.168.1.100`         | `***.***.***.100` |
 | `phone`      | `+33 6 12 34 56 78`     | `+33 ****5678`    |
 | `jwt`        | `eyJhbGciOi...`         | `eyJ***.***`      |

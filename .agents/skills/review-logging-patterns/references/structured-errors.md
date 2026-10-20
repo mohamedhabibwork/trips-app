@@ -222,7 +222,7 @@ throw createError({
   message: "Invalid email format",
   status: 422,
   why: `"${email}" is not a valid email address`,
-  fix: "Provide an email in the format user@example.com",
+  fix: "Provide an email in the format user@trips-enjoy.com",
 });
 
 // Business rule violation

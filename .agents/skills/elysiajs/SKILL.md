@@ -177,7 +177,7 @@ body: t.Object({
 .get('/user/:id', ({ params: { id } }) => ({
   id,
   name: 'John',
-  email: 'john@example.com'
+  email: 'john@trips-enjoy.com'
 }), {
   params: t.Object({
     id: t.Number()
