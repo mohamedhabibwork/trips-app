@@ -56,7 +56,7 @@ export const en = {
   "auth.signIn.title": "Sign in",
   "auth.signIn.subtitle": "Use your email or phone number.",
   "auth.signIn.identifierLabel": "Email or phone",
-  "auth.signIn.identifierPlaceholder": "you@example.com or +20 100 000 0000",
+  "auth.signIn.identifierPlaceholder": "you@trips-enjoy.com or +20 100 000 0000",
   "auth.signIn.methodLabel": "Sign-in method",
   "auth.signIn.methodOtp": "One-time code",
   "auth.signIn.methodPassword": "Password",

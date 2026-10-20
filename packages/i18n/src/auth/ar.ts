@@ -55,7 +55,7 @@ export const ar: AuthMessages = {
   "auth.signIn.title": "تسجيل الدخول",
   "auth.signIn.subtitle": "استخدم بريدك الإلكتروني أو رقم هاتفك.",
   "auth.signIn.identifierLabel": "البريد الإلكتروني أو الهاتف",
-  "auth.signIn.identifierPlaceholder": "you@example.com أو +20 100 000 0000",
+  "auth.signIn.identifierPlaceholder": "you@trips-enjoy.com أو +20 100 000 0000",
   "auth.signIn.methodLabel": "طريقة تسجيل الدخول",
   "auth.signIn.methodOtp": "رمز لمرة واحدة",
   "auth.signIn.methodPassword": "كلمة المرور",
