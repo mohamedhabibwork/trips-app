@@ -6,6 +6,7 @@ import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
+import { serverQueryOptions } from "@/utils/server-rpc";
 
 import { OrgSelect } from "../common/org-form";
 import { OrgLink, useOrgParams } from "../common/org-link";
@@ -110,15 +111,25 @@ export function CouponAnalytics() {
   const [range, setRange] = useState("all");
 
   const couponsQuery = useQuery({
-    ...orpc.coupons.listOrganizationCoupons.queryOptions({ input: {} }),
+    ...serverQueryOptions(orpc.coupons.listOrganizationCoupons, "coupons/listOrganizationCoupons", {
+      input: {},
+    }),
     enabled,
   });
   const bookingsQuery = useQuery({
-    ...orpc.booking.listOrganizationBookings.queryOptions({ input: {} }),
+    ...serverQueryOptions(
+      orpc.booking.listOrganizationBookings,
+      "booking/listOrganizationBookings",
+      { input: {} },
+    ),
     enabled,
   });
   const subscriptionQuery = useQuery({
-    ...orpc.plans.getOrganizationSubscription.queryOptions({ input: undefined }),
+    ...serverQueryOptions(
+      orpc.plans.getOrganizationSubscription,
+      "plans/getOrganizationSubscription",
+      { input: undefined },
+    ),
     enabled,
   });
 

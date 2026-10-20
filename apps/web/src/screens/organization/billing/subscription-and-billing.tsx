@@ -6,6 +6,7 @@ import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
+import { serverQueryOptions, serverMutationOptions } from "@/utils/server-rpc";
 
 import { useOrgUsage } from "../trips/trip-parts";
 
@@ -95,16 +96,24 @@ export function SubscriptionAndBilling() {
   const [changeOpen, setChangeOpen] = useState(false);
   const [chosenPlanId, setChosenPlanId] = useState<string | null>(null);
 
-  const subscriptionQuery = useQuery(
-    orpc.plans.getOrganizationSubscription.queryOptions({ input: undefined, enabled }),
-  );
-  const catalogQuery = useQuery(
-    orpc.plans.getCatalog.queryOptions({ input: { role: "organization" }, enabled }),
-  );
+  const subscriptionQuery = useQuery({
+    ...serverQueryOptions(
+      orpc.plans.getOrganizationSubscription,
+      "plans/getOrganizationSubscription",
+      { input: undefined },
+    ),
+    enabled,
+  });
+  const catalogQuery = useQuery({
+    ...serverQueryOptions(orpc.plans.getCatalog, "plans/getCatalog", {
+      input: { role: "organization" },
+    }),
+    enabled,
+  });
   const usageQuery = useOrgUsage();
 
   const changePlanMutation = useMutation(
-    orpc.plans.changeOrganizationPlan.mutationOptions({
+    serverMutationOptions(orpc.plans.changeOrganizationPlan, "plans/changeOrganizationPlan", {
       onSuccess: () => {
         void queryClient.invalidateQueries({ queryKey: orpc.plans.key() });
         setChangeOpen(false);

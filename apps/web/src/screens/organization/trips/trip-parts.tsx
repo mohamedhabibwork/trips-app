@@ -8,6 +8,7 @@ import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
+import { serverQueryOptions } from "@/utils/server-rpc";
 
 import { useOrgParams } from "../common/org-link";
 import { tripTitle } from "../common/org-shared";
@@ -45,7 +46,9 @@ export function useWizardTrip() {
   const { status: authStatus, locale } = useAuth();
   const tripId = useOrgParams().tripId ?? null;
   const tripQuery = useQuery({
-    ...orpc.trips.getOrganizationTrip.queryOptions({ input: { tripId: tripId ?? "" } }),
+    ...serverQueryOptions(orpc.trips.getOrganizationTrip, "trips/getOrganizationTrip", {
+      input: { tripId: tripId ?? "" },
+    }),
     enabled: authStatus === "authenticated" && Boolean(tripId),
   });
   const tripName = tripQuery.data ? tripTitle(tripQuery.data, locale) : "";
@@ -132,7 +135,9 @@ function asRecord(value: unknown): Record<string, unknown> {
 export function useOrgUsage() {
   const { status: authStatus } = useAuth();
   return useQuery({
-    ...orpc.plans.getOrganizationUsage.queryOptions({ input: undefined }),
+    ...serverQueryOptions(orpc.plans.getOrganizationUsage, "plans/getOrganizationUsage", {
+      input: undefined,
+    }),
     enabled: authStatus === "authenticated",
   });
 }
@@ -142,11 +147,17 @@ export function useOrgPlan() {
   const { status: authStatus } = useAuth();
   const enabled = authStatus === "authenticated";
   const subscriptionQuery = useQuery({
-    ...orpc.plans.getOrganizationSubscription.queryOptions({ input: undefined }),
+    ...serverQueryOptions(
+      orpc.plans.getOrganizationSubscription,
+      "plans/getOrganizationSubscription",
+      { input: undefined },
+    ),
     enabled,
   });
   const catalogQuery = useQuery({
-    ...orpc.plans.getCatalog.queryOptions({ input: { role: "organization" } }),
+    ...serverQueryOptions(orpc.plans.getCatalog, "plans/getCatalog", {
+      input: { role: "organization" },
+    }),
     enabled,
   });
   const planId = subscriptionQuery.data?.planId;

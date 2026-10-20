@@ -5,7 +5,9 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
+import { trackEvent } from "@/utils/analytics";
 import { orpc } from "@/utils/orpc";
+import { serverQueryOptions, serverMutationOptions } from "@/utils/server-rpc";
 
 import { OrgTextarea } from "../common/org-form";
 import { OrgButtonLink, useOrgNavigate, useOrgParams } from "../common/org-link";
@@ -40,15 +42,19 @@ export function CancelTripDecision() {
   const tripId = params.tripId ?? null;
 
   const tripQuery = useQuery({
-    ...orpc.trips.getOrganizationTrip.queryOptions({ input: { tripId: tripId ?? "" } }),
+    ...serverQueryOptions(orpc.trips.getOrganizationTrip, "trips/getOrganizationTrip", {
+      input: { tripId: tripId ?? "" },
+    }),
     enabled: signedIn && Boolean(tripId),
   });
 
   const cancelTripMutation = useMutation(
-    orpc.trips.cancel.mutationOptions({
+    serverMutationOptions(orpc.trips.cancel, "trips/cancel", {
       onSuccess: () => {
+        trackEvent("trip_cancelled", { surface: "organization" });
         void queryClient.invalidateQueries({ queryKey: orpc.trips.key() });
       },
+      onError: () => trackEvent("trip_cancel_failed", { surface: "organization" }),
     }),
   );
 

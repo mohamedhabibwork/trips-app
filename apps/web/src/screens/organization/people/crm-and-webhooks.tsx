@@ -5,6 +5,7 @@ import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
+import { serverQueryOptions, serverMutationOptions } from "@/utils/server-rpc";
 
 import {
   OrgAlert,
@@ -26,16 +27,26 @@ export function CrmAndWebhooks() {
   const enabled = authStatus === "authenticated" && Boolean(actor?.activeTenantId);
 
   const settingsQuery = useQuery(
-    orpc.organization.getOrganizationSettings.queryOptions({ input: {}, enabled }),
+    serverQueryOptions(
+      orpc.organization.getOrganizationSettings,
+      "organization/getOrganizationSettings",
+      { input: {}, enabled },
+    ),
   );
   const invalidate = () => {
     void queryClient.invalidateQueries({ queryKey: orpc.organization.key() });
   };
   const configureWebhooksMutation = useMutation(
-    orpc.organization.configureWebhooks.mutationOptions({ onSuccess: invalidate }),
+    serverMutationOptions(orpc.organization.configureWebhooks, "organization/configureWebhooks", {
+      onSuccess: invalidate,
+    }),
   );
   const updateSettingsMutation = useMutation(
-    orpc.organization.updateOrganizationSettings.mutationOptions({ onSuccess: invalidate }),
+    serverMutationOptions(
+      orpc.organization.updateOrganizationSettings,
+      "organization/updateOrganizationSettings",
+      { onSuccess: invalidate },
+    ),
   );
 
   const settings = settingsQuery.data?.settings;

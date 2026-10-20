@@ -6,6 +6,7 @@ import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
+import { serverQueryOptions, serverMutationOptions } from "@/utils/server-rpc";
 
 import { OrgInput, OrgSelect, OrgTextarea } from "../common/org-form";
 import {
@@ -227,16 +228,24 @@ export function OrganizationProfileSettingsAndBranding() {
   const canSave = authStatus === "authenticated" && Boolean(actor?.activeTenantId);
 
   const settingsQuery = useQuery({
-    ...orpc.organization.getOrganizationSettings.queryOptions({ input: {} }),
+    ...serverQueryOptions(
+      orpc.organization.getOrganizationSettings,
+      "organization/getOrganizationSettings",
+      { input: {} },
+    ),
     enabled: canSave,
   });
 
   const updateMutation = useMutation(
-    orpc.organization.updateOrganizationSettings.mutationOptions({
-      onSuccess: () => {
-        void queryClient.invalidateQueries({ queryKey: orpc.organization.key() });
+    serverMutationOptions(
+      orpc.organization.updateOrganizationSettings,
+      "organization/updateOrganizationSettings",
+      {
+        onSuccess: () => {
+          void queryClient.invalidateQueries({ queryKey: orpc.organization.key() });
+        },
       },
-    }),
+    ),
   );
 
   return (

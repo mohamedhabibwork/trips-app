@@ -6,6 +6,7 @@ import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
+import { serverQueryOptions } from "@/utils/server-rpc";
 
 import { OrgButtonLink } from "../common/org-link";
 import {
@@ -178,20 +179,28 @@ export function StaffingBoard() {
   const enabled = authStatus === "authenticated" && Boolean(actor?.activeTenantId);
 
   const tripsQuery = useQuery({
-    ...orpc.trips.listOrganizationTrips.queryOptions({ input: {} }),
+    ...serverQueryOptions(orpc.trips.listOrganizationTrips, "trips/listOrganizationTrips", {
+      input: {},
+    }),
     enabled,
   });
   const trips = tripsQuery.data?.items ?? [];
   const tripId = selectedTripId || trips[0]?.id || null;
 
   const staffingQuery = useQuery({
-    ...orpc.staffing.listTripStaffing.queryOptions({ input: { tripId: tripId ?? "" } }),
+    ...serverQueryOptions(orpc.staffing.listTripStaffing, "staffing/listTripStaffing", {
+      input: { tripId: tripId ?? "" },
+    }),
     enabled: enabled && Boolean(tripId),
   });
   const dealsQuery = useQuery({
-    ...orpc.negotiation.listOrganizationNegotiations.queryOptions({
-      input: { tripId: tripId ?? "" },
-    }),
+    ...serverQueryOptions(
+      orpc.negotiation.listOrganizationNegotiations,
+      "negotiation/listOrganizationNegotiations",
+      {
+        input: { tripId: tripId ?? "" },
+      },
+    ),
     enabled: enabled && Boolean(tripId),
   });
 

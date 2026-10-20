@@ -8,6 +8,7 @@ import { t } from "@trips-app/i18n";
 
 import { lookupTypeByCodeQueryOptions, toLookupSelectOptions } from "@/utils/lookups";
 import { orpc } from "@/utils/orpc";
+import { serverMutationOptions } from "@/utils/server-rpc";
 
 import { OrgInput, OrgSelect, OrgTextarea } from "../common/org-form";
 import { TripWizardFrame, wizardStepHref } from "../common/org-shared";
@@ -90,8 +91,12 @@ export function TripWizardStep1Basics() {
   }, [tripQuery.data]);
 
   const invalidate = () => queryClient.invalidateQueries({ queryKey: orpc.trips.key() });
-  const saveWizardStep = useMutation(orpc.trips.saveWizardStep.mutationOptions());
-  const createDraft = useMutation(orpc.trips.createDraft.mutationOptions());
+  const saveWizardStep = useMutation(
+    serverMutationOptions(orpc.trips.saveWizardStep, "trips/saveWizardStep"),
+  );
+  const createDraft = useMutation(
+    serverMutationOptions(orpc.trips.createDraft, "trips/createDraft"),
+  );
 
   /** Creates the draft once. Returns the new trip id, or null when it was not created. */
   const createOnce = async (values: BasicsForm): Promise<string | null> => {

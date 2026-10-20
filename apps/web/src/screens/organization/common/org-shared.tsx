@@ -70,7 +70,7 @@ export function toTripState(state: string): TripState {
 
 /** Trip state name (SRS 7.1) in the current language. */
 export function tripStateLabel(state: TripState): string {
-  return t(`screen.organization.common.orgShared.tripState.${TRIP_STATE_STYLE[state].key}`);
+  return t(`screen.trips-enjoy.common.orgShared.tripState.${TRIP_STATE_STYLE[state].key}`);
 }
 
 export function tripStateTone(state: TripState): OrgTone {
@@ -138,7 +138,7 @@ export function wizardStepHref(step: TripWizardStepId, tripId: string | null | u
 }
 
 export function wizardStepLabel(step: TripWizardStepId): string {
-  return t(`screen.organization.common.orgShared.step.${step}`);
+  return t(`screen.trips-enjoy.common.orgShared.step.${step}`);
 }
 
 /** The eight wizard steps as numbered dots; done steps show a check and link back. */
@@ -152,7 +152,7 @@ export function TripWizardSteps({
   const currentIndex = TRIP_WIZARD_STEP_IDS.indexOf(current);
   return (
     <ol
-      aria-label={t("screen.organization.common.orgShared.tripWizardProgress")}
+      aria-label={t("screen.trips-enjoy.common.orgShared.tripWizardProgress")}
       className="m-0 flex list-none flex-wrap items-center gap-x-4 gap-y-3 p-0"
     >
       {TRIP_WIZARD_STEP_IDS.map((step, index) => {
@@ -175,7 +175,7 @@ export function TripWizardSteps({
             </span>
             <span>{wizardStepLabel(step)}</span>
             {state === "done" ? (
-              <span className="sr-only">{t("screen.organization.common.orgShared.stepDone")}</span>
+              <span className="sr-only">{t("screen.trips-enjoy.common.orgShared.stepDone")}</span>
             ) : null}
           </>
         );
@@ -341,9 +341,9 @@ export function TripWizardFrame({
   const previous = TRIP_WIZARD_STEP_IDS[index - 1];
   const next = TRIP_WIZARD_STEP_IDS[index + 1];
   const caption = [
-    t("screen.organization.common.orgShared.stepCaption", {
+    t("screen.trips-enjoy.common.orgShared.stepCaption", {
       n: index + 1,
-      step: t(`screen.organization.common.orgShared.stepCaption.${stepId}`),
+      step: t(`screen.trips-enjoy.common.orgShared.stepCaption.${stepId}`),
     }),
     tripName,
   ]
@@ -369,7 +369,7 @@ export function TripWizardFrame({
         if (onSaveDraft) void onSaveDraft();
       }}
     >
-      {secondaryLabel ?? t("screen.organization.common.orgShared.saveAsDraft")}
+      {secondaryLabel ?? t("screen.trips-enjoy.common.orgShared.saveAsDraft")}
     </OrgButton>
   );
   const primaryButton = (
@@ -378,14 +378,14 @@ export function TripWizardFrame({
       aria-describedby={primaryDescribedBy}
       onClick={() => void handlePrimary()}
     >
-      {primaryLabel ?? t("screen.organization.common.orgShared.next")}
+      {primaryLabel ?? t("screen.trips-enjoy.common.orgShared.next")}
     </OrgButton>
   );
 
   return (
     <OrgPage>
       <OrgPageHeader
-        title={title ?? t("screen.organization.common.orgShared.createTrip")}
+        title={title ?? t("screen.trips-enjoy.common.orgShared.createTrip")}
         caption={caption}
       />
       <TripWizardSteps current={stepId} tripId={tripId} />
@@ -399,7 +399,7 @@ export function TripWizardFrame({
         >
           {previous && next ? (
             <OrgButton variant="secondary" onClick={() => void goTo(previous, tripId)}>
-              {t("screen.organization.common.orgShared.back")}
+              {t("screen.trips-enjoy.common.orgShared.back")}
             </OrgButton>
           ) : null}
           <div className="flex flex-wrap gap-3">

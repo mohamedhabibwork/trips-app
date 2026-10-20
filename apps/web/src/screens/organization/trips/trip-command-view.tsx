@@ -6,6 +6,7 @@ import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
+import { serverQueryOptions } from "@/utils/server-rpc";
 import { utcToZoned } from "@/utils/zoned-time";
 
 import { OrgNavTabs } from "../common/org-form";
@@ -131,14 +132,20 @@ export function TripCommandView() {
   }, [tripId]);
 
   const tripQuery = useQuery({
-    ...orpc.trips.getOrganizationTrip.queryOptions({ input: { tripId: tripId ?? "" } }),
+    ...serverQueryOptions(orpc.trips.getOrganizationTrip, "trips/getOrganizationTrip", {
+      input: { tripId: tripId ?? "" },
+    }),
     enabled: signedIn && Boolean(tripId),
   });
 
   const dealsQuery = useQuery({
-    ...orpc.negotiation.listOrganizationNegotiations.queryOptions({
-      input: { tripId: tripId ?? "" },
-    }),
+    ...serverQueryOptions(
+      orpc.negotiation.listOrganizationNegotiations,
+      "negotiation/listOrganizationNegotiations",
+      {
+        input: { tripId: tripId ?? "" },
+      },
+    ),
     enabled: signedIn && Boolean(tripId),
   });
   const openDealVehicles = new Set(

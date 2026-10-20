@@ -1,6 +1,6 @@
 import { pathFor, webRouteById } from "@/navigation/web-routes";
 
-/** Slug of every organization screen, in spec order (SCR-ORG-01 to SCR-ORG-42). */
+/** Slug of every organization screen, in spec order (SCR-ORG-01 onwards). */
 export const ORG_SLUGS = [
   "workspace-home",
   "employee-invitation-acceptance",
@@ -44,13 +44,66 @@ export const ORG_SLUGS = [
   "live-operations",
   "trip-report-review",
   "child-safety-reports",
+  "company-analytics",
+  "trip-analytics",
+  "customer-analytics",
+  "provider-analytics",
+  "page-analytics",
+  "api-keys",
+  "webhooks",
+  "webhook-new",
+  "webhook-detail",
+  "my-organizations",
+  "choose-workspace",
+  "support",
+  "roles-permissions",
+  "passenger-roster",
+  "crm-campaigns",
+  "crm-campaign-new",
+  "crm-customers",
+  "crm-customer",
+  "crm-leads",
+  "crm-lead",
+  "crm-inbox",
+  "crm-reviews",
+  "crm-segments",
+  "choose-plan",
+  "billing-checkout",
+  "plan-ended",
+  "b2b-invoice",
+  "settlement-statement",
 ] as const;
+
+/** Screen IDs whose number does not follow the slug order (the later design batches). */
+const EXTENDED_SCREEN_IDS: Readonly<Partial<Record<OrgSlug, string>>> = {
+  "company-analytics": "SCR-ORG-43",
+  "trip-analytics": "SCR-ORG-44",
+  "customer-analytics": "SCR-ORG-45",
+  "provider-analytics": "SCR-ORG-46",
+  "page-analytics": "SCR-ORG-47",
+  "api-keys": "SCR-ORG-57",
+  webhooks: "SCR-ORG-58",
+  "webhook-new": "SCR-ORG-59",
+  "webhook-detail": "SCR-ORG-60",
+  "my-organizations": "SCR-ORG-61",
+  "choose-workspace": "SCR-ORG-62",
+  support: "SCR-ORG-63",
+  "roles-permissions": "SCR-ORG-64",
+  "passenger-roster": "SCR-ORG-65",
+  "choose-plan": "SCR-ORG-66",
+  "billing-checkout": "SCR-ORG-67",
+  "plan-ended": "SCR-ORG-68",
+  "b2b-invoice": "SCR-ORG-69",
+  "settlement-statement": "SCR-ORG-70",
+};
 
 /** Links accept only these, so a link to a missing screen fails type checking. */
 export type OrgSlug = (typeof ORG_SLUGS)[number];
 
 /** Screen ID of a slug, e.g. `trips-list` → `SCR-ORG-04`. */
 export function orgScreenId(slug: OrgSlug): string {
+  const extended = EXTENDED_SCREEN_IDS[slug];
+  if (extended) return extended;
   return `SCR-ORG-${String(ORG_SLUGS.indexOf(slug) + 1).padStart(2, "0")}`;
 }
 
@@ -69,6 +122,11 @@ const PARAM_FALLBACK: Record<string, OrgSlug> = {
   bookingId: "bookings-and-travelers",
   couponId: "coupons-list",
   token: "employees-list",
+  endpointId: "webhooks",
+  customerId: "crm-customers",
+  leadId: "crm-leads",
+  invoiceId: "invoices-list",
+  settlementId: "settlements",
 };
 
 export type OrgParams = Readonly<Record<string, string | null | undefined>>;

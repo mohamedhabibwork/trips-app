@@ -1,13 +1,16 @@
 import { Outlet, createFileRoute } from "@tanstack/react-router";
+import { serverQueryOptions } from "@/utils/server-rpc";
 
 import { requireSurface } from "@/auth/guard";
 import { OrganizationShell } from "@/components/shells/organization-shell";
+import { pageHead } from "@/navigation/seo";
 import { findScreen } from "@/screens/registry";
 import { loadApiStatus } from "@/utils/api-status";
 
 /** `/business` — organization owners and employees (AC-6). Loader prefetches status and WorkspaceHome queries safely. */
 export const Route = createFileRoute("/business")({
   beforeLoad: requireSurface("business"),
+  head: pageHead("SCR-ORG-01"),
   loader: async ({ context, location }) => {
     await loadApiStatus({ context });
 
@@ -31,13 +34,23 @@ export const Route = createFileRoute("/business")({
     // Prefetch for WorkspaceHome queries when authenticated
     await Promise.allSettled([
       context.queryClient.prefetchQuery(
-        context.orpc.trips.listOrganizationTrips.queryOptions({ input: {} }),
+        serverQueryOptions(
+          context.orpc.trips.listOrganizationTrips,
+          "trips/listOrganizationTrips",
+          { input: {} },
+        ),
       ),
       context.queryClient.prefetchQuery(
-        context.orpc.organization.getOrganizationSettings.queryOptions({ input: {} }),
+        serverQueryOptions(
+          context.orpc.organization.getOrganizationSettings,
+          "organization/getOrganizationSettings",
+          { input: {} },
+        ),
       ),
       context.queryClient.prefetchQuery(
-        context.orpc.notifications.listInbox.queryOptions({ input: {} }),
+        serverQueryOptions(context.orpc.notifications.listInbox, "notifications/listInbox", {
+          input: {},
+        }),
       ),
     ]);
   },

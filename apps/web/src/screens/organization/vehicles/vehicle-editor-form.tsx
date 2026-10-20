@@ -5,6 +5,7 @@ import { useMutation } from "@tanstack/react-query";
 import { t } from "@trips-app/i18n";
 
 import { orpc } from "@/utils/orpc";
+import { serverMutationOptions } from "@/utils/server-rpc";
 
 import { OrgInput, OrgSelect } from "../common/org-form";
 import { OrgAlert, OrgButton, OrgCard } from "../common/org-ui";
@@ -79,7 +80,9 @@ export function VehicleForm(props: VehicleFormProps) {
   const [fileIds, setFileIds] = useState<string[]>([]);
   const [submitted, setSubmitted] = useState(false);
 
-  const uploadMutation = useMutation(orpc.media.uploadFile.mutationOptions());
+  const uploadMutation = useMutation(
+    serverMutationOptions(orpc.media.uploadFile, "media/uploadFile"),
+  );
 
   const type = types.find((item) => item.id === typeId);
   const seatValue = Number.parseInt(seats, 10);

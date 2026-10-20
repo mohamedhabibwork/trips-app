@@ -5,7 +5,9 @@ import { Link } from "@tanstack/react-router";
 
 import { t } from "@trips-app/i18n";
 
+import { trackEvent } from "@/utils/analytics";
 import { orpc } from "@/utils/orpc";
+import { serverMutationOptions } from "@/utils/server-rpc";
 
 import { useOrgNavigate } from "../common/org-link";
 import { OrgChoice, OrgInput } from "../common/org-form";
@@ -88,7 +90,7 @@ export function TripWizardStep8Publish() {
   }, [tripQuery.data]);
 
   const saveWizardStepMutation = useMutation(
-    orpc.trips.saveWizardStep.mutationOptions({
+    serverMutationOptions(orpc.trips.saveWizardStep, "trips/saveWizardStep", {
       onSuccess: () => {
         void queryClient.invalidateQueries({ queryKey: orpc.trips.key() });
       },
@@ -96,10 +98,12 @@ export function TripWizardStep8Publish() {
   );
 
   const publishMutation = useMutation(
-    orpc.trips.publish.mutationOptions({
+    serverMutationOptions(orpc.trips.publish, "trips/publish", {
       onSuccess: () => {
+        trackEvent("trip_published", { surface: "organization" });
         void queryClient.invalidateQueries({ queryKey: orpc.trips.key() });
       },
+      onError: () => trackEvent("trip_publish_failed", { surface: "organization" }),
     }),
   );
 

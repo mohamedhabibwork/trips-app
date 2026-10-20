@@ -255,7 +255,7 @@ export function OrgFlowArrow() {
 export function OrgLoading({ rows = 3 }: { rows?: number }) {
   return (
     <div role="status" aria-live="polite" className={CARD_CLASS}>
-      <span className="sr-only">{t("screen.organization.common.orgUi.loading")}</span>
+      <span className="sr-only">{t("screen.trips-enjoy.common.orgUi.loading")}</span>
       <Skeleton className="h-6 w-1/3" />
       {Array.from({ length: rows }, (_, index) => (
         <Skeleton key={index} className="h-4 w-full" />
@@ -273,13 +273,13 @@ interface OrgErrorProps {
 /** A failed load: what happened and a way to try again. */
 export function OrgError({ onRetry, title, children }: OrgErrorProps) {
   return (
-    <OrgAlert tone="err" title={title ?? t("screen.organization.common.orgUi.loadFailedTitle")}>
+    <OrgAlert tone="err" title={title ?? t("screen.trips-enjoy.common.orgUi.loadFailedTitle")}>
       <span className="block">
-        {children ?? t("screen.organization.common.orgUi.loadFailedBody")}
+        {children ?? t("screen.trips-enjoy.common.orgUi.loadFailedBody")}
       </span>
       {onRetry ? (
         <OrgButton variant="text" className="-ms-2" onClick={onRetry}>
-          {t("screen.organization.common.orgUi.tryAgain")}
+          {t("screen.trips-enjoy.common.orgUi.tryAgain")}
         </OrgButton>
       ) : null}
     </OrgAlert>

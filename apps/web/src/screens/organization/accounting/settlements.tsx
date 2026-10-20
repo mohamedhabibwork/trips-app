@@ -6,6 +6,7 @@ import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
+import { serverQueryOptions } from "@/utils/server-rpc";
 
 import { OrgChips } from "../common/org-form";
 import { OrgTable, type OrgColumn } from "../common/org-table";
@@ -50,12 +51,12 @@ export function Settlements() {
   const { status: authStatus, locale } = useAuth();
   const [stateFilter, setStateFilter] = useState<string>("open");
 
-  const ledgerQuery = useQuery(
-    orpc.accounting.listLedgerEntries.queryOptions({
+  const ledgerQuery = useQuery({
+    ...serverQueryOptions(orpc.accounting.listLedgerEntries, "accounting/listLedgerEntries", {
       input: {},
-      enabled: authStatus === "authenticated",
     }),
-  );
+    enabled: authStatus === "authenticated",
+  });
 
   const platform = t("screen.organization.accounting.settlements.platform");
   const rows: readonly SettlementRow[] = rowsOf<LedgerEntryView>(ledgerQuery.data)

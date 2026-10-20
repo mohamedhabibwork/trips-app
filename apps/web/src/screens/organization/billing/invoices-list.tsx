@@ -6,6 +6,7 @@ import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
+import { serverQueryOptions } from "@/utils/server-rpc";
 
 import { OrgChips } from "../common/org-form";
 import { OrgButtonLink } from "../common/org-link";
@@ -46,12 +47,12 @@ export function InvoicesList() {
   const { status: authStatus, locale } = useAuth();
   const [typeFilter, setTypeFilter] = useState<string>("all");
 
-  const ledgerQuery = useQuery(
-    orpc.accounting.listLedgerEntries.queryOptions({
+  const ledgerQuery = useQuery({
+    ...serverQueryOptions(orpc.accounting.listLedgerEntries, "accounting/listLedgerEntries", {
       input: {},
-      enabled: authStatus === "authenticated",
     }),
-  );
+    enabled: authStatus === "authenticated",
+  });
 
   const rows = rowsOf<LedgerEntryView>(ledgerQuery.data)
     .filter((entry) => Boolean(entry.invoiceNumber))

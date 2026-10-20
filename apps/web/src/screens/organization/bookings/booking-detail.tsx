@@ -7,6 +7,7 @@ import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
+import { serverQueryOptions, serverMutationOptions } from "@/utils/server-rpc";
 
 import { OrgInput } from "../common/org-form";
 import { useOrgNavigate, useOrgParams } from "../common/org-link";
@@ -71,32 +72,38 @@ export function BookingDetail() {
   const bookingId = routeBookingId ?? "";
 
   const detailQuery = useQuery({
-    ...orpc.booking.getBooking.queryOptions({ input: { bookingId } }),
+    ...serverQueryOptions(orpc.booking.getBooking, "booking/getBooking", { input: { bookingId } }),
     enabled: enabled && Boolean(bookingId),
   });
   const { booking, checkIns } = toBookingDetail(detailQuery.data);
 
   const paymentsQuery = useQuery({
-    ...orpc.payments.listPayments.queryOptions({ input: undefined }),
+    ...serverQueryOptions(orpc.payments.listPayments, "payments/listPayments", {
+      input: undefined,
+    }),
     enabled,
   });
   const tripQuery = useQuery({
-    ...orpc.trips.getOrganizationTrip.queryOptions({ input: { tripId: booking?.tripId ?? "" } }),
+    ...serverQueryOptions(orpc.trips.getOrganizationTrip, "trips/getOrganizationTrip", {
+      input: { tripId: booking?.tripId ?? "" },
+    }),
     enabled: enabled && Boolean(booking?.tripId),
   });
   const programsQuery = useQuery({
-    ...orpc.programs.listTripPrograms.queryOptions({ input: { tripId: booking?.tripId ?? "" } }),
+    ...serverQueryOptions(orpc.programs.listTripPrograms, "programs/listTripPrograms", {
+      input: { tripId: booking?.tripId ?? "" },
+    }),
     enabled: enabled && Boolean(booking?.tripId),
   });
   const seatMapQuery = useQuery({
-    ...orpc.seats.getSeatMap.queryOptions({
+    ...serverQueryOptions(orpc.seats.getSeatMap, "seats/getSeatMap", {
       input: { tripId: booking?.tripId ?? "", vehicleId: booking?.vehicleId ?? undefined },
     }),
     enabled: enabled && Boolean(booking?.tripId && booking.vehicleId),
   });
 
   const assignSeatMutation = useMutation(
-    orpc.seats.assignSeatByOrganization.mutationOptions({
+    serverMutationOptions(orpc.seats.assignSeatByOrganization, "seats/assignSeatByOrganization", {
       onSuccess: () => {
         void queryClient.invalidateQueries({ queryKey: orpc.seats.key() });
         void queryClient.invalidateQueries({ queryKey: orpc.booking.key() });
@@ -104,7 +111,7 @@ export function BookingDetail() {
     }),
   );
   const refundPaymentMutation = useMutation(
-    orpc.payments.refundPayment.mutationOptions({
+    serverMutationOptions(orpc.payments.refundPayment, "payments/refundPayment", {
       onSuccess: () => {
         void queryClient.invalidateQueries({ queryKey: orpc.payments.key() });
         void queryClient.invalidateQueries({ queryKey: orpc.booking.key() });

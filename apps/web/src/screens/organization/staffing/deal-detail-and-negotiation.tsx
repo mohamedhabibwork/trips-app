@@ -5,7 +5,9 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
+import { trackEvent } from "@/utils/analytics";
 import { orpc } from "@/utils/orpc";
+import { serverQueryOptions, serverMutationOptions } from "@/utils/server-rpc";
 
 import { OrgInput } from "../common/org-form";
 import { useOrgNavigate, useOrgParams } from "../common/org-link";
@@ -58,26 +60,38 @@ export function DealDetailAndNegotiation() {
   const [respondFailed, setRespondFailed] = useState(false);
 
   const negotiationsQuery = useQuery({
-    ...orpc.negotiation.listOrganizationNegotiations.queryOptions({ input: {} }),
+    ...serverQueryOptions(
+      orpc.negotiation.listOrganizationNegotiations,
+      "negotiation/listOrganizationNegotiations",
+      { input: {} },
+    ),
     enabled,
   });
   const items = negotiationsQuery.data?.items ?? [];
   const deal = dealId ? items.find((item) => item.id === dealId) : undefined;
 
   const tripQuery = useQuery({
-    ...orpc.trips.getOrganizationTrip.queryOptions({ input: { tripId: deal?.tripId ?? "" } }),
+    ...serverQueryOptions(orpc.trips.getOrganizationTrip, "trips/getOrganizationTrip", {
+      input: { tripId: deal?.tripId ?? "" },
+    }),
     enabled: enabled && Boolean(deal?.tripId),
   });
   const suppliersQuery = useQuery({
-    ...orpc.onboarding.listOrganizationSuppliers.queryOptions({ input: {} }),
+    ...serverQueryOptions(
+      orpc.onboarding.listOrganizationSuppliers,
+      "onboarding/listOrganizationSuppliers",
+      { input: {} },
+    ),
     enabled: enabled && Boolean(deal),
   });
 
   const respondMutation = useMutation(
-    orpc.negotiation.respondToOffer.mutationOptions({
+    serverMutationOptions(orpc.negotiation.respondToOffer, "negotiation/respondToOffer", {
       onSuccess: () => {
+        trackEvent("deal_response_submitted", { surface: "organization" });
         void queryClient.invalidateQueries({ queryKey: orpc.negotiation.key() });
       },
+      onError: () => trackEvent("deal_response_failed", { surface: "organization" }),
     }),
   );
 

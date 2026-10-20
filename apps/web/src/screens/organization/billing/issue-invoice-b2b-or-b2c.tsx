@@ -6,6 +6,7 @@ import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
+import { serverQueryOptions } from "@/utils/server-rpc";
 
 import { OrgChoice, OrgInput, OrgTextarea } from "../common/org-form";
 import { getSelectedTripId, tripTitle } from "../common/org-shared";
@@ -80,12 +81,20 @@ export function IssueInvoiceB2bOrB2c() {
   const [address, setAddress] = useState("");
   const [email, setEmail] = useState("");
 
-  const tripsQuery = useQuery(
-    orpc.trips.listOrganizationTrips.queryOptions({ input: {}, enabled }),
-  );
-  const bookingsQuery = useQuery(
-    orpc.booking.listOrganizationBookings.queryOptions({ input: {}, enabled }),
-  );
+  const tripsQuery = useQuery({
+    ...serverQueryOptions(orpc.trips.listOrganizationTrips, "trips/listOrganizationTrips", {
+      input: {},
+    }),
+    enabled,
+  });
+  const bookingsQuery = useQuery({
+    ...serverQueryOptions(
+      orpc.booking.listOrganizationBookings,
+      "booking/listOrganizationBookings",
+      { input: {} },
+    ),
+    enabled,
+  });
 
   const trips = tripsQuery.data?.items ?? [];
   const selectedId = getSelectedTripId();

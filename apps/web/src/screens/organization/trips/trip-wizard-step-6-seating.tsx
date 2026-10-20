@@ -5,6 +5,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { t } from "@trips-app/i18n";
 
 import { orpc } from "@/utils/orpc";
+import { serverMutationOptions } from "@/utils/server-rpc";
 
 import { OrgInput } from "../common/org-form";
 import { TripWizardFrame } from "../common/org-shared";
@@ -39,7 +40,7 @@ export function TripWizardStep6Seating() {
   }, [tripQuery.data]);
 
   const saveWizardStepMutation = useMutation(
-    orpc.trips.saveWizardStep.mutationOptions({
+    serverMutationOptions(orpc.trips.saveWizardStep, "trips/saveWizardStep", {
       onSuccess: () => {
         void queryClient.invalidateQueries({ queryKey: orpc.trips.key() });
         void queryClient.invalidateQueries({ queryKey: orpc.seats.key() });

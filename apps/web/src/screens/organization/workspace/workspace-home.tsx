@@ -5,6 +5,7 @@ import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
+import { serverQueryOptions } from "@/utils/server-rpc";
 
 import { useOrgUsage } from "../trips/trip-parts";
 
@@ -42,24 +43,40 @@ function useWorkspaceData() {
   const enabled = authStatus === "authenticated" && Boolean(actor?.activeTenantId);
 
   const tripsQuery = useQuery({
-    ...orpc.trips.listOrganizationTrips.queryOptions({ input: {} }),
+    ...serverQueryOptions(orpc.trips.listOrganizationTrips, "trips/listOrganizationTrips", {
+      input: {},
+    }),
     enabled,
   });
   const settingsQuery = useQuery({
-    ...orpc.organization.getOrganizationSettings.queryOptions({ input: {} }),
+    ...serverQueryOptions(
+      orpc.organization.getOrganizationSettings,
+      "organization/getOrganizationSettings",
+      { input: {} },
+    ),
     enabled,
   });
   const subscriptionQuery = useQuery({
-    ...orpc.plans.getOrganizationSubscription.queryOptions({ input: undefined }),
+    ...serverQueryOptions(
+      orpc.plans.getOrganizationSubscription,
+      "plans/getOrganizationSubscription",
+      { input: undefined },
+    ),
     enabled,
   });
   const dealsQuery = useQuery({
-    ...orpc.negotiation.listOrganizationNegotiations.queryOptions({ input: {} }),
+    ...serverQueryOptions(
+      orpc.negotiation.listOrganizationNegotiations,
+      "negotiation/listOrganizationNegotiations",
+      { input: {} },
+    ),
     enabled,
   });
   const inGrace = subscriptionQuery.data?.status === "past_due";
   const catalogQuery = useQuery({
-    ...orpc.plans.getCatalog.queryOptions({ input: { role: "organization" } }),
+    ...serverQueryOptions(orpc.plans.getCatalog, "plans/getCatalog", {
+      input: { role: "organization" },
+    }),
     enabled: enabled && inGrace,
   });
 

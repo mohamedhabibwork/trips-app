@@ -6,7 +6,9 @@ import { TeDialog } from "@trips-app/ui/components/te-dialog";
 import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
+import { trackEvent } from "@/utils/analytics";
 import { orpc } from "@/utils/orpc";
+import { serverQueryOptions, serverMutationOptions } from "@/utils/server-rpc";
 
 import { OrgButtonLink, useOrgNavigate, useOrgParams } from "../common/org-link";
 import { NO_VALUE, OrgEmpty, OrgError, OrgLoading, OrgPage, OrgPageHeader } from "../common/org-ui";
@@ -26,11 +28,11 @@ export function VehicleEditor() {
   const enabled = authStatus === "authenticated" && Boolean(actor?.activeTenantId);
 
   const vehiclesQuery = useQuery({
-    ...orpc.fleet.listVehicles.queryOptions({ input: {} }),
+    ...serverQueryOptions(orpc.fleet.listVehicles, "fleet/listVehicles", { input: {} }),
     enabled,
   });
   const typesQuery = useQuery({
-    ...orpc.fleet.listVehicleTypes.queryOptions({ input: {} }),
+    ...serverQueryOptions(orpc.fleet.listVehicleTypes, "fleet/listVehicleTypes", { input: {} }),
     enabled,
   });
 
@@ -49,13 +51,31 @@ export function VehicleEditor() {
     void goTo("vehicle-registry");
   };
   const createVehicleMutation = useMutation(
-    orpc.fleet.createVehicle.mutationOptions({ onSuccess: toRegistry }),
+    serverMutationOptions(orpc.fleet.createVehicle, "fleet/createVehicle", {
+      onSuccess: () => {
+        trackEvent("vehicle_created", { surface: "organization" });
+        toRegistry();
+      },
+      onError: () => trackEvent("vehicle_create_failed", { surface: "organization" }),
+    }),
   );
   const updateVehicleMutation = useMutation(
-    orpc.fleet.updateVehicle.mutationOptions({ onSuccess: toRegistry }),
+    serverMutationOptions(orpc.fleet.updateVehicle, "fleet/updateVehicle", {
+      onSuccess: () => {
+        trackEvent("vehicle_updated", { surface: "organization" });
+        toRegistry();
+      },
+      onError: () => trackEvent("vehicle_update_failed", { surface: "organization" }),
+    }),
   );
   const removeVehicleMutation = useMutation(
-    orpc.fleet.removeVehicle.mutationOptions({ onSuccess: toRegistry }),
+    serverMutationOptions(orpc.fleet.removeVehicle, "fleet/removeVehicle", {
+      onSuccess: () => {
+        trackEvent("vehicle_removed", { surface: "organization" });
+        toRegistry();
+      },
+      onError: () => trackEvent("vehicle_remove_failed", { surface: "organization" }),
+    }),
   );
 
   const busy =

@@ -6,6 +6,7 @@ import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
+import { serverQueryOptions } from "@/utils/server-rpc";
 
 import { OrgInput, OrgTabs } from "../common/org-form";
 import { OrgLink } from "../common/org-link";
@@ -128,15 +129,23 @@ export function BookingsAndTravelers() {
 
   const tripId = getSelectedTripId() ?? undefined;
   const bookingsQuery = useQuery({
-    ...orpc.booking.listOrganizationBookings.queryOptions({ input: { tripId } }),
+    ...serverQueryOptions(
+      orpc.booking.listOrganizationBookings,
+      "booking/listOrganizationBookings",
+      { input: { tripId } },
+    ),
     enabled,
   });
   const tripQuery = useQuery({
-    ...orpc.trips.getOrganizationTrip.queryOptions({ input: { tripId: tripId ?? "" } }),
+    ...serverQueryOptions(orpc.trips.getOrganizationTrip, "trips/getOrganizationTrip", {
+      input: { tripId: tripId ?? "" },
+    }),
     enabled: enabled && Boolean(tripId),
   });
   const programsQuery = useQuery({
-    ...orpc.programs.listTripPrograms.queryOptions({ input: { tripId: tripId ?? "" } }),
+    ...serverQueryOptions(orpc.programs.listTripPrograms, "programs/listTripPrograms", {
+      input: { tripId: tripId ?? "" },
+    }),
     enabled: enabled && Boolean(tripId),
   });
 

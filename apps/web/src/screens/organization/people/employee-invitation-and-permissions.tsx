@@ -6,7 +6,9 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
+import { trackEvent } from "@/utils/analytics";
 import { orpc } from "@/utils/orpc";
+import { serverQueryOptions, serverMutationOptions } from "@/utils/server-rpc";
 
 import { OrgChoice, OrgInput } from "../common/org-form";
 import { useOrgNavigate } from "../common/org-link";
@@ -159,14 +161,16 @@ export function EmployeeInvitationAndPermissions() {
   const enabled = authStatus === "authenticated" && Boolean(actor?.activeTenantId);
   const preferredId = getSelectedEmployeeId();
 
-  const employeesQuery = useQuery(orpc.employees.list.queryOptions({ input: {}, enabled }));
+  const employeesQuery = useQuery(
+    serverQueryOptions(orpc.employees.list, "employees/list", { input: {}, enabled }),
+  );
   const target =
     (preferredId
       ? employeesQuery.data?.employees.find((employee) => employee.id === preferredId)
       : undefined) ?? null;
 
   const detailQuery = useQuery(
-    orpc.employees.getById.queryOptions({
+    serverQueryOptions(orpc.employees.getById, "employees/getById", {
       input: { membershipId: target?.id ?? "" },
       enabled: enabled && Boolean(target),
     }),
@@ -176,9 +180,23 @@ export function EmployeeInvitationAndPermissions() {
     void queryClient.invalidateQueries({ queryKey: orpc.employees.key() });
     void goTo("employees-list");
   };
-  const inviteMutation = useMutation(orpc.employees.invite.mutationOptions({ onSuccess }));
+  const inviteMutation = useMutation(
+    serverMutationOptions(orpc.employees.invite, "employees/invite", {
+      onSuccess: () => {
+        trackEvent("staff_invited", { surface: "organization" });
+        onSuccess();
+      },
+      onError: () => trackEvent("staff_invite_failed", { surface: "organization" }),
+    }),
+  );
   const updatePermissionsMutation = useMutation(
-    orpc.employees.updatePermissions.mutationOptions({ onSuccess }),
+    serverMutationOptions(orpc.employees.updatePermissions, "employees/updatePermissions", {
+      onSuccess: () => {
+        trackEvent("staff_permissions_updated", { surface: "organization" });
+        onSuccess();
+      },
+      onError: () => trackEvent("staff_permissions_update_failed", { surface: "organization" }),
+    }),
   );
 
   const busy = inviteMutation.isPending || updatePermissionsMutation.isPending;

@@ -7,6 +7,7 @@ import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
+import { serverQueryOptions, serverMutationOptions } from "@/utils/server-rpc";
 import { zonedToUtcIso } from "@/utils/zoned-time";
 
 import { OrgButtonLink, useOrgNavigate, useOrgParams } from "../common/org-link";
@@ -148,27 +149,39 @@ export function CouponEditor() {
   const [saveFailed, setSaveFailed] = useState(false);
 
   const couponsQuery = useQuery({
-    ...orpc.coupons.listOrganizationCoupons.queryOptions({ input: {} }),
+    ...serverQueryOptions(orpc.coupons.listOrganizationCoupons, "coupons/listOrganizationCoupons", {
+      input: {},
+    }),
     enabled,
   });
   const tripsQuery = useQuery({
-    ...orpc.trips.listOrganizationTrips.queryOptions({ input: {} }),
+    ...serverQueryOptions(orpc.trips.listOrganizationTrips, "trips/listOrganizationTrips", {
+      input: {},
+    }),
     enabled,
   });
   const settingsQuery = useQuery({
-    ...orpc.organization.getOrganizationSettings.queryOptions({ input: {} }),
+    ...serverQueryOptions(
+      orpc.organization.getOrganizationSettings,
+      "organization/getOrganizationSettings",
+      { input: {} },
+    ),
     enabled,
   });
 
   const createCouponMutation = useMutation(
-    orpc.coupons.createOrganizationCoupon.mutationOptions({
-      onSuccess: () => {
-        void queryClient.invalidateQueries({ queryKey: orpc.coupons.key() });
+    serverMutationOptions(
+      orpc.coupons.createOrganizationCoupon,
+      "coupons/createOrganizationCoupon",
+      {
+        onSuccess: () => {
+          void queryClient.invalidateQueries({ queryKey: orpc.coupons.key() });
+        },
       },
-    }),
+    ),
   );
   const updateStatusMutation = useMutation(
-    orpc.coupons.updateStatus.mutationOptions({
+    serverMutationOptions(orpc.coupons.updateStatus, "coupons/updateStatus", {
       onSuccess: () => {
         void queryClient.invalidateQueries({ queryKey: orpc.coupons.key() });
       },

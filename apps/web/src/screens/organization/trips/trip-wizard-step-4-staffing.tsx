@@ -5,6 +5,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { t } from "@trips-app/i18n";
 
 import { orpc } from "@/utils/orpc";
+import { serverQueryOptions, serverMutationOptions } from "@/utils/server-rpc";
 
 import { Link } from "@tanstack/react-router";
 
@@ -45,11 +46,15 @@ function toStaffSource(choice: StaffChoice): StaffSource {
 /** Names of the organization's employees and own suppliers, by account id. */
 function useStaffNames(enabled: boolean): ReadonlyMap<string, string> {
   const employeesQuery = useQuery({
-    ...orpc.employees.list.queryOptions({ input: {} }),
+    ...serverQueryOptions(orpc.employees.list, "employees/list", { input: {} }),
     enabled,
   });
   const suppliersQuery = useQuery({
-    ...orpc.onboarding.listOrganizationSuppliers.queryOptions({ input: {} }),
+    ...serverQueryOptions(
+      orpc.onboarding.listOrganizationSuppliers,
+      "onboarding/listOrganizationSuppliers",
+      { input: {} },
+    ),
     enabled,
   });
   const names = new Map<string, string>();
@@ -125,7 +130,7 @@ export function TripWizardStep4Staffing() {
   }, [tripQuery.data]);
 
   const saveWizardStepMutation = useMutation(
-    orpc.trips.saveWizardStep.mutationOptions({
+    serverMutationOptions(orpc.trips.saveWizardStep, "trips/saveWizardStep", {
       onSuccess: () => {
         void queryClient.invalidateQueries({ queryKey: orpc.trips.key() });
       },

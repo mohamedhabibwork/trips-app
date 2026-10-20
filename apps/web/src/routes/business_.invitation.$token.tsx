@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
+import { pageHead } from "@/navigation/seo";
 import { EmployeeInvitationAcceptance } from "@/screens/organization/people/employee-invitation-acceptance";
 
 /**
@@ -10,5 +11,6 @@ import { EmployeeInvitationAcceptance } from "@/screens/organization/people/empl
  * Accepting still needs a session; the page links to sign-in and sign-up and comes back here.
  */
 export const Route = createFileRoute("/business_/invitation/$token")({
+  head: pageHead("SCR-ORG-02"),
   component: EmployeeInvitationAcceptance,
 });

@@ -27,17 +27,21 @@ export interface BookingRecord {
   passengers: readonly BookingPassengerRecord[];
   selectedProgramIds: readonly string[];
   seatLabels: readonly string[];
+  couponId: string | null;
   couponCode: string | null;
   programsTotalMinor: number;
+  discountMinor: number;
   totalAmountMinor: number;
   currencyCode: string;
   status: BookingStatus;
   refundAmountMinor: number;
+  createdAt: string | Date;
 }
 
 export interface CheckInRecord {
   passengerId: string;
   passengerName: string;
+  vehicleId: string | null;
   status: "pending" | "checked_in" | "no_show";
 }
 

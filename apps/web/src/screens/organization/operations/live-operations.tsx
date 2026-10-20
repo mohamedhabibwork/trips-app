@@ -7,6 +7,7 @@ import { TeLiveMap } from "@trips-app/ui/components/te-live-map";
 
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
+import { serverQueryOptions } from "@/utils/server-rpc";
 
 import { OrgInput } from "../common/org-form";
 import { getSelectedTripId, toTripState, tripStateLabel, tripTitle } from "../common/org-shared";
@@ -60,10 +61,16 @@ export function LiveOperations() {
   const enabled = authStatus === "authenticated";
   const [travelerQuery, setTravelerQuery] = useState("");
 
-  const tripsQuery = useQuery(
-    orpc.trips.listOrganizationTrips.queryOptions({ input: {}, enabled }),
-  );
-  const fleetQuery = useQuery(orpc.fleet.listVehicles.queryOptions({ input: {}, enabled }));
+  const tripsQuery = useQuery({
+    ...serverQueryOptions(orpc.trips.listOrganizationTrips, "trips/listOrganizationTrips", {
+      input: {},
+    }),
+    enabled,
+  });
+  const fleetQuery = useQuery({
+    ...serverQueryOptions(orpc.fleet.listVehicles, "fleet/listVehicles", { input: {} }),
+    enabled,
+  });
 
   const trips = tripsQuery.data?.items ?? [];
   const selectedId = getSelectedTripId();
@@ -74,13 +81,13 @@ export function LiveOperations() {
   const tripId = trip?.id ?? "";
 
   const manifestQuery = useQuery(
-    orpc.checkIn.listTripManifest.queryOptions({
+    serverQueryOptions(orpc.checkIn.listTripManifest, "checkIn/listTripManifest", {
       input: { tripId },
       enabled: enabled && Boolean(tripId),
     }),
   );
   const trackingQuery = useQuery(
-    orpc.tracking.getTripLiveTracking.queryOptions({
+    serverQueryOptions(orpc.tracking.getTripLiveTracking, "tracking/getTripLiveTracking", {
       input: { tripId },
       enabled: enabled && Boolean(tripId),
     }),

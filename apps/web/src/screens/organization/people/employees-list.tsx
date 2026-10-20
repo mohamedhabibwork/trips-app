@@ -7,6 +7,7 @@ import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
+import { serverQueryOptions, serverMutationOptions } from "@/utils/server-rpc";
 
 import { OrgButtonLink, OrgLink } from "../common/org-link";
 import { setSelectedEmployeeId } from "../common/org-shared";
@@ -133,14 +134,14 @@ export function EmployeesList() {
   const [removeTarget, setRemoveTarget] = useState<EmployeeRow | null>(null);
 
   const employeesQuery = useQuery(
-    orpc.employees.list.queryOptions({
+    serverQueryOptions(orpc.employees.list, "employees/list", {
       input: {},
       enabled: authStatus === "authenticated" && Boolean(actor?.activeTenantId),
     }),
   );
 
   const updateStatusMutation = useMutation(
-    orpc.employees.updateStatus.mutationOptions({
+    serverMutationOptions(orpc.employees.updateStatus, "employees/updateStatus", {
       onSuccess: () => {
         void queryClient.invalidateQueries({ queryKey: orpc.employees.key() });
       },
@@ -148,7 +149,7 @@ export function EmployeesList() {
   );
 
   const resendMutation = useMutation(
-    orpc.employees.resendInvite.mutationOptions({
+    serverMutationOptions(orpc.employees.resendInvite, "employees/resendInvite", {
       onSuccess: () => {
         void queryClient.invalidateQueries({ queryKey: orpc.employees.key() });
       },

@@ -9,7 +9,9 @@ import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
 import { usePathname } from "@/components/shells/shell-content";
+import { trackEvent } from "@/utils/analytics";
 import { orpc } from "@/utils/orpc";
+import { serverQueryOptions, serverMutationOptions } from "@/utils/server-rpc";
 
 import { OrgInput } from "../common/org-form";
 import { OrgButtonLink, useOrgParams } from "../common/org-link";
@@ -43,7 +45,9 @@ export function EmployeeInvitationAcceptance() {
   const returnTo = usePathname();
 
   const previewQuery = useQuery({
-    ...orpc.employees.previewInvite.queryOptions({ input: { inviteToken } }),
+    ...serverQueryOptions(orpc.employees.previewInvite, "employees/previewInvite", {
+      input: { inviteToken },
+    }),
     enabled: hasToken,
     retry: false,
   });
@@ -51,10 +55,21 @@ export function EmployeeInvitationAcceptance() {
     void queryClient.invalidateQueries({ queryKey: orpc.employees.key() });
   };
   const acceptMutation = useMutation(
-    orpc.employees.acceptInvite.mutationOptions({ onSuccess: invalidate }),
+    serverMutationOptions(orpc.employees.acceptInvite, "employees/acceptInvite", {
+      onSuccess: () => {
+        trackEvent("staff_invite_accepted", { surface: "public" });
+        invalidate();
+      },
+      onError: () => trackEvent("staff_invite_accept_failed", { surface: "public" }),
+    }),
   );
   const declineMutation = useMutation(
-    orpc.employees.declineInvite.mutationOptions({ onSuccess: invalidate }),
+    serverMutationOptions(orpc.employees.declineInvite, "employees/declineInvite", {
+      onSuccess: () => {
+        trackEvent("staff_invite_declined", { surface: "public" });
+        invalidate();
+      },
+    }),
   );
 
   const invite = previewQuery.data;

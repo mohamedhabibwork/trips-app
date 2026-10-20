@@ -6,6 +6,7 @@ import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
+import { serverQueryOptions, serverMutationOptions } from "@/utils/server-rpc";
 
 import { OrgChoice, OrgInput, OrgSelect } from "../common/org-form";
 import { useOrgNavigate, useOrgParams } from "../common/org-link";
@@ -95,7 +96,9 @@ export function ProgramEditor() {
   const signedIn = authStatus === "authenticated";
   const knownTripId = params.tripId ?? getSelectedTripId();
   const tripsQuery = useQuery({
-    ...orpc.trips.listOrganizationTrips.queryOptions({ input: {} }),
+    ...serverQueryOptions(orpc.trips.listOrganizationTrips, "trips/listOrganizationTrips", {
+      input: {},
+    }),
     enabled: signedIn && !knownTripId,
   });
   const effectiveTripId = knownTripId || tripsQuery.data?.items[0]?.id || null;
@@ -105,11 +108,15 @@ export function ProgramEditor() {
   }, [effectiveTripId]);
 
   const tripQuery = useQuery({
-    ...orpc.trips.getOrganizationTrip.queryOptions({ input: { tripId: effectiveTripId ?? "" } }),
+    ...serverQueryOptions(orpc.trips.getOrganizationTrip, "trips/getOrganizationTrip", {
+      input: { tripId: effectiveTripId ?? "" },
+    }),
     enabled: signedIn && Boolean(effectiveTripId),
   });
   const programsQuery = useQuery({
-    ...orpc.programs.listTripPrograms.queryOptions({ input: { tripId: effectiveTripId ?? "" } }),
+    ...serverQueryOptions(orpc.programs.listTripPrograms, "programs/listTripPrograms", {
+      input: { tripId: effectiveTripId ?? "" },
+    }),
     enabled: signedIn && Boolean(effectiveTripId),
   });
 
@@ -142,10 +149,10 @@ export function ProgramEditor() {
     void queryClient.invalidateQueries({ queryKey: orpc.trips.key() });
   };
   const updateProgramMutation = useMutation(
-    orpc.programs.updateProgram.mutationOptions({ onSuccess }),
+    serverMutationOptions(orpc.programs.updateProgram, "programs/updateProgram", { onSuccess }),
   );
   const createProgramMutation = useMutation(
-    orpc.programs.createProgram.mutationOptions({ onSuccess }),
+    serverMutationOptions(orpc.programs.createProgram, "programs/createProgram", { onSuccess }),
   );
 
   const setFlag = (flag: FlagId, checked: boolean) => {

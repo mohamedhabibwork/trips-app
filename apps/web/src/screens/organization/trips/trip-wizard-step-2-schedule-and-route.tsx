@@ -12,6 +12,7 @@ import {
   type LookupItemDto,
 } from "@/utils/lookups";
 import { orpc } from "@/utils/orpc";
+import { serverMutationOptions } from "@/utils/server-rpc";
 import { utcToZoned, zonedToUtcIso } from "@/utils/zoned-time";
 
 import { OrgInput, OrgSelect } from "../common/org-form";
@@ -168,7 +169,7 @@ export function TripWizardStep2ScheduleAndRoute() {
   }, [tripQuery.data]);
 
   const saveWizardStep = useMutation(
-    orpc.trips.saveWizardStep.mutationOptions({
+    serverMutationOptions(orpc.trips.saveWizardStep, "trips/saveWizardStep", {
       onSuccess: () => {
         void queryClient.invalidateQueries({ queryKey: orpc.trips.key() });
       },

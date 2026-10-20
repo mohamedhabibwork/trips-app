@@ -7,6 +7,7 @@ import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
+import { serverQueryOptions } from "@/utils/server-rpc";
 
 import { OrgButtonLink, OrgLink } from "../common/org-link";
 import {
@@ -119,7 +120,9 @@ export function TripsList() {
   const [stateFilter, setStateFilter] = useState<string>("all");
 
   const tripsQuery = useQuery({
-    ...orpc.trips.listOrganizationTrips.queryOptions({ input: {} }),
+    ...serverQueryOptions(orpc.trips.listOrganizationTrips, "trips/listOrganizationTrips", {
+      input: {},
+    }),
     enabled: authStatus === "authenticated",
   });
 

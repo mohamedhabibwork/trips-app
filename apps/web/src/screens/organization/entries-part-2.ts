@@ -21,6 +21,7 @@ import { AnalyticsAndReports } from "./operations/analytics-and-reports";
 import { LiveOperations } from "./operations/live-operations";
 import { TripReportReview } from "./operations/trip-report-review";
 import { ChildSafetyReports } from "./operations/child-safety-reports";
+import { serverQueryOptions } from "@/utils/server-rpc";
 
 /** SCR-ORG-22 to SCR-ORG-42, in spec order. */
 export const ORGANIZATION_SCREENS_PART_B: readonly ScreenEntry[] = [
@@ -35,7 +36,11 @@ export const ORGANIZATION_SCREENS_PART_B: readonly ScreenEntry[] = [
       try {
         await Promise.allSettled([
           queryClient.prefetchQuery(
-            orpc.negotiation.listOrganizationNegotiations.queryOptions({ input: {} }),
+            serverQueryOptions(
+              orpc.negotiation.listOrganizationNegotiations,
+              "negotiation/listOrganizationNegotiations",
+              { input: {} },
+            ),
           ),
         ]);
       } catch {
@@ -53,7 +58,11 @@ export const ORGANIZATION_SCREENS_PART_B: readonly ScreenEntry[] = [
       if (typeof window === "undefined" && !auth.accessToken()) return;
       try {
         await queryClient.ensureQueryData(
-          orpc.booking.listOrganizationBookings.queryOptions({ input: {} }),
+          serverQueryOptions(
+            orpc.booking.listOrganizationBookings,
+            "booking/listOrganizationBookings",
+            { input: {} },
+          ),
         );
       } catch {
         // Gracefully ignore SSR errors
@@ -71,9 +80,17 @@ export const ORGANIZATION_SCREENS_PART_B: readonly ScreenEntry[] = [
       try {
         await Promise.allSettled([
           queryClient.prefetchQuery(
-            orpc.booking.listOrganizationBookings.queryOptions({ input: {} }),
+            serverQueryOptions(
+              orpc.booking.listOrganizationBookings,
+              "booking/listOrganizationBookings",
+              { input: {} },
+            ),
           ),
-          queryClient.prefetchQuery(orpc.payments.listPayments.queryOptions({ input: undefined })),
+          queryClient.prefetchQuery(
+            serverQueryOptions(orpc.payments.listPayments, "payments/listPayments", {
+              input: undefined,
+            }),
+          ),
         ]);
       } catch {
         // Gracefully ignore SSR errors
@@ -90,7 +107,11 @@ export const ORGANIZATION_SCREENS_PART_B: readonly ScreenEntry[] = [
       if (typeof window === "undefined" && !auth.accessToken()) return;
       try {
         await Promise.allSettled([
-          queryClient.prefetchQuery(orpc.trips.listOrganizationTrips.queryOptions({ input: {} })),
+          queryClient.prefetchQuery(
+            serverQueryOptions(orpc.trips.listOrganizationTrips, "trips/listOrganizationTrips", {
+              input: {},
+            }),
+          ),
         ]);
       } catch {
         // Gracefully ignore SSR errors
@@ -107,7 +128,11 @@ export const ORGANIZATION_SCREENS_PART_B: readonly ScreenEntry[] = [
       if (typeof window === "undefined" && !auth.accessToken()) return;
       try {
         await Promise.allSettled([
-          queryClient.prefetchQuery(orpc.trips.listOrganizationTrips.queryOptions({ input: {} })),
+          queryClient.prefetchQuery(
+            serverQueryOptions(orpc.trips.listOrganizationTrips, "trips/listOrganizationTrips", {
+              input: {},
+            }),
+          ),
         ]);
       } catch {
         // Gracefully ignore SSR errors
@@ -125,10 +150,18 @@ export const ORGANIZATION_SCREENS_PART_B: readonly ScreenEntry[] = [
       try {
         await Promise.allSettled([
           queryClient.prefetchQuery(
-            orpc.coupons.listOrganizationCoupons.queryOptions({ input: {} }),
+            serverQueryOptions(
+              orpc.coupons.listOrganizationCoupons,
+              "coupons/listOrganizationCoupons",
+              { input: {} },
+            ),
           ),
           queryClient.prefetchQuery(
-            orpc.plans.getOrganizationSubscription.queryOptions({ input: undefined }),
+            serverQueryOptions(
+              orpc.plans.getOrganizationSubscription,
+              "plans/getOrganizationSubscription",
+              { input: undefined },
+            ),
           ),
         ]);
       } catch {
@@ -147,7 +180,11 @@ export const ORGANIZATION_SCREENS_PART_B: readonly ScreenEntry[] = [
       try {
         await Promise.allSettled([
           queryClient.prefetchQuery(
-            orpc.coupons.listOrganizationCoupons.queryOptions({ input: {} }),
+            serverQueryOptions(
+              orpc.coupons.listOrganizationCoupons,
+              "coupons/listOrganizationCoupons",
+              { input: {} },
+            ),
           ),
         ]);
       } catch {
@@ -165,7 +202,11 @@ export const ORGANIZATION_SCREENS_PART_B: readonly ScreenEntry[] = [
       if (typeof window === "undefined" && !auth.accessToken()) return;
       try {
         await queryClient.ensureQueryData(
-          orpc.coupons.listOrganizationCoupons.queryOptions({ input: {} }),
+          serverQueryOptions(
+            orpc.coupons.listOrganizationCoupons,
+            "coupons/listOrganizationCoupons",
+            { input: {} },
+          ),
         );
       } catch {
         // Gracefully ignore SSR errors
@@ -183,9 +224,17 @@ export const ORGANIZATION_SCREENS_PART_B: readonly ScreenEntry[] = [
       try {
         await Promise.allSettled([
           queryClient.prefetchQuery(
-            orpc.accounting.getOrganizationSummary.queryOptions({ input: undefined }),
+            serverQueryOptions(
+              orpc.accounting.getOrganizationSummary,
+              "accounting/getOrganizationSummary",
+              { input: undefined },
+            ),
           ),
-          queryClient.prefetchQuery(orpc.trips.listOrganizationTrips.queryOptions({ input: {} })),
+          queryClient.prefetchQuery(
+            serverQueryOptions(orpc.trips.listOrganizationTrips, "trips/listOrganizationTrips", {
+              input: {},
+            }),
+          ),
         ]);
       } catch {
         // Gracefully ignore SSR errors
@@ -202,7 +251,9 @@ export const ORGANIZATION_SCREENS_PART_B: readonly ScreenEntry[] = [
       if (typeof window === "undefined" && !auth.accessToken()) return;
       try {
         await queryClient.ensureQueryData(
-          orpc.accounting.listLedgerEntries.queryOptions({ input: {} }),
+          serverQueryOptions(orpc.accounting.listLedgerEntries, "accounting/listLedgerEntries", {
+            input: {},
+          }),
         );
       } catch {
         // Gracefully ignore SSR errors
@@ -219,7 +270,9 @@ export const ORGANIZATION_SCREENS_PART_B: readonly ScreenEntry[] = [
       if (typeof window === "undefined" && !auth.accessToken()) return;
       try {
         await queryClient.ensureQueryData(
-          orpc.accounting.listLedgerEntries.queryOptions({ input: {} }),
+          serverQueryOptions(orpc.accounting.listLedgerEntries, "accounting/listLedgerEntries", {
+            input: {},
+          }),
         );
       } catch {
         // Gracefully ignore SSR errors
@@ -237,12 +290,26 @@ export const ORGANIZATION_SCREENS_PART_B: readonly ScreenEntry[] = [
       try {
         await Promise.allSettled([
           queryClient.prefetchQuery(
-            orpc.plans.getOrganizationSubscription.queryOptions({ input: undefined }),
+            serverQueryOptions(
+              orpc.plans.getOrganizationSubscription,
+              "plans/getOrganizationSubscription",
+              { input: undefined },
+            ),
           ),
-          queryClient.prefetchQuery(orpc.trips.listOrganizationTrips.queryOptions({ input: {} })),
-          queryClient.prefetchQuery(orpc.employees.list.queryOptions({ input: {} })),
           queryClient.prefetchQuery(
-            orpc.coupons.listOrganizationCoupons.queryOptions({ input: {} }),
+            serverQueryOptions(orpc.trips.listOrganizationTrips, "trips/listOrganizationTrips", {
+              input: {},
+            }),
+          ),
+          queryClient.prefetchQuery(
+            serverQueryOptions(orpc.employees.list, "employees/list", { input: {} }),
+          ),
+          queryClient.prefetchQuery(
+            serverQueryOptions(
+              orpc.coupons.listOrganizationCoupons,
+              "coupons/listOrganizationCoupons",
+              { input: {} },
+            ),
           ),
         ]);
       } catch {
@@ -259,7 +326,9 @@ export const ORGANIZATION_SCREENS_PART_B: readonly ScreenEntry[] = [
     loader: async ({ queryClient, orpc, auth }) => {
       if (typeof window === "undefined" && !auth.accessToken()) return;
       try {
-        await queryClient.ensureQueryData(orpc.employees.list.queryOptions({ input: {} }));
+        await queryClient.ensureQueryData(
+          serverQueryOptions(orpc.employees.list, "employees/list", { input: {} }),
+        );
       } catch {
         // Gracefully ignore SSR errors
       }
@@ -275,7 +344,9 @@ export const ORGANIZATION_SCREENS_PART_B: readonly ScreenEntry[] = [
       if (typeof window === "undefined" && !auth.accessToken()) return;
       try {
         await Promise.allSettled([
-          queryClient.prefetchQuery(orpc.employees.list.queryOptions({ input: {} })),
+          queryClient.prefetchQuery(
+            serverQueryOptions(orpc.employees.list, "employees/list", { input: {} }),
+          ),
         ]);
       } catch {
         // Gracefully ignore SSR errors
@@ -292,7 +363,11 @@ export const ORGANIZATION_SCREENS_PART_B: readonly ScreenEntry[] = [
       if (typeof window === "undefined" && !auth.accessToken()) return;
       try {
         await queryClient.ensureQueryData(
-          orpc.organization.getOrganizationSettings.queryOptions({ input: {} }),
+          serverQueryOptions(
+            orpc.organization.getOrganizationSettings,
+            "organization/getOrganizationSettings",
+            { input: {} },
+          ),
         );
       } catch {
         // Gracefully ignore SSR errors
@@ -309,7 +384,9 @@ export const ORGANIZATION_SCREENS_PART_B: readonly ScreenEntry[] = [
       if (typeof window === "undefined" && !auth.accessToken()) return;
       try {
         await queryClient.ensureQueryData(
-          orpc.accounting.listLedgerEntries.queryOptions({ input: {} }),
+          serverQueryOptions(orpc.accounting.listLedgerEntries, "accounting/listLedgerEntries", {
+            input: {},
+          }),
         );
       } catch {
         // Gracefully ignore SSR errors
@@ -327,7 +404,11 @@ export const ORGANIZATION_SCREENS_PART_B: readonly ScreenEntry[] = [
       try {
         await Promise.allSettled([
           queryClient.prefetchQuery(
-            orpc.booking.listOrganizationBookings.queryOptions({ input: {} }),
+            serverQueryOptions(
+              orpc.booking.listOrganizationBookings,
+              "booking/listOrganizationBookings",
+              { input: {} },
+            ),
           ),
         ]);
       } catch {
@@ -346,13 +427,25 @@ export const ORGANIZATION_SCREENS_PART_B: readonly ScreenEntry[] = [
       try {
         await Promise.allSettled([
           queryClient.prefetchQuery(
-            orpc.booking.listOrganizationBookings.queryOptions({ input: {} }),
+            serverQueryOptions(
+              orpc.booking.listOrganizationBookings,
+              "booking/listOrganizationBookings",
+              { input: {} },
+            ),
           ),
           queryClient.prefetchQuery(
-            orpc.coupons.listOrganizationCoupons.queryOptions({ input: {} }),
+            serverQueryOptions(
+              orpc.coupons.listOrganizationCoupons,
+              "coupons/listOrganizationCoupons",
+              { input: {} },
+            ),
           ),
           queryClient.prefetchQuery(
-            orpc.accounting.getOrganizationSummary.queryOptions({ input: undefined }),
+            serverQueryOptions(
+              orpc.accounting.getOrganizationSummary,
+              "accounting/getOrganizationSummary",
+              { input: undefined },
+            ),
           ),
         ]);
       } catch {
@@ -370,8 +463,14 @@ export const ORGANIZATION_SCREENS_PART_B: readonly ScreenEntry[] = [
       if (typeof window === "undefined" && !auth.accessToken()) return;
       try {
         await Promise.allSettled([
-          queryClient.prefetchQuery(orpc.trips.listOrganizationTrips.queryOptions({ input: {} })),
-          queryClient.prefetchQuery(orpc.fleet.listVehicles.queryOptions({ input: {} })),
+          queryClient.prefetchQuery(
+            serverQueryOptions(orpc.trips.listOrganizationTrips, "trips/listOrganizationTrips", {
+              input: {},
+            }),
+          ),
+          queryClient.prefetchQuery(
+            serverQueryOptions(orpc.fleet.listVehicles, "fleet/listVehicles", { input: {} }),
+          ),
         ]);
       } catch {
         // Gracefully ignore SSR errors
@@ -388,8 +487,14 @@ export const ORGANIZATION_SCREENS_PART_B: readonly ScreenEntry[] = [
       if (typeof window === "undefined" && !auth.accessToken()) return;
       try {
         await Promise.allSettled([
-          queryClient.prefetchQuery(orpc.trips.listOrganizationTrips.queryOptions({ input: {} })),
-          queryClient.prefetchQuery(orpc.fleet.listVehicles.queryOptions({ input: {} })),
+          queryClient.prefetchQuery(
+            serverQueryOptions(orpc.trips.listOrganizationTrips, "trips/listOrganizationTrips", {
+              input: {},
+            }),
+          ),
+          queryClient.prefetchQuery(
+            serverQueryOptions(orpc.fleet.listVehicles, "fleet/listVehicles", { input: {} }),
+          ),
         ]);
       } catch {
         // Gracefully ignore SSR errors
@@ -406,7 +511,11 @@ export const ORGANIZATION_SCREENS_PART_B: readonly ScreenEntry[] = [
       if (typeof window === "undefined" && !auth.accessToken()) return;
       try {
         await Promise.allSettled([
-          queryClient.prefetchQuery(orpc.trips.listOrganizationTrips.queryOptions({ input: {} })),
+          queryClient.prefetchQuery(
+            serverQueryOptions(orpc.trips.listOrganizationTrips, "trips/listOrganizationTrips", {
+              input: {},
+            }),
+          ),
         ]);
       } catch {
         // Gracefully ignore SSR errors

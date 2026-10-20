@@ -6,6 +6,7 @@ import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
+import { serverQueryOptions } from "@/utils/server-rpc";
 
 import { OrgChips } from "../common/org-form";
 import { OrgButtonLink, OrgLink } from "../common/org-link";
@@ -61,11 +62,11 @@ export function VehicleRegistry() {
   const enabled = authStatus === "authenticated" && Boolean(actor?.activeTenantId);
 
   const vehiclesQuery = useQuery({
-    ...orpc.fleet.listVehicles.queryOptions({ input: {} }),
+    ...serverQueryOptions(orpc.fleet.listVehicles, "fleet/listVehicles", { input: {} }),
     enabled,
   });
   const typesQuery = useQuery({
-    ...orpc.fleet.listVehicleTypes.queryOptions({ input: {} }),
+    ...serverQueryOptions(orpc.fleet.listVehicleTypes, "fleet/listVehicleTypes", { input: {} }),
     enabled,
   });
 

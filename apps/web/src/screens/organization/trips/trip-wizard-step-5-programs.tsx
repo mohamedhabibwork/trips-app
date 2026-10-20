@@ -4,6 +4,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { t } from "@trips-app/i18n";
 
 import { orpc } from "@/utils/orpc";
+import { serverQueryOptions, serverMutationOptions } from "@/utils/server-rpc";
 
 import { OrgButtonLink, OrgLink } from "../common/org-link";
 import { TripWizardFrame, setSelectedProgramId } from "../common/org-shared";
@@ -62,7 +63,9 @@ export function TripWizardStep5Programs() {
   const { error: saveError, run } = useWizardStepSave(tripId);
 
   const programsQuery = useQuery({
-    ...orpc.programs.listTripPrograms.queryOptions({ input: { tripId: tripId ?? "" } }),
+    ...serverQueryOptions(orpc.programs.listTripPrograms, "programs/listTripPrograms", {
+      input: { tripId: tripId ?? "" },
+    }),
     enabled: authStatus === "authenticated" && Boolean(tripId),
   });
 
@@ -98,7 +101,7 @@ export function TripWizardStep5Programs() {
     }) ?? [];
 
   const saveWizardStepMutation = useMutation(
-    orpc.trips.saveWizardStep.mutationOptions({
+    serverMutationOptions(orpc.trips.saveWizardStep, "trips/saveWizardStep", {
       onSuccess: () => {
         void queryClient.invalidateQueries({ queryKey: orpc.trips.key() });
       },

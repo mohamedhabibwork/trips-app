@@ -6,6 +6,7 @@ import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
+import { serverQueryOptions, serverMutationOptions } from "@/utils/server-rpc";
 
 import { OrgInput, OrgSelect } from "../common/org-form";
 import { useOrgNavigate } from "../common/org-link";
@@ -56,13 +57,17 @@ interface SupplierCardProps {
 
 function SupplierCard({ supplier, window, date, enabled, selected, onSelect }: SupplierCardProps) {
   const availabilityQuery = useQuery({
-    ...orpc.availability.checkSupplierAvailability.queryOptions({
-      input: {
-        supplierAccountId: supplier.accountId,
-        startsAt: window?.startsAt ?? "",
-        endsAt: window?.endsAt ?? "",
+    ...serverQueryOptions(
+      orpc.availability.checkSupplierAvailability,
+      "availability/checkSupplierAvailability",
+      {
+        input: {
+          supplierAccountId: supplier.accountId,
+          startsAt: window?.startsAt ?? "",
+          endsAt: window?.endsAt ?? "",
+        },
       },
-    }),
+    ),
     enabled: enabled && Boolean(window),
   });
   const available = availabilityQuery.data?.isAvailable;
@@ -134,11 +139,17 @@ export function PlatformSupplierSearchAndDealStart() {
   const sendHintId = useId();
 
   const negotiationsQuery = useQuery({
-    ...orpc.negotiation.listOrganizationNegotiations.queryOptions({ input: {} }),
+    ...serverQueryOptions(
+      orpc.negotiation.listOrganizationNegotiations,
+      "negotiation/listOrganizationNegotiations",
+      { input: {} },
+    ),
     enabled,
   });
   const tripsQuery = useQuery({
-    ...orpc.trips.listOrganizationTrips.queryOptions({ input: {} }),
+    ...serverQueryOptions(orpc.trips.listOrganizationTrips, "trips/listOrganizationTrips", {
+      input: {},
+    }),
     enabled,
   });
 
@@ -183,7 +194,7 @@ export function PlatformSupplierSearchAndDealStart() {
   const selected = candidates.find((candidate) => candidate.accountId === selectedId);
 
   const createOfferMutation = useMutation(
-    orpc.negotiation.createOffer.mutationOptions({
+    serverMutationOptions(orpc.negotiation.createOffer, "negotiation/createOffer", {
       onSuccess: () => {
         void queryClient.invalidateQueries({ queryKey: orpc.negotiation.key() });
       },

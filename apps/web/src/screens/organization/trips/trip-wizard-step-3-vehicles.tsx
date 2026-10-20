@@ -5,6 +5,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { t } from "@trips-app/i18n";
 
 import { orpc } from "@/utils/orpc";
+import { serverQueryOptions, serverMutationOptions } from "@/utils/server-rpc";
 
 import { OrgSelect } from "../common/org-form";
 import { OrgLink } from "../common/org-link";
@@ -54,7 +55,7 @@ export function TripWizardStep3Vehicles() {
   const { error: saveError, run } = useWizardStepSave(tripId);
 
   const fleetQuery = useQuery({
-    ...orpc.fleet.listVehicles.queryOptions({ input: {} }),
+    ...serverQueryOptions(orpc.fleet.listVehicles, "fleet/listVehicles", { input: {} }),
     enabled: authStatus === "authenticated",
   });
 
@@ -136,7 +137,7 @@ export function TripWizardStep3Vehicles() {
   ];
 
   const saveWizardStepMutation = useMutation(
-    orpc.trips.saveWizardStep.mutationOptions({
+    serverMutationOptions(orpc.trips.saveWizardStep, "trips/saveWizardStep", {
       onSuccess: () => {
         void queryClient.invalidateQueries({ queryKey: orpc.trips.key() });
       },

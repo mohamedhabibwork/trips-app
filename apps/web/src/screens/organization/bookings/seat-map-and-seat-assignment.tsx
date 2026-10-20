@@ -7,6 +7,7 @@ import { cn } from "@trips-app/ui/lib/utils";
 
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
+import { serverQueryOptions, serverMutationOptions } from "@/utils/server-rpc";
 
 import { OrgTabs } from "../common/org-form";
 import { useOrgParams } from "../common/org-link";
@@ -69,7 +70,9 @@ export function SeatMapAndSeatAssignment() {
   const [assignFailed, setAssignFailed] = useState(false);
 
   const tripsQuery = useQuery({
-    ...orpc.trips.listOrganizationTrips.queryOptions({ input: {} }),
+    ...serverQueryOptions(orpc.trips.listOrganizationTrips, "trips/listOrganizationTrips", {
+      input: {},
+    }),
     enabled,
   });
   const trips = tripsQuery.data?.items ?? [];
@@ -78,20 +81,26 @@ export function SeatMapAndSeatAssignment() {
   const selectedVehicleId = getSelectedVehicleId();
 
   const seatMapQuery = useQuery({
-    ...orpc.seats.getSeatMap.queryOptions({
+    ...serverQueryOptions(orpc.seats.getSeatMap, "seats/getSeatMap", {
       input: { tripId: tripId ?? "", vehicleId: selectedVehicleId ?? undefined },
     }),
     enabled: enabled && Boolean(tripId),
     refetchInterval: LIVE_REFRESH_MS,
   });
   const bookingsQuery = useQuery({
-    ...orpc.booking.listOrganizationBookings.queryOptions({
-      input: { tripId: tripId ?? undefined },
-    }),
+    ...serverQueryOptions(
+      orpc.booking.listOrganizationBookings,
+      "booking/listOrganizationBookings",
+      {
+        input: { tripId: tripId ?? undefined },
+      },
+    ),
     enabled: enabled && Boolean(tripId),
   });
   const programsQuery = useQuery({
-    ...orpc.programs.listTripPrograms.queryOptions({ input: { tripId: tripId ?? "" } }),
+    ...serverQueryOptions(orpc.programs.listTripPrograms, "programs/listTripPrograms", {
+      input: { tripId: tripId ?? "" },
+    }),
     enabled: enabled && Boolean(tripId),
   });
 
@@ -139,7 +148,7 @@ export function SeatMapAndSeatAssignment() {
   const moveFrom = seats.find((seat) => seat.label === moveFromLabel && seat.state === "reserved");
 
   const assignSeatMutation = useMutation(
-    orpc.seats.assignSeatByOrganization.mutationOptions({
+    serverMutationOptions(orpc.seats.assignSeatByOrganization, "seats/assignSeatByOrganization", {
       onSuccess: () => {
         void queryClient.invalidateQueries({ queryKey: orpc.seats.key() });
         void queryClient.invalidateQueries({ queryKey: orpc.booking.key() });

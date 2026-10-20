@@ -6,6 +6,7 @@ import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
+import { serverQueryOptions } from "@/utils/server-rpc";
 
 import { OrgSelect } from "../common/org-form";
 import { OrgButtonLink } from "../common/org-link";
@@ -62,29 +63,41 @@ export function TripAccounting() {
   const enabled = authStatus === "authenticated";
   const [chosenTripId, setChosenTripId] = useState<string | null>(() => getSelectedTripId());
 
-  const summaryQuery = useQuery(
-    orpc.accounting.getOrganizationSummary.queryOptions({ input: undefined, enabled }),
-  );
-  const tripsQuery = useQuery(
-    orpc.trips.listOrganizationTrips.queryOptions({ input: {}, enabled }),
-  );
+  const summaryQuery = useQuery({
+    ...serverQueryOptions(
+      orpc.accounting.getOrganizationSummary,
+      "accounting/getOrganizationSummary",
+      { input: undefined },
+    ),
+    enabled,
+  });
+  const tripsQuery = useQuery({
+    ...serverQueryOptions(orpc.trips.listOrganizationTrips, "trips/listOrganizationTrips", {
+      input: {},
+    }),
+    enabled,
+  });
 
   const trips = tripsQuery.data?.items ?? [];
   const trip = trips.find((item) => item.id === chosenTripId) ?? trips[0];
   const tripId = trip?.id;
 
-  const bookingsQuery = useQuery(
-    orpc.booking.listOrganizationBookings.queryOptions({
+  const bookingsQuery = useQuery({
+    ...serverQueryOptions(
+      orpc.booking.listOrganizationBookings,
+      "booking/listOrganizationBookings",
+      {
+        input: { tripId },
+      },
+    ),
+    enabled: enabled && Boolean(tripId),
+  });
+  const ledgerQuery = useQuery({
+    ...serverQueryOptions(orpc.accounting.listLedgerEntries, "accounting/listLedgerEntries", {
       input: { tripId },
-      enabled: enabled && Boolean(tripId),
     }),
-  );
-  const ledgerQuery = useQuery(
-    orpc.accounting.listLedgerEntries.queryOptions({
-      input: { tripId },
-      enabled: enabled && Boolean(tripId),
-    }),
-  );
+    enabled: enabled && Boolean(tripId),
+  });
 
   const currency = trip?.currencyCode ?? summaryQuery.data?.currencyCode;
   const bookings = rowsOf<BookingView>(bookingsQuery.data).filter(

@@ -8,6 +8,7 @@ import { t } from "@trips-app/i18n";
 import { useAuth } from "@/auth/auth-context";
 import { lookupTypeByCodeQueryOptions, toLookupSelectOptions } from "@/utils/lookups";
 import { orpc } from "@/utils/orpc";
+import { serverQueryOptions, serverMutationOptions } from "@/utils/server-rpc";
 
 import { OrgChoice, OrgInput, OrgSelect } from "../common/org-form";
 import { OrgTable, type OrgColumn } from "../common/org-table";
@@ -257,7 +258,11 @@ export function OrganizationOwnedDriversAndPhotographers() {
   const enabled = authStatus === "authenticated" && Boolean(actor?.activeTenantId);
 
   const suppliersQuery = useQuery({
-    ...orpc.onboarding.listOrganizationSuppliers.queryOptions({ input: {} }),
+    ...serverQueryOptions(
+      orpc.onboarding.listOrganizationSuppliers,
+      "onboarding/listOrganizationSuppliers",
+      { input: {} },
+    ),
     enabled,
   });
 
@@ -273,19 +278,27 @@ export function OrganizationOwnedDriversAndPhotographers() {
   const photographerCount = rows.length - driverCount;
 
   const onboardMutation = useMutation(
-    orpc.onboarding.onboardOrganizationSupplier.mutationOptions({
-      onSuccess: () => {
-        void queryClient.invalidateQueries({ queryKey: orpc.onboarding.key() });
+    serverMutationOptions(
+      orpc.onboarding.onboardOrganizationSupplier,
+      "onboarding/onboardOrganizationSupplier",
+      {
+        onSuccess: () => {
+          void queryClient.invalidateQueries({ queryKey: orpc.onboarding.key() });
+        },
       },
-    }),
+    ),
   );
 
   const removeMutation = useMutation(
-    orpc.onboarding.removeOrganizationSupplier.mutationOptions({
-      onSuccess: () => {
-        void queryClient.invalidateQueries({ queryKey: orpc.onboarding.key() });
+    serverMutationOptions(
+      orpc.onboarding.removeOrganizationSupplier,
+      "onboarding/removeOrganizationSupplier",
+      {
+        onSuccess: () => {
+          void queryClient.invalidateQueries({ queryKey: orpc.onboarding.key() });
+        },
       },
-    }),
+    ),
   );
 
   async function handleAdd(values: AddStaffValues) {

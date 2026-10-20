@@ -6,6 +6,7 @@ import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
+import { serverQueryOptions } from "@/utils/server-rpc";
 
 import { OrgSelect } from "../common/org-form";
 import { getSelectedTripId, tripTitle } from "../common/org-shared";
@@ -41,19 +42,22 @@ export function ChildSafetyReports() {
   const enabled = authStatus === "authenticated";
   const [chosenTripId, setChosenTripId] = useState<string | null>(() => getSelectedTripId());
 
-  const tripsQuery = useQuery(
-    orpc.trips.listOrganizationTrips.queryOptions({ input: {}, enabled }),
-  );
+  const tripsQuery = useQuery({
+    ...serverQueryOptions(orpc.trips.listOrganizationTrips, "trips/listOrganizationTrips", {
+      input: {},
+    }),
+    enabled,
+  });
   const trips = tripsQuery.data?.items ?? [];
   const trip = trips.find((item) => item.id === chosenTripId) ?? trips[0];
   const tripId = trip?.id ?? "";
 
-  const trackingQuery = useQuery(
-    orpc.tracking.getTripLiveTracking.queryOptions({
+  const trackingQuery = useQuery({
+    ...serverQueryOptions(orpc.tracking.getTripLiveTracking, "tracking/getTripLiveTracking", {
       input: { tripId },
-      enabled: enabled && Boolean(tripId),
     }),
-  );
+    enabled: enabled && Boolean(tripId),
+  });
 
   const tripVehicles = (trip?.vehicles ?? []) as readonly TripVehicleView[];
   const noFleet: readonly FleetVehicleView[] = [];

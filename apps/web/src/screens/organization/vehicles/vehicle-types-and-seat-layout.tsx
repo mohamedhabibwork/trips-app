@@ -7,6 +7,7 @@ import { t } from "@trips-app/i18n";
 import { useAuth } from "@/auth/auth-context";
 import { lookupTypeByCodeQueryOptions, toLookupSelectOptions } from "@/utils/lookups";
 import { orpc } from "@/utils/orpc";
+import { serverQueryOptions, serverMutationOptions } from "@/utils/server-rpc";
 
 import { OrgInput, OrgSelect } from "../common/org-form";
 import {
@@ -225,7 +226,7 @@ export function VehicleTypesAndSeatLayout() {
   const enabled = authStatus === "authenticated" && Boolean(actor?.activeTenantId);
 
   const typesQuery = useQuery({
-    ...orpc.fleet.listVehicleTypes.queryOptions({ input: {} }),
+    ...serverQueryOptions(orpc.fleet.listVehicleTypes, "fleet/listVehicleTypes", { input: {} }),
     enabled,
   });
   const items = typesQuery.data?.items ?? [];
@@ -235,10 +236,14 @@ export function VehicleTypesAndSeatLayout() {
     void queryClient.invalidateQueries({ queryKey: orpc.fleet.key() });
   };
   const updateMutation = useMutation(
-    orpc.fleet.updateVehicleType.mutationOptions({ onSuccess: invalidate }),
+    serverMutationOptions(orpc.fleet.updateVehicleType, "fleet/updateVehicleType", {
+      onSuccess: invalidate,
+    }),
   );
   const createMutation = useMutation(
-    orpc.fleet.createVehicleType.mutationOptions({ onSuccess: invalidate }),
+    serverMutationOptions(orpc.fleet.createVehicleType, "fleet/createVehicleType", {
+      onSuccess: invalidate,
+    }),
   );
   function handleSave(values: TypeValues) {
     if (!enabled) return;

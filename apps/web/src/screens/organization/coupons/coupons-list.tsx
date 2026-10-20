@@ -7,6 +7,7 @@ import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
+import { serverQueryOptions, serverMutationOptions } from "@/utils/server-rpc";
 
 import { useOrgPlan } from "../trips/trip-parts";
 
@@ -133,16 +134,22 @@ export function CouponsList() {
   const [revokeTarget, setRevokeTarget] = useState<CouponRow | null>(null);
 
   const couponsQuery = useQuery({
-    ...orpc.coupons.listOrganizationCoupons.queryOptions({ input: {} }),
+    ...serverQueryOptions(orpc.coupons.listOrganizationCoupons, "coupons/listOrganizationCoupons", {
+      input: {},
+    }),
     enabled,
   });
   const bookingsQuery = useQuery({
-    ...orpc.booking.listOrganizationBookings.queryOptions({ input: {} }),
+    ...serverQueryOptions(
+      orpc.booking.listOrganizationBookings,
+      "booking/listOrganizationBookings",
+      { input: {} },
+    ),
     enabled,
   });
 
   const updateStatusMutation = useMutation(
-    orpc.coupons.updateStatus.mutationOptions({
+    serverMutationOptions(orpc.coupons.updateStatus, "coupons/updateStatus", {
       onSuccess: () => {
         void queryClient.invalidateQueries({ queryKey: orpc.coupons.key() });
       },

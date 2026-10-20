@@ -6,6 +6,7 @@ import { t } from "@trips-app/i18n";
 
 import { useAuth } from "@/auth/auth-context";
 import { orpc } from "@/utils/orpc";
+import { serverQueryOptions } from "@/utils/server-rpc";
 
 import { OrgInput, OrgSelect } from "../common/org-form";
 import { OrgTable, type OrgColumn } from "../common/org-table";
@@ -66,12 +67,12 @@ export function LedgerAndExports() {
   const [eventType, setEventType] = useState("all");
   const [reference, setReference] = useState("");
 
-  const ledgerQuery = useQuery(
-    orpc.accounting.listLedgerEntries.queryOptions({
+  const ledgerQuery = useQuery({
+    ...serverQueryOptions(orpc.accounting.listLedgerEntries, "accounting/listLedgerEntries", {
       input: {},
-      enabled: authStatus === "authenticated",
     }),
-  );
+    enabled: authStatus === "authenticated",
+  });
 
   const rows: readonly LedgerRow[] = rowsOf<LedgerEntryView>(ledgerQuery.data).map((entry) => {
     const linkedFull = entry.bookingId ?? entry.tripId ?? "";
